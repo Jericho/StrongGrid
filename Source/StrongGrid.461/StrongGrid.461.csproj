@@ -7,8 +7,8 @@
     <ProjectGuid>{330F468F-B43C-4B25-BCA6-5FD4E302D84A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>StrongGrid._461</RootNamespace>
-    <AssemblyName>StrongGrid.461</AssemblyName>
+    <RootNamespace>StrongGrid</RootNamespace>
+    <AssemblyName>StrongGrid</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
