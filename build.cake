@@ -40,7 +40,7 @@ var gitHubPassword = EnvironmentVariable("GITHUB_PASSWORD");
 var solution = GetFiles("./Source/" + libraryName + ".sln").First();
 var solutionPath = solution.GetDirectory();
 
-var unitTestsPaths = GetDirectories("./Source/*.UnitTests.*");
+var unitTestsPaths = GetDirectories("./Source/*.UnitTests");
 var outputDir = "./artifacts/";
 var codeCoverageDir = outputDir + "CodeCoverage/";
 var versionInfo = GitVersion(new GitVersionSettings() { OutputType = GitVersionOutput.Json });
@@ -257,8 +257,7 @@ Task("Create-NuGet-Package")
 		Symbols                 = false,
 		NoPackageAnalysis       = true,
 		Dependencies            = new [] {
-			new NuSpecDependency { Id = "Wire", Version = "0.8.1" },
-			new NuSpecDependency { Id = "WindowsAzure.Storage", Version = "7.1.2" }
+			new NuSpecDependency { Id = "Newtonsoft.Json", Version = "9.0.1" }
 		},
 		Files                   = new [] {
 			new NuSpecContent { Source = libraryName + ".452/bin/" + configuration + "/" + libraryName + ".dll", Target = "lib/net452" },
