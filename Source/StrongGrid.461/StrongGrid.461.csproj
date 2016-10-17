@@ -51,6 +51,9 @@
     <Compile Include="..\StrongGrid.Shared\IClient.cs">
       <Link>IClient.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\UserCredits.cs">
+      <Link>Model\UserCredits.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\ApiKeys.cs">
       <Link>Resources\ApiKeys.cs</Link>
     </Compile>
@@ -62,6 +65,15 @@
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\SuppressionGroup.cs">
       <Link>Model\SuppressionGroup.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\User.cs">
+      <Link>Resources\User.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\UserProfile.cs">
+      <Link>Model\UserProfile.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\Account.cs">
+      <Link>Model\Account.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Utilities\EpochConverter.cs">
       <Link>Utilities\EpochConverter.cs</Link>

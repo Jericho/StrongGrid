@@ -97,6 +97,7 @@
   <ItemGroup>
     <Compile Include="ClientTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\UserTests.cs" />
     <Compile Include="Resources\UnsubscribeGroupsTests.cs" />
     <Compile Include="Resources\ApiKeysTests.cs" />
   </ItemGroup>
