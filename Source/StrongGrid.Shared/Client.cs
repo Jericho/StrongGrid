@@ -31,6 +31,7 @@ namespace StrongGrid
 		#region PROPERTIES
 
 		public ApiKeys ApiKeys { get; private set; }
+		public UnsubscribeGroups UnsubscribeGroups { get; private set; }
 		public string Version { get; private set; }
 
 		#endregion
@@ -48,6 +49,7 @@ namespace StrongGrid
 			_apiKey = apiKey;
 
 			ApiKeys = new ApiKeys(this);
+			UnsubscribeGroups = new UnsubscribeGroups(this);
 			Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
 			_mustDisposeHttpClient = (httpClient == null);

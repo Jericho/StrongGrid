@@ -11,7 +11,7 @@ StrongGrid is a strongly typed library for SendGrid's v3 API.
 
 It started out in February 2016 as a [fork](https://github.com/Jericho/sendgrid-csharp) of SendGrid's own library. I submited a [pull request](https://github.com/sendgrid/sendgrid-csharp/pull/211) to SendGrid in March 2016 but it was not accepted and eventually closed in June 2016.
 
-In October 2016 I decided to release this library as a nuget package since there SendGrid's library was still using `dynamic` and lacking strong typing.
+In October 2016 I decided to release this library as a nuget package since SendGrid's library was still using `dynamic` and lacking strong typing.
 
 
 ## Nuget
@@ -23,7 +23,7 @@ StrongGrid is available as a Nuget package.
 
 ## Installation
 
-The easiest way to include StrongGrid in your C# project is by grabing the nuget package:
+The easiest way to include StrongGrid in your C# project is by adding the nuget package to your project:
 
 ```
 PM> Install-Package StrongGrid
@@ -42,6 +42,7 @@ StrongGrid supports the following .NET frameworks:
 
 - 4.5.2
 - 4.6
+- 4.6.1
 - 4.6.2
  
 I plan to also support .NET Core in a future release.
@@ -49,4 +50,9 @@ I plan to also support .NET Core in a future release.
 
 ## Usage
 
-TODO
+```
+var apiKey = "... your api key...";
+var client = new Client(apiKey);
+
+var newApiKey = client.ApiKeys.Create("My New Key", new[] { "mail.send", "alerts.create", "alerts.read" });
+```

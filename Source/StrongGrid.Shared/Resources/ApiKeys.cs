@@ -47,7 +47,7 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="cancellationToken"></param>
 		/// <returns></returns>
-		public async Task<ApiKey[]> GetAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<ApiKey[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(_endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();

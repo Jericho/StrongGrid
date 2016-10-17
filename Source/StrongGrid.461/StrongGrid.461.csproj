@@ -57,6 +57,12 @@
     <Compile Include="..\StrongGrid.Shared\Model\ApiKey.cs">
       <Link>Model\ApiKey.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\UnsubscribeGroups.cs">
+      <Link>Resources\UnsubscribeGroups.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\SuppressionGroup.cs">
+      <Link>Model\SuppressionGroup.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Utilities\EpochConverter.cs">
       <Link>Utilities\EpochConverter.cs</Link>
     </Compile>

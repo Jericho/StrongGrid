@@ -28,7 +28,7 @@ var configuration = Argument<string>("configuration", "Release");
 var libraryName = "StrongGrid";
 var gitHubRepo = "StrongGrid";
 
-var testCoverageFilter = "+[StrongGrid]* -[StrongGrid]StrongGrid.Properties.*";
+var testCoverageFilter = "+[StrongGrid]* -[StrongGrid]StrongGrid.Properties.* -[StrongGrid]StrongGrid.Model.*";
 var testCoverageExcludeByAttribute = "*.ExcludeFromCodeCoverage*";
 var testCoverageExcludeByFile = "*/*Designer.cs;*/*AssemblyInfo.cs";
 
@@ -245,7 +245,7 @@ Task("Create-NuGet-Package")
 		Title                   = libraryName,
 		Authors                 = new[] { "Jeremie Desautels" },
 		Owners                  = new[] { "Jeremie Desautels" },
-		Description             = "StrongGrid",
+		Description             = "Strongly typed library for SendGrid's v3 API",
 		Summary                 = "Strongly typed library for SendGrid's v3 API",
 		ProjectUrl              = new Uri("https://github.com/Jericho/StrongGrid"),
 		IconUrl                 = new Uri("https://github.com/identicons/jericho.png"),
