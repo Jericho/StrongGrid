@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace StrongGrid
 {
-	public class Client : IDisposable
+	public class Client : IClient, IDisposable
 	{
 		#region FIELDS
 

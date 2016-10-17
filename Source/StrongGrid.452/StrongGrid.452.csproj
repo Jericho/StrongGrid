@@ -47,6 +47,9 @@
     <Compile Include="..\StrongGrid.Shared\Client.cs">
       <Link>Client.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\IClient.cs">
+      <Link>IClient.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\ApiKeys.cs">
       <Link>Resources\ApiKeys.cs</Link>
     </Compile>

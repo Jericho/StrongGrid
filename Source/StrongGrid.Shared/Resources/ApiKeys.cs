@@ -12,7 +12,7 @@ namespace StrongGrid.Resources
 	public class ApiKeys
 	{
 		private string _endpoint;
-		private Client _client;
+		private IClient _client;
 
 		/// <summary>
 		/// Constructs the SendGrid APIKeys object.
@@ -20,7 +20,7 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
 		/// <param name="endpoint">Resource endpoint</param>
-		public ApiKeys(Client client, string endpoint = "/api_keys")
+		public ApiKeys(IClient client, string endpoint = "/api_keys")
 		{
 			_endpoint = endpoint;
 			_client = client;
