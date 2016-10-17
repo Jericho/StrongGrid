@@ -48,6 +48,24 @@
     <Compile Include="..\StrongGrid.Shared\Client.cs">
       <Link>Client.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\ApiKeys.cs">
+      <Link>Resources\ApiKeys.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\ApiKey.cs">
+      <Link>Model\ApiKey.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Utilities\EpochConverter.cs">
+      <Link>Utilities\EpochConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Utilities\Extensions.cs">
+      <Link>Utilities\Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Utilities\IntegerBooleanConverter.cs">
+      <Link>Utilities\IntegerBooleanConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Utilities\SendGridDateTimeConverter.cs">
+      <Link>Utilities\SendGridDateTimeConverter.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
