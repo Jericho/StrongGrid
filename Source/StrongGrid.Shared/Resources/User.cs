@@ -153,6 +153,34 @@ namespace StrongGrid.Resources
 			return dynamicObject.username;
 		}
 
+		/// <summary>
+		/// Retrieve the current credit balance for your account
+		/// </summary>
+		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html</returns>
+		public async Task<UserCredits> GetCreditsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var response = await _client.GetAsync("/user/credits", cancellationToken).ConfigureAwait(false);
+			response.EnsureSuccess();
+
+			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var userCredits = JObject.Parse(responseContent).ToObject<UserCredits>();
+			return userCredits;
+		}
+
+		/// <summary>
+		/// Update the password for your account
+		/// </summary>
+		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html</returns>
+		public async Task UpdatePasswordAsync(string oldPassword, string newPassword, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var data = new JObject();
+			data.Add("new_password", oldPassword);
+			data.Add("old_password", newPassword);
+
+			var response = await _client.PutAsync("/user/password", data, cancellationToken).ConfigureAwait(false);
+			response.EnsureSuccess();
+		}
+
 		private static JObject CreateJObjectForUserProfile(string address = null, string city = null, string company = null, string country = null, string firstName = null, string lastName = null, string phone = null, string state = null, string website = null, string zip = null)
 		{
 			var result = new JObject();

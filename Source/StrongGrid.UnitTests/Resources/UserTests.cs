@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -183,6 +184,58 @@ namespace StrongGrid.Resources.UnitTests
 
 			// Assert
 			Assert.AreEqual(username, result);
+		}
+
+		[TestMethod]
+		public void GetCredits()
+		{
+			// Arrange
+			var apiResponse = @"{
+				'remain': 200,
+				'total': 200,
+				'overage': 0,
+				'used': 0,
+				'last_reset': '2013-01-01',
+				'next_reset': '2013-02-01',
+				'reset_frequency': 'monthly'
+			}";
+			var mockClient = new Mock<IClient>(MockBehavior.Strict);
+			mockClient.Setup(c => c.GetAsync("/user/credits", It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
+
+			var user = new User(mockClient.Object);
+
+			// Act
+			var result = user.GetCreditsAsync(CancellationToken.None).Result;
+
+			// Assert
+			Assert.IsNotNull(result);
+			Assert.AreEqual(200, result.Remaining);
+			Assert.AreEqual(200, result.Total);
+			Assert.AreEqual(0, result.Overage);
+			Assert.AreEqual(0, result.Used);
+			Assert.AreEqual("monthly", result.ResetFrequency);
+			Assert.AreEqual(new DateTime(2013, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), result.LastReset);
+			Assert.AreEqual(new DateTime(2013, 2, 1, 0, 0, 0, 0, DateTimeKind.Utc), result.NextReset);
+		}
+
+		[TestMethod]
+		public void UpdatePassword()
+		{
+			// Arrange
+			var oldPassword = "azerty";
+			var newPassword = "qwerty";
+
+			var mockClient = new Mock<IClient>(MockBehavior.Strict);
+			mockClient.Setup(c => c.PutAsync("/user/password", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK));
+
+			var user = new User(mockClient.Object);
+
+			// Act
+			user.UpdatePasswordAsync(oldPassword, newPassword, CancellationToken.None).Wait(CancellationToken.None);
+
+			// Assert
 		}
 	}
 }
