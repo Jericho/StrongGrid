@@ -91,7 +91,7 @@ namespace StrongGrid.Resources.UnitTests
 			var apiKeys = new ApiKeys(mockClient.Object);
 
 			// Act
-			var result = apiKeys.GetAsync(CancellationToken.None).Result;
+			var result = apiKeys.GetAllAsync(CancellationToken.None).Result;
 
 			// Assert
 			Assert.IsNotNull(result);
