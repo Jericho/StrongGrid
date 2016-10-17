@@ -83,8 +83,74 @@ namespace StrongGrid.Resources
 			// }
 			// We use a dynamic object to get rid of the 'email' property and simply return a string
 			dynamic dynamicObject = JObject.Parse(responseContent);
-			var email = dynamicObject.email;
-			return email;
+			return dynamicObject.email;
+		}
+
+		/// <summary>
+		/// Update the email address on file for your account
+		/// </summary>
+		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html</returns>
+		public async Task<string> UpdateEmailAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var data = new JObject();
+			data.Add("email", email);
+
+			var response = await _client.PutAsync("/user/email", data, cancellationToken).ConfigureAwait(false);
+			response.EnsureSuccess();
+
+			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+			// Response looks like this:
+			// {
+			//  "email": "test@example.com"
+			// }
+			// We use a dynamic object to get rid of the 'email' property and simply return a string
+			dynamic dynamicObject = JObject.Parse(responseContent);
+			return dynamicObject.email;
+		}
+
+		/// <summary>
+		/// Retrieve your account username
+		/// </summary>
+		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html</returns>
+		public async Task<string> GetUsernameAsync(CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var response = await _client.GetAsync("/user/username", cancellationToken).ConfigureAwait(false);
+			response.EnsureSuccess();
+
+			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+			// Response looks like this:
+			// {
+			//  "username": "test_username",
+			//  "user_id": 1
+			// }
+			// We use a dynamic object to get rid of the 'user_id' property and simply return the string content of the 'username' property
+			dynamic dynamicObject = JObject.Parse(responseContent);
+			return dynamicObject.username;
+		}
+
+		/// <summary>
+		/// Update your account username
+		/// </summary>
+		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html</returns>
+		public async Task<string> UpdateUsernameAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var data = new JObject();
+			data.Add("username", username);
+
+			var response = await _client.PutAsync("/user/username", data, cancellationToken).ConfigureAwait(false);
+			response.EnsureSuccess();
+
+			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+			// Response looks like this:
+			// {
+			//  "username": "test_username"
+			// }
+			// We use a dynamic object to get rid of the 'username' property and simply return a string
+			dynamic dynamicObject = JObject.Parse(responseContent);
+			return dynamicObject.username;
 		}
 
 		private static JObject CreateJObjectForUserProfile(string address = null, string city = null, string company = null, string country = null, string firstName = null, string lastName = null, string phone = null, string state = null, string website = null, string zip = null)

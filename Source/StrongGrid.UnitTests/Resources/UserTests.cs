@@ -64,7 +64,7 @@ namespace StrongGrid.Resources.UnitTests
 			// Assert
 			Assert.IsNotNull(result);
 			Assert.AreEqual("free", result.Type);
-			Assert.AreEqual(99.7f, result.Reputation);
+			Assert.AreEqual(99.7F, result.Reputation);
 		}
 
 		[TestMethod]
@@ -118,6 +118,71 @@ namespace StrongGrid.Resources.UnitTests
 
 			// Assert
 			Assert.AreEqual("test@example.com", result);
+		}
+
+		[TestMethod]
+		public void UpdateEmail()
+		{
+			// Arrange
+			var email = "test@example.com";
+
+			var apiResponse = @"{
+				'email': 'test@example.com'
+			}";
+			var mockClient = new Mock<IClient>(MockBehavior.Strict);
+			mockClient.Setup(c => c.PutAsync("/user/email", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
+
+			var user = new User(mockClient.Object);
+
+			// Act
+			var result = user.UpdateEmailAsync(email, CancellationToken.None).Result;
+
+			// Assert
+			Assert.AreEqual("test@example.com", result);
+		}
+
+		[TestMethod]
+		public void GetUsername()
+		{
+			// Arrange
+			var apiResponse = @"{
+				'username': 'test_username'
+			}";
+
+			var mockClient = new Mock<IClient>(MockBehavior.Strict);
+			mockClient.Setup(c => c.GetAsync("/user/username", It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
+
+			var user = new User(mockClient.Object);
+
+			// Act
+			var result = user.GetUsernameAsync(CancellationToken.None).Result;
+
+			// Assert
+			Assert.AreEqual("test_username", result);
+		}
+
+		[TestMethod]
+		public void UpdateUsername()
+		{
+			// Arrange
+			var username = "test_username";
+
+			var apiResponse = @"{
+				'username': 'test_username'
+			}";
+			var mockClient = new Mock<IClient>(MockBehavior.Strict);
+			mockClient.Setup(c => c.PutAsync("/user/username", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
+
+			var user = new User(mockClient.Object);
+
+			// Act
+			var result = user.UpdateUsernameAsync(username, CancellationToken.None).Result;
+
+			// Assert
+			Assert.AreEqual(username, result);
 		}
 	}
 }
