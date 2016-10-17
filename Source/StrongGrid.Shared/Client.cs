@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using StrongGrid.Resources;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace StrongGrid
 {
-	public class Client : IDisposable
+	public class Client : IClient, IDisposable
 	{
 		#region FIELDS
 
@@ -29,6 +30,9 @@ namespace StrongGrid
 
 		#region PROPERTIES
 
+		public ApiKeys ApiKeys { get; private set; }
+		public UnsubscribeGroups UnsubscribeGroups { get; private set; }
+		public User User { get; private set; }
 		public string Version { get; private set; }
 
 		#endregion
@@ -45,6 +49,9 @@ namespace StrongGrid
 			_baseUri = new Uri(string.Format("{0}/{1}", baseUri, apiVersion));
 			_apiKey = apiKey;
 
+			ApiKeys = new ApiKeys(this);
+			UnsubscribeGroups = new UnsubscribeGroups(this);
+			User = new User(this);
 			Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
 			_mustDisposeHttpClient = (httpClient == null);

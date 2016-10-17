@@ -47,6 +47,45 @@
     <Compile Include="..\StrongGrid.Shared\Client.cs">
       <Link>Client.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\IClient.cs">
+      <Link>IClient.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\UserCredits.cs">
+      <Link>Model\UserCredits.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\ApiKeys.cs">
+      <Link>Resources\ApiKeys.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\ApiKey.cs">
+      <Link>Model\ApiKey.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\UnsubscribeGroups.cs">
+      <Link>Resources\UnsubscribeGroups.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\SuppressionGroup.cs">
+      <Link>Model\SuppressionGroup.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\User.cs">
+      <Link>Resources\User.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\UserProfile.cs">
+      <Link>Model\UserProfile.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\Account.cs">
+      <Link>Model\Account.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Utilities\EpochConverter.cs">
+      <Link>Utilities\EpochConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Utilities\Extensions.cs">
+      <Link>Utilities\Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Utilities\IntegerBooleanConverter.cs">
+      <Link>Utilities\IntegerBooleanConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Utilities\SendGridDateTimeConverter.cs">
+      <Link>Utilities\SendGridDateTimeConverter.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
