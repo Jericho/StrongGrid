@@ -44,8 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\StrongGrid.462\Client.cs">
-      <Link>Class1.cs</Link>
+    <Compile Include="..\StrongGrid.Shared\Client.cs">
+      <Link>Client.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
