@@ -18,7 +18,7 @@ namespace StrongGrid
 		private readonly Uri _baseUri;
 		private HttpClient _httpClient;
 		private readonly bool _mustDisposeHttpClient;
-		private const string MediaType = "application/json";
+		private const string MEDIA_TYPE = "application/json";
 
 		private enum Methods
 		{
@@ -51,9 +51,9 @@ namespace StrongGrid
 			_httpClient = httpClient ?? new HttpClient();
 			_httpClient.BaseAddress = _baseUri;
 			_httpClient.DefaultRequestHeaders.Accept.Clear();
-			_httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaType));
+			_httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MEDIA_TYPE));
 			_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
-			_httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", string.Format("strong_grid/{0}", Version));
+			_httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", string.Format("StrongGrid/{0}", Version));
 		}
 
 		~Client()
@@ -175,7 +175,7 @@ namespace StrongGrid
 		/// <returns>An asyncronous task</returns>
 		private Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, JObject data, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var content = (data == null ? null : new StringContent(data.ToString(), Encoding.UTF8, MediaType));
+			var content = (data == null ? null : new StringContent(data.ToString(), Encoding.UTF8, MEDIA_TYPE));
 			return RequestAsync(method, endpoint, content, cancellationToken);
 		}
 
@@ -188,7 +188,7 @@ namespace StrongGrid
 		/// <returns>An asyncronous task</returns>
 		private Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, JArray data, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var content = (data == null ? null : new StringContent(data.ToString(), Encoding.UTF8, MediaType));
+			var content = (data == null ? null : new StringContent(data.ToString(), Encoding.UTF8, MEDIA_TYPE));
 			return RequestAsync(method, endpoint, content, cancellationToken);
 		}
 
@@ -223,7 +223,7 @@ namespace StrongGrid
 				var httpRequest = new HttpRequestMessage
 				{
 					Method = new HttpMethod(methodAsString),
-					RequestUri = new Uri(_baseUri + endpoint),
+					RequestUri = new Uri(string.Format("{0}{1}{2}", _baseUri, endpoint.StartsWith("/", StringComparison.InvariantCultureIgnoreCase) ? "" : "/", endpoint)),
 					Content = content
 				};
 				return await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
