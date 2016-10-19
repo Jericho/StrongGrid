@@ -196,6 +196,5 @@ namespace StrongGrid.Resources
 			if (!string.IsNullOrEmpty(zip)) result.Add("zip", zip);
 			return result;
 		}
-
 	}
 }
