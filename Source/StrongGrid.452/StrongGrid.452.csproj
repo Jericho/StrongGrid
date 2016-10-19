@@ -36,6 +36,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -53,6 +54,9 @@
     <Compile Include="..\StrongGrid.Shared\Model\Account.cs">
       <Link>Model\Account.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\AggregateBy.cs">
+      <Link>Model\AggregateBy.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\ApiKey.cs">
       <Link>Model\ApiKey.cs</Link>
     </Compile>
@@ -67,6 +71,9 @@
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\FooterSettings.cs">
       <Link>Model\FooterSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\GlobalStat.cs">
+      <Link>Model\GlobalStat.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\GoogleAnalyticsSettings.cs">
       <Link>Model\GoogleAnalyticsSettings.cs</Link>
@@ -83,6 +90,9 @@
     <Compile Include="..\StrongGrid.Shared\Model\MailSettings.cs">
       <Link>Model\MailSettings.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\Metrics.cs">
+      <Link>Model\Metrics.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\OpenTrackingSettings.cs">
       <Link>Model\OpenTrackingSettings.cs</Link>
     </Compile>
@@ -91,6 +101,9 @@
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\SpamCheckingSettings.cs">
       <Link>Model\SpamCheckingSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\Stat.cs">
+      <Link>Model\Stat.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\SubscriptionTrackingSettings.cs">
       <Link>Model\SubscriptionTrackingSettings.cs</Link>
@@ -109,6 +122,9 @@
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\ApiKeys.cs">
       <Link>Resources\ApiKeys.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\GlobalStats.cs">
+      <Link>Resources\GlobalStats.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\Mail.cs">
       <Link>Resources\Mail.cs</Link>
