@@ -31,6 +31,7 @@ namespace StrongGrid.IntegrationTests
 			ApiKeys(client);
 			UnsubscribeGroups(client);
 			User(client);
+			Statistics(client);
 		}
 
 		private static void Mail(IClient client)
@@ -177,6 +178,58 @@ namespace StrongGrid.IntegrationTests
 			client.UnsubscribeGroups.DeleteAsync(newGroup.Id).Wait();
 			Console.WriteLine("Suppression group {0} deleted", newGroup.Id);
 
+			Console.WriteLine("\n\nPress any key to continue");
+			Console.ReadKey();
+		}
+
+		private static void Statistics(IClient client)
+		{
+			Console.WriteLine("\n***** STATISTICS *****");
+
+			var now = DateTime.UtcNow;
+			var startDate = new DateTime(now.Year, 1, 1);
+
+			//----- Global Stats -----
+			var globalStats = client.Statistics.GetGlobalStatisticsAsync(startDate, null).Result;
+			Console.WriteLine("Number of GLOBAL stats in {0}: {1}", now.Year, globalStats.Length);
+
+			globalStats = client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Day).Result;
+			Console.WriteLine("Number of GLOBAL stats in {0} and aggregated by day: {1}", now.Year, globalStats.Length);
+
+			// Grouping by week doesn't work. I opened a support ticket with SendGrid to try to figure out: http://support.sendgrid.com/hc/requests/780001
+			//globalStats = client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Week).Result;
+			//Console.WriteLine("Number of GLOBAL stats in {0} and aggregated by week: {1}", now.Year, globalStats.Length);
+
+			globalStats = client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Month).Result;
+			Console.WriteLine("Number of GLOBAL stats in {0} and aggregated by month: {1}", now.Year, globalStats.Length);
+
+			//----- Global Stats -----
+			var countryStats = client.Statistics.GetCountryStatisticsAsync(null, startDate, null).Result;
+			Console.WriteLine("Number of COUNTRY stats in {0}: {1}", now.Year, countryStats.Length);
+
+			countryStats = client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Day).Result;
+			Console.WriteLine("Number of COUNTRY stats in {0} and aggregated by day: {1}", now.Year, countryStats.Length);
+
+			// Grouping by week doesn't work. I opened a support ticket with SendGrid to try to figure out: http://support.sendgrid.com/hc/requests/780001
+			//countryStats = client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Week).Result;
+			//Console.WriteLine("Number of COUNTRY stats in {0} and aggregated by week: {1}", now.Year, countryStats.Length);
+
+			countryStats = client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Month).Result;
+			Console.WriteLine("Number of COUNTRY stats in {0} and aggregated by month: {1}", now.Year, countryStats.Length);
+
+			//----- Browser Stats -----
+			var browserStats = client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null).Result;
+			Console.WriteLine("Number of BROWSER stats in {0}: {1}", now.Year, browserStats.Length);
+
+			browserStats = client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Day).Result;
+			Console.WriteLine("Number of BROWSER stats in {0} and aggregated by day: {1}", now.Year, browserStats.Length);
+
+			// Grouping by week doesn't work. I opened a support ticket with SendGrid to try to figure out: http://support.sendgrid.com/hc/requests/780001
+			//browserStats = client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Week).Result;
+			//Console.WriteLine("Number of BROWSER stats in {0} and aggregated by week: {1}", now.Year, browserStats.Length);
+
+			browserStats = client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Month).Result;
+			Console.WriteLine("Number of BROWSER stats in {0} and aggregated by month: {1}", now.Year, browserStats.Length);
 			Console.WriteLine("\n\nPress any key to continue");
 			Console.ReadKey();
 		}
