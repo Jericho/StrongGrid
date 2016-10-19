@@ -558,12 +558,12 @@ namespace StrongGrid.Resources.UnitTests
 			var statistics = new Statistics(mockClient.Object);
 
 			// Act
-			var result = statistics.GetSubusersStatisticsAsync(providers, startDate, endDate, AggregateBy.None, CancellationToken.None).Result;
+			var result = statistics.GetInboxProvidersStatisticsAsync(providers, startDate, endDate, AggregateBy.None, CancellationToken.None).Result;
 
 			// Assert
 			Assert.IsNotNull(result);
 			Assert.AreEqual(2, result.Length);
-			Assert.AreEqual(2, result[0].Stats.Length);
+			Assert.AreEqual(1, result[0].Stats.Length);
 			Assert.AreEqual("Gmail", result[0].Stats[0].Name);
 			Assert.AreEqual("esp", result[0].Stats[0].Type);
 		}
