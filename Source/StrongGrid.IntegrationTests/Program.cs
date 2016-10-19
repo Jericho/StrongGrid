@@ -29,6 +29,7 @@ namespace StrongGrid.IntegrationTests
 
 			Mail(client);
 			ApiKeys(client);
+			UnsubscribeGroups(client);
 			User(client);
 		}
 
@@ -51,7 +52,7 @@ namespace StrongGrid.IntegrationTests
 				},
 				new MailPersonalization
 				{
-					To = new[] {to2 },
+					To = new[] { to2 },
 					Subject = "Dear customer"
 				}
 			};
@@ -80,11 +81,13 @@ namespace StrongGrid.IntegrationTests
 				trackingSettings: trackingSettings
 			).Wait();
 
-			// Here's the simplified way to send a single email to a single recipient:
-			// client.Mail.SendToSingleRecipientAsync(to, from, subject, htmlContent, textContent).Wait();
+			/******
+				Here's the simplified way to send a single email to a single recipient:
+				await client.Mail.SendToSingleRecipientAsync(to, from, subject, htmlContent, textContent).ConfigureAwait(false);
 
-			// Here's the simplified way to send the same email to multiple recipients:
-			// client.Mail.SendToMultipleRecipientsAsync(new[] { to1, to2, to3 }, from, subject, htmlContent, textContent).Wait();
+				Here's the simplified way to send the same email to multiple recipients:
+				await client.Mail.SendToMultipleRecipientsAsync(new[] { to1, to2, to3 }, from, subject, htmlContent, textContent).ConfigureAwait(false);
+			******/
 
 			Console.WriteLine("\n\nPress any key to continue");
 			Console.ReadKey();
@@ -122,9 +125,65 @@ namespace StrongGrid.IntegrationTests
 			Console.ReadKey();
 		}
 
+		private static void UnsubscribeGroups(IClient client)
+		{
+			Console.WriteLine("\n***** UNSUBSCRIBE GROUPS *****");
+
+			// CREATE A NEW SUPPRESSION GROUP
+			var newGroup = client.UnsubscribeGroups.CreateAsync(Guid.NewGuid().ToString("N"), "This is a new group for testing purposes", false).Result;
+			Console.WriteLine("Unique ID of the new unsubscribe group: {0}", newGroup.Id);
+
+			// UPDATE A SUPPRESSION GROUP
+			var updatedGroup = client.UnsubscribeGroups.UpdateAsync(newGroup.Id, "This is the updated name").Result;
+			Console.WriteLine("Unsubscribe group {0} updated", updatedGroup.Id);
+
+			// GET UNSUBSCRIBE GROUPS
+			var groups = client.UnsubscribeGroups.GetAllAsync().Result;
+			Console.WriteLine("There are {0} unsubscribe groups", groups.Length);
+
+			// GET A PARTICULAR UNSUBSCRIBE GROUP
+			var group = client.UnsubscribeGroups.GetAsync(newGroup.Id).Result;
+			Console.WriteLine("Retrieved unsubscribe group {0}: {1}", group.Id, group.Name);
+
+			// ADD A FEW ADDRESSES TO UNSUBSCRIBE GROUP
+			client.Suppressions.AddAddressToUnsubscribeGroupAsync(group.Id, "test1@example.com").Wait();
+			Console.WriteLine("Added test1@example.com to unsubscribe group {0}", group.Id);
+			client.Suppressions.AddAddressToUnsubscribeGroupAsync(group.Id, "test2@example.com").Wait();
+			Console.WriteLine("Added test2@example.com to unsubscribe group {0}", group.Id);
+
+			// GET THE ADDRESSES IN A GROUP
+			var unsubscribedAddresses = client.Suppressions.GetUnsubscribedAddressesAsync(group.Id).Result;
+			Console.WriteLine("There are {0} unsubscribed addresses in group {1}", unsubscribedAddresses.Length, group.Id);
+
+			// REMOVE ALL ADDRESSES FROM UNSUBSCRIBE GROUP
+			foreach (var address in unsubscribedAddresses)
+			{
+				client.Suppressions.RemoveAddressFromSuppressionGroupAsync(group.Id, address).Wait();
+				Console.WriteLine("{0} removed from unsubscribe group {1}", address, group.Id);
+			}
+
+			// MAKE SURE THERE ARE NO ADDRESSES IN THE GROUP
+			unsubscribedAddresses = client.Suppressions.GetUnsubscribedAddressesAsync(group.Id).Result;
+			if (unsubscribedAddresses.Length == 0)
+			{
+				Console.WriteLine("As expected, there are no more addresses in group {0}", group.Id);
+			}
+			else
+			{
+				Console.WriteLine("We expected the group {1} to be empty but instead we found {0} unsubscribed addresses.", unsubscribedAddresses.Length, group.Id);
+			}
+
+			// DELETE UNSUBSCRIBE GROUP
+			client.UnsubscribeGroups.DeleteAsync(newGroup.Id).Wait();
+			Console.WriteLine("Suppression group {0} deleted", newGroup.Id);
+
+			Console.WriteLine("\n\nPress any key to continue");
+			Console.ReadKey();
+		}
+
 		private static void User(IClient client)
 		{
-			Console.WriteLine("\n***** USERS *****");
+			Console.WriteLine("\n***** USER *****");
 
 			// RETRIEVE YOUR ACCOUNT INFORMATION
 			var account = client.User.GetAccountAsync().Result;

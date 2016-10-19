@@ -113,6 +113,9 @@
     <Compile Include="..\StrongGrid.Shared\Resources\Mail.cs">
       <Link>Resources\Mail.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\Suppressions.cs">
+      <Link>Resources\Suppressions.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\UnsubscribeGroups.cs">
       <Link>Resources\UnsubscribeGroups.cs</Link>
     </Compile>

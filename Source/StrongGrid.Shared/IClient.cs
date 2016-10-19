@@ -11,6 +11,7 @@ namespace StrongGrid
 		Mail Mail { get; }
 		ApiKeys ApiKeys { get; }
 		UnsubscribeGroups UnsubscribeGroups { get; }
+		Suppressions Suppressions { get; }
 		User User { get; }
 
 		Task<HttpResponseMessage> GetAsync(string endpoint, CancellationToken cancellationToken = default(CancellationToken));

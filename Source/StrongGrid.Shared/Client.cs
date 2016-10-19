@@ -33,6 +33,7 @@ namespace StrongGrid
 		public Mail Mail { get; private set; }
 		public ApiKeys ApiKeys { get; private set; }
 		public UnsubscribeGroups UnsubscribeGroups { get; private set; }
+		public Suppressions Suppressions { get; private set; }
 		public User User { get; private set; }
 		public string Version { get; private set; }
 
@@ -53,6 +54,7 @@ namespace StrongGrid
 			Mail = new Mail(this);
 			ApiKeys = new ApiKeys(this);
 			UnsubscribeGroups = new UnsubscribeGroups(this);
+			Suppressions = new Suppressions(this);
 			User = new User(this);
 			Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
