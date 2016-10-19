@@ -132,11 +132,11 @@ namespace StrongGrid.Resources
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
-			data.Add("personalizations", JToken.FromObject(personalizations.ToArray()));
-			data.Add("from", JToken.FromObject(from));
+			if (personalizations != null && personalizations.Any()) data.Add("personalizations", JToken.FromObject(personalizations.ToArray()));
+			if (from != null) data.Add("from", JToken.FromObject(from));
 			if (replyTo != null) data.Add("reply_to", JToken.FromObject(replyTo));
-			data.Add("subject", subject);
-			data.Add("content", JToken.FromObject(contents.ToArray()));
+			if (!string.IsNullOrEmpty(subject)) data.Add("subject", subject);
+			if (contents != null && contents.Any()) data.Add("content", JToken.FromObject(contents.ToArray()));
 			if (attachments != null && attachments.Any()) data.Add("attachments", JToken.FromObject(attachments.ToArray()));
 			if (!string.IsNullOrEmpty(templateId)) data.Add("template_id", templateId);
 			if (sections != null && sections.Any()) data.Add("sections", JToken.FromObject(sections.ToArray()));
