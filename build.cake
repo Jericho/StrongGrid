@@ -190,10 +190,13 @@ Task("Run-Unit-Tests")
 	.IsDependentOn("Build")
 	.Does(() =>
 {
+	var vsTestSettings = new VSTestSettings();
+	vsTestSettings.ArgumentCustomization = args => args.Append("/Parallel");
+
 	foreach(var path in unitTestsPaths)
 	{
 		Information("Running unit tests in {0}...", path);
-		VSTest(path + "/bin/" + configuration + "/*.UnitTests.dll");
+		VSTest(path + "/bin/" + configuration + "/*.UnitTests.dll", vsTestSettings);
 	}
 });
 
@@ -202,8 +205,20 @@ Task("Run-Code-Coverage")
 	.Does(() =>
 {
 	var testAssemblyPath = string.Format("{2}/bin/{1}/{0}.UnitTests.dll", libraryName, configuration, unitTestsPaths.First());
+	
+	var testArgs = new List<string>();
+	testArgs.Add("/Parallel");
+	if (AppVeyor.IsRunningOnAppVeyor) testArgs.Add("/logger:Appveyor");
+
 	var vsTestSettings = new VSTestSettings();
-	if (AppVeyor.IsRunningOnAppVeyor) vsTestSettings.ArgumentCustomization = args => args.Append("/logger:Appveyor");
+	vsTestSettings.ArgumentCustomization = args =>
+	{
+		foreach (var arg in testArgs)
+		{
+			args.Append(arg);
+		}
+		return args;
+	};
 
 	OpenCover(
 		tool => { tool.VSTest(testAssemblyPath, vsTestSettings); },

@@ -11,8 +11,8 @@ namespace StrongGrid.Resources
 {
 	public class ApiKeys
 	{
-		private string _endpoint;
-		private IClient _client;
+		private readonly string _endpoint;
+		private readonly IClient _client;
 
 		/// <summary>
 		/// Constructs the SendGrid APIKeys object.
