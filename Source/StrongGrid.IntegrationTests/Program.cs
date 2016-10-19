@@ -10,7 +10,7 @@ namespace StrongGrid.IntegrationTests
 	{
 		static void Main()
 		{
-			// Indicate if you want to proxy requests through fiddler (which is useful for debugging)
+			// Do you want to proxy requests through fiddler (useful for debugging)?
 			var useFiddler = false;
 			if (useFiddler)
 			{
