@@ -30,6 +30,7 @@ namespace StrongGrid
 
 		#region PROPERTIES
 
+		public Mail Mail { get; private set; }
 		public ApiKeys ApiKeys { get; private set; }
 		public UnsubscribeGroups UnsubscribeGroups { get; private set; }
 		public User User { get; private set; }
@@ -49,6 +50,7 @@ namespace StrongGrid
 			_baseUri = new Uri(string.Format("{0}/{1}", baseUri, apiVersion));
 			_apiKey = apiKey;
 
+			Mail = new Mail(this);
 			ApiKeys = new ApiKeys(this);
 			UnsubscribeGroups = new UnsubscribeGroups(this);
 			User = new User(this);

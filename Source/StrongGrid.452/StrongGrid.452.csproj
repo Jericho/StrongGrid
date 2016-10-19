@@ -50,14 +50,68 @@
     <Compile Include="..\StrongGrid.Shared\IClient.cs">
       <Link>IClient.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\Account.cs">
+      <Link>Model\Account.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\ApiKey.cs">
+      <Link>Model\ApiKey.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\Attachment.cs">
+      <Link>Model\Attachment.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\BypassListManagementSettings.cs">
+      <Link>Model\BypassListManagementSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\ClickTrackingSettings.cs">
+      <Link>Model\ClickTrackingSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\FooterSettings.cs">
+      <Link>Model\FooterSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\GoogleAnalyticsSettings.cs">
+      <Link>Model\GoogleAnalyticsSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\MailAdress.cs">
+      <Link>Model\MailAdress.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\MailContent.cs">
+      <Link>Model\MailContent.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\MailPersonalization.cs">
+      <Link>Model\MailPersonalization.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\MailSettings.cs">
+      <Link>Model\MailSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\OpenTrackingSettings.cs">
+      <Link>Model\OpenTrackingSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\SandboxModeSettings.cs">
+      <Link>Model\SandboxModeSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\SpamCheckingSettings.cs">
+      <Link>Model\SpamCheckingSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\SubscriptionTrackingSettings.cs">
+      <Link>Model\SubscriptionTrackingSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\TrackingSettings.cs">
+      <Link>Model\TrackingSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\UnsubscribeOptions.cs">
+      <Link>Model\UnsubscribeOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\BccSettings.cs">
+      <Link>Model\BccSettings.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\UserCredits.cs">
       <Link>Model\UserCredits.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\ApiKeys.cs">
       <Link>Resources\ApiKeys.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\ApiKey.cs">
-      <Link>Model\ApiKey.cs</Link>
+    <Compile Include="..\StrongGrid.Shared\Resources\Mail.cs">
+      <Link>Resources\Mail.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\UnsubscribeGroups.cs">
       <Link>Resources\UnsubscribeGroups.cs</Link>
@@ -70,9 +124,6 @@
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\UserProfile.cs">
       <Link>Model\UserProfile.cs</Link>
-    </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\Account.cs">
-      <Link>Model\Account.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Utilities\EpochConverter.cs">
       <Link>Utilities\EpochConverter.cs</Link>
