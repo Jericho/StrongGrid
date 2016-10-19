@@ -80,6 +80,12 @@ namespace StrongGrid.IntegrationTests
 				trackingSettings: trackingSettings
 			).Wait();
 
+			// Here's the simplified way to send a single email to a single recipient:
+			// client.Mail.SendToSingleRecipientAsync(to, from, subject, htmlContent, textContent).Wait();
+
+			// Here's the simplified way to send the same email to multiple recipients:
+			// client.Mail.SendToMultipleRecipientsAsync(new[] { to1, to2, to3 }, from, subject, htmlContent, textContent).Wait();
+
 			Console.WriteLine("\n\nPress any key to continue");
 			Console.ReadKey();
 		}

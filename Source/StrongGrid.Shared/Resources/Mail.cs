@@ -27,10 +27,91 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
+		/// Send an email to a single recipient
+		/// </summary>
+		/// <remarks>
+		/// This is a convenience method with simplified parameters. 
+		/// If you need more options, use the <see cref="SendAsync"/> method.
+		/// </remarks>
+		public Task SendToSingleRecipientAsync(
+			MailAddress to,
+			MailAddress from,
+			string subject,
+			string htmlContent,
+			string textContent,
+			bool trackOpens = true,
+			bool trackClicks = true,
+			SubscriptionTrackingSettings subscriptionTracking = null,
+			MailAddress replyTo = null,
+			IEnumerable<Attachment> attachments = null,
+			string templateId = null,
+			IEnumerable<KeyValuePair<string, string>> sections = null,
+			IEnumerable<KeyValuePair<string, string>> headers = null,
+			IEnumerable<string> categories = null,
+			DateTime? sendAt = null,
+			string batchId = null,
+			UnsubscribeOptions unsubscribeOptions = null,
+			string ipPoolName = null,
+			MailSettings mailSettings = null,
+			CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var recipients = new[] { to };
+			return SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, templateId, sections, headers, categories, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, cancellationToken);
+		}
+
+		/// <summary>
+		/// Send the same email to multiple recipients
+		/// </summary>
+		/// <remarks>
+		/// This is a convenience method with simplified parameters. 
+		/// If you need more options, use the <see cref="SendAsync"/> method.
+		/// </remarks>
+		public Task SendToMultipleRecipientsAsync(
+			IEnumerable<MailAddress> recipients,
+			MailAddress from,
+			string subject,
+			string htmlContent,
+			string textContent,
+			bool trackOpens = true,
+			bool trackClicks = true,
+			SubscriptionTrackingSettings subscriptionTracking = null,
+			MailAddress replyTo = null,
+			IEnumerable<Attachment> attachments = null,
+			string templateId = null,
+			IEnumerable<KeyValuePair<string, string>> sections = null,
+			IEnumerable<KeyValuePair<string, string>> headers = null,
+			IEnumerable<string> categories = null,
+			DateTime? sendAt = null,
+			string batchId = null,
+			UnsubscribeOptions unsubscribeOptions = null,
+			string ipPoolName = null,
+			MailSettings mailSettings = null,
+			CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var personalizations = recipients.Select(r => new MailPersonalization { To = new[] { r } });
+			var contents = new[]
+			{
+				new MailContent("text/plain", textContent),
+				new MailContent("text/html", htmlContent)
+			};
+			var trackingSettings = new TrackingSettings
+			{
+				ClickTracking = new ClickTrackingSettings
+				{
+					EnabledInHtmlContent = trackClicks,
+					EnabledInTextContent = trackClicks
+				},
+				OpenTracking = new OpenTrackingSettings { Enabled = trackOpens },
+				GoogleAnalytics = new GoogleAnalyticsSettings { Enabled = false },
+				SubscriptionTracking = subscriptionTracking
+			};
+
+			return SendAsync(personalizations, subject, contents, from, replyTo, attachments, templateId, sections, headers, categories, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, cancellationToken);
+		}
+
+		/// <summary>
 		/// Send email(s) over SendGrid’s v3 Web API
 		/// </summary>
-		/// <param name="cancellationToken"></param>
-		/// <returns></returns>
 		public async Task SendAsync(
 			IEnumerable<MailPersonalization> personalizations,
 			string subject,
