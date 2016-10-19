@@ -8,6 +8,7 @@ namespace StrongGrid
 {
 	public interface IClient
 	{
+		Mail Mail { get; }
 		ApiKeys ApiKeys { get; }
 		UnsubscribeGroups UnsubscribeGroups { get; }
 		User User { get; }
