@@ -462,7 +462,7 @@ namespace StrongGrid.Resources.UnitTests
 								'unique_opens': 1
 							},
 							'name': 'Gmail',
-							'type': 'device'
+							'type': 'client'
 						}
 					]
 				},
@@ -475,7 +475,7 @@ namespace StrongGrid.Resources.UnitTests
 								'unique_opens': 0
 							},
 							'name': 'Gmail',
-							'type': 'device'
+							'type': 'client'
 						}
 					]
 				}
