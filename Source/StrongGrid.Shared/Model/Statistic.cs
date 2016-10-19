@@ -3,7 +3,7 @@ using System;
 
 namespace StrongGrid.Model
 {
-	public class GlobalStat
+	public class Statistic
 	{
 		[JsonProperty("date")]
 		public DateTime Date { get; set; }

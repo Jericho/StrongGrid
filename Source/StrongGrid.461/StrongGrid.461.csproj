@@ -73,9 +73,6 @@
     <Compile Include="..\StrongGrid.Shared\Model\FooterSettings.cs">
       <Link>Model\FooterSettings.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\GlobalStat.cs">
-      <Link>Model\GlobalStat.cs</Link>
-    </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\GoogleAnalyticsSettings.cs">
       <Link>Model\GoogleAnalyticsSettings.cs</Link>
     </Compile>
@@ -106,6 +103,9 @@
     <Compile Include="..\StrongGrid.Shared\Model\Stat.cs">
       <Link>Model\Stat.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\Statistic.cs">
+      <Link>Model\Statistic.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\SubscriptionTrackingSettings.cs">
       <Link>Model\SubscriptionTrackingSettings.cs</Link>
     </Compile>
@@ -124,11 +124,11 @@
     <Compile Include="..\StrongGrid.Shared\Resources\ApiKeys.cs">
       <Link>Resources\ApiKeys.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Resources\GlobalStats.cs">
-      <Link>Resources\GlobalStats.cs</Link>
-    </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\Mail.cs">
       <Link>Resources\Mail.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\Statistics.cs">
+      <Link>Resources\Statistics.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\Suppressions.cs">
       <Link>Resources\Suppressions.cs</Link>
