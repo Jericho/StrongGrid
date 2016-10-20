@@ -30,14 +30,15 @@ namespace StrongGrid
 
 		#region PROPERTIES
 
-		public Mail Mail { get; private set; }
 		public ApiKeys ApiKeys { get; private set; }
-		public UnsubscribeGroups UnsubscribeGroups { get; private set; }
-		public Suppressions Suppressions { get; private set; }
+		public CustomFields CustomFields { get; private set; }
 		public GlobalSuppressions GlobalSuppressions { get; private set; }
+		public Mail Mail { get; private set; }
 		public Statistics Statistics { get; private set; }
-		public User User { get; private set; }
+		public Suppressions Suppressions { get; private set; }
 		public Templates Templates { get; private set; }
+		public UnsubscribeGroups UnsubscribeGroups { get; private set; }
+		public User User { get; private set; }
 		public string Version { get; private set; }
 
 		#endregion
@@ -54,14 +55,15 @@ namespace StrongGrid
 			_baseUri = new Uri(string.Format("{0}/{1}", baseUri, apiVersion));
 			_apiKey = apiKey;
 
-			Mail = new Mail(this);
 			ApiKeys = new ApiKeys(this);
-			UnsubscribeGroups = new UnsubscribeGroups(this);
-			Suppressions = new Suppressions(this);
+			CustomFields = new CustomFields(this);
 			GlobalSuppressions = new GlobalSuppressions(this);
+			Mail = new Mail(this);
 			Statistics = new Statistics(this);
-			User = new User(this);
+			Suppressions = new Suppressions(this);
 			Templates = new Templates(this);
+			UnsubscribeGroups = new UnsubscribeGroups(this);
+			User = new User(this);
 			Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
 			_mustDisposeHttpClient = (httpClient == null);

@@ -8,14 +8,16 @@ namespace StrongGrid
 {
 	public interface IClient
 	{
-		Mail Mail { get; }
 		ApiKeys ApiKeys { get; }
-		UnsubscribeGroups UnsubscribeGroups { get; }
-		Suppressions Suppressions { get; }
+		CustomFields CustomFields { get; }
 		GlobalSuppressions GlobalSuppressions { get; }
+		Mail Mail { get; }
 		Statistics Statistics { get; }
-		User User { get; }
+		Suppressions Suppressions { get; }
 		Templates Templates { get; }
+		UnsubscribeGroups UnsubscribeGroups { get; }
+		User User { get; }
+		string Version { get; }
 
 		Task<HttpResponseMessage> GetAsync(string endpoint, CancellationToken cancellationToken = default(CancellationToken));
 		Task<HttpResponseMessage> PostAsync(string endpoint, JObject data, CancellationToken cancellationToken = default(CancellationToken));

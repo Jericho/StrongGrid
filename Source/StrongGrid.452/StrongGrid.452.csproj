@@ -36,6 +36,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -68,6 +69,18 @@
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\ClickTrackingSettings.cs">
       <Link>Model\ClickTrackingSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\CustomField.cs">
+      <Link>Model\CustomField.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\CustomFieldMetadata.cs">
+      <Link>Model\CustomFieldMetadata.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\Field.cs">
+      <Link>Model\Field.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\FieldType.cs">
+      <Link>Model\FieldType.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\FooterSettings.cs">
       <Link>Model\FooterSettings.cs</Link>
@@ -128,6 +141,9 @@
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\ApiKeys.cs">
       <Link>Resources\ApiKeys.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\CustomFields.cs">
+      <Link>Resources\CustomFields.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\GlobalSuppressions.cs">
       <Link>Resources\GlobalSuppressions.cs</Link>

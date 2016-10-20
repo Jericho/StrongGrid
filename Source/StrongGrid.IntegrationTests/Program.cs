@@ -1,5 +1,6 @@
 ﻿using StrongGrid.Model;
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Security;
@@ -27,10 +28,11 @@ namespace StrongGrid.IntegrationTests
 			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY", EnvironmentVariableTarget.User);
 			var client = new StrongGrid.Client(apiKey: apiKey, httpClient: httpClient);
 
-			Mail(client);
 			ApiKeys(client);
-			UnsubscribeGroups(client);
+			CustomFields(client);
 			GlobalSuppressions(client);
+			Mail(client);
+			UnsubscribeGroups(client);
 			User(client);
 			Statistics(client);
 			Templates(client);
@@ -313,6 +315,47 @@ namespace StrongGrid.IntegrationTests
 			// VERIFY THAT YOUR PROFILE HAS BEEN UPDATED
 			var updatedProfile = client.User.GetProfileAsync().Result;
 			Console.WriteLine("Hello {0} from {1}", updatedProfile.FirstName, string.IsNullOrEmpty(updatedProfile.State) ? "unknown location" : updatedProfile.State);
+
+			Console.WriteLine("\n\nPress any key to continue");
+			Console.ReadKey();
+		}
+
+		private static void CustomFields(IClient client)
+		{
+			Console.WriteLine("\n***** CONTACTS AND CUSTOM FIELDS *****");
+
+			var fields = client.CustomFields.GetAllAsync().Result;
+			Console.WriteLine("All custom fields retrieved. There are {0} fields", fields.Length);
+
+			CustomFieldMetadata nicknameField;
+			if (fields.Any(f => f.Name == "nickname")) nicknameField = fields.Single(f => f.Name == "nickname");
+			else nicknameField = client.CustomFields.CreateAsync("nickname", FieldType.Text).Result;
+			Console.WriteLine("Field '{0}' Id: {1}", nicknameField.Name, nicknameField.Id);
+
+			CustomFieldMetadata ageField;
+			if (fields.Any(f => f.Name == "age")) ageField = fields.Single(f => f.Name == "age");
+			else ageField = client.CustomFields.CreateAsync("age", FieldType.Number).Result;
+			Console.WriteLine("Field '{0}' Id: {1}", ageField.Name, ageField.Id);
+
+			CustomFieldMetadata customerSinceField;
+			if (fields.Any(f => f.Name == "customer_since")) customerSinceField = fields.Single(f => f.Name == "customer_since");
+			else customerSinceField = client.CustomFields.CreateAsync("customer_since", FieldType.Date).Result;
+			Console.WriteLine("Field '{0}' Id: {1}", customerSinceField.Name, customerSinceField.Id);
+
+			fields = client.CustomFields.GetAllAsync().Result;
+			Console.WriteLine("All custom fields retrieved. There are {0} fields", fields.Length);
+
+			client.CustomFields.DeleteAsync(nicknameField.Id).Wait();
+			Console.WriteLine("Field {0} deleted", nicknameField.Id);
+
+			client.CustomFields.DeleteAsync(ageField.Id).Wait();
+			Console.WriteLine("Field {0} deleted", ageField.Id);
+
+			client.CustomFields.DeleteAsync(customerSinceField.Id).Wait();
+			Console.WriteLine("Field {0} deleted", customerSinceField.Id);
+
+			fields = client.CustomFields.GetAllAsync().Result;
+			Console.WriteLine("All custom fields retrieved. There are {0} fields", fields.Length);
 
 			Console.WriteLine("\n\nPress any key to continue");
 			Console.ReadKey();
