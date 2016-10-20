@@ -57,6 +57,7 @@ namespace StrongGrid
 			ApiKeys = new ApiKeys(this);
 			UnsubscribeGroups = new UnsubscribeGroups(this);
 			Suppressions = new Suppressions(this);
+			GlobalSuppressions = new GlobalSuppressions(this);
 			Statistics = new Statistics(this);
 			User = new User(this);
 			Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
