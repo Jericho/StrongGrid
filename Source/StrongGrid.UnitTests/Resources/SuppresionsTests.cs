@@ -52,7 +52,7 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PostAsync(ENDPOINT + "/" + groupId + "/suppressions", It.Is<JObject>(o => o["recipient_emails"].ToObject< JArray>().Count == 1), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.PostAsync(ENDPOINT + "/" + groupId + "/suppressions", It.Is<JObject>(o => o["recipient_emails"].ToObject<JArray>().Count == 1), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var suppressions = new Suppressions(mockClient.Object);

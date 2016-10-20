@@ -12,6 +12,7 @@ namespace StrongGrid
 		ApiKeys ApiKeys { get; }
 		UnsubscribeGroups UnsubscribeGroups { get; }
 		Suppressions Suppressions { get; }
+		GlobalSuppressions GlobalSuppressions { get; }
 		Statistics Statistics { get; }
 		User User { get; }
 

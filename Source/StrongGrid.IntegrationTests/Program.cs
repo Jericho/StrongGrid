@@ -30,6 +30,7 @@ namespace StrongGrid.IntegrationTests
 			Mail(client);
 			ApiKeys(client);
 			UnsubscribeGroups(client);
+			GlobalSuppressions(client);
 			User(client);
 			Statistics(client);
 		}
@@ -177,6 +178,30 @@ namespace StrongGrid.IntegrationTests
 			// DELETE UNSUBSCRIBE GROUP
 			client.UnsubscribeGroups.DeleteAsync(newGroup.Id).Wait();
 			Console.WriteLine("Suppression group {0} deleted", newGroup.Id);
+
+			Console.WriteLine("\n\nPress any key to continue");
+			Console.ReadKey();
+		}
+
+		private static void GlobalSuppressions(IClient client)
+		{
+			Console.WriteLine("\n***** GLOBAL SUPPRESSION *****");
+
+			// ADD EMAILS TO THE GLOBAL SUPPRESSION LIST
+			var emails = new[] { "example@example.com", "example2@example.com" };
+			client.GlobalSuppressions.AddAsync(emails).Wait();
+			Console.WriteLine("The following emails have been added to the global suppression list: {0}", string.Join(", ", emails));
+			Console.WriteLine("Is {0} unsubscribed (should be true): {1}", emails[0], client.GlobalSuppressions.IsUnsubscribedAsync(emails[0]).Result);
+			Console.WriteLine("Is {0} unsubscribed (should be true): {1}", emails[1], client.GlobalSuppressions.IsUnsubscribedAsync(emails[1]).Result);
+
+			// DELETE EMAILS FROM THE GLOBAL SUPPRESSION GROUP
+			client.GlobalSuppressions.RemoveAsync(emails[0]).Wait();
+			Console.WriteLine("{0} has been removed from the global suppression list", emails[0]);
+			client.GlobalSuppressions.RemoveAsync(emails[1]).Wait();
+			Console.WriteLine("{0} has been removed from the global suppression list", emails[1]);
+
+			Console.WriteLine("Is {0} unsubscribed (should be false): {1}", emails[0], client.GlobalSuppressions.IsUnsubscribedAsync(emails[0]).Result);
+			Console.WriteLine("Is {0} unsubscribed (should be false): {1}", emails[1], client.GlobalSuppressions.IsUnsubscribedAsync(emails[1]).Result);
 
 			Console.WriteLine("\n\nPress any key to continue");
 			Console.ReadKey();
