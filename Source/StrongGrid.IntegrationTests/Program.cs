@@ -33,6 +33,7 @@ namespace StrongGrid.IntegrationTests
 			GlobalSuppressions(client);
 			User(client);
 			Statistics(client);
+			Templates(client);
 		}
 
 		private static void Mail(IClient client)
@@ -212,7 +213,7 @@ namespace StrongGrid.IntegrationTests
 			Console.WriteLine("\n***** STATISTICS *****");
 
 			var now = DateTime.UtcNow;
-			var startDate = new DateTime(now.Year, 1, 1);
+			var startDate = new DateTime(now.Year, 1, 3);
 
 			//----- Global Stats -----
 			var globalStats = client.Statistics.GetGlobalStatisticsAsync(startDate, null).Result;
@@ -221,9 +222,8 @@ namespace StrongGrid.IntegrationTests
 			globalStats = client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Day).Result;
 			Console.WriteLine("Number of GLOBAL stats in {0} and aggregated by day: {1}", now.Year, globalStats.Length);
 
-			// Grouping by week doesn't work. I opened a support ticket with SendGrid to try to figure out: http://support.sendgrid.com/hc/requests/780001
-			//globalStats = client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Week).Result;
-			//Console.WriteLine("Number of GLOBAL stats in {0} and aggregated by week: {1}", now.Year, globalStats.Length);
+			globalStats = client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Week).Result;
+			Console.WriteLine("Number of GLOBAL stats in {0} and aggregated by week: {1}", now.Year, globalStats.Length);
 
 			globalStats = client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Month).Result;
 			Console.WriteLine("Number of GLOBAL stats in {0} and aggregated by month: {1}", now.Year, globalStats.Length);
@@ -235,9 +235,8 @@ namespace StrongGrid.IntegrationTests
 			countryStats = client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Day).Result;
 			Console.WriteLine("Number of COUNTRY stats in {0} and aggregated by day: {1}", now.Year, countryStats.Length);
 
-			// Grouping by week doesn't work. I opened a support ticket with SendGrid to try to figure out: http://support.sendgrid.com/hc/requests/780001
-			//countryStats = client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Week).Result;
-			//Console.WriteLine("Number of COUNTRY stats in {0} and aggregated by week: {1}", now.Year, countryStats.Length);
+			countryStats = client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Week).Result;
+			Console.WriteLine("Number of COUNTRY stats in {0} and aggregated by week: {1}", now.Year, countryStats.Length);
 
 			countryStats = client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Month).Result;
 			Console.WriteLine("Number of COUNTRY stats in {0} and aggregated by month: {1}", now.Year, countryStats.Length);
@@ -255,6 +254,41 @@ namespace StrongGrid.IntegrationTests
 
 			browserStats = client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Month).Result;
 			Console.WriteLine("Number of BROWSER stats in {0} and aggregated by month: {1}", now.Year, browserStats.Length);
+			Console.WriteLine("\n\nPress any key to continue");
+			Console.ReadKey();
+		}
+
+		private static void Templates(IClient client)
+		{
+			Console.WriteLine("\n***** TEMPLATES *****");
+
+			var template = client.Templates.CreateAsync("My template").Result;
+			Console.WriteLine("Template '{0}' created. Id: {1}", template.Name, template.Id);
+
+			client.Templates.UpdateAsync(template.Id, "New name").Wait();
+			Console.WriteLine("Template '{0}' updated", template.Id);
+
+			template = client.Templates.GetAsync(template.Id).Result;
+			Console.WriteLine("Template '{0}' retrieved.", template.Id);
+
+			var firstVersion = client.Templates.CreateVersionAsync(template.Id, "Version 1", "My first Subject <%subject%>", "<html<body>hello world<br/><%body%></body></html>", "Hello world <%body%>", true).Result;
+			Console.WriteLine("First version created. Id: {0}", firstVersion.Id);
+
+			var secondVersion = client.Templates.CreateVersionAsync(template.Id, "Version 2", "My second Subject <%subject%>", "<html<body>Qwerty<br/><%body%></body></html>", "Qwerty <%body%>", true).Result;
+			Console.WriteLine("Second version created. Id: {0}", secondVersion.Id);
+
+			var templates = client.Templates.GetAllAsync().Result;
+			Console.WriteLine("All templates retrieved. There are {0} templates", templates.Length);
+
+			client.Templates.DeleteVersionAsync(template.Id, firstVersion.Id).Wait();
+			Console.WriteLine("Version {0} deleted", firstVersion.Id);
+
+			client.Templates.DeleteVersionAsync(template.Id, secondVersion.Id).Wait();
+			Console.WriteLine("Version {0} deleted", secondVersion.Id);
+
+			client.Templates.DeleteAsync(template.Id).Wait();
+			Console.WriteLine("Template {0} deleted", template.Id);
+
 			Console.WriteLine("\n\nPress any key to continue");
 			Console.ReadKey();
 		}

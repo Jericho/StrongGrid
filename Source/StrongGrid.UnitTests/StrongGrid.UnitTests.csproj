@@ -101,6 +101,7 @@
     <Compile Include="Resources\StatisticsTests.cs" />
     <Compile Include="Resources\SuppresionsTests.cs" />
     <Compile Include="Resources\MailTests.cs" />
+    <Compile Include="Resources\TemplatesTests.cs" />
     <Compile Include="Resources\UserTests.cs" />
     <Compile Include="Resources\UnsubscribeGroupsTests.cs" />
     <Compile Include="Resources\ApiKeysTests.cs" />

@@ -15,6 +15,7 @@ namespace StrongGrid
 		GlobalSuppressions GlobalSuppressions { get; }
 		Statistics Statistics { get; }
 		User User { get; }
+		Templates Templates { get; }
 
 		Task<HttpResponseMessage> GetAsync(string endpoint, CancellationToken cancellationToken = default(CancellationToken));
 		Task<HttpResponseMessage> PostAsync(string endpoint, JObject data, CancellationToken cancellationToken = default(CancellationToken));

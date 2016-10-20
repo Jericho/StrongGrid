@@ -109,6 +109,12 @@
     <Compile Include="..\StrongGrid.Shared\Model\SubscriptionTrackingSettings.cs">
       <Link>Model\SubscriptionTrackingSettings.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\Template.cs">
+      <Link>Model\Template.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\TemplateVersion.cs">
+      <Link>Model\TemplateVersion.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\TrackingSettings.cs">
       <Link>Model\TrackingSettings.cs</Link>
     </Compile>
@@ -135,6 +141,9 @@
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\Suppressions.cs">
       <Link>Resources\Suppressions.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\Templates.cs">
+      <Link>Resources\Templates.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\UnsubscribeGroups.cs">
       <Link>Resources\UnsubscribeGroups.cs</Link>

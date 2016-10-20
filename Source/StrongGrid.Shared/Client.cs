@@ -37,6 +37,7 @@ namespace StrongGrid
 		public GlobalSuppressions GlobalSuppressions { get; private set; }
 		public Statistics Statistics { get; private set; }
 		public User User { get; private set; }
+		public Templates Templates { get; private set; }
 		public string Version { get; private set; }
 
 		#endregion
@@ -60,6 +61,7 @@ namespace StrongGrid
 			GlobalSuppressions = new GlobalSuppressions(this);
 			Statistics = new Statistics(this);
 			User = new User(this);
+			Templates = new Templates(this);
 			Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
 			_mustDisposeHttpClient = (httpClient == null);
