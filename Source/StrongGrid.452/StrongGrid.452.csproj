@@ -123,6 +123,9 @@
     <Compile Include="..\StrongGrid.Shared\Resources\ApiKeys.cs">
       <Link>Resources\ApiKeys.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\GlobalSuppressions.cs">
+      <Link>Resources\GlobalSuppressions.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\Mail.cs">
       <Link>Resources\Mail.cs</Link>
     </Compile>

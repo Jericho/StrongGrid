@@ -34,6 +34,7 @@ namespace StrongGrid
 		public ApiKeys ApiKeys { get; private set; }
 		public UnsubscribeGroups UnsubscribeGroups { get; private set; }
 		public Suppressions Suppressions { get; private set; }
+		public GlobalSuppressions GlobalSuppressions { get; private set; }
 		public Statistics Statistics { get; private set; }
 		public User User { get; private set; }
 		public string Version { get; private set; }
