@@ -131,6 +131,9 @@
     <Compile Include="..\StrongGrid.Shared\Model\SearchCondition.cs">
       <Link>Model\SearchCondition.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\Segment.cs">
+      <Link>Model\Segment.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\SpamCheckingSettings.cs">
       <Link>Model\SpamCheckingSettings.cs</Link>
     </Compile>
@@ -178,6 +181,9 @@
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\Mail.cs">
       <Link>Resources\Mail.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\Segments.cs">
+      <Link>Resources\Segments.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\Statistics.cs">
       <Link>Resources\Statistics.cs</Link>
