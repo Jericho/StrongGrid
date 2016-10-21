@@ -28,14 +28,15 @@ namespace StrongGrid.IntegrationTests
 			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY", EnvironmentVariableTarget.User);
 			var client = new StrongGrid.Client(apiKey: apiKey, httpClient: httpClient);
 
-			ApiKeys(client);
-			ContactsAndCustomFields(client);
-			GlobalSuppressions(client);
-			Mail(client);
-			UnsubscribeGroups(client);
-			User(client);
-			Statistics(client);
-			Templates(client);
+			//ApiKeys(client);
+			//ContactsAndCustomFields(client);
+			//GlobalSuppressions(client);
+			Lists(client);
+			//Mail(client);
+			//UnsubscribeGroups(client);
+			//User(client);
+			//Statistics(client);
+			//Templates(client);
 		}
 
 		private static void Mail(IClient client)
@@ -429,6 +430,35 @@ namespace StrongGrid.IntegrationTests
 
 			fields = client.CustomFields.GetAllAsync().Result;
 			Console.WriteLine($"All custom fields retrieved. There are {fields.Length} fields");
+
+			Console.WriteLine("\n\nPress any key to continue");
+			Console.ReadKey();
+		}
+
+		private static void Lists(IClient client)
+		{
+			Console.WriteLine("\n***** LISTS AND SEGMENTS *****");
+
+			var firstList = client.Lists.CreateAsync("My first list").Result;
+			Console.WriteLine("List '{0}' created. Id: {1}", firstList.Name, firstList.Id);
+
+			var secondList = client.Lists.CreateAsync("My second list").Result;
+			Console.WriteLine("List '{0}' created. Id: {1}", secondList.Name, secondList.Id);
+
+			client.Lists.UpdateAsync(firstList.Id, "New name").Wait();
+			Console.WriteLine("List '{0}' updated", firstList.Id);
+
+			var lists = client.Lists.GetAllAsync().Result;
+			Console.WriteLine("All lists retrieved. There are {0} lists", lists.Length);
+
+			client.Lists.DeleteAsync(firstList.Id).Wait();
+			Console.WriteLine("List {0} deleted", firstList.Id);
+
+			client.Lists.DeleteAsync(secondList.Id).Wait();
+			Console.WriteLine("List {0} deleted", secondList.Id);
+
+			lists = client.Lists.GetAllAsync().Result;
+			Console.WriteLine("All lists retrieved. There are {0} lists", lists.Length);
 
 			Console.WriteLine("\n\nPress any key to continue");
 			Console.ReadKey();
