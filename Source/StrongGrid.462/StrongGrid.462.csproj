@@ -71,11 +71,17 @@
     <Compile Include="..\StrongGrid.Shared\Model\ClickTrackingSettings.cs">
       <Link>Model\ClickTrackingSettings.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\Contact.cs">
+      <Link>Model\Contact.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\CustomField.cs">
       <Link>Model\CustomField.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\CustomFieldMetadata.cs">
       <Link>Model\CustomFieldMetadata.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\Error.cs">
+      <Link>Model\Error.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\Field.cs">
       <Link>Model\Field.cs</Link>
@@ -88,6 +94,9 @@
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\GoogleAnalyticsSettings.cs">
       <Link>Model\GoogleAnalyticsSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\ImportResult.cs">
+      <Link>Model\ImportResult.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\MailAdress.cs">
       <Link>Model\MailAdress.cs</Link>
@@ -142,6 +151,9 @@
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\ApiKeys.cs">
       <Link>Resources\ApiKeys.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\Contacts.cs">
+      <Link>Resources\Contacts.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\CustomFields.cs">
       <Link>Resources\CustomFields.cs</Link>

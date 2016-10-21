@@ -31,6 +31,7 @@ namespace StrongGrid
 		#region PROPERTIES
 
 		public ApiKeys ApiKeys { get; private set; }
+		public Contacts Contacts { get; private set; }
 		public CustomFields CustomFields { get; private set; }
 		public GlobalSuppressions GlobalSuppressions { get; private set; }
 		public Mail Mail { get; private set; }
@@ -56,6 +57,7 @@ namespace StrongGrid
 			_apiKey = apiKey;
 
 			ApiKeys = new ApiKeys(this);
+			Contacts = new Contacts(this);
 			CustomFields = new CustomFields(this);
 			GlobalSuppressions = new GlobalSuppressions(this);
 			Mail = new Mail(this);
