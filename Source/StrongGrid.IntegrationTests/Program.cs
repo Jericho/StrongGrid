@@ -29,7 +29,7 @@ namespace StrongGrid.IntegrationTests
 			var client = new StrongGrid.Client(apiKey: apiKey, httpClient: httpClient);
 
 			ApiKeys(client);
-			CustomFields(client);
+			ContactsAndCustomFields(client);
 			GlobalSuppressions(client);
 			Mail(client);
 			UnsubscribeGroups(client);
@@ -215,7 +215,7 @@ namespace StrongGrid.IntegrationTests
 			Console.WriteLine("\n***** STATISTICS *****");
 
 			var now = DateTime.UtcNow;
-			var startDate = new DateTime(now.Year, 1, 3);
+			var startDate = new DateTime(now.Year, 1, 4);
 
 			//----- Global Stats -----
 			var globalStats = client.Statistics.GetGlobalStatisticsAsync(startDate, null).Result;
@@ -320,7 +320,7 @@ namespace StrongGrid.IntegrationTests
 			Console.ReadKey();
 		}
 
-		private static void CustomFields(IClient client)
+		private static void ContactsAndCustomFields(IClient client)
 		{
 			Console.WriteLine("\n***** CONTACTS AND CUSTOM FIELDS *****");
 
@@ -330,32 +330,105 @@ namespace StrongGrid.IntegrationTests
 			CustomFieldMetadata nicknameField;
 			if (fields.Any(f => f.Name == "nickname")) nicknameField = fields.Single(f => f.Name == "nickname");
 			else nicknameField = client.CustomFields.CreateAsync("nickname", FieldType.Text).Result;
-			Console.WriteLine("Field '{0}' Id: {1}", nicknameField.Name, nicknameField.Id);
+			Console.WriteLine($"Field '{nicknameField.Name}' Id: {nicknameField.Id}");
 
 			CustomFieldMetadata ageField;
 			if (fields.Any(f => f.Name == "age")) ageField = fields.Single(f => f.Name == "age");
 			else ageField = client.CustomFields.CreateAsync("age", FieldType.Number).Result;
-			Console.WriteLine("Field '{0}' Id: {1}", ageField.Name, ageField.Id);
+			Console.WriteLine($"Field '{ageField.Name}' Id: {ageField.Id}");
 
 			CustomFieldMetadata customerSinceField;
 			if (fields.Any(f => f.Name == "customer_since")) customerSinceField = fields.Single(f => f.Name == "customer_since");
 			else customerSinceField = client.CustomFields.CreateAsync("customer_since", FieldType.Date).Result;
-			Console.WriteLine("Field '{0}' Id: {1}", customerSinceField.Name, customerSinceField.Id);
+			Console.WriteLine($"Field '{customerSinceField.Name}' Id: {customerSinceField.Id}");
 
 			fields = client.CustomFields.GetAllAsync().Result;
-			Console.WriteLine("All custom fields retrieved. There are {0} fields", fields.Length);
+			Console.WriteLine($"All custom fields retrieved. There are {fields.Length} fields");
+
+			var email = "111@example.com";
+			var firstName = "Robert";
+			var lastName = "Unknown";
+			var customFields = new Field[]
+			{
+				new Field<string>("nickname", "Bob"),
+				new Field<long?>("age", 42),
+				new Field<DateTime>("customer_since", new DateTime(2000, 12, 1))
+			};
+			var contactId = client.Contacts.CreateAsync(email, firstName, lastName, customFields).Result;
+			Console.WriteLine($"Contact {contactId} created: {firstName} {lastName}");
+
+			var newLastName = "Smith";
+			client.Contacts.UpdateAsync(email, null, newLastName).Wait();
+			Console.WriteLine($"Contact {contactId} updated: {firstName} {newLastName}");
+
+			var contact = client.Contacts.GetAsync(contactId).Result;
+			Console.WriteLine($"Retrieved contact {contactId}");
+			Console.WriteLine($"\tEmail: {contact.Email}");
+			Console.WriteLine($"\tFirst Name: {contact.FirstName}");
+			Console.WriteLine($"\tLast Name: {contact.LastName}");
+			Console.WriteLine($"\tCreated On:{contact.CreatedOn}");
+			Console.WriteLine($"\tModified On: {contact.ModifiedOn}");
+			Console.WriteLine($"\tLast Clicked On: {contact.LastClickedOn}");
+			Console.WriteLine($"\tLast Emailed On: {contact.LastEmailedOn}");
+			Console.WriteLine($"\tLast Opened On: {contact.LastOpenedOn}");
+			foreach (var customField in contact.CustomFields.OfType<Field<string>>())
+			{
+				Console.WriteLine($"\t{customField.Name}: {customField.Value}");
+			}
+			foreach (var customField in contact.CustomFields.OfType<Field<long?>>())
+			{
+				Console.WriteLine($"\t{customField.Name}: {customField.Value}");
+			}
+			foreach (var customField in contact.CustomFields.OfType<Field<DateTime?>>())
+			{
+				Console.WriteLine($"\t{customField.Name}: {customField.Value}");
+			}
+
+			var recordsPerPage = 5;
+			var contacts = client.Contacts.GetAsync(recordsPerPage, 1).Result;
+			Console.WriteLine(contacts.Length < recordsPerPage ? $"Found {contacts.Length} contacts" : $"Retrieved the first {recordsPerPage} contacts");
+			foreach (var record in contacts)
+			{
+				Console.WriteLine($"\t{record.FirstName} {record.LastName}");
+			}
+
+			var firstNameCondition = new SearchCondition
+			{
+				Field = "first_name",
+				Value = "Robert",
+				Operator = ConditionOperator.Equal,
+				LogicalOperator = LogicalOperator.None
+			};
+			var LastNameCondition = new SearchCondition
+			{
+				Field = "last_name",
+				Value = "Smith",
+				Operator = ConditionOperator.Equal,
+				LogicalOperator = LogicalOperator.And
+			};
+			var searchResult = client.Contacts.SearchAsync(new[] { firstNameCondition, LastNameCondition }).Result;
+			Console.WriteLine($"Found {searchResult.Length} contacts named Robert Smith");
+
+			var billableCount = client.Contacts.GetBillableCountAsync().Result;
+			var totalCount = client.Contacts.GetTotalCountAsync().Result;
+			Console.WriteLine("Record counts");
+			Console.WriteLine($"\tBillable: {billableCount}");
+			Console.WriteLine($"\tTotal: {totalCount}");
+
+			client.Contacts.DeleteAsync(contactId).Wait();
+			Console.WriteLine($"Contact {contactId} deleted: {firstName} {newLastName}");
 
 			client.CustomFields.DeleteAsync(nicknameField.Id).Wait();
-			Console.WriteLine("Field {0} deleted", nicknameField.Id);
+			Console.WriteLine($"Field {nicknameField.Id} deleted");
 
 			client.CustomFields.DeleteAsync(ageField.Id).Wait();
-			Console.WriteLine("Field {0} deleted", ageField.Id);
+			Console.WriteLine($"Field {ageField.Id} deleted");
 
 			client.CustomFields.DeleteAsync(customerSinceField.Id).Wait();
-			Console.WriteLine("Field {0} deleted", customerSinceField.Id);
+			Console.WriteLine($"Field {customerSinceField.Id} deleted");
 
 			fields = client.CustomFields.GetAllAsync().Result;
-			Console.WriteLine("All custom fields retrieved. There are {0} fields", fields.Length);
+			Console.WriteLine($"All custom fields retrieved. There are {fields.Length} fields");
 
 			Console.WriteLine("\n\nPress any key to continue");
 			Console.ReadKey();
