@@ -160,6 +160,9 @@
     <Compile Include="..\StrongGrid.Shared\Resources\ApiKeys.cs">
       <Link>Resources\ApiKeys.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\Categories.cs">
+      <Link>Resources\Categories.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\Contacts.cs">
       <Link>Resources\Contacts.cs</Link>
     </Compile>

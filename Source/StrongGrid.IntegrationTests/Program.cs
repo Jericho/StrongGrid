@@ -29,6 +29,7 @@ namespace StrongGrid.IntegrationTests
 			var client = new StrongGrid.Client(apiKey: apiKey, httpClient: httpClient);
 
 			ApiKeys(client);
+			Categories(client);
 			ContactsAndCustomFields(client);
 			GlobalSuppressions(client);
 			Mail(client);
@@ -429,6 +430,18 @@ namespace StrongGrid.IntegrationTests
 
 			fields = client.CustomFields.GetAllAsync().Result;
 			Console.WriteLine($"All custom fields retrieved. There are {fields.Length} fields");
+
+			Console.WriteLine("\n\nPress any key to continue");
+			Console.ReadKey();
+		}
+
+		private static void Categories(IClient client)
+		{
+			Console.WriteLine("\n***** CATEGORIES *****");
+
+			var categories = client.Categories.GetAsync().Result;
+			Console.WriteLine("Number of categories: {0}", categories.Length);
+			Console.WriteLine("Categories: {0}", string.Join(", ", categories));
 
 			Console.WriteLine("\n\nPress any key to continue");
 			Console.ReadKey();
