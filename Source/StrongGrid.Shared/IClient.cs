@@ -15,6 +15,7 @@ namespace StrongGrid
 		GlobalSuppressions GlobalSuppressions { get; }
 		Lists Lists { get; }
 		Mail Mail { get; }
+		Segments Segments { get; }
 		Statistics Statistics { get; }
 		Suppressions Suppressions { get; }
 		Templates Templates { get; }

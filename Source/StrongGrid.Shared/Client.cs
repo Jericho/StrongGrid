@@ -37,6 +37,7 @@ namespace StrongGrid
 		public GlobalSuppressions GlobalSuppressions { get; private set; }
 		public Lists Lists { get; private set; }
 		public Mail Mail { get; private set; }
+		public Segments Segments { get; private set; }
 		public Statistics Statistics { get; private set; }
 		public Suppressions Suppressions { get; private set; }
 		public Templates Templates { get; private set; }
@@ -65,6 +66,7 @@ namespace StrongGrid
 			GlobalSuppressions = new GlobalSuppressions(this);
 			Lists = new Lists(this);
 			Mail = new Mail(this);
+			Segments = new Segments(this);
 			Statistics = new Statistics(this);
 			Suppressions = new Suppressions(this);
 			Templates = new Templates(this);
