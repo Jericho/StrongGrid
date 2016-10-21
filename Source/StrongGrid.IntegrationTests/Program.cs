@@ -29,7 +29,7 @@ namespace StrongGrid.IntegrationTests
 			var client = new StrongGrid.Client(apiKey: apiKey, httpClient: httpClient);
 
 			ApiKeys(client);
-			CustomFields(client);
+			ContactsAndCustomFields(client);
 			GlobalSuppressions(client);
 			Mail(client);
 			UnsubscribeGroups(client);
@@ -320,7 +320,7 @@ namespace StrongGrid.IntegrationTests
 			Console.ReadKey();
 		}
 
-		private static void CustomFields(IClient client)
+		private static void ContactsAndCustomFields(IClient client)
 		{
 			Console.WriteLine("\n***** CONTACTS AND CUSTOM FIELDS *****");
 
@@ -344,6 +344,32 @@ namespace StrongGrid.IntegrationTests
 
 			fields = client.CustomFields.GetAllAsync().Result;
 			Console.WriteLine("All custom fields retrieved. There are {0} fields", fields.Length);
+
+			var contact1 = new Contact
+			{
+				Email = "111@example.com",
+				FirstName = "Robert",
+				LastName = "Unknown",
+				CustomFields = new CustomFieldMetadata[]
+				{
+					new CustomField<string> { Name = "nickname", Value = "Bob" },
+					new CustomField<int> { Name = "age", Value = 42 },
+					new CustomField<DateTime> { Name = "customer_since", Value = new DateTime(2000, 12, 1) }
+				}
+			};
+			contact1.Id = client.Contacts.CreateAsync(contact1).Result;
+			Console.WriteLine("{0} {1} created. Id: {2}", contact1.FirstName, contact1.LastName, contact1.Id);
+
+			var contact2 = new Contact
+			{
+				Email = "111@example.com",
+				LastName = "Smith"
+			};
+			contact1.Id = client.Contacts.UpdateAsync(contact2).Result;
+			Console.WriteLine("{0} {1} updated. Id: {2}", contact1.FirstName, contact2.LastName, contact1.Id);
+
+			client.Contacts.DeleteAsync(contact1.Id).Wait();
+			Console.WriteLine("{0} {1} deleted. Id: {2}", contact1.FirstName, contact2.LastName, contact1.Id);
 
 			client.CustomFields.DeleteAsync(nicknameField.Id).Wait();
 			Console.WriteLine("Field {0} deleted", nicknameField.Id);
