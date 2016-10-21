@@ -2,7 +2,7 @@
 
 namespace StrongGrid.Model
 {
-	public class CustomFieldMetadata : Field
+	public class CustomFieldMetadata : FieldMetadata
 	{
 		[JsonProperty("id")]
 		public int Id { get; set; }

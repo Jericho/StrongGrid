@@ -1,11 +1,25 @@
 ﻿using Newtonsoft.Json;
 using StrongGrid.Utilities;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace StrongGrid.Model
 {
 	public class Contact
 	{
+		public Contact()
+		{
+		}
+
+		public Contact(string email, string firstName = null, string lastName = null, IEnumerable<Field> customFields = null)
+		{
+			Email = email;
+			FirstName = firstName;
+			LastName = lastName;
+			CustomFields = (customFields ?? Enumerable.Empty<Field>()).ToArray();
+		}
+
 		[JsonProperty("created_at")]
 		[JsonConverter(typeof(EpochConverter))]
 		public DateTime CreatedOn { get; set; }
@@ -39,6 +53,7 @@ namespace StrongGrid.Model
 		public DateTime ModifiedOn { get; set; }
 
 		[JsonProperty("custom_fields")]
-		public CustomFieldMetadata[] CustomFields { get; set; }
+		[JsonConverter(typeof(CustomFieldsConverter))]
+		public Field[] CustomFields { get; set; }
 	}
 }

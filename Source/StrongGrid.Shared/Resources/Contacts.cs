@@ -28,8 +28,9 @@ namespace StrongGrid.Resources
 			_client = client;
 		}
 
-		public async Task<string> CreateAsync(Contact contact, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<string> CreateAsync(string email, string firstName = null, string lastName = null, IEnumerable<Field> customFields = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
+			var contact = new Contact(email, firstName, lastName, customFields);
 			var importResult = await ImportAsync(new[] { contact }, cancellationToken);
 			if (importResult.ErrorCount > 0)
 			{
@@ -40,8 +41,9 @@ namespace StrongGrid.Resources
 			return importResult.PersistedRecipients.Single();
 		}
 
-		public async Task<string> UpdateAsync(Contact contact, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task UpdateAsync(string email, string firstName = null, string lastName = null, IEnumerable<Field> customFields = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
+			var contact = new Contact(email, firstName, lastName, customFields);
 			var data = new JArray(ConvertContactToJObject(contact));
 			var response = await _client.PatchAsync(_endpoint, data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
@@ -54,7 +56,6 @@ namespace StrongGrid.Resources
 				var errorMsg = string.Join(Environment.NewLine, importResult.Errors.Select(e => e.Message));
 				throw new Exception(errorMsg);
 			}
-			return importResult.PersistedRecipients.Single();
 		}
 
 		public async Task<ImportResult> ImportAsync(IEnumerable<Contact> contacts, CancellationToken cancellationToken = default(CancellationToken))
@@ -85,6 +86,16 @@ namespace StrongGrid.Resources
 			response.EnsureSuccess();
 		}
 
+		public async Task<Contact> GetAsync(string contactId, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var response = await _client.GetAsync(_endpoint + "/" + contactId, cancellationToken).ConfigureAwait(false);
+			response.EnsureSuccess();
+
+			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var contact = JObject.Parse(responseContent).ToObject<Contact>();
+			return contact;
+		}
+
 		public async Task<Contact[]> GetAsync(int recordsPerPage = 100, int page = 1, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var query = HttpUtility.ParseQueryString(string.Empty);
@@ -108,7 +119,21 @@ namespace StrongGrid.Resources
 			//			"last_emailed": null,
 			//			"last_name": null,
 			//			"last_opened": null,
-			//			"updated_at": 1422395108
+			//			"updated_at": 1422395108,
+			//			"custom_fields": [
+			//				{
+			//					"id": 23,
+			//					"name": "pet",
+			//					"value": "Indiana",
+			//					"type": "text"
+			//				},
+			//				{
+			//					"id": 24,
+			//					"name": "age",
+			//					"value": 43,
+			//					"type": "number"
+			//				}
+			//			]
 			//		}
 			//	]
 			// }
@@ -158,12 +183,13 @@ namespace StrongGrid.Resources
 			return count;
 		}
 
-		public async Task<Contact[]> SearchAsync(string fieldName, string value, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<Contact[]> SearchAsync(IEnumerable<SearchCondition> conditions, int? listId = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var query = HttpUtility.ParseQueryString(string.Empty);
-			query[fieldName] = value;
+			var data = new JObject();
+			if (listId.HasValue) data.Add("list_id", listId.Value);
+			if (conditions != null) data.Add("conditions", JArray.FromObject(conditions));
 
-			var response = await _client.GetAsync(string.Format("{0}/search?{1}", _endpoint, query), cancellationToken).ConfigureAwait(false);
+			var response = await _client.PostAsync(_endpoint + "/search", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -180,7 +206,15 @@ namespace StrongGrid.Resources
 			//			"last_emailed": null,
 			//			"last_name": null,
 			//			"last_opened": null,
-			//			"updated_at": 1422395108
+			//			"updated_at": 1422395108,
+			//			"custom_fields": [
+			//				{
+			//					"id": 23,
+			//					"name": "pet",
+			//					"value": "Fluffy",
+			//					"type": "text"
+			//				}
+			//			]
 			//		}
 			//	]
 			// }
@@ -190,16 +224,6 @@ namespace StrongGrid.Resources
 
 			var recipients = dynamicArray.ToObject<Contact[]>();
 			return recipients;
-		}
-
-		public Task<Contact[]> SearchAsync(string fieldName, DateTime value, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			return SearchAsync(fieldName, value.ToUnixTime().ToString(CultureInfo.InvariantCulture), cancellationToken);
-		}
-
-		public Task<Contact[]> SearchAsync(string fieldName, long value, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			return SearchAsync(fieldName, value.ToString(CultureInfo.InvariantCulture), cancellationToken);
 		}
 
 		private static JObject ConvertContactToJObject(Contact contact)
@@ -212,17 +236,26 @@ namespace StrongGrid.Resources
 
 			if (contact.CustomFields != null)
 			{
-				foreach (var customField in contact.CustomFields.OfType<CustomField<string>>())
+				foreach (var customField in contact.CustomFields.OfType<Field<string>>())
 				{
 					result.Add(customField.Name, customField.Value);
 				}
-				foreach (var customField in contact.CustomFields.OfType<CustomField<int>>())
+				foreach (var customField in contact.CustomFields.OfType<Field<long>>())
 				{
 					result.Add(customField.Name, customField.Value);
 				}
-				foreach (var customField in contact.CustomFields.OfType<CustomField<DateTime>>())
+				foreach (var customField in contact.CustomFields.OfType<Field<long?>>())
+				{
+					result.Add(customField.Name, customField.Value.GetValueOrDefault());
+				}
+				foreach (var customField in contact.CustomFields.OfType<Field<DateTime>>())
 				{
 					result.Add(customField.Name, customField.Value.ToUnixTime());
+				}
+				foreach (var customField in contact.CustomFields.OfType<Field<DateTime?>>())
+				{
+					if (customField.Value.HasValue) result.Add(customField.Name, customField.Value.Value.ToUnixTime());
+					else result.Add(customField.Name, null);
 				}
 			}
 
