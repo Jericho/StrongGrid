@@ -35,6 +35,7 @@ namespace StrongGrid
 		public Contacts Contacts { get; private set; }
 		public CustomFields CustomFields { get; private set; }
 		public GlobalSuppressions GlobalSuppressions { get; private set; }
+		public Lists Lists { get; private set; }
 		public Mail Mail { get; private set; }
 		public Statistics Statistics { get; private set; }
 		public Suppressions Suppressions { get; private set; }
@@ -62,6 +63,7 @@ namespace StrongGrid
 			Contacts = new Contacts(this);
 			CustomFields = new CustomFields(this);
 			GlobalSuppressions = new GlobalSuppressions(this);
+			Lists = new Lists(this);
 			Mail = new Mail(this);
 			Statistics = new Statistics(this);
 			Suppressions = new Suppressions(this);

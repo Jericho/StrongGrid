@@ -101,6 +101,9 @@
     <Compile Include="..\StrongGrid.Shared\Model\ImportResult.cs">
       <Link>Model\ImportResult.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\List.cs">
+      <Link>Model\List.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\LogicalOperator.cs">
       <Link>Model\LogicalOperator.cs</Link>
     </Compile>
@@ -172,6 +175,9 @@
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\GlobalSuppressions.cs">
       <Link>Resources\GlobalSuppressions.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\Lists.cs">
+      <Link>Resources\Lists.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\Mail.cs">
       <Link>Resources\Mail.cs</Link>
