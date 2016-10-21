@@ -29,10 +29,9 @@ namespace StrongGrid.IntegrationTests
 			var client = new StrongGrid.Client(apiKey: apiKey, httpClient: httpClient);
 
 			ApiKeys(client);
-			Categories(client);
 			ContactsAndCustomFields(client);
 			GlobalSuppressions(client);
-			Lists(client);
+			ListsAndSegments(client);
 			Mail(client);
 			UnsubscribeGroups(client);
 			User(client);
@@ -463,6 +462,18 @@ namespace StrongGrid.IntegrationTests
 
 			var lists = client.Lists.GetAllAsync().Result;
 			Console.WriteLine("All lists retrieved. There are {0} lists", lists.Length);
+
+			var hotmailCondition = new SearchCondition { Field = "email", Operator = ConditionOperator.Contains, Value = "hotmail.com", LogicalOperator = LogicalOperator.None };
+			var segment = client.Segments.CreateAsync("Recipients @ Hotmail", firstList.Id, new[] { hotmailCondition }).Result;
+			Console.WriteLine("Segment '{0}' created. Id: {1}", segment.Name, segment.Id);
+
+			var millerLastNameCondition = new SearchCondition { Field = "last_name", Operator = ConditionOperator.Equal, Value = "Miller", LogicalOperator = LogicalOperator.None };
+			var clickedRecentlyCondition = new SearchCondition { Field = "last_clicked", Operator = ConditionOperator.GreatherThan, Value = DateTime.UtcNow.AddDays(-30).ToString("MM/dd/yyyy"), LogicalOperator = LogicalOperator.And };
+			segment = client.Segments.UpdateAsync(segment.Id, "Last Name is Miller and clicked recently", null, new[] { millerLastNameCondition, clickedRecentlyCondition }).Result;
+			Console.WriteLine("Segment {0} updated. The new name is: '{1}'", segment.Id, segment.Name);
+
+			client.Segments.DeleteAsync(segment.Id).Wait();
+			Console.WriteLine("Segment {0} deleted", segment.Id);
 
 			client.Lists.DeleteAsync(firstList.Id).Wait();
 			Console.WriteLine("List {0} deleted", firstList.Id);
