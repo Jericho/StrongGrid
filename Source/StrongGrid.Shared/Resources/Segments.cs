@@ -118,11 +118,10 @@ namespace StrongGrid.Resources
 		public async Task<Contact[]> GetRecipientsAsync(long segmentId, int recordsPerPage = 100, int page = 1, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var query = HttpUtility.ParseQueryString(string.Empty);
-			query["segment_id"] = segmentId.ToString(CultureInfo.InvariantCulture);
 			query["page_size"] = recordsPerPage.ToString(CultureInfo.InvariantCulture);
 			query["page"] = page.ToString(CultureInfo.InvariantCulture);
 
-			var response = await _client.GetAsync(string.Format("{0}?{1}", _endpoint, query), cancellationToken).ConfigureAwait(false);
+			var response = await _client.GetAsync(string.Format("{0}/{1}/recipients?{2}", _endpoint, segmentId, query), cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
