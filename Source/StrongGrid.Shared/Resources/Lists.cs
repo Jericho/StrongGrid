@@ -72,40 +72,11 @@ namespace StrongGrid.Resources
 			response.EnsureSuccess();
 		}
 
-		public async Task DeleteAsync(IEnumerable<long> recipientIds, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task DeleteAsync(IEnumerable<long> listIds, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = JArray.FromObject(recipientIds.ToArray());
+			var data = JArray.FromObject(listIds.ToArray());
 			var response = await _client.DeleteAsync(_endpoint, data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
-		}
-
-		public async Task<List[]> GetAsync(int recordsPerPage = 100, int page = 1, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			var query = HttpUtility.ParseQueryString(string.Empty);
-			query["page_size"] = recordsPerPage.ToString(CultureInfo.InvariantCulture);
-			query["page"] = page.ToString(CultureInfo.InvariantCulture);
-
-			var response = await _client.GetAsync(string.Format("{0}?{1}", _endpoint, query), cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-			// Response looks like this:
-			// {
-			//  "lists": [
-			//    {
-			//      "id": 1,
-			//      "name": "the jones",
-			//      "recipient_count": 1
-			//    }
-			//  ]
-			//}
-			// We use a dynamic object to get rid of the 'lists' property and simply return an array of lists
-			dynamic dynamicObject = JObject.Parse(responseContent);
-			dynamic dynamicArray = dynamicObject.lists;
-
-			var recipients = dynamicArray.ToObject<List[]>();
-			return recipients;
 		}
 
 		public async Task<List> GetAsync(long listId, CancellationToken cancellationToken = default(CancellationToken))
@@ -163,21 +134,21 @@ namespace StrongGrid.Resources
 			return recipients;
 		}
 
-		public async Task AddRecipientAsync(long listId, string recipientId, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task AddRecipientAsync(long listId, string contactId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.PostAsync(string.Format("{0}/{1}/recipients/{2}", _endpoint, listId, recipientId), (JObject)null, cancellationToken).ConfigureAwait(false);
+			var response = await _client.PostAsync(string.Format("{0}/{1}/recipients/{2}", _endpoint, listId, contactId), (JObject)null, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 		}
 
-		public async Task RemoveRecipientAsync(long listId, string recipientId, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task RemoveRecipientAsync(long listId, string contactId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.DeleteAsync(string.Format("{0}/{1}/recipients/{2}", _endpoint, listId, recipientId), cancellationToken).ConfigureAwait(false);
+			var response = await _client.DeleteAsync(string.Format("{0}/{1}/recipients/{2}", _endpoint, listId, contactId), cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 		}
 
-		public async Task AddRecipientsAsync(long listId, IEnumerable<string> recipientIds, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task AddRecipientsAsync(long listId, IEnumerable<string> contactIds, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = JArray.FromObject(recipientIds.ToArray());
+			var data = JArray.FromObject(contactIds.ToArray());
 			var response = await _client.PostAsync(string.Format("{0}/{1}/recipients", _endpoint, listId), data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 		}
