@@ -65,6 +65,9 @@
     <Compile Include="..\StrongGrid.Shared\Model\Attachment.cs">
       <Link>Model\Attachment.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\Bounce.cs">
+      <Link>Model\Bounce.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\BypassListManagementSettings.cs">
       <Link>Model\BypassListManagementSettings.cs</Link>
     </Compile>
@@ -166,6 +169,9 @@
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\ApiKeys.cs">
       <Link>Resources\ApiKeys.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\Bounces.cs">
+      <Link>Resources\Bounces.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\Categories.cs">
       <Link>Resources\Categories.cs</Link>

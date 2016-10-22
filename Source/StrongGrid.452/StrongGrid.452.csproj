@@ -64,6 +64,9 @@
     <Compile Include="..\StrongGrid.Shared\Model\Attachment.cs">
       <Link>Model\Attachment.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\Bounce.cs">
+      <Link>Model\Bounce.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\BypassListManagementSettings.cs">
       <Link>Model\BypassListManagementSettings.cs</Link>
     </Compile>
