@@ -447,7 +447,7 @@ namespace StrongGrid.IntegrationTests
 			Console.ReadKey();
 		}
 
-		private static void Lists(IClient client)
+		private static void ListsAndSegments(IClient client)
 		{
 			Console.WriteLine("\n***** LISTS AND SEGMENTS *****");
 
