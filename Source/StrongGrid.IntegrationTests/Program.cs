@@ -29,9 +29,9 @@ namespace StrongGrid.IntegrationTests
 			var client = new StrongGrid.Client(apiKey: apiKey, httpClient: httpClient);
 
 			ApiKeys(client);
-			Categories(client);
 			ContactsAndCustomFields(client);
 			GlobalSuppressions(client);
+			ListsAndSegments(client);
 			Mail(client);
 			UnsubscribeGroups(client);
 			User(client);
@@ -442,6 +442,47 @@ namespace StrongGrid.IntegrationTests
 			var categories = client.Categories.GetAsync().Result;
 			Console.WriteLine("Number of categories: {0}", categories.Length);
 			Console.WriteLine("Categories: {0}", string.Join(", ", categories));
+
+			Console.WriteLine("\n\nPress any key to continue");
+			Console.ReadKey();
+		}
+
+		private static void Lists(IClient client)
+		{
+			Console.WriteLine("\n***** LISTS AND SEGMENTS *****");
+
+			var firstList = client.Lists.CreateAsync("My first list").Result;
+			Console.WriteLine("List '{0}' created. Id: {1}", firstList.Name, firstList.Id);
+
+			var secondList = client.Lists.CreateAsync("My second list").Result;
+			Console.WriteLine("List '{0}' created. Id: {1}", secondList.Name, secondList.Id);
+
+			client.Lists.UpdateAsync(firstList.Id, "New name").Wait();
+			Console.WriteLine("List '{0}' updated", firstList.Id);
+
+			var lists = client.Lists.GetAllAsync().Result;
+			Console.WriteLine("All lists retrieved. There are {0} lists", lists.Length);
+
+			var hotmailCondition = new SearchCondition { Field = "email", Operator = ConditionOperator.Contains, Value = "hotmail.com", LogicalOperator = LogicalOperator.None };
+			var segment = client.Segments.CreateAsync("Recipients @ Hotmail", firstList.Id, new[] { hotmailCondition }).Result;
+			Console.WriteLine("Segment '{0}' created. Id: {1}", segment.Name, segment.Id);
+
+			var millerLastNameCondition = new SearchCondition { Field = "last_name", Operator = ConditionOperator.Equal, Value = "Miller", LogicalOperator = LogicalOperator.None };
+			var clickedRecentlyCondition = new SearchCondition { Field = "last_clicked", Operator = ConditionOperator.GreatherThan, Value = DateTime.UtcNow.AddDays(-30).ToString("MM/dd/yyyy"), LogicalOperator = LogicalOperator.And };
+			segment = client.Segments.UpdateAsync(segment.Id, "Last Name is Miller and clicked recently", null, new[] { millerLastNameCondition, clickedRecentlyCondition }).Result;
+			Console.WriteLine("Segment {0} updated. The new name is: '{1}'", segment.Id, segment.Name);
+
+			client.Segments.DeleteAsync(segment.Id).Wait();
+			Console.WriteLine("Segment {0} deleted", segment.Id);
+
+			client.Lists.DeleteAsync(firstList.Id).Wait();
+			Console.WriteLine("List {0} deleted", firstList.Id);
+
+			client.Lists.DeleteAsync(secondList.Id).Wait();
+			Console.WriteLine("List {0} deleted", secondList.Id);
+
+			lists = client.Lists.GetAllAsync().Result;
+			Console.WriteLine("All lists retrieved. There are {0} lists", lists.Length);
 
 			Console.WriteLine("\n\nPress any key to continue");
 			Console.ReadKey();
