@@ -98,6 +98,7 @@
     <Compile Include="ClientTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\CategoriesTests.cs" />
+    <Compile Include="Resources\ListsTests.cs" />
     <Compile Include="Resources\SegmentsTests.cs" />
     <Compile Include="Resources\ContactsTests.cs" />
     <Compile Include="Resources\CustomFieldsTests.cs" />
