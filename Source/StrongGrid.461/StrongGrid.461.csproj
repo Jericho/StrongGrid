@@ -71,6 +71,12 @@
     <Compile Include="..\StrongGrid.Shared\Model\BypassListManagementSettings.cs">
       <Link>Model\BypassListManagementSettings.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\Campaign.cs">
+      <Link>Model\Campaign.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\CampaignStatus.cs">
+      <Link>Model\CampaignStatus.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\ClickTrackingSettings.cs">
       <Link>Model\ClickTrackingSettings.cs</Link>
     </Compile>
@@ -169,6 +175,9 @@
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\ApiKeys.cs">
       <Link>Resources\ApiKeys.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\Campaigns.cs">
+      <Link>Resources\Campaigns.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\Categories.cs">
       <Link>Resources\Categories.cs</Link>
