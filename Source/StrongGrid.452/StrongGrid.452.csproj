@@ -142,6 +142,9 @@
     <Compile Include="..\StrongGrid.Shared\Model\Segment.cs">
       <Link>Model\Segment.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\SenderIdentity.cs">
+      <Link>Model\SenderIdentity.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\SpamCheckingSettings.cs">
       <Link>Model\SpamCheckingSettings.cs</Link>
     </Compile>
@@ -172,6 +175,9 @@
     <Compile Include="..\StrongGrid.Shared\Model\UserCredits.cs">
       <Link>Model\UserCredits.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\VerificationStatus.cs">
+      <Link>Model\VerificationStatus.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\ApiKeys.cs">
       <Link>Resources\ApiKeys.cs</Link>
     </Compile>
@@ -198,6 +204,9 @@
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\Segments.cs">
       <Link>Resources\Segments.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\SenderIndentities.cs">
+      <Link>Resources\SenderIndentities.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\Statistics.cs">
       <Link>Resources\Statistics.cs</Link>
