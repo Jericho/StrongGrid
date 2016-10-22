@@ -30,12 +30,18 @@ namespace StrongGrid
 
 		#region PROPERTIES
 
-		public Mail Mail { get; private set; }
 		public ApiKeys ApiKeys { get; private set; }
-		public UnsubscribeGroups UnsubscribeGroups { get; private set; }
-		public Suppressions Suppressions { get; private set; }
+		public Categories Categories { get; private set; }
+		public Contacts Contacts { get; private set; }
+		public CustomFields CustomFields { get; private set; }
 		public GlobalSuppressions GlobalSuppressions { get; private set; }
+		public Lists Lists { get; private set; }
+		public Mail Mail { get; private set; }
+		public Segments Segments { get; private set; }
 		public Statistics Statistics { get; private set; }
+		public Suppressions Suppressions { get; private set; }
+		public Templates Templates { get; private set; }
+		public UnsubscribeGroups UnsubscribeGroups { get; private set; }
 		public User User { get; private set; }
 		public string Version { get; private set; }
 
@@ -53,12 +59,18 @@ namespace StrongGrid
 			_baseUri = new Uri(string.Format("{0}/{1}", baseUri, apiVersion));
 			_apiKey = apiKey;
 
-			Mail = new Mail(this);
 			ApiKeys = new ApiKeys(this);
-			UnsubscribeGroups = new UnsubscribeGroups(this);
-			Suppressions = new Suppressions(this);
+			Categories = new Categories(this);
+			Contacts = new Contacts(this);
+			CustomFields = new CustomFields(this);
 			GlobalSuppressions = new GlobalSuppressions(this);
+			Lists = new Lists(this);
+			Mail = new Mail(this);
+			Segments = new Segments(this);
 			Statistics = new Statistics(this);
+			Suppressions = new Suppressions(this);
+			Templates = new Templates(this);
+			UnsubscribeGroups = new UnsubscribeGroups(this);
 			User = new User(this);
 			Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 

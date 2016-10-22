@@ -37,6 +37,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -70,11 +71,41 @@
     <Compile Include="..\StrongGrid.Shared\Model\ClickTrackingSettings.cs">
       <Link>Model\ClickTrackingSettings.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\ConditionOperator.cs">
+      <Link>Model\ConditionOperator.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\Contact.cs">
+      <Link>Model\Contact.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\CustomFieldMetadata.cs">
+      <Link>Model\CustomFieldMetadata.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\Error.cs">
+      <Link>Model\Error.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\Field.cs">
+      <Link>Model\Field.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\FieldMetadata.cs">
+      <Link>Model\FieldMetadata.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\FieldType.cs">
+      <Link>Model\FieldType.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\FooterSettings.cs">
       <Link>Model\FooterSettings.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\GoogleAnalyticsSettings.cs">
       <Link>Model\GoogleAnalyticsSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\ImportResult.cs">
+      <Link>Model\ImportResult.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\List.cs">
+      <Link>Model\List.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\LogicalOperator.cs">
+      <Link>Model\LogicalOperator.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\MailAdress.cs">
       <Link>Model\MailAdress.cs</Link>
@@ -97,6 +128,12 @@
     <Compile Include="..\StrongGrid.Shared\Model\SandboxModeSettings.cs">
       <Link>Model\SandboxModeSettings.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\SearchCondition.cs">
+      <Link>Model\SearchCondition.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\Segment.cs">
+      <Link>Model\Segment.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\SpamCheckingSettings.cs">
       <Link>Model\SpamCheckingSettings.cs</Link>
     </Compile>
@@ -108,6 +145,12 @@
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\SubscriptionTrackingSettings.cs">
       <Link>Model\SubscriptionTrackingSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\Template.cs">
+      <Link>Model\Template.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\TemplateVersion.cs">
+      <Link>Model\TemplateVersion.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\TrackingSettings.cs">
       <Link>Model\TrackingSettings.cs</Link>
@@ -124,17 +167,35 @@
     <Compile Include="..\StrongGrid.Shared\Resources\ApiKeys.cs">
       <Link>Resources\ApiKeys.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\Categories.cs">
+      <Link>Resources\Categories.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\Contacts.cs">
+      <Link>Resources\Contacts.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\CustomFields.cs">
+      <Link>Resources\CustomFields.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\GlobalSuppressions.cs">
       <Link>Resources\GlobalSuppressions.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\Lists.cs">
+      <Link>Resources\Lists.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\Mail.cs">
       <Link>Resources\Mail.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\Segments.cs">
+      <Link>Resources\Segments.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\Statistics.cs">
       <Link>Resources\Statistics.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\Suppressions.cs">
       <Link>Resources\Suppressions.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\Templates.cs">
+      <Link>Resources\Templates.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\UnsubscribeGroups.cs">
       <Link>Resources\UnsubscribeGroups.cs</Link>
@@ -147,6 +208,9 @@
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\UserProfile.cs">
       <Link>Model\UserProfile.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Utilities\CustomFieldsConverter.cs">
+      <Link>Utilities\CustomFieldsConverter.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Utilities\EpochConverter.cs">
       <Link>Utilities\EpochConverter.cs</Link>
