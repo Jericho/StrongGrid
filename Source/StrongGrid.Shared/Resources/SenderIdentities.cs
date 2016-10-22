@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StrongGrid.Resources
 {
-	public class SenderIndentities
+	public class SenderIdentities
 	{
 		private readonly string _endpoint;
 		private readonly IClient _client;
@@ -17,7 +17,7 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
 		/// <param name="endpoint">Resource endpoint, do not prepend slash</param>
-		public SenderIndentities(IClient client, string endpoint = "/senders")
+		public SenderIdentities(IClient client, string endpoint = "/senders")
 		{
 			_endpoint = endpoint;
 			_client = client;

@@ -209,8 +209,8 @@
     <Compile Include="..\StrongGrid.Shared\Resources\Segments.cs">
       <Link>Resources\Segments.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Resources\SenderIndentities.cs">
-      <Link>Resources\SenderIndentities.cs</Link>
+    <Compile Include="..\StrongGrid.Shared\Resources\SenderIdentities.cs">
+      <Link>Resources\SenderIdentities.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\Statistics.cs">
       <Link>Resources\Statistics.cs</Link>

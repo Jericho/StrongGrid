@@ -39,7 +39,7 @@ namespace StrongGrid
 		public Lists Lists { get; private set; }
 		public Mail Mail { get; private set; }
 		public Segments Segments { get; private set; }
-		public SenderIndentities SenderIdentities { get; private set; }
+		public SenderIdentities SenderIdentities { get; private set; }
 		public Statistics Statistics { get; private set; }
 		public Suppressions Suppressions { get; private set; }
 		public Templates Templates { get; private set; }
@@ -70,7 +70,7 @@ namespace StrongGrid
 			Lists = new Lists(this);
 			Mail = new Mail(this);
 			Segments = new Segments(this);
-			SenderIdentities = new SenderIndentities(this);
+			SenderIdentities = new SenderIdentities(this);
 			Statistics = new Statistics(this);
 			Suppressions = new Suppressions(this);
 			Templates = new Templates(this);

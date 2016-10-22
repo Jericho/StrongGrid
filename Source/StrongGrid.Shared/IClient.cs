@@ -17,7 +17,7 @@ namespace StrongGrid
 		Lists Lists { get; }
 		Mail Mail { get; }
 		Segments Segments { get; }
-		SenderIndentities SenderIdentities { get; }
+		SenderIdentities SenderIdentities { get; }
 		Statistics Statistics { get; }
 		Suppressions Suppressions { get; }
 		Templates Templates { get; }
