@@ -46,202 +46,202 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\StrongGrid.Shared\Client.cs">
+    <Compile Include="..\StrongGrid\Client.cs">
       <Link>Client.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\IClient.cs">
+    <Compile Include="..\StrongGrid\IClient.cs">
       <Link>IClient.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\Account.cs">
+    <Compile Include="..\StrongGrid\Model\Account.cs">
       <Link>Model\Account.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\AggregateBy.cs">
+    <Compile Include="..\StrongGrid\Model\AggregateBy.cs">
       <Link>Model\AggregateBy.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\ApiKey.cs">
+    <Compile Include="..\StrongGrid\Model\ApiKey.cs">
       <Link>Model\ApiKey.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\Attachment.cs">
+    <Compile Include="..\StrongGrid\Model\Attachment.cs">
       <Link>Model\Attachment.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\Bounce.cs">
+    <Compile Include="..\StrongGrid\Model\Bounce.cs">
       <Link>Model\Bounce.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\BypassListManagementSettings.cs">
+    <Compile Include="..\StrongGrid\Model\BypassListManagementSettings.cs">
       <Link>Model\BypassListManagementSettings.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\Campaign.cs">
+    <Compile Include="..\StrongGrid\Model\Campaign.cs">
       <Link>Model\Campaign.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\CampaignStatus.cs">
+    <Compile Include="..\StrongGrid\Model\CampaignStatus.cs">
       <Link>Model\CampaignStatus.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\ClickTrackingSettings.cs">
+    <Compile Include="..\StrongGrid\Model\ClickTrackingSettings.cs">
       <Link>Model\ClickTrackingSettings.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\ConditionOperator.cs">
+    <Compile Include="..\StrongGrid\Model\ConditionOperator.cs">
       <Link>Model\ConditionOperator.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\Contact.cs">
+    <Compile Include="..\StrongGrid\Model\Contact.cs">
       <Link>Model\Contact.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\CustomFieldMetadata.cs">
+    <Compile Include="..\StrongGrid\Model\CustomFieldMetadata.cs">
       <Link>Model\CustomFieldMetadata.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\Error.cs">
+    <Compile Include="..\StrongGrid\Model\Error.cs">
       <Link>Model\Error.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\Field.cs">
+    <Compile Include="..\StrongGrid\Model\Field.cs">
       <Link>Model\Field.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\FieldMetadata.cs">
+    <Compile Include="..\StrongGrid\Model\FieldMetadata.cs">
       <Link>Model\FieldMetadata.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\FieldType.cs">
+    <Compile Include="..\StrongGrid\Model\FieldType.cs">
       <Link>Model\FieldType.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\FooterSettings.cs">
+    <Compile Include="..\StrongGrid\Model\FooterSettings.cs">
       <Link>Model\FooterSettings.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\GoogleAnalyticsSettings.cs">
+    <Compile Include="..\StrongGrid\Model\GoogleAnalyticsSettings.cs">
       <Link>Model\GoogleAnalyticsSettings.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\ImportResult.cs">
+    <Compile Include="..\StrongGrid\Model\ImportResult.cs">
       <Link>Model\ImportResult.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\List.cs">
+    <Compile Include="..\StrongGrid\Model\List.cs">
       <Link>Model\List.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\LogicalOperator.cs">
+    <Compile Include="..\StrongGrid\Model\LogicalOperator.cs">
       <Link>Model\LogicalOperator.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\MailAdress.cs">
+    <Compile Include="..\StrongGrid\Model\MailAdress.cs">
       <Link>Model\MailAdress.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\MailContent.cs">
+    <Compile Include="..\StrongGrid\Model\MailContent.cs">
       <Link>Model\MailContent.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\MailPersonalization.cs">
+    <Compile Include="..\StrongGrid\Model\MailPersonalization.cs">
       <Link>Model\MailPersonalization.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\MailSettings.cs">
+    <Compile Include="..\StrongGrid\Model\MailSettings.cs">
       <Link>Model\MailSettings.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\Metrics.cs">
+    <Compile Include="..\StrongGrid\Model\Metrics.cs">
       <Link>Model\Metrics.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\OpenTrackingSettings.cs">
+    <Compile Include="..\StrongGrid\Model\OpenTrackingSettings.cs">
       <Link>Model\OpenTrackingSettings.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\SandboxModeSettings.cs">
+    <Compile Include="..\StrongGrid\Model\SandboxModeSettings.cs">
       <Link>Model\SandboxModeSettings.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\SearchCondition.cs">
+    <Compile Include="..\StrongGrid\Model\SearchCondition.cs">
       <Link>Model\SearchCondition.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\Segment.cs">
+    <Compile Include="..\StrongGrid\Model\Segment.cs">
       <Link>Model\Segment.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\SenderIdentity.cs">
+    <Compile Include="..\StrongGrid\Model\SenderIdentity.cs">
       <Link>Model\SenderIdentity.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\SpamCheckingSettings.cs">
+    <Compile Include="..\StrongGrid\Model\SpamCheckingSettings.cs">
       <Link>Model\SpamCheckingSettings.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\Stat.cs">
+    <Compile Include="..\StrongGrid\Model\Stat.cs">
       <Link>Model\Stat.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\Statistic.cs">
+    <Compile Include="..\StrongGrid\Model\Statistic.cs">
       <Link>Model\Statistic.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\SubscriptionTrackingSettings.cs">
+    <Compile Include="..\StrongGrid\Model\SubscriptionTrackingSettings.cs">
       <Link>Model\SubscriptionTrackingSettings.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\Template.cs">
+    <Compile Include="..\StrongGrid\Model\Template.cs">
       <Link>Model\Template.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\TemplateVersion.cs">
+    <Compile Include="..\StrongGrid\Model\TemplateVersion.cs">
       <Link>Model\TemplateVersion.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\TrackingSettings.cs">
+    <Compile Include="..\StrongGrid\Model\TrackingSettings.cs">
       <Link>Model\TrackingSettings.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\UnsubscribeOptions.cs">
+    <Compile Include="..\StrongGrid\Model\UnsubscribeOptions.cs">
       <Link>Model\UnsubscribeOptions.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\BccSettings.cs">
+    <Compile Include="..\StrongGrid\Model\BccSettings.cs">
       <Link>Model\BccSettings.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\UserCredits.cs">
+    <Compile Include="..\StrongGrid\Model\UserCredits.cs">
       <Link>Model\UserCredits.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\VerificationStatus.cs">
+    <Compile Include="..\StrongGrid\Model\VerificationStatus.cs">
       <Link>Model\VerificationStatus.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Resources\ApiKeys.cs">
+    <Compile Include="..\StrongGrid\Resources\ApiKeys.cs">
       <Link>Resources\ApiKeys.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Resources\Campaigns.cs">
+    <Compile Include="..\StrongGrid\Resources\Campaigns.cs">
       <Link>Resources\Campaigns.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Resources\Categories.cs">
+    <Compile Include="..\StrongGrid\Resources\Categories.cs">
       <Link>Resources\Categories.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Resources\Contacts.cs">
+    <Compile Include="..\StrongGrid\Resources\Contacts.cs">
       <Link>Resources\Contacts.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Resources\CustomFields.cs">
+    <Compile Include="..\StrongGrid\Resources\CustomFields.cs">
       <Link>Resources\CustomFields.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Resources\GlobalSuppressions.cs">
+    <Compile Include="..\StrongGrid\Resources\GlobalSuppressions.cs">
       <Link>Resources\GlobalSuppressions.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Resources\Lists.cs">
+    <Compile Include="..\StrongGrid\Resources\Lists.cs">
       <Link>Resources\Lists.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Resources\Mail.cs">
+    <Compile Include="..\StrongGrid\Resources\Mail.cs">
       <Link>Resources\Mail.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Resources\Segments.cs">
+    <Compile Include="..\StrongGrid\Resources\Segments.cs">
       <Link>Resources\Segments.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Resources\SenderIdentities.cs">
+    <Compile Include="..\StrongGrid\Resources\SenderIdentities.cs">
       <Link>Resources\SenderIdentities.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Resources\Statistics.cs">
+    <Compile Include="..\StrongGrid\Resources\Statistics.cs">
       <Link>Resources\Statistics.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Resources\Suppressions.cs">
+    <Compile Include="..\StrongGrid\Resources\Suppressions.cs">
       <Link>Resources\Suppressions.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Resources\Templates.cs">
+    <Compile Include="..\StrongGrid\Resources\Templates.cs">
       <Link>Resources\Templates.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Resources\UnsubscribeGroups.cs">
+    <Compile Include="..\StrongGrid\Resources\UnsubscribeGroups.cs">
       <Link>Resources\UnsubscribeGroups.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\SuppressionGroup.cs">
+    <Compile Include="..\StrongGrid\Model\SuppressionGroup.cs">
       <Link>Model\SuppressionGroup.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Resources\User.cs">
+    <Compile Include="..\StrongGrid\Resources\User.cs">
       <Link>Resources\User.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Model\UserProfile.cs">
+    <Compile Include="..\StrongGrid\Model\UserProfile.cs">
       <Link>Model\UserProfile.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Utilities\CustomFieldsConverter.cs">
+    <Compile Include="..\StrongGrid\Utilities\CustomFieldsConverter.cs">
       <Link>Utilities\CustomFieldsConverter.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Utilities\EpochConverter.cs">
+    <Compile Include="..\StrongGrid\Utilities\EpochConverter.cs">
       <Link>Utilities\EpochConverter.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Utilities\Extensions.cs">
+    <Compile Include="..\StrongGrid\Utilities\Extensions.cs">
       <Link>Utilities\Extensions.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Utilities\IntegerBooleanConverter.cs">
+    <Compile Include="..\StrongGrid\Utilities\IntegerBooleanConverter.cs">
       <Link>Utilities\IntegerBooleanConverter.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Utilities\SendGridDateTimeConverter.cs">
+    <Compile Include="..\StrongGrid\Utilities\SendGridDateTimeConverter.cs">
       <Link>Utilities\SendGridDateTimeConverter.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
