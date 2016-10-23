@@ -41,7 +41,39 @@ namespace StrongGrid.Resources
 			response.EnsureSuccess();
 
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-			var senderIdentities = JArray.Parse(responseContent).ToObject<SenderIdentity[]>();
+
+			// Response looks like this:
+			//{
+			//	'result': [
+			//		{
+			//			'id': 1,
+			//			'nickname': 'My Sender ID',
+			//			'from': {
+			//				'email': 'from@example.com',
+			//				'name': 'Example INC'
+			//			},
+			//			'reply_to': {
+			//				'email': 'replyto@example.com',
+			//				'name': 'Example INC'
+			//			},
+			//			'address': '123 Elm St.',
+			//			'address_2': 'Apt. 456',
+			//			'city': 'Denver',
+			//			'state': 'Colorado',
+			//			'zip': '80202',
+			//			'country': 'United States',
+			//			'verified': { 'status': true, 'reason': '' },
+			//			'updated_at': 1449872165,
+			//			'created_at': 1449872165,
+			//			'locked': false
+			//		}
+			//	]
+			//}
+			// We use a dynamic object to get rid of the 'result' property and simply return an array of sender identitiess
+			dynamic dynamicObject = JObject.Parse(responseContent);
+			dynamic dynamicArray = dynamicObject.result;
+
+			var senderIdentities = dynamicArray.ToObject<SenderIdentity[]>();
 			return senderIdentities;
 		}
 
@@ -73,9 +105,9 @@ namespace StrongGrid.Resources
 			response.EnsureSuccess();
 		}
 
-		public async Task ResendVerification(long segmentId, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task ResendVerification(long senderId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.GetAsync(string.Format("{0}/{1}/resend_verification", _endpoint, segmentId), cancellationToken).ConfigureAwait(false);
+			var response = await _client.PostAsync(string.Format("{0}/{1}/resend_verification", _endpoint, senderId), (JObject)null, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 		}
 
