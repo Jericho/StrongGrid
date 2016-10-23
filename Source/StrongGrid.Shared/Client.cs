@@ -31,6 +31,7 @@ namespace StrongGrid
 		#region PROPERTIES
 
 		public ApiKeys ApiKeys { get; private set; }
+		public Campaigns Campaigns { get; private set; }
 		public Categories Categories { get; private set; }
 		public Contacts Contacts { get; private set; }
 		public CustomFields CustomFields { get; private set; }
@@ -38,6 +39,7 @@ namespace StrongGrid
 		public Lists Lists { get; private set; }
 		public Mail Mail { get; private set; }
 		public Segments Segments { get; private set; }
+		public SenderIdentities SenderIdentities { get; private set; }
 		public Statistics Statistics { get; private set; }
 		public Suppressions Suppressions { get; private set; }
 		public Templates Templates { get; private set; }
@@ -60,6 +62,7 @@ namespace StrongGrid
 			_apiKey = apiKey;
 
 			ApiKeys = new ApiKeys(this);
+			Campaigns = new Campaigns(this);
 			Categories = new Categories(this);
 			Contacts = new Contacts(this);
 			CustomFields = new CustomFields(this);
@@ -67,6 +70,7 @@ namespace StrongGrid
 			Lists = new Lists(this);
 			Mail = new Mail(this);
 			Segments = new Segments(this);
+			SenderIdentities = new SenderIdentities(this);
 			Statistics = new Statistics(this);
 			Suppressions = new Suppressions(this);
 			Templates = new Templates(this);

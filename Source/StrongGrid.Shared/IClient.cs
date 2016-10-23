@@ -9,6 +9,7 @@ namespace StrongGrid
 	public interface IClient
 	{
 		ApiKeys ApiKeys { get; }
+		Campaigns Campaigns { get; }
 		Categories Categories { get; }
 		Contacts Contacts { get; }
 		CustomFields CustomFields { get; }
@@ -16,6 +17,7 @@ namespace StrongGrid
 		Lists Lists { get; }
 		Mail Mail { get; }
 		Segments Segments { get; }
+		SenderIdentities SenderIdentities { get; }
 		Statistics Statistics { get; }
 		Suppressions Suppressions { get; }
 		Templates Templates { get; }

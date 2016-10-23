@@ -71,6 +71,12 @@
     <Compile Include="..\StrongGrid.Shared\Model\BypassListManagementSettings.cs">
       <Link>Model\BypassListManagementSettings.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\Campaign.cs">
+      <Link>Model\Campaign.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\CampaignStatus.cs">
+      <Link>Model\CampaignStatus.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\ClickTrackingSettings.cs">
       <Link>Model\ClickTrackingSettings.cs</Link>
     </Compile>
@@ -137,6 +143,9 @@
     <Compile Include="..\StrongGrid.Shared\Model\Segment.cs">
       <Link>Model\Segment.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\SenderIdentity.cs">
+      <Link>Model\SenderIdentity.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Model\SpamCheckingSettings.cs">
       <Link>Model\SpamCheckingSettings.cs</Link>
     </Compile>
@@ -167,8 +176,14 @@
     <Compile Include="..\StrongGrid.Shared\Model\UserCredits.cs">
       <Link>Model\UserCredits.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Model\VerificationStatus.cs">
+      <Link>Model\VerificationStatus.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\ApiKeys.cs">
       <Link>Resources\ApiKeys.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\Campaigns.cs">
+      <Link>Resources\Campaigns.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\Categories.cs">
       <Link>Resources\Categories.cs</Link>
@@ -190,6 +205,9 @@
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\Segments.cs">
       <Link>Resources\Segments.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\SenderIdentities.cs">
+      <Link>Resources\SenderIdentities.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\Statistics.cs">
       <Link>Resources\Statistics.cs</Link>

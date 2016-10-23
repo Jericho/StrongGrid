@@ -71,7 +71,7 @@ namespace StrongGrid.Resources.UnitTests
 			]";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(string.Format("/stats?start_date={0}&end_date={1}", startDate.ToString("yyyy-MM-dd"), endDate.ToString("yyyy-MM-dd")), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={ endDate.ToString("yyyy-MM-dd")}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var statistics = new Statistics(mockClient.Object);
@@ -93,6 +93,7 @@ namespace StrongGrid.Resources.UnitTests
 			var categories = new[] { "cat1", "cat2" };
 			var startDate = new DateTime(2015, 1, 1);
 			var endDate = new DateTime(2015, 1, 2);
+
 			var apiResponse = @"[
 				{
 					'date': '2015 - 01 - 01',
@@ -195,7 +196,7 @@ namespace StrongGrid.Resources.UnitTests
 			]";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(string.Format("/categories/stats?start_date={0}&end_date={1}&categories={2}&categories={3}", startDate.ToString("yyyy-MM-dd"), endDate.ToString("yyyy-MM-dd"), categories[0], categories[1]), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"/categories/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={endDate.ToString("yyyy-MM-dd")}&categories={categories[0]}&categories={categories[1]}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var statistics = new Statistics(mockClient.Object);
@@ -320,7 +321,7 @@ namespace StrongGrid.Resources.UnitTests
 			]";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(string.Format("/subusers/stats?start_date={0}&end_date={1}&subusers={2}&subusers={3}", startDate.ToString("yyyy-MM-dd"), endDate.ToString("yyyy-MM-dd"), subusers[0], subusers[1]), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"/subusers/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={endDate.ToString("yyyy-MM-dd")}&subusers={subusers[0]}&subusers={subusers[1]}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var statistics = new Statistics(mockClient.Object);
@@ -377,7 +378,7 @@ namespace StrongGrid.Resources.UnitTests
 			]";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(string.Format("/geo/stats?start_date={0}&end_date={1}&country={2}", startDate.ToString("yyyy-MM-dd"), endDate.ToString("yyyy-MM-dd"), country), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"/geo/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={endDate.ToString("yyyy-MM-dd")}&country={country}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var statistics = new Statistics(mockClient.Object);
@@ -429,7 +430,7 @@ namespace StrongGrid.Resources.UnitTests
 			]";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(string.Format("/devices/stats?start_date={0}&end_date={1}", startDate.ToString("yyyy-MM-dd"), endDate.ToString("yyyy-MM-dd")), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"/devices/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={endDate.ToString("yyyy-MM-dd")}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var statistics = new Statistics(mockClient.Object);
@@ -482,7 +483,7 @@ namespace StrongGrid.Resources.UnitTests
 			]";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(string.Format("/clients/stats?start_date={0}&end_date={1}", startDate.ToString("yyyy-MM-dd"), endDate.ToString("yyyy-MM-dd")), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"/clients/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={endDate.ToString("yyyy-MM-dd")}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var statistics = new Statistics(mockClient.Object);
@@ -552,7 +553,7 @@ namespace StrongGrid.Resources.UnitTests
 			]";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(string.Format("/mailbox_providers/stats?start_date={0}&end_date={1}&mailbox_providers={2}&mailbox_providers={3}", startDate.ToString("yyyy-MM-dd"), endDate.ToString("yyyy-MM-dd"), providers[0], providers[1]), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"/mailbox_providers/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={endDate.ToString("yyyy-MM-dd")}&mailbox_providers={providers[0]}&mailbox_providers={providers[1]}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var statistics = new Statistics(mockClient.Object);
@@ -621,7 +622,7 @@ namespace StrongGrid.Resources.UnitTests
 			]";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(string.Format("/browsers/stats?start_date={0}&end_date={1}&browsers={2}&browsers={3}", startDate.ToString("yyyy-MM-dd"), endDate.ToString("yyyy-MM-dd"), browsers[0], browsers[1]), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"/browsers/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={endDate.ToString("yyyy-MM-dd")}&browsers={browsers[0]}&browsers={browsers[1]}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var statistics = new Statistics(mockClient.Object);

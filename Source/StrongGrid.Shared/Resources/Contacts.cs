@@ -137,7 +137,7 @@ namespace StrongGrid.Resources
 			//		}
 			//	]
 			// }
-			// We use a dynamic object to get rid of the 'recipients' property and simply return an array of recipients
+			// We use a dynamic object to get rid of the 'recipients' property and simply return an array of contacts
 			dynamic dynamicObject = JObject.Parse(responseContent);
 			dynamic dynamicArray = dynamicObject.recipients;
 
