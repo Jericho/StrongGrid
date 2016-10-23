@@ -278,7 +278,8 @@ Task("Create-NuGet-Package")
 			new NuSpecContent { Source = libraryName + ".452/bin/" + configuration + "/" + libraryName + ".dll", Target = "lib/net452" },
 			new NuSpecContent { Source = libraryName + ".46/bin/" + configuration + "/" + libraryName + ".dll", Target = "lib/net46" },
 			new NuSpecContent { Source = libraryName + ".461/bin/" + configuration + "/" + libraryName + ".dll", Target = "lib/net461" },
-			new NuSpecContent { Source = libraryName + ".462/bin/" + configuration + "/" + libraryName + ".dll", Target = "lib/net462" }
+			new NuSpecContent { Source = libraryName + ".462/bin/" + configuration + "/" + libraryName + ".dll", Target = "lib/net462" },
+			new NuSpecContent { Source = libraryName + "/bin/" + configuration + "/netstandard1.6/" + libraryName + ".dll", Target = "lib/netstandard1.6" },
 		},
 		BasePath                = "./Source/",
 		OutputDirectory         = outputDir,
