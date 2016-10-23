@@ -212,6 +212,9 @@
     <Compile Include="..\StrongGrid.Shared\Resources\SenderIdentities.cs">
       <Link>Resources\SenderIdentities.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid.Shared\Resources\Settings.cs">
+      <Link>Resources\Settings.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid.Shared\Resources\Statistics.cs">
       <Link>Resources\Statistics.cs</Link>
     </Compile>
