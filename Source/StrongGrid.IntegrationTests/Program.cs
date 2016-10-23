@@ -529,13 +529,13 @@ namespace StrongGrid.IntegrationTests
 				Console.WriteLine("Unsubscribe group created");
 			}
 
-			var campaign = client.Campaigns.CreateAsync("Integration testing campaign", unsubscribeGroup.Id, "This is the subject", sender.Id, "<html><body>Hello <b>World</b><p><a href='[unsubscribe]'>Click Here to Unsubscribe</a></p></body></html", "Hello world. To unsubscribe, visit [unsubscribe]", new[] { list.Id }).Result;
+			var campaign = client.Campaigns.CreateAsync("Integration testing campaign", unsubscribeGroup.Id, sender.Id, "This is the subject", "<html><body>Hello <b>World</b><p><a href='[unsubscribe]'>Click Here to Unsubscribe</a></p></body></html", "Hello world. To unsubscribe, visit [unsubscribe]", new[] { list.Id }).Result;
 			Console.WriteLine("Campaign '{0}' created. Id: {1}", campaign.Title, campaign.Id);
 
 			client.Campaigns.UpdateAsync(campaign.Id, categories: new[] { "category1", "category2" }).Wait();
 			Console.WriteLine("Campaign '{0}' updated", campaign.Id);
 
-			var campaigns = client.Campaigns.GetAsync(100, 0).Result;
+			var campaigns = client.Campaigns.GetAllAsync(100, 0).Result;
 			Console.WriteLine("All campaigns retrieved. There are {0} campaigns", campaigns.Length);
 
 			client.Campaigns.SendTestAsync(campaign.Id, new[] { YOUR_EMAIL }).Wait();
@@ -547,7 +547,7 @@ namespace StrongGrid.IntegrationTests
 			client.Campaigns.DeleteAsync(campaign.Id).Wait();
 			Console.WriteLine("Campaign {0} deleted", campaign.Id);
 
-			campaigns = client.Campaigns.GetAsync(100, 0).Result;
+			campaigns = client.Campaigns.GetAllAsync(100, 0).Result;
 			Console.WriteLine("All campaigns retrieved. There are {0} campaigns", campaigns.Length);
 
 			Console.WriteLine("\n\nPress any key to continue");

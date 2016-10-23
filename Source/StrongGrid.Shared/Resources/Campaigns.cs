@@ -28,15 +28,13 @@ namespace StrongGrid.Resources
 			_client = client;
 		}
 
-		public async Task<Campaign> CreateAsync(string title, long suppressionGroupId, string subject = null, long? senderId = null, string htmlContent = null, string textContent = null, IEnumerable<long> listIds = null, IEnumerable<long> segmentIds = null, IEnumerable<string> categories = null, string customUnsubscribeUrl = null, string ipPool = null, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<Campaign> CreateAsync(string title, long suppressionGroupId, long senderId, string subject = null, string htmlContent = null, string textContent = null, IEnumerable<long> listIds = null, IEnumerable<long> segmentIds = null, IEnumerable<string> categories = null, string customUnsubscribeUrl = null, string ipPool = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			listIds = (listIds ?? Enumerable.Empty<long>());
 			segmentIds = (segmentIds ?? Enumerable.Empty<long>());
 			categories = (categories ?? Enumerable.Empty<string>());
 
-			if (!listIds.Any() && !segmentIds.Any()) throw new ArgumentException("You must specify at least one list or segment");
-
-			var data = CreateJObjectForCampaign(title, suppressionGroupId, subject, senderId, htmlContent, textContent, listIds, segmentIds, categories, customUnsubscribeUrl, ipPool);
+			var data = CreateJObjectForCampaign(title, suppressionGroupId, senderId, subject, htmlContent, textContent, listIds, segmentIds, categories, customUnsubscribeUrl, ipPool);
 			var response = await _client.PostAsync(_endpoint, data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
@@ -45,7 +43,7 @@ namespace StrongGrid.Resources
 			return campaign;
 		}
 
-		public async Task<Campaign[]> GetAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<Campaign[]> GetAllAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var query = HttpUtility.ParseQueryString(string.Empty);
 			query["limit"] = limit.ToString(CultureInfo.InvariantCulture);
@@ -107,13 +105,13 @@ namespace StrongGrid.Resources
 			response.EnsureSuccess();
 		}
 
-		public async Task<Campaign> UpdateAsync(long campaignId, string title = null, long? suppressionGroupId = null, string subject = null, long? senderId = null, string htmlContent = null, string textContent = null, IEnumerable<long> listIds = null, IEnumerable<long> segmentIds = null, IEnumerable<string> categories = null, string customUnsubscribeUrl = null, string ipPool = null, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<Campaign> UpdateAsync(long campaignId, string title = null, long? suppressionGroupId = null, long? senderId = null, string subject = null, string htmlContent = null, string textContent = null, IEnumerable<long> listIds = null, IEnumerable<long> segmentIds = null, IEnumerable<string> categories = null, string customUnsubscribeUrl = null, string ipPool = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			listIds = (listIds ?? Enumerable.Empty<long>());
 			segmentIds = (segmentIds ?? Enumerable.Empty<long>());
 			categories = (categories ?? Enumerable.Empty<string>());
 
-			var data = CreateJObjectForCampaign(title, suppressionGroupId, subject, senderId, htmlContent, textContent, listIds, segmentIds, categories, customUnsubscribeUrl, ipPool);
+			var data = CreateJObjectForCampaign(title, suppressionGroupId, senderId, subject, htmlContent, textContent, listIds, segmentIds, categories, customUnsubscribeUrl, ipPool);
 			var response = await _client.PatchAsync(string.Format("{0}/{1}", _endpoint, campaignId), data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
@@ -122,14 +120,24 @@ namespace StrongGrid.Resources
 			return campaign;
 		}
 
-		public async Task SendAsync(long campaignId, DateTime? sendOn = null, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task SendNowAsync(long campaignId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = (sendOn.HasValue ? new JObject { { "send_at", sendOn.Value.ToUnixTime() } } : null);
+			var data = (JObject)null;
+			var response = await _client.PostAsync(string.Format("{0}/{1}/schedules/now", _endpoint, campaignId), data, cancellationToken).ConfigureAwait(false);
+			response.EnsureSuccess();
+		}
+
+		public async Task ScheduleAsync(long campaignId, DateTime sendOn, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var data = new JObject
+			{
+				{  "send_at", sendOn.ToUnixTime() }
+			};
 			var response = await _client.PostAsync(string.Format("{0}/{1}/schedules", _endpoint, campaignId), data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 		}
 
-		public async Task UpdateScheduledDateAsync(long campaignId, DateTime sendOn, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task RescheduleAsync(long campaignId, DateTime sendOn, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
 			{
@@ -178,7 +186,7 @@ namespace StrongGrid.Resources
 			response.EnsureSuccess();
 		}
 
-		private static JObject CreateJObjectForCampaign(string title = null, long? suppressionGroupId = null, string subject = null, long? senderId = null, string htmlContent = null, string textContent = null, IEnumerable<long> listIds = null, IEnumerable<long> segmentIds = null, IEnumerable<string> categories = null, string customUnsubscribeUrl = null, string ipPool = null)
+		private static JObject CreateJObjectForCampaign(string title = null, long? suppressionGroupId = null, long? senderId = null, string subject = null, string htmlContent = null, string textContent = null, IEnumerable<long> listIds = null, IEnumerable<long> segmentIds = null, IEnumerable<string> categories = null, string customUnsubscribeUrl = null, string ipPool = null)
 		{
 			var result = new JObject();
 			if (!string.IsNullOrEmpty(title)) result.Add("title", title);
