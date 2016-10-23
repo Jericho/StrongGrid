@@ -67,32 +67,30 @@ namespace StrongGrid.Resources.UnitTests
 		public void GetAll()
 		{
 			// Arrange
-			var apiResponse = @"{
-				'result': [
-					{
-						'id': 1,
-						'nickname': 'My Sender ID',
-						'from': {
-							'email': 'from@example.com',
-							'name': 'Example INC'
-						},
-						'reply_to': {
-							'email': 'replyto@example.com',
-							'name': 'Example INC'
-						},
-						'address': '123 Elm St.',
-						'address_2': 'Apt. 456',
-						'city': 'Denver',
-						'state': 'Colorado',
-						'zip': '80202',
-						'country': 'United States',
-						'verified': { 'status': true, 'reason': '' },
-						'updated_at': 1449872165,
-						'created_at': 1449872165,
-						'locked': false
-					}
-				]
-			}";
+			var apiResponse = @"[
+				{
+					'id': 1,
+					'nickname': 'My Sender ID',
+					'from': {
+						'email': 'from@example.com',
+						'name': 'Example INC'
+					},
+					'reply_to': {
+						'email': 'replyto@example.com',
+						'name': 'Example INC'
+					},
+					'address': '123 Elm St.',
+					'address_2': 'Apt. 456',
+					'city': 'Denver',
+					'state': 'Colorado',
+					'zip': '80202',
+					'country': 'United States',
+					'verified': { 'status': true, 'reason': '' },
+					'updated_at': 1449872165,
+					'created_at': 1449872165,
+					'locked': false
+				}
+			]";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
 			mockClient.Setup(c => c.GetAsync(ENDPOINT, It.IsAny<CancellationToken>()))
@@ -139,7 +137,7 @@ namespace StrongGrid.Resources.UnitTests
 				'locked': false
 			}";
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PatchAsync(ENDPOINT + "/" + identityId, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.PatchAsync($"{ENDPOINT}/{identityId}", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var senderIdentities = new SenderIdentities(mockClient.Object);
@@ -158,7 +156,7 @@ namespace StrongGrid.Resources.UnitTests
 			var identityId = 1;
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.DeleteAsync(ENDPOINT + "/" + identityId, It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.DeleteAsync($"{ENDPOINT}/{identityId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent));
 
 			var senderIdentities = new SenderIdentities(mockClient.Object);

@@ -42,9 +42,8 @@ namespace StrongGrid.Resources
 
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-			// Response looks like this:
-			//{
-			//	'result': [
+			// Contrary to what the documentation says, the response looks like this:
+			//	[
 			//		{
 			//			'id': 1,
 			//			'nickname': 'My Sender ID',
@@ -68,12 +67,7 @@ namespace StrongGrid.Resources
 			//			'locked': false
 			//		}
 			//	]
-			//}
-			// We use a dynamic object to get rid of the 'result' property and simply return an array of sender identitiess
-			dynamic dynamicObject = JObject.Parse(responseContent);
-			dynamic dynamicArray = dynamicObject.result;
-
-			var senderIdentities = dynamicArray.ToObject<SenderIdentity[]>();
+			var senderIdentities = JArray.Parse(responseContent).ToObject<SenderIdentity[]>();
 			return senderIdentities;
 		}
 

@@ -54,7 +54,7 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(ENDPOINT + "/" + fieldId, It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"{ENDPOINT}/{fieldId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var customFields = new CustomFields(mockClient.Object);
@@ -117,7 +117,7 @@ namespace StrongGrid.Resources.UnitTests
 			var fieldId = 1;
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.DeleteAsync(ENDPOINT + "/" + fieldId, It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.DeleteAsync($"{ENDPOINT}/{fieldId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.Accepted));
 
 			var customFields = new CustomFields(mockClient.Object);

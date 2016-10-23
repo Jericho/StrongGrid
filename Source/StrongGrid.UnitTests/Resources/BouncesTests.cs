@@ -36,7 +36,7 @@ namespace StrongGrid.Resources.UnitTests
 				}
 			]";
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(ENDPOINT + "?start_time=" + start.ToUnixTime() + "&end_time=" + end.ToUnixTime(), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"{ENDPOINT}?start_time={start.ToUnixTime()}&end_time={end.ToUnixTime()}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var bounces = new Bounces(mockClient.Object);
@@ -66,7 +66,7 @@ namespace StrongGrid.Resources.UnitTests
 				}
 			]";
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(ENDPOINT + "/" + email, It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"{ENDPOINT}/{email}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var bounces = new Bounces(mockClient.Object);
@@ -104,7 +104,7 @@ namespace StrongGrid.Resources.UnitTests
 			var email = "email1@test.com";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.DeleteAsync(ENDPOINT + "/" + email, It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.DeleteAsync($"{ENDPOINT}/{email}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent));
 
 			var bounces = new Bounces(mockClient.Object);

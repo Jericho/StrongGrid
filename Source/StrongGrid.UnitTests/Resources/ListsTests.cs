@@ -78,7 +78,7 @@ namespace StrongGrid.Resources.UnitTests
 			var listId = 1;
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.DeleteAsync(ENDPOINT + "/" + listId, It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.DeleteAsync($"{ENDPOINT}/{listId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent));
 
 			var lists = new Lists(mockClient.Object);
@@ -119,7 +119,7 @@ namespace StrongGrid.Resources.UnitTests
 				'recipient_count': 0
 			}";
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(ENDPOINT + "/" + listId, It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"{ENDPOINT}/{listId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var lists = new Lists(mockClient.Object);
@@ -142,7 +142,7 @@ namespace StrongGrid.Resources.UnitTests
 			var name = "newlistname";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PatchAsync(ENDPOINT + "/" + listId, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.PatchAsync($"{ENDPOINT}/{listId}", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK));
 
 			var lists = new Lists(mockClient.Object);
@@ -177,7 +177,7 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(ENDPOINT + "/" + listId + "/recipients?page_size=" + recordsPerPage + "&page=" + page, It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"{ENDPOINT}/{listId}/recipients?page_size={recordsPerPage}&page={page}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var lists = new Lists(mockClient.Object);
@@ -199,7 +199,7 @@ namespace StrongGrid.Resources.UnitTests
 			var contactId = "abc123";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PostAsync(ENDPOINT + "/" + listId + "/recipients/" + contactId, (JObject)null, It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.PostAsync($"{ENDPOINT}/{listId}/recipients/{contactId}", (JObject)null, It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.Created));
 
 			var lists = new Lists(mockClient.Object);
@@ -218,7 +218,7 @@ namespace StrongGrid.Resources.UnitTests
 			var contactId = "abc123";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.DeleteAsync(ENDPOINT + "/" + listId + "/recipients/" + contactId, It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.DeleteAsync($"{ENDPOINT}/{listId}/recipients/{contactId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent));
 
 			var lists = new Lists(mockClient.Object);
@@ -237,7 +237,7 @@ namespace StrongGrid.Resources.UnitTests
 			var contactIds = new[] { "abc123", "def456" };
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PostAsync(ENDPOINT + "/" + listId + "/recipients", It.Is<JArray>(o => o.Count == 2), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.PostAsync($"{ENDPOINT}/{listId}/recipients", It.Is<JArray>(o => o.Count == 2), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.Created));
 
 			var lists = new Lists(mockClient.Object);

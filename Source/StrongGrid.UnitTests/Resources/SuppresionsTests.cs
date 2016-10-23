@@ -23,7 +23,7 @@ namespace StrongGrid.Resources.UnitTests
 				'test2@example.com'
 			]";
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(ENDPOINT + "/" + groupId + "/suppressions", It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"{ENDPOINT}/{groupId}/suppressions", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var suppresions = new Suppressions(mockClient.Object);
@@ -52,7 +52,7 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PostAsync(ENDPOINT + "/" + groupId + "/suppressions", It.Is<JObject>(o => o["recipient_emails"].ToObject<JArray>().Count == 1), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.PostAsync($"{ENDPOINT}/{groupId}/suppressions", It.Is<JObject>(o => o["recipient_emails"].ToObject<JArray>().Count == 1), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var suppressions = new Suppressions(mockClient.Object);
@@ -77,7 +77,7 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PostAsync(ENDPOINT + "/" + groupId + "/suppressions", It.Is<JObject>(o => o["recipient_emails"].ToObject<JArray>().Count == emails.Length), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.PostAsync($"{ENDPOINT}/{groupId}/suppressions", It.Is<JObject>(o => o["recipient_emails"].ToObject<JArray>().Count == emails.Length), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var suppressions = new Suppressions(mockClient.Object);
@@ -96,7 +96,7 @@ namespace StrongGrid.Resources.UnitTests
 			var email = "test1@example.com";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.DeleteAsync(ENDPOINT + "/" + groupId + "/suppressions/" + email, It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.DeleteAsync($"{ENDPOINT}/{groupId}/suppressions/{email}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent));
 
 			var suppressions = new Suppressions(mockClient.Object);

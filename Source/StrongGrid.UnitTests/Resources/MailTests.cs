@@ -18,7 +18,7 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PostAsync(ENDPOINT + "/send", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.PostAsync($"{ENDPOINT}/send", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.Accepted));
 
 			var mail = new Mail(mockClient.Object);
@@ -34,7 +34,7 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PostAsync(ENDPOINT + "/send", It.Is<JObject>(o => o["personalizations"].ToObject<MailPersonalization[]>().Length == 1), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.PostAsync($"{ENDPOINT}/send", It.Is<JObject>(o => o["personalizations"].ToObject<MailPersonalization[]>().Length == 1), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.Accepted));
 
 			var mail = new Mail(mockClient.Object);
@@ -50,7 +50,7 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PostAsync(ENDPOINT + "/send", It.Is<JObject>(o => o["personalizations"].ToObject<MailPersonalization[]>().Length == 3), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.PostAsync($"{ENDPOINT}/send", It.Is<JObject>(o => o["personalizations"].ToObject<MailPersonalization[]>().Length == 3), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.Accepted));
 
 			var recipients = new[]

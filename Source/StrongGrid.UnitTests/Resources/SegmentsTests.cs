@@ -143,7 +143,7 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(ENDPOINT + "/" + segmentId, It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"{ENDPOINT}/{segmentId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var segments = new Segments(mockClient.Object);
@@ -190,7 +190,7 @@ namespace StrongGrid.Resources.UnitTests
 				'recipient_count': 1
 			}";
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PatchAsync(ENDPOINT + "/" + segmentId, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.PatchAsync($"{ENDPOINT}/{segmentId}", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var segments = new Segments(mockClient.Object);
@@ -212,7 +212,7 @@ namespace StrongGrid.Resources.UnitTests
 			var deleteContacts = false;
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.DeleteAsync(ENDPOINT + "/" + segmentId + "?delete_contacts=false", It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.DeleteAsync($"{ENDPOINT}/{segmentId}?delete_contacts=false", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent));
 
 			var segments = new Segments(mockClient.Object);
@@ -231,7 +231,7 @@ namespace StrongGrid.Resources.UnitTests
 			var deleteContacts = true;
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.DeleteAsync(ENDPOINT + "/" + segmentId + "?delete_contacts=true", It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.DeleteAsync($"{ENDPOINT}/{segmentId}?delete_contacts=true", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent));
 
 			var segments = new Segments(mockClient.Object);
@@ -275,7 +275,7 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(ENDPOINT + "/" + segmentId + "/recipients?page_size=" + recordsPerPage + "&page=" + page, It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"{ENDPOINT}/{segmentId}/recipients?page_size={recordsPerPage}&page={page}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var segments = new Segments(mockClient.Object);

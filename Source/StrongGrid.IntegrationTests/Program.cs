@@ -525,7 +525,7 @@ namespace StrongGrid.IntegrationTests
 			var unsubscribeGroup = unsubscribeGroups.FirstOrDefault(l => l.Name == "Integration testing group");
 			if (unsubscribeGroup == null)
 			{
-				unsubscribeGroup = client.UnsubscribeGroups.CreateAsync("Integration testing list", "For testing purposes", false).Result;
+				unsubscribeGroup = client.UnsubscribeGroups.CreateAsync("Integration testing group", "For testing purposes", false).Result;
 				Console.WriteLine("Unsubscribe group created");
 			}
 

@@ -159,7 +159,7 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(ENDPOINT + "/" + contactId, It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"{ENDPOINT}/{contactId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var contacts = new Contacts(mockClient.Object);
@@ -213,7 +213,7 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(ENDPOINT + "?page_size=" + recordsPerPage + "&page=" + page, It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"{ENDPOINT}?page_size={recordsPerPage}&page={page}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var contacts = new Contacts(mockClient.Object);
@@ -277,7 +277,7 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(ENDPOINT + "/billable_count", It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"{ENDPOINT}/billable_count", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var contacts = new Contacts(mockClient.Object);
@@ -298,7 +298,7 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(ENDPOINT + "/count", It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"{ENDPOINT}/count", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var contacts = new Contacts(mockClient.Object);
@@ -370,7 +370,7 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PostAsync(ENDPOINT + "/search", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.PostAsync($"{ENDPOINT}/search", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var contacts = new Contacts(mockClient.Object);
