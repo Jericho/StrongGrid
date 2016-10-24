@@ -6,7 +6,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace StrongGrid.Resources
 {
@@ -101,11 +100,8 @@ namespace StrongGrid.Resources
 
 		public async Task<Contact[]> GetRecipientsAsync(long listId, int recordsPerPage = 100, int page = 1, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var query = HttpUtility.ParseQueryString(string.Empty);
-			query["page_size"] = recordsPerPage.ToString(CultureInfo.InvariantCulture);
-			query["page"] = page.ToString(CultureInfo.InvariantCulture);
-
-			var response = await _client.GetAsync(string.Format("{0}/{1}/recipients?{2}", _endpoint, listId, query), cancellationToken).ConfigureAwait(false);
+			var endpoint = string.Format("{0}/{1}/recipients?page_size={2}&page={3}", _endpoint, listId, recordsPerPage, page);
+			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);

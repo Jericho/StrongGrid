@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace StrongGrid.Resources
 {
@@ -37,12 +36,11 @@ namespace StrongGrid.Resources
 		/// <returns></returns>
 		public async Task<Statistic[]> GetGlobalStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var query = HttpUtility.ParseQueryString(string.Empty);
-			query["start_date"] = startDate.ToString("yyyy-MM-dd");
-			if (endDate.HasValue) query["end_date"] = endDate.Value.ToString("yyyy-MM-dd");
-			if (aggregatedBy != AggregateBy.None) query["aggregated_by"] = aggregatedBy.GetDescription();
+			var endpoint = string.Format("{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
+			if (endDate.HasValue) endpoint += string.Format("end_date={0}", endDate.Value.ToString("yyyy-MM-dd"));
+			if (aggregatedBy != AggregateBy.None) endpoint += string.Format("&aggregated_by={0}", aggregatedBy.GetDescription());
 
-			var response = await _client.GetAsync(string.Format("{0}?{1}", _endpoint, query), cancellationToken).ConfigureAwait(false);
+			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -61,19 +59,18 @@ namespace StrongGrid.Resources
 		/// <returns></returns>
 		public async Task<Statistic[]> GetCategoriesStatisticsAsync(IEnumerable<string> categories, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var query = HttpUtility.ParseQueryString(string.Empty);
-			query["start_date"] = startDate.ToString("yyyy-MM-dd");
-			if (endDate.HasValue) query["end_date"] = endDate.Value.ToString("yyyy-MM-dd");
-			if (aggregatedBy != AggregateBy.None) query["aggregated_by"] = aggregatedBy.GetDescription();
+			var endpoint = string.Format("{0}/categories/stats?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
+			if (endDate.HasValue) endpoint += "&end_date=" + endDate.Value.ToString("yyyy-MM-dd");
+			if (aggregatedBy != AggregateBy.None) endpoint += "aggregated_by=" + aggregatedBy.GetDescription();
 			if (categories != null && categories.Any())
 			{
 				foreach (var category in categories)
 				{
-					query.Add("categories", category);
+					endpoint += "categories=" + category;
 				}
 			}
 
-			var response = await _client.GetAsync(string.Format("/categories/stats?{0}", query), cancellationToken).ConfigureAwait(false);
+			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -92,19 +89,18 @@ namespace StrongGrid.Resources
 		/// <returns></returns>
 		public async Task<Statistic[]> GetSubusersStatisticsAsync(IEnumerable<string> subusers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var query = HttpUtility.ParseQueryString(string.Empty);
-			query["start_date"] = startDate.ToString("yyyy-MM-dd");
-			if (endDate.HasValue) query["end_date"] = endDate.Value.ToString("yyyy-MM-dd");
-			if (aggregatedBy != AggregateBy.None) query["aggregated_by"] = aggregatedBy.GetDescription();
+			var endpoint = string.Format("{0}/subusers/stats?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
+			if (endDate.HasValue) endpoint += "&end_date=" + endDate.Value.ToString("yyyy-MM-dd");
+			if (aggregatedBy != AggregateBy.None) endpoint += "aggregated_by=" + aggregatedBy.GetDescription();
 			if (subusers != null && subusers.Any())
 			{
 				foreach (var subuser in subusers)
 				{
-					query.Add("subusers", subuser);
+					endpoint += "subusers=" + subuser;
 				}
 			}
 
-			var response = await _client.GetAsync(string.Format("/subusers/stats?{0}", query), cancellationToken).ConfigureAwait(false);
+			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -123,13 +119,12 @@ namespace StrongGrid.Resources
 		/// <returns></returns>
 		public async Task<Statistic[]> GetCountryStatisticsAsync(string country, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var query = HttpUtility.ParseQueryString(string.Empty);
-			query["start_date"] = startDate.ToString("yyyy-MM-dd");
-			if (endDate.HasValue) query["end_date"] = endDate.Value.ToString("yyyy-MM-dd");
-			if (aggregatedBy != AggregateBy.None) query["aggregated_by"] = aggregatedBy.GetDescription();
-			if (!string.IsNullOrEmpty(country)) query["country"] = country;
+			var endpoint = string.Format("{0}/subusers/stats?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
+			if (endDate.HasValue) endpoint += "&end_date=" + endDate.Value.ToString("yyyy-MM-dd");
+			if (aggregatedBy != AggregateBy.None) endpoint += "aggregated_by=" + aggregatedBy.GetDescription();
+			if (!string.IsNullOrEmpty(country)) endpoint += "country=" + country;
 
-			var response = await _client.GetAsync(string.Format("/geo/stats?{0}", query), cancellationToken).ConfigureAwait(false);
+			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -147,12 +142,11 @@ namespace StrongGrid.Resources
 		/// <returns></returns>
 		public async Task<Statistic[]> GetDeviceTypesStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var query = HttpUtility.ParseQueryString(string.Empty);
-			query["start_date"] = startDate.ToString("yyyy-MM-dd");
-			if (endDate.HasValue) query["end_date"] = endDate.Value.ToString("yyyy-MM-dd");
-			if (aggregatedBy != AggregateBy.None) query["aggregated_by"] = aggregatedBy.GetDescription();
+			var endpoint = string.Format("{0}/devices/stats?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
+			if (endDate.HasValue) endpoint += "&end_date=" + endDate.Value.ToString("yyyy-MM-dd");
+			if (aggregatedBy != AggregateBy.None) endpoint += "aggregated_by=" + aggregatedBy.GetDescription();
 
-			var response = await _client.GetAsync(string.Format("/devices/stats?{0}", query), cancellationToken).ConfigureAwait(false);
+			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -170,12 +164,11 @@ namespace StrongGrid.Resources
 		/// <returns></returns>
 		public async Task<Statistic[]> GetClientTypesStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var query = HttpUtility.ParseQueryString(string.Empty);
-			query["start_date"] = startDate.ToString("yyyy-MM-dd");
-			if (endDate.HasValue) query["end_date"] = endDate.Value.ToString("yyyy-MM-dd");
-			if (aggregatedBy != AggregateBy.None) query["aggregated_by"] = aggregatedBy.GetDescription();
+			var endpoint = string.Format("{0}/clients/stats?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
+			if (endDate.HasValue) endpoint += "&end_date=" + endDate.Value.ToString("yyyy-MM-dd");
+			if (aggregatedBy != AggregateBy.None) endpoint += "aggregated_by=" + aggregatedBy.GetDescription();
 
-			var response = await _client.GetAsync(string.Format("/clients/stats?{0}", query), cancellationToken).ConfigureAwait(false);
+			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -194,19 +187,18 @@ namespace StrongGrid.Resources
 		/// <returns></returns>
 		public async Task<Statistic[]> GetInboxProvidersStatisticsAsync(IEnumerable<string> providers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var query = HttpUtility.ParseQueryString(string.Empty);
-			query["start_date"] = startDate.ToString("yyyy-MM-dd");
-			if (endDate.HasValue) query["end_date"] = endDate.Value.ToString("yyyy-MM-dd");
-			if (aggregatedBy != AggregateBy.None) query["aggregated_by"] = aggregatedBy.GetDescription();
+			var endpoint = string.Format("{0}/mailbox_providers/stats?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
+			if (endDate.HasValue) endpoint += "&end_date=" + endDate.Value.ToString("yyyy-MM-dd");
+			if (aggregatedBy != AggregateBy.None) endpoint += "aggregated_by=" + aggregatedBy.GetDescription();
 			if (providers != null && providers.Any())
 			{
 				foreach (var provider in providers)
 				{
-					query.Add("mailbox_providers", provider);
+					endpoint += "mailbox_providers=" + provider;
 				}
 			}
 
-			var response = await _client.GetAsync(string.Format("/mailbox_providers/stats?{0}", query), cancellationToken).ConfigureAwait(false);
+			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -225,19 +217,18 @@ namespace StrongGrid.Resources
 		/// <returns></returns>
 		public async Task<Statistic[]> GetBrowsersStatisticsAsync(IEnumerable<string> browsers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var query = HttpUtility.ParseQueryString(string.Empty);
-			query["start_date"] = startDate.ToString("yyyy-MM-dd");
-			if (endDate.HasValue) query["end_date"] = endDate.Value.ToString("yyyy-MM-dd");
-			if (aggregatedBy != AggregateBy.None) query["aggregated_by"] = aggregatedBy.GetDescription();
+			var endpoint = string.Format("{0}/browsers/stats?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
+			if (endDate.HasValue) endpoint += "&end_date=" + endDate.Value.ToString("yyyy-MM-dd");
+			if (aggregatedBy != AggregateBy.None) endpoint += "aggregated_by=" + aggregatedBy.GetDescription();
 			if (browsers != null && browsers.Any())
 			{
 				foreach (var browser in browsers)
 				{
-					query.Add("browsers", browser);
+					endpoint += "browsers=" + browser;
 				}
 			}
 
-			var response = await _client.GetAsync(string.Format("/browsers/stats?{0}", query), cancellationToken).ConfigureAwait(false);
+			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
