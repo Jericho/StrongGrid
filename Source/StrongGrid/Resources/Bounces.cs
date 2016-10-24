@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace StrongGrid.Resources
 {
@@ -33,11 +32,8 @@ namespace StrongGrid.Resources
 		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/bounces.html</returns>
 		public async Task<Bounce[]> GetAsync(DateTime? start = null, DateTime? end = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var query = HttpUtility.ParseQueryString(string.Empty);
-			if (start.HasValue) query["start_time"] = start.Value.ToUnixTime().ToString();
-			if (end.HasValue) query["end_time"] = end.Value.ToUnixTime().ToString();
-
-			var response = await _client.GetAsync(string.Format("{0}?{1}", _endpoint, query), cancellationToken).ConfigureAwait(false);
+			var endpoint = string.Format("{0}?start_time={1}&end_time={2}", _endpoint, start.Value.ToUnixTime().ToString(), end.Value.ToUnixTime().ToString());
+			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);

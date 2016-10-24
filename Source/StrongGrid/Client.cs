@@ -76,7 +76,7 @@ namespace StrongGrid
 			Templates = new Templates(this);
 			UnsubscribeGroups = new UnsubscribeGroups(this);
 			User = new User(this);
-			Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+			Version = typeof(Client).GetTypeInfo().Assembly.GetName().Version.ToString();
 
 			_mustDisposeHttpClient = (httpClient == null);
 			_httpClient = httpClient ?? new HttpClient();
@@ -254,7 +254,7 @@ namespace StrongGrid
 				var httpRequest = new HttpRequestMessage
 				{
 					Method = new HttpMethod(methodAsString),
-					RequestUri = new Uri(string.Format("{0}{1}{2}", _baseUri, endpoint.StartsWith("/", StringComparison.InvariantCultureIgnoreCase) ? "" : "/", endpoint)),
+					RequestUri = new Uri(string.Format("{0}{1}{2}", _baseUri, endpoint.StartsWith("/", StringComparison.Ordinal) ? "" : "/", endpoint)),
 					Content = content
 				};
 				return await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
