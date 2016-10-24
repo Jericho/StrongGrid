@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <id>StrongGrid</id>
+    <title>StrongGrid</title>
+    <version>0.0.0</version>
+    <authors>Jeremie Desautels</authors>
+    <owners>Jeremie Desautels</owners>
+    <description>Strongly typed library for SendGrid's v3 API</description>
+    <summary>StrongGrid is a strongly typed .NET client for SendGrid's v3 API.</summary>
+    <licenseUrl>http://jericho.mit-license.org</licenseUrl>
+    <projectUrl>https://github.com/Jericho/StrongGrid</projectUrl>
+    <iconUrl>https://github.com/identicons/jericho.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <copyright>Copyright (c) Jeremie Desautels and contributors</copyright>
+    <language>en-US</language>
+    <tags>StrongGrid SendGrid</tags>
+    <dependencies>
+      <group targetFramework=".NETFramework4.5">
+        <dependency id="Newtonsoft.Json" version="9.0.1" />
+      </group>
+      <group targetFramework=".NETStandard1.6">
+        <dependency id="Newtonsoft.Json" version="9.0.1" />
+        <dependency id="System.ComponentModel.Primitives" version="4.1.0" />
+        <dependency id="System.Reflection.TypeExtensions" version="4.1.0" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="StrongGrid.452/bin/Release/StrongGrid.dll" target="lib/net452" />
+    <file src="StrongGrid.46/bin/Release/StrongGrid.dll" target="lib/net46" />
+    <file src="StrongGrid.461/bin/Release/StrongGrid.dll" target="lib/net461" />
+    <file src="StrongGrid.462/bin/Release/StrongGrid.dll" target="lib/net462" />
+    <file src="StrongGrid/bin/Release/netstandard1.6/StrongGrid.dll" target="lib/netstandard1.6" />
+  </files>
+</package>
