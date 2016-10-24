@@ -7,7 +7,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace StrongGrid.Resources
 {
@@ -45,11 +44,8 @@ namespace StrongGrid.Resources
 
 		public async Task<Campaign[]> GetAllAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var query = HttpUtility.ParseQueryString(string.Empty);
-			query["limit"] = limit.ToString(CultureInfo.InvariantCulture);
-			query["offset"] = offset.ToString(CultureInfo.InvariantCulture);
-
-			var response = await _client.GetAsync(string.Format("{0}?{1}", _endpoint, query), cancellationToken).ConfigureAwait(false);
+			var endpoint = string.Format("{0}?limit={1}&offset={2}", _endpoint, limit, offset);
+			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);

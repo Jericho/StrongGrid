@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Net.Http;
+using System.Reflection;
+using System.Linq;
 
 namespace StrongGrid.Utilities
 {
@@ -23,7 +25,7 @@ namespace StrongGrid.Utilities
 			var fieldInfo = value.GetType().GetField(value.ToString());
 			if (fieldInfo == null) return value.ToString();
 
-			var attributes = fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
+			var attributes = fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false).ToArray();
 			if (attributes == null || attributes.Length == 0) return value.ToString();
 
 			var descriptionAttribute = attributes[0] as DescriptionAttribute;
