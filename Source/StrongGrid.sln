@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\build.cake = ..\build.cake
 		..\LICENSE = ..\LICENSE
 		..\README.md = ..\README.md
+		..\nuspec\StrongGrid.nuspec = ..\nuspec\StrongGrid.nuspec
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrongGrid.461", "StrongGrid.461\StrongGrid.461.csproj", "{330F468F-B43C-4B25-BCA6-5FD4E302D84A}"
