@@ -74,6 +74,9 @@
     <Compile Include="..\StrongGrid\Model\Attachment.cs">
       <Link>Model\Attachment.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid\Model\Block.cs">
+      <Link>Model\Block.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid\Model\Bounce.cs">
       <Link>Model\Bounce.cs</Link>
     </Compile>
@@ -226,6 +229,9 @@
     </Compile>
     <Compile Include="..\StrongGrid\Resources\ApiKeys.cs">
       <Link>Resources\ApiKeys.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Resources\Blocks.cs">
+      <Link>Resources\Blocks.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid\Resources\Bounces.cs">
       <Link>Resources\Bounces.cs</Link>

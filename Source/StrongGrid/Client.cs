@@ -32,6 +32,7 @@ namespace StrongGrid
 
 		public Alerts Alerts { get; private set; }
 		public ApiKeys ApiKeys { get; private set; }
+		public Blocks Blocks { get; private set; }
 		public Campaigns Campaigns { get; private set; }
 		public Categories Categories { get; private set; }
 		public Contacts Contacts { get; private set; }
@@ -65,6 +66,7 @@ namespace StrongGrid
 
 			Alerts = new Alerts(this);
 			ApiKeys = new ApiKeys(this);
+			Blocks = new Blocks(this);
 			Campaigns = new Campaigns(this);
 			Categories = new Categories(this);
 			Contacts = new Contacts(this);
