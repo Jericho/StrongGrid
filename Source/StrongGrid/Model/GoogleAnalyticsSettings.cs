@@ -2,11 +2,8 @@
 
 namespace StrongGrid.Model
 {
-	public class GoogleAnalyticsSettings
+	public class GoogleAnalyticsSettings : Setting
 	{
-		[JsonProperty("enable")]
-		public bool Enabled { get; set; }
-
 		[JsonProperty("substitution_tag")]
 		public string SubstitutionTag { get; set; }
 	}

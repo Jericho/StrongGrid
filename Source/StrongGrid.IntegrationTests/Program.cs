@@ -28,16 +28,17 @@ namespace StrongGrid.IntegrationTests
 			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY", EnvironmentVariableTarget.User);
 			var client = new StrongGrid.Client(apiKey: apiKey, httpClient: httpClient);
 
-			ApiKeys(client);
-			Campaigns(client);
-			ContactsAndCustomFields(client);
-			GlobalSuppressions(client);
-			ListsAndSegments(client);
-			Mail(client);
-			UnsubscribeGroups(client);
-			User(client);
-			Statistics(client);
-			Templates(client);
+			//ApiKeys(client);
+			//Campaigns(client);
+			//ContactsAndCustomFields(client);
+			//GlobalSuppressions(client);
+			//ListsAndSegments(client);
+			//Mail(client);
+			//UnsubscribeGroups(client);
+			//User(client);
+			//Statistics(client);
+			//Templates(client);
+			Settings(client);
 		}
 
 		private static void Mail(IClient client)
@@ -68,15 +69,15 @@ namespace StrongGrid.IntegrationTests
 				Footer = new FooterSettings
 				{
 					Enabled = true,
-					Html = "<p>This email was sent with the help of the <b>StrongGrid</b> library</p>",
-					Text = "This email was sent with the help of the StrongGrid library"
+					HtmlContent = "<p>This email was sent with the help of the <b>StrongGrid</b> library</p>",
+					TextContent = "This email was sent with the help of the StrongGrid library"
 				}
 			};
 			var trackingSettings = new TrackingSettings
 			{
 				ClickTracking = new ClickTrackingSettings
 				{
-					EnabledInHtmlContent = true,
+					Enabled = true,
 					EnabledInTextContent = true
 				},
 				OpenTracking = new OpenTrackingSettings { Enabled = true },
@@ -549,6 +550,23 @@ namespace StrongGrid.IntegrationTests
 
 			campaigns = client.Campaigns.GetAllAsync(100, 0).Result;
 			Console.WriteLine("All campaigns retrieved. There are {0} campaigns", campaigns.Length);
+
+			Console.WriteLine("\n\nPress any key to continue");
+			Console.ReadKey();
+		}
+
+		private static void Settings(IClient client)
+		{
+			Console.WriteLine("\n***** SETTINGS *****");
+
+			var partnerSettings = client.Settings.GetAllPartnerSettingsAsync().Result;
+			Console.WriteLine($"All partner settings retrieved. There are {partnerSettings.Length} settings");
+
+			var trackingSettings = client.Settings.GetAllTrackingSettingsAsync().Result;
+			Console.WriteLine($"All partner tracking retrieved. There are {trackingSettings.Length} settings");
+
+			var mailSettings = client.Settings.GetAllMailSettingsAsync().Result;
+			Console.WriteLine($"All mail tracking retrieved. There are {mailSettings.Length} settings");
 
 			Console.WriteLine("\n\nPress any key to continue");
 			Console.ReadKey();

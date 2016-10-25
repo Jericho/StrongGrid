@@ -2,9 +2,7 @@
 
 namespace StrongGrid.Model
 {
-	public class SandboxModeSettings
+	public class SandboxModeSettings : Setting
 	{
-		[JsonProperty("enable")]
-		public bool Enabled { get; set; }
 	}
 }

@@ -2,11 +2,8 @@
 
 namespace StrongGrid.Model
 {
-	public class OpenTrackingSettings
+	public class OpenTrackingSettings : Setting
 	{
-		[JsonProperty("enable")]
-		public bool Enabled { get; set; }
-
 		[JsonProperty("substitution_tag")]
 		public string SubstitutionTag { get; set; }
 	}

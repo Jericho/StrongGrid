@@ -2,11 +2,8 @@
 
 namespace StrongGrid.Model
 {
-	public class SpamCheckingSettings
+	public class SpamCheckingSettings : Setting
 	{
-		[JsonProperty("enable")]
-		public bool Enabled { get; set; }
-
 		[JsonProperty("threshold")]
 		public int Threshold { get; set; }
 

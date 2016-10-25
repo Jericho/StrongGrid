@@ -2,9 +2,7 @@
 
 namespace StrongGrid.Model
 {
-	public class BypassListManagementSettings
+	public class BypassListManagementSettings : Setting
 	{
-		[JsonProperty("enable")]
-		public bool Enabled { get; set; }
 	}
 }

@@ -98,7 +98,7 @@ namespace StrongGrid.Resources
 			{
 				ClickTracking = new ClickTrackingSettings
 				{
-					EnabledInHtmlContent = trackClicks,
+					Enabled = trackClicks,
 					EnabledInTextContent = trackClicks
 				},
 				OpenTracking = new OpenTrackingSettings { Enabled = trackOpens },
