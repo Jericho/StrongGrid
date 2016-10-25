@@ -28,17 +28,18 @@ namespace StrongGrid.IntegrationTests
 			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY", EnvironmentVariableTarget.User);
 			var client = new StrongGrid.Client(apiKey: apiKey, httpClient: httpClient);
 
-			//ApiKeys(client);
-			//Campaigns(client);
-			//ContactsAndCustomFields(client);
-			//GlobalSuppressions(client);
-			//ListsAndSegments(client);
-			//Mail(client);
-			//UnsubscribeGroups(client);
-			//User(client);
-			//Statistics(client);
-			//Templates(client);
+			ApiKeys(client);
+			Campaigns(client);
+			ContactsAndCustomFields(client);
+			GlobalSuppressions(client);
+			ListsAndSegments(client);
+			Mail(client);
+			UnsubscribeGroups(client);
+			User(client);
+			Statistics(client);
+			Templates(client);
 			Settings(client);
+			Alerts(client);
 		}
 
 		private static void Mail(IClient client)
@@ -567,6 +568,23 @@ namespace StrongGrid.IntegrationTests
 
 			var mailSettings = client.Settings.GetAllMailSettingsAsync().Result;
 			Console.WriteLine($"All mail tracking retrieved. There are {mailSettings.Length} settings");
+
+			Console.WriteLine("\n\nPress any key to continue");
+			Console.ReadKey();
+		}
+
+		private static void Alerts(IClient client)
+		{
+			Console.WriteLine("\n***** ALERTS *****");
+
+			var newAlert = client.Alerts.CreateAsync(AlertType.UsageLimit, "test@example.com", Frequency.Weekly, 75).Result;
+			Console.WriteLine($"New alert created: {newAlert.Id}");
+
+			var allAlerts = client.Alerts.GetAllAsync().Result;
+			Console.WriteLine($"All alerts retrieved. There are {allAlerts.Length} alerts");
+
+			client.Alerts.DeleteAsync(newAlert.Id).Wait();
+			Console.WriteLine($"Alert {newAlert.Id} deleted");
 
 			Console.WriteLine("\n\nPress any key to continue");
 			Console.ReadKey();
