@@ -2,9 +2,9 @@
 
 namespace StrongGrid.Model
 {
-	public class SpamCheckingSettings : Setting
+	public class SpamCheckSettings : Setting
 	{
-		[JsonProperty("threshold")]
+		[JsonProperty("max_score")]
 		public int Threshold { get; set; }
 
 		[JsonProperty("post_to_url")]

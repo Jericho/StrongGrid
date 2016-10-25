@@ -56,6 +56,9 @@
     <Compile Include="..\StrongGrid\Model\Account.cs">
       <Link>Model\Account.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid\Model\AddressWhitelistSettings.cs">
+      <Link>Model\AddressWhitelistSettings.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid\Model\AggregateBy.cs">
       <Link>Model\AggregateBy.cs</Link>
     </Compile>
@@ -67,6 +70,9 @@
     </Compile>
     <Compile Include="..\StrongGrid\Model\Bounce.cs">
       <Link>Model\Bounce.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Model\BouncePurgeSettings.cs">
+      <Link>Model\BouncePurgeSettings.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid\Model\BypassListManagementSettings.cs">
       <Link>Model\BypassListManagementSettings.cs</Link>
@@ -89,6 +95,12 @@
     <Compile Include="..\StrongGrid\Model\CustomFieldMetadata.cs">
       <Link>Model\CustomFieldMetadata.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid\Model\EmailAddressSetting.cs">
+      <Link>Model\EmailAddressSetting.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Model\EnforcedTlsSettings.cs">
+      <Link>Model\EnforcedTlsSettings.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid\Model\Error.cs">
       <Link>Model\Error.cs</Link>
     </Compile>
@@ -101,8 +113,17 @@
     <Compile Include="..\StrongGrid\Model\FieldType.cs">
       <Link>Model\FieldType.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid\Model\FooterGlobalSettings.cs">
+      <Link>Model\FooterGlobalSettings.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid\Model\FooterSettings.cs">
       <Link>Model\FooterSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Model\GlobalSetting.cs">
+      <Link>Model\GlobalSetting.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Model\GoogleAnalyticsGlobalSettings.cs">
+      <Link>Model\GoogleAnalyticsGlobalSettings.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid\Model\GoogleAnalyticsSettings.cs">
       <Link>Model\GoogleAnalyticsSettings.cs</Link>
@@ -131,6 +152,9 @@
     <Compile Include="..\StrongGrid\Model\Metrics.cs">
       <Link>Model\Metrics.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid\Model\NewRelicSettings.cs">
+      <Link>Model\NewRelicSettings.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid\Model\OpenTrackingSettings.cs">
       <Link>Model\OpenTrackingSettings.cs</Link>
     </Compile>
@@ -146,8 +170,14 @@
     <Compile Include="..\StrongGrid\Model\SenderIdentity.cs">
       <Link>Model\SenderIdentity.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid\Model\Setting.cs">
+      <Link>Model\Setting.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid\Model\SpamCheckingSettings.cs">
       <Link>Model\SpamCheckingSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Model\SpamCheckSettings.cs">
+      <Link>Model\SpamCheckSettings.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid\Model\Stat.cs">
       <Link>Model\Stat.cs</Link>
@@ -155,11 +185,17 @@
     <Compile Include="..\StrongGrid\Model\Statistic.cs">
       <Link>Model\Statistic.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid\Model\SubscriptionSettings.cs">
+      <Link>Model\SubscriptionSettings.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid\Model\SubscriptionTrackingSettings.cs">
       <Link>Model\SubscriptionTrackingSettings.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid\Model\Template.cs">
       <Link>Model\Template.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Model\TemplateSettings.cs">
+      <Link>Model\TemplateSettings.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid\Model\TemplateVersion.cs">
       <Link>Model\TemplateVersion.cs</Link>
@@ -169,9 +205,6 @@
     </Compile>
     <Compile Include="..\StrongGrid\Model\UnsubscribeOptions.cs">
       <Link>Model\UnsubscribeOptions.cs</Link>
-    </Compile>
-    <Compile Include="..\StrongGrid\Model\BccSettings.cs">
-      <Link>Model\BccSettings.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid\Model\UserCredits.cs">
       <Link>Model\UserCredits.cs</Link>
@@ -212,7 +245,7 @@
     <Compile Include="..\StrongGrid\Resources\SenderIdentities.cs">
       <Link>Resources\SenderIdentities.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid.Shared\Resources\Settings.cs">
+    <Compile Include="..\StrongGrid\Resources\Settings.cs">
       <Link>Resources\Settings.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid\Resources\Statistics.cs">

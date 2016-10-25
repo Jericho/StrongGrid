@@ -2,11 +2,8 @@
 
 namespace StrongGrid.Model
 {
-	public class SubscriptionTrackingSettings
+	public class SubscriptionTrackingSettings : Setting
 	{
-		[JsonProperty("enable")]
-		public bool Enabled { get; set; }
-
 		[JsonProperty("text")]
 		public string Text { get; set; }
 

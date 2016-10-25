@@ -2,11 +2,8 @@
 
 namespace StrongGrid.Model
 {
-	public class ClickTrackingSettings
+	public class ClickTrackingSettings : Setting
 	{
-		[JsonProperty("enable")]
-		public bool EnabledInHtmlContent { get; set; }
-
 		[JsonProperty("enable_text")]
 		public bool EnabledInTextContent { get; set; }
 	}
