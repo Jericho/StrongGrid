@@ -30,6 +30,7 @@ namespace StrongGrid
 
 		#region PROPERTIES
 
+		public Alerts Alerts { get; private set; }
 		public ApiKeys ApiKeys { get; private set; }
 		public Campaigns Campaigns { get; private set; }
 		public Categories Categories { get; private set; }
@@ -62,6 +63,7 @@ namespace StrongGrid
 			_baseUri = new Uri(string.Format("{0}/{1}", baseUri, apiVersion));
 			_apiKey = apiKey;
 
+			Alerts = new Alerts(this);
 			ApiKeys = new ApiKeys(this);
 			Campaigns = new Campaigns(this);
 			Categories = new Categories(this);

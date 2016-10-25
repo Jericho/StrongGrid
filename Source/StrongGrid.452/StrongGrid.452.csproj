@@ -61,6 +61,12 @@
     <Compile Include="..\StrongGrid\Model\AggregateBy.cs">
       <Link>Model\AggregateBy.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid\Model\Alert.cs">
+      <Link>Model\Alert.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Model\AlertType.cs">
+      <Link>Model\AlertType.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid\Model\ApiKey.cs">
       <Link>Model\ApiKey.cs</Link>
     </Compile>
@@ -117,6 +123,9 @@
     </Compile>
     <Compile Include="..\StrongGrid\Model\FooterSettings.cs">
       <Link>Model\FooterSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Model\Frequency.cs">
+      <Link>Model\Frequency.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid\Model\GlobalSetting.cs">
       <Link>Model\GlobalSetting.cs</Link>
@@ -210,6 +219,9 @@
     </Compile>
     <Compile Include="..\StrongGrid\Model\VerificationStatus.cs">
       <Link>Model\VerificationStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Resources\Alerts.cs">
+      <Link>Resources\Alerts.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid\Resources\ApiKeys.cs">
       <Link>Resources\ApiKeys.cs</Link>
