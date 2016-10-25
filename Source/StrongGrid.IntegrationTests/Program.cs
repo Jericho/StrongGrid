@@ -28,15 +28,19 @@ namespace StrongGrid.IntegrationTests
 			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY", EnvironmentVariableTarget.User);
 			var client = new StrongGrid.Client(apiKey: apiKey, httpClient: httpClient);
 
-			ApiKeys(client);
-			ContactsAndCustomFields(client);
-			GlobalSuppressions(client);
-			ListsAndSegments(client);
-			Mail(client);
-			UnsubscribeGroups(client);
-			User(client);
-			Statistics(client);
-			Templates(client);
+			//ApiKeys(client);
+			//Campaigns(client);
+			//ContactsAndCustomFields(client);
+			//GlobalSuppressions(client);
+			//ListsAndSegments(client);
+			//Mail(client);
+			//UnsubscribeGroups(client);
+			//User(client);
+			//Statistics(client);
+			//Templates(client);
+			//Settings(client);
+			//Alerts(client);
+			Blocks(client);
 		}
 
 		private static void Mail(IClient client)
@@ -67,15 +71,15 @@ namespace StrongGrid.IntegrationTests
 				Footer = new FooterSettings
 				{
 					Enabled = true,
-					Html = "<p>This email was sent with the help of the <b>StrongGrid</b> library</p>",
-					Text = "This email was sent with the help of the StrongGrid library"
+					HtmlContent = "<p>This email was sent with the help of the <b>StrongGrid</b> library</p>",
+					TextContent = "This email was sent with the help of the StrongGrid library"
 				}
 			};
 			var trackingSettings = new TrackingSettings
 			{
 				ClickTracking = new ClickTrackingSettings
 				{
-					EnabledInHtmlContent = true,
+					Enabled = true,
 					EnabledInTextContent = true
 				},
 				OpenTracking = new OpenTrackingSettings { Enabled = true },
@@ -483,6 +487,116 @@ namespace StrongGrid.IntegrationTests
 
 			lists = client.Lists.GetAllAsync().Result;
 			Console.WriteLine("All lists retrieved. There are {0} lists", lists.Length);
+
+			Console.WriteLine("\n\nPress any key to continue");
+			Console.ReadKey();
+		}
+
+		private static void Campaigns(IClient client)
+		{
+			var YOUR_EMAIL = "youremail@hotmail.com";
+
+			Console.WriteLine("\n***** CAMPAIGNS *****");
+
+			var senderIdentities = client.SenderIdentities.GetAllAsync().Result;
+			Console.WriteLine($"All sender identities retrieved. There are {senderIdentities.Length} identities");
+
+			var sender = senderIdentities.FirstOrDefault(s => s.NickName == "Integration Testing identity");
+			if (sender == null)
+			{
+				sender = client.SenderIdentities.CreateAsync("Integration Testing identity", new MailAddress(YOUR_EMAIL, "John Doe"), new MailAddress(YOUR_EMAIL, "John Doe"), "123 Main Street", null, "Small Town", "ZZ", "12345", "USA").Result;
+				throw new Exception($"A new sender identity was create and a verification email was sent to {sender.From.Email}. You must complete the verification process before proceeding.");
+			}
+			else if (!sender.Verification.IsCompleted)
+			{
+				throw new Exception($"A verification email was previously sent to {sender.From.Email} but the process hasn't been completed yet (hint: there is a link in the email that you must click on).");
+			}
+
+			var lists = client.Lists.GetAllAsync().Result;
+			Console.WriteLine($"All lists retrieved. There are {lists.Length} lists");
+
+			var list = lists.FirstOrDefault(l => l.Name == "Integration testing list");
+			if (list == null)
+			{
+				list = client.Lists.CreateAsync("Integration testing list").Result;
+				Console.WriteLine("List created");
+			}
+
+			var unsubscribeGroups = client.UnsubscribeGroups.GetAllAsync().Result;
+			Console.WriteLine($"All unsubscribe groups retrieved. There are {unsubscribeGroups.Length} groups");
+
+			var unsubscribeGroup = unsubscribeGroups.FirstOrDefault(l => l.Name == "Integration testing group");
+			if (unsubscribeGroup == null)
+			{
+				unsubscribeGroup = client.UnsubscribeGroups.CreateAsync("Integration testing group", "For testing purposes", false).Result;
+				Console.WriteLine("Unsubscribe group created");
+			}
+
+			var campaign = client.Campaigns.CreateAsync("Integration testing campaign", unsubscribeGroup.Id, sender.Id, "This is the subject", "<html><body>Hello <b>World</b><p><a href='[unsubscribe]'>Click Here to Unsubscribe</a></p></body></html", "Hello world. To unsubscribe, visit [unsubscribe]", new[] { list.Id }).Result;
+			Console.WriteLine("Campaign '{0}' created. Id: {1}", campaign.Title, campaign.Id);
+
+			client.Campaigns.UpdateAsync(campaign.Id, categories: new[] { "category1", "category2" }).Wait();
+			Console.WriteLine("Campaign '{0}' updated", campaign.Id);
+
+			var campaigns = client.Campaigns.GetAllAsync(100, 0).Result;
+			Console.WriteLine("All campaigns retrieved. There are {0} campaigns", campaigns.Length);
+
+			client.Campaigns.SendTestAsync(campaign.Id, new[] { YOUR_EMAIL }).Wait();
+			Console.WriteLine("Test sent");
+
+			client.Lists.DeleteAsync(list.Id).Wait();
+			Console.WriteLine("List deleted");
+
+			client.Campaigns.DeleteAsync(campaign.Id).Wait();
+			Console.WriteLine("Campaign {0} deleted", campaign.Id);
+
+			campaigns = client.Campaigns.GetAllAsync(100, 0).Result;
+			Console.WriteLine("All campaigns retrieved. There are {0} campaigns", campaigns.Length);
+
+			Console.WriteLine("\n\nPress any key to continue");
+			Console.ReadKey();
+		}
+
+		private static void Settings(IClient client)
+		{
+			Console.WriteLine("\n***** SETTINGS *****");
+
+			var partnerSettings = client.Settings.GetAllPartnerSettingsAsync().Result;
+			Console.WriteLine($"All partner settings retrieved. There are {partnerSettings.Length} settings");
+
+			var trackingSettings = client.Settings.GetAllTrackingSettingsAsync().Result;
+			Console.WriteLine($"All partner tracking retrieved. There are {trackingSettings.Length} settings");
+
+			var mailSettings = client.Settings.GetAllMailSettingsAsync().Result;
+			Console.WriteLine($"All mail tracking retrieved. There are {mailSettings.Length} settings");
+
+			Console.WriteLine("\n\nPress any key to continue");
+			Console.ReadKey();
+		}
+
+		private static void Alerts(IClient client)
+		{
+			Console.WriteLine("\n***** ALERTS *****");
+
+			var newAlert = client.Alerts.CreateAsync(AlertType.UsageLimit, "test@example.com", Frequency.Weekly, 75).Result;
+			Console.WriteLine($"New alert created: {newAlert.Id}");
+
+			var allAlerts = client.Alerts.GetAllAsync().Result;
+			Console.WriteLine($"All alerts retrieved. There are {allAlerts.Length} alerts");
+
+			client.Alerts.DeleteAsync(newAlert.Id).Wait();
+			Console.WriteLine($"Alert {newAlert.Id} deleted");
+
+			Console.WriteLine("\n\nPress any key to continue");
+			Console.ReadKey();
+		}
+
+		private static void Blocks(IClient client)
+		{
+			Console.WriteLine("\n***** BLOCKS *****");
+
+			var blocks = client.Blocks.GetAllAsync().Result;
+			Console.WriteLine($"All blocks retrieved. There are {blocks.Length} blocks");
 
 			Console.WriteLine("\n\nPress any key to continue");
 			Console.ReadKey();

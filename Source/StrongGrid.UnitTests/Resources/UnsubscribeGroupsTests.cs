@@ -56,7 +56,7 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(ENDPOINT + "/" + groupId, It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"{ENDPOINT}/{groupId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var groups = new UnsubscribeGroups(mockClient.Object);
@@ -116,7 +116,7 @@ namespace StrongGrid.Resources.UnitTests
 			var groupId = 100;
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.DeleteAsync(ENDPOINT + "/" + groupId, It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.DeleteAsync($"{ENDPOINT}/{groupId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK));
 
 			var groups = new UnsubscribeGroups(mockClient.Object);
@@ -141,7 +141,7 @@ namespace StrongGrid.Resources.UnitTests
 				'description': 'Suggestions for items our users might like.'
 			}";
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PatchAsync(ENDPOINT + "/" + groupId, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.PatchAsync($"{ENDPOINT}/{groupId}", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var groups = new UnsubscribeGroups(mockClient.Object);

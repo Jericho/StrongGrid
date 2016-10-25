@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\build.cake = ..\build.cake
 		..\LICENSE = ..\LICENSE
 		..\README.md = ..\README.md
+		..\nuspec\StrongGrid.nuspec = ..\nuspec\StrongGrid.nuspec
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrongGrid.461", "StrongGrid.461\StrongGrid.461.csproj", "{330F468F-B43C-4B25-BCA6-5FD4E302D84A}"
@@ -25,6 +26,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrongGrid.UnitTests", "StrongGrid.UnitTests\StrongGrid.UnitTests.csproj", "{0133C4A5-64BE-475B-8636-82A95C057DD7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrongGrid.IntegrationTests", "StrongGrid.IntegrationTests\StrongGrid.IntegrationTests.csproj", "{F63CECA2-7D7A-4448-8F5D-E540DE430E93}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "StrongGrid", "StrongGrid\StrongGrid.xproj", "{451E4044-7AE3-4982-8F53-6B86AB788557}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,6 +59,10 @@ Global
 		{F63CECA2-7D7A-4448-8F5D-E540DE430E93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F63CECA2-7D7A-4448-8F5D-E540DE430E93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F63CECA2-7D7A-4448-8F5D-E540DE430E93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{451E4044-7AE3-4982-8F53-6B86AB788557}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{451E4044-7AE3-4982-8F53-6B86AB788557}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{451E4044-7AE3-4982-8F53-6B86AB788557}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{451E4044-7AE3-4982-8F53-6B86AB788557}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,5 +74,6 @@ Global
 		{6D2BAA27-E4FB-4087-8C15-8C9E8898F564} = {7F08B680-E39D-4201-A60A-22814CA5ABF4}
 		{0133C4A5-64BE-475B-8636-82A95C057DD7} = {92D9174E-51D2-459A-9C8B-9BF12B3BDA63}
 		{F63CECA2-7D7A-4448-8F5D-E540DE430E93} = {92D9174E-51D2-459A-9C8B-9BF12B3BDA63}
+		{451E4044-7AE3-4982-8F53-6B86AB788557} = {7F08B680-E39D-4201-A60A-22814CA5ABF4}
 	EndGlobalSection
 EndGlobal

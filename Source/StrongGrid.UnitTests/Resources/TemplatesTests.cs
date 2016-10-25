@@ -62,7 +62,7 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(ENDPOINT + "/" + templateId, It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"{ENDPOINT}/{templateId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var templates = new Templates(mockClient.Object);
@@ -120,7 +120,7 @@ namespace StrongGrid.Resources.UnitTests
 			var templateId = "xxxxxxxx";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.DeleteAsync(ENDPOINT + "/" + templateId, It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.DeleteAsync($"{ENDPOINT}/{templateId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK));
 
 			var templates = new Templates(mockClient.Object);
@@ -144,7 +144,7 @@ namespace StrongGrid.Resources.UnitTests
 				'versions': []
 			}";
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PatchAsync(ENDPOINT + "/" + templateId, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.PatchAsync($"{ENDPOINT}/{templateId}", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var templates = new Templates(mockClient.Object);
@@ -180,7 +180,7 @@ namespace StrongGrid.Resources.UnitTests
 				'updated_at': '2014-03-19 18:56:33'
 			}";
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PostAsync(ENDPOINT + "/" + templateId + "/versions", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.PostAsync($"{ENDPOINT}/{templateId}/versions", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var templates = new Templates(mockClient.Object);
@@ -213,7 +213,7 @@ namespace StrongGrid.Resources.UnitTests
 				'updated_at': '2014-06-12 11:33:00'
 			}";
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PostAsync(ENDPOINT + "/" + templateId + "/versions/" + versionId + "/activate", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.PostAsync($"{ENDPOINT}/{templateId}/versions/{versionId}/activate", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var templates = new Templates(mockClient.Object);
@@ -246,7 +246,7 @@ namespace StrongGrid.Resources.UnitTests
 				'updated_at': '2014-03-19 18:56:33'
 			}";
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(ENDPOINT + "/" + templateId + "/versions/" + versionId, It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"{ENDPOINT}/{templateId}/versions/{versionId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var templates = new Templates(mockClient.Object);
@@ -280,7 +280,7 @@ namespace StrongGrid.Resources.UnitTests
 				'updated_at': '2014-03-19 18:56:33'
 			}";
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PatchAsync(ENDPOINT + "/" + templateId + "/versions/" + versionId, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.PatchAsync($"{ENDPOINT}/{templateId}/versions/{versionId}", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var templates = new Templates(mockClient.Object);
@@ -304,7 +304,7 @@ namespace StrongGrid.Resources.UnitTests
 			var versionId = "8aefe0ee-f12b-4575-b5b7-c97e21cb36f3";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.DeleteAsync(ENDPOINT + "/" + templateId + "/versions/" + versionId, It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.DeleteAsync($"{ENDPOINT}/{templateId}/versions/{versionId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent));
 
 			var templates = new Templates(mockClient.Object);

@@ -255,37 +255,15 @@ Task("Create-NuGet-Package")
 {
 	var settings = new NuGetPackSettings
 	{
-		Id                      = libraryName,
 		Version                 = versionInfo.NuGetVersionV2,
-		Title                   = libraryName,
-		Authors                 = new[] { "Jeremie Desautels" },
-		Owners                  = new[] { "Jeremie Desautels" },
-		Description             = "Strongly typed library for SendGrid's v3 API",
-		Summary                 = "Strongly typed library for SendGrid's v3 API",
-		ProjectUrl              = new Uri("https://github.com/Jericho/StrongGrid"),
-		IconUrl                 = new Uri("https://github.com/identicons/jericho.png"),
-		LicenseUrl              = new Uri("http://jericho.mit-license.org"),
-		Copyright               = "Copyright (c) 2016 Jeremie Desautels",
-		ReleaseNotes            = new [] { "" },
-		Tags                    = new [] { "StrongGrid", "sendgrid" },
-		RequireLicenseAcceptance= false,
 		Symbols                 = false,
 		NoPackageAnalysis       = true,
-		Dependencies            = new [] {
-			new NuSpecDependency { Id = "Newtonsoft.Json", Version = "9.0.1" }
-		},
-		Files                   = new [] {
-			new NuSpecContent { Source = libraryName + ".452/bin/" + configuration + "/" + libraryName + ".dll", Target = "lib/net452" },
-			new NuSpecContent { Source = libraryName + ".46/bin/" + configuration + "/" + libraryName + ".dll", Target = "lib/net46" },
-			new NuSpecContent { Source = libraryName + ".461/bin/" + configuration + "/" + libraryName + ".dll", Target = "lib/net461" },
-			new NuSpecContent { Source = libraryName + ".462/bin/" + configuration + "/" + libraryName + ".dll", Target = "lib/net462" }
-		},
 		BasePath                = "./Source/",
 		OutputDirectory         = outputDir,
 		ArgumentCustomization   = args => args.Append("-Prop Configuration=" + configuration)
 	};
 			
-	NuGetPack(settings);
+	NuGetPack("./nuspec/" + libraryName + ".nuspec", settings);
 });
 
 Task("Upload-AppVeyor-Artifacts")

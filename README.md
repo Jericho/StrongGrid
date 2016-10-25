@@ -44,6 +44,7 @@ StrongGrid supports the following .NET frameworks:
 - 4.6
 - 4.6.1
 - 4.6.2
+- .Net Standard 1.6
  
 I plan to also support .NET Core in a future release.
 
