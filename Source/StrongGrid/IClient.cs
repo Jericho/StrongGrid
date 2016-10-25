@@ -8,6 +8,7 @@ namespace StrongGrid
 {
 	public interface IClient
 	{
+		Alerts Alerts { get; }
 		ApiKeys ApiKeys { get; }
 		Campaigns Campaigns { get; }
 		Categories Categories { get; }
