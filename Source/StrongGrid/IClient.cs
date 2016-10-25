@@ -10,6 +10,7 @@ namespace StrongGrid
 	{
 		Alerts Alerts { get; }
 		ApiKeys ApiKeys { get; }
+		Blocks Blocks { get; }
 		Campaigns Campaigns { get; }
 		Categories Categories { get; }
 		Contacts Contacts { get; }
