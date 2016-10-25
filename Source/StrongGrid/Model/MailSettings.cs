@@ -5,7 +5,7 @@ namespace StrongGrid.Model
 	public class MailSettings
 	{
 		[JsonProperty("bcc")]
-		public BccSettings Bcc { get; set; }
+		public EmailAddressSetting Bcc { get; set; }
 
 		[JsonProperty("bypass_list_management")]
 		public BypassListManagementSettings BypassListManagement { get; set; }

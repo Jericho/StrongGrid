@@ -2,7 +2,7 @@
 
 namespace StrongGrid.Model
 {
-	public abstract class Setting
+	public class Setting
 	{
 		[JsonProperty("enabled")]
 		public bool Enabled { get; set; }

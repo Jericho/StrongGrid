@@ -2,7 +2,7 @@
 
 namespace StrongGrid.Model
 {
-    public class BccSettings : Setting
+    public class EmailAddressSetting : Setting
     {
         [JsonProperty("email")]
         public string EmailAddress { get; set; }

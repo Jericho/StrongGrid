@@ -45,11 +45,12 @@ namespace StrongGrid.Resources
 		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/enforced_tls.html</returns>
 		public async Task UpdateEnforcedTlsSettingsAsync(bool requireTls, bool requireValidCert, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = new JObject
+			var enforcedTlsSettings = new EnforcedTlsSettings
 			{
-				{ "require_tls", requireTls },
-				{ "require_valid_cert", requireValidCert }
+				RequireTls = requireTls,
+				RequireValidCertificate = requireValidCert
 			};
+			var data = JObject.FromObject(enforcedTlsSettings);
 			var response = await _client.PatchAsync(_endpoint + "/enforced_tls", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 		}
@@ -105,11 +106,12 @@ namespace StrongGrid.Resources
 		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/partners.html</returns>
 		public async Task UpdateNewRelicSettingsAsync(bool enabled, string licenseKey, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = new JObject
+			var newRelicSettings = new NewRelicSettings
 			{
-				{ "enabled", enabled },
-				{ "license_key", licenseKey }
+				Enabled = enabled,
+				LicenseKey = licenseKey
 			};
+			var data = JObject.FromObject(newRelicSettings);
 			var response = await _client.PatchAsync("/partner_settings/new_relic", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 		}
@@ -177,10 +179,11 @@ namespace StrongGrid.Resources
 		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/tracking.html</returns>
 		public async Task UpdateClickTrackingSettingsAsync(bool enabled, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = new JObject
+			var clickTrackingSettings = new Setting
 			{
-				{ "enabled", enabled }
+				Enabled = enabled
 			};
+			var data = JObject.FromObject(clickTrackingSettings);
 			var response = await _client.PatchAsync("/tracking_settings/click", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 		}
@@ -205,15 +208,16 @@ namespace StrongGrid.Resources
 		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/tracking.html</returns>
 		public async Task UpdateGoogleAnalyticsGlobalSettingsAsync(bool enabled, string utmSource, string utmMedium, string utmTerm, string utmContent, string utmCampaign, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = new JObject
+			var googleAnalyticsGlobalSettings = new GoogleAnalyticsGlobalSettings
 			{
-				{ "enabled", enabled },
-				{ "utm_source", utmSource },
-				{ "utm_medium", utmMedium },
-				{ "utm_term", utmTerm },
-				{ "utm_content", utmContent },
-				{ "utm_campaign", utmCampaign }
+				Enabled = enabled,
+				UtmSource = utmSource,
+				UtmMedium = utmMedium,
+				UtmTerm = utmTerm,
+				UtmContent = utmContent,
+				UtmCampaign = utmCampaign
 			};
+			var data = JObject.FromObject(googleAnalyticsGlobalSettings);
 			var response = await _client.PatchAsync("/tracking_settings/google_analytics", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 		}
@@ -250,10 +254,11 @@ namespace StrongGrid.Resources
 		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/tracking.html</returns>
 		public async Task UpdateOpenTrackingSettingsAsync(bool enabled, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = new JObject
+			var openTrackingSettings = new Setting
 			{
-				{ "enabled", enabled }
+				Enabled = enabled
 			};
+			var data = JObject.FromObject(openTrackingSettings);
 			var response = await _client.PatchAsync("/tracking_settings/open", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 		}
@@ -278,15 +283,16 @@ namespace StrongGrid.Resources
 		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/tracking.html</returns>
 		public async Task UpdateSubscriptionTrackingSettingsAsync(bool enabled, string landingPageHtml, string url, string replacementTag, string htmlContent, string textContent, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = new JObject
+			var subscriptionTrackingSettings = new SubscriptionSettings
 			{
-				{ "enabled", enabled },
-				{ "landing", landingPageHtml },
-				{ "url", url },
-				{ "replace", replacementTag },
-				{ "html_content", htmlContent },
-				{ "plain_content", textContent }
+				Enabled = enabled,
+				LandingPageHtml = landingPageHtml,
+				Url = url,
+				ReplacementTag = replacementTag,
+				HtmlContent = htmlContent,
+				TextContent = textContent
 			};
+			var data = JObject.FromObject(subscriptionTrackingSettings);
 			var response = await _client.PatchAsync("/tracking_settings/subscription", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 		}
@@ -326,13 +332,13 @@ namespace StrongGrid.Resources
 		/// Get BCC Settings 
 		/// </summary>
 		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/mail.html</returns>
-		public async Task<BccSettings> GetBccMailSettinsgAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<EmailAddressSetting> GetBccMailSettinsgAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync("/mail_settings/bcc", cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-			var bccMailSettings = JObject.Parse(responseContent).ToObject<BccSettings>();
+			var bccMailSettings = JObject.Parse(responseContent).ToObject<EmailAddressSetting>();
 			return bccMailSettings;
 		}
 
@@ -342,11 +348,12 @@ namespace StrongGrid.Resources
 		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/mail.html</returns>
 		public async Task UpdateBccMailSettinsgAsync(bool enabled, string email, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = new JObject
+			var bccMailSettings = new EmailAddressSetting
 			{
-				{ "enabled", enabled },
-				{ "email", email }
+				Enabled = enabled,
+				EmailAddress = email
 			};
+			var data = JObject.FromObject(bccMailSettings);
 			var response = await _client.PatchAsync("/mail_settings/bcc", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 		}
@@ -409,6 +416,108 @@ namespace StrongGrid.Resources
 			};
 			var data = JObject.FromObject(footerGlobalSetting);
 			var response = await _client.PatchAsync("/mail_settings/footer", data, cancellationToken).ConfigureAwait(false);
+			response.EnsureSuccess();
+		}
+
+		/// <summary>
+		/// Get Forward Spam Settings 
+		/// </summary>
+		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/mail.html</returns>
+		public async Task<EmailAddressSetting> GetForwardSpamMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var response = await _client.GetAsync("/mail_settings/forward_spam", cancellationToken).ConfigureAwait(false);
+			response.EnsureSuccess();
+
+			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var bccMailSettings = JObject.Parse(responseContent).ToObject<EmailAddressSetting>();
+			return bccMailSettings;
+		}
+
+		/// <summary>
+		/// Change the Forward Spam settings
+		/// </summary>
+		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/mail.html</returns>
+		public async Task UpdateForwardSpamMailSettingsAsync(bool enabled, string email, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var forwardSpamMailSettins = new EmailAddressSetting
+			{
+				Enabled = enabled,
+				EmailAddress = email
+			};
+			var data = JObject.FromObject(forwardSpamMailSettins);
+			var response = await _client.PatchAsync("/mail_settings/forward_spam", data, cancellationToken).ConfigureAwait(false);
+			response.EnsureSuccess();
+		}
+
+		/// <summary>
+		/// Get Plain Content Settings
+		/// </summary>
+		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/mail.html</returns>
+		public async Task<bool> GetPlainContentMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var response = await _client.GetAsync("/mail_settings/plain_content", cancellationToken).ConfigureAwait(false);
+			response.EnsureSuccess();
+
+			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+			// Response looks like this:
+			// {
+			//   "result": [
+			//     {
+			//       "enabled": true
+			//     }
+			//	]
+			// }
+			// We use a dynamic object to get rid of the 'enabled' property and simply return a boolean
+			dynamic dynamicObject = JObject.Parse(responseContent);
+
+			var isEnabled = (bool)dynamicObject.enabled;
+			return isEnabled;
+		}
+
+		/// <summary>
+		/// Change the Plain Content settings
+		/// </summary>
+		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/mail.html</returns>
+		public async Task UpdatPlainContentMailSettingsAsync(bool enabled, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var plainContentSettings = new Setting
+			{
+				Enabled = enabled
+			};
+			var data = JObject.FromObject(plainContentSettings);
+			var response = await _client.PatchAsync("/mail_settings/plain_content", data, cancellationToken).ConfigureAwait(false);
+			response.EnsureSuccess();
+		}
+
+		/// <summary>
+		/// Get Spam Check Settings 
+		/// </summary>
+		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/mail.html</returns>
+		public async Task<SpamCheckSettings> GetSpamCheckMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var response = await _client.GetAsync("/mail_settings/spam_check", cancellationToken).ConfigureAwait(false);
+			response.EnsureSuccess();
+
+			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var spamCheckMailSettings = JObject.Parse(responseContent).ToObject<SpamCheckSettings>();
+			return spamCheckMailSettings;
+		}
+
+		/// <summary>
+		/// Change the Spam Check settings
+		/// </summary>
+		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/mail.html</returns>
+		public async Task UpdateSpamCheckMailSettingsAsync(bool enabled, string postToUrl, int threshold, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var spamCheckMailSettings = new SpamCheckSettings
+			{
+				Enabled = enabled,
+				PostToUrl = postToUrl,
+				Threshold = threshold
+			};
+			var data = JObject.FromObject(spamCheckMailSettings);
+			var response = await _client.PatchAsync("/mmail_settings/spam_check", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 		}
 	}

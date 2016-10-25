@@ -92,6 +92,9 @@
     <Compile Include="..\StrongGrid\Model\CustomFieldMetadata.cs">
       <Link>Model\CustomFieldMetadata.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid\Model\EmailAddressSetting.cs">
+      <Link>Model\EmailAddressSetting.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid\Model\EnforcedTlsSettings.cs">
       <Link>Model\EnforcedTlsSettings.cs</Link>
     </Compile>
@@ -170,6 +173,9 @@
     <Compile Include="..\StrongGrid\Model\SpamCheckingSettings.cs">
       <Link>Model\SpamCheckingSettings.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid\Model\SpamCheckSettings.cs">
+      <Link>Model\SpamCheckSettings.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid\Model\Stat.cs">
       <Link>Model\Stat.cs</Link>
     </Compile>
@@ -193,9 +199,6 @@
     </Compile>
     <Compile Include="..\StrongGrid\Model\UnsubscribeOptions.cs">
       <Link>Model\UnsubscribeOptions.cs</Link>
-    </Compile>
-    <Compile Include="..\StrongGrid\Model\BccSettings.cs">
-      <Link>Model\BccSettings.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid\Model\UserCredits.cs">
       <Link>Model\UserCredits.cs</Link>
