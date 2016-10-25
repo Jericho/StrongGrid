@@ -71,6 +71,9 @@
     <Compile Include="..\StrongGrid\Model\Bounce.cs">
       <Link>Model\Bounce.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid\Model\BouncePurgeSettings.cs">
+      <Link>Model\BouncePurgeSettings.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid\Model\BypassListManagementSettings.cs">
       <Link>Model\BypassListManagementSettings.cs</Link>
     </Compile>
@@ -190,6 +193,9 @@
     </Compile>
     <Compile Include="..\StrongGrid\Model\Template.cs">
       <Link>Model\Template.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Model\TemplateSettings.cs">
+      <Link>Model\TemplateSettings.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid\Model\TemplateVersion.cs">
       <Link>Model\TemplateVersion.cs</Link>

@@ -520,5 +520,96 @@ namespace StrongGrid.Resources
 			var response = await _client.PatchAsync("/mmail_settings/spam_check", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 		}
+
+		/// <summary>
+		/// Get Template Settings 
+		/// </summary>
+		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/mail.html</returns>
+		public async Task<TemplateSettings> GetTemplateMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var response = await _client.GetAsync("/mail_settings/template", cancellationToken).ConfigureAwait(false);
+			response.EnsureSuccess();
+
+			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var templateMailSettings = JObject.Parse(responseContent).ToObject<TemplateSettings>();
+			return templateMailSettings;
+		}
+
+		/// <summary>
+		/// Change the Template settings
+		/// </summary>
+		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/mail.html</returns>
+		public async Task UpdatBouncePurgeMailSettingsAsync(bool enabled, string htmlContent, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var templateMailSettings = new TemplateSettings
+			{
+				Enabled = enabled,
+				HtmlContent = htmlContent
+			};
+			var data = JObject.FromObject(templateMailSettings);
+			var response = await _client.PatchAsync("/mmail_settings/template", data, cancellationToken).ConfigureAwait(false);
+			response.EnsureSuccess();
+		}
+
+		/// <summary>
+		/// Get Bounce Purge Settings 
+		/// </summary>
+		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/mail.html</returns>
+		public async Task<BouncePurgeSettings> GetBouncePurgeMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var response = await _client.GetAsync("/mail_settings/bounce_purge", cancellationToken).ConfigureAwait(false);
+			response.EnsureSuccess();
+
+			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var bouncePurgeSettings = JObject.Parse(responseContent).ToObject<BouncePurgeSettings>();
+			return bouncePurgeSettings;
+		}
+
+		/// <summary>
+		/// Change the Bounce Purge settings
+		/// </summary>
+		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/mail.html</returns>
+		public async Task UpdatBouncePurgeMailSettingsAsync(bool enabled, int hardBounces, int softBounces, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var bouncePurgeSettings = new BouncePurgeSettings
+			{
+				Enabled = enabled,
+				HardBounces = hardBounces,
+				SoftBounces = softBounces
+			};
+			var data = JObject.FromObject(bouncePurgeSettings);
+			var response = await _client.PatchAsync("/mmail_settings/bounce_purge", data, cancellationToken).ConfigureAwait(false);
+			response.EnsureSuccess();
+		}
+
+		/// <summary>
+		/// Get Forward Bounce Settings 
+		/// </summary>
+		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/mail.html</returns>
+		public async Task<EmailAddressSetting> GetForwardBounceMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var response = await _client.GetAsync("/mail_settings/forward_bounce", cancellationToken).ConfigureAwait(false);
+			response.EnsureSuccess();
+
+			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var bccMailSettings = JObject.Parse(responseContent).ToObject<EmailAddressSetting>();
+			return bccMailSettings;
+		}
+
+		/// <summary>
+		/// Change the Forward Spam settings
+		/// </summary>
+		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/mail.html</returns>
+		public async Task UpdateForwardBounceMailSettingsAsync(bool enabled, string email, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var forwardSpamMailSettins = new EmailAddressSetting
+			{
+				Enabled = enabled,
+				EmailAddress = email
+			};
+			var data = JObject.FromObject(forwardSpamMailSettins);
+			var response = await _client.PatchAsync("/mail_settings/forward_bounce", data, cancellationToken).ConfigureAwait(false);
+			response.EnsureSuccess();
+		}
 	}
 }
