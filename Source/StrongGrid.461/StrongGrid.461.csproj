@@ -74,6 +74,12 @@
     <Compile Include="..\StrongGrid\Model\Attachment.cs">
       <Link>Model\Attachment.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid\Model\BatchInfo.cs">
+      <Link>Model\BatchInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Model\BatchStatus.cs">
+      <Link>Model\BatchStatus.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid\Model\Block.cs">
       <Link>Model\Block.cs</Link>
     </Compile>
@@ -256,6 +262,9 @@
     </Compile>
     <Compile Include="..\StrongGrid\Resources\InvalidEmails.cs">
       <Link>Resources\InvalidEmails.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Resources\Batches.cs">
+      <Link>Resources\Batches.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid\Resources\Lists.cs">
       <Link>Resources\Lists.cs</Link>

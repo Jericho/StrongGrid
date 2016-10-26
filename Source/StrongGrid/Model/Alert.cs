@@ -8,7 +8,7 @@ namespace StrongGrid.Model
 	public class Alert
 	{
 		[JsonProperty("id")]
-		public long Id{ get; set; }
+		public long Id { get; set; }
 
 		[JsonProperty("email_to")]
 		public string EmailTo { get; set; }
