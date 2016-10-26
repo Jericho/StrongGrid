@@ -28,9 +28,14 @@
   </metadata>
   <files>
     <file src="StrongGrid.452/bin/Release/StrongGrid.dll" target="lib/net452" />
+    <file src="StrongGrid.452/bin/Release/StrongGrid.pdb" target="lib/net452" />
     <file src="StrongGrid.46/bin/Release/StrongGrid.dll" target="lib/net46" />
+    <file src="StrongGrid.46/bin/Release/StrongGrid.pdb" target="lib/net46" />
     <file src="StrongGrid.461/bin/Release/StrongGrid.dll" target="lib/net461" />
+    <file src="StrongGrid.461/bin/Release/StrongGrid.pdb" target="lib/net461" />
     <file src="StrongGrid.462/bin/Release/StrongGrid.dll" target="lib/net462" />
+    <file src="StrongGrid.462/bin/Release/StrongGrid.pdb" target="lib/net462" />
     <file src="StrongGrid/bin/Release/netstandard1.6/StrongGrid.dll" target="lib/netstandard1.6" />
+    <file src="StrongGrid/bin/Release/netstandard1.6/StrongGrid.pdb" target="lib/netstandard1.6" />
   </files>
 </package>
