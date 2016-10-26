@@ -43,6 +43,7 @@ namespace StrongGrid.IntegrationTests
 			Blocks(client);
 			SpamReports(client);
 			InvalidEmails(client);
+			Batches(client);
 		}
 
 		private static void Mail(IClient client)
@@ -621,6 +622,20 @@ namespace StrongGrid.IntegrationTests
 
 			var invalidEmails = client.InvalidEmails.GetAllAsync().Result;
 			Console.WriteLine($"All invalid emails retrieved. There are {invalidEmails.Length} invalid email addresses");
+
+			Console.WriteLine("\n\nPress any key to continue");
+			Console.ReadKey();
+		}
+
+		private static void Batches(IClient client)
+		{
+			Console.WriteLine("\n***** BATCHES *****");
+
+			var batchId = client.Batches.GenerateBatchIdAsync().Result;
+			Console.WriteLine($"New batchId generated: {batchId}");
+
+			var batches = client.Batches.GetAllAsync().Result;
+			Console.WriteLine($"All batches retrieved. There are {batches.Length} batches");
 
 			Console.WriteLine("\n\nPress any key to continue");
 			Console.ReadKey();
