@@ -21,6 +21,7 @@ namespace StrongGrid
 		Segments Segments { get; }
 		SenderIdentities SenderIdentities { get; }
 		Settings Settings { get; }
+		SpamReports SpamReports { get; }
 		Statistics Statistics { get; }
 		Suppressions Suppressions { get; }
 		Templates Templates { get; }
