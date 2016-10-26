@@ -43,6 +43,7 @@ namespace StrongGrid
 		public Segments Segments { get; private set; }
 		public SenderIdentities SenderIdentities { get; private set; }
 		public Settings Settings { get; private set; }
+		public SpamReports SpamReports { get; private set; }
 		public Statistics Statistics { get; private set; }
 		public Suppressions Suppressions { get; private set; }
 		public Templates Templates { get; private set; }
@@ -77,6 +78,7 @@ namespace StrongGrid
 			Segments = new Segments(this);
 			SenderIdentities = new SenderIdentities(this);
 			Settings = new Settings(this);
+			SpamReports = new SpamReports(this);
 			Statistics = new Statistics(this);
 			Suppressions = new Suppressions(this);
 			Templates = new Templates(this);

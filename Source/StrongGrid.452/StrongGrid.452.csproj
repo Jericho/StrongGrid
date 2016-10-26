@@ -190,6 +190,9 @@
     <Compile Include="..\StrongGrid\Model\SpamCheckSettings.cs">
       <Link>Model\SpamCheckSettings.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid\Model\SpamReport.cs">
+      <Link>Model\SpamReport.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid\Model\Stat.cs">
       <Link>Model\Stat.cs</Link>
     </Compile>
@@ -261,6 +264,9 @@
     </Compile>
     <Compile Include="..\StrongGrid\Resources\Settings.cs">
       <Link>Resources\Settings.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Resources\SpamReports.cs">
+      <Link>Resources\SpamReports.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid\Resources\Statistics.cs">
       <Link>Resources\Statistics.cs</Link>
