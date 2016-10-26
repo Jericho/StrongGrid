@@ -42,6 +42,7 @@ namespace StrongGrid.IntegrationTests
 			Alerts(client);
 			Blocks(client);
 			SpamReports(client);
+			InvalidEmails(client);
 		}
 
 		private static void Mail(IClient client)
@@ -609,6 +610,17 @@ namespace StrongGrid.IntegrationTests
 
 			var spamReports = client.SpamReports.GetAllAsync().Result;
 			Console.WriteLine($"All spam reports retrieved. There are {spamReports.Length} reports");
+
+			Console.WriteLine("\n\nPress any key to continue");
+			Console.ReadKey();
+		}
+
+		private static void InvalidEmails(IClient client)
+		{
+			Console.WriteLine("\n***** INVALID EMAILS *****");
+
+			var invalidEmails = client.InvalidEmails.GetAllAsync().Result;
+			Console.WriteLine($"All invalid emails retrieved. There are {invalidEmails.Length} invalid email addresses");
 
 			Console.WriteLine("\n\nPress any key to continue");
 			Console.ReadKey();

@@ -16,6 +16,7 @@ namespace StrongGrid
 		Contacts Contacts { get; }
 		CustomFields CustomFields { get; }
 		GlobalSuppressions GlobalSuppressions { get; }
+		InvalidEmails InvalidEmails { get; }
 		Lists Lists { get; }
 		Mail Mail { get; }
 		Segments Segments { get; }
