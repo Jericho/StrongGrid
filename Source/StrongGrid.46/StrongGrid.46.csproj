@@ -143,6 +143,9 @@
     <Compile Include="..\StrongGrid\Model\ImportResult.cs">
       <Link>Model\ImportResult.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid\Model\InvalidEmail.cs">
+      <Link>Model\InvalidEmail.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid\Model\List.cs">
       <Link>Model\List.cs</Link>
     </Compile>
@@ -250,6 +253,9 @@
     </Compile>
     <Compile Include="..\StrongGrid\Resources\GlobalSuppressions.cs">
       <Link>Resources\GlobalSuppressions.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Resources\InvalidEmails.cs">
+      <Link>Resources\InvalidEmails.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid\Resources\Lists.cs">
       <Link>Resources\Lists.cs</Link>
