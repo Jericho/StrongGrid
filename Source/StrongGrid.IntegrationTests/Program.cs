@@ -28,19 +28,19 @@ namespace StrongGrid.IntegrationTests
 			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY", EnvironmentVariableTarget.User);
 			var client = new StrongGrid.Client(apiKey: apiKey, httpClient: httpClient);
 
-			//ApiKeys(client);
-			//Campaigns(client);
-			//ContactsAndCustomFields(client);
-			//GlobalSuppressions(client);
-			//ListsAndSegments(client);
-			//Mail(client);
-			//UnsubscribeGroups(client);
-			//User(client);
-			//Statistics(client);
-			//Templates(client);
-			//Settings(client);
-			//Alerts(client);
-			//Blocks(client);
+			ApiKeys(client);
+			Campaigns(client);
+			ContactsAndCustomFields(client);
+			GlobalSuppressions(client);
+			ListsAndSegments(client);
+			Mail(client);
+			UnsubscribeGroups(client);
+			User(client);
+			Statistics(client);
+			Templates(client);
+			Settings(client);
+			Alerts(client);
+			Blocks(client);
 			SpamReports(client);
 		}
 
