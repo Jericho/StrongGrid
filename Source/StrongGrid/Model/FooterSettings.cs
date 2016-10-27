@@ -2,8 +2,11 @@
 
 namespace StrongGrid.Model
 {
-	public class FooterSettings : Setting
+	public class FooterSettings
 	{
+		[JsonProperty("enable")]
+		public bool Enabled { get; set; }
+
 		[JsonProperty("text")]
 		public string TextContent { get; set; }
 
