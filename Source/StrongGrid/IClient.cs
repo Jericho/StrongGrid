@@ -10,17 +10,20 @@ namespace StrongGrid
 	{
 		Alerts Alerts { get; }
 		ApiKeys ApiKeys { get; }
+		Batches Batches { get; }
 		Blocks Blocks { get; }
 		Campaigns Campaigns { get; }
 		Categories Categories { get; }
 		Contacts Contacts { get; }
 		CustomFields CustomFields { get; }
 		GlobalSuppressions GlobalSuppressions { get; }
+		InvalidEmails InvalidEmails { get; }
 		Lists Lists { get; }
 		Mail Mail { get; }
 		Segments Segments { get; }
 		SenderIdentities SenderIdentities { get; }
 		Settings Settings { get; }
+		SpamReports SpamReports { get; }
 		Statistics Statistics { get; }
 		Suppressions Suppressions { get; }
 		Templates Templates { get; }

@@ -32,17 +32,20 @@ namespace StrongGrid
 
 		public Alerts Alerts { get; private set; }
 		public ApiKeys ApiKeys { get; private set; }
+		public Batches Batches { get; private set; }
 		public Blocks Blocks { get; private set; }
 		public Campaigns Campaigns { get; private set; }
 		public Categories Categories { get; private set; }
 		public Contacts Contacts { get; private set; }
 		public CustomFields CustomFields { get; private set; }
 		public GlobalSuppressions GlobalSuppressions { get; private set; }
+		public InvalidEmails InvalidEmails { get; private set; }
 		public Lists Lists { get; private set; }
 		public Mail Mail { get; private set; }
 		public Segments Segments { get; private set; }
 		public SenderIdentities SenderIdentities { get; private set; }
 		public Settings Settings { get; private set; }
+		public SpamReports SpamReports { get; private set; }
 		public Statistics Statistics { get; private set; }
 		public Suppressions Suppressions { get; private set; }
 		public Templates Templates { get; private set; }
@@ -66,17 +69,20 @@ namespace StrongGrid
 
 			Alerts = new Alerts(this);
 			ApiKeys = new ApiKeys(this);
+			Batches = new Batches(this);
 			Blocks = new Blocks(this);
 			Campaigns = new Campaigns(this);
 			Categories = new Categories(this);
 			Contacts = new Contacts(this);
 			CustomFields = new CustomFields(this);
 			GlobalSuppressions = new GlobalSuppressions(this);
+			InvalidEmails = new InvalidEmails(this);
 			Lists = new Lists(this);
 			Mail = new Mail(this);
 			Segments = new Segments(this);
 			SenderIdentities = new SenderIdentities(this);
 			Settings = new Settings(this);
+			SpamReports = new SpamReports(this);
 			Statistics = new Statistics(this);
 			Suppressions = new Suppressions(this);
 			Templates = new Templates(this);

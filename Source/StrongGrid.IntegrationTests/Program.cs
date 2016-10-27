@@ -28,19 +28,22 @@ namespace StrongGrid.IntegrationTests
 			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY", EnvironmentVariableTarget.User);
 			var client = new StrongGrid.Client(apiKey: apiKey, httpClient: httpClient);
 
-			//ApiKeys(client);
-			//Campaigns(client);
-			//ContactsAndCustomFields(client);
-			//GlobalSuppressions(client);
-			//ListsAndSegments(client);
-			//Mail(client);
-			//UnsubscribeGroups(client);
-			//User(client);
-			//Statistics(client);
-			//Templates(client);
-			//Settings(client);
-			//Alerts(client);
+			ApiKeys(client);
+			Campaigns(client);
+			ContactsAndCustomFields(client);
+			GlobalSuppressions(client);
+			ListsAndSegments(client);
+			Mail(client);
+			UnsubscribeGroups(client);
+			User(client);
+			Statistics(client);
+			Templates(client);
+			Settings(client);
+			Alerts(client);
 			Blocks(client);
+			SpamReports(client);
+			InvalidEmails(client);
+			Batches(client);
 		}
 
 		private static void Mail(IClient client)
@@ -597,6 +600,42 @@ namespace StrongGrid.IntegrationTests
 
 			var blocks = client.Blocks.GetAllAsync().Result;
 			Console.WriteLine($"All blocks retrieved. There are {blocks.Length} blocks");
+
+			Console.WriteLine("\n\nPress any key to continue");
+			Console.ReadKey();
+		}
+
+		private static void SpamReports(IClient client)
+		{
+			Console.WriteLine("\n***** SPAM REPORTS *****");
+
+			var spamReports = client.SpamReports.GetAllAsync().Result;
+			Console.WriteLine($"All spam reports retrieved. There are {spamReports.Length} reports");
+
+			Console.WriteLine("\n\nPress any key to continue");
+			Console.ReadKey();
+		}
+
+		private static void InvalidEmails(IClient client)
+		{
+			Console.WriteLine("\n***** INVALID EMAILS *****");
+
+			var invalidEmails = client.InvalidEmails.GetAllAsync().Result;
+			Console.WriteLine($"All invalid emails retrieved. There are {invalidEmails.Length} invalid email addresses");
+
+			Console.WriteLine("\n\nPress any key to continue");
+			Console.ReadKey();
+		}
+
+		private static void Batches(IClient client)
+		{
+			Console.WriteLine("\n***** BATCHES *****");
+
+			var batchId = client.Batches.GenerateBatchIdAsync().Result;
+			Console.WriteLine($"New batchId generated: {batchId}");
+
+			var batches = client.Batches.GetAllAsync().Result;
+			Console.WriteLine($"All batches retrieved. There are {batches.Length} batches");
 
 			Console.WriteLine("\n\nPress any key to continue");
 			Console.ReadKey();

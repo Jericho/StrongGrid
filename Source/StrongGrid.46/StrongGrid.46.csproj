@@ -74,6 +74,12 @@
     <Compile Include="..\StrongGrid\Model\Attachment.cs">
       <Link>Model\Attachment.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid\Model\BatchInfo.cs">
+      <Link>Model\BatchInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Model\BatchStatus.cs">
+      <Link>Model\BatchStatus.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid\Model\Block.cs">
       <Link>Model\Block.cs</Link>
     </Compile>
@@ -143,6 +149,9 @@
     <Compile Include="..\StrongGrid\Model\ImportResult.cs">
       <Link>Model\ImportResult.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid\Model\InvalidEmail.cs">
+      <Link>Model\InvalidEmail.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid\Model\List.cs">
       <Link>Model\List.cs</Link>
     </Compile>
@@ -190,6 +199,9 @@
     </Compile>
     <Compile Include="..\StrongGrid\Model\SpamCheckSettings.cs">
       <Link>Model\SpamCheckSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Model\SpamReport.cs">
+      <Link>Model\SpamReport.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid\Model\Stat.cs">
       <Link>Model\Stat.cs</Link>
@@ -248,6 +260,12 @@
     <Compile Include="..\StrongGrid\Resources\GlobalSuppressions.cs">
       <Link>Resources\GlobalSuppressions.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid\Resources\InvalidEmails.cs">
+      <Link>Resources\InvalidEmails.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Resources\Batches.cs">
+      <Link>Resources\Batches.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid\Resources\Lists.cs">
       <Link>Resources\Lists.cs</Link>
     </Compile>
@@ -262,6 +280,9 @@
     </Compile>
     <Compile Include="..\StrongGrid\Resources\Settings.cs">
       <Link>Resources\Settings.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Resources\SpamReports.cs">
+      <Link>Resources\SpamReports.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid\Resources\Statistics.cs">
       <Link>Resources\Statistics.cs</Link>
