@@ -82,7 +82,7 @@ namespace StrongGrid.IntegrationTests
 			{
 				ClickTracking = new ClickTrackingSettings
 				{
-					Enabled = true,
+					EnabledInHtmlContent = true,
 					EnabledInTextContent = true
 				},
 				OpenTracking = new OpenTrackingSettings { Enabled = true },
