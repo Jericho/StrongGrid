@@ -109,6 +109,15 @@
     <Compile Include="..\StrongGrid\Model\CustomFieldMetadata.cs">
       <Link>Model\CustomFieldMetadata.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid\Model\DnsRecord.cs">
+      <Link>Model\DnsRecord.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Model\DomainValidation.cs">
+      <Link>Model\DomainValidation.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Model\DomainValidationResults.cs">
+      <Link>Model\DomainValidationResults.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid\Model\EmailAddressSetting.cs">
       <Link>Model\EmailAddressSetting.cs</Link>
     </Compile>
@@ -150,6 +159,18 @@
     </Compile>
     <Compile Include="..\StrongGrid\Model\InvalidEmail.cs">
       <Link>Model\InvalidEmail.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Model\IpValidation.cs">
+      <Link>Model\IpValidation.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Model\IpValidationResults.cs">
+      <Link>Model\IpValidationResults.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Model\LinkValidation.cs">
+      <Link>Model\LinkValidation.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Model\LinkValidationResults.cs">
+      <Link>Model\LinkValidationResults.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid\Model\List.cs">
       <Link>Model\List.cs</Link>
@@ -232,8 +253,26 @@
     <Compile Include="..\StrongGrid\Model\UserCredits.cs">
       <Link>Model\UserCredits.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid\Model\ValidationResult.cs">
+      <Link>Model\ValidationResult.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid\Model\VerificationStatus.cs">
       <Link>Model\VerificationStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Model\WhitelabelDomain.cs">
+      <Link>Model\WhitelabelDomain.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Model\WhitelabelDomainDns.cs">
+      <Link>Model\WhitelabelDomainDns.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Model\WhitelabelIp.cs">
+      <Link>Model\WhitelabelIp.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Model\WhitelabelLink.cs">
+      <Link>Model\WhitelabelLink.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Model\WhitelabelLinkDns.cs">
+      <Link>Model\WhitelabelLinkDns.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid\Resources\Alerts.cs">
       <Link>Resources\Alerts.cs</Link>
@@ -303,6 +342,9 @@
     </Compile>
     <Compile Include="..\StrongGrid\Model\UserProfile.cs">
       <Link>Model\UserProfile.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Resources\Whitelabel.cs">
+      <Link>Resources\Whitelabel.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid\Utilities\CustomFieldsConverter.cs">
       <Link>Utilities\CustomFieldsConverter.cs</Link>

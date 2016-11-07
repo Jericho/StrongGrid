@@ -52,6 +52,7 @@ namespace StrongGrid
 		public UnsubscribeGroups UnsubscribeGroups { get; private set; }
 		public User User { get; private set; }
 		public string Version { get; private set; }
+		public Whitelabel Whitelabel { get; private set; }
 
 		#endregion
 
@@ -89,6 +90,7 @@ namespace StrongGrid
 			UnsubscribeGroups = new UnsubscribeGroups(this);
 			User = new User(this);
 			Version = typeof(Client).GetTypeInfo().Assembly.GetName().Version.ToString();
+			Whitelabel = new Whitelabel(this);
 
 			_mustDisposeHttpClient = (httpClient == null);
 			_httpClient = httpClient ?? new HttpClient();
