@@ -7,6 +7,7 @@
 #tool "nuget:?package=GitReleaseManager&version=0.6.0"
 #tool "nuget:?package=OpenCover&version=4.6.519"
 #tool "nuget:?package=ReportGenerator&version=2.5.0"
+#tool "nuget:?package=coveralls.io&version=1.3.4"
 
 // Using statements
 using Polly;
