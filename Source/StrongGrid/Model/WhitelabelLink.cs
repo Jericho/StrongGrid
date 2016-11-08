@@ -29,6 +29,6 @@ namespace StrongGrid.Model
 		public bool IsLegacy { get; set; }
 
 		[JsonProperty("dns")]
-		public DnsRecord DNS { get; set; }
+		public WhitelabelLinkDns DNS { get; set; }
 	}
 }

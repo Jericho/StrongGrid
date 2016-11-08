@@ -5,7 +5,10 @@ namespace StrongGrid.Model
 	public class WhitelabelDomainDns
 	{
 		[JsonProperty("mail_cname")]
-		public DnsRecord Mail { get; set; }
+		public DnsRecord MailCName { get; set; }
+
+		[JsonProperty("mail_server")]
+		public DnsRecord MailServer { get; set; }
 
 		[JsonProperty("spf")]
 		public DnsRecord Spf { get; set; }
