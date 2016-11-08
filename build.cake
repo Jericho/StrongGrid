@@ -1,13 +1,12 @@
 // Install addins.
-#addin "nuget:?package=Polly"
-#addin "nuget:?package=Cake.Coveralls""
+#addin "nuget:?package=Polly&version=4.3.0"
+#addin "nuget:?package=Cake.Coveralls&version=0.2.0"
 
 // Install tools.
-#tool "nuget:?package=GitVersion.CommandLine"
-#tool "nuget:?package=GitReleaseManager"
-#tool "nuget:?package=OpenCover"
-#tool "nuget:?package=ReportGenerator"
-#tool "nuget:?package=coveralls.io"
+#tool "nuget:?package=GitVersion.CommandLine&version=3.6.4"
+#tool "nuget:?package=GitReleaseManager&version=0.6.0"
+#tool "nuget:?package=OpenCover&version=4.6.519"
+#tool "nuget:?package=ReportGenerator&version=2.5.0"
 
 // Using statements
 using Polly;
