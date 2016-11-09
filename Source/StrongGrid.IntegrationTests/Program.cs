@@ -459,16 +459,25 @@ namespace StrongGrid.IntegrationTests
 		{
 			Console.WriteLine("\n***** LISTS AND SEGMENTS *****");
 
-			var firstList = client.Lists.CreateAsync("My first list").Result;
-			Console.WriteLine("List '{0}' created. Id: {1}", firstList.Name, firstList.Id);
+			var lists = client.Lists.GetAllAsync().Result;
+			var firstList = lists.FirstOrDefault(l => l.Name == "My first list");
+			var secondList = lists.FirstOrDefault(l => l.Name == "My second list");
 
-			var secondList = client.Lists.CreateAsync("My second list").Result;
-			Console.WriteLine("List '{0}' created. Id: {1}", secondList.Name, secondList.Id);
+			if (firstList == null)
+			{
+				firstList = client.Lists.CreateAsync("My first list").Result;
+				Console.WriteLine("List '{0}' created. Id: {1}", firstList.Name, firstList.Id);
+			}
+			if (secondList == null)
+			{
+				secondList = client.Lists.CreateAsync("My second list").Result;
+				Console.WriteLine("List '{0}' created. Id: {1}", secondList.Name, secondList.Id);
+			}
 
 			client.Lists.UpdateAsync(firstList.Id, "New name").Wait();
 			Console.WriteLine("List '{0}' updated", firstList.Id);
 
-			var lists = client.Lists.GetAllAsync().Result;
+			lists = client.Lists.GetAllAsync().Result;
 			Console.WriteLine("All lists retrieved. There are {0} lists", lists.Length);
 
 			var hotmailCondition = new SearchCondition { Field = "email", Operator = ConditionOperator.Contains, Value = "hotmail.com", LogicalOperator = LogicalOperator.None };
