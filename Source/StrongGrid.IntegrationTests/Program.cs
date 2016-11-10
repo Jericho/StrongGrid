@@ -44,6 +44,7 @@ namespace StrongGrid.IntegrationTests
 			SpamReports(client);
 			InvalidEmails(client);
 			Batches(client);
+			Whitelabel(client);
 		}
 
 		private static void Mail(IClient client)
@@ -458,16 +459,25 @@ namespace StrongGrid.IntegrationTests
 		{
 			Console.WriteLine("\n***** LISTS AND SEGMENTS *****");
 
-			var firstList = client.Lists.CreateAsync("My first list").Result;
-			Console.WriteLine("List '{0}' created. Id: {1}", firstList.Name, firstList.Id);
+			var lists = client.Lists.GetAllAsync().Result;
+			var firstList = lists.FirstOrDefault(l => l.Name == "My first list");
+			var secondList = lists.FirstOrDefault(l => l.Name == "My second list");
 
-			var secondList = client.Lists.CreateAsync("My second list").Result;
-			Console.WriteLine("List '{0}' created. Id: {1}", secondList.Name, secondList.Id);
+			if (firstList == null)
+			{
+				firstList = client.Lists.CreateAsync("My first list").Result;
+				Console.WriteLine("List '{0}' created. Id: {1}", firstList.Name, firstList.Id);
+			}
+			if (secondList == null)
+			{
+				secondList = client.Lists.CreateAsync("My second list").Result;
+				Console.WriteLine("List '{0}' created. Id: {1}", secondList.Name, secondList.Id);
+			}
 
 			client.Lists.UpdateAsync(firstList.Id, "New name").Wait();
 			Console.WriteLine("List '{0}' updated", firstList.Id);
 
-			var lists = client.Lists.GetAllAsync().Result;
+			lists = client.Lists.GetAllAsync().Result;
 			Console.WriteLine("All lists retrieved. There are {0} lists", lists.Length);
 
 			var hotmailCondition = new SearchCondition { Field = "email", Operator = ConditionOperator.Contains, Value = "hotmail.com", LogicalOperator = LogicalOperator.None };
@@ -636,6 +646,47 @@ namespace StrongGrid.IntegrationTests
 
 			var batches = client.Batches.GetAllAsync().Result;
 			Console.WriteLine($"All batches retrieved. There are {batches.Length} batches");
+
+			Console.WriteLine("\n\nPress any key to continue");
+			Console.ReadKey();
+		}
+
+		private static void Whitelabel(IClient client)
+		{
+			Console.WriteLine("\n***** WHITELABEL DOMAINS *****");
+
+			var newDomain = client.Whitelabel.CreateDomainAsync("example.com", "email").Result;
+			Console.WriteLine($"Whitelabel domain created. Id: {newDomain.Id}");
+
+			var domains = client.Whitelabel.GetAllDomainsAsync().Result;
+			Console.WriteLine($"All whitelabel domains retrieved. There are {domains.Length} domains");
+
+			var domainValidation = client.Whitelabel.ValidateDomainAsync(newDomain.Id).Result;
+			Console.WriteLine($"Whitelabel domain validation: {domainValidation.IsValid}");
+
+			client.Whitelabel.DeleteDomainAsync(newDomain.Id).Wait();
+			Console.WriteLine($"Whitelabel domain {newDomain.Id} deleted.");
+
+
+			Console.WriteLine("\n***** WHITELABEL IPS *****");
+
+			var ipAdresses = client.Whitelabel.GetAllDomainsAsync().Result;
+			Console.WriteLine($"All whitelabel IP addreses retrieved. There are {ipAdresses.Length} adresses");
+
+
+			Console.WriteLine("\n***** WHITELABEL LINKS *****");
+
+			var newLink = client.Whitelabel.CreateLinkAsync("example.com", "email", true).Result;
+			Console.WriteLine($"Whitelabel link created. Id: {newLink.Id}");
+
+			var links = client.Whitelabel.GetAllLinksAsync().Result;
+			Console.WriteLine($"All whitelabel links retrieved. There are {links.Length} links");
+
+			var linkValidation = client.Whitelabel.ValidateLinkAsync(newLink.Id).Result;
+			Console.WriteLine($"Whitelabel validation: {linkValidation.IsValid}");
+
+			client.Whitelabel.DeleteLinkAsync(newLink.Id).Wait();
+			Console.WriteLine($"Whitelabel link {newLink.Id} deleted.");
 
 			Console.WriteLine("\n\nPress any key to continue");
 			Console.ReadKey();

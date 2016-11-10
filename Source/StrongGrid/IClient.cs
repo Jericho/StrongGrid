@@ -30,6 +30,7 @@ namespace StrongGrid
 		UnsubscribeGroups UnsubscribeGroups { get; }
 		User User { get; }
 		string Version { get; }
+		Whitelabel Whitelabel { get; }
 
 		Task<HttpResponseMessage> GetAsync(string endpoint, CancellationToken cancellationToken = default(CancellationToken));
 		Task<HttpResponseMessage> PostAsync(string endpoint, JObject data, CancellationToken cancellationToken = default(CancellationToken));

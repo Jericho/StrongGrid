@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
 using StrongGrid.Resources;
+using StrongGrid.Utilities;
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -20,6 +22,7 @@ namespace StrongGrid
 		private HttpClient _httpClient;
 		private readonly bool _mustDisposeHttpClient;
 		private const string MEDIA_TYPE = "application/json";
+		private const int MAX_RETRIES = 3;
 
 		private enum Methods
 		{
@@ -52,6 +55,7 @@ namespace StrongGrid
 		public UnsubscribeGroups UnsubscribeGroups { get; private set; }
 		public User User { get; private set; }
 		public string Version { get; private set; }
+		public Whitelabel Whitelabel { get; private set; }
 
 		#endregion
 
@@ -89,6 +93,7 @@ namespace StrongGrid
 			UnsubscribeGroups = new UnsubscribeGroups(this);
 			User = new User(this);
 			Version = typeof(Client).GetTypeInfo().Assembly.GetName().Version.ToString();
+			Whitelabel = new Whitelabel(this);
 
 			_mustDisposeHttpClient = (httpClient == null);
 			_httpClient = httpClient ?? new HttpClient();
@@ -115,7 +120,7 @@ namespace StrongGrid
 		/// <returns>The resulting message from the API call</returns>
 		public Task<HttpResponseMessage> GetAsync(string endpoint, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			return RequestAsync(Methods.GET, endpoint, (StringContent)null, cancellationToken);
+			return RequestAsync(Methods.GET, endpoint, (JObject)null, cancellationToken);
 		}
 
 		/// <param name="endpoint">Resource endpoint</param>
@@ -138,7 +143,7 @@ namespace StrongGrid
 		/// <returns>The resulting message from the API call</returns>
 		public Task<HttpResponseMessage> DeleteAsync(string endpoint, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			return RequestAsync(Methods.DELETE, endpoint, (StringContent)null, cancellationToken);
+			return RequestAsync(Methods.DELETE, endpoint, (JObject)null, cancellationToken);
 		}
 
 		/// <param name="endpoint">Resource endpoint</param>
@@ -219,7 +224,7 @@ namespace StrongGrid
 		private Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, JObject data, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var content = (data == null ? null : new StringContent(data.ToString(), Encoding.UTF8, MEDIA_TYPE));
-			return RequestAsync(method, endpoint, content, cancellationToken);
+			return RequestAsync(method, endpoint, content, MAX_RETRIES, cancellationToken);
 		}
 
 		/// <summary>
@@ -232,7 +237,7 @@ namespace StrongGrid
 		private Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, JArray data, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var content = (data == null ? null : new StringContent(data.ToString(), Encoding.UTF8, MEDIA_TYPE));
-			return RequestAsync(method, endpoint, content, cancellationToken);
+			return RequestAsync(method, endpoint, content, MAX_RETRIES, cancellationToken);
 		}
 
 		/// <summary>
@@ -242,7 +247,7 @@ namespace StrongGrid
 		/// <param name="endpoint">Resource endpoint</param>
 		/// <param name="content">A StringContent representing the content of the http request</param>
 		/// <returns>An asyncronous task</returns>
-		private async Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, StringContent content, CancellationToken cancellationToken = default(CancellationToken))
+		private async Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, StringContent content, int retriesRemaining, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			try
 			{
@@ -256,29 +261,42 @@ namespace StrongGrid
 					case Methods.DELETE: methodAsString = "DELETE"; break;
 					default:
 						var message = "{\"errors\":[{\"message\":\"Bad method call, supported methods are GET, PUT, POST, PATCH and DELETE\"}]}";
-						var response = new HttpResponseMessage(HttpStatusCode.MethodNotAllowed)
+						return new HttpResponseMessage(HttpStatusCode.MethodNotAllowed)
 						{
 							Content = new StringContent(message)
 						};
-						return response;
 				}
-
 				var httpRequest = new HttpRequestMessage
 				{
 					Method = new HttpMethod(methodAsString),
 					RequestUri = new Uri(string.Format("{0}{1}{2}", _baseUri, endpoint.StartsWith("/", StringComparison.Ordinal) ? "" : "/", endpoint)),
 					Content = content
 				};
-				return await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
+				var response = await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
+
+				if (response.StatusCode == (HttpStatusCode)429 && retriesRemaining > 0)  // 429 = TOO MANY REQUESTS
+				{
+					var limit = long.Parse(response.Headers.GetValues("X-RateLimit-Limit").FirstOrDefault() ?? "-1");
+					var remaining = long.Parse(response.Headers.GetValues("X-RateLimit-Remaining").FirstOrDefault() ?? "-1");
+					var reset = long.Parse(response.Headers.GetValues("X-RateLimit-Reset").FirstOrDefault() ?? "-1");
+
+					var waitTime = reset > 0 ? DateTime.UtcNow.Subtract(reset.FromUnixTime()) : TimeSpan.FromMilliseconds(500);
+					if (waitTime.TotalSeconds > 2) waitTime = TimeSpan.FromSeconds(2);  // Totally arbitrary. Make sure we don't wait more than a 'reasonable' amount of time.
+
+					await Task.Delay(waitTime).ConfigureAwait(false);
+
+					return await RequestAsync(method, endpoint, content, --retriesRemaining, cancellationToken).ConfigureAwait(false);
+				}
+
+				return response;
 			}
 			catch (Exception ex)
 			{
 				var message = string.Format(".NET {0}, raw message: \n\n{1}", (ex is HttpRequestException) ? "HttpRequestException" : "Exception", ex.GetBaseException().Message);
-				var response = new HttpResponseMessage(HttpStatusCode.BadRequest)
+				return new HttpResponseMessage(HttpStatusCode.BadRequest)
 				{
 					Content = new StringContent(message)
 				};
-				return response;
 			}
 		}
 
