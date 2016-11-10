@@ -30,6 +30,7 @@ namespace StrongGrid.IntegrationTests
 
 			ApiKeys(client);
 			Campaigns(client);
+			Categories(client);
 			ContactsAndCustomFields(client);
 			GlobalSuppressions(client);
 			ListsAndSegments(client);
