@@ -346,6 +346,9 @@
     <Compile Include="..\StrongGrid\Resources\Whitelabel.cs">
       <Link>Resources\Whitelabel.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid\Utilities\AsyncDelayer.cs">
+      <Link>Utilities\AsyncDelayer.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid\Utilities\CustomFieldsConverter.cs">
       <Link>Utilities\CustomFieldsConverter.cs</Link>
     </Compile>
@@ -354,6 +357,9 @@
     </Compile>
     <Compile Include="..\StrongGrid\Utilities\Extensions.cs">
       <Link>Utilities\Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Utilities\IAsyncDelayer.cs">
+      <Link>Utilities\IAsyncDelayer.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid\Utilities\IntegerBooleanConverter.cs">
       <Link>Utilities\IntegerBooleanConverter.cs</Link>

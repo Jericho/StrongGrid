@@ -6,6 +6,8 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using StrongGrid.Utilities;
+using Moq;
+using System.Threading.Tasks;
 
 namespace StrongGrid.UnitTests
 {
@@ -130,13 +132,21 @@ namespace StrongGrid.UnitTests
 				.With(request => request.Content == null)
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
+			// Verify that we wait 1 second before retrying
+			var mockDelayer = new Mock<IAsyncDelayer>(MockBehavior.Strict);
+			mockDelayer
+				.Setup(d => d.Delay(It.Is<TimeSpan>(t => t.Seconds == 1)))
+				.Returns(Task.FromResult(0))
+				.Verifiable();
+
 			var httpClient = new HttpClient(mockHttp);
-			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
+			var client = new Client(apiKey: API_KEY, httpClient: httpClient, asyncDelayer: mockDelayer.Object);
 
 			// Act
 			var result = client.GetAsync("myendpoint", CancellationToken.None).Result;
 
 			// Assert
+			mockDelayer.VerifyAll();
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 			Assert.IsTrue(result.IsSuccessStatusCode);
@@ -161,8 +171,15 @@ namespace StrongGrid.UnitTests
 				.With(request => request.Content == null)
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
+			// Verify that we wait 1 second before retrying
+			var mockDelayer = new Mock<IAsyncDelayer>(MockBehavior.Strict);
+			mockDelayer
+				.Setup(d => d.Delay(It.Is<TimeSpan>(t => t.Milliseconds == 500)))
+				.Returns(Task.FromResult(0))
+				.Verifiable();
+
 			var httpClient = new HttpClient(mockHttp);
-			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
+			var client = new Client(apiKey: API_KEY, httpClient: httpClient, asyncDelayer: mockDelayer.Object);
 
 			// Act
 			var result = client.GetAsync("myendpoint", CancellationToken.None).Result;
@@ -192,8 +209,15 @@ namespace StrongGrid.UnitTests
 				.With(request => request.Content == null)
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
+			// Verify that we wait 1 second before retrying
+			var mockDelayer = new Mock<IAsyncDelayer>(MockBehavior.Strict);
+			mockDelayer
+				.Setup(d => d.Delay(It.Is<TimeSpan>(t => t.Seconds == 1)))
+				.Returns(Task.FromResult(0))
+				.Verifiable();
+
 			var httpClient = new HttpClient(mockHttp);
-			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
+			var client = new Client(apiKey: API_KEY, httpClient: httpClient, asyncDelayer: mockDelayer.Object);
 
 			// Act
 			var result = client.GetAsync("myendpoint", CancellationToken.None).Result;
@@ -223,8 +247,15 @@ namespace StrongGrid.UnitTests
 				.With(request => request.Content == null)
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
+			// Verify that we wait 2 seconds before retrying
+			var mockDelayer = new Mock<IAsyncDelayer>(MockBehavior.Strict);
+			mockDelayer
+				.Setup(d => d.Delay(It.Is<TimeSpan>(t => t.Seconds == 2)))
+				.Returns(Task.FromResult(0))
+				.Verifiable();
+
 			var httpClient = new HttpClient(mockHttp);
-			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
+			var client = new Client(apiKey: API_KEY, httpClient: httpClient, asyncDelayer: mockDelayer.Object);
 
 			// Act
 			var result = client.GetAsync("myendpoint", CancellationToken.None).Result;
