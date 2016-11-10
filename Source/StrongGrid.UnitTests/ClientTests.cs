@@ -1,9 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using RichardSzalay.MockHttp;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using StrongGrid.Utilities;
 
 namespace StrongGrid.UnitTests
 {
@@ -31,7 +33,7 @@ namespace StrongGrid.UnitTests
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.When(HttpMethod.Get, "https://api.sendgrid.com/v3/myendpoint")
+			mockHttp.Expect(HttpMethod.Get, "https://api.sendgrid.com/v3/myendpoint")
 				.With(request => request.Content == null)
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
@@ -48,13 +50,13 @@ namespace StrongGrid.UnitTests
 		}
 
 		[TestMethod]
-		public void GetAsync_exception()
+		public void GetAsync_Exception()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.When(HttpMethod.Get, "https://api.sendgrid.com/v3/myendpoint")
+			mockHttp.Expect(HttpMethod.Get, "https://api.sendgrid.com/v3/myendpoint")
 				.With(request => request.Content == null)
-				.Throw(new System.Exception("Let's pretend something wrong happened"));
+				.Throw(new Exception("Let's pretend something wrong happened"));
 
 			var httpClient = new HttpClient(mockHttp);
 			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
@@ -70,13 +72,177 @@ namespace StrongGrid.UnitTests
 		}
 
 		[TestMethod]
+		public void GetAsync_HttpException()
+		{
+			// Arrange
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, "https://api.sendgrid.com/v3/myendpoint")
+				.With(request => request.Content == null)
+				.Throw(new HttpRequestException("Let's pretend something wrong happened"));
+
+			var httpClient = new HttpClient(mockHttp);
+			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
+
+			// Act
+			var result = client.GetAsync("myendpoint", CancellationToken.None).Result;
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			Assert.IsFalse(result.IsSuccessStatusCode);
+			Assert.AreEqual(HttpStatusCode.BadRequest, result.StatusCode);
+		}
+
+		[TestMethod]
+		public void GetAsync_extra_seperator()
+		{
+			// Arrange
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, "https://api.sendgrid.com/v3/myendpoint")
+				.With(request => request.Content == null)
+				.Respond("application/json", "{'name' : 'This is a test'}");
+
+			var httpClient = new HttpClient(mockHttp);
+			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
+
+			// Act
+			var result = client.GetAsync("/myendpoint", CancellationToken.None).Result;
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			Assert.IsTrue(result.IsSuccessStatusCode);
+		}
+
+		[TestMethod]
+		public void GetAsync_retry_HTTP429_without_XRateLimitReset()
+		{
+			// Arrange
+			var mockHttp = new MockHttpMessageHandler();
+
+			// First attempt, we return HTTP 429 which means TOO MANY REQUESTS
+			mockHttp.Expect(HttpMethod.Get, "https://api.sendgrid.com/v3/myendpoint")
+				.With(request => request.Content == null)
+				.Respond((HttpStatusCode)429);
+
+			// Second attempt, we return the expected result
+			mockHttp.Expect(HttpMethod.Get, "https://api.sendgrid.com/v3/myendpoint")
+				.With(request => request.Content == null)
+				.Respond("application/json", "{'name' : 'This is a test'}");
+
+			var httpClient = new HttpClient(mockHttp);
+			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
+
+			// Act
+			var result = client.GetAsync("myendpoint", CancellationToken.None).Result;
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			Assert.IsTrue(result.IsSuccessStatusCode);
+		}
+
+		[TestMethod]
+		public void GetAsync_retry_HTTP429_with_too_small_XRateLimitReset()
+		{
+			// Arrange
+			var mockHttp = new MockHttpMessageHandler();
+
+			var tooManyRequests = new HttpResponseMessage((HttpStatusCode)429);
+			tooManyRequests.Headers.Add("X-RateLimit-Reset", "-1");
+			
+			// First attempt, we return HTTP 429 which means TOO MANY REQUESTS
+			mockHttp.Expect(HttpMethod.Get, "https://api.sendgrid.com/v3/myendpoint")
+				.With(request => request.Content == null)
+				.Respond(tooManyRequests);
+
+			// Second attempt, we return the expected result
+			mockHttp.Expect(HttpMethod.Get, "https://api.sendgrid.com/v3/myendpoint")
+				.With(request => request.Content == null)
+				.Respond("application/json", "{'name' : 'This is a test'}");
+
+			var httpClient = new HttpClient(mockHttp);
+			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
+
+			// Act
+			var result = client.GetAsync("myendpoint", CancellationToken.None).Result;
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			Assert.IsTrue(result.IsSuccessStatusCode);
+		}
+
+		[TestMethod]
+		public void GetAsync_retry_HTTP429_with_reasonable_XRateLimitReset()
+		{
+			// Arrange
+			var mockHttp = new MockHttpMessageHandler();
+
+			var tooManyRequests = new HttpResponseMessage((HttpStatusCode)429);
+			tooManyRequests.Headers.Add("X-RateLimit-Reset", DateTime.UtcNow.AddSeconds(1).ToUnixTime().ToString());
+			
+			// First attempt, we return HTTP 429 which means TOO MANY REQUESTS
+			mockHttp.Expect(HttpMethod.Get, "https://api.sendgrid.com/v3/myendpoint")
+				.With(request => request.Content == null)
+				.Respond(tooManyRequests);
+
+			// Second attempt, we return the expected result
+			mockHttp.Expect(HttpMethod.Get, "https://api.sendgrid.com/v3/myendpoint")
+				.With(request => request.Content == null)
+				.Respond("application/json", "{'name' : 'This is a test'}");
+
+			var httpClient = new HttpClient(mockHttp);
+			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
+
+			// Act
+			var result = client.GetAsync("myendpoint", CancellationToken.None).Result;
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			Assert.IsTrue(result.IsSuccessStatusCode);
+		}
+
+		[TestMethod]
+		public void GetAsync_retry_HTTP429_with_too_large_XRateLimitReset()
+		{
+			// Arrange
+			var mockHttp = new MockHttpMessageHandler();
+
+			var tooManyRequests = new HttpResponseMessage((HttpStatusCode)429);
+			tooManyRequests.Headers.Add("X-RateLimit-Reset", DateTime.UtcNow.AddHours(1).ToUnixTime().ToString());
+			
+			// First attempt, we return HTTP 429 which means TOO MANY REQUESTS
+			mockHttp.Expect(HttpMethod.Get, "https://api.sendgrid.com/v3/myendpoint")
+				.With(request => request.Content == null)
+				.Respond(tooManyRequests);
+
+			// Second attempt, we return the expected result
+			mockHttp.Expect(HttpMethod.Get, "https://api.sendgrid.com/v3/myendpoint")
+				.With(request => request.Content == null)
+				.Respond("application/json", "{'name' : 'This is a test'}");
+
+			var httpClient = new HttpClient(mockHttp);
+			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
+
+			// Act
+			var result = client.GetAsync("myendpoint", CancellationToken.None).Result;
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			Assert.IsTrue(result.IsSuccessStatusCode);
+		}
+
+		[TestMethod]
 		public void PostAsync_without_jObject()
 		{
 			// Arrange
 			var data = (JObject)null;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.When(HttpMethod.Post, "https://api.sendgrid.com/v3/myendpoint")
+			mockHttp.Expect(HttpMethod.Post, "https://api.sendgrid.com/v3/myendpoint")
 				.With(request => request.Content == null)
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
@@ -101,7 +267,7 @@ namespace StrongGrid.UnitTests
 			data.Add("property2", 123);
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.When(HttpMethod.Post, "https://api.sendgrid.com/v3/myendpoint")
+			mockHttp.Expect(HttpMethod.Post, "https://api.sendgrid.com/v3/myendpoint")
 				.WithContent(data.ToString())
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
@@ -124,7 +290,7 @@ namespace StrongGrid.UnitTests
 			var data = (JArray)null;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.When(HttpMethod.Post, "https://api.sendgrid.com/v3/myendpoint")
+			mockHttp.Expect(HttpMethod.Post, "https://api.sendgrid.com/v3/myendpoint")
 				.With(request => request.Content == null)
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
@@ -155,7 +321,7 @@ namespace StrongGrid.UnitTests
 			var data = JArray.FromObject(new[] { object1, object2 });
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.When(HttpMethod.Post, "https://api.sendgrid.com/v3/myendpoint")
+			mockHttp.Expect(HttpMethod.Post, "https://api.sendgrid.com/v3/myendpoint")
 				.WithContent(data.ToString())
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
@@ -176,7 +342,7 @@ namespace StrongGrid.UnitTests
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.When(HttpMethod.Delete, "https://api.sendgrid.com/v3/myendpoint")
+			mockHttp.Expect(HttpMethod.Delete, "https://api.sendgrid.com/v3/myendpoint")
 				.With(request => request.Content == null)
 				.Respond(HttpStatusCode.NoContent);
 
@@ -199,7 +365,7 @@ namespace StrongGrid.UnitTests
 			var data = (JObject)null;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.When(HttpMethod.Delete, "https://api.sendgrid.com/v3/myendpoint")
+			mockHttp.Expect(HttpMethod.Delete, "https://api.sendgrid.com/v3/myendpoint")
 				.With(request => request.Content == null)
 				.Respond(HttpStatusCode.NoContent);
 
@@ -224,7 +390,7 @@ namespace StrongGrid.UnitTests
 			data.Add("property2", 123);
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.When(HttpMethod.Delete, "https://api.sendgrid.com/v3/myendpoint")
+			mockHttp.Expect(HttpMethod.Delete, "https://api.sendgrid.com/v3/myendpoint")
 				.WithContent(data.ToString())
 				.Respond(HttpStatusCode.NoContent);
 
@@ -247,7 +413,7 @@ namespace StrongGrid.UnitTests
 			var data = (JArray)null;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.When(HttpMethod.Delete, "https://api.sendgrid.com/v3/myendpoint")
+			mockHttp.Expect(HttpMethod.Delete, "https://api.sendgrid.com/v3/myendpoint")
 				.With(request => request.Content == null)
 				.Respond(HttpStatusCode.NoContent);
 
@@ -278,7 +444,7 @@ namespace StrongGrid.UnitTests
 			var data = JArray.FromObject(new[] { object1, object2 });
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.When(HttpMethod.Delete, "https://api.sendgrid.com/v3/myendpoint")
+			mockHttp.Expect(HttpMethod.Delete, "https://api.sendgrid.com/v3/myendpoint")
 				.WithContent(data.ToString())
 				.Respond(HttpStatusCode.NoContent);
 
@@ -301,7 +467,7 @@ namespace StrongGrid.UnitTests
 			var data = (JObject)null;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.When(new HttpMethod("PATCH"), "https://api.sendgrid.com/v3/myendpoint")
+			mockHttp.Expect(new HttpMethod("PATCH"), "https://api.sendgrid.com/v3/myendpoint")
 				.With(request => request.Content == null)
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
@@ -326,7 +492,7 @@ namespace StrongGrid.UnitTests
 			data.Add("property2", 123);
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.When(new HttpMethod("PATCH"), "https://api.sendgrid.com/v3/myendpoint")
+			mockHttp.Expect(new HttpMethod("PATCH"), "https://api.sendgrid.com/v3/myendpoint")
 				.WithContent(data.ToString())
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
@@ -349,7 +515,7 @@ namespace StrongGrid.UnitTests
 			var data = (JArray)null;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.When(new HttpMethod("PATCH"), "https://api.sendgrid.com/v3/myendpoint")
+			mockHttp.Expect(new HttpMethod("PATCH"), "https://api.sendgrid.com/v3/myendpoint")
 				.With(request => request.Content == null)
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
@@ -380,7 +546,7 @@ namespace StrongGrid.UnitTests
 			var data = JArray.FromObject(new[] { object1, object2 });
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.When(new HttpMethod("PATCH"), "https://api.sendgrid.com/v3/myendpoint")
+			mockHttp.Expect(new HttpMethod("PATCH"), "https://api.sendgrid.com/v3/myendpoint")
 				.WithContent(data.ToString())
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
@@ -403,7 +569,7 @@ namespace StrongGrid.UnitTests
 			var data = (JObject)null;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.When(HttpMethod.Put, "https://api.sendgrid.com/v3/myendpoint")
+			mockHttp.Expect(HttpMethod.Put, "https://api.sendgrid.com/v3/myendpoint")
 				.With(request => request.Content == null)
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
@@ -428,7 +594,7 @@ namespace StrongGrid.UnitTests
 			data.Add("property2", 123);
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.When(HttpMethod.Put, "https://api.sendgrid.com/v3/myendpoint")
+			mockHttp.Expect(HttpMethod.Put, "https://api.sendgrid.com/v3/myendpoint")
 				.WithContent(data.ToString())
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
