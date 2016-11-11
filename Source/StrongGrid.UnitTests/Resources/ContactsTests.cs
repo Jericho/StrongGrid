@@ -2,9 +2,11 @@
 using Moq;
 using Newtonsoft.Json.Linq;
 using StrongGrid.Model;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Linq;
 
 namespace StrongGrid.Resources.UnitTests
 {
@@ -14,7 +16,7 @@ namespace StrongGrid.Resources.UnitTests
 		private const string ENDPOINT = "/contactdb/recipients";
 
 		[TestMethod]
-		public void Create()
+		public void Create_success()
 		{
 			// Arrange
 			var email = "Jane@example.com";
@@ -44,6 +46,45 @@ namespace StrongGrid.Resources.UnitTests
 
 			// Assert
 			Assert.IsNotNull(result);
+		}
+
+		[TestMethod]
+		[ExpectedException(typeof(AggregateException))]
+		public void Create_failure()
+		{
+			// Arrange
+			var email = "invalid_email";
+			var firstName = "Jane";
+			var lastName = "Doe";
+
+			var apiResponse = @"{
+				'error_count': 1,
+				'error_indices': [
+					0
+				],
+				'unmodified_indices': [
+				],
+				'new_count': 0,
+				'persisted_recipients': [
+				],
+				'updated_count': 0,
+				'errors': [
+					{
+						'message': 'Invalid email.',
+						'error_indices': [
+							0
+						]
+					}
+				]
+			}";
+			var mockClient = new Mock<IClient>(MockBehavior.Strict);
+			mockClient.Setup(c => c.PostAsync(ENDPOINT, It.Is<JArray>(o => o.Count == 1), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
+
+			var contacts = new Contacts(mockClient.Object);
+
+			// Act
+			var result = contacts.CreateAsync(email, firstName, lastName, null, CancellationToken.None).Result;
 		}
 
 		[TestMethod]
@@ -102,7 +143,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[TestMethod]
-		public void Update()
+		public void Update_success()
 		{
 			// Arrange
 			var email = "jones@example.com";
@@ -131,6 +172,44 @@ namespace StrongGrid.Resources.UnitTests
 			contacts.UpdateAsync(email, null, lastName, null, CancellationToken.None).Wait();
 
 			// Assert
+		}
+
+		[TestMethod]
+		[ExpectedException(typeof(AggregateException))]
+		public void Update_failure()
+		{
+			// Arrange
+			var email = "invalid_email";
+			var lastName = "Jones";
+
+			var apiResponse = @"{
+				'error_count': 1,
+				'error_indices': [
+					0
+				],
+				'unmodified_indices': [
+				],
+				'new_count': 0,
+				'persisted_recipients': [
+				],
+				'updated_count': 0,
+				'errors': [
+					{
+						'message': 'Invalid email.',
+						'error_indices': [
+							0
+						]
+					}
+				]
+			}";
+			var mockClient = new Mock<IClient>(MockBehavior.Strict);
+			mockClient.Setup(c => c.PatchAsync(ENDPOINT, It.Is<JArray>(o => o.Count == 1), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
+
+			var contacts = new Contacts(mockClient.Object);
+
+			// Act
+			contacts.UpdateAsync(email, null, lastName, null, CancellationToken.None).Wait();
 		}
 
 		[TestMethod]
@@ -370,7 +449,63 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PostAsync($"{ENDPOINT}/search", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.PostAsync($"{ENDPOINT}/search", It.Is<JObject>(o => o.Properties().Count() == 2), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
+
+			var contacts = new Contacts(mockClient.Object);
+
+			// Act
+			var result = contacts.SearchAsync(conditions, listId, CancellationToken.None).Result;
+
+			// Assert
+			Assert.IsNotNull(result);
+			Assert.AreEqual(1, result.Length);
+			Assert.AreEqual("jones@example.com", result[0].Email);
+			Assert.AreEqual(2, result[0].CustomFields.Length);
+			Assert.AreEqual("pet", result[0].CustomFields[0].Name);
+			Assert.AreEqual("Indiana", ((Field<string>)result[0].CustomFields[0]).Value);
+			Assert.AreEqual("age", result[0].CustomFields[1].Name);
+			Assert.AreEqual(43, ((Field<long?>)result[0].CustomFields[1]).Value);
+		}
+
+		[TestMethod]
+		public void Search_without_conditions()
+		{
+			// Arrange
+			var listId = (int?)null;
+			var conditions = (SearchCondition[])null;
+			var apiResponse = @"{
+				'recipients': [
+					{
+						'created_at': 1422313607,
+						'email': 'jones@example.com',
+						'first_name': null,
+						'id': 'YUBh',
+						'last_clicked': 12345,
+						'last_emailed': null,
+						'last_name': 'Miller',
+						'last_opened': null,
+						'updated_at': 1422313790,
+						'custom_fields': [
+							{
+								'id': 23,
+								'name': 'pet',
+								'value': 'Indiana',
+								'type': 'text'
+							},
+							{
+								'id': 24,
+								'name': 'age',
+								'value': '43',
+								'type': 'number'
+							}
+						]
+					}
+				]
+			}";
+
+			var mockClient = new Mock<IClient>(MockBehavior.Strict);
+			mockClient.Setup(c => c.PostAsync($"{ENDPOINT}/search", It.Is<JObject>(o => o.Properties().Count() == 0), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var contacts = new Contacts(mockClient.Object);

@@ -74,7 +74,7 @@ namespace StrongGrid.Resources.UnitTests
 			var batches = new Batches(mockClient.Object);
 
 			// Act
-			batches.Cancel(batchId).Wait(CancellationToken.None);
+			batches.Pause(batchId).Wait(CancellationToken.None);
 
 			// Assert
 		}
