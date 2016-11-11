@@ -2,7 +2,6 @@
 using StrongGrid.Resources;
 using StrongGrid.Utilities;
 using System;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -23,6 +22,7 @@ namespace StrongGrid
 		private readonly bool _mustDisposeHttpClient;
 		private const string MEDIA_TYPE = "application/json";
 		private const int MAX_RETRIES = 3;
+		private readonly IAsyncDelayer _asyncDelayer;
 
 		private enum Methods
 		{
@@ -66,10 +66,14 @@ namespace StrongGrid
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key</param>
 		/// <param name="baseUri">Base SendGrid API Uri</param>
-		public Client(string apiKey, string baseUri = "https://api.sendgrid.com", string apiVersion = "v3", HttpClient httpClient = null)
+		/// <param name="apiVersion">The SendGrid API version. Please note: currently, only 'v3' is supported</param>
+		/// <param name="httpClient">Allows you to inject your own HttpClient. This is useful, for example, to setup the HtppClient with a proxy</param>
+		/// <param name="asyncDelayer">Allows you to inject your own logic to delay calls when the SendGrid API returns 'TOO MANY REQUESTS'</param>
+		public Client(string apiKey, string baseUri = "https://api.sendgrid.com", string apiVersion = "v3", HttpClient httpClient = null, IAsyncDelayer asyncDelayer = null)
 		{
 			_baseUri = new Uri(string.Format("{0}/{1}", baseUri, apiVersion));
 			_apiKey = apiKey;
+			_asyncDelayer = asyncDelayer ?? new AsyncDelayer();
 
 			Alerts = new Alerts(this);
 			ApiKeys = new ApiKeys(this);
@@ -273,19 +277,16 @@ namespace StrongGrid
 					Content = content
 				};
 				var response = await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
+				retriesRemaining--;
 
 				if (response.StatusCode == (HttpStatusCode)429 && retriesRemaining > 0)  // 429 = TOO MANY REQUESTS
 				{
-					var limit = long.Parse(response.Headers.GetValues("X-RateLimit-Limit").FirstOrDefault() ?? "-1");
-					var remaining = long.Parse(response.Headers.GetValues("X-RateLimit-Remaining").FirstOrDefault() ?? "-1");
-					var reset = long.Parse(response.Headers.GetValues("X-RateLimit-Reset").FirstOrDefault() ?? "-1");
+					// Wait
+					var waitTime = _asyncDelayer.CalculateDelay(response.Headers);
+					await _asyncDelayer.Delay(waitTime).ConfigureAwait(false);
 
-					var waitTime = reset > 0 ? DateTime.UtcNow.Subtract(reset.FromUnixTime()) : TimeSpan.FromMilliseconds(500);
-					if (waitTime.TotalSeconds > 2) waitTime = TimeSpan.FromSeconds(2);  // Totally arbitrary. Make sure we don't wait more than a 'reasonable' amount of time.
-
-					await Task.Delay(waitTime).ConfigureAwait(false);
-
-					return await RequestAsync(method, endpoint, content, --retriesRemaining, cancellationToken).ConfigureAwait(false);
+					// Retry
+					return await RequestAsync(method, endpoint, content, retriesRemaining, cancellationToken).ConfigureAwait(false);
 				}
 
 				return response;

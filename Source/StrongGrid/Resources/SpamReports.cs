@@ -95,15 +95,5 @@ namespace StrongGrid.Resources
 			var response = await _client.DeleteAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 		}
-
-		private static JObject CreateJObjectForAlert(AlertType? type, string emailTo = null, Frequency? frequency = null, int? percentage = null)
-		{
-			var result = new JObject();
-			if (type.HasValue) result.Add("type", JToken.FromObject(type.Value));
-			if (!string.IsNullOrEmpty(emailTo)) result.Add("email_to", emailTo);
-			if (frequency.HasValue) result.Add("frequency", JToken.FromObject(frequency.Value));
-			if (percentage.HasValue) result.Add("percentage", percentage.Value);
-			return result;
-		}
 	}
 }

@@ -28,7 +28,7 @@ namespace StrongGrid.Resources.UnitTests
 			]";
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync($"{ENDPOINT}?limit={limit}&offset={offset}", It.IsAny<CancellationToken>()))
+			mockClient.Setup(c => c.GetAsync($"{ENDPOINT}?category=&limit={limit}&offset={offset}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
 			var categories = new Categories(mockClient.Object);

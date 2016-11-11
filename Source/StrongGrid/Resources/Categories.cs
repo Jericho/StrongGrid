@@ -25,16 +25,7 @@ namespace StrongGrid.Resources
 
 		public async Task<string[]> GetAsync(string searchPrefix = null, int limit = 50, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = (string)null;
-			if (!string.IsNullOrEmpty(searchPrefix))
-			{
-				endpoint = string.Format("{0}?category={1}&limit={2}&offset={3}", _endpoint, searchPrefix, limit, offset);
-			}
-			else
-			{
-				endpoint = string.Format("{0}?limit={1}&offset={2}", _endpoint, limit, offset);
-			}
-
+			var endpoint = string.Format("{0}?category={1}&limit={2}&offset={3}", _endpoint, searchPrefix, limit, offset);
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
