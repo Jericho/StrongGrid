@@ -277,6 +277,7 @@ namespace StrongGrid
 					Content = content
 				};
 				var response = await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
+				retriesRemaining--;
 
 				if (response.StatusCode == (HttpStatusCode)429 && retriesRemaining > 0)  // 429 = TOO MANY REQUESTS
 				{
@@ -285,7 +286,7 @@ namespace StrongGrid
 					await _asyncDelayer.Delay(waitTime).ConfigureAwait(false);
 
 					// Retry
-					return await RequestAsync(method, endpoint, content, --retriesRemaining, cancellationToken).ConfigureAwait(false);
+					return await RequestAsync(method, endpoint, content, retriesRemaining, cancellationToken).ConfigureAwait(false);
 				}
 
 				return response;
