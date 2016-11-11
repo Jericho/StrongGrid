@@ -1,12 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using Newtonsoft.Json.Linq;
 using RichardSzalay.MockHttp;
+using StrongGrid.Utilities;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
-using StrongGrid.Utilities;
-using Moq;
 using System.Threading.Tasks;
 
 namespace StrongGrid.UnitTests
@@ -117,7 +118,7 @@ namespace StrongGrid.UnitTests
 		}
 
 		[TestMethod]
-		public void GetAsync_retry_HTTP429_without_XRateLimitReset()
+		public void GetAsync_HTTP429_retry_success()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -132,10 +133,14 @@ namespace StrongGrid.UnitTests
 				.With(request => request.Content == null)
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
-			// Verify that we wait 1 second before retrying
+			// Fake delay for testing purposes
 			var mockDelayer = new Mock<IAsyncDelayer>(MockBehavior.Strict);
 			mockDelayer
-				.Setup(d => d.Delay(It.Is<TimeSpan>(t => t.Seconds == 1)))
+				.Setup(d => d.CalculateDelay(It.IsAny<HttpResponseHeaders>()))
+				.Returns(TimeSpan.FromMilliseconds(1))
+				.Verifiable();
+			mockDelayer
+				.Setup(d => d.Delay(It.Is<TimeSpan>(t => t.Milliseconds == 1)))
 				.Returns(Task.FromResult(0))
 				.Verifiable();
 
@@ -153,28 +158,30 @@ namespace StrongGrid.UnitTests
 		}
 
 		[TestMethod]
-		public void GetAsync_retry_HTTP429_with_too_small_XRateLimitReset()
+		public void GetAsync_HTTP429_retry_failure()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
 
-			var tooManyRequests = new HttpResponseMessage((HttpStatusCode)429);
-			tooManyRequests.Headers.Add("X-RateLimit-Reset", "-1");
-			
-			// First attempt, we return HTTP 429 which means TOO MANY REQUESTS
+			// Three successive HTTP 429 which means TOO MANY REQUESTS
 			mockHttp.Expect(HttpMethod.Get, "https://api.sendgrid.com/v3/myendpoint")
 				.With(request => request.Content == null)
-				.Respond(tooManyRequests);
-
-			// Second attempt, we return the expected result
+				.Respond((HttpStatusCode)429);
 			mockHttp.Expect(HttpMethod.Get, "https://api.sendgrid.com/v3/myendpoint")
 				.With(request => request.Content == null)
-				.Respond("application/json", "{'name' : 'This is a test'}");
+				.Respond((HttpStatusCode)429);
+			mockHttp.Expect(HttpMethod.Get, "https://api.sendgrid.com/v3/myendpoint")
+				.With(request => request.Content == null)
+				.Respond((HttpStatusCode)429);
 
-			// Verify that we wait 1 second before retrying
+			// Fake delay for testing purposes
 			var mockDelayer = new Mock<IAsyncDelayer>(MockBehavior.Strict);
 			mockDelayer
-				.Setup(d => d.Delay(It.Is<TimeSpan>(t => t.Milliseconds == 500)))
+				.Setup(d => d.CalculateDelay(It.IsAny<HttpResponseHeaders>()))
+				.Returns(TimeSpan.FromMilliseconds(1))
+				.Verifiable();
+			mockDelayer
+				.Setup(d => d.Delay(It.Is<TimeSpan>(t => t.Milliseconds == 1)))
 				.Returns(Task.FromResult(0))
 				.Verifiable();
 
@@ -185,85 +192,11 @@ namespace StrongGrid.UnitTests
 			var result = client.GetAsync("myendpoint", CancellationToken.None).Result;
 
 			// Assert
+			mockDelayer.VerifyAll();
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsTrue(result.IsSuccessStatusCode);
-		}
-
-		[TestMethod]
-		public void GetAsync_retry_HTTP429_with_reasonable_XRateLimitReset()
-		{
-			// Arrange
-			var mockHttp = new MockHttpMessageHandler();
-
-			var tooManyRequests = new HttpResponseMessage((HttpStatusCode)429);
-			tooManyRequests.Headers.Add("X-RateLimit-Reset", DateTime.UtcNow.AddSeconds(1).ToUnixTime().ToString());
-			
-			// First attempt, we return HTTP 429 which means TOO MANY REQUESTS
-			mockHttp.Expect(HttpMethod.Get, "https://api.sendgrid.com/v3/myendpoint")
-				.With(request => request.Content == null)
-				.Respond(tooManyRequests);
-
-			// Second attempt, we return the expected result
-			mockHttp.Expect(HttpMethod.Get, "https://api.sendgrid.com/v3/myendpoint")
-				.With(request => request.Content == null)
-				.Respond("application/json", "{'name' : 'This is a test'}");
-
-			// Verify that we wait 1 second before retrying
-			var mockDelayer = new Mock<IAsyncDelayer>(MockBehavior.Strict);
-			mockDelayer
-				.Setup(d => d.Delay(It.Is<TimeSpan>(t => t.Seconds == 1)))
-				.Returns(Task.FromResult(0))
-				.Verifiable();
-
-			var httpClient = new HttpClient(mockHttp);
-			var client = new Client(apiKey: API_KEY, httpClient: httpClient, asyncDelayer: mockDelayer.Object);
-
-			// Act
-			var result = client.GetAsync("myendpoint", CancellationToken.None).Result;
-
-			// Assert
-			mockHttp.VerifyNoOutstandingExpectation();
-			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsTrue(result.IsSuccessStatusCode);
-		}
-
-		[TestMethod]
-		public void GetAsync_retry_HTTP429_with_too_large_XRateLimitReset()
-		{
-			// Arrange
-			var mockHttp = new MockHttpMessageHandler();
-
-			var tooManyRequests = new HttpResponseMessage((HttpStatusCode)429);
-			tooManyRequests.Headers.Add("X-RateLimit-Reset", DateTime.UtcNow.AddHours(1).ToUnixTime().ToString());
-			
-			// First attempt, we return HTTP 429 which means TOO MANY REQUESTS
-			mockHttp.Expect(HttpMethod.Get, "https://api.sendgrid.com/v3/myendpoint")
-				.With(request => request.Content == null)
-				.Respond(tooManyRequests);
-
-			// Second attempt, we return the expected result
-			mockHttp.Expect(HttpMethod.Get, "https://api.sendgrid.com/v3/myendpoint")
-				.With(request => request.Content == null)
-				.Respond("application/json", "{'name' : 'This is a test'}");
-
-			// Verify that we wait 2 seconds before retrying
-			var mockDelayer = new Mock<IAsyncDelayer>(MockBehavior.Strict);
-			mockDelayer
-				.Setup(d => d.Delay(It.Is<TimeSpan>(t => t.Seconds == 2)))
-				.Returns(Task.FromResult(0))
-				.Verifiable();
-
-			var httpClient = new HttpClient(mockHttp);
-			var client = new Client(apiKey: API_KEY, httpClient: httpClient, asyncDelayer: mockDelayer.Object);
-
-			// Act
-			var result = client.GetAsync("myendpoint", CancellationToken.None).Result;
-
-			// Assert
-			mockHttp.VerifyNoOutstandingExpectation();
-			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsTrue(result.IsSuccessStatusCode);
+			Assert.IsFalse(result.IsSuccessStatusCode);
+			Assert.AreEqual((HttpStatusCode)429, result.StatusCode);
 		}
 
 		[TestMethod]

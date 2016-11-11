@@ -2,8 +2,6 @@
 using StrongGrid.Resources;
 using StrongGrid.Utilities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -68,6 +66,9 @@ namespace StrongGrid
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key</param>
 		/// <param name="baseUri">Base SendGrid API Uri</param>
+		/// <param name="apiVersion">The SendGrid API version. Please note: currently, only 'v3' is supported</param>
+		/// <param name="httpClient">Allows you to inject your own HttpClient. This is useful, for example, to setup the HtppClient with a proxy</param>
+		/// <param name="asyncDelayer">Allows you to inject your own logic to delay calls when the SendGrid API returns 'TOO MANY REQUESTS'</param>
 		public Client(string apiKey, string baseUri = "https://api.sendgrid.com", string apiVersion = "v3", HttpClient httpClient = null, IAsyncDelayer asyncDelayer = null)
 		{
 			_baseUri = new Uri(string.Format("{0}/{1}", baseUri, apiVersion));
@@ -279,23 +280,8 @@ namespace StrongGrid
 
 				if (response.StatusCode == (HttpStatusCode)429 && retriesRemaining > 0)  // 429 = TOO MANY REQUESTS
 				{
-					IEnumerable<string> rateLimitRestValues;
-					var waitTime = TimeSpan.FromSeconds(1); // Default value in case the 'reset' time is missing from HTTP headers
-
-					// Get the 'reset' time from the HTTP headers (if present)
-					if (response.Headers.TryGetValues("X-RateLimit-Reset", out rateLimitRestValues))
-					{
-						var reset = long.Parse(rateLimitRestValues.First());
-						waitTime = reset.FromUnixTime().Subtract(DateTime.UtcNow);
-					}
-
-					// Make sure the wait time is valid
-					if (waitTime.TotalMilliseconds <= 0) waitTime = TimeSpan.FromMilliseconds(500);
-
-					// Totally arbitrary. Make sure we don't wait more than a 'reasonable' amount of time
-					if (waitTime.TotalSeconds > 2) waitTime = TimeSpan.FromSeconds(2);
-
 					// Wait
+					var waitTime = _asyncDelayer.CalculateDelay(response.Headers);
 					await _asyncDelayer.Delay(waitTime).ConfigureAwait(false);
 
 					// Retry

@@ -364,8 +364,14 @@
     <Compile Include="..\StrongGrid\Utilities\IntegerBooleanConverter.cs">
       <Link>Utilities\IntegerBooleanConverter.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid\Utilities\ISystemClock.cs">
+      <Link>Utilities\ISystemClock.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid\Utilities\SendGridDateTimeConverter.cs">
       <Link>Utilities\SendGridDateTimeConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\StrongGrid\Utilities\SystemClock.cs">
+      <Link>Utilities\SystemClock.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
