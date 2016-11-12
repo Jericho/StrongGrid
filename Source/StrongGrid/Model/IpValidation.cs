@@ -10,7 +10,7 @@ namespace StrongGrid.Model
 		[JsonProperty("valid")]
 		public bool IsValid { get; set; }
 
-		[JsonProperty("validation_resuts")]
-		public IpValidationResults ValidationResults{ get; set; }
+		[JsonProperty("validation_results")]
+		public IpValidationResults ValidationResults { get; set; }
 	}
 }

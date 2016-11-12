@@ -426,7 +426,7 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var endpoint = string.Format("{0}/domains", ENDPOINT);
 			var domain = "";
-			var subdoman = "";
+			var subdomain = "";
 			var automaticSecurity = true;
 			var customSpf = false;
 			var isDefault = true;
@@ -439,7 +439,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = CreateWhitelabel();
 
 			// Act
-			var result = whitelabel.CreateDomainAsync(domain, subdoman, automaticSecurity, customSpf, isDefault, CancellationToken.None).Result;
+			var result = whitelabel.CreateDomainAsync(domain, subdomain, automaticSecurity, customSpf, isDefault, CancellationToken.None).Result;
 
 			// Assert
 			Assert.IsNotNull(result);
@@ -606,6 +606,47 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[TestMethod]
+		public void DisassociateDomain()
+		{
+			// Arrange
+			var username = "abc123";
+
+			_mockClient
+				.Setup(c => c.DeleteAsync($"{ENDPOINT}/domains/subuser?username={username}", It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK))
+				.Verifiable();
+
+			var whitelabel = CreateWhitelabel();
+
+			// Act
+			whitelabel.DisassociateDomainAsync(username, CancellationToken.None).Wait(CancellationToken.None);
+
+			// Assert
+		}
+
+		[TestMethod]
+		public void AssociateDomain()
+		{
+			// Arrange
+			var domainId = 123L;
+			var endpoint = string.Format("{0}/domains/{1}/subuser", ENDPOINT, domainId);
+			var ipAddress = "192.168.77.1";
+
+			_mockClient
+				.Setup(c => c.PostAsync(endpoint, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_DOMAIN_JSON) })
+				.Verifiable();
+
+			var whitelabel = CreateWhitelabel();
+
+			// Act
+			var result = whitelabel.AssociateDomainAsync(domainId, ipAddress, CancellationToken.None).Result;
+
+			// Assert
+			Assert.IsNotNull(result);
+		}
+
+		[TestMethod]
 		public void GetAllIpsAsync()
 		{
 			// Arrange
@@ -625,6 +666,318 @@ namespace StrongGrid.Resources.UnitTests
 			Assert.IsNotNull(result);
 			Assert.AreEqual(2, result.Length);
 		}
+
+		[TestMethod]
+		public void GetIp()
+		{
+			// Arrange
+			var id = 123L;
+			var endpoint = string.Format("{0}/ips/{1}", ENDPOINT, id);
+
+			_mockClient
+				.Setup(c => c.GetAsync(endpoint, It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_IP_JSON) })
+				.Verifiable();
+
+			var whitelabel = CreateWhitelabel();
+
+			// Act
+			var result = whitelabel.GetIpAsync(id).Result;
+
+			// Assert
+			Assert.IsNotNull(result);
+		}
+
+		[TestMethod]
+		public void CreateIp()
+		{
+			// Arrange
+			var endpoint = string.Format("{0}/ips", ENDPOINT);
+			var ipAddress = "192.168.77.1";
+			var domain = "exmaple.com";
+			var subdomain = "mail";
+
+			_mockClient
+				.Setup(c => c.PostAsync(endpoint, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_IP_JSON) })
+				.Verifiable();
+
+			var whitelabel = CreateWhitelabel();
+
+			// Act
+			var result = whitelabel.CreateIpAsync(ipAddress, domain, subdomain, CancellationToken.None).Result;
+
+			// Assert
+			Assert.IsNotNull(result);
+		}
+
+		[TestMethod]
+		public void DeleteIp()
+		{
+			// Arrange
+			var domainId = 48L;
+
+			_mockClient
+				.Setup(c => c.DeleteAsync($"{ENDPOINT}/ips/{domainId}", It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK))
+				.Verifiable();
+
+			var whitelabel = CreateWhitelabel();
+
+			// Act
+			whitelabel.DeleteIpAsync(domainId, CancellationToken.None).Wait(CancellationToken.None);
+
+			// Assert
+		}
+
+		[TestMethod]
+		public void ValidateIp()
+		{
+			// Arrange
+			var id = 1L;
+			var endpoint = string.Format("{0}/ips/{1}/validate", ENDPOINT, id);
+
+			var apiResponse = @"{
+				'id': 1,
+				'valid': true,
+				'validation_results': {
+					'a_record': {
+						'valid': true,
+						'reason': null
+					}
+				}
+			}";
+
+			_mockClient
+				.Setup(c => c.PostAsync(endpoint, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
+				.Verifiable();
+
+			var whitelabel = CreateWhitelabel();
+
+			// Act
+			var result = whitelabel.ValidateIpAsync(id).Result;
+
+			// Assert
+			Assert.IsNotNull(result);
+			Assert.AreEqual(1, result.IpId);
+			Assert.AreEqual(true, result.IsValid);
+			Assert.AreEqual(true, result.ValidationResults.ARecord.IsValid);
+			Assert.IsNull(result.ValidationResults.ARecord.Reason);
+		}
+
+		[TestMethod]
+		public void GetLink()
+		{
+			// Arrange
+			var linkId = 123L;
+			var endpoint = string.Format("{0}/links/{1}", ENDPOINT, linkId);
+
+			_mockClient
+				.Setup(c => c.GetAsync(endpoint, It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_LINK_JSON) })
+				.Verifiable();
+
+			var whitelabel = CreateWhitelabel();
+
+			// Act
+			var result = whitelabel.GetLinkAsync(linkId).Result;
+
+			// Assert
+			Assert.IsNotNull(result);
+		}
+
+		[TestMethod]
+		public void CreateLink()
+		{
+			// Arrange
+			var endpoint = string.Format("{0}/links", ENDPOINT);
+			var domain = "exmaple.com";
+			var subdomain = "mail";
+			var isDefault = false;
+
+			_mockClient
+				.Setup(c => c.PostAsync(endpoint, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_LINK_JSON) })
+				.Verifiable();
+
+			var whitelabel = CreateWhitelabel();
+
+			// Act
+			var result = whitelabel.CreateLinkAsync(domain, subdomain, isDefault, CancellationToken.None).Result;
+
+			// Assert
+			Assert.IsNotNull(result);
+		}
+
+		[TestMethod]
+		public void UpdateLink()
+		{
+			// Arrange
+			var linkId = 123L;
+			var endpoint = string.Format("{0}/links/{1}", ENDPOINT, linkId);
+			var isDefault = true;
+
+			_mockClient
+				.Setup(c => c.PatchAsync(endpoint, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_LINK_JSON) })
+				.Verifiable();
+
+			var whitelabel = CreateWhitelabel();
+
+			// Act
+			var result = whitelabel.UpdateLinkAsync(linkId, isDefault).Result;
+
+			// Assert
+			Assert.IsNotNull(result);
+		}
+
+		[TestMethod]
+		public void DeleteLink()
+		{
+			// Arrange
+			var linkId = 48L;
+
+			_mockClient
+				.Setup(c => c.DeleteAsync($"{ENDPOINT}/links/{linkId}", It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK))
+				.Verifiable();
+
+			var whitelabel = CreateWhitelabel();
+
+			// Act
+			whitelabel.DeleteLinkAsync(linkId, CancellationToken.None).Wait(CancellationToken.None);
+
+			// Assert
+		}
+
+		[TestMethod]
+		public void GetDefaultLink()
+		{
+			// Arrange
+			var domain = "example.com";
+			var endpoint = string.Format("{0}/links/default?domain={1}", ENDPOINT, domain);
+
+			_mockClient
+				.Setup(c => c.GetAsync(endpoint, It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_LINK_JSON) })
+				.Verifiable();
+
+			var whitelabel = CreateWhitelabel();
+
+			// Act
+			var result = whitelabel.GetDefaultLinkAsync(domain).Result;
+
+			// Assert
+			Assert.IsNotNull(result);
+		}
+
+		[TestMethod]
+		public void ValidateLink()
+		{
+			// Arrange
+			var linkId = 1L;
+			var endpoint = string.Format("{0}/links/{1}/validate", ENDPOINT, linkId);
+
+			var apiResponse = @"{
+				'id': 1,
+				'valid': true,
+				'validation_results': {
+					'domain_cname': {
+						'valid': false,
+						'reason': 'Expected CNAME to match \'sendgrid.net.\' but found \'example.com.\'.'
+					},
+					'owner_cname': {
+						'valid': true,
+						'reason': null
+					}
+				}
+			}";
+
+			_mockClient
+				.Setup(c => c.PostAsync(endpoint, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
+				.Verifiable();
+
+			var whitelabel = CreateWhitelabel();
+
+			// Act
+			var result = whitelabel.ValidateLinkAsync(linkId).Result;
+
+			// Assert
+			Assert.IsNotNull(result);
+			Assert.AreEqual(1, result.LinkId);
+			Assert.AreEqual(true, result.IsValid);
+			Assert.AreEqual(false, result.ValidationResults.Domain.IsValid);
+			Assert.AreEqual("Expected CNAME to match \'sendgrid.net.\' but found \'example.com.\'.", result.ValidationResults.Domain.Reason);
+			Assert.AreEqual(true, result.ValidationResults.Owner.IsValid);
+			Assert.IsNull(result.ValidationResults.Owner.Reason);
+		}
+
+		[TestMethod]
+		public void GetAssociatedLink()
+		{
+			// Arrange
+			var username = "abc123";
+			var endpoint = string.Format("{0}/links/subuser?username={1}", ENDPOINT, username);
+
+			_mockClient
+				.Setup(c => c.GetAsync(endpoint, It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_LINK_JSON) })
+				.Verifiable();
+
+			var whitelabel = CreateWhitelabel();
+
+			// Act
+			var result = whitelabel.GetAssociatedLinkAsync(username, CancellationToken.None).Result;
+
+			// Assert
+			Assert.IsNotNull(result);
+		}
+
+		[TestMethod]
+		public void DisassociateLink()
+		{
+			// Arrange
+			var username = "abc123";
+
+			_mockClient
+				.Setup(c => c.DeleteAsync($"{ENDPOINT}/links/subuser?username={username}", It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK))
+				.Verifiable();
+
+			var whitelabel = CreateWhitelabel();
+
+			// Act
+			whitelabel.DisassociateLinkAsync(username, CancellationToken.None).Wait(CancellationToken.None);
+
+			// Assert
+		}
+
+		[TestMethod]
+		public void AssociateLink()
+		{
+			// Arrange
+			var linkId = 123L;
+			var endpoint = string.Format("{0}/links/{1}/subuser", ENDPOINT, linkId);
+			var username = "abc123";
+
+			_mockClient
+				.Setup(c => c.PostAsync(endpoint, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_DOMAIN_JSON) })
+				.Verifiable();
+
+			var whitelabel = CreateWhitelabel();
+
+			// Act
+			var result = whitelabel.AssociateLinkAsync(linkId, username, CancellationToken.None).Result;
+
+			// Assert
+			Assert.IsNotNull(result);
+		}
+
+
+
 
 		[TestMethod]
 		public void GetAllLinksAsync()
