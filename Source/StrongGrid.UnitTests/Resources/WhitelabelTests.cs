@@ -403,7 +403,7 @@ namespace StrongGrid.Resources.UnitTests
 		public void GetDomain()
 		{
 			// Arrange
-			var domainId = 123;
+			var domainId = 123L;
 			var endpoint = string.Format("{0}/domains/{1}", ENDPOINT, domainId);
 
 			_mockClient
@@ -440,6 +440,166 @@ namespace StrongGrid.Resources.UnitTests
 
 			// Act
 			var result = whitelabel.CreateDomainAsync(domain, subdoman, automaticSecurity, customSpf, isDefault, CancellationToken.None).Result;
+
+			// Assert
+			Assert.IsNotNull(result);
+		}
+
+		[TestMethod]
+		public void UpdateDomain()
+		{
+			// Arrange
+			var domainId = 123L;
+			var endpoint = string.Format("{0}/domains/{1}", ENDPOINT, domainId);
+			var customSpf = true;
+			var isDefault = false;
+
+			_mockClient
+				.Setup(c => c.PatchAsync(endpoint, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_DOMAIN_JSON) })
+				.Verifiable();
+
+			var whitelabel = CreateWhitelabel();
+
+			// Act
+			var result = whitelabel.UpdateDomainAsync(domainId, isDefault, customSpf, CancellationToken.None).Result;
+
+			// Assert
+			Assert.IsNotNull(result);
+		}
+
+		[TestMethod]
+		public void DeleteDomain()
+		{
+			// Arrange
+			var domainId = 48L;
+
+			_mockClient
+				.Setup(c => c.DeleteAsync($"{ENDPOINT}/domains/{domainId}", It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK))
+				.Verifiable();
+
+			var whitelabel = CreateWhitelabel();
+
+			// Act
+			whitelabel.DeleteDomainAsync(domainId, CancellationToken.None).Wait(CancellationToken.None);
+
+			// Assert
+		}
+
+		[TestMethod]
+		public void AddIpAddressToDomain()
+		{
+			// Arrange
+			var domainId = 123L;
+			var endpoint = string.Format("{0}/domains/{1}/ips", ENDPOINT, domainId);
+			var ipAddress = "192.168.77.1";
+
+			_mockClient
+				.Setup(c => c.PostAsync(endpoint, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_DOMAIN_JSON) })
+				.Verifiable();
+
+			var whitelabel = CreateWhitelabel();
+
+			// Act
+			var result = whitelabel.AddIpAddressToDomainAsync(domainId, ipAddress, CancellationToken.None).Result;
+
+			// Assert
+			Assert.IsNotNull(result);
+		}
+
+		[TestMethod]
+		public void DeleteIpAddressFromDomain()
+		{
+			// Arrange
+			var domainId = 48L;
+			var ipAddress = "192.168.77.1";
+
+			_mockClient
+				.Setup(c => c.DeleteAsync($"{ENDPOINT}/domains/{domainId}/ips/{ipAddress}", It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_DOMAIN_JSON) })
+				.Verifiable();
+
+			var whitelabel = CreateWhitelabel();
+
+			// Act
+			var result = whitelabel.DeleteIpAddressFromDomainAsync(domainId, ipAddress, CancellationToken.None).Result;
+
+			// Assert
+			Assert.IsNotNull(result);
+		}
+
+		[TestMethod]
+		public void ValidateDomain()
+		{
+			// Arrange
+			var domainId = 1L;
+			var endpoint = string.Format("{0}/domains/{1}/validate", ENDPOINT, domainId);
+
+			var apiResponse = @"{
+				'id': 1,
+				'valid': true,
+				'validation_resuts': {
+					'mail_cname': {
+						'valid': false,
+						'reason': 'Expected your MX record to be \'mx.sendgrid.net\' but found \'example.com\'.'
+					},
+					'dkim1': {
+						'valid': true,
+						'reason': null
+					},
+					'dkim2': {
+						'valid': true,
+						'reason': null
+					},
+					'spf': {
+						'valid': true,
+						'reason': null
+					}
+				}
+			}";
+
+			_mockClient
+				.Setup(c => c.PostAsync(endpoint, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
+				.Verifiable();
+
+			var whitelabel = CreateWhitelabel();
+
+			// Act
+			var result = whitelabel.ValidateDomainAsync(domainId).Result;
+
+			// Assert
+			Assert.IsNotNull(result);
+			Assert.AreEqual(1, result.DomainId);
+			Assert.AreEqual(true, result.IsValid);
+			Assert.AreEqual(true, result.ValidationResults.Dkim1.IsValid);
+			Assert.IsNull(result.ValidationResults.Dkim1.Reason);
+			Assert.AreEqual(true, result.ValidationResults.Dkim2.IsValid);
+			Assert.IsNull(result.ValidationResults.Dkim2.Reason);
+			Assert.AreEqual(false, result.ValidationResults.Mail.IsValid);
+			Assert.AreEqual("Expected your MX record to be \'mx.sendgrid.net\' but found \'example.com\'.", result.ValidationResults.Mail.Reason);
+			Assert.AreEqual(true, result.ValidationResults.Spf.IsValid);
+			Assert.IsNull(result.ValidationResults.Spf.Reason);
+		}
+
+		[TestMethod]
+		public void GetAssociatedDomain()
+		{
+			// Arrange
+			var username = "abc123";
+			var endpoint = string.Format("{0}/domains/subuser?username={1}", ENDPOINT, username);
+
+			_mockClient
+				.Setup(c => c.GetAsync(endpoint, It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_DOMAIN_JSON) })
+				.Verifiable();
+
+			var whitelabel = CreateWhitelabel();
+
+			// Act
+			var result = whitelabel.GetAssociatedDomainAsync(username, CancellationToken.None).Result;
 
 			// Assert
 			Assert.IsNotNull(result);
