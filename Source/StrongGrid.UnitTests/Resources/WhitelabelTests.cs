@@ -361,10 +361,8 @@ namespace StrongGrid.Resources.UnitTests
 		public void GetAllDomains_include_subusers()
 		{
 			// Arrange
-			var endpoint = string.Format("{0}/domains?exclude_subusers=false&limit=50&offset=0&username=&domain=", ENDPOINT);
-
 			_mockClient
-				.Setup(c => c.GetAsync(endpoint, It.IsAny<CancellationToken>()))
+				.Setup(c => c.GetAsync($"{ENDPOINT}/domains?exclude_subusers=false&limit=50&offset=0&username=&domain=", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_DOMAINS_JSON) })
 				.Verifiable();
 
@@ -382,10 +380,8 @@ namespace StrongGrid.Resources.UnitTests
 		public void GetAllDomains_exclude_subusers()
 		{
 			// Arrange
-			var endpoint = string.Format("{0}/domains?exclude_subusers=true&limit=50&offset=0&username=&domain=", ENDPOINT);
-
 			_mockClient
-				.Setup(c => c.GetAsync(endpoint, It.IsAny<CancellationToken>()))
+				.Setup(c => c.GetAsync($"{ENDPOINT}/domains?exclude_subusers=true&limit=50&offset=0&username=&domain=", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_DOMAINS_JSON) })
 				.Verifiable();
 
@@ -404,10 +400,9 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var domainId = 123L;
-			var endpoint = string.Format("{0}/domains/{1}", ENDPOINT, domainId);
 
 			_mockClient
-				.Setup(c => c.GetAsync(endpoint, It.IsAny<CancellationToken>()))
+				.Setup(c => c.GetAsync($"{ENDPOINT}/domains/{domainId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_DOMAIN_JSON) })
 				.Verifiable();
 
@@ -424,7 +419,6 @@ namespace StrongGrid.Resources.UnitTests
 		public void CreateDomain()
 		{
 			// Arrange
-			var endpoint = string.Format("{0}/domains", ENDPOINT);
 			var domain = "";
 			var subdomain = "";
 			var automaticSecurity = true;
@@ -432,7 +426,7 @@ namespace StrongGrid.Resources.UnitTests
 			var isDefault = true;
 
 			_mockClient
-				.Setup(c => c.PostAsync(endpoint, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.Setup(c => c.PostAsync($"{ENDPOINT}/domains", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_DOMAIN_JSON) })
 				.Verifiable();
 
@@ -450,12 +444,11 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var domainId = 123L;
-			var endpoint = string.Format("{0}/domains/{1}", ENDPOINT, domainId);
 			var customSpf = true;
 			var isDefault = false;
 
 			_mockClient
-				.Setup(c => c.PatchAsync(endpoint, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.Setup(c => c.PatchAsync($"{ENDPOINT}/domains/{domainId}", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_DOMAIN_JSON) })
 				.Verifiable();
 
@@ -492,11 +485,10 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var domainId = 123L;
-			var endpoint = string.Format("{0}/domains/{1}/ips", ENDPOINT, domainId);
 			var ipAddress = "192.168.77.1";
 
 			_mockClient
-				.Setup(c => c.PostAsync(endpoint, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.Setup(c => c.PostAsync($"{ENDPOINT}/domains/{domainId}/ips", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_DOMAIN_JSON) })
 				.Verifiable();
 
@@ -535,7 +527,6 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var domainId = 1L;
-			var endpoint = string.Format("{0}/domains/{1}/validate", ENDPOINT, domainId);
 
 			var apiResponse = @"{
 				'id': 1,
@@ -561,7 +552,7 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			_mockClient
-				.Setup(c => c.PostAsync(endpoint, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.Setup(c => c.PostAsync($"{ENDPOINT}/domains/{domainId}/validate", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
@@ -589,10 +580,9 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var username = "abc123";
-			var endpoint = string.Format("{0}/domains/subuser?username={1}", ENDPOINT, username);
 
 			_mockClient
-				.Setup(c => c.GetAsync(endpoint, It.IsAny<CancellationToken>()))
+				.Setup(c => c.GetAsync($"{ENDPOINT}/domains/subuser?username={username}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_DOMAIN_JSON) })
 				.Verifiable();
 
@@ -629,11 +619,10 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var domainId = 123L;
-			var endpoint = string.Format("{0}/domains/{1}/subuser", ENDPOINT, domainId);
 			var ipAddress = "192.168.77.1";
 
 			_mockClient
-				.Setup(c => c.PostAsync(endpoint, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.Setup(c => c.PostAsync($"{ENDPOINT}/domains/{domainId}/subuser", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_DOMAIN_JSON) })
 				.Verifiable();
 
@@ -650,10 +639,8 @@ namespace StrongGrid.Resources.UnitTests
 		public void GetAllIpsAsync()
 		{
 			// Arrange
-			var endpoint = string.Format("{0}/ips?limit=50&offset=0&ip=", ENDPOINT);
-
 			_mockClient
-				.Setup(c => c.GetAsync(endpoint, It.IsAny<CancellationToken>()))
+				.Setup(c => c.GetAsync($"{ENDPOINT}/ips?limit=50&offset=0&ip=", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_IPS_JSON) })
 				.Verifiable();
 
@@ -672,10 +659,9 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var id = 123L;
-			var endpoint = string.Format("{0}/ips/{1}", ENDPOINT, id);
 
 			_mockClient
-				.Setup(c => c.GetAsync(endpoint, It.IsAny<CancellationToken>()))
+				.Setup(c => c.GetAsync($"{ENDPOINT}/ips/{id}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_IP_JSON) })
 				.Verifiable();
 
@@ -692,13 +678,12 @@ namespace StrongGrid.Resources.UnitTests
 		public void CreateIp()
 		{
 			// Arrange
-			var endpoint = string.Format("{0}/ips", ENDPOINT);
 			var ipAddress = "192.168.77.1";
 			var domain = "exmaple.com";
 			var subdomain = "mail";
 
 			_mockClient
-				.Setup(c => c.PostAsync(endpoint, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.Setup(c => c.PostAsync($"{ENDPOINT}/ips", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_IP_JSON) })
 				.Verifiable();
 
@@ -735,7 +720,6 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var id = 1L;
-			var endpoint = string.Format("{0}/ips/{1}/validate", ENDPOINT, id);
 
 			var apiResponse = @"{
 				'id': 1,
@@ -749,7 +733,7 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			_mockClient
-				.Setup(c => c.PostAsync(endpoint, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.Setup(c => c.PostAsync($"{ENDPOINT}/ips/{id}/validate", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
@@ -771,10 +755,9 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var linkId = 123L;
-			var endpoint = string.Format("{0}/links/{1}", ENDPOINT, linkId);
 
 			_mockClient
-				.Setup(c => c.GetAsync(endpoint, It.IsAny<CancellationToken>()))
+				.Setup(c => c.GetAsync($"{ENDPOINT}/links/{linkId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_LINK_JSON) })
 				.Verifiable();
 
@@ -791,13 +774,12 @@ namespace StrongGrid.Resources.UnitTests
 		public void CreateLink()
 		{
 			// Arrange
-			var endpoint = string.Format("{0}/links", ENDPOINT);
-			var domain = "exmaple.com";
+			var domain = "example.com";
 			var subdomain = "mail";
 			var isDefault = false;
 
 			_mockClient
-				.Setup(c => c.PostAsync(endpoint, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.Setup(c => c.PostAsync($"{ENDPOINT}/links", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_LINK_JSON) })
 				.Verifiable();
 
@@ -815,11 +797,10 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var linkId = 123L;
-			var endpoint = string.Format("{0}/links/{1}", ENDPOINT, linkId);
 			var isDefault = true;
 
 			_mockClient
-				.Setup(c => c.PatchAsync(endpoint, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.Setup(c => c.PatchAsync($"{ENDPOINT}/links/{linkId}", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_LINK_JSON) })
 				.Verifiable();
 
@@ -856,10 +837,9 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var domain = "example.com";
-			var endpoint = string.Format("{0}/links/default?domain={1}", ENDPOINT, domain);
 
 			_mockClient
-				.Setup(c => c.GetAsync(endpoint, It.IsAny<CancellationToken>()))
+				.Setup(c => c.GetAsync($"{ENDPOINT}/links/default?domain={domain}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_LINK_JSON) })
 				.Verifiable();
 
@@ -877,7 +857,6 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var linkId = 1L;
-			var endpoint = string.Format("{0}/links/{1}/validate", ENDPOINT, linkId);
 
 			var apiResponse = @"{
 				'id': 1,
@@ -895,7 +874,7 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			_mockClient
-				.Setup(c => c.PostAsync(endpoint, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.Setup(c => c.PostAsync($"{ENDPOINT}/links/{linkId}/validate", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
@@ -919,10 +898,9 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var username = "abc123";
-			var endpoint = string.Format("{0}/links/subuser?username={1}", ENDPOINT, username);
 
 			_mockClient
-				.Setup(c => c.GetAsync(endpoint, It.IsAny<CancellationToken>()))
+				.Setup(c => c.GetAsync($"{ENDPOINT}/links/subuser?username={username}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_LINK_JSON) })
 				.Verifiable();
 
@@ -959,11 +937,10 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var linkId = 123L;
-			var endpoint = string.Format("{0}/links/{1}/subuser", ENDPOINT, linkId);
 			var username = "abc123";
 
 			_mockClient
-				.Setup(c => c.PostAsync(endpoint, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.Setup(c => c.PostAsync($"{ENDPOINT}/links/{linkId}/subuser", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_DOMAIN_JSON) })
 				.Verifiable();
 
@@ -976,17 +953,12 @@ namespace StrongGrid.Resources.UnitTests
 			Assert.IsNotNull(result);
 		}
 
-
-
-
 		[TestMethod]
 		public void GetAllLinksAsync()
 		{
 			// Arrange
-			var endpoint = string.Format("{0}/links?limit=50&offset=0&ip=", ENDPOINT);
-
 			_mockClient
-				.Setup(c => c.GetAsync(endpoint, It.IsAny<CancellationToken>()))
+				.Setup(c => c.GetAsync($"{ENDPOINT}/links?limit=50&offset=0&ip=", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_LINKS_JSON) })
 				.Verifiable();
 
