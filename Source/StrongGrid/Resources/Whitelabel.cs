@@ -49,7 +49,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get a specific domain whitelabel
 		/// </summary>
-		public async Task<WhitelabelDomain> GetDomainsAsync(long domainId, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<WhitelabelDomain> GetDomainAsync(long domainId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/domains/{1}", _endpoint, domainId);
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
