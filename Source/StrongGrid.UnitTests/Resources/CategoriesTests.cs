@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json.Linq;
 using StrongGrid.Model;
@@ -11,7 +11,40 @@ namespace StrongGrid.Resources.UnitTests
 	[TestClass]
 	public class CategoriesTests
 	{
+		#region FIELDS
+
 		private const string ENDPOINT = "/categories";
+		private MockRepository _mockRepository;
+		private Mock<IClient> _mockClient;
+
+		private const string MULTIPLE_CATEGORIES_JSON = @"[
+			{ 'category': 'cat1' },
+			{ 'category': 'cat2' },
+			{ 'category': 'cat3' },
+			{ 'category': 'cat4' },
+			{ 'category': 'cat5' }
+		]";
+
+		#endregion
+
+		private Categories CreateCategories()
+		{
+			return new Categories(_mockClient.Object, ENDPOINT);
+
+		}
+
+		[TestInitialize]
+		public void TestInitialize()
+		{
+			_mockRepository = new MockRepository(MockBehavior.Strict);
+			_mockClient = _mockRepository.Create<IClient>();
+		}
+
+		[TestCleanup]
+		public void TestCleanup()
+		{
+			_mockRepository.VerifyAll();
+		}
 		
 		[TestMethod]
 		public void Get_multiple()
@@ -19,19 +52,13 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var limit = 25;
 			var offset = 0;
-			var apiResponse = @"[
-				{ 'category': 'cat1' },
-				{ 'category': 'cat2' },
-				{ 'category': 'cat3' },
-				{ 'category': 'cat4' },
-				{ 'category': 'cat5' }
-			]";
 
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync($"{ENDPOINT}?category=&limit={limit}&offset={offset}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
+			_mockClient
+				.Setup(c => c.GetAsync($"{ENDPOINT}?category=&limit={limit}&offset={offset}", It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_CATEGORIES_JSON) })
+				.Verifiable();
 
-			var categories = new Categories(mockClient.Object);
+			var categories = CreateCategories();
 
 			// Act
 			var result = categories.GetAsync(null, limit, offset, CancellationToken.None).Result;
