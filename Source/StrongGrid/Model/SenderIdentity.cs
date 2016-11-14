@@ -21,7 +21,7 @@ namespace StrongGrid.Model
 		[JsonProperty("address")]
 		public string Address1 { get; set; }
 
-		[JsonProperty("address2")]
+		[JsonProperty("address_2")]
 		public string Address2 { get; set; }
 
 		[JsonProperty("city")]

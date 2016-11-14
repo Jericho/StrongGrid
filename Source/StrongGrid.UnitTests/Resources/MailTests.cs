@@ -11,17 +11,43 @@ namespace StrongGrid.Resources.UnitTests
 	[TestClass]
 	public class MailTests
 	{
+		#region FIELDS
+
 		private const string ENDPOINT = "/mail";
+		private MockRepository _mockRepository;
+		private Mock<IClient> _mockClient;
+
+		#endregion
+
+		private Mail CreateMail()
+		{
+			return new Mail(_mockClient.Object, ENDPOINT);
+		}
+
+		[TestInitialize]
+		public void TestInitialize()
+		{
+			_mockRepository = new MockRepository(MockBehavior.Strict);
+			_mockClient = _mockRepository.Create<IClient>();
+		}
+
+		[TestCleanup]
+		public void TestCleanup()
+		{
+			_mockRepository.VerifyAll();
+		}
 
 		[TestMethod]
 		public void Send()
 		{
 			// Arrange
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PostAsync($"{ENDPOINT}/send", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.Accepted));
 
-			var mail = new Mail(mockClient.Object);
+			_mockClient
+				.Setup(c => c.PostAsync($"{ENDPOINT}/send", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.Accepted))
+				.Verifiable();
+
+			var mail = CreateMail();
 
 			// Act
 			mail.SendAsync(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, CancellationToken.None).Wait();
@@ -33,11 +59,13 @@ namespace StrongGrid.Resources.UnitTests
 		public void SendToSingleRecipient()
 		{
 			// Arrange
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PostAsync($"{ENDPOINT}/send", It.Is<JObject>(o => o["personalizations"].ToObject<MailPersonalization[]>().Length == 1), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.Accepted));
 
-			var mail = new Mail(mockClient.Object);
+			_mockClient
+				.Setup(c => c.PostAsync($"{ENDPOINT}/send", It.Is<JObject>(o => o["personalizations"].ToObject<MailPersonalization[]>().Length == 1), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.Accepted))
+				.Verifiable();
+
+			var mail = CreateMail();
 
 			// Act
 			mail.SendToSingleRecipientAsync(null, null, null, null, null).Wait(CancellationToken.None);
@@ -49,9 +77,11 @@ namespace StrongGrid.Resources.UnitTests
 		public void SendToMultipleRecipients()
 		{
 			// Arrange
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PostAsync($"{ENDPOINT}/send", It.Is<JObject>(o => o["personalizations"].ToObject<MailPersonalization[]>().Length == 3), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.Accepted));
+
+			_mockClient
+				.Setup(c => c.PostAsync($"{ENDPOINT}/send", It.Is<JObject>(o => o["personalizations"].ToObject<MailPersonalization[]>().Length == 3), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.Accepted))
+				.Verifiable();
 
 			var recipients = new[]
 			{
@@ -59,7 +89,7 @@ namespace StrongGrid.Resources.UnitTests
 				new MailAddress("b@b.com", "b"),
 				new MailAddress("c@c.com", "c")
 			};
-			var mail = new Mail(mockClient.Object);
+			var mail = CreateMail();
 
 			// Act
 			mail.SendToMultipleRecipientsAsync(recipients, null, null, null, null).Wait(CancellationToken.None);

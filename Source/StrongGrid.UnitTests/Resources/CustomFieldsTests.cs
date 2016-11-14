@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StrongGrid.Model;
 using System.Net;
@@ -11,56 +12,65 @@ namespace StrongGrid.Resources.UnitTests
 	[TestClass]
 	public class CustomFieldsTests
 	{
+		#region FIELDS
+
 		private const string ENDPOINT = "/contactdb/custom_fields";
+		private MockRepository _mockRepository;
+		private Mock<IClient> _mockClient;
 
-		[TestMethod]
-		public void Create()
+		private const string SINGLE_CUSTOM_FIELD_JSON = @"{
+			'id': 1,
+			'name': 'customfield1',
+			'type': 'text'
+		}";
+		private const string MULTIPLE_CUSTOM_FIELDS_JSON = @"{
+			'custom_fields': [
+				{
+					'id': 1,
+					'name': 'birthday',
+					'type': 'date'
+				},
+				{
+					'id': 2,
+					'name': 'middle_name',
+					'type': 'text'
+				},
+				{
+					'id': 3,
+					'name': 'favorite_number',
+					'type': 'number'
+				}
+			]
+		}";
+
+		#endregion
+
+		private CustomFields CreateCustomFields()
 		{
-			// Arrange
-			var name = "customfield1";
-			var type = FieldType.Text;
+			return new CustomFields(_mockClient.Object, ENDPOINT);
 
-			var apiResponse = @"{
-				'id': 1,
-				'name': 'customfield1',
-				'type': 'text'
-			}";
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PostAsync(ENDPOINT, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
+		}
 
-			var customFields = new CustomFields(mockClient.Object);
+		[TestInitialize]
+		public void TestInitialize()
+		{
+			_mockRepository = new MockRepository(MockBehavior.Strict);
+			_mockClient = _mockRepository.Create<IClient>();
+		}
 
-			// Act
-			var result = customFields.CreateAsync(name, type, CancellationToken.None).Result;
-
-			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(1, result.Id);
-			Assert.AreEqual(name, result.Name);
-			Assert.AreEqual(type, result.Type);
+		[TestCleanup]
+		public void TestCleanup()
+		{
+			_mockRepository.VerifyAll();
 		}
 
 		[TestMethod]
-		public void Get()
+		public void Parse_json()
 		{
 			// Arrange
-			var fieldId = 1;
-
-			var apiResponse = @"{
-				'id': 1,
-				'name': 'customfield1',
-				'type': 'text'
-			}";
-
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync($"{ENDPOINT}/{fieldId}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
-
-			var customFields = new CustomFields(mockClient.Object);
 
 			// Act
-			var result = customFields.GetAsync(fieldId, CancellationToken.None).Result;
+			var result = JsonConvert.DeserializeObject<CustomFieldMetadata>(SINGLE_CUSTOM_FIELD_JSON);
 
 			// Assert
 			Assert.IsNotNull(result);
@@ -70,34 +80,56 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[TestMethod]
+		public void Create()
+		{
+			// Arrange
+			var name = "customfield1";
+			var type = FieldType.Text;
+
+			_mockClient
+				.Setup(c => c.PostAsync(ENDPOINT, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_CUSTOM_FIELD_JSON) })
+				.Verifiable();
+
+			var customFields = CreateCustomFields();
+
+			// Act
+			var result = customFields.CreateAsync(name, type, CancellationToken.None).Result;
+
+			// Assert
+			Assert.IsNotNull(result);
+		}
+
+		[TestMethod]
+		public void Get()
+		{
+			// Arrange
+			var fieldId = 1;
+
+			_mockClient
+				.Setup(c => c.GetAsync($"{ENDPOINT}/{fieldId}", It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_CUSTOM_FIELD_JSON) })
+				.Verifiable();
+
+			var customFields = CreateCustomFields();
+
+			// Act
+			var result = customFields.GetAsync(fieldId, CancellationToken.None).Result;
+
+			// Assert
+			Assert.IsNotNull(result);
+		}
+
+		[TestMethod]
 		public void GetAll()
 		{
 			// Arrange
-			var apiResponse = @"{
-				'custom_fields': [
-					{
-						'id': 1,
-						'name': 'birthday',
-						'type': 'date'
-					},
-					{
-						'id': 2,
-						'name': 'middle_name',
-						'type': 'text'
-					},
-					{
-						'id': 3,
-						'name': 'favorite_number',
-						'type': 'number'
-					}
-				]
-			}";
+			_mockClient
+				.Setup(c => c.GetAsync(ENDPOINT, It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_CUSTOM_FIELDS_JSON) })
+				.Verifiable();
 
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(ENDPOINT, It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
-
-			var customFields = new CustomFields(mockClient.Object);
+			var customFields = CreateCustomFields();
 
 			// Act
 			var result = customFields.GetAllAsync(CancellationToken.None).Result;
@@ -105,9 +137,6 @@ namespace StrongGrid.Resources.UnitTests
 			// Assert
 			Assert.IsNotNull(result);
 			Assert.AreEqual(3, result.Length);
-			Assert.AreEqual("birthday", result[0].Name);
-			Assert.AreEqual("middle_name", result[1].Name);
-			Assert.AreEqual("favorite_number", result[2].Name);
 		}
 
 		[TestMethod]
@@ -116,11 +145,12 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var fieldId = 1;
 
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.DeleteAsync($"{ENDPOINT}/{fieldId}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.Accepted));
+			_mockClient
+				.Setup(c => c.DeleteAsync($"{ENDPOINT}/{fieldId}", It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.Accepted))
+				.Verifiable();
 
-			var customFields = new CustomFields(mockClient.Object);
+			var customFields = CreateCustomFields();
 
 			// Act
 			customFields.DeleteAsync(fieldId, CancellationToken.None).Wait(CancellationToken.None);
@@ -173,11 +203,12 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync("/contactdb/reserved_fields", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
+			_mockClient
+				.Setup(c => c.GetAsync("/contactdb/reserved_fields", It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
+				.Verifiable();
 
-			var customFields = new CustomFields(mockClient.Object);
+			var customFields = CreateCustomFields();
 
 			// Act
 			var result = customFields.GetReservedFieldsAsync(CancellationToken.None).Result;

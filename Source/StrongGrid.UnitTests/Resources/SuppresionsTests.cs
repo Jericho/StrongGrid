@@ -10,7 +10,32 @@ namespace StrongGrid.Resources.UnitTests
 	[TestClass]
 	public class SuppresionsTests
 	{
+		#region FIELDS
+
 		private const string ENDPOINT = "/asm/groups";
+		private MockRepository _mockRepository;
+		private Mock<IClient> _mockClient;
+
+		#endregion
+
+		private Suppressions CreateSuppressions()
+		{
+			return new Suppressions(_mockClient.Object, ENDPOINT);
+
+		}
+
+		[TestInitialize]
+		public void TestInitialize()
+		{
+			_mockRepository = new MockRepository(MockBehavior.Strict);
+			_mockClient = _mockRepository.Create<IClient>();
+		}
+
+		[TestCleanup]
+		public void TestCleanup()
+		{
+			_mockRepository.VerifyAll();
+		}
 
 		[TestMethod]
 		public void GetUnsubscribedAddresses()
@@ -22,11 +47,13 @@ namespace StrongGrid.Resources.UnitTests
 				'test1@example.com',
 				'test2@example.com'
 			]";
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync($"{ENDPOINT}/{groupId}/suppressions", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
-			var suppresions = new Suppressions(mockClient.Object);
+			_mockClient
+				.Setup(c => c.GetAsync($"{ENDPOINT}/{groupId}/suppressions", It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
+				.Verifiable();
+
+			var suppresions = CreateSuppressions();
 
 			// Act
 			var result = suppresions.GetUnsubscribedAddressesAsync(groupId, CancellationToken.None).Result;
@@ -51,11 +78,13 @@ namespace StrongGrid.Resources.UnitTests
 					'test2@example.com'
 				]
 			}";
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PostAsync($"{ENDPOINT}/{groupId}/suppressions", It.Is<JObject>(o => o["recipient_emails"].ToObject<JArray>().Count == 1), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
-			var suppressions = new Suppressions(mockClient.Object);
+			_mockClient
+				.Setup(c => c.PostAsync($"{ENDPOINT}/{groupId}/suppressions", It.Is<JObject>(o => o["recipient_emails"].ToObject<JArray>().Count == 1), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
+				.Verifiable();
+
+			var suppressions = CreateSuppressions();
 
 			// Act
 			suppressions.AddAddressToUnsubscribeGroupAsync(groupId, email, CancellationToken.None).Wait();
@@ -76,11 +105,13 @@ namespace StrongGrid.Resources.UnitTests
 					'test2@example.com'
 				]
 			}";
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PostAsync($"{ENDPOINT}/{groupId}/suppressions", It.Is<JObject>(o => o["recipient_emails"].ToObject<JArray>().Count == emails.Length), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
-			var suppressions = new Suppressions(mockClient.Object);
+			_mockClient
+				.Setup(c => c.PostAsync($"{ENDPOINT}/{groupId}/suppressions", It.Is<JObject>(o => o["recipient_emails"].ToObject<JArray>().Count == emails.Length), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
+				.Verifiable();
+
+			var suppressions = CreateSuppressions();
 
 			// Act
 			suppressions.AddAddressToUnsubscribeGroupAsync(groupId, emails, CancellationToken.None).Wait();
@@ -95,11 +126,13 @@ namespace StrongGrid.Resources.UnitTests
 			var groupId = 103;
 			var email = "test1@example.com";
 
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.DeleteAsync($"{ENDPOINT}/{groupId}/suppressions/{email}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent));
 
-			var suppressions = new Suppressions(mockClient.Object);
+			_mockClient
+				.Setup(c => c.DeleteAsync($"{ENDPOINT}/{groupId}/suppressions/{email}", It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent))
+				.Verifiable();
+
+			var suppressions = CreateSuppressions();
 
 			// Act
 			suppressions.RemoveAddressFromSuppressionGroupAsync(groupId, email, CancellationToken.None).Wait();

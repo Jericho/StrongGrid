@@ -23,7 +23,7 @@ namespace StrongGrid.Utilities
 		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 		{
 			if (reader.Value == null) return null;
-			var date = DateTime.ParseExact(reader.Value.ToString(), SENDGRID_DATETIME_FORMAT, new CultureInfo("en-US"), DateTimeStyles.AssumeUniversal);
+			var date = DateTime.ParseExact(reader.Value.ToString(), SENDGRID_DATETIME_FORMAT, new CultureInfo("en-US"), DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
 			return date;
 		}
 	}
