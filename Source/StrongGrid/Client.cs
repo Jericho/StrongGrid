@@ -257,7 +257,7 @@ namespace StrongGrid
 		{
 			try
 			{
-				var methodAsString = "";
+				var methodAsString = string.Empty;
 				switch (method)
 				{
 					case Methods.GET: methodAsString = "GET"; break;
@@ -276,7 +276,7 @@ namespace StrongGrid
 				var httpRequest = new HttpRequestMessage
 				{
 					Method = new HttpMethod(methodAsString),
-					RequestUri = new Uri(string.Format("{0}{1}{2}", _baseUri, endpoint.StartsWith("/", StringComparison.Ordinal) ? "" : "/", endpoint)),
+					RequestUri = new Uri(string.Format("{0}{1}{2}", _baseUri, endpoint.StartsWith("/", StringComparison.Ordinal) ? string.Empty : "/", endpoint)),
 					Content = content
 				};
 				var response = await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
