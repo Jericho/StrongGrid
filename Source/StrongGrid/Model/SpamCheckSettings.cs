@@ -7,7 +7,7 @@ namespace StrongGrid.Model
 		[JsonProperty("max_score")]
 		public int Threshold { get; set; }
 
-		[JsonProperty("post_to_url")]
-		public string PostToUrl { get; set; }
+		[JsonProperty("url")]
+		public string Url { get; set; }
 	}
 }

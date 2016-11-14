@@ -49,7 +49,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get a specific domain whitelabel
 		/// </summary>
-		public async Task<WhitelabelDomain> GetDomainsAsync(long domainId, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<WhitelabelDomain> GetDomainAsync(long domainId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/domains/{1}", _endpoint, domainId);
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
@@ -87,7 +87,7 @@ namespace StrongGrid.Resources
 		/// </summary>
 		public async Task<WhitelabelDomain> UpdateDomainAsync(long domainId, bool isDefault = false, bool customSpf = false, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/{1}", _endpoint, domainId);
+			var endpoint = string.Format("{0}/domains/{1}", _endpoint, domainId);
 			var data = new JObject
 			{
 				{ "custom_spf", customSpf },
@@ -174,7 +174,7 @@ namespace StrongGrid.Resources
 			response.EnsureSuccess();
 
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-			var domain = JArray.Parse(responseContent).ToObject<WhitelabelDomain>();
+			var domain = JObject.Parse(responseContent).ToObject<WhitelabelDomain>();
 			return domain;
 		}
 
@@ -202,7 +202,7 @@ namespace StrongGrid.Resources
 			response.EnsureSuccess();
 
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-			var domain = JArray.Parse(responseContent).ToObject<WhitelabelDomain>();
+			var domain = JObject.Parse(responseContent).ToObject<WhitelabelDomain>();
 			return domain;
 		}
 
@@ -412,7 +412,7 @@ namespace StrongGrid.Resources
 			response.EnsureSuccess();
 
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-			var link = JArray.Parse(responseContent).ToObject<WhitelabelLink>();
+			var link = JObject.Parse(responseContent).ToObject<WhitelabelLink>();
 			return link;
 		}
 
@@ -440,7 +440,7 @@ namespace StrongGrid.Resources
 			response.EnsureSuccess();
 
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-			var link = JArray.Parse(responseContent).ToObject<WhitelabelLink>();
+			var link = JObject.Parse(responseContent).ToObject<WhitelabelLink>();
 			return link;
 		}
 	}

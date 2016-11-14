@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Net.Http;
 using System.Reflection;
-using System.Linq;
 
 namespace StrongGrid.Utilities
 {
@@ -36,9 +36,16 @@ namespace StrongGrid.Utilities
 		{
 			if (response.IsSuccessStatusCode) return;
 
-			var content = response.Content.ReadAsStringAsync().Result;
-			if (response.Content != null) response.Content.Dispose();
-
+			var content = string.Empty;
+			if (response.Content != null)
+			{
+				content = response.Content.ReadAsStringAsync().Result;
+				response.Content.Dispose();
+			}
+			else
+			{
+				content = string.Format("StatusCode: {0}", response.StatusCode);
+			}
 			throw new Exception(content);
 		}
 	}

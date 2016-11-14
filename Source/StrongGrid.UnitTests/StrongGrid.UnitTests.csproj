@@ -122,6 +122,8 @@
     <Compile Include="Resources\UserTests.cs" />
     <Compile Include="Resources\UnsubscribeGroupsTests.cs" />
     <Compile Include="Resources\ApiKeysTests.cs" />
+    <Compile Include="Utilities\TestingEnum.cs" />
+    <Compile Include="Utilities\ExtensionsTests.cs" />
     <Compile Include="Utilities\AsyncDelayerTests.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -7,9 +7,9 @@ using System.Net.Security;
 
 namespace StrongGrid.IntegrationTests
 {
-	class Program
+	public class Program
 	{
-		static void Main()
+		public static void Main()
 		{
 			// Do you want to proxy requests through fiddler (useful for debugging)?
 			var useFiddler = false;
@@ -25,30 +25,34 @@ namespace StrongGrid.IntegrationTests
 					UseProxy = useFiddler
 				}
 			);
-			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY", EnvironmentVariableTarget.User);
+			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
 			var client = new StrongGrid.Client(apiKey: apiKey, httpClient: httpClient);
 
-			ApiKeys(client);
-			Campaigns(client);
-			Categories(client);
-			ContactsAndCustomFields(client);
-			GlobalSuppressions(client);
-			ListsAndSegments(client);
-			Mail(client);
-			UnsubscribeGroups(client);
-			User(client);
-			Statistics(client);
-			Templates(client);
-			Settings(client);
-			Alerts(client);
-			Blocks(client);
-			SpamReports(client);
-			InvalidEmails(client);
-			Batches(client);
-			Whitelabel(client);
-		}
+			// Set this variable to true if you want to pause after each test 
+			// which gives you an opportunity to review the output in the console.
+			var pauseAfterTests = false;
 
-		private static void Mail(IClient client)
+			ApiKeys(client, pauseAfterTests);
+			Campaigns(client, pauseAfterTests);
+			Categories(client, pauseAfterTests);
+			ContactsAndCustomFields(client, pauseAfterTests);
+			GlobalSuppressions(client, pauseAfterTests);
+			ListsAndSegments(client, pauseAfterTests);
+			Mail(client, pauseAfterTests);
+			UnsubscribeGroups(client, pauseAfterTests);
+			User(client, pauseAfterTests);
+			Statistics(client, pauseAfterTests);
+			Templates(client, pauseAfterTests);
+			Settings(client, pauseAfterTests);
+			Alerts(client, pauseAfterTests);
+			Blocks(client, pauseAfterTests);
+			SpamReports(client, pauseAfterTests);
+			InvalidEmails(client, pauseAfterTests);
+			Batches(client, pauseAfterTests);
+			Whitelabel(client, pauseAfterTests);
+		}
+		
+		private static void Mail(IClient client, bool pauseAfterTests)
 		{
 			Console.WriteLine("\n***** MAIL *****");
 
@@ -104,11 +108,10 @@ namespace StrongGrid.IntegrationTests
 				await client.Mail.SendToMultipleRecipientsAsync(new[] { to1, to2, to3 }, from, subject, htmlContent, textContent).ConfigureAwait(false);
 			******/
 
-			Console.WriteLine("\n\nPress any key to continue");
-			Console.ReadKey();
+			ConcludeTests(pauseAfterTests);
 		}
 
-		private static void ApiKeys(IClient client)
+		private static void ApiKeys(IClient client, bool pauseAfterTests)
 		{
 			Console.WriteLine("\n***** API KEYS *****");
 
@@ -136,11 +139,10 @@ namespace StrongGrid.IntegrationTests
 			client.ApiKeys.DeleteAsync(newApiKey.KeyId).Wait();
 			Console.WriteLine("Api Key {0} deleted", newApiKey.KeyId);
 
-			Console.WriteLine("\n\nPress any key to continue");
-			Console.ReadKey();
+			ConcludeTests(pauseAfterTests);
 		}
 
-		private static void UnsubscribeGroups(IClient client)
+		private static void UnsubscribeGroups(IClient client, bool pauseAfterTests)
 		{
 			Console.WriteLine("\n***** UNSUBSCRIBE GROUPS *****");
 
@@ -192,11 +194,10 @@ namespace StrongGrid.IntegrationTests
 			client.UnsubscribeGroups.DeleteAsync(newGroup.Id).Wait();
 			Console.WriteLine("Suppression group {0} deleted", newGroup.Id);
 
-			Console.WriteLine("\n\nPress any key to continue");
-			Console.ReadKey();
+			ConcludeTests(pauseAfterTests);
 		}
 
-		private static void GlobalSuppressions(IClient client)
+		private static void GlobalSuppressions(IClient client, bool pauseAfterTests)
 		{
 			Console.WriteLine("\n***** GLOBAL SUPPRESSION *****");
 
@@ -216,15 +217,21 @@ namespace StrongGrid.IntegrationTests
 			Console.WriteLine("Is {0} unsubscribed (should be false): {1}", emails[0], client.GlobalSuppressions.IsUnsubscribedAsync(emails[0]).Result);
 			Console.WriteLine("Is {0} unsubscribed (should be false): {1}", emails[1], client.GlobalSuppressions.IsUnsubscribedAsync(emails[1]).Result);
 
-			Console.WriteLine("\n\nPress any key to continue");
-			Console.ReadKey();
+			ConcludeTests(pauseAfterTests);
 		}
 
-		private static void Statistics(IClient client)
+		private static void Statistics(IClient client, bool pauseAfterTests)
 		{
 			Console.WriteLine("\n***** STATISTICS *****");
 
 			var now = DateTime.UtcNow;
+
+			// There is a bug in the SendGrid API when grouping by week and start date is January 1st.
+			// You get a cryptic error: "unable to get stats"
+			// I contacted SendGrid support on October 19 2016 (http://support.sendgrid.com/hc/requests/780001)
+			// and I was told: 
+			//		"the issue here is that we expect there to be 52 weeks per year, but that isn't always
+			//		 the case and is 'borking' on those first few days as a result of that"
 			var startDate = new DateTime(now.Year, 1, 4);
 
 			//----- Global Stats -----
@@ -260,17 +267,16 @@ namespace StrongGrid.IntegrationTests
 			browserStats = client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Day).Result;
 			Console.WriteLine("Number of BROWSER stats in {0} and aggregated by day: {1}", now.Year, browserStats.Length);
 
-			// Grouping by week doesn't work. I opened a support ticket with SendGrid to try to figure out: http://support.sendgrid.com/hc/requests/780001
-			//browserStats = client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Week).Result;
-			//Console.WriteLine("Number of BROWSER stats in {0} and aggregated by week: {1}", now.Year, browserStats.Length);
+			browserStats = client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Week).Result;
+			Console.WriteLine("Number of BROWSER stats in {0} and aggregated by week: {1}", now.Year, browserStats.Length);
 
 			browserStats = client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Month).Result;
 			Console.WriteLine("Number of BROWSER stats in {0} and aggregated by month: {1}", now.Year, browserStats.Length);
-			Console.WriteLine("\n\nPress any key to continue");
-			Console.ReadKey();
+
+			ConcludeTests(pauseAfterTests);
 		}
 
-		private static void Templates(IClient client)
+		private static void Templates(IClient client, bool pauseAfterTests)
 		{
 			Console.WriteLine("\n***** TEMPLATES *****");
 
@@ -301,11 +307,10 @@ namespace StrongGrid.IntegrationTests
 			client.Templates.DeleteAsync(template.Id).Wait();
 			Console.WriteLine("Template {0} deleted", template.Id);
 
-			Console.WriteLine("\n\nPress any key to continue");
-			Console.ReadKey();
+			ConcludeTests(pauseAfterTests);
 		}
 
-		private static void User(IClient client)
+		private static void User(IClient client, bool pauseAfterTests)
 		{
 			Console.WriteLine("\n***** USER *****");
 
@@ -326,11 +331,10 @@ namespace StrongGrid.IntegrationTests
 			var updatedProfile = client.User.GetProfileAsync().Result;
 			Console.WriteLine("Hello {0} from {1}", updatedProfile.FirstName, string.IsNullOrEmpty(updatedProfile.State) ? "unknown location" : updatedProfile.State);
 
-			Console.WriteLine("\n\nPress any key to continue");
-			Console.ReadKey();
+			ConcludeTests(pauseAfterTests);
 		}
 
-		private static void ContactsAndCustomFields(IClient client)
+		private static void ContactsAndCustomFields(IClient client, bool pauseAfterTests)
 		{
 			Console.WriteLine("\n***** CONTACTS AND CUSTOM FIELDS *****");
 
@@ -440,11 +444,10 @@ namespace StrongGrid.IntegrationTests
 			fields = client.CustomFields.GetAllAsync().Result;
 			Console.WriteLine($"All custom fields retrieved. There are {fields.Length} fields");
 
-			Console.WriteLine("\n\nPress any key to continue");
-			Console.ReadKey();
+			ConcludeTests(pauseAfterTests);
 		}
 
-		private static void Categories(IClient client)
+		private static void Categories(IClient client, bool pauseAfterTests)
 		{
 			Console.WriteLine("\n***** CATEGORIES *****");
 
@@ -452,11 +455,10 @@ namespace StrongGrid.IntegrationTests
 			Console.WriteLine("Number of categories: {0}", categories.Length);
 			Console.WriteLine("Categories: {0}", string.Join(", ", categories));
 
-			Console.WriteLine("\n\nPress any key to continue");
-			Console.ReadKey();
+			ConcludeTests(pauseAfterTests);
 		}
 
-		private static void ListsAndSegments(IClient client)
+		private static void ListsAndSegments(IClient client, bool pauseAfterTests)
 		{
 			Console.WriteLine("\n***** LISTS AND SEGMENTS *****");
 
@@ -502,11 +504,10 @@ namespace StrongGrid.IntegrationTests
 			lists = client.Lists.GetAllAsync().Result;
 			Console.WriteLine("All lists retrieved. There are {0} lists", lists.Length);
 
-			Console.WriteLine("\n\nPress any key to continue");
-			Console.ReadKey();
+			ConcludeTests(pauseAfterTests);
 		}
 
-		private static void Campaigns(IClient client)
+		private static void Campaigns(IClient client, bool pauseAfterTests)
 		{
 			var YOUR_EMAIL = "youremail@hotmail.com";
 
@@ -567,11 +568,10 @@ namespace StrongGrid.IntegrationTests
 			campaigns = client.Campaigns.GetAllAsync(100, 0).Result;
 			Console.WriteLine("All campaigns retrieved. There are {0} campaigns", campaigns.Length);
 
-			Console.WriteLine("\n\nPress any key to continue");
-			Console.ReadKey();
+			ConcludeTests(pauseAfterTests);
 		}
 
-		private static void Settings(IClient client)
+		private static void Settings(IClient client, bool pauseAfterTests)
 		{
 			Console.WriteLine("\n***** SETTINGS *****");
 
@@ -584,11 +584,10 @@ namespace StrongGrid.IntegrationTests
 			var mailSettings = client.Settings.GetAllMailSettingsAsync().Result;
 			Console.WriteLine($"All mail tracking retrieved. There are {mailSettings.Length} settings");
 
-			Console.WriteLine("\n\nPress any key to continue");
-			Console.ReadKey();
+			ConcludeTests(pauseAfterTests);
 		}
 
-		private static void Alerts(IClient client)
+		private static void Alerts(IClient client, bool pauseAfterTests)
 		{
 			Console.WriteLine("\n***** ALERTS *****");
 
@@ -601,44 +600,40 @@ namespace StrongGrid.IntegrationTests
 			client.Alerts.DeleteAsync(newAlert.Id).Wait();
 			Console.WriteLine($"Alert {newAlert.Id} deleted");
 
-			Console.WriteLine("\n\nPress any key to continue");
-			Console.ReadKey();
+			ConcludeTests(pauseAfterTests);
 		}
 
-		private static void Blocks(IClient client)
+		private static void Blocks(IClient client, bool pauseAfterTests)
 		{
 			Console.WriteLine("\n***** BLOCKS *****");
 
 			var blocks = client.Blocks.GetAllAsync().Result;
 			Console.WriteLine($"All blocks retrieved. There are {blocks.Length} blocks");
 
-			Console.WriteLine("\n\nPress any key to continue");
-			Console.ReadKey();
+			ConcludeTests(pauseAfterTests);
 		}
 
-		private static void SpamReports(IClient client)
+		private static void SpamReports(IClient client, bool pauseAfterTests)
 		{
 			Console.WriteLine("\n***** SPAM REPORTS *****");
 
 			var spamReports = client.SpamReports.GetAllAsync().Result;
 			Console.WriteLine($"All spam reports retrieved. There are {spamReports.Length} reports");
 
-			Console.WriteLine("\n\nPress any key to continue");
-			Console.ReadKey();
+			ConcludeTests(pauseAfterTests);
 		}
 
-		private static void InvalidEmails(IClient client)
+		private static void InvalidEmails(IClient client, bool pauseAfterTests)
 		{
 			Console.WriteLine("\n***** INVALID EMAILS *****");
 
 			var invalidEmails = client.InvalidEmails.GetAllAsync().Result;
 			Console.WriteLine($"All invalid emails retrieved. There are {invalidEmails.Length} invalid email addresses");
 
-			Console.WriteLine("\n\nPress any key to continue");
-			Console.ReadKey();
+			ConcludeTests(pauseAfterTests);
 		}
 
-		private static void Batches(IClient client)
+		private static void Batches(IClient client, bool pauseAfterTests)
 		{
 			Console.WriteLine("\n***** BATCHES *****");
 
@@ -648,11 +643,10 @@ namespace StrongGrid.IntegrationTests
 			var batches = client.Batches.GetAllAsync().Result;
 			Console.WriteLine($"All batches retrieved. There are {batches.Length} batches");
 
-			Console.WriteLine("\n\nPress any key to continue");
-			Console.ReadKey();
+			ConcludeTests(pauseAfterTests);
 		}
 
-		private static void Whitelabel(IClient client)
+		private static void Whitelabel(IClient client, bool pauseAfterTests)
 		{
 			Console.WriteLine("\n***** WHITELABEL DOMAINS *****");
 
@@ -689,8 +683,20 @@ namespace StrongGrid.IntegrationTests
 			client.Whitelabel.DeleteLinkAsync(newLink.Id).Wait();
 			Console.WriteLine($"Whitelabel link {newLink.Id} deleted.");
 
-			Console.WriteLine("\n\nPress any key to continue");
-			Console.ReadKey();
+			ConcludeTests(pauseAfterTests);
+		}
+
+		private static void ConcludeTests(bool pause)
+		{
+			if (pause)
+			{
+				while (Console.KeyAvailable)
+				{
+					Console.ReadKey(false);
+				}
+				Console.WriteLine("\n\nPress any key to continue");
+				Console.ReadKey();
+			}
 		}
 	}
 }
