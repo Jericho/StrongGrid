@@ -116,7 +116,7 @@ namespace StrongGrid.Resources.UnitTests
 			Assert.AreEqual("example_version_name", result.Name);
 			Assert.AreEqual("ddb96bbc-9b92-425e-8979-99464621b543", result.TemplateId);
 			Assert.AreEqual("<%body%>", result.TextContent);
-			Assert.AreEqual(new DateTime(2014, 3, 19, 13, 56, 33, DateTimeKind.Utc), result.UpdatedOn);
+			Assert.AreEqual(new DateTime(2014, 3, 19, 18, 56, 33, DateTimeKind.Utc), result.UpdatedOn);
 		}
 
 		[TestMethod]
