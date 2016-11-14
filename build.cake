@@ -206,19 +206,11 @@ Task("Run-Code-Coverage")
 {
 	var testAssemblyPath = string.Format("{2}/bin/{1}/{0}.UnitTests.dll", libraryName, configuration, unitTestsPaths.First());
 	
-	var testArgs = new List<string>();
-	testArgs.Add("/Parallel");
-	if (AppVeyor.IsRunningOnAppVeyor) testArgs.Add("/logger:Appveyor");
-
-	var vsTestSettings = new VSTestSettings();
-	vsTestSettings.ArgumentCustomization = args =>
+	var vsTestSettings = new VSTestSettings()
 	{
-		foreach (var arg in testArgs)
-		{
-			args.Append(arg);
-		}
-		return args;
+		Parallel = true
 	};
+	if (AppVeyor.IsRunningOnAppVeyor) vsTestSettings.WithAppVeyorLogger();
 
 	OpenCover(
 		tool => { tool.VSTest(testAssemblyPath, vsTestSettings); },
