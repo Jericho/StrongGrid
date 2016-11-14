@@ -97,7 +97,8 @@ namespace StrongGrid.Resources.UnitTests
 
 			_mockClient
 				.Setup(c => c.PostAsync("/user/scheduled_sends", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_BATCH_JSON) });
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_BATCH_JSON) })
+				.Verifiable();
 
 			var batches = CreateBatches();
 

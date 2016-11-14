@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StrongGrid.Model;
 using System.Net;
@@ -11,27 +12,55 @@ namespace StrongGrid.Resources.UnitTests
 	[TestClass]
 	public class ListsTests
 	{
+		#region FIELDS
+
 		private const string ENDPOINT = "/contactdb/lists";
+		private MockRepository _mockRepository;
+		private Mock<IClient> _mockClient;
+
+		private const string SINGLE_LIST_JSON = @"{
+			'id': 1,
+			'name': 'listname',
+			'recipient_count': 0
+		}";
+		private const string MULTIPLE_LISTS_JSON = @"{
+			'lists': [
+				{
+					'id': 1,
+					'name': 'the jones',
+					'recipient_count': 1
+				}
+			]
+		}";
+
+		#endregion
+
+		private Lists CreateLists()
+		{
+			return new Lists(_mockClient.Object, ENDPOINT);
+
+		}
+
+		[TestInitialize]
+		public void TestInitialize()
+		{
+			_mockRepository = new MockRepository(MockBehavior.Strict);
+			_mockClient = _mockRepository.Create<IClient>();
+		}
+
+		[TestCleanup]
+		public void TestCleanup()
+		{
+			_mockRepository.VerifyAll();
+		}
 
 		[TestMethod]
-		public void Create()
+		public void Parse_json()
 		{
 			// Arrange
-			var name = "listname";
-
-			var apiResponse = @"{
-				'id': 1,
-				'name': 'listname',
-				'recipient_count': 0
-			}";
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PostAsync(ENDPOINT, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
-
-			var lists = new Lists(mockClient.Object);
 
 			// Act
-			var result = lists.CreateAsync(name, CancellationToken.None).Result;
+			var result = JsonConvert.DeserializeObject<List>(SINGLE_LIST_JSON);
 
 			// Assert
 			Assert.IsNotNull(result);
@@ -41,24 +70,35 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[TestMethod]
+		public void Create()
+		{
+			// Arrange
+			var name = "listname";
+
+			_mockClient
+				.Setup(c => c.PostAsync(ENDPOINT, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_LIST_JSON) })
+				.Verifiable();
+
+			var lists = CreateLists();
+
+			// Act
+			var result = lists.CreateAsync(name, CancellationToken.None).Result;
+
+			// Assert
+			Assert.IsNotNull(result);
+		}
+
+		[TestMethod]
 		public void GetAll()
 		{
 			// Arrange
-			var apiResponse = @"{
-				'lists': [
-					{
-						'id': 1,
-						'name': 'the jones',
-						'recipient_count': 1
-					}
-				]
-			}";
+			_mockClient
+				.Setup(c => c.GetAsync(ENDPOINT, It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_LISTS_JSON) })
+				.Verifiable();
 
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync(ENDPOINT, It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
-
-			var lists = new Lists(mockClient.Object);
+			var lists = CreateLists();
 
 			// Act
 			var result = lists.GetAllAsync(CancellationToken.None).Result;
@@ -66,9 +106,6 @@ namespace StrongGrid.Resources.UnitTests
 			// Assert
 			Assert.IsNotNull(result);
 			Assert.AreEqual(1, result.Length);
-			Assert.AreEqual(1, result[0].Id);
-			Assert.AreEqual("the jones", result[0].Name);
-			Assert.AreEqual(1, result[0].RecipientCount);
 		}
 
 		[TestMethod]
@@ -77,11 +114,12 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var listId = 1;
 
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.DeleteAsync($"{ENDPOINT}/{listId}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent));
+			_mockClient
+				.Setup(c => c.DeleteAsync($"{ENDPOINT}/{listId}", It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent))
+				.Verifiable();
 
-			var lists = new Lists(mockClient.Object);
+			var lists = CreateLists();
 
 			// Act
 			lists.DeleteAsync(listId, CancellationToken.None).Wait(CancellationToken.None);
@@ -95,11 +133,12 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var listIds = new long[] { 1, 2, 3 };
 
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.DeleteAsync(ENDPOINT, It.Is<JArray>(o => o.Count == 3), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent));
+			_mockClient
+				.Setup(c => c.DeleteAsync(ENDPOINT, It.Is<JArray>(o => o.Count == 3), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent))
+				.Verifiable();
 
-			var lists = new Lists(mockClient.Object);
+			var lists = CreateLists();
 
 			// Act
 			lists.DeleteAsync(listIds, CancellationToken.None).Wait(CancellationToken.None);
@@ -113,25 +152,18 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var listId = 1;
 
-			var apiResponse = @"{
-				'id': 1,
-				'name': 'listname',
-				'recipient_count': 0
-			}";
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync($"{ENDPOINT}/{listId}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
+			_mockClient
+				.Setup(c => c.GetAsync($"{ENDPOINT}/{listId}", It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_LIST_JSON) })
+				.Verifiable();
 
-			var lists = new Lists(mockClient.Object);
+			var lists = CreateLists();
 
 			// Act
 			var result = lists.GetAsync(listId, CancellationToken.None).Result;
 
 			// Assert
 			Assert.IsNotNull(result);
-			Assert.AreEqual(1, result.Id);
-			Assert.AreEqual("listname", result.Name);
-			Assert.AreEqual(0, result.RecipientCount);
 		}
 
 		[TestMethod]
@@ -141,11 +173,12 @@ namespace StrongGrid.Resources.UnitTests
 			var listId = 5;
 			var name = "newlistname";
 
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PatchAsync($"{ENDPOINT}/{listId}", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK));
+			_mockClient
+				.Setup(c => c.PatchAsync($"{ENDPOINT}/{listId}", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK))
+				.Verifiable();
 
-			var lists = new Lists(mockClient.Object);
+			var lists = CreateLists();
 
 			// Act
 			lists.UpdateAsync(listId, name, CancellationToken.None).Wait();
@@ -176,11 +209,13 @@ namespace StrongGrid.Resources.UnitTests
 					}
 				]
 			}";
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync($"{ENDPOINT}/{listId}/recipients?page_size={recordsPerPage}&page={page}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
-			var lists = new Lists(mockClient.Object);
+			_mockClient
+				.Setup(c => c.GetAsync($"{ENDPOINT}/{listId}/recipients?page_size={recordsPerPage}&page={page}", It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
+				.Verifiable();
+
+			var lists = CreateLists();
 
 			// Act
 			var result = lists.GetRecipientsAsync(listId, recordsPerPage, page, CancellationToken.None).Result;
@@ -198,11 +233,12 @@ namespace StrongGrid.Resources.UnitTests
 			var listId = 1;
 			var contactId = "abc123";
 
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PostAsync($"{ENDPOINT}/{listId}/recipients/{contactId}", (JObject)null, It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.Created));
+			_mockClient
+				.Setup(c => c.PostAsync($"{ENDPOINT}/{listId}/recipients/{contactId}", (JObject)null, It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.Created))
+				.Verifiable();
 
-			var lists = new Lists(mockClient.Object);
+			var lists = CreateLists();
 
 			// Act
 			lists.AddRecipientAsync(listId, contactId, CancellationToken.None).Wait();
@@ -217,11 +253,12 @@ namespace StrongGrid.Resources.UnitTests
 			var listId = 1;
 			var contactId = "abc123";
 
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.DeleteAsync($"{ENDPOINT}/{listId}/recipients/{contactId}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent));
+			_mockClient
+				.Setup(c => c.DeleteAsync($"{ENDPOINT}/{listId}/recipients/{contactId}", It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent))
+				.Verifiable();
 
-			var lists = new Lists(mockClient.Object);
+			var lists = CreateLists();
 
 			// Act
 			lists.RemoveRecipientAsync(listId, contactId, CancellationToken.None).Wait();
@@ -236,11 +273,12 @@ namespace StrongGrid.Resources.UnitTests
 			var listId = 1;
 			var contactIds = new[] { "abc123", "def456" };
 
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.PostAsync($"{ENDPOINT}/{listId}/recipients", It.Is<JArray>(o => o.Count == 2), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.Created));
+			_mockClient
+				.Setup(c => c.PostAsync($"{ENDPOINT}/{listId}/recipients", It.Is<JArray>(o => o.Count == 2), It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.Created))
+				.Verifiable();
 
-			var lists = new Lists(mockClient.Object);
+			var lists = CreateLists();
 
 			// Act
 			lists.AddRecipientsAsync(listId, contactIds, CancellationToken.None).Wait();

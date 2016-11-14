@@ -1,7 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Newtonsoft.Json.Linq;
-using StrongGrid.Model;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -45,7 +43,7 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			_mockRepository.VerifyAll();
 		}
-		
+
 		[TestMethod]
 		public void Get_multiple()
 		{

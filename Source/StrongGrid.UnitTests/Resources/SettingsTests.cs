@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using StrongGrid.Model;
 using System.Net;
 using System.Net.Http;
@@ -11,6 +11,55 @@ namespace StrongGrid.Resources.UnitTests
 	[TestClass]
 	public class SettingsTests
 	{
+		#region FIELDS
+
+		private const string ENDPOINT = "/alerts";
+		private MockRepository _mockRepository;
+		private Mock<IClient> _mockClient;
+
+		private const string SINGLE_GLOBAL_SETTING_JSON = @"{
+			'name': 'bcc',
+			'title': 'BCC',
+			'description': 'lorem ipsum... .',
+			'enabled': true
+		}";
+
+		#endregion
+
+		private Settings CreateSettings()
+		{
+			return new Settings(_mockClient.Object, ENDPOINT);
+		}
+
+		[TestInitialize]
+		public void TestInitialize()
+		{
+			_mockRepository = new MockRepository(MockBehavior.Strict);
+			_mockClient = _mockRepository.Create<IClient>();
+		}
+
+		[TestCleanup]
+		public void TestCleanup()
+		{
+			_mockRepository.VerifyAll();
+		}
+
+		[TestMethod]
+		public void Parse_json()
+		{
+			// Arrange
+
+			// Act
+			var result = JsonConvert.DeserializeObject<GlobalSetting>(SINGLE_GLOBAL_SETTING_JSON);
+
+			// Assert
+			Assert.IsNotNull(result);
+			Assert.AreEqual("lorem ipsum... .", result.Description);
+			Assert.AreEqual(true, result.Enabled);
+			Assert.AreEqual("bcc", result.Name);
+			Assert.AreEqual("BCC", result.Title);
+		}
+
 		[TestMethod]
 		public void GetAllMailSettings()
 		{
@@ -28,11 +77,13 @@ namespace StrongGrid.Resources.UnitTests
 					}
 				]
 			}";
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync("/mail_settings?limit=" + limit + "&offset=" + offset, It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
-			var settings = new Settings(mockClient.Object);
+			_mockClient
+				.Setup(c => c.GetAsync("/mail_settings?limit=" + limit + "&offset=" + offset, It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
+				.Verifiable();
+
+			var settings = CreateSettings();
 
 			// Act
 			var result = settings.GetAllMailSettingsAsync(limit, offset, CancellationToken.None).Result;
@@ -60,11 +111,13 @@ namespace StrongGrid.Resources.UnitTests
 					}
 				]
 			}";
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync("/partner_settings?limit=" + limit + "&offset=" + offset, It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
-			var settings = new Settings(mockClient.Object);
+			_mockClient
+				.Setup(c => c.GetAsync("/partner_settings?limit=" + limit + "&offset=" + offset, It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
+				.Verifiable();
+
+			var settings = CreateSettings();
 
 			// Act
 			var result = settings.GetAllPartnerSettingsAsync(limit, offset, CancellationToken.None).Result;
@@ -92,11 +145,13 @@ namespace StrongGrid.Resources.UnitTests
 					}
 				]
 			}";
-			var mockClient = new Mock<IClient>(MockBehavior.Strict);
-			mockClient.Setup(c => c.GetAsync("/tracking_settings?limit=" + limit + "&offset=" + offset, It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) });
 
-			var settings = new Settings(mockClient.Object);
+			_mockClient
+				.Setup(c => c.GetAsync("/tracking_settings?limit=" + limit + "&offset=" + offset, It.IsAny<CancellationToken>()))
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
+				.Verifiable();
+
+			var settings = CreateSettings();
 
 			// Act
 			var result = settings.GetAllTrackingSettingsAsync(limit, offset, CancellationToken.None).Result;
