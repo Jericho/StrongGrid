@@ -16,13 +16,15 @@ namespace StrongGrid
 	{
 		#region FIELDS
 
-		private readonly string _apiKey;
-		private readonly Uri _baseUri;
-		private HttpClient _httpClient;
-		private readonly bool _mustDisposeHttpClient;
 		private const string MEDIA_TYPE = "application/json";
 		private const int MAX_RETRIES = 3;
+
+		private readonly string _apiKey;
+		private readonly Uri _baseUri;
+		private readonly bool _mustDisposeHttpClient;
 		private readonly IAsyncDelayer _asyncDelayer;
+
+		private HttpClient _httpClient;
 
 		private enum Methods
 		{
@@ -111,7 +113,7 @@ namespace StrongGrid
 		~Client()
 		{
 			// The object went out of scope and finalized is called.
-			// Call 'Dispose' to release unmanaged resources 
+			// Call 'Dispose' to release unmanaged resources
 			// Managed resources will be released when GC runs the next time.
 			Dispose(false);
 		}
@@ -270,6 +272,7 @@ namespace StrongGrid
 							Content = new StringContent(message)
 						};
 				}
+
 				var httpRequest = new HttpRequestMessage
 				{
 					Method = new HttpMethod(methodAsString),
@@ -279,7 +282,8 @@ namespace StrongGrid
 				var response = await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
 				retriesRemaining--;
 
-				if (response.StatusCode == (HttpStatusCode)429 && retriesRemaining > 0)  // 429 = TOO MANY REQUESTS
+				// Handle HTTP429 (TOO MANY REQUESTS)
+				if (response.StatusCode == (HttpStatusCode)429 && retriesRemaining > 0)
 				{
 					// Wait
 					var waitTime = _asyncDelayer.CalculateDelay(response.Headers);

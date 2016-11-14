@@ -42,7 +42,7 @@ namespace StrongGrid.Resources
 			//  }
 			// If the email address is not on the global suppression list, the response will be empty
 			//
-			// Therefore, we check for the presence of the 'recipient_email' to indicate if the email 
+			// Therefore, we check for the presence of the 'recipient_email' to indicate if the email
 			// address is on the global suppression list or not.
 			var dynamicObject = JObject.Parse(responseContent);
 			var propertyDictionary = (IDictionary<string, JToken>)dynamicObject;

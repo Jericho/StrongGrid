@@ -8,6 +8,6 @@ namespace StrongGrid.Model
 		public bool RequireTls { get; set; }
 
 		[JsonProperty("require_valid_cert")]
-		public bool RequireValidCertificate{ get; set; }
+		public bool RequireValidCertificate { get; set; }
 	}
 }

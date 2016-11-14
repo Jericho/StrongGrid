@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using StrongGrid.Model;
 using StrongGrid.Utilities;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -63,7 +60,7 @@ namespace StrongGrid.Resources
 		/// </summary>
 		public async Task<Alert> CreateAsync(AlertType type, string emailTo = null, Frequency? frequency = null, int? percentage = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = CreateJObjectForAlert(type, emailTo , frequency , percentage );
+			var data = CreateJObjectForAlert(type, emailTo, frequency, percentage);
 			var response = await _client.PostAsync(_endpoint, data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
@@ -86,7 +83,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Update an alert. 
+		/// Update an alert.
 		/// </summary>
 		public async Task<Alert> UpdateAsync(long alertId, AlertType? type, string emailTo = null, Frequency? frequency = null, int? percentage = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -98,7 +95,6 @@ namespace StrongGrid.Resources
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 			var alert = JObject.Parse(responseContent).ToObject<Alert>();
 			return alert;
-
 		}
 
 		private static JObject CreateJObjectForAlert(AlertType? type, string emailTo = null, Frequency? frequency = null, int? percentage = null)

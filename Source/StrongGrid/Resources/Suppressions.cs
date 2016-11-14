@@ -42,7 +42,7 @@ namespace StrongGrid.Resources
 
         /// <summary>
         /// Add recipient address to the suppressions list for a given group.
-        /// 
+        ///
         /// If the group has been deleted, this request will add the address to the global suppression.
         /// </summary>
         /// <param name="groupId">ID of the suppression group</param>
@@ -55,7 +55,7 @@ namespace StrongGrid.Resources
 
         /// <summary>
         /// Add recipient addresses to the suppressions list for a given group.
-        /// 
+        ///
         /// If the group has been deleted, this request will add the address to the global suppression.
         /// </summary>
         /// <param name="groupId">ID of the suppression group</param>

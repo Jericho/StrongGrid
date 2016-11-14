@@ -2,7 +2,6 @@
 using StrongGrid.Model;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -108,19 +107,19 @@ namespace StrongGrid.Resources
 
 			// Response looks like this:
 			// {
-			//	"recipients": [
-			//		{
-			//			"created_at": 1422395108,
-			//			"email": "e@example.com",
-			//			"first_name": "Ed",
-			//			"id": "YUBh",
-			//			"last_clicked": null,
-			//			"last_emailed": null,
-			//			"last_name": null,
-			//			"last_opened": null,
-			//			"updated_at": 1422395108
-			//		}
-			//	]
+			//  "recipients": [
+			//    {
+			//      "created_at": 1422395108,
+			//      "email": "e@example.com",
+			//      "first_name": "Ed",
+			//      "id": "YUBh",
+			//      "last_clicked": null,
+			//      "last_emailed": null,
+			//      "last_name": null,
+			//      "last_opened": null,
+			//      "updated_at": 1422395108
+			//    }
+			//  ]
 			// }
 			// We use a dynamic object to get rid of the 'recipients' property and simply return an array of recipients
 			dynamic dynamicObject = JObject.Parse(responseContent);

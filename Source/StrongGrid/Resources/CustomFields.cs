@@ -100,7 +100,7 @@ namespace StrongGrid.Resources
 
 			// Response looks like this:
 			//{
-			//	"reserved_fields": [
+			//  "reserved_fields": [
 			//    {
 			//      "name": "first_name",
 			//      "type": "text"

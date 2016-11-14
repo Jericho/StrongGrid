@@ -46,6 +46,7 @@ namespace StrongGrid.Utilities
 			{
 				content = string.Format("StatusCode: {0}", response.StatusCode);
 			}
+
 			throw new Exception(content);
 		}
 	}

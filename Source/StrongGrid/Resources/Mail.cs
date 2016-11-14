@@ -30,7 +30,7 @@ namespace StrongGrid.Resources
 		/// Send an email to a single recipient
 		/// </summary>
 		/// <remarks>
-		/// This is a convenience method with simplified parameters. 
+		/// This is a convenience method with simplified parameters.
 		/// If you need more options, use the <see cref="SendAsync"/> method.
 		/// </remarks>
 		public Task SendToSingleRecipientAsync(
@@ -63,7 +63,7 @@ namespace StrongGrid.Resources
 		/// Send the same email to multiple recipients
 		/// </summary>
 		/// <remarks>
-		/// This is a convenience method with simplified parameters. 
+		/// This is a convenience method with simplified parameters.
 		/// If you need more options, use the <see cref="SendAsync"/> method.
 		/// </remarks>
 		public Task SendToMultipleRecipientsAsync(

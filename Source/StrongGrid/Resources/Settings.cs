@@ -145,7 +145,7 @@ namespace StrongGrid.Resources
 			//       "description": "lorem ipsum... .",
 			//       "enabled": true
 			//     }
-			//	]
+			//  ]
 			// }
 			// We use a dynamic object to get rid of the 'result' property and simply return an array of partner settings
 			dynamic dynamicObject = JObject.Parse(responseContent);
@@ -209,7 +209,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get Google Analytics Settings 
+		/// Get Google Analytics Settings
 		/// </summary>
 		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/tracking.html</returns>
 		public async Task<GoogleAnalyticsGlobalSettings> GetGoogleAnalyticsGlobalSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
@@ -365,7 +365,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get BCC Settings 
+		/// Get BCC Settings
 		/// </summary>
 		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/mail.html</returns>
 		public async Task<EmailAddressSetting> GetBccMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
@@ -399,7 +399,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get Address Whitelist Settings 
+		/// Get Address Whitelist Settings
 		/// </summary>
 		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/mail.html</returns>
 		public async Task<AddressWhitelistSettings> GetAddressWhitelistMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
@@ -433,7 +433,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get Footer Settings 
+		/// Get Footer Settings
 		/// </summary>
 		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/mail.html</returns>
 		public async Task<FooterGlobalSettings> GetFooterMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
@@ -468,7 +468,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get Forward Spam Settings 
+		/// Get Forward Spam Settings
 		/// </summary>
 		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/mail.html</returns>
 		public async Task<EmailAddressSetting> GetForwardSpamMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
@@ -555,7 +555,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get Spam Check Settings 
+		/// Get Spam Check Settings
 		/// </summary>
 		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/mail.html</returns>
 		public async Task<SpamCheckSettings> GetSpamCheckMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
@@ -590,7 +590,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get Template Settings 
+		/// Get Template Settings
 		/// </summary>
 		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/mail.html</returns>
 		public async Task<TemplateSettings> GetTemplateMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
@@ -624,7 +624,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get Bounce Purge Settings 
+		/// Get Bounce Purge Settings
 		/// </summary>
 		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/mail.html</returns>
 		public async Task<BouncePurgeSettings> GetBouncePurgeMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
@@ -659,7 +659,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get Forward Bounce Settings 
+		/// Get Forward Bounce Settings
 		/// </summary>
 		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/mail.html</returns>
 		public async Task<EmailAddressSetting> GetForwardBounceMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))

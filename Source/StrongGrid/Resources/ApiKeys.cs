@@ -61,7 +61,7 @@ namespace StrongGrid.Resources
 			//       "name": "A New Hope",
 			//       "api_key_id": "xxxxxxxx"
 			//     }
-			//	]
+			//  ]
 			// }
 			// We use a dynamic object to get rid of the 'result' property and simply return an array of api keys
 			dynamic dynamicObject = JObject.Parse(responseContent);
@@ -125,6 +125,7 @@ namespace StrongGrid.Resources
 			{
 				response = await _client.PatchAsync(string.Format("{0}/{1}", _endpoint, keyId), data, cancellationToken).ConfigureAwait(false);
 			}
+
 			response.EnsureSuccess();
 
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);

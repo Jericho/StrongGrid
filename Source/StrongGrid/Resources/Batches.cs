@@ -1,11 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using StrongGrid.Model;
 using StrongGrid.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,7 +23,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Generate a new Batch ID to associate with scheduled sends 
+		/// Generate a new Batch ID to associate with scheduled sends
 		/// </summary>
 		/// <param name="cancellationToken"></param>
 		/// <returns></returns>
@@ -50,7 +45,7 @@ namespace StrongGrid.Resources
 		}
 
 		///// <summary>
-		///// Validate whether or not a batch id is valid 
+		///// Validate whether or not a batch id is valid
 		///// </summary>
 		///// <param name="batchId"></param>
 		///// <param name="cancellationToken"></param>
@@ -139,7 +134,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Delete the cancellation/pause of a scheduled send. 
+		/// Delete the cancellation/pause of a scheduled send.
 		/// </summary>
 		/// <param name="batchId"></param>
 		/// <param name="cancellationToken"></param>

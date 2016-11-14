@@ -178,8 +178,8 @@
     <Compile Include="..\StrongGrid\Model\LogicalOperator.cs">
       <Link>Model\LogicalOperator.cs</Link>
     </Compile>
-    <Compile Include="..\StrongGrid\Model\MailAdress.cs">
-      <Link>Model\MailAdress.cs</Link>
+    <Compile Include="..\StrongGrid\Model\MailAddress.cs">
+      <Link>Model\MailAddress.cs</Link>
     </Compile>
     <Compile Include="..\StrongGrid\Model\MailContent.cs">
       <Link>Model\MailContent.cs</Link>

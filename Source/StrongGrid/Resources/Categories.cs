@@ -38,7 +38,7 @@ namespace StrongGrid.Resources
 			//  {"category": "cat3"},
 			//  {"category": "cat4"},
 			//  {"category": "cat5"}
-			//]
+			// ]
 			// We use a dynamic object to get rid of the 'category' property and simply return an array of strings
 			var jArray = JArray.Parse(responseContent);
 			var categories = jArray.Select(x => x["category"].ToString()).ToArray();
