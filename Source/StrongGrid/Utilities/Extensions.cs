@@ -32,7 +32,7 @@ namespace StrongGrid.Utilities
 			return (descriptionAttribute == null ? value.ToString() : descriptionAttribute.Description);
 		}
 
-		public static T ConvertToEnum<T>(this string description)
+		public static T ConverDescriptiontToEnum<T>(this string description)
 		{
 			var fields = typeof(T).GetFields();
 			foreach (var fieldInfo in fields)
