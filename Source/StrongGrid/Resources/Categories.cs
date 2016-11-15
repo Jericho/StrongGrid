@@ -12,7 +12,7 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Constructs the SendGrid Categories object.
+		/// Initializes a new instance of the Categories class
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Categories/categories.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>

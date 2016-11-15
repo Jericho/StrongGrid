@@ -12,7 +12,7 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Constructs the SendGrid Whitelabel object.
+		/// Initializes a new instance of the Whitelabel class
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/domains.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>

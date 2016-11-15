@@ -13,7 +13,7 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Constructs the SendGrid Global Suppressions object.
+		/// Initializes a new instance of the Global Suppressions class
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/global_suppressions.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>

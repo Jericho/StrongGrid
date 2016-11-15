@@ -12,7 +12,7 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Constructs the SendGrid Alerts object.
+		/// Initializes a new instance of the Alerts class
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/alerts.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>

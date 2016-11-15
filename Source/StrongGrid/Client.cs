@@ -64,7 +64,7 @@ namespace StrongGrid
 		#region CTOR
 
 		/// <summary>
-		///     Create a client that connects to the SendGrid Web API
+		/// Initializes a new instance of the Client class
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key</param>
 		/// <param name="baseUri">Base SendGrid API Uri</param>

@@ -15,7 +15,7 @@ namespace StrongGrid.Resources
 		private IClient _client;
 
 		/// <summary>
-		/// Constructs the SendGrid Campaigns object.
+		/// Initializes a new instance of the Campaigns class
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/campaigns.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>

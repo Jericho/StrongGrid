@@ -12,7 +12,7 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Constructs the SendGrid SenderIdentities object.
+		/// Initializes a new instance of the SenderIdentities class
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/sender_identities.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
