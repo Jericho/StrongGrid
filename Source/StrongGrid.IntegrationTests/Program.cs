@@ -2,7 +2,6 @@
 using System;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Net.Security;
 
 namespace StrongGrid.IntegrationTests
@@ -11,22 +10,21 @@ namespace StrongGrid.IntegrationTests
 	{
 		public static void Main()
 		{
-			// Do you want to proxy requests through fiddler (useful for debugging)?
+			// Do you want to proxy requests through Fiddler (useful for debugging)?
 			var useFiddler = false;
 			if (useFiddler)
 			{
 				// This is necessary to ensure HTTPS traffic can be proxied through Fiddler without any certificate validation error.
 				ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
+
 			}
-			var httpClient = new HttpClient(
-				new HttpClientHandler
-				{
-					Proxy = new WebProxy("http://localhost:8888"),
-					UseProxy = useFiddler
-				}
-			);
+
+			// Setup the proxy for Fiddler
+			IWebProxy proxy = useFiddler ? new WebProxy("http://localhost:8888") : null;
+
+			// Set up the client
 			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
-			var client = new StrongGrid.Client(apiKey: apiKey, httpClient: httpClient);
+			var client = new StrongGrid.Client(apiKey, proxy);
 
 			// Set this variable to true if you want to pause after each test 
 			// which gives you an opportunity to review the output in the console.

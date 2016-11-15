@@ -22,7 +22,7 @@ namespace StrongGrid.UnitTests
 		public void Version_is_not_empty()
 		{
 			// Arrange
-			var client = new Client(API_KEY);
+			var client = new Client(API_KEY, (HttpClient)null);
 
 			// Act
 			var result = client.Version;
@@ -578,7 +578,7 @@ namespace StrongGrid.UnitTests
 		public void Dispose()
 		{
 			// Arrange
-			var client = new Client(apiKey: API_KEY);
+			var client = new Client(API_KEY, (IWebProxy)null);
 
 			// Act
 			client.Dispose();
