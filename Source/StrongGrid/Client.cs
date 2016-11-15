@@ -89,13 +89,33 @@ namespace StrongGrid
 		/// Initializes a new instance of the Client class
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key</param>
+		public Client(string apiKey)
+			: this(apiKey, (HttpClient)null, null)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the Client class
+		/// </summary>
+		/// <param name="apiKey">Your SendGrid API Key</param>
+		/// <param name="proxy">Allows you to specify a proxy</param>
+		public Client(string apiKey, IWebProxy proxy = null, IAsyncDelayer asyncDelayer = null)
+			: this(apiKey, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }), asyncDelayer)
+		{
+			_mustDisposeHttpClient = true;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the Client class
+		/// </summary>
+		/// <param name="apiKey">Your SendGrid API Key</param>
 		/// <param name="baseUri">Base SendGrid API Uri</param>
 		/// <param name="apiVersion">The SendGrid API version. Please note: currently, only 'v3' is supported</param>
 		/// <param name="httpClient">Allows you to inject your own HttpClient. This is useful, for example, to setup the HtppClient with a proxy</param>
 		/// <param name="asyncDelayer">Allows you to inject your own logic to delay calls when the SendGrid API returns 'TOO MANY REQUESTS'</param>
-		public Client(string apiKey, string baseUri = "https://api.sendgrid.com", string apiVersion = "v3", HttpClient httpClient = null, IAsyncDelayer asyncDelayer = null)
+		public Client(string apiKey, HttpClient httpClient = null, IAsyncDelayer asyncDelayer = null)
 		{
-			_baseUri = new Uri(string.Format("{0}/{1}", baseUri, apiVersion));
+			_baseUri = new Uri("https://api.sendgrid.com/v3");
 			_apiKey = apiKey;
 			_asyncDelayer = asyncDelayer ?? new AsyncDelayer();
 
@@ -123,7 +143,7 @@ namespace StrongGrid
 			Version = typeof(Client).GetTypeInfo().Assembly.GetName().Version.ToString();
 			Whitelabel = new Whitelabel(this);
 
-			_mustDisposeHttpClient = (httpClient == null);
+			_mustDisposeHttpClient = httpClient == null;
 			_httpClient = httpClient ?? new HttpClient();
 			_httpClient.BaseAddress = _baseUri;
 			_httpClient.DefaultRequestHeaders.Accept.Clear();
