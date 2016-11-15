@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using StrongGrid.Utilities;
 using System;
 
@@ -14,11 +13,11 @@ namespace StrongGrid.Model
 		public string EmailTo { get; set; }
 
 		[JsonProperty("frequency")]
-		[JsonConverter(typeof(StringEnumConverter))]
+		[JsonConverter(typeof(EnumDescriptionConverter))]
 		public Frequency Frequency { get; set; }
 
 		[JsonProperty("type")]
-		[JsonConverter(typeof(StringEnumConverter))]
+		[JsonConverter(typeof(EnumDescriptionConverter))]
 		public AlertType Type { get; set; }
 
 		[JsonProperty("created_at")]

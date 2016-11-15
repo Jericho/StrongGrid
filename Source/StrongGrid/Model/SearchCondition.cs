@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using StrongGrid.Utilities;
 
 namespace StrongGrid.Model
 {
@@ -12,11 +12,11 @@ namespace StrongGrid.Model
 		public string Value { get; set; }
 
 		[JsonProperty("operator")]
-		[JsonConverter(typeof(StringEnumConverter))]
+		[JsonConverter(typeof(EnumDescriptionConverter))]
 		public ConditionOperator Operator { get; set; }
 
 		[JsonProperty("and_or")]
-		[JsonConverter(typeof(StringEnumConverter))]
+		[JsonConverter(typeof(EnumDescriptionConverter))]
 		public LogicalOperator LogicalOperator { get; set; }
 	}
 }

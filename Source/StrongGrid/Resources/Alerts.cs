@@ -100,9 +100,9 @@ namespace StrongGrid.Resources
 		private static JObject CreateJObjectForAlert(AlertType? type, string emailTo = null, Frequency? frequency = null, int? percentage = null)
 		{
 			var result = new JObject();
-			if (type.HasValue) result.Add("type", JToken.FromObject(type.Value));
+			if (type.HasValue) result.Add("type", type.GetDescription());
 			if (!string.IsNullOrEmpty(emailTo)) result.Add("email_to", emailTo);
-			if (frequency.HasValue) result.Add("frequency", JToken.FromObject(frequency.Value));
+			if (frequency.HasValue) result.Add("frequency", frequency.GetDescription());
 			if (percentage.HasValue) result.Add("percentage", percentage.Value);
 			return result;
 		}

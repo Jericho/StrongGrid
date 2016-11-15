@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using StrongGrid.Utilities;
 
 namespace StrongGrid.Model
 {
@@ -42,7 +42,7 @@ namespace StrongGrid.Model
 		public string TextContent { get; set; }
 
 		[JsonProperty("status")]
-		[JsonConverter(typeof(StringEnumConverter))]
+		[JsonConverter(typeof(EnumDescriptionConverter))]
 		public CampaignStatus Status { get; set; }
 	}
 }

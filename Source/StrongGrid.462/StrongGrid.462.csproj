@@ -356,6 +356,9 @@
     <Compile Include="..\StrongGrid\Utilities\CustomFieldsConverter.cs">
       <Link>Utilities\CustomFieldsConverter.cs</Link>
     </Compile>
+    <Compile Include="..\StrongGrid\Utilities\EnumDescriptionConverter.cs">
+      <Link>Utilities\EnumDescriptionConverter.cs</Link>
+    </Compile>
     <Compile Include="..\StrongGrid\Utilities\EpochConverter.cs">
       <Link>Utilities\EpochConverter.cs</Link>
     </Compile>
