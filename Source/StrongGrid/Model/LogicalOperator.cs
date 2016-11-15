@@ -1,14 +1,15 @@
-﻿using System.Runtime.Serialization;
+﻿using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace StrongGrid.Model
 {
 	public enum LogicalOperator
 	{
-		[EnumMember(Value = "")]
+		[Description("")]
 		None,
-		[EnumMember(Value = "and")]
+		[Description("and")]
 		And,
-		[EnumMember(Value = "or")]
+		[Description("or")]
 		Or
 	}
 }

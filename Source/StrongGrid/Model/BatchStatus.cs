@@ -1,12 +1,13 @@
-﻿using System.Runtime.Serialization;
+﻿using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace StrongGrid.Model
 {
 	public enum BatchStatus
 	{
-		[EnumMember(Value = "pause")]
+		[Description("pause")]
 		Paused,
-		[EnumMember(Value = "cancel")]
+		[Description("cancel")]
 		Canceled
 	}
 }

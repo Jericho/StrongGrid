@@ -1,14 +1,14 @@
-﻿using System.Runtime.Serialization;
+﻿using System.ComponentModel;
 
 namespace StrongGrid.Model
 {
 	public enum FieldType
 	{
-		[EnumMember(Value = "date")]
+		[Description("date")]
 		Date,
-		[EnumMember(Value = "text")]
+		[Description("text")]
 		Text,
-		[EnumMember(Value = "number")]
+		[Description("number")]
 		Number
 	}
 }
