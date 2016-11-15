@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using StrongGrid.Model;
 using StrongGrid.Utilities;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -44,44 +45,51 @@ namespace StrongGrid.Resources
 			return batchId;
 		}
 
-		///// <summary>
-		///// Validate whether or not a batch id is valid
-		///// </summary>
-		///// <param name="batchId"></param>
-		///// <param name="cancellationToken"></param>
-		///// <returns></returns>
+		/// <summary>
+		/// Validate whether or not a batch id is valid
+		/// </summary>
+		/// <param name="batchId"></param>
+		/// <param name="cancellationToken"></param>
+		/// <returns></returns>
+		public async Task<bool> ValidateBatchIdAsync(string batchId, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var endpoint = string.Format("{0}/{1}", _endpoint, batchId);
+			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 
-		//------------------------------
-		// I am getting 'METHOD NOT ALLOWED' when executing this request
-		//------------------------------
+			if (response.StatusCode == HttpStatusCode.BadRequest)
+			{
+				// If the batch id is not valid, the response looks like this:
+				// {
+				//   "errors": [
+				//     {
+				//       "field": null,
+				//       "message": "invalid batch id"
+				//     }
+				//   ]
+				// }
+				var badRequestResponseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+				dynamic dynamicObject = JObject.Parse(badRequestResponseContent);
+				dynamic dynamicArray = dynamicObject.errors;
 
-		//public async Task<bool> ValidateBatchIdAsync(string batchId, CancellationToken cancellationToken = default(CancellationToken))
-		//{
-		//	var endpoint = string.Format("{0}/{1}", _endpoint, batchId);
-		//	var response = await _client.GetAsync(_endpoint, cancellationToken).ConfigureAwait(false);
-		//	response.EnsureSuccess();
+				if (dynamicArray.Count >= 1)
+				{
+					var error = dynamicArray.First;
+					if (error.message == "invalid batch id") return false;
+				}
+			}
 
-		//	var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			response.EnsureSuccess();
 
-		//	// If the batch id is valid, the response looks like this:
-		//	// {
-		//	//   "batch_id": "HkJ5yLYULb7Rj8GKSx7u025ouWVlMgAi"
-		//	// }
+			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-		//	// If the batch id is not valid, the response looks like this:
-		//	// {
-		//	//   "errors": [
-		//	//     {
-		//	//       "field": null,
-		//	//       "message": "invalid batch id"
-		//	//     }
-		//	//   ]
-		//	// }
-
-		//	// To determine if a batch id is valid, we simply check if the 'batch_id' property is present
-		//	var isValid = JObject.Parse(responseContent)["batch_id"] != null;
-		//	return isValid;
-		//}
+			// If the batch id is valid, the response looks like this:
+			// {
+			//   "batch_id": "HkJ5yLYULb7Rj8GKSx7u025ouWVlMgAi"
+			// }
+			// To determine if a batch id is valid, we simply check if the 'batch_id' property is present
+			var isValid = JObject.Parse(responseContent)["batch_id"] != null;
+			return isValid;
+		}
 
 		/// <summary>
 		/// The Cancel Scheduled Sends feature allows the customer to cancel a scheduled send based on a Batch ID.

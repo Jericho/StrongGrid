@@ -71,6 +71,59 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[TestMethod]
+		public void ValidateBatchId_true()
+		{
+			// Arrange
+			var batchId = "ABC123";
+
+			var apiResponse = @"{
+				'batch_id': 'ABC123'
+			}";
+
+			_mockClient
+				.Setup(c => c.GetAsync($"{ENDPOINT}/{batchId}", It.IsAny<CancellationToken>()))
+					.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
+					.Verifiable();
+
+			var batches = CreateBatches();
+
+			// Act
+			var result = batches.ValidateBatchIdAsync(batchId).Result;
+
+			// Assert
+			Assert.IsTrue(result);
+		}
+
+		[TestMethod]
+		public void ValidateBatchId_false()
+		{
+			// Arrange
+			var batchId = "ABC123";
+
+			var apiResponse = @"{
+				'errors': [
+					{
+						'field': null,
+						'message': 'invalid batch id'
+					}
+				]
+			}";
+
+			_mockClient
+				.Setup(c => c.GetAsync($"{ENDPOINT}/{batchId}", It.IsAny<CancellationToken>()))
+					.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
+					.Verifiable();
+
+			var batches = CreateBatches();
+
+			// Act
+			var result = batches.ValidateBatchIdAsync(batchId).Result;
+
+			// Assert
+			Assert.IsFalse(result);
+		}
+
+		[TestMethod]
 		public void Cancel()
 		{
 			// Arrange

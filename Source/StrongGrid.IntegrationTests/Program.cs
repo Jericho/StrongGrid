@@ -51,7 +51,7 @@ namespace StrongGrid.IntegrationTests
 			Batches(client, pauseAfterTests);
 			Whitelabel(client, pauseAfterTests);
 		}
-		
+
 		private static void Mail(IClient client, bool pauseAfterTests)
 		{
 			Console.WriteLine("\n***** MAIL *****");
@@ -639,6 +639,13 @@ namespace StrongGrid.IntegrationTests
 
 			var batchId = client.Batches.GenerateBatchIdAsync().Result;
 			Console.WriteLine($"New batchId generated: {batchId}");
+
+			var isValid = client.Batches.ValidateBatchIdAsync(batchId).Result;
+			Console.WriteLine($"{batchId} is valid: {isValid}");
+
+			batchId = "some_bogus_batch_id";
+			isValid = client.Batches.ValidateBatchIdAsync(batchId).Result;
+			Console.WriteLine($"{batchId} is valid: {isValid}");
 
 			var batches = client.Batches.GetAllAsync().Result;
 			Console.WriteLine($"All batches retrieved. There are {batches.Length} batches");
