@@ -55,7 +55,7 @@ namespace StrongGrid.Resources
 			//      "recipient_count": 1
 			//    }
 			//  ]
-			//}
+			// }
 			// We use a dynamic object to get rid of the 'lists' property and simply return an array of lists
 			dynamic dynamicObject = JObject.Parse(responseContent);
 			dynamic dynamicArray = dynamicObject.lists;

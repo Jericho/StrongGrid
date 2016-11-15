@@ -36,27 +36,49 @@ namespace StrongGrid
 		#region PROPERTIES
 
 		public Alerts Alerts { get; private set; }
+
 		public ApiKeys ApiKeys { get; private set; }
+
 		public Batches Batches { get; private set; }
+
 		public Blocks Blocks { get; private set; }
+
 		public Campaigns Campaigns { get; private set; }
+
 		public Categories Categories { get; private set; }
+
 		public Contacts Contacts { get; private set; }
+
 		public CustomFields CustomFields { get; private set; }
+
 		public GlobalSuppressions GlobalSuppressions { get; private set; }
+
 		public InvalidEmails InvalidEmails { get; private set; }
+
 		public Lists Lists { get; private set; }
+
 		public Mail Mail { get; private set; }
+
 		public Segments Segments { get; private set; }
+
 		public SenderIdentities SenderIdentities { get; private set; }
+
 		public Settings Settings { get; private set; }
+
 		public SpamReports SpamReports { get; private set; }
+
 		public Statistics Statistics { get; private set; }
+
 		public Suppressions Suppressions { get; private set; }
+
 		public Templates Templates { get; private set; }
+
 		public UnsubscribeGroups UnsubscribeGroups { get; private set; }
+
 		public User User { get; private set; }
+
 		public string Version { get; private set; }
+
 		public Whitelabel Whitelabel { get; private set; }
 
 		#endregion

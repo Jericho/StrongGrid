@@ -105,8 +105,8 @@ namespace StrongGrid.Resources
 			// Response looks like this:
 			// {
 			//  "recipients": [
-			//	  {
-			//	    "created_at": 1422395108,
+			//    {
+			//      "created_at": 1422395108,
 			//      "email": "e@example.com",
 			//      "first_name": "Ed",
 			//      "id": "YUBh",
@@ -130,7 +130,7 @@ namespace StrongGrid.Resources
 			//        }
 			//      ]
 			//    }
-			//	]
+			//  ]
 			// }
 			// We use a dynamic object to get rid of the 'recipients' property and simply return an array of contacts
 			dynamic dynamicObject = JObject.Parse(responseContent);

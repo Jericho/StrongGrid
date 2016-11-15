@@ -80,7 +80,7 @@ namespace StrongGrid.Resources
 			//       "description": "lorem ipsum... .",
 			//       "enabled": true
 			//     }
-			//	]
+			//   ]
 			// }
 			// We use a dynamic object to get rid of the 'result' property and simply return an array of partner settings
 			dynamic dynamicObject = JObject.Parse(responseContent);
@@ -172,7 +172,7 @@ namespace StrongGrid.Resources
 			//     {
 			//       "enabled": true
 			//     }
-			//	]
+			//   ]
 			// }
 			// We use a dynamic object to get rid of the 'enabled' property and simply return a boolean
 			dynamic dynamicObject = JObject.Parse(responseContent);
@@ -354,7 +354,7 @@ namespace StrongGrid.Resources
 			//       "description": "lorem ipsum... .",
 			//       "enabled": true
 			//     }
-			//	]
+			//   ]
 			// }
 			// We use a dynamic object to get rid of the 'result' property and simply return an array of settings
 			dynamic dynamicObject = JObject.Parse(responseContent);
@@ -518,7 +518,7 @@ namespace StrongGrid.Resources
 			//     {
 			//       "enabled": true
 			//     }
-			//	]
+			//   ]
 			// }
 			// We use a dynamic object to get rid of the 'enabled' property and simply return a boolean
 			dynamic dynamicObject = JObject.Parse(responseContent);
