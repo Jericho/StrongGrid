@@ -1,14 +1,14 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Shouldly;
 using StrongGrid.Utilities;
 using System;
 using System.Net.Http.Headers;
+using Xunit;
 
 namespace StrongGrid.UnitTests
 {
-	[TestClass]
 	public class AsyncDelayerTests
 	{
-		[TestMethod]
+		[Fact]
 		public void CalculateDelay_with_null_HttpHeaders()
 		{
 			// Arrange
@@ -20,10 +20,10 @@ namespace StrongGrid.UnitTests
 			var result = asyncDelayer.CalculateDelay(headers);
 
 			// Assert
-			Assert.AreEqual(TimeSpan.FromSeconds(1), result);
+			result.ShouldBe(TimeSpan.FromSeconds(1));
 		}
 
-		[TestMethod]
+		[Fact]
 		public void CalculateDelay_without_XRateLimitReset()
 		{
 			// Arrange
@@ -35,10 +35,10 @@ namespace StrongGrid.UnitTests
 			var result = asyncDelayer.CalculateDelay(headers);
 
 			// Assert
-			Assert.AreEqual(TimeSpan.FromSeconds(1), result);
+			result.ShouldBe(TimeSpan.FromSeconds(1));
 		}
 
-		[TestMethod]
+		[Fact]
 		public void CalculateDelay_with_too_small_XRateLimitReset()
 		{
 			// Arrange
@@ -51,10 +51,10 @@ namespace StrongGrid.UnitTests
 			var result = asyncDelayer.CalculateDelay(headers);
 
 			// Assert
-			Assert.AreEqual(TimeSpan.FromSeconds(1), result);
+			result.ShouldBe(TimeSpan.FromSeconds(1));
 		}
 
-		[TestMethod]
+		[Fact]
 		public void CalculateDelay_with_reasonable_XRateLimitReset()
 		{
 			// Arrange
@@ -67,10 +67,10 @@ namespace StrongGrid.UnitTests
 			var result = asyncDelayer.CalculateDelay(headers);
 
 			// Assert
-			Assert.AreEqual(TimeSpan.FromSeconds(3), result);
+			result.ShouldBe(TimeSpan.FromSeconds(3));
 		}
 
-		[TestMethod]
+		[Fact]
 		public void CalculateDelay_with_too_large_XRateLimitReset()
 		{
 			// Arrange
@@ -83,7 +83,7 @@ namespace StrongGrid.UnitTests
 			var result = asyncDelayer.CalculateDelay(headers);
 
 			// Assert
-			Assert.AreEqual(TimeSpan.FromSeconds(5), result);
+			result.ShouldBe(TimeSpan.FromSeconds(5));
 		}
 	}
 }

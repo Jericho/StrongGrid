@@ -1,24 +1,22 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Shouldly;
 using StrongGrid.Model;
 using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
 {
-	[TestClass]
 	public class ContactsTests
 	{
 		#region FIELDS
 
 		private const string ENDPOINT = "/contactdb/recipients";
-		private MockRepository _mockRepository;
-		private Mock<IClient> _mockClient;
 
 		private const string SINGLE_RECIPIENT_JSON = @"{
 			'created_at': 1422313607,
@@ -71,26 +69,7 @@ namespace StrongGrid.Resources.UnitTests
 
 		#endregion
 
-		private Contacts CreateContacts()
-		{
-			return new Contacts(_mockClient.Object, ENDPOINT);
-
-		}
-
-		[TestInitialize]
-		public void TestInitialize()
-		{
-			_mockRepository = new MockRepository(MockBehavior.Strict);
-			_mockClient = _mockRepository.Create<IClient>();
-		}
-
-		[TestCleanup]
-		public void TestCleanup()
-		{
-			_mockRepository.VerifyAll();
-		}
-
-		[TestMethod]
+		[Fact]
 		public void Parse_json()
 		{
 			// Arrange
@@ -99,26 +78,26 @@ namespace StrongGrid.Resources.UnitTests
 			var result = JsonConvert.DeserializeObject<Contact>(SINGLE_RECIPIENT_JSON);
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(new DateTime(2015, 1, 26, 23, 6, 47, DateTimeKind.Utc), result.CreatedOn);
-			Assert.IsNotNull(result.CustomFields);
-			Assert.AreEqual(1, result.CustomFields.Length);
-			Assert.AreEqual(typeof(Field<string>), result.CustomFields[0].GetType());
+			result.ShouldNotBeNull();
+			result.CreatedOn.ShouldBe(new DateTime(2015, 1, 26, 23, 6, 47, DateTimeKind.Utc));
+			result.CustomFields.ShouldNotBeNull();
+			result.CustomFields.Length.ShouldBe(1);
+			result.CustomFields[0].GetType().ShouldBe(typeof(Field<string>));
 			var stringField = result.CustomFields[0] as Field<string>;
-			Assert.AreEqual(23, stringField.Id);
-			Assert.AreEqual("pet", stringField.Name);
-			Assert.AreEqual("Indiana", stringField.Value);
-			Assert.AreEqual("jones@example.com", result.Email);
-			Assert.IsNull(result.FirstName);
-			Assert.AreEqual("YUBh", result.Id);
-			Assert.IsNull(result.LastClickedOn);
-			Assert.IsNull(result.LastEmailedOn);
-			Assert.AreEqual("Jones", result.LastName);
-			Assert.IsNull(result.LastOpenedOn);
-			Assert.AreEqual(new DateTime(2015, 1, 26, 23, 9, 50, DateTimeKind.Utc), result.ModifiedOn);
+			stringField.Id.ShouldBe(23);
+			stringField.Name.ShouldBe("pet");
+			stringField.Value.ShouldBe("Indiana");
+			result.Email.ShouldBe("jones@example.com");
+			result.FirstName.ShouldBeNull();
+			result.Id.ShouldBe("YUBh");
+			result.LastClickedOn.ShouldBeNull();
+			result.LastEmailedOn.ShouldBeNull();
+			result.LastName.ShouldBe("Jones");
+			result.LastOpenedOn.ShouldBeNull();
+			result.ModifiedOn.ShouldBe(new DateTime(2015, 1, 26, 23, 9, 50, DateTimeKind.Utc));
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Create_success()
 		{
 			// Arrange
@@ -139,22 +118,23 @@ namespace StrongGrid.Resources.UnitTests
 				'updated_count': 0
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PostAsync(ENDPOINT, It.Is<JArray>(o => o.Count == 1), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var contacts = CreateContacts();
+			var contacts = new Contacts(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = contacts.CreateAsync(email, firstName, lastName, null, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
-		[ExpectedException(typeof(AggregateException))]
+		[Fact]
 		public void Create_failure()
 		{
 			// Arrange
@@ -183,18 +163,24 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PostAsync(ENDPOINT, It.Is<JArray>(o => o.Count == 1), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var contacts = CreateContacts();
+			var contacts = new Contacts(mockClient.Object, ENDPOINT);
 
 			// Act
-			var result = contacts.CreateAsync(email, firstName, lastName, null, CancellationToken.None).Result;
+			Should.ThrowAsync<Exception>(() => contacts.CreateAsync(email, firstName, lastName, null, CancellationToken.None))
+				.Result.Message.ShouldBe("Invalid email.");
+
+			// Assert
+			mockRepository.VerifyAll();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Import()
 		{
 			// Arrange
@@ -229,29 +215,31 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PostAsync(ENDPOINT, It.Is<JArray>(o => o.Count == 3), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var contacts = CreateContacts();
+			var contacts = new Contacts(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = contacts.ImportAsync(records, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(1, result.ErrorCount);
-			CollectionAssert.AreEqual(new[] { 2 }, result.ErrorIndices);
-			Assert.AreEqual(2, result.NewCount);
-			Assert.AreEqual(2, result.PersistedRecipients.Length);
-			Assert.AreEqual(0, result.UpdatedCount);
-			Assert.AreEqual(1, result.Errors.Length);
-			Assert.AreEqual("Invalid email.", result.Errors[0].Message);
-			CollectionAssert.AreEqual(new[] { 2 }, result.Errors[0].ErrorIndices);
+			result.ShouldNotBeNull();
+			result.ErrorCount.ShouldBe(1);
+			result.ErrorIndices.ShouldBe(new[] { 2 });
+			result.NewCount.ShouldBe(2);
+			result.PersistedRecipients.Length.ShouldBe(2);
+			result.UpdatedCount.ShouldBe(0);
+			result.Errors.Length.ShouldBe(1);
+			result.Errors[0].Message.ShouldBe("Invalid email.");
+			result.Errors[0].ErrorIndices.ShouldBe(new[] { 2 });
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Update_success()
 		{
 			// Arrange
@@ -272,12 +260,14 @@ namespace StrongGrid.Resources.UnitTests
 				'updated_count': 1
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PatchAsync(ENDPOINT, It.Is<JArray>(o => o.Count == 1), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var contacts = CreateContacts();
+			var contacts = new Contacts(mockClient.Object, ENDPOINT);
 
 			// Act
 			contacts.UpdateAsync(email, null, lastName, null, CancellationToken.None).Wait();
@@ -285,8 +275,7 @@ namespace StrongGrid.Resources.UnitTests
 			// Assert
 		}
 
-		[TestMethod]
-		[ExpectedException(typeof(AggregateException))]
+		[Fact]
 		public void Update_failure()
 		{
 			// Arrange
@@ -314,82 +303,94 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PatchAsync(ENDPOINT, It.Is<JArray>(o => o.Count == 1), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var contacts = CreateContacts();
+			var contacts = new Contacts(mockClient.Object, ENDPOINT);
 
 			// Act
-			contacts.UpdateAsync(email, null, lastName, null, CancellationToken.None).Wait();
+			Should.ThrowAsync<Exception>(() => contacts.UpdateAsync(email, null, lastName, null, CancellationToken.None))
+				.Result.Message.ShouldBe("Invalid email.");
+
+			// Assert
+			mockRepository.VerifyAll();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Get_single()
 		{
 			// Arrange
 			var contactId = "YUBh";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"{ENDPOINT}/{contactId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_RECIPIENT_JSON) })
 				.Verifiable();
 
-			var contacts = CreateContacts();
+			var contacts = new Contacts(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = contacts.GetAsync(contactId, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual("Jones", result.LastName);
-			Assert.AreEqual("jones@example.com", result.Email);
-			Assert.AreEqual(1, result.CustomFields.Length);
-			Assert.AreEqual("pet", result.CustomFields[0].Name);
-			Assert.AreEqual("Indiana", ((Field<string>)result.CustomFields[0]).Value);
+			result.ShouldNotBeNull();
+			result.LastName.ShouldBe("Jones");
+			result.Email.ShouldBe("jones@example.com");
+			result.CustomFields.Length.ShouldBe(1);
+			result.CustomFields[0].Name.ShouldBe("pet");
+			((Field<string>)result.CustomFields[0]).Value.ShouldBe("Indiana");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Get_multiple()
 		{
 			// Arrange
 			var recordsPerPage = 25;
 			var page = 1;
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"{ENDPOINT}?page_size={recordsPerPage}&page={page}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_RECIPIENTS_JSON) })
 				.Verifiable();
 
-			var contacts = CreateContacts();
+			var contacts = new Contacts(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = contacts.GetAsync(recordsPerPage, page, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(1, result.Length);
-			Assert.AreEqual("jones@example.com", result[0].Email);
-			Assert.AreEqual(2, result[0].CustomFields.Length);
-			Assert.AreEqual("pet", result[0].CustomFields[0].Name);
-			Assert.AreEqual("Indiana", ((Field<string>)result[0].CustomFields[0]).Value);
-			Assert.AreEqual("age", result[0].CustomFields[1].Name);
-			Assert.AreEqual(43, ((Field<long?>)result[0].CustomFields[1]).Value);
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(1);
+			result[0].Email.ShouldBe("jones@example.com");
+			result[0].CustomFields.Length.ShouldBe(2);
+			result[0].CustomFields[0].Name.ShouldBe("pet");
+			((Field<string>)result[0].CustomFields[0]).Value.ShouldBe("Indiana");
+			result[0].CustomFields[1].Name.ShouldBe("age");
+			((Field<long?>)result[0].CustomFields[1]).Value.ShouldBe(43);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Delete_single()
 		{
 			// Arrange
 			var contactId = "recipient_id1";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.DeleteAsync(ENDPOINT, It.Is<JArray>(o => o.Count == 1), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK))
 				.Verifiable();
 
-			var contacts = CreateContacts();
+			var contacts = new Contacts(mockClient.Object, ENDPOINT);
 
 			// Act
 			contacts.DeleteAsync(contactId, CancellationToken.None).Wait(CancellationToken.None);
@@ -397,18 +398,20 @@ namespace StrongGrid.Resources.UnitTests
 			// Assert
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Delete_multiple()
 		{
 			// Arrange
 			var contactIds = new[] { "recipient_id1", "recipient_id2" };
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.DeleteAsync(ENDPOINT, It.Is<JArray>(o => o.Count == 2), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK))
 				.Verifiable();
 
-			var contacts = CreateContacts();
+			var contacts = new Contacts(mockClient.Object, ENDPOINT);
 
 			// Act
 			contacts.DeleteAsync(contactIds, CancellationToken.None).Wait(CancellationToken.None);
@@ -416,7 +419,7 @@ namespace StrongGrid.Resources.UnitTests
 			// Assert
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetBillableCount()
 		{
 			// Arrange
@@ -424,21 +427,23 @@ namespace StrongGrid.Resources.UnitTests
 				'recipient_count': 2
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"{ENDPOINT}/billable_count", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var contacts = CreateContacts();
+			var contacts = new Contacts(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = contacts.GetBillableCountAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.AreEqual(2, result);
+			result.ShouldBe(2);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetTotalCount()
 		{
 			// Arrange
@@ -446,21 +451,23 @@ namespace StrongGrid.Resources.UnitTests
 				'recipient_count': 3
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"{ENDPOINT}/count", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var contacts = CreateContacts();
+			var contacts = new Contacts(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = contacts.GetTotalCountAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.AreEqual(3, result);
+			result.ShouldBe(3);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Search()
 		{
 			// Arrange
@@ -519,28 +526,30 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PostAsync($"{ENDPOINT}/search", It.Is<JObject>(o => o.Properties().Count() == 2), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var contacts = CreateContacts();
+			var contacts = new Contacts(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = contacts.SearchAsync(conditions, listId, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(1, result.Length);
-			Assert.AreEqual("jones@example.com", result[0].Email);
-			Assert.AreEqual(2, result[0].CustomFields.Length);
-			Assert.AreEqual("pet", result[0].CustomFields[0].Name);
-			Assert.AreEqual("Indiana", ((Field<string>)result[0].CustomFields[0]).Value);
-			Assert.AreEqual("age", result[0].CustomFields[1].Name);
-			Assert.AreEqual(43, ((Field<long?>)result[0].CustomFields[1]).Value);
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(1);
+			result[0].Email.ShouldBe("jones@example.com");
+			result[0].CustomFields.Length.ShouldBe(2);
+			result[0].CustomFields[0].Name.ShouldBe("pet");
+			((Field<string>)result[0].CustomFields[0]).Value.ShouldBe("Indiana");
+			result[0].CustomFields[1].Name.ShouldBe("age");
+			((Field<long?>)result[0].CustomFields[1]).Value.ShouldBe(43);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Search_without_conditions()
 		{
 			// Arrange
@@ -576,25 +585,27 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PostAsync($"{ENDPOINT}/search", It.Is<JObject>(o => o.Properties().Count() == 0), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var contacts = CreateContacts();
+			var contacts = new Contacts(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = contacts.SearchAsync(conditions, listId, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(1, result.Length);
-			Assert.AreEqual("jones@example.com", result[0].Email);
-			Assert.AreEqual(2, result[0].CustomFields.Length);
-			Assert.AreEqual("pet", result[0].CustomFields[0].Name);
-			Assert.AreEqual("Indiana", ((Field<string>)result[0].CustomFields[0]).Value);
-			Assert.AreEqual("age", result[0].CustomFields[1].Name);
-			Assert.AreEqual(43, ((Field<long?>)result[0].CustomFields[1]).Value);
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(1);
+			result[0].Email.ShouldBe("jones@example.com");
+			result[0].CustomFields.Length.ShouldBe(2);
+			result[0].CustomFields[0].Name.ShouldBe("pet");
+			((Field<string>)result[0].CustomFields[0]).Value.ShouldBe("Indiana");
+			result[0].CustomFields[1].Name.ShouldBe("age");
+			((Field<long?>)result[0].CustomFields[1]).Value.ShouldBe(43);
 		}
 	}
 }

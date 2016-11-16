@@ -1,7 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+﻿using Moq;
 using Newtonsoft.Json.Linq;
 using RichardSzalay.MockHttp;
+using Shouldly;
 using StrongGrid.Utilities;
 using System;
 using System.Net;
@@ -9,16 +9,16 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace StrongGrid.UnitTests
 {
-	[TestClass]
 	public class ClientTests
 	{
 		private const string API_KEY = "my_api_key";
 		private const string MEDIA_TYPE = "application/json";
 
-		[TestMethod]
+		[Fact]
 		public void Version_is_not_empty()
 		{
 			// Arrange
@@ -28,10 +28,10 @@ namespace StrongGrid.UnitTests
 			var result = client.Version;
 
 			// Assert
-			Assert.IsFalse(string.IsNullOrEmpty(result));
+			result.ShouldNotBeNullOrEmpty();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetAsync_success()
 		{
 			// Arrange
@@ -49,10 +49,10 @@ namespace StrongGrid.UnitTests
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsTrue(result.IsSuccessStatusCode);
+			result.IsSuccessStatusCode.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetAsync_Exception()
 		{
 			// Arrange
@@ -70,11 +70,11 @@ namespace StrongGrid.UnitTests
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsFalse(result.IsSuccessStatusCode);
-			Assert.AreEqual(HttpStatusCode.BadRequest, result.StatusCode);
+			result.IsSuccessStatusCode.ShouldBeFalse();
+			result.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetAsync_HttpException()
 		{
 			// Arrange
@@ -92,11 +92,11 @@ namespace StrongGrid.UnitTests
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsFalse(result.IsSuccessStatusCode);
-			Assert.AreEqual(HttpStatusCode.BadRequest, result.StatusCode);
+			result.IsSuccessStatusCode.ShouldBeFalse();
+			result.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetAsync_extra_seperator()
 		{
 			// Arrange
@@ -114,10 +114,10 @@ namespace StrongGrid.UnitTests
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsTrue(result.IsSuccessStatusCode);
+			result.IsSuccessStatusCode.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetAsync_HTTP429_retry_success()
 		{
 			// Arrange
@@ -154,10 +154,10 @@ namespace StrongGrid.UnitTests
 			mockDelayer.VerifyAll();
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsTrue(result.IsSuccessStatusCode);
+			result.IsSuccessStatusCode.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetAsync_HTTP429_retry_failure()
 		{
 			// Arrange
@@ -195,11 +195,11 @@ namespace StrongGrid.UnitTests
 			mockDelayer.VerifyAll();
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsFalse(result.IsSuccessStatusCode);
-			Assert.AreEqual((HttpStatusCode)429, result.StatusCode);
+			result.IsSuccessStatusCode.ShouldBeFalse();
+			result.StatusCode.ShouldBe((HttpStatusCode)429);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void PostAsync_without_jObject()
 		{
 			// Arrange
@@ -219,10 +219,10 @@ namespace StrongGrid.UnitTests
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsTrue(result.IsSuccessStatusCode);
+			result.IsSuccessStatusCode.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void PostAsync_with_jObject()
 		{
 			// Arrange
@@ -244,10 +244,10 @@ namespace StrongGrid.UnitTests
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsTrue(result.IsSuccessStatusCode);
+			result.IsSuccessStatusCode.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void PostAsync_without_jArray()
 		{
 			// Arrange
@@ -267,10 +267,10 @@ namespace StrongGrid.UnitTests
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsTrue(result.IsSuccessStatusCode);
+			result.IsSuccessStatusCode.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void PostAsync_with_jArray()
 		{
 			// Arrange
@@ -298,10 +298,10 @@ namespace StrongGrid.UnitTests
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsTrue(result.IsSuccessStatusCode);
+			result.IsSuccessStatusCode.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void DeleteAsync_without_content()
 		{
 			// Arrange
@@ -319,10 +319,10 @@ namespace StrongGrid.UnitTests
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsTrue(result.IsSuccessStatusCode);
+			result.IsSuccessStatusCode.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void DeleteAsync_without_jobject()
 		{
 			// Arrange
@@ -342,10 +342,10 @@ namespace StrongGrid.UnitTests
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsTrue(result.IsSuccessStatusCode);
+			result.IsSuccessStatusCode.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void DeleteAsync_with_jobject()
 		{
 			// Arrange
@@ -367,10 +367,10 @@ namespace StrongGrid.UnitTests
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsTrue(result.IsSuccessStatusCode);
+			result.IsSuccessStatusCode.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void DeleteAsync_without_jArray()
 		{
 			// Arrange
@@ -390,10 +390,10 @@ namespace StrongGrid.UnitTests
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsTrue(result.IsSuccessStatusCode);
+			result.IsSuccessStatusCode.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void DeleteAsync_with_jArray()
 		{
 			// Arrange
@@ -421,10 +421,10 @@ namespace StrongGrid.UnitTests
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsTrue(result.IsSuccessStatusCode);
+			result.IsSuccessStatusCode.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void PatchAsync_without_jObject()
 		{
 			// Arrange
@@ -444,10 +444,10 @@ namespace StrongGrid.UnitTests
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsTrue(result.IsSuccessStatusCode);
+			result.IsSuccessStatusCode.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void PatchAsync_with_jObject()
 		{
 			// Arrange
@@ -469,10 +469,10 @@ namespace StrongGrid.UnitTests
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsTrue(result.IsSuccessStatusCode);
+			result.IsSuccessStatusCode.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void PatchAsync_without_jArray()
 		{
 			// Arrange
@@ -492,10 +492,10 @@ namespace StrongGrid.UnitTests
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsTrue(result.IsSuccessStatusCode);
+			result.IsSuccessStatusCode.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void PatchAsync_with_jArray()
 		{
 			// Arrange
@@ -523,10 +523,10 @@ namespace StrongGrid.UnitTests
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsTrue(result.IsSuccessStatusCode);
+			result.IsSuccessStatusCode.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void PutAsync_without_jObject()
 		{
 			// Arrange
@@ -546,10 +546,10 @@ namespace StrongGrid.UnitTests
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsTrue(result.IsSuccessStatusCode);
+			result.IsSuccessStatusCode.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void PutAsync_with_jObject()
 		{
 			// Arrange
@@ -571,10 +571,10 @@ namespace StrongGrid.UnitTests
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			Assert.IsTrue(result.IsSuccessStatusCode);
+			result.IsSuccessStatusCode.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Dispose()
 		{
 			// Arrange

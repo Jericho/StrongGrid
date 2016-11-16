@@ -1,15 +1,15 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Shouldly;
 using StrongGrid.Utilities;
 using System;
 using System.Net;
 using System.Net.Http;
+using Xunit;
 
 namespace StrongGrid.UnitTests
 {
-	[TestClass]
 	public class ExtensionsTests
 	{
-		[TestMethod]
+		[Fact]
 		public void FromUnixTime_EPOCH()
 		{
 			// Arrange
@@ -19,10 +19,10 @@ namespace StrongGrid.UnitTests
 			var result = unixTime.FromUnixTime();
 
 			// Assert
-			Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc), result);
+			result.ShouldBe(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
 		}
 
-		[TestMethod]
+		[Fact]
 		public void FromUnixTime_2016()
 		{
 			// Arrange
@@ -32,9 +32,9 @@ namespace StrongGrid.UnitTests
 			var result = unixTime.FromUnixTime();
 
 			// Assert
-			Assert.AreEqual(new DateTime(2016, 7, 10, 12, 51, 51, DateTimeKind.Utc), result);
+			result.ShouldBe(new DateTime(2016, 7, 10, 12, 51, 51, DateTimeKind.Utc));
 		}
-		[TestMethod]
+		[Fact]
 
 		public void ToUnixTime_EPOCH()
 		{
@@ -45,10 +45,10 @@ namespace StrongGrid.UnitTests
 			var result = date.ToUnixTime();
 
 			// Assert
-			Assert.AreEqual(0, result);
+			result.ShouldBe(0);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void ToUnixTime_2016()
 		{
 			// Arrange
@@ -58,10 +58,10 @@ namespace StrongGrid.UnitTests
 			var result = date.ToUnixTime();
 
 			// Assert
-			Assert.AreEqual(1468155111, result);
+			result.ShouldBe(1468155111);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetDescription_description_is_present()
 		{
 			// Arrange
@@ -71,10 +71,10 @@ namespace StrongGrid.UnitTests
 			var result = enumVal.GetDescription();
 
 			// Assert
-			Assert.AreEqual("Abc123", result);
+			result.ShouldBe("Abc123");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetDescription_description_is_missing()
 		{
 			// Arrange
@@ -84,10 +84,10 @@ namespace StrongGrid.UnitTests
 			var result = enumVal.GetDescription();
 
 			// Assert
-			Assert.AreEqual("Second", result);
+			result.ShouldBe("Second");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetDescription_invalid_enum_value()
 		{
 			// Arrange
@@ -97,10 +97,10 @@ namespace StrongGrid.UnitTests
 			var result = enumVal.GetDescription();
 
 			// Assert
-			Assert.AreEqual("999", result);
+			result.ShouldBe("999");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void EnsureSuccess_success()
 		{
 			// Arrange
@@ -113,22 +113,21 @@ namespace StrongGrid.UnitTests
 			// Nothing to assert, we just want to make sure no exception was thrown
 		}
 
-		[TestMethod]
-		[ExpectedException(typeof(Exception))]
+		[Fact]
 		public void EnsureSuccess_failure()
 		{
 			// Arrange
 			var httpResponse = new HttpResponseMessage(HttpStatusCode.ServiceUnavailable);
 
 			// Act
-			httpResponse.EnsureSuccess();
+			Should.Throw<Exception>(() => httpResponse.EnsureSuccess())
+				.Message.ShouldBe("StatusCode: ServiceUnavailable");
 
 			// Assert
 			// Nothing to assert, we just want to make sure an exception was thrown
 		}
 
-		[TestMethod]
-		[ExpectedException(typeof(Exception))]
+		[Fact]
 		public void EnsureSuccess_failure_with_content()
 		{
 			// Arrange
@@ -136,7 +135,8 @@ namespace StrongGrid.UnitTests
 			httpResponse.Content = new StringContent("Hello World");
 
 			// Act
-			httpResponse.EnsureSuccess();
+			Should.Throw<Exception>(() => httpResponse.EnsureSuccess())
+				.Message.ShouldBe("Hello World");
 
 			// Assert
 			// Nothing to assert, we just want to make sure an exception was thrown
