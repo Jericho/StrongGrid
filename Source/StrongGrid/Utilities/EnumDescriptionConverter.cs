@@ -10,7 +10,6 @@ namespace StrongGrid.Utilities
 {
 	public class EnumDescriptionConverter : StringEnumConverter
 	{
-
 		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 		{
 			var isNullable = objectType.GetTypeInfo().IsGenericType && objectType.GetGenericTypeDefinition() == typeof(Nullable<>);
