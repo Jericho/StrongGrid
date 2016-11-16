@@ -22,7 +22,7 @@ namespace StrongGrid.UnitTests
 		public void Version_is_not_empty()
 		{
 			// Arrange
-			var client = new Client(API_KEY, (HttpClient)null);
+			var client = new Client(API_KEY);
 
 			// Act
 			var result = client.Version;

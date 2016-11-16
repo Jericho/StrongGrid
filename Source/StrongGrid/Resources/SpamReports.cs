@@ -15,7 +15,7 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the SpamReport class
+		/// Initializes a new instance of the SpamReport class.
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/spam_reports.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>

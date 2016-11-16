@@ -86,13 +86,13 @@ namespace StrongGrid
 		#region CTOR
 
 		/// <summary>
-		/// Initializes a new instance of the Client class
+		/// Initializes a new instance of the Client class.
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key</param>
 		public Client(string apiKey) : this(apiKey, httpClient: (HttpClient)null) { }
 
 		/// <summary>
-		/// Initializes a new instance of the Client class
+		/// Initializes a new instance of the Client class.
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key</param>
 		/// <param name="proxy">Allows you to specify a proxy</param>
@@ -103,7 +103,7 @@ namespace StrongGrid
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the Client class
+		/// Initializes a new instance of the Client class.
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key</param>
 		/// <param name="baseUri">Base SendGrid API Uri</param>

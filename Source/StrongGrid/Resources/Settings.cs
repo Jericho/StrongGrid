@@ -14,7 +14,7 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the Settings class
+		/// Initializes a new instance of the Settings class.
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/index.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
