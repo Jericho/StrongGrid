@@ -89,10 +89,7 @@ namespace StrongGrid
 		/// Initializes a new instance of the Client class
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key</param>
-		public Client(string apiKey)
-			: this(apiKey, (HttpClient)null, null)
-		{
-		}
+		public Client(string apiKey) : this(apiKey, (HttpClient)null, null) { }
 
 		/// <summary>
 		/// Initializes a new instance of the Client class

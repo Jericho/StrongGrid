@@ -1,17 +1,97 @@
 {
-  "version": "1.0.0-*",
-    "dependencies": {
-        "NETStandard.Library": "1.6.0",
-        "Newtonsoft.Json": "9.0.1",
-        "System.ComponentModel.Primitives": "4.1.0",
-        "System.Reflection.TypeExtensions": "4.1.0"
-    },
-    "frameworks": {
-        "netstandard1.6": {
-            "imports": "dnxcore50"
-        }
-    },
-    "buildOptions": {
-        "define": [ "NETSTANDARD" ]
-    }
+	"version": "1.0.0-*",
+	"buildOptions": {
+		"emitEntryPoint": false,
+		"xmlDoc": false,
+		"platform": "anycpu",
+		"additionalArguments": [
+			"/ruleset:../StrongGrid.ruleset",
+			"/additionalfile:../stylecop.json"
+		],
+		"compile": {
+		}
+	},
+	"configurations": {
+		"Release": {
+			"buildOptions": {
+				"warningsAsErrors": true
+			}
+		}
+	},
+	"dependencies": {
+		"StyleCop.Analyzers": {
+			"version": "1.0.0",
+			"type": "build"
+		}
+	},
+	"frameworks": {
+		"netstandard1.6": {
+			"buildOptions": {
+				"define": [ "NETSTANDARD", "NETSTANDARD16" ]
+			},
+			"imports": "dnxcore50",
+			"dependencies": {
+				"NETStandard.Library": "1.6.0",
+				"Newtonsoft.Json": "9.0.1",
+				"System.ComponentModel.Primitives": "4.1.0",
+				"System.Reflection.TypeExtensions": "4.1.0"
+			}
+		},
+		"netstandard1.3": {
+			"buildOptions": {
+				"define": [ "NETSTANDARD", "NETSTANDARD13" ]
+			},
+			"imports": "dnxcore50",
+			"dependencies": {
+				"NETStandard.Library": "1.6.0",
+				"Newtonsoft.Json": "9.0.1",
+				"System.ComponentModel.Primitives": "4.1.0",
+				"System.Reflection.TypeExtensions": "4.1.0"
+			}
+		},
+		"net452": {
+			"buildOptions": {
+				"define": [ "NET452" ]
+			},
+			"dependencies": {
+				"Newtonsoft.Json": "9.0.1",
+				"System.Net.Http": "4.0.0"
+			},
+			"frameworkAssemblies": {
+			}
+		},
+		"net46": {
+			"buildOptions": {
+				"define": [ "NET46" ]
+			},
+			"dependencies": {
+				"Newtonsoft.Json": "9.0.1",
+				"System.Net.Http": "4.0.0"
+			},
+			"frameworkAssemblies": {
+			}
+		},
+		"net461": {
+			"buildOptions": {
+				"define": [ "NET461" ]
+			},
+			"dependencies": {
+				"Newtonsoft.Json": "9.0.1",
+				"System.Net.Http": "4.0.0"
+			},
+			"frameworkAssemblies": {
+			}
+		},
+		"net462": {
+			"buildOptions": {
+				"define": [ "NET462" ]
+			},
+			"dependencies": {
+				"Newtonsoft.Json": "9.0.1",
+				"System.Net.Http": "4.0.0"
+			},
+			"frameworkAssemblies": {
+			}
+		}
+	}
 }

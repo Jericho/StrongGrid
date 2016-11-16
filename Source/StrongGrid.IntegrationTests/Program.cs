@@ -10,25 +10,21 @@ namespace StrongGrid.IntegrationTests
 	{
 		public static void Main()
 		{
+			// -----------------------------------------------------------------------------
+
 			// Do you want to proxy requests through Fiddler (useful for debugging)?
-			var useFiddler = false;
-			if (useFiddler)
-			{
-				// This is necessary to ensure HTTPS traffic can be proxied through Fiddler without any certificate validation error.
-				ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
-
-			}
-
-			// Setup the proxy for Fiddler
-			IWebProxy proxy = useFiddler ? new WebProxy("http://localhost:8888") : null;
-
-			// Set up the client
-			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
-			var client = new StrongGrid.Client(apiKey, proxy);
+			var useFiddler = true;
 
 			// Set this variable to true if you want to pause after each test 
 			// which gives you an opportunity to review the output in the console.
 			var pauseAfterTests = false;
+
+			// -----------------------------------------------------------------------------
+
+
+			var proxy = useFiddler ? new WebProxy("http://localhost:8888") : null;
+			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
+			var client = new StrongGrid.Client(apiKey, proxy);
 
 			ApiKeys(client, pauseAfterTests);
 			Campaigns(client, pauseAfterTests);

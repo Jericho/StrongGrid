@@ -127,12 +127,6 @@
     <Compile Include="Utilities\AsyncDelayerTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\StrongGrid.462\StrongGrid.462.csproj">
-      <Project>{a86d2bfa-afaf-49f9-affd-530ad4cdc650}</Project>
-      <Name>StrongGrid.462</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
