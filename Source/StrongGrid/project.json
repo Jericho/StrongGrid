@@ -2,7 +2,7 @@
 	"version": "1.0.0-*",
 	"buildOptions": {
 		"emitEntryPoint": false,
-		"xmlDoc": false,
+		"xmlDoc": true,
 		"platform": "anycpu",
 		"additionalArguments": [
 			"/ruleset:../StrongGrid.ruleset",
@@ -14,7 +14,7 @@
 	"configurations": {
 		"Release": {
 			"buildOptions": {
-				"warningsAsErrors": true
+				"warningsAsErrors": false
 			}
 		}
 	},
