@@ -1,19 +1,17 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Shouldly;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
 {
-	[TestClass]
 	public class CategoriesTests
 	{
 		#region FIELDS
 
 		private const string ENDPOINT = "/categories";
-		private MockRepository _mockRepository;
-		private Mock<IClient> _mockClient;
 
 		private const string MULTIPLE_CATEGORIES_JSON = @"[
 			{ 'category': 'cat1' },
@@ -25,50 +23,33 @@ namespace StrongGrid.Resources.UnitTests
 
 		#endregion
 
-		private Categories CreateCategories()
-		{
-			return new Categories(_mockClient.Object, ENDPOINT);
-
-		}
-
-		[TestInitialize]
-		public void TestInitialize()
-		{
-			_mockRepository = new MockRepository(MockBehavior.Strict);
-			_mockClient = _mockRepository.Create<IClient>();
-		}
-
-		[TestCleanup]
-		public void TestCleanup()
-		{
-			_mockRepository.VerifyAll();
-		}
-
-		[TestMethod]
+		[Fact]
 		public void Get_multiple()
 		{
 			// Arrange
 			var limit = 25;
 			var offset = 0;
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"{ENDPOINT}?category=&limit={limit}&offset={offset}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_CATEGORIES_JSON) })
 				.Verifiable();
 
-			var categories = CreateCategories();
+			var categories = new Categories(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = categories.GetAsync(null, limit, offset, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(5, result.Length);
-			Assert.AreEqual("cat1", result[0]);
-			Assert.AreEqual("cat2", result[1]);
-			Assert.AreEqual("cat3", result[2]);
-			Assert.AreEqual("cat4", result[3]);
-			Assert.AreEqual("cat5", result[4]);
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(5);
+			result[0].ShouldBe("cat1");
+			result[1].ShouldBe("cat2");
+			result[2].ShouldBe("cat3");
+			result[3].ShouldBe("cat4");
+			result[4].ShouldBe("cat5");
 		}
 	}
 }

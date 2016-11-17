@@ -3,7 +3,6 @@ using StrongGrid.Model;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,7 +15,7 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Constructs the SendGrid Recipients object.
+		/// Initializes a new instance of the Recipients class.
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/contactdb.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
@@ -37,6 +36,7 @@ namespace StrongGrid.Resources
 				var errorMsg = string.Join(Environment.NewLine, importResult.Errors.Select(e => e.Message));
 				throw new Exception(errorMsg);
 			}
+
 			return importResult.PersistedRecipients.Single();
 		}
 
@@ -104,33 +104,33 @@ namespace StrongGrid.Resources
 
 			// Response looks like this:
 			// {
-			//	"recipients": [
-			//		{
-			//			"created_at": 1422395108,
-			//			"email": "e@example.com",
-			//			"first_name": "Ed",
-			//			"id": "YUBh",
-			//			"last_clicked": null,
-			//			"last_emailed": null,
-			//			"last_name": null,
-			//			"last_opened": null,
-			//			"updated_at": 1422395108,
-			//			"custom_fields": [
-			//				{
-			//					"id": 23,
-			//					"name": "pet",
-			//					"value": "Indiana",
-			//					"type": "text"
-			//				},
-			//				{
-			//					"id": 24,
-			//					"name": "age",
-			//					"value": 43,
-			//					"type": "number"
-			//				}
-			//			]
-			//		}
-			//	]
+			//  "recipients": [
+			//    {
+			//      "created_at": 1422395108,
+			//      "email": "e@example.com",
+			//      "first_name": "Ed",
+			//      "id": "YUBh",
+			//      "last_clicked": null,
+			//      "last_emailed": null,
+			//      "last_name": null,
+			//      "last_opened": null,
+			//      "updated_at": 1422395108,
+			//      "custom_fields": [
+			//        {
+			//          "id": 23,
+			//          "name": "pet",
+			//          "value": "Indiana",
+			//          "type": "text"
+			//        },
+			//        {
+			//          "id": 24,
+			//          "name": "age",
+			//          "value": 43,
+			//          "type": "number"
+			//        }
+			//      ]
+			//    }
+			//  ]
 			// }
 			// We use a dynamic object to get rid of the 'recipients' property and simply return an array of contacts
 			dynamic dynamicObject = JObject.Parse(responseContent);
@@ -191,27 +191,27 @@ namespace StrongGrid.Resources
 
 			// Response looks like this:
 			// {
-			//	"recipients": [
-			//		{
-			//			"created_at": 1422395108,
-			//			"email": "e@example.com",
-			//			"first_name": "Ed",
-			//			"id": "YUBh",
-			//			"last_clicked": null,
-			//			"last_emailed": null,
-			//			"last_name": null,
-			//			"last_opened": null,
-			//			"updated_at": 1422395108,
-			//			"custom_fields": [
-			//				{
-			//					"id": 23,
-			//					"name": "pet",
-			//					"value": "Fluffy",
-			//					"type": "text"
-			//				}
-			//			]
-			//		}
-			//	]
+			//  "recipients": [
+			//    {
+			//      "created_at": 1422395108,
+			//      "email": "e@example.com",
+			//      "first_name": "Ed",
+			//      "id": "YUBh",
+			//      "last_clicked": null,
+			//      "last_emailed": null,
+			//      "last_name": null,
+			//      "last_opened": null,
+			//      "updated_at": 1422395108,
+			//      "custom_fields": [
+			//        {
+			//          "id": 23,
+			//          "name": "pet",
+			//          "value": "Fluffy",
+			//          "type": "text"
+			//        }
+			//      ]
+			//    }
+			//  ]
 			// }
 			// We use a dynamic object to get rid of the 'recipients' property and simply return an array of recipients
 			dynamic dynamicObject = JObject.Parse(responseContent);
@@ -235,18 +235,22 @@ namespace StrongGrid.Resources
 				{
 					result.Add(customField.Name, customField.Value);
 				}
+
 				foreach (var customField in contact.CustomFields.OfType<Field<long>>())
 				{
 					result.Add(customField.Name, customField.Value);
 				}
+
 				foreach (var customField in contact.CustomFields.OfType<Field<long?>>())
 				{
 					result.Add(customField.Name, customField.Value.GetValueOrDefault());
 				}
+
 				foreach (var customField in contact.CustomFields.OfType<Field<DateTime>>())
 				{
 					result.Add(customField.Name, customField.Value.ToUnixTime());
 				}
+
 				foreach (var customField in contact.CustomFields.OfType<Field<DateTime?>>())
 				{
 					if (customField.Value.HasValue) result.Add(customField.Name, customField.Value.Value.ToUnixTime());

@@ -1,22 +1,20 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+﻿using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Shouldly;
 using StrongGrid.Model;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
 {
-	[TestClass]
 	public class SegmentsTests
 	{
 		#region FIELDS
 
 		private const string ENDPOINT = "/contactdb/segments";
-		private MockRepository _mockRepository;
-		private Mock<IClient> _mockClient;
 
 		private const string SINGLE_SEGMENT_JSON = @"{
 			'id': 1,
@@ -64,26 +62,7 @@ namespace StrongGrid.Resources.UnitTests
 
 		#endregion
 
-		private Segments CreateSegments()
-		{
-			return new Segments(_mockClient.Object, ENDPOINT);
-
-		}
-
-		[TestInitialize]
-		public void TestInitialize()
-		{
-			_mockRepository = new MockRepository(MockBehavior.Strict);
-			_mockClient = _mockRepository.Create<IClient>();
-		}
-
-		[TestCleanup]
-		public void TestCleanup()
-		{
-			_mockRepository.VerifyAll();
-		}
-
-		[TestMethod]
+		[Fact]
 		public void Parse_json()
 		{
 			// Arrange
@@ -92,31 +71,31 @@ namespace StrongGrid.Resources.UnitTests
 			var result = JsonConvert.DeserializeObject<Segment>(SINGLE_SEGMENT_JSON);
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.IsNotNull(result.Conditions);
-			Assert.AreEqual(3, result.Conditions.Length);
+			result.ShouldNotBeNull();
+			result.Conditions.ShouldNotBeNull();
+			result.Conditions.Length.ShouldBe(3);
 
-			Assert.AreEqual("last_name", result.Conditions[0].Field);
-			Assert.AreEqual(LogicalOperator.None, result.Conditions[0].LogicalOperator);
-			Assert.AreEqual(ConditionOperator.Equal, result.Conditions[0].Operator);
-			Assert.AreEqual("Miller", result.Conditions[0].Value);
+			result.Conditions[0].Field.ShouldBe("last_name");
+			result.Conditions[0].LogicalOperator.ShouldBe(LogicalOperator.None);
+			result.Conditions[0].Operator.ShouldBe(ConditionOperator.Equal);
+			result.Conditions[0].Value.ShouldBe("Miller");
 
-			Assert.AreEqual("last_clicked", result.Conditions[1].Field);
-			Assert.AreEqual(LogicalOperator.And, result.Conditions[1].LogicalOperator);
-			Assert.AreEqual(ConditionOperator.GreatherThan, result.Conditions[1].Operator);
-			Assert.AreEqual("01/02/2015", result.Conditions[1].Value);
+			result.Conditions[1].Field.ShouldBe("last_clicked");
+			result.Conditions[1].LogicalOperator.ShouldBe(LogicalOperator.And);
+			result.Conditions[1].Operator.ShouldBe(ConditionOperator.GreatherThan);
+			result.Conditions[1].Value.ShouldBe("01/02/2015");
 
-			Assert.AreEqual("clicks.campaign_identifier", result.Conditions[2].Field);
-			Assert.AreEqual(LogicalOperator.Or, result.Conditions[2].LogicalOperator);
-			Assert.AreEqual(ConditionOperator.Equal, result.Conditions[2].Operator);
-			Assert.AreEqual("513", result.Conditions[2].Value);
+			result.Conditions[2].Field.ShouldBe("clicks.campaign_identifier");
+			result.Conditions[2].LogicalOperator.ShouldBe(LogicalOperator.Or);
+			result.Conditions[2].Operator.ShouldBe(ConditionOperator.Equal);
+			result.Conditions[2].Value.ShouldBe("513");
 
-			Assert.AreEqual(1, result.Id);
-			Assert.AreEqual(4, result.ListId);
-			Assert.AreEqual("Last Name Miller", result.Name);
+			result.Id.ShouldBe(1);
+			result.ListId.ShouldBe(4);
+			result.Name.ShouldBe("Last Name Miller");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Create()
 		{
 			// Arrange
@@ -147,60 +126,66 @@ namespace StrongGrid.Resources.UnitTests
 				}
 			};
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PostAsync(ENDPOINT, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_SEGMENT_JSON) })
 				.Verifiable();
 
-			var segments = CreateSegments();
+			var segments = new Segments(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = segments.CreateAsync(name, listId, conditions, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetAll()
 		{
 			// Arrange
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync(ENDPOINT, It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_SEGMENTS_JSON) })
 				.Verifiable();
 
-			var segments = CreateSegments();
+			var segments = new Segments(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = segments.GetAllAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(1, result.Length);
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(1);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Get()
 		{
 			// Arrange
 			var segmentId = 1;
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"{ENDPOINT}/{segmentId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_SEGMENT_JSON) })
 				.Verifiable();
 
-			var segments = CreateSegments();
+			var segments = new Segments(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = segments.GetAsync(segmentId, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Update()
 		{
 			// Arrange
@@ -218,33 +203,37 @@ namespace StrongGrid.Resources.UnitTests
 				}
 			};
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PatchAsync($"{ENDPOINT}/{segmentId}", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_SEGMENT_JSON) })
 				.Verifiable();
 
-			var segments = CreateSegments();
+			var segments = new Segments(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = segments.UpdateAsync(segmentId, name, listId, conditions, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Delete_and_preserve_contacts()
 		{
 			// Arrange
 			var segmentId = 1;
 			var deleteContacts = false;
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.DeleteAsync($"{ENDPOINT}/{segmentId}?delete_contacts=false", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent))
 				.Verifiable();
 
-			var segments = CreateSegments();
+			var segments = new Segments(mockClient.Object, ENDPOINT);
 
 			// Act
 			segments.DeleteAsync(segmentId, deleteContacts, CancellationToken.None).Wait(CancellationToken.None);
@@ -252,19 +241,21 @@ namespace StrongGrid.Resources.UnitTests
 			// Assert
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Delete_and_delete_contacts()
 		{
 			// Arrange
 			var segmentId = 1;
 			var deleteContacts = true;
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.DeleteAsync($"{ENDPOINT}/{segmentId}?delete_contacts=true", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent))
 				.Verifiable();
 
-			var segments = CreateSegments();
+			var segments = new Segments(mockClient.Object, ENDPOINT);
 
 			// Act
 			segments.DeleteAsync(segmentId, deleteContacts, CancellationToken.None).Wait(CancellationToken.None);
@@ -272,7 +263,7 @@ namespace StrongGrid.Resources.UnitTests
 			// Assert
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetRecipients()
 		{
 			// Arrange
@@ -304,20 +295,22 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"{ENDPOINT}/{segmentId}/recipients?page_size={recordsPerPage}&page={page}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var segments = CreateSegments();
+			var segments = new Segments(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = segments.GetRecipientsAsync(segmentId, recordsPerPage, page, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(1, result.Length);
-			Assert.AreEqual("jones@example.com", result[0].Email);
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(1);
+			result[0].Email.ShouldBe("jones@example.com");
 		}
 	}
 }

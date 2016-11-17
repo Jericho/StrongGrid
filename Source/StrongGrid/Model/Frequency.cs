@@ -5,20 +5,15 @@ using System.Runtime.Serialization;
 
 namespace StrongGrid.Model
 {
-	[JsonConverter(typeof(StringEnumConverter))]
 	public enum Frequency
 	{
-//		[Description("hourly")]
-		[EnumMember(Value = "hourly")]
+		[Description("hourly")]
 		Hourly,
-		[EnumMember(Value = "daily")]
-//		[Description("daily")]
+		[Description("daily")]
 		Daily,
-		[EnumMember(Value = "weekly")]
-//		[Description("weekly")]
+		[Description("weekly")]
 		Weekly,
-		[EnumMember(Value = "monthly")]
-//		[Description("monthly")]
+		[Description("monthly")]
 		Monthly
 	}
 }

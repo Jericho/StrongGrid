@@ -16,13 +16,15 @@ namespace StrongGrid
 	{
 		#region FIELDS
 
-		private readonly string _apiKey;
-		private readonly Uri _baseUri;
-		private HttpClient _httpClient;
-		private readonly bool _mustDisposeHttpClient;
 		private const string MEDIA_TYPE = "application/json";
 		private const int MAX_RETRIES = 3;
+
+		private readonly string _apiKey;
+		private readonly Uri _baseUri;
+		private readonly bool _mustDisposeHttpClient;
 		private readonly IAsyncDelayer _asyncDelayer;
+
+		private HttpClient _httpClient;
 
 		private enum Methods
 		{
@@ -34,27 +36,49 @@ namespace StrongGrid
 		#region PROPERTIES
 
 		public Alerts Alerts { get; private set; }
+
 		public ApiKeys ApiKeys { get; private set; }
+
 		public Batches Batches { get; private set; }
+
 		public Blocks Blocks { get; private set; }
+
 		public Campaigns Campaigns { get; private set; }
+
 		public Categories Categories { get; private set; }
+
 		public Contacts Contacts { get; private set; }
+
 		public CustomFields CustomFields { get; private set; }
+
 		public GlobalSuppressions GlobalSuppressions { get; private set; }
+
 		public InvalidEmails InvalidEmails { get; private set; }
+
 		public Lists Lists { get; private set; }
+
 		public Mail Mail { get; private set; }
+
 		public Segments Segments { get; private set; }
+
 		public SenderIdentities SenderIdentities { get; private set; }
+
 		public Settings Settings { get; private set; }
+
 		public SpamReports SpamReports { get; private set; }
+
 		public Statistics Statistics { get; private set; }
+
 		public Suppressions Suppressions { get; private set; }
+
 		public Templates Templates { get; private set; }
+
 		public UnsubscribeGroups UnsubscribeGroups { get; private set; }
+
 		public User User { get; private set; }
+
 		public string Version { get; private set; }
+
 		public Whitelabel Whitelabel { get; private set; }
 
 		#endregion
@@ -62,7 +86,24 @@ namespace StrongGrid
 		#region CTOR
 
 		/// <summary>
-		///     Create a client that connects to the SendGrid Web API
+		/// Initializes a new instance of the Client class.
+		/// </summary>
+		/// <param name="apiKey">Your SendGrid API Key</param>
+		public Client(string apiKey) : this(apiKey, httpClient: (HttpClient)null) { }
+
+		/// <summary>
+		/// Initializes a new instance of the Client class.
+		/// </summary>
+		/// <param name="apiKey">Your SendGrid API Key</param>
+		/// <param name="proxy">Allows you to specify a proxy</param>
+		public Client(string apiKey, IWebProxy proxy = null)
+			: this(apiKey, httpClient: new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }))
+		{
+			_mustDisposeHttpClient = true;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the Client class.
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key</param>
 		/// <param name="baseUri">Base SendGrid API Uri</param>
@@ -99,7 +140,7 @@ namespace StrongGrid
 			Version = typeof(Client).GetTypeInfo().Assembly.GetName().Version.ToString();
 			Whitelabel = new Whitelabel(this);
 
-			_mustDisposeHttpClient = (httpClient == null);
+			_mustDisposeHttpClient = httpClient == null;
 			_httpClient = httpClient ?? new HttpClient();
 			_httpClient.BaseAddress = _baseUri;
 			_httpClient.DefaultRequestHeaders.Accept.Clear();
@@ -111,7 +152,7 @@ namespace StrongGrid
 		~Client()
 		{
 			// The object went out of scope and finalized is called.
-			// Call 'Dispose' to release unmanaged resources 
+			// Call 'Dispose' to release unmanaged resources
 			// Managed resources will be released when GC runs the next time.
 			Dispose(false);
 		}
@@ -255,7 +296,7 @@ namespace StrongGrid
 		{
 			try
 			{
-				var methodAsString = "";
+				var methodAsString = string.Empty;
 				switch (method)
 				{
 					case Methods.GET: methodAsString = "GET"; break;
@@ -270,16 +311,18 @@ namespace StrongGrid
 							Content = new StringContent(message)
 						};
 				}
+
 				var httpRequest = new HttpRequestMessage
 				{
 					Method = new HttpMethod(methodAsString),
-					RequestUri = new Uri(string.Format("{0}{1}{2}", _baseUri, endpoint.StartsWith("/", StringComparison.Ordinal) ? "" : "/", endpoint)),
+					RequestUri = new Uri(string.Format("{0}{1}{2}", _baseUri, endpoint.StartsWith("/", StringComparison.Ordinal) ? string.Empty : "/", endpoint)),
 					Content = content
 				};
 				var response = await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
 				retriesRemaining--;
 
-				if (response.StatusCode == (HttpStatusCode)429 && retriesRemaining > 0)  // 429 = TOO MANY REQUESTS
+				// Handle HTTP429 (TOO MANY REQUESTS)
+				if (response.StatusCode == (HttpStatusCode)429 && retriesRemaining > 0)
 				{
 					// Wait
 					var waitTime = _asyncDelayer.CalculateDelay(response.Headers);

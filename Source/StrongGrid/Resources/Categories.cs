@@ -12,7 +12,7 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Constructs the SendGrid Categories object.
+		/// Initializes a new instance of the Categories class.
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Categories/categories.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
@@ -38,7 +38,7 @@ namespace StrongGrid.Resources
 			//  {"category": "cat3"},
 			//  {"category": "cat4"},
 			//  {"category": "cat5"}
-			//]
+			// ]
 			// We use a dynamic object to get rid of the 'category' property and simply return an array of strings
 			var jArray = JArray.Parse(responseContent);
 			var categories = jArray.Select(x => x["category"].ToString()).ToArray();

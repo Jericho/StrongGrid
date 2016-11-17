@@ -14,7 +14,7 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Constructs the SendGrid Recipients object.
+		/// Initializes a new instance of the Recipients class.
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/contactdb.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
@@ -30,7 +30,7 @@ namespace StrongGrid.Resources
 			var data = new JObject
 			{
 				{ "name", name },
-				{ "type", JToken.Parse(JsonConvert.SerializeObject(type, Formatting.None, new StringEnumConverter())).Value<string>() }
+				{ "type", type.GetDescription() }
 			};
 			var response = await _client.PostAsync(_endpoint, data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
@@ -48,7 +48,7 @@ namespace StrongGrid.Resources
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
 			// Response looks like this:
-			//{
+			// {
 			//  "custom_fields": [
 			//    {
 			//      "id": 1,
@@ -66,7 +66,7 @@ namespace StrongGrid.Resources
 			//      "type": "number"
 			//    }
 			//  ]
-			//}
+			// }
 			// We use a dynamic object to get rid of the 'custom_fields' property and simply return an array of custom fields
 			dynamic dynamicObject = JObject.Parse(responseContent);
 			dynamic dynamicArray = dynamicObject.custom_fields;
@@ -99,8 +99,8 @@ namespace StrongGrid.Resources
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
 			// Response looks like this:
-			//{
-			//	"reserved_fields": [
+			// {
+			//  "reserved_fields": [
 			//    {
 			//      "name": "first_name",
 			//      "type": "text"
@@ -114,7 +114,7 @@ namespace StrongGrid.Resources
 			//      "type": "text"
 			//    }
 			//  ]
-			//}
+			// }
 			// We use a dynamic object to get rid of the 'reserved_fields' property and simply return an array of fields
 			dynamic dynamicObject = JObject.Parse(responseContent);
 			dynamic dynamicArray = dynamicObject.reserved_fields;

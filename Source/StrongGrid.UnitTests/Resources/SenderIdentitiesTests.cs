@@ -1,23 +1,21 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+﻿using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Shouldly;
 using StrongGrid.Model;
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
 {
-	[TestClass]
 	public class SenderIdentitiesTests
 	{
 		#region FIELDS
 
 		private const string ENDPOINT = "/senders";
-		private MockRepository _mockRepository;
-		private Mock<IClient> _mockClient;
 
 		private const string SINGLE_SENDER_IDENTITY_JSON = @"{
 			'id': 1,
@@ -68,26 +66,7 @@ namespace StrongGrid.Resources.UnitTests
 
 		#endregion
 
-		private SenderIdentities CreateSenderIdentities()
-		{
-			return new SenderIdentities(_mockClient.Object, ENDPOINT);
-
-		}
-
-		[TestInitialize]
-		public void TestInitialize()
-		{
-			_mockRepository = new MockRepository(MockBehavior.Strict);
-			_mockClient = _mockRepository.Create<IClient>();
-		}
-
-		[TestCleanup]
-		public void TestCleanup()
-		{
-			_mockRepository.VerifyAll();
-		}
-
-		[TestMethod]
+		[Fact]
 		public void Parse_json()
 		{
 			// Arrange
@@ -96,30 +75,30 @@ namespace StrongGrid.Resources.UnitTests
 			var result = JsonConvert.DeserializeObject<SenderIdentity>(SINGLE_SENDER_IDENTITY_JSON);
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(1, result.Id);
-			Assert.AreEqual("123 Elm St.", result.Address1);
-			Assert.AreEqual("Apt. 456", result.Address2);
-			Assert.AreEqual("Denver", result.City);
-			Assert.AreEqual("Colorado", result.State);
-			Assert.AreEqual("80202", result.Zip);
-			Assert.AreEqual("United States", result.Country);
-			Assert.IsNotNull(result.Verification);
-			Assert.IsTrue(result.Verification.IsCompleted);
-			Assert.AreEqual("", result.Verification.Reason);
-			Assert.AreEqual(false, result.Locked);
-			Assert.AreEqual(new DateTime(2015, 12, 11, 22, 16, 5, DateTimeKind.Utc), result.ModifiedOn);
-			Assert.AreEqual("My Sender ID", result.NickName);
-			Assert.IsNotNull(result.ReplyTo);
-			Assert.AreEqual("replyto@example.com", result.ReplyTo.Email);
-			Assert.AreEqual("Example INC", result.ReplyTo.Name);
-			Assert.AreEqual(new DateTime(2015, 12, 11, 22, 16, 5, DateTimeKind.Utc), result.CreatedOn);
-			Assert.IsNotNull(result.From);
-			Assert.AreEqual("from@example.com", result.From.Email);
-			Assert.AreEqual("Example INC", result.From.Name);
+			result.ShouldNotBeNull();
+			result.Id.ShouldBe(1);
+			result.Address1.ShouldBe("123 Elm St.");
+			result.Address2.ShouldBe("Apt. 456");
+			result.City.ShouldBe("Denver");
+			result.State.ShouldBe("Colorado");
+			result.Zip.ShouldBe("80202");
+			result.Country.ShouldBe("United States");
+			result.Verification.ShouldNotBeNull();
+			result.Verification.IsCompleted.ShouldBeTrue();
+			result.Verification.Reason.ShouldBe("");
+			result.Locked.ShouldBe(false);
+			result.ModifiedOn.ShouldBe(new DateTime(2015, 12, 11, 22, 16, 5, DateTimeKind.Utc));
+			result.NickName.ShouldBe("My Sender ID");
+			result.ReplyTo.ShouldNotBeNull();
+			result.ReplyTo.Email.ShouldBe("replyto@example.com");
+			result.ReplyTo.Name.ShouldBe("Example INC");
+			result.CreatedOn.ShouldBe(new DateTime(2015, 12, 11, 22, 16, 5, DateTimeKind.Utc));
+			result.From.ShouldNotBeNull();
+			result.From.Email.ShouldBe("from@example.com");
+			result.From.Name.ShouldBe("Example INC");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Create()
 		{
 			// Arrange
@@ -133,74 +112,82 @@ namespace StrongGrid.Resources.UnitTests
 			var zip = "80202";
 			var country = "United States";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PostAsync(ENDPOINT, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_SENDER_IDENTITY_JSON) })
 				.Verifiable();
 
-			var senderIdentities = CreateSenderIdentities();
+			var senderIdentities = new SenderIdentities(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = senderIdentities.CreateAsync(nickname, from, replyTo, address, address2, city, state, zip, country, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(1, result.Id);
+			result.ShouldNotBeNull();
+			result.Id.ShouldBe(1);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetAll()
 		{
 			// Arrange
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync(ENDPOINT, It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_SENDER_IDENTITIES_JSON) })
 				.Verifiable();
 
-			var senderIdentities = CreateSenderIdentities();
+			var senderIdentities = new SenderIdentities(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = senderIdentities.GetAllAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(1, result.Length);
-			Assert.AreEqual(1, result[0].Id);
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(1);
+			result[0].Id.ShouldBe(1);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Update()
 		{
 			// Arrange
 			var identityId = 1;
 			var nickname = "New nickname";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PatchAsync($"{ENDPOINT}/{identityId}", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_SENDER_IDENTITY_JSON) })
 				.Verifiable();
 
-			var senderIdentities = CreateSenderIdentities();
+			var senderIdentities = new SenderIdentities(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = senderIdentities.UpdateAsync(identityId, nickname, null, null, null, null, null, null, null, null, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Delete()
 		{
 			// Arrange
 			var identityId = 1;
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.DeleteAsync($"{ENDPOINT}/{identityId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent))
 				.Verifiable();
 
-			var senderIdentities = CreateSenderIdentities();
+			var senderIdentities = new SenderIdentities(mockClient.Object, ENDPOINT);
 
 			// Act
 			senderIdentities.DeleteAsync(identityId, CancellationToken.None).Wait(CancellationToken.None);
@@ -208,18 +195,20 @@ namespace StrongGrid.Resources.UnitTests
 			// Assert
 		}
 
-		[TestMethod]
+		[Fact]
 		public void ResendVerification()
 		{
 			// Arrange
 			var identityId = 1;
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PostAsync($"{ENDPOINT}/{identityId}/resend_verification", (JObject)null, It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent))
 				.Verifiable();
 
-			var senderIdentities = CreateSenderIdentities();
+			var senderIdentities = new SenderIdentities(mockClient.Object, ENDPOINT);
 
 			// Act
 			senderIdentities.ResendVerification(identityId, CancellationToken.None).Wait(CancellationToken.None);
@@ -227,25 +216,27 @@ namespace StrongGrid.Resources.UnitTests
 			// Assert
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Get()
 		{
 			// Arrange
 			var identityId = 1;
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"{ENDPOINT}/{identityId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_SENDER_IDENTITY_JSON) })
 				.Verifiable();
 
-			var senderIdentities = CreateSenderIdentities();
+			var senderIdentities = new SenderIdentities(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = senderIdentities.GetAsync(identityId, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(identityId, result.Id);
+			result.ShouldNotBeNull();
+			result.Id.ShouldBe(identityId);
 		}
 	}
 }

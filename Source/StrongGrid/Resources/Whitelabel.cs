@@ -12,7 +12,7 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Constructs the SendGrid Whitelabel object.
+		/// Initializes a new instance of the Whitelabel class.
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/domains.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
@@ -83,7 +83,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Update a whitelabel domain. 
+		/// Update a whitelabel domain.
 		/// </summary>
 		public async Task<WhitelabelDomain> UpdateDomainAsync(long domainId, bool isDefault = false, bool customSpf = false, CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -99,7 +99,6 @@ namespace StrongGrid.Resources
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 			var whitelabelDomain = JObject.Parse(responseContent).ToObject<WhitelabelDomain>();
 			return whitelabelDomain;
-
 		}
 
 		/// <summary>
@@ -292,7 +291,7 @@ namespace StrongGrid.Resources
 		/// <remarks>
 		/// A link whitelabel consists of a subdomain and domain that will be used to rewrite links in mail
 		/// messages. Our customer will be asked to create a couple CNAME records for the links to be
-		/// rewritten to and for us to verify that they are the domain owners. 
+		/// rewritten to and for us to verify that they are the domain owners.
 		/// </remarks>
 		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/links.html</returns>
 		public async Task<WhitelabelLink[]> GetAllLinksAsync(string segmentPrefix = null, int limit = 50, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))

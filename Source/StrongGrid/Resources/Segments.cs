@@ -2,7 +2,6 @@
 using StrongGrid.Model;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,7 +14,7 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Constructs the SendGrid Campaigns object.
+		/// Initializes a new instance of the Campaigns class.
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/campaigns.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
@@ -120,19 +119,19 @@ namespace StrongGrid.Resources
 
 			// Response looks like this:
 			// {
-			//	"recipients": [
-			//		{
-			//			"created_at": 1422395108,
-			//			"email": "e@example.com",
-			//			"first_name": "Ed",
-			//			"id": "YUBh",
-			//			"last_clicked": null,
-			//			"last_emailed": null,
-			//			"last_name": null,
-			//			"last_opened": null,
-			//			"updated_at": 1422395108
-			//		}
-			//	]
+			//  "recipients": [
+			//    {
+			//      "created_at": 1422395108,
+			//      "email": "e@example.com",
+			//      "first_name": "Ed",
+			//      "id": "YUBh",
+			//      "last_clicked": null,
+			//      "last_emailed": null,
+			//      "last_name": null,
+			//      "last_opened": null,
+			//      "updated_at": 1422395108
+			//    }
+			//  ]
 			// }
 			// We use a dynamic object to get rid of the 'recipients' property and simply return an array of recipients
 			dynamic dynamicObject = JObject.Parse(responseContent);

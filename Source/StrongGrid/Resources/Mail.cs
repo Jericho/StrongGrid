@@ -15,7 +15,7 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Constructs the SendGrid Mail object.
+		/// Initializes a new instance of the Mail class.
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Mail/index.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
@@ -30,7 +30,7 @@ namespace StrongGrid.Resources
 		/// Send an email to a single recipient
 		/// </summary>
 		/// <remarks>
-		/// This is a convenience method with simplified parameters. 
+		/// This is a convenience method with simplified parameters.
 		/// If you need more options, use the <see cref="SendAsync"/> method.
 		/// </remarks>
 		public Task SendToSingleRecipientAsync(
@@ -63,7 +63,7 @@ namespace StrongGrid.Resources
 		/// Send the same email to multiple recipients
 		/// </summary>
 		/// <remarks>
-		/// This is a convenience method with simplified parameters. 
+		/// This is a convenience method with simplified parameters.
 		/// If you need more options, use the <see cref="SendAsync"/> method.
 		/// </remarks>
 		public Task SendToMultipleRecipientsAsync(

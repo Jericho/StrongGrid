@@ -14,7 +14,7 @@ namespace StrongGrid.Resources
         private readonly IClient _client;
 
         /// <summary>
-        /// Constructs the SendGrid Suppressions object.
+        /// Initializes a new instance of the Suppressions class.
         /// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/suppressions.html
         /// </summary>
         /// <param name="client">SendGrid Web API v3 client</param>
@@ -42,7 +42,7 @@ namespace StrongGrid.Resources
 
         /// <summary>
         /// Add recipient address to the suppressions list for a given group.
-        /// 
+        ///
         /// If the group has been deleted, this request will add the address to the global suppression.
         /// </summary>
         /// <param name="groupId">ID of the suppression group</param>
@@ -55,7 +55,7 @@ namespace StrongGrid.Resources
 
         /// <summary>
         /// Add recipient addresses to the suppressions list for a given group.
-        /// 
+        ///
         /// If the group has been deleted, this request will add the address to the global suppression.
         /// </summary>
         /// <param name="groupId">ID of the suppression group</param>

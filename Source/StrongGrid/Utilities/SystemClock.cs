@@ -13,7 +13,9 @@ namespace StrongGrid.Utilities
 		#region PROPERTIES
 
 		public static ISystemClock Instance { get { return _instance.Value; } }
+
 		public DateTime Now { get { return DateTime.Now; } }
+
 		public DateTime UtcNow { get { return DateTime.UtcNow; } }
 
 		#endregion

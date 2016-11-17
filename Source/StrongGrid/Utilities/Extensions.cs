@@ -32,6 +32,22 @@ namespace StrongGrid.Utilities
 			return (descriptionAttribute == null ? value.ToString() : descriptionAttribute.Description);
 		}
 
+		public static T ConverDescriptiontToEnum<T>(this string description)
+		{
+			var fields = typeof(T).GetFields();
+			foreach (var fieldInfo in fields)
+			{
+				var attributes = fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false).OfType<DescriptionAttribute>();
+				if (attributes.Any(a => a.Description == description))
+				{
+					return (T)Enum.Parse(typeof(T), fieldInfo.Name, true);
+				}
+			}
+
+			var message = string.Format("'{0}' is not a valid enumeration of '{1}'", description, typeof(T).Name);
+			throw new Exception(message);
+		}
+
 		public static void EnsureSuccess(this HttpResponseMessage response)
 		{
 			if (response.IsSuccessStatusCode) return;
@@ -46,6 +62,7 @@ namespace StrongGrid.Utilities
 			{
 				content = string.Format("StatusCode: {0}", response.StatusCode);
 			}
+
 			throw new Exception(content);
 		}
 	}
