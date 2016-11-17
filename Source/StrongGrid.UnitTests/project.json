@@ -2,8 +2,11 @@
 	"version": "1.0.0-*",
 	"testRunner": "xunit",
 
+	"buildOptions": {
+		"platform": "anycpu"
+	},
+
 	"dependencies": {
-		"NETStandard.Library": "1.6.1",
 		"StrongGrid": { "target": "project" },
 		"xunit": "2.2.0-beta4-build3444",
 		"dotnet-test-xunit": "2.2.0-preview2-build1029",
@@ -13,14 +16,28 @@
 	},
 
 	"frameworks": {
+		"net452": {
+			"dependencies": {
+			},
+			"frameworkAssemblies": {
+				"System.Runtime": {
+					"type": "build"
+				}
+			}
+		},
 		"netcoreapp1.0": {
+			"buildOptions": {
+				"define": [ "NETCORE" ]
+			},
+			"imports": [
+				"dnxcore50"
+			],
 			"dependencies": {
 				"Microsoft.NETCore.App": {
 					"type": "platform",
-					"version": "1.0.1"
+					"version": "1.0.0"
 				}
-			},
-			"imports": "dnxcore50"
+			}
 		}
 	}
 }
