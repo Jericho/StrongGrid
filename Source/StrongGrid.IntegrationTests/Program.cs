@@ -1,8 +1,6 @@
 ﻿using StrongGrid.Model;
 using System;
 using System.Linq;
-using System.Net;
-using System.Net.Security;
 
 namespace StrongGrid.IntegrationTests
 {

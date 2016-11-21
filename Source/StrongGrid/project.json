@@ -1,5 +1,4 @@
 {
-	"version": "1.0.0-*",
 	"buildOptions": {
 		"emitEntryPoint": false,
 		"xmlDoc": true,
@@ -96,5 +95,6 @@
 			"frameworkAssemblies": {
 			}
 		}
-	}
+	},
+	"version": "1.0.0-*"
 }
