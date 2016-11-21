@@ -16,15 +16,6 @@
 	},
 
 	"frameworks": {
-		"net452": {
-			"dependencies": {
-			},
-			"frameworkAssemblies": {
-				"System.Runtime": {
-					"type": "build"
-				}
-			}
-		},
 		"netcoreapp1.0": {
 			"buildOptions": {
 				"define": [ "NETCORE" ]
@@ -35,7 +26,16 @@
 			"dependencies": {
 				"Microsoft.NETCore.App": {
 					"type": "platform",
-					"version": "1.0.0"
+					"version": "1.0.1"
+				}
+			}
+		},
+		"net452": {
+			"dependencies": {
+			},
+			"frameworkAssemblies": {
+				"System.Runtime": {
+					"type": "build"
 				}
 			}
 		}
