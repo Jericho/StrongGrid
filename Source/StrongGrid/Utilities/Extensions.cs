@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
@@ -57,8 +58,32 @@ namespace StrongGrid.Utilities
 			{
 				content = response.Content.ReadAsStringAsync().Result;
 				response.Content.Dispose();
+
+				try
+				{
+					// Response looks like this:
+					// {
+					//   "errors": [
+					//     {
+					//       "message": "An error has occured",
+					//       "field": null,
+					//       "help": null
+					//     }
+					//  ]
+					// }
+					// We use a dynamic object to get rid of the 'errors' property and get the first error message
+					dynamic dynamicObject = JObject.Parse(content);
+					dynamic dynamicArray = dynamicObject.errors;
+					dynamic firstError = dynamicArray.First;
+
+					content = firstError.message.ToString();
+				} catch
+				{
+					// Intentionally ignore parsing errors
+				}
 			}
-			else
+
+			if (string.IsNullOrEmpty(content))
 			{
 				content = string.Format("StatusCode: {0}", response.StatusCode);
 			}
