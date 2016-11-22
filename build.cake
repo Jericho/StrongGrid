@@ -140,20 +140,42 @@ Task("Restore-NuGet-Packages")
 	});
 });
 
-Task("Update-Asembly-Version")
+Task("Update-Assembly-Version")
 	.WithCriteria(() => !isLocalBuild)
 	.Does(() =>
 {
-	GitVersion(new GitVersionSettings()
+	var projects = GetFiles("./**/project.json");
+	foreach(var project in projects)
 	{
-		UpdateAssemblyInfo = true,
-		OutputType = GitVersionOutput.BuildServer
-	});
+		Information("Setting version: {0}", project);
+
+		var path = project.ToString();
+		var trg = new StringBuilder();
+		var regExVersion = new System.Text.RegularExpressions.Regex("\"version\":(\\s)?\"(.*).(.*).(.*)-\\*\"(,?)");
+		using (var src = System.IO.File.OpenRead(path))
+		{
+			using (var reader = new StreamReader(src))
+			{
+				while (!reader.EndOfStream)
+				{
+					var line = reader.ReadLine();
+					if (line == null) continue;
+
+					// $5 is important: it ensures the final comma is preserved in the original string if it was present
+					line = regExVersion.Replace(line, string.Format("\"version\": \"{0}\"$5", versionInfo.SemVer));
+
+					trg.AppendLine(line);
+				}
+			}
+		}
+
+		System.IO.File.WriteAllText(path, trg.ToString());
+	}
 });
 
 Task("Build")
 	.IsDependentOn("Restore-NuGet-Packages")
-	.IsDependentOn("Update-Asembly-Version")
+	.IsDependentOn("Update-Assembly-Version")
 	.Does(() =>
 {
 	var projects = GetFiles("./**/*.xproj");
