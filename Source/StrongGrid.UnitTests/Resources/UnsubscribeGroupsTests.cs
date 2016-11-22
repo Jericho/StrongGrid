@@ -1,22 +1,20 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+﻿using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Shouldly;
 using StrongGrid.Model;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
 {
-	[TestClass]
 	public class UnsubscribeGroupsTests
 	{
 		#region FIELDS
 
 		private const string ENDPOINT = "/asm/groups";
-		private MockRepository _mockRepository;
-		private Mock<IClient> _mockClient;
 
 		private const string SINGLE_SUPPRESSION_GROUP_JSON = @"{
 			'id': 1,
@@ -45,25 +43,7 @@ namespace StrongGrid.Resources.UnitTests
 
 		#endregion
 
-		private UnsubscribeGroups CreateUnsubscribeGroups()
-		{
-			return new UnsubscribeGroups(_mockClient.Object, ENDPOINT);
-		}
-
-		[TestInitialize]
-		public void TestInitialize()
-		{
-			_mockRepository = new MockRepository(MockBehavior.Strict);
-			_mockClient = _mockRepository.Create<IClient>();
-		}
-
-		[TestCleanup]
-		public void TestCleanup()
-		{
-			_mockRepository.VerifyAll();
-		}
-
-		[TestMethod]
+		[Fact]
 		public void Parse_json()
 		{
 			// Arrange
@@ -72,14 +52,14 @@ namespace StrongGrid.Resources.UnitTests
 			var result = JsonConvert.DeserializeObject<SuppressionGroup>(SINGLE_SUPPRESSION_GROUP_JSON);
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual("Suggestions for products our users might like.", result.Description);
-			Assert.AreEqual(1, result.Id);
-			Assert.AreEqual(true, result.IsDefault);
-			Assert.AreEqual("Product Suggestions", result.Name);
+			result.ShouldNotBeNull();
+			result.Description.ShouldBe("Suggestions for products our users might like.");
+			result.Id.ShouldBe(1);
+			result.IsDefault.ShouldBe(true);
+			result.Name.ShouldBe("Product Suggestions");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Create()
 		{
 			// Arrange
@@ -93,76 +73,84 @@ namespace StrongGrid.Resources.UnitTests
 				'is_default': true
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PostAsync(ENDPOINT, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var goups = CreateUnsubscribeGroups();
+			var goups = new UnsubscribeGroups(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = goups.CreateAsync(name, description, isDefault, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(name, result.Name);
-			Assert.AreEqual(description, result.Description);
-			Assert.AreEqual(isDefault, result.IsDefault);
+			result.ShouldNotBeNull();
+			result.Name.ShouldBe(name);
+			result.Description.ShouldBe(description);
+			result.IsDefault.ShouldBe(isDefault);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Get()
 		{
 			// Arrange
 			var groupId = 100;
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"{ENDPOINT}/{groupId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_SUPPRESSION_GROUP_JSON) })
 				.Verifiable();
 
-			var groups = CreateUnsubscribeGroups();
+			var groups = new UnsubscribeGroups(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = groups.GetAsync(groupId, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetAll()
 		{
 			// Arrange
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync(ENDPOINT, It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_SUPPRESSION_GROUPS_JSON) })
 				.Verifiable();
 
-			var groups = CreateUnsubscribeGroups();
+			var groups = new UnsubscribeGroups(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = groups.GetAllAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(2, result.Length);
-			Assert.AreEqual(100, result[0].Id);
-			Assert.AreEqual(101, result[1].Id);
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(2);
+			result[0].Id.ShouldBe(100);
+			result[1].Id.ShouldBe(101);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Delete()
 		{
 			// Arrange
 			var groupId = 100;
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.DeleteAsync($"{ENDPOINT}/{groupId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK))
 				.Verifiable();
 
-			var groups = CreateUnsubscribeGroups();
+			var groups = new UnsubscribeGroups(mockClient.Object, ENDPOINT);
 
 			// Act
 			groups.DeleteAsync(groupId, CancellationToken.None).Wait(CancellationToken.None);
@@ -170,7 +158,7 @@ namespace StrongGrid.Resources.UnitTests
 			// Assert
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Update()
 		{
 			// Arrange
@@ -178,18 +166,20 @@ namespace StrongGrid.Resources.UnitTests
 			var name = "Item Suggestions";
 			var description = "Suggestions for items our users might like.";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PatchAsync($"{ENDPOINT}/{groupId}", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_SUPPRESSION_GROUP_JSON) })
 				.Verifiable();
 
-			var groups = CreateUnsubscribeGroups();
+			var groups = new UnsubscribeGroups(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = groups.UpdateAsync(groupId, name, description, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 	}
 }

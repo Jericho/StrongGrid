@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using StrongGrid.Model;
 using StrongGrid.Utilities;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,7 +12,7 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Constructs the SendGrid Alerts object.
+		/// Initializes a new instance of the Alerts class.
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/alerts.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
@@ -63,7 +60,7 @@ namespace StrongGrid.Resources
 		/// </summary>
 		public async Task<Alert> CreateAsync(AlertType type, string emailTo = null, Frequency? frequency = null, int? percentage = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = CreateJObjectForAlert(type, emailTo , frequency , percentage );
+			var data = CreateJObjectForAlert(type, emailTo, frequency, percentage);
 			var response = await _client.PostAsync(_endpoint, data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
@@ -86,7 +83,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Update an alert. 
+		/// Update an alert.
 		/// </summary>
 		public async Task<Alert> UpdateAsync(long alertId, AlertType? type, string emailTo = null, Frequency? frequency = null, int? percentage = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -98,15 +95,14 @@ namespace StrongGrid.Resources
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 			var alert = JObject.Parse(responseContent).ToObject<Alert>();
 			return alert;
-
 		}
 
 		private static JObject CreateJObjectForAlert(AlertType? type, string emailTo = null, Frequency? frequency = null, int? percentage = null)
 		{
 			var result = new JObject();
-			if (type.HasValue) result.Add("type", JToken.FromObject(type.Value));
+			if (type.HasValue) result.Add("type", type.GetDescription());
 			if (!string.IsNullOrEmpty(emailTo)) result.Add("email_to", emailTo);
-			if (frequency.HasValue) result.Add("frequency", JToken.FromObject(frequency.Value));
+			if (frequency.HasValue) result.Add("frequency", frequency.GetDescription());
 			if (percentage.HasValue) result.Add("percentage", percentage.Value);
 			return result;
 		}

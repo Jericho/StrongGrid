@@ -12,7 +12,7 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Constructs the SendGrid SenderIdentities object.
+		/// Initializes a new instance of the SenderIdentities class.
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/sender_identities.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
@@ -43,30 +43,30 @@ namespace StrongGrid.Resources
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
 			// Contrary to what the documentation says, the response looks like this:
-			//	[
-			//		{
-			//			'id': 1,
-			//			'nickname': 'My Sender ID',
-			//			'from': {
-			//				'email': 'from@example.com',
-			//				'name': 'Example INC'
-			//			},
-			//			'reply_to': {
-			//				'email': 'replyto@example.com',
-			//				'name': 'Example INC'
-			//			},
-			//			'address': '123 Elm St.',
-			//			'address_2': 'Apt. 456',
-			//			'city': 'Denver',
-			//			'state': 'Colorado',
-			//			'zip': '80202',
-			//			'country': 'United States',
-			//			'verified': { 'status': true, 'reason': '' },
-			//			'updated_at': 1449872165,
-			//			'created_at': 1449872165,
-			//			'locked': false
-			//		}
-			//	]
+			//  [
+			//    {
+			//      'id': 1,
+			//      'nickname': 'My Sender ID',
+			//      'from': {
+			//        'email': 'from@example.com',
+			//        'name': 'Example INC'
+			//      },
+			//      'reply_to': {
+			//        'email': 'replyto@example.com',
+			//        'name': 'Example INC'
+			//      },
+			//      'address': '123 Elm St.',
+			//      'address_2': 'Apt. 456',
+			//      'city': 'Denver',
+			//      'state': 'Colorado',
+			//      'zip': '80202',
+			//      'country': 'United States',
+			//      'verified': { 'status': true, 'reason': '' },
+			//      'updated_at': 1449872165,
+			//      'created_at': 1449872165,
+			//      'locked': false
+			//    }
+			//  ]
 			var senderIdentities = JArray.Parse(responseContent).ToObject<SenderIdentity[]>();
 			return senderIdentities;
 		}

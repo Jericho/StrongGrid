@@ -8,9 +8,7 @@
 #tool "nuget:?package=OpenCover&version=4.6.519"
 #tool "nuget:?package=ReportGenerator&version=2.5.0"
 #tool "nuget:?package=coveralls.io&version=1.3.4"
-
-// Using statements
-using Polly;
+#tool "nuget:?package=xunit.runner.console&version=2.1.0"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -37,12 +35,13 @@ var nuGetApiKey = EnvironmentVariable("NUGET_API_KEY");
 var gitHubUserName = EnvironmentVariable("GITHUB_USERNAME");
 var gitHubPassword = EnvironmentVariable("GITHUB_PASSWORD");
 
-var solution = GetFiles("./Source/" + libraryName + ".sln").First();
-var solutionPath = solution.GetDirectory();
+var sourceFolder = "./Source/";
+var unitTestsPath = sourceFolder + libraryName + ".UnitTests";
 
-var unitTestsPaths = GetDirectories("./Source/*.UnitTests");
 var outputDir = "./artifacts/";
 var codeCoverageDir = outputDir + "CodeCoverage/";
+var unitTestingDir = outputDir + "UnitTesting/";
+
 var versionInfo = GitVersion(new GitVersionSettings() { OutputType = GitVersionOutput.Json });
 var milestone = string.Concat("v", versionInfo.MajorMinorPatch);
 var cakeVersion = typeof(ICakeContext).Assembly.GetName().Version.ToString();
@@ -111,9 +110,9 @@ Task("Clean")
 	.Does(() =>
 {
 	// Clean solution directories.
-	Information("Cleaning {0}", solutionPath);
-	CleanDirectories(solutionPath + "/*/bin/" + configuration);
-	CleanDirectories(solutionPath + "/*/obj/" + configuration);
+	Information("Cleaning {0}", sourceFolder);
+	CleanDirectories(sourceFolder + "*/bin/" + configuration);
+	CleanDirectories(sourceFolder + "*/obj/" + configuration);
 
 	// Clean previous artifacts
 	Information("Cleaning {0}", outputDir);
@@ -128,106 +127,105 @@ Task("Restore-NuGet-Packages")
 	.IsDependentOn("Clean")
 	.Does(() =>
 {
-	// Restore all NuGet packages.
-	var maxRetryCount = 5;
-	var toolTimeout = 1d;
-
-	Information("Restoring {0}...", solution);
-
-	Policy
-		.Handle<Exception>()
-		.Retry(maxRetryCount, (exception, retryCount, context) => {
-			if (retryCount == maxRetryCount)
-			{
-				throw exception;
-			}
-			else
-			{
-				Verbose("{0}", exception);
-				toolTimeout += 0.5;
-			}})
-		.Execute(()=> {
-			NuGetRestore(solution, new NuGetRestoreSettings {
-				Source = new List<string> {
-					"https://api.nuget.org/v3/index.json",
-					"https://www.myget.org/F/roslyn-nightly/api/v3/index.json"
-				},
-				ToolTimeout = TimeSpan.FromMinutes(toolTimeout)
-			});
-		});
+	DotNetCoreRestore("./", new DotNetCoreRestoreSettings
+	{
+		Verbose = false,
+		Verbosity = DotNetCoreRestoreVerbosity.Warning,
+		Sources = new [] {
+			"https://www.myget.org/F/xunit/api/v3/index.json",
+			"https://dotnet.myget.org/F/dotnet-core/api/v3/index.json",
+			"https://dotnet.myget.org/F/cli-deps/api/v3/index.json",
+			"https://api.nuget.org/v3/index.json",
+		}
+	});
 });
 
-Task("Update-Asembly-Version")
+Task("Update-Assembly-Version")
 	.WithCriteria(() => !isLocalBuild)
 	.Does(() =>
 {
 	GitVersion(new GitVersionSettings()
 	{
-		UpdateAssemblyInfo = true,
+		UpdateAssemblyInfo = false,
 		OutputType = GitVersionOutput.BuildServer
 	});
+
+	var projects = GetFiles("./**/project.json");
+	foreach(var project in projects)
+	{
+		Information("Setting version: {0}", project);
+
+		var path = project.ToString();
+		var trg = new StringBuilder();
+		var regExVersion = new System.Text.RegularExpressions.Regex("\"version\":(\\s)?\"(.*).(.*).(.*)-\\*\"(,?)");
+		using (var src = System.IO.File.OpenRead(path))
+		{
+			using (var reader = new StreamReader(src))
+			{
+				while (!reader.EndOfStream)
+				{
+					var line = reader.ReadLine();
+					if (line == null) continue;
+
+					// $5 is important: it ensures the final comma is preserved in the original string if it was present
+					line = regExVersion.Replace(line, string.Format("\"version\": \"{0}\"$5", versionInfo.SemVer));
+
+					trg.AppendLine(line);
+				}
+			}
+		}
+
+		System.IO.File.WriteAllText(path, trg.ToString());
+	}
 });
 
 Task("Build")
 	.IsDependentOn("Restore-NuGet-Packages")
-	.IsDependentOn("Update-Asembly-Version")
+	.IsDependentOn("Update-Assembly-Version")
 	.Does(() =>
 {
-	// Build the solution
-	Information("Building {0}", solution);
-	MSBuild(solution, new MSBuildSettings()
-		.SetPlatformTarget(PlatformTarget.MSIL)
-		.SetConfiguration(configuration)
-		.SetVerbosity(Verbosity.Minimal)
-		.SetNodeReuse(false)
-		.WithProperty("Windows", "True")
-		.WithProperty("TreatWarningsAsErrors", "True")
-		.WithTarget("Build")
-	);
+	var projects = GetFiles("./**/*.xproj");
+	foreach(var project in projects)
+	{
+		DotNetCoreBuild(project.GetDirectory().FullPath, new DotNetCoreBuildSettings {
+			Configuration = configuration
+		});
+	}
 });
 
 Task("Run-Unit-Tests")
 	.IsDependentOn("Build")
 	.Does(() =>
 {
-	var vsTestSettings = new VSTestSettings();
-	vsTestSettings.ArgumentCustomization = args => args.Append("/Parallel");
+	var testSettings = new DotNetCoreTestSettings {
+		Configuration = configuration
+	};
 
-	foreach(var path in unitTestsPaths)
-	{
-		Information("Running unit tests in {0}...", path);
-		VSTest(path + "/bin/" + configuration + "/*.UnitTests.dll", vsTestSettings);
-	}
+	DotNetCoreTest(unitTestsPath, testSettings);
 });
 
 Task("Run-Code-Coverage")
 	.IsDependentOn("Build")
 	.Does(() =>
 {
-	var testAssemblyPath = string.Format("{2}/bin/{1}/{0}.UnitTests.dll", libraryName, configuration, unitTestsPaths.First());
-	
-	var testArgs = new List<string>();
-	testArgs.Add("/Parallel");
-	if (AppVeyor.IsRunningOnAppVeyor) testArgs.Add("/logger:Appveyor");
-
-	var vsTestSettings = new VSTestSettings();
-	vsTestSettings.ArgumentCustomization = args =>
-	{
-		foreach (var arg in testArgs)
-		{
-			args.Append(arg);
-		}
-		return args;
+	var testSettings = new DotNetCoreTestSettings {
+		Configuration = configuration
 	};
 
-	OpenCover(
-		tool => { tool.VSTest(testAssemblyPath, vsTestSettings); },
-		new FilePath(codeCoverageDir + "coverage.xml"),
-		new OpenCoverSettings() { ReturnTargetCodeOffset = 0 }
-			.WithFilter(testCoverageFilter)
-			.ExcludeByAttribute(testCoverageExcludeByAttribute)
-			.ExcludeByFile(testCoverageExcludeByFile)
-	);
+	Action<ICakeContext> testAction = ctx => ctx.DotNetCoreTest(unitTestsPath, new DotNetCoreTestSettings {
+		NoBuild = true,
+		Configuration = configuration,
+		ArgumentCustomization = args => args.AppendSwitchQuoted("-xml", codeCoverageDir + "/coverage.xml")
+	});
+
+	OpenCover(testAction,
+		codeCoverageDir + "/coverage.xml",
+		new OpenCoverSettings {
+			ArgumentCustomization = args => args.Append("-mergeoutput")
+		}
+		.WithFilter(testCoverageFilter)
+		.ExcludeByAttribute(testCoverageExcludeByAttribute)
+		.ExcludeByFile(testCoverageExcludeByFile));
 });
 
 Task("Upload-Coverage-Result")

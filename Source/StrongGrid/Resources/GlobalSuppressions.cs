@@ -13,7 +13,7 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Constructs the SendGrid Global Suppressions object.
+		/// Initializes a new instance of the Global Suppressions class.
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/global_suppressions.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
@@ -42,7 +42,7 @@ namespace StrongGrid.Resources
 			//  }
 			// If the email address is not on the global suppression list, the response will be empty
 			//
-			// Therefore, we check for the presence of the 'recipient_email' to indicate if the email 
+			// Therefore, we check for the presence of the 'recipient_email' to indicate if the email
 			// address is on the global suppression list or not.
 			var dynamicObject = JObject.Parse(responseContent);
 			var propertyDictionary = (IDictionary<string, JToken>)dynamicObject;

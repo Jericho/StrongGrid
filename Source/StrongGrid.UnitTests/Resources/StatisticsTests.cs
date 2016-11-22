@@ -1,45 +1,24 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+﻿using Moq;
 using Newtonsoft.Json;
+using Shouldly;
 using StrongGrid.Model;
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
 {
-	[TestClass]
 	public class StatisticsTests
 	{
 		#region FIELDS
 
 		private const string ENDPOINT = "/stats";
-		private MockRepository _mockRepository;
-		private Mock<IClient> _mockClient;
 
 		#endregion
 
-		private Statistics CreateStatistics()
-		{
-			return new Statistics(_mockClient.Object, ENDPOINT);
-
-		}
-
-		[TestInitialize]
-		public void TestInitialize()
-		{
-			_mockRepository = new MockRepository(MockBehavior.Strict);
-			_mockClient = _mockRepository.Create<IClient>();
-		}
-
-		[TestCleanup]
-		public void TestCleanup()
-		{
-			_mockRepository.VerifyAll();
-		}
-
-		[TestMethod]
+		[Fact]
 		public void GetGlobalStats()
 		{
 			// Arrange
@@ -98,24 +77,26 @@ namespace StrongGrid.Resources.UnitTests
 				}
 			]";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={ endDate.ToString("yyyy-MM-dd")}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var statistics = CreateStatistics();
+			var statistics = new Statistics(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = statistics.GetGlobalStatisticsAsync(startDate, endDate, AggregateBy.None, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(2, result.Length);
-			Assert.AreEqual(1, result[0].Stats.Length);
-			Assert.AreEqual(3, result[0].Stats[0].Metrics.Requests);
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(2);
+			result[0].Stats.Length.ShouldBe(1);
+			result[0].Stats[0].Metrics.Requests.ShouldBe(3);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetCategoryStats()
 		{
 			// Arrange
@@ -224,25 +205,27 @@ namespace StrongGrid.Resources.UnitTests
 				}
 			]";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"/categories/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={endDate.ToString("yyyy-MM-dd")}&categories={categories[0]}&categories={categories[1]}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var statistics = CreateStatistics();
+			var statistics = new Statistics(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = statistics.GetCategoriesStatisticsAsync(categories, startDate, endDate, AggregateBy.None, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(2, result.Length);
-			Assert.AreEqual(2, result[0].Stats.Length);
-			Assert.AreEqual("cat1", result[0].Stats[0].Name);
-			Assert.AreEqual("category", result[0].Stats[0].Type);
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(2);
+			result[0].Stats.Length.ShouldBe(2);
+			result[0].Stats[0].Name.ShouldBe("cat1");
+			result[0].Stats[0].Type.ShouldBe("category");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetSubusersStats()
 		{
 			// Arrange
@@ -350,25 +333,27 @@ namespace StrongGrid.Resources.UnitTests
 				}
 			]";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"/subusers/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={endDate.ToString("yyyy-MM-dd")}&subusers={subusers[0]}&subusers={subusers[1]}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var statistics = CreateStatistics();
+			var statistics = new Statistics(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = statistics.GetSubusersStatisticsAsync(subusers, startDate, endDate, AggregateBy.None, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(2, result.Length);
-			Assert.AreEqual(2, result[0].Stats.Length);
-			Assert.AreEqual("user1", result[0].Stats[0].Name);
-			Assert.AreEqual("subuser", result[0].Stats[0].Type);
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(2);
+			result[0].Stats.Length.ShouldBe(2);
+			result[0].Stats[0].Name.ShouldBe("user1");
+			result[0].Stats[0].Type.ShouldBe("subuser");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetCountryStats()
 		{
 			// Arrange
@@ -408,25 +393,27 @@ namespace StrongGrid.Resources.UnitTests
 				}
 			]";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"/geo/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={endDate.ToString("yyyy-MM-dd")}&country={country}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var statistics = CreateStatistics();
+			var statistics = new Statistics(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = statistics.GetCountryStatisticsAsync(country, startDate, endDate, AggregateBy.None, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(2, result.Length);
-			Assert.AreEqual(1, result[0].Stats.Length);
-			Assert.AreEqual("us", result[0].Stats[0].Name);
-			Assert.AreEqual("country", result[0].Stats[0].Type);
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(2);
+			result[0].Stats.Length.ShouldBe(1);
+			result[0].Stats[0].Name.ShouldBe("us");
+			result[0].Stats[0].Type.ShouldBe("country");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetDeviceTypesStats()
 		{
 			// Arrange
@@ -461,26 +448,28 @@ namespace StrongGrid.Resources.UnitTests
 				}
 			]";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"/devices/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={endDate.ToString("yyyy-MM-dd")}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var statistics = CreateStatistics();
+			var statistics = new Statistics(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = statistics.GetDeviceTypesStatisticsAsync(startDate, endDate, AggregateBy.None, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(2, result.Length);
-			Assert.AreEqual(1, result[0].Stats.Length);
-			Assert.AreEqual(1, result[0].Stats[0].Metrics.Opens);
-			Assert.AreEqual("Webmail", result[0].Stats[0].Name);
-			Assert.AreEqual("device", result[0].Stats[0].Type);
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(2);
+			result[0].Stats.Length.ShouldBe(1);
+			result[0].Stats[0].Metrics.Opens.ShouldBe(1);
+			result[0].Stats[0].Name.ShouldBe("Webmail");
+			result[0].Stats[0].Type.ShouldBe("device");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetClientTypesStats()
 		{
 			// Arrange
@@ -515,26 +504,28 @@ namespace StrongGrid.Resources.UnitTests
 				}
 			]";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"/clients/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={endDate.ToString("yyyy-MM-dd")}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var statistics = CreateStatistics();
+			var statistics = new Statistics(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = statistics.GetClientTypesStatisticsAsync(startDate, endDate, AggregateBy.None, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(2, result.Length);
-			Assert.AreEqual(1, result[0].Stats.Length);
-			Assert.AreEqual(1, result[0].Stats[0].Metrics.Opens);
-			Assert.AreEqual("Gmail", result[0].Stats[0].Name);
-			Assert.AreEqual("client", result[0].Stats[0].Type);
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(2);
+			result[0].Stats.Length.ShouldBe(1);
+			result[0].Stats[0].Metrics.Opens.ShouldBe(1);
+			result[0].Stats[0].Name.ShouldBe("Gmail");
+			result[0].Stats[0].Type.ShouldBe("client");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetInboxProvidersStats()
 		{
 			// Arrange
@@ -586,25 +577,27 @@ namespace StrongGrid.Resources.UnitTests
 				}
 			]";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"/mailbox_providers/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={endDate.ToString("yyyy-MM-dd")}&mailbox_providers={providers[0]}&mailbox_providers={providers[1]}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var statistics = CreateStatistics();
+			var statistics = new Statistics(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = statistics.GetInboxProvidersStatisticsAsync(providers, startDate, endDate, AggregateBy.None, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(2, result.Length);
-			Assert.AreEqual(1, result[0].Stats.Length);
-			Assert.AreEqual("Gmail", result[0].Stats[0].Name);
-			Assert.AreEqual("esp", result[0].Stats[0].Type);
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(2);
+			result[0].Stats.Length.ShouldBe(1);
+			result[0].Stats[0].Name.ShouldBe("Gmail");
+			result[0].Stats[0].Type.ShouldBe("esp");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetBrowsersStats()
 		{
 			// Arrange
@@ -656,22 +649,24 @@ namespace StrongGrid.Resources.UnitTests
 				}
 			]";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"/browsers/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={endDate.ToString("yyyy-MM-dd")}&browsers={browsers[0]}&browsers={browsers[1]}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var statistics = CreateStatistics();
+			var statistics = new Statistics(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = statistics.GetBrowsersStatisticsAsync(browsers, startDate, endDate, AggregateBy.None, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(2, result.Length);
-			Assert.AreEqual(2, result[0].Stats.Length);
-			Assert.AreEqual("Chrome", result[0].Stats[0].Name);
-			Assert.AreEqual("browser", result[0].Stats[0].Type);
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(2);
+			result[0].Stats.Length.ShouldBe(2);
+			result[0].Stats[0].Name.ShouldBe("Chrome");
+			result[0].Stats[0].Type.ShouldBe("browser");
 		}
 	}
 }

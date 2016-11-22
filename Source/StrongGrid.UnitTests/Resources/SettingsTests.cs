@@ -1,22 +1,20 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+﻿using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Shouldly;
 using StrongGrid.Model;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
 {
-	[TestClass]
 	public class SettingsTests
 	{
 		#region FIELDS
 
 		private const string ENDPOINT = "/alerts";
-		private MockRepository _mockRepository;
-		private Mock<IClient> _mockClient;
 
 		private const string SINGLE_GLOBAL_SETTING_JSON = @"{
 			'name': 'bcc',
@@ -27,25 +25,7 @@ namespace StrongGrid.Resources.UnitTests
 
 		#endregion
 
-		private Settings CreateSettings()
-		{
-			return new Settings(_mockClient.Object, ENDPOINT);
-		}
-
-		[TestInitialize]
-		public void TestInitialize()
-		{
-			_mockRepository = new MockRepository(MockBehavior.Strict);
-			_mockClient = _mockRepository.Create<IClient>();
-		}
-
-		[TestCleanup]
-		public void TestCleanup()
-		{
-			_mockRepository.VerifyAll();
-		}
-
-		[TestMethod]
+		[Fact]
 		public void Parse_json()
 		{
 			// Arrange
@@ -54,14 +34,14 @@ namespace StrongGrid.Resources.UnitTests
 			var result = JsonConvert.DeserializeObject<GlobalSetting>(SINGLE_GLOBAL_SETTING_JSON);
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual("lorem ipsum... .", result.Description);
-			Assert.AreEqual(true, result.Enabled);
-			Assert.AreEqual("bcc", result.Name);
-			Assert.AreEqual("BCC", result.Title);
+			result.ShouldNotBeNull();
+			result.Description.ShouldBe("lorem ipsum... .");
+			result.Enabled.ShouldBe(true);
+			result.Name.ShouldBe("bcc");
+			result.Title.ShouldBe("BCC");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetEnforcedTlsSettings()
 		{
 			// Arrange
@@ -70,23 +50,25 @@ namespace StrongGrid.Resources.UnitTests
 				'require_valid_cert': false
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync("/user/settings/enforced_tls", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.GetEnforcedTlsSettingsAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(true, result.RequireTls);
-			Assert.AreEqual(false, result.RequireValidCertificate);
+			result.ShouldNotBeNull();
+			result.RequireTls.ShouldBe(true);
+			result.RequireValidCertificate.ShouldBe(false);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void UpdateEnforcedTlsSettings()
 		{
 			// Arrange
@@ -98,23 +80,25 @@ namespace StrongGrid.Resources.UnitTests
 				'require_valid_cert': true
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PatchAsync("/user/settings/enforced_tls", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.UpdateEnforcedTlsSettingsAsync(requireTls, requireValidCert, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(true, result.RequireTls);
-			Assert.AreEqual(true, result.RequireValidCertificate);
+			result.ShouldNotBeNull();
+			result.RequireTls.ShouldBe(true);
+			result.RequireValidCertificate.ShouldBe(true);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetAllMailSettings()
 		{
 			// Arrange
@@ -132,23 +116,25 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync("/mail_settings?limit=" + limit + "&offset=" + offset, It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.GetAllMailSettingsAsync(limit, offset, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(1, result.Length);
-			Assert.AreEqual("BCC", result[0].Title);
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(1);
+			result[0].Title.ShouldBe("BCC");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetAllPartnerSettings()
 		{
 			// Arrange
@@ -166,23 +152,25 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync("/partner_settings?limit=" + limit + "&offset=" + offset, It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.GetAllPartnerSettingsAsync(limit, offset, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(1, result.Length);
-			Assert.AreEqual("New Relic", result[0].Title);
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(1);
+			result[0].Title.ShouldBe("New Relic");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetNewRelicSettings()
 		{
 			// Arrange
@@ -191,23 +179,25 @@ namespace StrongGrid.Resources.UnitTests
 				'license_key': 'key'
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync("/partner_settings/new_relic", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.GetNewRelicSettingsAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(true, result.Enabled);
-			Assert.AreEqual("key", result.LicenseKey);
+			result.ShouldNotBeNull();
+			result.Enabled.ShouldBe(true);
+			result.LicenseKey.ShouldBe("key");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void UpdateNewRelicSettings()
 		{
 			// Arrange
@@ -219,23 +209,25 @@ namespace StrongGrid.Resources.UnitTests
 				'license_key': 'abc123'
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PatchAsync("/partner_settings/new_relic", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.UpdateNewRelicSettingsAsync(enabled, licenseKey, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(true, result.Enabled);
-			Assert.AreEqual("abc123", result.LicenseKey);
+			result.ShouldNotBeNull();
+			result.Enabled.ShouldBe(true);
+			result.LicenseKey.ShouldBe("abc123");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetAllTrackingSettings()
 		{
 			// Arrange
@@ -253,23 +245,25 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync("/tracking_settings?limit=" + limit + "&offset=" + offset, It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.GetAllTrackingSettingsAsync(limit, offset, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(1, result.Length);
-			Assert.AreEqual("Open Tracking", result[0].Title);
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(1);
+			result[0].Title.ShouldBe("Open Tracking");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetClickTrackingSettings()
 		{
 			// Arrange
@@ -277,21 +271,23 @@ namespace StrongGrid.Resources.UnitTests
 				'enabled': true,
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync("/tracking_settings/click", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.GetClickTrackingSettingsAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsTrue(result);
+			result.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void UpdateClickTrackingSettings()
 		{
 			// Arrange
@@ -301,21 +297,23 @@ namespace StrongGrid.Resources.UnitTests
 				'enabled': true,
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PatchAsync("/tracking_settings/click", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.UpdateClickTrackingSettingsAsync(enabled, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsTrue(result);
+			result.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetGoogleAnalyticsGlobalSettings()
 		{
 			// Arrange
@@ -328,27 +326,29 @@ namespace StrongGrid.Resources.UnitTests
 				'utm_campaign': 'website'
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync("/tracking_settings/google_analytics", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.GetGoogleAnalyticsGlobalSettingsAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(true, result.Enabled);
-			Assert.AreEqual("website", result.UtmCampaign);
-			Assert.AreEqual("", result.UtmContent);
-			Assert.AreEqual("email", result.UtmMedium);
-			Assert.AreEqual("sendgrid.com", result.UtmSource);
-			Assert.AreEqual("", result.UtmTerm);
+			result.ShouldNotBeNull();
+			result.Enabled.ShouldBe(true);
+			result.UtmCampaign.ShouldBe("website");
+			result.UtmContent.ShouldBe("");
+			result.UtmMedium.ShouldBe("email");
+			result.UtmSource.ShouldBe("sendgrid.com");
+			result.UtmTerm.ShouldBe("");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void UpdateGoogleAnalyticsGlobal()
 		{
 			// Arrange
@@ -368,21 +368,23 @@ namespace StrongGrid.Resources.UnitTests
 				'utm_campaign': 'website'
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PatchAsync("/tracking_settings/google_analytics", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.UpdateGoogleAnalyticsGlobalSettingsAsync(enabled, utmSource, utmMedium, utmTerm, utmContent, utmCampaign, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetOpenTrackingSettings()
 		{
 			// Arrange
@@ -390,21 +392,23 @@ namespace StrongGrid.Resources.UnitTests
 				'enabled': true,
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync("/tracking_settings/open", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.GetOpenTrackingSettingsAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsTrue(result);
+			result.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void UpdateOpenTrackingSettings()
 		{
 			// Arrange
@@ -414,21 +418,23 @@ namespace StrongGrid.Resources.UnitTests
 				'enabled': true,
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PatchAsync("/tracking_settings/open", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.UpdateOpenTrackingSettingsAsync(enabled, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsTrue(result);
+			result.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetSubscriptionTrackingSettings()
 		{
 			// Arrange
@@ -441,27 +447,29 @@ namespace StrongGrid.Resources.UnitTests
 				'plain_content': 'text content'
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync("/tracking_settings/subscription", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.GetSubscriptionTrackingSettingsAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(true, result.Enabled);
-			Assert.AreEqual("html content", result.HtmlContent);
-			Assert.AreEqual("landing page html", result.LandingPageHtml);
-			Assert.AreEqual("replacement tag", result.ReplacementTag);
-			Assert.AreEqual("text content", result.TextContent);
-			Assert.AreEqual("url", result.Url);
+			result.ShouldNotBeNull();
+			result.Enabled.ShouldBe(true);
+			result.HtmlContent.ShouldBe("html content");
+			result.LandingPageHtml.ShouldBe("landing page html");
+			result.ReplacementTag.ShouldBe("replacement tag");
+			result.TextContent.ShouldBe("text content");
+			result.Url.ShouldBe("url");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void UpdateSubscriptionTrackingSettings()
 		{
 			// Arrange
@@ -481,21 +489,23 @@ namespace StrongGrid.Resources.UnitTests
 				'plain_content': 'text content'
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PatchAsync("/tracking_settings/subscription", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.UpdateSubscriptionTrackingSettingsAsync(enabled, landingPageHtml, url, replacementTag, htmlContent, textContent, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetBccMailSettings()
 		{
 			// Arrange
@@ -504,23 +514,25 @@ namespace StrongGrid.Resources.UnitTests
 				'email': 'email@example.com'
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync("/mail_settings/bcc", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.GetBccMailSettingsAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(true, result.Enabled);
-			Assert.AreEqual("email@example.com", result.EmailAddress);
+			result.ShouldNotBeNull();
+			result.Enabled.ShouldBe(true);
+			result.EmailAddress.ShouldBe("email@example.com");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void UpdateBccMailSettings()
 		{
 			// Arrange
@@ -532,21 +544,23 @@ namespace StrongGrid.Resources.UnitTests
 				'email': 'email@example.com'
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PatchAsync("/mail_settings/bcc", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.UpdateBccMailSettingsAsync(enabled, email, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetAddressWhitelistMailSettings()
 		{
 			// Arrange
@@ -558,26 +572,28 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync("/mail_settings/address_whitelist", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.GetAddressWhitelistMailSettingsAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(true, result.Enabled);
-			Assert.IsNotNull(result.EmailAddresses);
-			Assert.AreEqual(2, result.EmailAddresses.Length);
-			Assert.AreEqual("email1@example.com", result.EmailAddresses[0]);
-			Assert.AreEqual("example.com", result.EmailAddresses[1]);
+			result.ShouldNotBeNull();
+			result.Enabled.ShouldBe(true);
+			result.EmailAddresses.ShouldNotBeNull();
+			result.EmailAddresses.Length.ShouldBe(2);
+			result.EmailAddresses[0].ShouldBe("email1@example.com");
+			result.EmailAddresses[1].ShouldBe("example.com");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void UpdateAddressWhitelistMailSettings()
 		{
 			// Arrange
@@ -592,21 +608,23 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PatchAsync("/mail_settings/address_whitelist", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.UpdateAddressWhitelistMailSettingsAsync(enabled, emailAddresses, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetFooterMailSettings()
 		{
 			// Arrange
@@ -616,24 +634,26 @@ namespace StrongGrid.Resources.UnitTests
 				'plain_content': '... abc ...'
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync("/mail_settings/footer", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.GetFooterMailSettingsAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(true, result.Enabled);
-			Assert.AreEqual("... 123 ...", result.HtmlContent);
-			Assert.AreEqual("... abc ...", result.TextContent);
+			result.ShouldNotBeNull();
+			result.Enabled.ShouldBe(true);
+			result.HtmlContent.ShouldBe("... 123 ...");
+			result.TextContent.ShouldBe("... abc ...");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void UpdateFooterMailSettings()
 		{
 			// Arrange
@@ -647,21 +667,23 @@ namespace StrongGrid.Resources.UnitTests
 				'plain_content': 'text content'
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PatchAsync("/mail_settings/footer", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.UpdateFooterMailSettingsAsync(enabled, htmlContent, textContent, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetForwardSpamMailSettings()
 		{
 			// Arrange
@@ -670,23 +692,25 @@ namespace StrongGrid.Resources.UnitTests
 				'email': 'email address'
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync("/mail_settings/forward_spam", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.GetForwardSpamMailSettingsAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(true, result.Enabled);
-			Assert.AreEqual("email address", result.EmailAddress);
+			result.ShouldNotBeNull();
+			result.Enabled.ShouldBe(true);
+			result.EmailAddress.ShouldBe("email address");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void UpdateForwardSpamMailSettings()
 		{
 			// Arrange
@@ -698,21 +722,23 @@ namespace StrongGrid.Resources.UnitTests
 				'email': 'email address'
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PatchAsync("/mail_settings/forward_spam", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.UpdateForwardSpamMailSettingsAsync(enabled, email, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetPlainContentMailSettings()
 		{
 			// Arrange
@@ -720,21 +746,23 @@ namespace StrongGrid.Resources.UnitTests
 				'enabled': true,
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync("/mail_settings/plain_content", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.GetPlainContentMailSettingsAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsTrue(result);
+			result.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void UpdatPlainContentMailSettings()
 		{
 			// Arrange
@@ -744,21 +772,23 @@ namespace StrongGrid.Resources.UnitTests
 				'enabled': true,
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PatchAsync("/mail_settings/plain_content", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.UpdatPlainContentMailSettingsAsync(enabled, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsTrue(result);
+			result.ShouldBeTrue();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetSpamCheckMailSettings()
 		{
 			// Arrange
@@ -768,24 +798,26 @@ namespace StrongGrid.Resources.UnitTests
 				'max_score': 5
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync("/mail_settings/spam_check", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.GetSpamCheckMailSettingsAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(true, result.Enabled);
-			Assert.AreEqual("url", result.Url);
-			Assert.AreEqual(5, result.Threshold);
+			result.ShouldNotBeNull();
+			result.Enabled.ShouldBe(true);
+			result.Url.ShouldBe("url");
+			result.Threshold.ShouldBe(5);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void UpdateSpamCheckMailSettings()
 		{
 			// Arrange
@@ -799,21 +831,23 @@ namespace StrongGrid.Resources.UnitTests
 				'max_score': 5
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PatchAsync("/mail_settings/spam_check", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.UpdateSpamCheckMailSettingsAsync(enabled, postToUrl, threshold, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetTemplateMailSettings()
 		{
 			// Arrange
@@ -822,23 +856,25 @@ namespace StrongGrid.Resources.UnitTests
 				'html_content': ' <% body %> '
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync("/mail_settings/template", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.GetTemplateMailSettingsAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(true, result.Enabled);
-			Assert.AreEqual(" <% body %> ", result.HtmlContent);
+			result.ShouldNotBeNull();
+			result.Enabled.ShouldBe(true);
+			result.HtmlContent.ShouldBe(" <% body %> ");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void UpdateTemplateMailSettings()
 		{
 			// Arrange
@@ -850,21 +886,23 @@ namespace StrongGrid.Resources.UnitTests
 				'html_content': ' <% body %> '
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PatchAsync("/mail_settings/template", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.UpdateTemplateMailSettingsAsync(enabled, htmlContent, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetBouncePurgeMailSettings()
 		{
 			// Arrange
@@ -874,24 +912,26 @@ namespace StrongGrid.Resources.UnitTests
 				'soft_bounces': 5
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync("/mail_settings/bounce_purge", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.GetBouncePurgeMailSettingsAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(true, result.Enabled);
-			Assert.AreEqual(5, result.HardBounces);
-			Assert.AreEqual(5, result.SoftBounces);
+			result.ShouldNotBeNull();
+			result.Enabled.ShouldBe(true);
+			result.HardBounces.ShouldBe(5);
+			result.SoftBounces.ShouldBe(5);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void UpdatBouncePurgeMailSettings()
 		{
 			// Arrange
@@ -905,21 +945,23 @@ namespace StrongGrid.Resources.UnitTests
 				'soft_bounces': 5
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PatchAsync("/mail_settings/bounce_purge", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.UpdatBouncePurgeMailSettingsAsync(enabled, hardBounces, softBounces, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetForwardBounceMailSettings()
 		{
 			// Arrange
@@ -928,23 +970,25 @@ namespace StrongGrid.Resources.UnitTests
 				'email': 'email address'
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync("/mail_settings/forward_bounce", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.GetForwardBounceMailSettingsAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(true, result.Enabled);
-			Assert.AreEqual("email address", result.EmailAddress);
+			result.ShouldNotBeNull();
+			result.Enabled.ShouldBe(true);
+			result.EmailAddress.ShouldBe("email address");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void UpdatForwardBounceMailSettings()
 		{
 			// Arrange
@@ -956,18 +1000,20 @@ namespace StrongGrid.Resources.UnitTests
 				'email': 'email address'
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PatchAsync("/mail_settings/forward_bounce", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var settings = CreateSettings();
+			var settings = new Settings(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = settings.UpdateForwardBounceMailSettingsAsync(enabled, email, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 	}
 }

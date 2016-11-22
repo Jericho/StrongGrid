@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
@@ -32,6 +33,22 @@ namespace StrongGrid.Utilities
 			return (descriptionAttribute == null ? value.ToString() : descriptionAttribute.Description);
 		}
 
+		public static T ConverDescriptiontToEnum<T>(this string description)
+		{
+			var fields = typeof(T).GetFields();
+			foreach (var fieldInfo in fields)
+			{
+				var attributes = fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false).OfType<DescriptionAttribute>();
+				if (attributes.Any(a => a.Description == description))
+				{
+					return (T)Enum.Parse(typeof(T), fieldInfo.Name, true);
+				}
+			}
+
+			var message = string.Format("'{0}' is not a valid enumeration of '{1}'", description, typeof(T).Name);
+			throw new Exception(message);
+		}
+
 		public static void EnsureSuccess(this HttpResponseMessage response)
 		{
 			if (response.IsSuccessStatusCode) return;
@@ -41,11 +58,36 @@ namespace StrongGrid.Utilities
 			{
 				content = response.Content.ReadAsStringAsync().Result;
 				response.Content.Dispose();
+
+				try
+				{
+					// Response looks like this:
+					// {
+					//   "errors": [
+					//     {
+					//       "message": "An error has occured",
+					//       "field": null,
+					//       "help": null
+					//     }
+					//  ]
+					// }
+					// We use a dynamic object to get rid of the 'errors' property and get the first error message
+					dynamic dynamicObject = JObject.Parse(content);
+					dynamic dynamicArray = dynamicObject.errors;
+					dynamic firstError = dynamicArray.First;
+
+					content = firstError.message.ToString();
+				} catch
+				{
+					// Intentionally ignore parsing errors
+				}
 			}
-			else
+
+			if (string.IsNullOrEmpty(content))
 			{
 				content = string.Format("StatusCode: {0}", response.StatusCode);
 			}
+
 			throw new Exception(content);
 		}
 	}

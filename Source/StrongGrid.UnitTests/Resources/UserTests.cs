@@ -1,23 +1,21 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+﻿using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Shouldly;
 using StrongGrid.Model;
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
 {
-	[TestClass]
 	public class UserTests
 	{
 		#region FIELDS
 
 		private const string ENDPOINT = "/user/profile";
-		private MockRepository _mockRepository;
-		private Mock<IClient> _mockClient;
 
 		private const string SINGLE_PROFILE_JSON = @"{
 			'address': '814 West Chapman Avenue',
@@ -36,25 +34,7 @@ namespace StrongGrid.Resources.UnitTests
 
 		#endregion
 
-		private User CreateUser()
-		{
-			return new User(_mockClient.Object, ENDPOINT);
-		}
-
-		[TestInitialize]
-		public void TestInitialize()
-		{
-			_mockRepository = new MockRepository(MockBehavior.Strict);
-			_mockClient = _mockRepository.Create<IClient>();
-		}
-
-		[TestCleanup]
-		public void TestCleanup()
-		{
-			_mockRepository.VerifyAll();
-		}
-
-		[TestMethod]
+		[Fact]
 		public void Parse_json()
 		{
 			// Arrange
@@ -63,38 +43,40 @@ namespace StrongGrid.Resources.UnitTests
 			var result = JsonConvert.DeserializeObject<UserProfile>(SINGLE_PROFILE_JSON);
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual("814 West Chapman Avenue", result.Address);
-			Assert.AreEqual("Orange", result.City);
-			Assert.AreEqual("SendGrid", result.Company);
-			Assert.AreEqual("US", result.Country);
-			Assert.AreEqual("Test", result.FirstName);
-			Assert.AreEqual("User", result.LastName);
-			Assert.AreEqual("555-555-5555", result.Phone);
-			Assert.AreEqual("CA", result.State);
-			Assert.AreEqual("http://www.sendgrid.com", result.Website);
-			Assert.AreEqual("92868", result.ZipCode);
+			result.ShouldNotBeNull();
+			result.Address.ShouldBe("814 West Chapman Avenue");
+			result.City.ShouldBe("Orange");
+			result.Company.ShouldBe("SendGrid");
+			result.Country.ShouldBe("US");
+			result.FirstName.ShouldBe("Test");
+			result.LastName.ShouldBe("User");
+			result.Phone.ShouldBe("555-555-5555");
+			result.State.ShouldBe("CA");
+			result.Website.ShouldBe("http://www.sendgrid.com");
+			result.ZipCode.ShouldBe("92868");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetProfile()
 		{
 			// Arrange
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync(ENDPOINT, It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_PROFILE_JSON) })
 				.Verifiable();
 
-			var user = CreateUser();
+			var user = new User(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = user.GetProfileAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetAccount()
 		{
 			// Arrange
@@ -103,43 +85,47 @@ namespace StrongGrid.Resources.UnitTests
 				'reputation': 99.7
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync("/user/account", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var user = CreateUser();
+			var user = new User(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = user.GetAccountAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual("free", result.Type);
-			Assert.AreEqual(99.7F, result.Reputation);
+			result.ShouldNotBeNull();
+			result.Type.ShouldBe("free");
+			result.Reputation.ShouldBe(99.7F);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void UpdateProfile()
 		{
 			// Arrange
 			var city = "New York";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PatchAsync(ENDPOINT, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_PROFILE_JSON) })
 				.Verifiable();
 
-			var user = CreateUser();
+			var user = new User(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = user.UpdateProfileAsync(null, city, null, null, null, null, null, null, null, null, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetEmail()
 		{
 			// Arrange
@@ -147,21 +133,23 @@ namespace StrongGrid.Resources.UnitTests
 				'email': 'test@example.com'
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync("/user/email", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var user = CreateUser();
+			var user = new User(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = user.GetEmailAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.AreEqual("test@example.com", result);
+			result.ShouldBe("test@example.com");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void UpdateEmail()
 		{
 			// Arrange
@@ -171,21 +159,23 @@ namespace StrongGrid.Resources.UnitTests
 				'email': 'test@example.com'
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PutAsync("/user/email", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var user = CreateUser();
+			var user = new User(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = user.UpdateEmailAsync(email, CancellationToken.None).Result;
 
 			// Assert
-			Assert.AreEqual("test@example.com", result);
+			result.ShouldBe("test@example.com");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetUsername()
 		{
 			// Arrange
@@ -193,21 +183,23 @@ namespace StrongGrid.Resources.UnitTests
 				'username': 'test_username'
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync("/user/username", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var user = CreateUser();
+			var user = new User(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = user.GetUsernameAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.AreEqual("test_username", result);
+			result.ShouldBe("test_username");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void UpdateUsername()
 		{
 			// Arrange
@@ -217,21 +209,23 @@ namespace StrongGrid.Resources.UnitTests
 				'username': 'test_username'
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PutAsync("/user/username", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var user = CreateUser();
+			var user = new User(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = user.UpdateUsernameAsync(username, CancellationToken.None).Result;
 
 			// Assert
-			Assert.AreEqual(username, result);
+			result.ShouldBe(username);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetCredits()
 		{
 			// Arrange
@@ -245,40 +239,44 @@ namespace StrongGrid.Resources.UnitTests
 				'reset_frequency': 'monthly'
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync("/user/credits", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var user = CreateUser();
+			var user = new User(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = user.GetCreditsAsync(CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(200, result.Remaining);
-			Assert.AreEqual(200, result.Total);
-			Assert.AreEqual(0, result.Overage);
-			Assert.AreEqual(0, result.Used);
-			Assert.AreEqual("monthly", result.ResetFrequency);
-			Assert.AreEqual(new DateTime(2013, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), result.LastReset);
-			Assert.AreEqual(new DateTime(2013, 2, 1, 0, 0, 0, 0, DateTimeKind.Utc), result.NextReset);
+			result.ShouldNotBeNull();
+			result.Remaining.ShouldBe(200);
+			result.Total.ShouldBe(200);
+			result.Overage.ShouldBe(0);
+			result.Used.ShouldBe(0);
+			result.ResetFrequency.ShouldBe("monthly");
+			result.LastReset.ShouldBe(new DateTime(2013, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc));
+			result.NextReset.ShouldBe(new DateTime(2013, 2, 1, 0, 0, 0, 0, DateTimeKind.Utc));
 		}
 
-		[TestMethod]
+		[Fact]
 		public void UpdatePassword()
 		{
 			// Arrange
 			var oldPassword = "azerty";
 			var newPassword = "qwerty";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PutAsync("/user/password", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK))
 				.Verifiable();
 
-			var user = CreateUser();
+			var user = new User(mockClient.Object, ENDPOINT);
 
 			// Act
 			user.UpdatePasswordAsync(oldPassword, newPassword, CancellationToken.None).Wait(CancellationToken.None);

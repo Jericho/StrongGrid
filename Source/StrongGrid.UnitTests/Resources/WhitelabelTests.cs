@@ -1,22 +1,20 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+﻿using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Shouldly;
 using StrongGrid.Model;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
 {
-	[TestClass]
 	public class WhitelabelTests
 	{
 		#region FIELDS
 
 		private const string ENDPOINT = "/whitelabel";
-		private MockRepository _mockRepository;
-		private Mock<IClient> _mockClient;
 
 		private const string SINGLE_DOMAIN_JSON = @"{
 			'id': 1,
@@ -298,26 +296,7 @@ namespace StrongGrid.Resources.UnitTests
 
 		#endregion
 
-		private Whitelabel CreateWhitelabel()
-		{
-			return new Whitelabel(_mockClient.Object, ENDPOINT);
-
-		}
-
-		[TestInitialize]
-		public void TestInitialize()
-		{
-			_mockRepository = new MockRepository(MockBehavior.Strict);
-			_mockClient = _mockRepository.Create<IClient>();
-		}
-
-		[TestCleanup]
-		public void TestCleanup()
-		{
-			_mockRepository.VerifyAll();
-		}
-
-		[TestMethod]
+		[Fact]
 		public void Parse_WhitelabelDomain_json()
 		{
 			// Arrange
@@ -326,96 +305,102 @@ namespace StrongGrid.Resources.UnitTests
 			var result = JsonConvert.DeserializeObject<WhitelabelDomain>(SINGLE_DOMAIN_JSON);
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual("s1._domainkey.u7.wl.sendgrid.net", result.DNS.Dkim1.Data);
-			Assert.AreEqual("s1._domainkey.example.com", result.DNS.Dkim1.Host);
-			Assert.AreEqual(true, result.DNS.Dkim1.IsValid);
-			Assert.AreEqual("cname", result.DNS.Dkim1.Type);
-			Assert.AreEqual("s2._domainkey.u7.wl.sendgrid.net", result.DNS.Dkim2.Data);
-			Assert.AreEqual("s2._domainkey.example.com", result.DNS.Dkim2.Host);
-			Assert.AreEqual(true, result.DNS.Dkim2.IsValid);
-			Assert.AreEqual("cname", result.DNS.Dkim2.Type);
-			Assert.AreEqual("u7.wl.sendgrid.net", result.DNS.MailCName.Data);
-			Assert.AreEqual("mail.example.com", result.DNS.MailCName.Host);
-			Assert.AreEqual(true, result.DNS.MailCName.IsValid);
-			Assert.AreEqual("cname", result.DNS.MailCName.Type);
-			Assert.AreEqual("v=spf1 include:u7.wl.sendgrid.net -all", result.DNS.Spf.Data);
-			Assert.AreEqual("example.com", result.DNS.Spf.Host);
-			Assert.AreEqual(true, result.DNS.Spf.IsValid);
-			Assert.AreEqual("txt", result.DNS.Spf.Type);
-			Assert.IsNull(result.DNS.MailServer);
-			Assert.AreEqual("example.com", result.Domain);
-			Assert.AreEqual(1, result.Id);
-			CollectionAssert.AreEqual(new[] { "192.168.1.1", "192.168.1.2" }, result.IpAddresses);
-			Assert.AreEqual(true, result.IsAutomaticSecurity);
-			Assert.AreEqual(true, result.IsCustomSpf);
-			Assert.AreEqual(true, result.IsDefault);
-			Assert.AreEqual(false, result.IsLegacy);
-			Assert.AreEqual(true, result.IsValid);
-			Assert.AreEqual("mail", result.Subdomain);
-			Assert.AreEqual(7, result.UserId);
-			Assert.AreEqual("john@example.com", result.Username);
+			result.ShouldNotBeNull();
+			result.DNS.Dkim1.Data.ShouldBe("s1._domainkey.u7.wl.sendgrid.net");
+			result.DNS.Dkim1.Host.ShouldBe("s1._domainkey.example.com");
+			result.DNS.Dkim1.IsValid.ShouldBe(true);
+			result.DNS.Dkim1.Type.ShouldBe("cname");
+			result.DNS.Dkim2.Data.ShouldBe("s2._domainkey.u7.wl.sendgrid.net");
+			result.DNS.Dkim2.Host.ShouldBe("s2._domainkey.example.com");
+			result.DNS.Dkim2.IsValid.ShouldBe(true);
+			result.DNS.Dkim2.Type.ShouldBe("cname");
+			result.DNS.MailCName.Data.ShouldBe("u7.wl.sendgrid.net");
+			result.DNS.MailCName.Host.ShouldBe("mail.example.com");
+			result.DNS.MailCName.IsValid.ShouldBe(true);
+			result.DNS.MailCName.Type.ShouldBe("cname");
+			result.DNS.Spf.Data.ShouldBe("v=spf1 include:u7.wl.sendgrid.net -all");
+			result.DNS.Spf.Host.ShouldBe("example.com");
+			result.DNS.Spf.IsValid.ShouldBe(true);
+			result.DNS.Spf.Type.ShouldBe("txt");
+			result.DNS.MailServer.ShouldBeNull();
+			result.Domain.ShouldBe("example.com");
+			result.Id.ShouldBe(1);
+			result.IpAddresses.ShouldBe(new[] { "192.168.1.1", "192.168.1.2" });
+			result.IsAutomaticSecurity.ShouldBe(true);
+			result.IsCustomSpf.ShouldBe(true);
+			result.IsDefault.ShouldBe(true);
+			result.IsLegacy.ShouldBe(false);
+			result.IsValid.ShouldBe(true);
+			result.Subdomain.ShouldBe("mail");
+			result.UserId.ShouldBe(7);
+			result.Username.ShouldBe("john@example.com");
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetAllDomains_include_subusers()
 		{
 			// Arrange
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"{ENDPOINT}/domains?exclude_subusers=false&limit=50&offset=0&username=&domain=", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_DOMAINS_JSON) })
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = whitelabel.GetAllDomainsAsync(excludeSubusers: false).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(2, result.Length);
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(2);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetAllDomains_exclude_subusers()
 		{
 			// Arrange
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"{ENDPOINT}/domains?exclude_subusers=true&limit=50&offset=0&username=&domain=", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_DOMAINS_JSON) })
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = whitelabel.GetAllDomainsAsync(excludeSubusers: true).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(2, result.Length);
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(2);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetDomain()
 		{
 			// Arrange
 			var domainId = 123L;
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"{ENDPOINT}/domains/{domainId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_DOMAIN_JSON) })
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = whitelabel.GetDomainAsync(domainId).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void CreateDomain()
 		{
 			// Arrange
@@ -425,21 +410,23 @@ namespace StrongGrid.Resources.UnitTests
 			var customSpf = false;
 			var isDefault = true;
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PostAsync($"{ENDPOINT}/domains", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_DOMAIN_JSON) })
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = whitelabel.CreateDomainAsync(domain, subdomain, automaticSecurity, customSpf, isDefault, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void UpdateDomain()
 		{
 			// Arrange
@@ -447,32 +434,36 @@ namespace StrongGrid.Resources.UnitTests
 			var customSpf = true;
 			var isDefault = false;
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PatchAsync($"{ENDPOINT}/domains/{domainId}", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_DOMAIN_JSON) })
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = whitelabel.UpdateDomainAsync(domainId, isDefault, customSpf, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void DeleteDomain()
 		{
 			// Arrange
 			var domainId = 48L;
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.DeleteAsync($"{ENDPOINT}/domains/{domainId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK))
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			whitelabel.DeleteDomainAsync(domainId, CancellationToken.None).Wait(CancellationToken.None);
@@ -480,49 +471,53 @@ namespace StrongGrid.Resources.UnitTests
 			// Assert
 		}
 
-		[TestMethod]
+		[Fact]
 		public void AddIpAddressToDomain()
 		{
 			// Arrange
 			var domainId = 123L;
 			var ipAddress = "192.168.77.1";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PostAsync($"{ENDPOINT}/domains/{domainId}/ips", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_DOMAIN_JSON) })
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = whitelabel.AddIpAddressToDomainAsync(domainId, ipAddress, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void DeleteIpAddressFromDomain()
 		{
 			// Arrange
 			var domainId = 48L;
 			var ipAddress = "192.168.77.1";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.DeleteAsync($"{ENDPOINT}/domains/{domainId}/ips/{ipAddress}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_DOMAIN_JSON) })
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = whitelabel.DeleteIpAddressFromDomainAsync(domainId, ipAddress, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void ValidateDomain()
 		{
 			// Arrange
@@ -551,62 +546,68 @@ namespace StrongGrid.Resources.UnitTests
 				}
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PostAsync($"{ENDPOINT}/domains/{domainId}/validate", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = whitelabel.ValidateDomainAsync(domainId).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(1, result.DomainId);
-			Assert.AreEqual(true, result.IsValid);
-			Assert.AreEqual(true, result.ValidationResults.Dkim1.IsValid);
-			Assert.IsNull(result.ValidationResults.Dkim1.Reason);
-			Assert.AreEqual(true, result.ValidationResults.Dkim2.IsValid);
-			Assert.IsNull(result.ValidationResults.Dkim2.Reason);
-			Assert.AreEqual(false, result.ValidationResults.Mail.IsValid);
-			Assert.AreEqual("Expected your MX record to be \'mx.sendgrid.net\' but found \'example.com\'.", result.ValidationResults.Mail.Reason);
-			Assert.AreEqual(true, result.ValidationResults.Spf.IsValid);
-			Assert.IsNull(result.ValidationResults.Spf.Reason);
+			result.ShouldNotBeNull();
+			result.DomainId.ShouldBe(1);
+			result.IsValid.ShouldBe(true);
+			result.ValidationResults.Dkim1.IsValid.ShouldBe(true);
+			result.ValidationResults.Dkim1.Reason.ShouldBeNull();
+			result.ValidationResults.Dkim2.IsValid.ShouldBe(true);
+			result.ValidationResults.Dkim2.Reason.ShouldBeNull();
+			result.ValidationResults.Mail.IsValid.ShouldBe(false);
+			result.ValidationResults.Mail.Reason.ShouldBe("Expected your MX record to be \'mx.sendgrid.net\' but found \'example.com\'.");
+			result.ValidationResults.Spf.IsValid.ShouldBe(true);
+			result.ValidationResults.Spf.Reason.ShouldBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetAssociatedDomain()
 		{
 			// Arrange
 			var username = "abc123";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"{ENDPOINT}/domains/subuser?username={username}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_DOMAIN_JSON) })
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = whitelabel.GetAssociatedDomainAsync(username, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void DisassociateDomain()
 		{
 			// Arrange
 			var username = "abc123";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.DeleteAsync($"{ENDPOINT}/domains/subuser?username={username}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK))
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			whitelabel.DisassociateDomainAsync(username, CancellationToken.None).Wait(CancellationToken.None);
@@ -614,67 +615,73 @@ namespace StrongGrid.Resources.UnitTests
 			// Assert
 		}
 
-		[TestMethod]
+		[Fact]
 		public void AssociateDomain()
 		{
 			// Arrange
 			var domainId = 123L;
 			var ipAddress = "192.168.77.1";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PostAsync($"{ENDPOINT}/domains/{domainId}/subuser", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_DOMAIN_JSON) })
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = whitelabel.AssociateDomainAsync(domainId, ipAddress, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetAllIpsAsync()
 		{
 			// Arrange
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"{ENDPOINT}/ips?limit=50&offset=0&ip=", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_IPS_JSON) })
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = whitelabel.GetAllIpsAsync().Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(2, result.Length);
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(2);
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetIp()
 		{
 			// Arrange
 			var id = 123L;
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"{ENDPOINT}/ips/{id}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_IP_JSON) })
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = whitelabel.GetIpAsync(id).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void CreateIp()
 		{
 			// Arrange
@@ -682,32 +689,36 @@ namespace StrongGrid.Resources.UnitTests
 			var domain = "exmaple.com";
 			var subdomain = "mail";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PostAsync($"{ENDPOINT}/ips", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_IP_JSON) })
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = whitelabel.CreateIpAsync(ipAddress, domain, subdomain, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void DeleteIp()
 		{
 			// Arrange
 			var domainId = 48L;
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.DeleteAsync($"{ENDPOINT}/ips/{domainId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK))
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			whitelabel.DeleteIpAsync(domainId, CancellationToken.None).Wait(CancellationToken.None);
@@ -715,7 +726,7 @@ namespace StrongGrid.Resources.UnitTests
 			// Assert
 		}
 
-		[TestMethod]
+		[Fact]
 		public void ValidateIp()
 		{
 			// Arrange
@@ -732,45 +743,49 @@ namespace StrongGrid.Resources.UnitTests
 				}
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PostAsync($"{ENDPOINT}/ips/{id}/validate", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = whitelabel.ValidateIpAsync(id).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(1, result.IpId);
-			Assert.AreEqual(true, result.IsValid);
-			Assert.AreEqual(true, result.ValidationResults.ARecord.IsValid);
-			Assert.IsNull(result.ValidationResults.ARecord.Reason);
+			result.ShouldNotBeNull();
+			result.IpId.ShouldBe(1);
+			result.IsValid.ShouldBe(true);
+			result.ValidationResults.ARecord.IsValid.ShouldBe(true);
+			result.ValidationResults.ARecord.Reason.ShouldBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetLink()
 		{
 			// Arrange
 			var linkId = 123L;
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"{ENDPOINT}/links/{linkId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_LINK_JSON) })
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = whitelabel.GetLinkAsync(linkId).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void CreateLink()
 		{
 			// Arrange
@@ -778,53 +793,59 @@ namespace StrongGrid.Resources.UnitTests
 			var subdomain = "mail";
 			var isDefault = false;
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PostAsync($"{ENDPOINT}/links", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_LINK_JSON) })
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = whitelabel.CreateLinkAsync(domain, subdomain, isDefault, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void UpdateLink()
 		{
 			// Arrange
 			var linkId = 123L;
 			var isDefault = true;
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PatchAsync($"{ENDPOINT}/links/{linkId}", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_LINK_JSON) })
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = whitelabel.UpdateLinkAsync(linkId, isDefault).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void DeleteLink()
 		{
 			// Arrange
 			var linkId = 48L;
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.DeleteAsync($"{ENDPOINT}/links/{linkId}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK))
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			whitelabel.DeleteLinkAsync(linkId, CancellationToken.None).Wait(CancellationToken.None);
@@ -832,27 +853,29 @@ namespace StrongGrid.Resources.UnitTests
 			// Assert
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetDefaultLink()
 		{
 			// Arrange
 			var domain = "example.com";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"{ENDPOINT}/links/default?domain={domain}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_LINK_JSON) })
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = whitelabel.GetDefaultLinkAsync(domain).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void ValidateLink()
 		{
 			// Arrange
@@ -873,58 +896,64 @@ namespace StrongGrid.Resources.UnitTests
 				}
 			}";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PostAsync($"{ENDPOINT}/links/{linkId}/validate", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = whitelabel.ValidateLinkAsync(linkId).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(1, result.LinkId);
-			Assert.AreEqual(true, result.IsValid);
-			Assert.AreEqual(false, result.ValidationResults.Domain.IsValid);
-			Assert.AreEqual("Expected CNAME to match \'sendgrid.net.\' but found \'example.com.\'.", result.ValidationResults.Domain.Reason);
-			Assert.AreEqual(true, result.ValidationResults.Owner.IsValid);
-			Assert.IsNull(result.ValidationResults.Owner.Reason);
+			result.ShouldNotBeNull();
+			result.LinkId.ShouldBe(1);
+			result.IsValid.ShouldBe(true);
+			result.ValidationResults.Domain.IsValid.ShouldBe(false);
+			result.ValidationResults.Domain.Reason.ShouldBe("Expected CNAME to match \'sendgrid.net.\' but found \'example.com.\'.");
+			result.ValidationResults.Owner.IsValid.ShouldBe(true);
+			result.ValidationResults.Owner.Reason.ShouldBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetAssociatedLink()
 		{
 			// Arrange
 			var username = "abc123";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"{ENDPOINT}/links/subuser?username={username}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_LINK_JSON) })
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = whitelabel.GetAssociatedLinkAsync(username, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void DisassociateLink()
 		{
 			// Arrange
 			var username = "abc123";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.DeleteAsync($"{ENDPOINT}/links/subuser?username={username}", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK))
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			whitelabel.DisassociateLinkAsync(username, CancellationToken.None).Wait(CancellationToken.None);
@@ -932,44 +961,48 @@ namespace StrongGrid.Resources.UnitTests
 			// Assert
 		}
 
-		[TestMethod]
+		[Fact]
 		public void AssociateLink()
 		{
 			// Arrange
 			var linkId = 123L;
 			var username = "abc123";
 
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.PostAsync($"{ENDPOINT}/links/{linkId}/subuser", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_DOMAIN_JSON) })
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = whitelabel.AssociateLinkAsync(linkId, username, CancellationToken.None).Result;
 
 			// Assert
-			Assert.IsNotNull(result);
+			result.ShouldNotBeNull();
 		}
 
-		[TestMethod]
+		[Fact]
 		public void GetAllLinksAsync()
 		{
 			// Arrange
-			_mockClient
+			var mockRepository = new MockRepository(MockBehavior.Strict);
+			var mockClient = mockRepository.Create<IClient>();
+			mockClient
 				.Setup(c => c.GetAsync($"{ENDPOINT}/links?limit=50&offset=0&ip=", It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_LINKS_JSON) })
 				.Verifiable();
 
-			var whitelabel = CreateWhitelabel();
+			var whitelabel = new Whitelabel(mockClient.Object, ENDPOINT);
 
 			// Act
 			var result = whitelabel.GetAllLinksAsync().Result;
 
 			// Assert
-			Assert.IsNotNull(result);
-			Assert.AreEqual(2, result.Length);
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(2);
 		}
 	}
 }

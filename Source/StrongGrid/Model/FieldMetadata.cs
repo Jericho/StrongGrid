@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using StrongGrid.Utilities;
 
 namespace StrongGrid.Model
 {
@@ -9,7 +9,7 @@ namespace StrongGrid.Model
 		public string Name { get; set; }
 
 		[JsonProperty("type")]
-		[JsonConverter(typeof(StringEnumConverter))]
+		[JsonConverter(typeof(EnumDescriptionConverter))]
 		public FieldType Type { get; set; }
 	}
 }

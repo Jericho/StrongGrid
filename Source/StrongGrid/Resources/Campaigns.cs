@@ -3,7 +3,6 @@ using StrongGrid.Model;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,7 +15,7 @@ namespace StrongGrid.Resources
 		private IClient _client;
 
 		/// <summary>
-		/// Constructs the SendGrid Campaigns object.
+		/// Initializes a new instance of the Campaigns class.
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/campaigns.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
@@ -75,7 +74,7 @@ namespace StrongGrid.Resources
 			//       "plain_content": "Check out our spring line!",
 			//       "status": "Draft"
 			//     }
-			//	]
+			//  ]
 			// }
 			// We use a dynamic object to get rid of the 'result' property and simply return an array of campaigns
 			dynamic dynamicObject = JObject.Parse(responseContent);
@@ -127,7 +126,7 @@ namespace StrongGrid.Resources
 		{
 			var data = new JObject
 			{
-				{  "send_at", sendOn.ToUnixTime() }
+				{ "send_at", sendOn.ToUnixTime() }
 			};
 			var response = await _client.PostAsync(string.Format("{0}/{1}/schedules", _endpoint, campaignId), data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();

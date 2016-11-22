@@ -1,18 +1,18 @@
-﻿using System.Runtime.Serialization;
+﻿using System.ComponentModel;
 
 namespace StrongGrid.Model
 {
 	public enum ConditionOperator
 	{
-		[EnumMember(Value = "eq")]
+		[Description("eq")]
 		Equal,
-		[EnumMember(Value = "ne")]
+		[Description("ne")]
 		NotEqual,
-		[EnumMember(Value = "lt")]
+		[Description("lt")]
 		LessThan,
-		[EnumMember(Value = "gt")]
+		[Description("gt")]
 		GreatherThan,
-		[EnumMember(Value = "contains")]
+		[Description("contains")]
 		Contains
 	}
 }

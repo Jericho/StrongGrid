@@ -23,22 +23,27 @@ namespace StrongGrid.Utilities
 			{
 				serializer.Serialize(writer, customField);
 			}
+
 			foreach (var customField in ((Field[])value).OfType<Field<long>>())
 			{
 				serializer.Serialize(writer, customField);
 			}
+
 			foreach (var customField in ((Field[])value).OfType<Field<long?>>())
 			{
 				serializer.Serialize(writer, customField);
 			}
+
 			foreach (var customField in ((Field[])value).OfType<Field<DateTime>>())
 			{
 				serializer.Serialize(writer, customField);
 			}
+
 			foreach (var customField in ((Field[])value).OfType<Field<DateTime?>>())
 			{
 				serializer.Serialize(writer, customField);
 			}
+
 			writer.WriteEndArray();
 		}
 
@@ -72,6 +77,7 @@ namespace StrongGrid.Utilities
 						default:
 							throw new Exception("Unable to determine the field type");
 					}
+
 					if (id.HasValue) field.Id = id.Value;
 					fields.Add(field);
 				}
@@ -86,7 +92,6 @@ namespace StrongGrid.Utilities
 		{
 			if (item[name] == null) return default(T);
 			return item[name].Value<T>();
-
 		}
 	}
 }
