@@ -1,16 +1,19 @@
-﻿using System.ComponentModel;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System.Runtime.Serialization;
 
 namespace StrongGrid.Model
 {
+	[JsonConverter(typeof(StringEnumConverter))]
 	public enum AggregateBy
 	{
-		[Description("none")]
+		[EnumMember(Value = "none")]
 		None,
-		[Description("day")]
+		[EnumMember(Value = "day")]
 		Day,
-		[Description("week")]
+		[EnumMember(Value = "week")]
 		Week,
-		[Description("month")]
+		[EnumMember(Value = "month")]
 		Month
 	}
 }

@@ -21,34 +21,6 @@ namespace StrongGrid.Utilities
 			return Convert.ToInt64((date.ToUniversalTime() - EPOCH).TotalSeconds);
 		}
 
-		public static string GetDescription(this Enum value)
-		{
-			var fieldInfo = value.GetType().GetField(value.ToString());
-			if (fieldInfo == null) return value.ToString();
-
-			var attributes = fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false).ToArray();
-			if (attributes == null || attributes.Length == 0) return value.ToString();
-
-			var descriptionAttribute = attributes[0] as DescriptionAttribute;
-			return (descriptionAttribute == null ? value.ToString() : descriptionAttribute.Description);
-		}
-
-		public static T ConverDescriptiontToEnum<T>(this string description)
-		{
-			var fields = typeof(T).GetFields();
-			foreach (var fieldInfo in fields)
-			{
-				var attributes = fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false).OfType<DescriptionAttribute>();
-				if (attributes.Any(a => a.Description == description))
-				{
-					return (T)Enum.Parse(typeof(T), fieldInfo.Name, true);
-				}
-			}
-
-			var message = string.Format("'{0}' is not a valid enumeration of '{1}'", description, typeof(T).Name);
-			throw new Exception(message);
-		}
-
 		public static void EnsureSuccess(this HttpResponseMessage response)
 		{
 			if (response.IsSuccessStatusCode) return;

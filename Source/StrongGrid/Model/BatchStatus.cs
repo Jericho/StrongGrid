@@ -1,13 +1,15 @@
-﻿using System.ComponentModel;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System.Runtime.Serialization;
 
 namespace StrongGrid.Model
 {
+	[JsonConverter(typeof(StringEnumConverter))]
 	public enum BatchStatus
 	{
-		[Description("pause")]
+		[EnumMember(Value = "pause")]
 		Paused,
-		[Description("cancel")]
+		[EnumMember(Value = "cancel")]
 		Canceled
 	}
 }

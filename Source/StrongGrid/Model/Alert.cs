@@ -13,11 +13,9 @@ namespace StrongGrid.Model
 		public string EmailTo { get; set; }
 
 		[JsonProperty("frequency")]
-		[JsonConverter(typeof(EnumDescriptionConverter))]
 		public Frequency Frequency { get; set; }
 
 		[JsonProperty("type")]
-		[JsonConverter(typeof(EnumDescriptionConverter))]
 		public AlertType Type { get; set; }
 
 		[JsonProperty("created_at")]

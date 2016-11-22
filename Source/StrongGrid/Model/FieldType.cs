@@ -1,14 +1,17 @@
-﻿using System.ComponentModel;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System.Runtime.Serialization;
 
 namespace StrongGrid.Model
 {
+	[JsonConverter(typeof(StringEnumConverter))]
 	public enum FieldType
 	{
-		[Description("date")]
+		[EnumMember(Value = "date")]
 		Date,
-		[Description("text")]
+		[EnumMember(Value = "text")]
 		Text,
-		[Description("number")]
+		[EnumMember(Value = "number")]
 		Number
 	}
 }
