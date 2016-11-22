@@ -144,6 +144,12 @@ Task("Update-Assembly-Version")
 	.WithCriteria(() => !isLocalBuild)
 	.Does(() =>
 {
+	GitVersion(new GitVersionSettings()
+	{
+		UpdateAssemblyInfo = false,
+		OutputType = GitVersionOutput.BuildServer
+	});
+
 	var projects = GetFiles("./**/project.json");
 	foreach(var project in projects)
 	{
