@@ -11,7 +11,7 @@ namespace StrongGrid.IntegrationTests
 			// -----------------------------------------------------------------------------
 
 			// Do you want to proxy requests through Fiddler (useful for debugging)?
-			var useFiddler = true;
+			var useFiddler = false;
 
 			// Set this variable to true if you want to pause after each test 
 			// which gives you an opportunity to review the output in the console.
@@ -24,24 +24,46 @@ namespace StrongGrid.IntegrationTests
 			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
 			var client = new StrongGrid.Client(apiKey, proxy);
 
-			ApiKeys(client, pauseAfterTests);
-			Campaigns(client, pauseAfterTests);
-			Categories(client, pauseAfterTests);
-			ContactsAndCustomFields(client, pauseAfterTests);
-			GlobalSuppressions(client, pauseAfterTests);
-			ListsAndSegments(client, pauseAfterTests);
-			Mail(client, pauseAfterTests);
-			UnsubscribeGroups(client, pauseAfterTests);
-			User(client, pauseAfterTests);
-			Statistics(client, pauseAfterTests);
-			Templates(client, pauseAfterTests);
-			Settings(client, pauseAfterTests);
-			Alerts(client, pauseAfterTests);
-			Blocks(client, pauseAfterTests);
-			SpamReports(client, pauseAfterTests);
-			InvalidEmails(client, pauseAfterTests);
-			Batches(client, pauseAfterTests);
-			Whitelabel(client, pauseAfterTests);
+			try
+			{
+				ApiKeys(client, pauseAfterTests);
+				Campaigns(client, pauseAfterTests);
+				Categories(client, pauseAfterTests);
+				ContactsAndCustomFields(client, pauseAfterTests);
+				GlobalSuppressions(client, pauseAfterTests);
+				ListsAndSegments(client, pauseAfterTests);
+				Mail(client, pauseAfterTests);
+				UnsubscribeGroups(client, pauseAfterTests);
+				User(client, pauseAfterTests);
+				Statistics(client, pauseAfterTests);
+				Templates(client, pauseAfterTests);
+				Settings(client, pauseAfterTests);
+				Alerts(client, pauseAfterTests);
+				Blocks(client, pauseAfterTests);
+				SpamReports(client, pauseAfterTests);
+				InvalidEmails(client, pauseAfterTests);
+				Batches(client, pauseAfterTests);
+				Whitelabel(client, pauseAfterTests);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine("\n\n*************************");
+				Console.WriteLine("*************************");
+				Console.WriteLine($"AN EXCEPTION OCCURED: {e.Message}");
+				Console.WriteLine("*************************");
+				Console.WriteLine("*************************");
+			}
+			finally
+			{
+				while (Console.KeyAvailable)
+				{
+					Console.ReadKey(false);
+				}
+				Console.WriteLine("\n\n*************************");
+				Console.WriteLine("All tests completed");
+				Console.WriteLine("Press any key to exit");
+				Console.ReadKey();
+			}
 		}
 
 		private static void Mail(IClient client, bool pauseAfterTests)
@@ -149,6 +171,16 @@ namespace StrongGrid.IntegrationTests
 			// DELETE API KEY
 			client.ApiKeys.DeleteAsync(newApiKey.KeyId).Wait();
 			Console.WriteLine("Api Key {0} deleted", newApiKey.KeyId);
+
+			// CREATE AND DELETE A BILING API KEY
+			var billingKey = client.ApiKeys.CreateWithBillingPermissionsAsync("Integration testing billing Key").Result;
+			client.ApiKeys.DeleteAsync(billingKey.KeyId).Wait();
+			Console.WriteLine("Created and deleted the billing key");
+
+			// CREATE AND DELETE AN API KEY WITH ALL PERMISSIONS
+			var superKey = client.ApiKeys.CreateWithAllPermissionsAsync("Integration testing Super Key").Result;
+			client.ApiKeys.DeleteAsync(superKey.KeyId).Wait();
+			Console.WriteLine("Created and deleted a key with all permissions");
 
 			ConcludeTests(pauseAfterTests);
 		}

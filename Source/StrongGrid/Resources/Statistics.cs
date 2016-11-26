@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using StrongGrid.Model;
 using StrongGrid.Utilities;
 using System;
@@ -38,7 +39,7 @@ namespace StrongGrid.Resources
 		{
 			var endpoint = string.Format("{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
 			if (endDate.HasValue) endpoint += string.Format("&end_date={0}", endDate.Value.ToString("yyyy-MM-dd"));
-			if (aggregatedBy != AggregateBy.None) endpoint += string.Format("&aggregated_by={0}", aggregatedBy.GetDescription());
+			if (aggregatedBy != AggregateBy.None) endpoint += string.Format("&aggregated_by={0}", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy))).ToString();
 
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
@@ -61,7 +62,7 @@ namespace StrongGrid.Resources
 		{
 			var endpoint = string.Format("/categories{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
 			if (endDate.HasValue) endpoint += "&end_date=" + endDate.Value.ToString("yyyy-MM-dd");
-			if (aggregatedBy != AggregateBy.None) endpoint += "&aggregated_by=" + aggregatedBy.GetDescription();
+			if (aggregatedBy != AggregateBy.None) endpoint += "&aggregated_by=" + JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString();
 			if (categories != null && categories.Any())
 			{
 				foreach (var category in categories)
@@ -91,7 +92,7 @@ namespace StrongGrid.Resources
 		{
 			var endpoint = string.Format("/subusers{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
 			if (endDate.HasValue) endpoint += "&end_date=" + endDate.Value.ToString("yyyy-MM-dd");
-			if (aggregatedBy != AggregateBy.None) endpoint += "&aggregated_by=" + aggregatedBy.GetDescription();
+			if (aggregatedBy != AggregateBy.None) endpoint += "&aggregated_by=" + JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString();
 			if (subusers != null && subusers.Any())
 			{
 				foreach (var subuser in subusers)
@@ -121,7 +122,7 @@ namespace StrongGrid.Resources
 		{
 			var endpoint = string.Format("/geo{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
 			if (endDate.HasValue) endpoint += "&end_date=" + endDate.Value.ToString("yyyy-MM-dd");
-			if (aggregatedBy != AggregateBy.None) endpoint += "&aggregated_by=" + aggregatedBy.GetDescription();
+			if (aggregatedBy != AggregateBy.None) endpoint += "&aggregated_by=" + JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString();
 			if (!string.IsNullOrEmpty(country)) endpoint += "&country=" + country;
 
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
@@ -144,7 +145,7 @@ namespace StrongGrid.Resources
 		{
 			var endpoint = string.Format("/devices{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
 			if (endDate.HasValue) endpoint += "&end_date=" + endDate.Value.ToString("yyyy-MM-dd");
-			if (aggregatedBy != AggregateBy.None) endpoint += "&aggregated_by=" + aggregatedBy.GetDescription();
+			if (aggregatedBy != AggregateBy.None) endpoint += "&aggregated_by=" + JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString();
 
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
@@ -166,7 +167,7 @@ namespace StrongGrid.Resources
 		{
 			var endpoint = string.Format("/clients{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
 			if (endDate.HasValue) endpoint += "&end_date=" + endDate.Value.ToString("yyyy-MM-dd");
-			if (aggregatedBy != AggregateBy.None) endpoint += "&aggregated_by=" + aggregatedBy.GetDescription();
+			if (aggregatedBy != AggregateBy.None) endpoint += "&aggregated_by=" + JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString();
 
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
@@ -189,7 +190,7 @@ namespace StrongGrid.Resources
 		{
 			var endpoint = string.Format("/mailbox_providers{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
 			if (endDate.HasValue) endpoint += "&end_date=" + endDate.Value.ToString("yyyy-MM-dd");
-			if (aggregatedBy != AggregateBy.None) endpoint += "&aggregated_by=" + aggregatedBy.GetDescription();
+			if (aggregatedBy != AggregateBy.None) endpoint += "&aggregated_by=" + JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString();
 			if (providers != null && providers.Any())
 			{
 				foreach (var provider in providers)
@@ -219,7 +220,7 @@ namespace StrongGrid.Resources
 		{
 			var endpoint = string.Format("/browsers{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
 			if (endDate.HasValue) endpoint += "&end_date=" + endDate.Value.ToString("yyyy-MM-dd");
-			if (aggregatedBy != AggregateBy.None) endpoint += "&aggregated_by=" + aggregatedBy.GetDescription();
+			if (aggregatedBy != AggregateBy.None) endpoint += "&aggregated_by=" + JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString();
 			if (browsers != null && browsers.Any())
 			{
 				foreach (var browser in browsers)

@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using StrongGrid.Utilities;
 
 namespace StrongGrid.Model
 {
@@ -9,7 +8,6 @@ namespace StrongGrid.Model
 		public string BatchId { get; set; }
 
 		[JsonProperty("status")]
-		[JsonConverter(typeof(EnumDescriptionConverter))]
 		public BatchStatus Status { get; set; }
 	}
 }

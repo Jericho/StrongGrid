@@ -1,18 +1,21 @@
-﻿using System.ComponentModel;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System.Runtime.Serialization;
 
 namespace StrongGrid.Model
 {
+	[JsonConverter(typeof(StringEnumConverter))]
 	public enum ConditionOperator
 	{
-		[Description("eq")]
+		[EnumMember(Value = "eq")]
 		Equal,
-		[Description("ne")]
+		[EnumMember(Value = "ne")]
 		NotEqual,
-		[Description("lt")]
+		[EnumMember(Value = "lt")]
 		LessThan,
-		[Description("gt")]
+		[EnumMember(Value = "gt")]
 		GreatherThan,
-		[Description("contains")]
+		[EnumMember(Value = "contains")]
 		Contains
 	}
 }

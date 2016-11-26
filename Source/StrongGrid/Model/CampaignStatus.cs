@@ -1,14 +1,17 @@
-﻿using System.ComponentModel;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System.Runtime.Serialization;
 
 namespace StrongGrid.Model
 {
+	[JsonConverter(typeof(StringEnumConverter))]
 	public enum CampaignStatus
 	{
-		[Description("draft")]
+		[EnumMember(Value = "draft")]
 		Draft,
-		[Description("scheduled")]
+		[EnumMember(Value = "scheduled")]
 		Scheduled,
-		[Description("sent")]
+		[EnumMember(Value = "sent")]
 		Sent
 	}
 }

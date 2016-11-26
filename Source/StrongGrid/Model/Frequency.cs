@@ -1,19 +1,19 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System.ComponentModel;
 using System.Runtime.Serialization;
 
 namespace StrongGrid.Model
 {
+	[JsonConverter(typeof(StringEnumConverter))]
 	public enum Frequency
 	{
-		[Description("hourly")]
+		[EnumMember(Value = "hourly")]
 		Hourly,
-		[Description("daily")]
+		[EnumMember(Value = "daily")]
 		Daily,
-		[Description("weekly")]
+		[EnumMember(Value = "weekly")]
 		Weekly,
-		[Description("monthly")]
+		[EnumMember(Value = "monthly")]
 		Monthly
 	}
 }

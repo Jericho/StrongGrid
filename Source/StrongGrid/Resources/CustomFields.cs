@@ -30,7 +30,7 @@ namespace StrongGrid.Resources
 			var data = new JObject
 			{
 				{ "name", name },
-				{ "type", type.GetDescription() }
+				{ "type", JToken.Parse(JsonConvert.SerializeObject(type)).ToString() }
 			};
 			var response = await _client.PostAsync(_endpoint, data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();

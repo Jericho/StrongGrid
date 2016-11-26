@@ -62,45 +62,6 @@ namespace StrongGrid.UnitTests
 		}
 
 		[Fact]
-		public void GetDescription_description_is_present()
-		{
-			// Arrange
-			var enumVal = TestingEnum.First;
-
-			// Act
-			var result = enumVal.GetDescription();
-
-			// Assert
-			result.ShouldBe("Abc123");
-		}
-
-		[Fact]
-		public void GetDescription_description_is_missing()
-		{
-			// Arrange
-			var enumVal = TestingEnum.Second;
-
-			// Act
-			var result = enumVal.GetDescription();
-
-			// Assert
-			result.ShouldBe("Second");
-		}
-
-		[Fact]
-		public void GetDescription_invalid_enum_value()
-		{
-			// Arrange
-			var enumVal = (TestingEnum)999;
-
-			// Act
-			var result = enumVal.GetDescription();
-
-			// Assert
-			result.ShouldBe("999");
-		}
-
-		[Fact]
 		public void EnsureSuccess_success()
 		{
 			// Arrange
