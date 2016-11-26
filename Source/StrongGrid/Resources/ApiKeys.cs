@@ -116,7 +116,7 @@ namespace StrongGrid.Resources
 		/// <param name="scopes"></param>
 		/// <param name="cancellationToken"></param>
 		/// <returns></returns>
-		public async Task<ApiKey> UpdateAsync(string keyId, string name = null, IEnumerable<string> scopes = null, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<ApiKey> UpdateAsync(string keyId, string name, IEnumerable<string> scopes = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			scopes = (scopes ?? Enumerable.Empty<string>());
 
