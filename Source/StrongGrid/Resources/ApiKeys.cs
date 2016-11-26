@@ -156,6 +156,31 @@ namespace StrongGrid.Resources
 			return this.CreateAsync(name, scopes, cancellationToken);
 		}
 
+		/// <summary>
+		/// Generate a new API Key with all permissions
+		/// </summary>
+		/// <remarks>
+		/// If you specify an API Key when instanciating the <see cref="Client"/>, the new API Key will inherit the permissions of that API Key.
+		/// If you specify a username and password when instanciating the <see cref="Client"/>, the new API Key will inherit the permissions of that user.
+		/// </remarks>
+		/// <param name="name"></param>
+		/// <param name="cancellationToken"></param>
+		/// <returns></returns>
+		public async Task<ApiKey> CreateWithAllPermissionsAsync(string name, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			// Get the current user's permissions
+			var permissions = await _client.User.GetPermissionsAsync(cancellationToken).ConfigureAwait(false);
+
+			// The SendGrid documentation clearly states:
+			//		Billing permissions are mutually exclusive from all others. 
+			//		An API Key can either have Billing Permissions, or any other set of Permissions.
+			// Therefore it's important to exclude 'billing' permissions.
+			permissions = permissions.Where(p => !p.StartsWith("Billing", StringComparison.OrdinalIgnoreCase)).ToArray();
+
+			var superApiKey = await this.CreateAsync(name, permissions, cancellationToken).ConfigureAwait(false);
+			return superApiKey;
+		}
+
 		private static JObject CreateJObjectForApiKey(string name = null, IEnumerable<string> scopes = null)
 		{
 			var result = new JObject();
