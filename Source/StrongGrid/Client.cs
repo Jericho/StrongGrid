@@ -18,8 +18,9 @@ namespace StrongGrid
 
 		private const string MEDIA_TYPE = "application/json";
 		private const int MAX_RETRIES = 3;
+		private const string DEFAULT_BASE_URI = "https://api.sendgrid.com";
+		private const string DEFAULT_API_VERSION = "v3";
 
-		private readonly string _apiKey;
 		private readonly Uri _baseUri;
 		private readonly bool _mustDisposeHttpClient;
 		private readonly IAsyncDelayer _asyncDelayer;
@@ -89,7 +90,10 @@ namespace StrongGrid
 		/// Initializes a new instance of the Client class.
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key</param>
-		public Client(string apiKey) : this(apiKey, httpClient: (HttpClient)null) { }
+		public Client(string apiKey)
+			: this(apiKey, null, null, DEFAULT_BASE_URI, DEFAULT_API_VERSION, null, null)
+		{
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the Client class.
@@ -97,7 +101,7 @@ namespace StrongGrid
 		/// <param name="apiKey">Your SendGrid API Key</param>
 		/// <param name="proxy">Allows you to specify a proxy</param>
 		public Client(string apiKey, IWebProxy proxy = null)
-			: this(apiKey, httpClient: new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }))
+			: this(apiKey, null, null, DEFAULT_BASE_URI, DEFAULT_API_VERSION, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }), null)
 		{
 			_mustDisposeHttpClient = true;
 		}
@@ -110,10 +114,46 @@ namespace StrongGrid
 		/// <param name="apiVersion">The SendGrid API version. Please note: currently, only 'v3' is supported</param>
 		/// <param name="httpClient">Allows you to inject your own HttpClient. This is useful, for example, to setup the HtppClient with a proxy</param>
 		/// <param name="asyncDelayer">Allows you to inject your own logic to delay calls when the SendGrid API returns 'TOO MANY REQUESTS'</param>
-		public Client(string apiKey, string baseUri = "https://api.sendgrid.com", string apiVersion = "v3", HttpClient httpClient = null, IAsyncDelayer asyncDelayer = null)
+		public Client(string apiKey, string baseUri = DEFAULT_BASE_URI, string apiVersion = DEFAULT_API_VERSION, HttpClient httpClient = null, IAsyncDelayer asyncDelayer = null)
+			: this(apiKey, null, null, baseUri, apiVersion, httpClient, asyncDelayer)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the Client class.
+		/// </summary>
+		public Client(string username, string password)
+			: this(null, username, password, DEFAULT_BASE_URI, DEFAULT_API_VERSION, null, null)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the Client class.
+		/// </summary>
+		/// <param name="proxy">Allows you to specify a proxy</param>
+		public Client(string username, string password, IWebProxy proxy = null)
+			: this(null, username, password, DEFAULT_BASE_URI, DEFAULT_API_VERSION, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }), null)
+		{
+			_mustDisposeHttpClient = true;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the Client class.
+		/// </summary>
+		/// <param name="username">Your username</param>
+		/// <param name="password">Your password</param>
+		/// <param name="baseUri">Base SendGrid API Uri</param>
+		/// <param name="apiVersion">The SendGrid API version. Please note: currently, only 'v3' is supported</param>
+		/// <param name="httpClient">Allows you to inject your own HttpClient. This is useful, for example, to setup the HtppClient with a proxy</param>
+		/// <param name="asyncDelayer">Allows you to inject your own logic to delay calls when the SendGrid API returns 'TOO MANY REQUESTS'</param>
+		public Client(string username, string password, string baseUri = DEFAULT_BASE_URI, string apiVersion = DEFAULT_API_VERSION, HttpClient httpClient = null, IAsyncDelayer asyncDelayer = null)
+			: this(null, username, password, baseUri, apiVersion, httpClient, asyncDelayer)
+		{
+		}
+
+		private Client(string apiKey, string username, string password, string baseUri, string apiVersion, HttpClient httpClient, IAsyncDelayer asyncDelayer)
 		{
 			_baseUri = new Uri(string.Format("{0}/{1}", baseUri, apiVersion));
-			_apiKey = apiKey;
 			_asyncDelayer = asyncDelayer ?? new AsyncDelayer();
 
 			Alerts = new Alerts(this);
@@ -145,7 +185,8 @@ namespace StrongGrid
 			_httpClient.BaseAddress = _baseUri;
 			_httpClient.DefaultRequestHeaders.Accept.Clear();
 			_httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MEDIA_TYPE));
-			_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+			if (!string.IsNullOrEmpty(apiKey)) _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+			if (!string.IsNullOrEmpty(username)) _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes(string.Concat(username, ":", password))));
 			_httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", string.Format("StrongGrid/{0}", Version));
 		}
 
@@ -268,7 +309,7 @@ namespace StrongGrid
 		/// <returns>An asyncronous task</returns>
 		private Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, JObject data, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var content = (data == null ? null : new StringContent(data.ToString(), Encoding.UTF8, MEDIA_TYPE));
+			var content = data?.ToString();
 			return RequestAsync(method, endpoint, content, MAX_RETRIES, cancellationToken);
 		}
 
@@ -281,7 +322,7 @@ namespace StrongGrid
 		/// <returns>An asyncronous task</returns>
 		private Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, JArray data, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var content = (data == null ? null : new StringContent(data.ToString(), Encoding.UTF8, MEDIA_TYPE));
+			var content = data?.ToString();
 			return RequestAsync(method, endpoint, content, MAX_RETRIES, cancellationToken);
 		}
 
@@ -292,7 +333,7 @@ namespace StrongGrid
 		/// <param name="endpoint">Resource endpoint</param>
 		/// <param name="content">A StringContent representing the content of the http request</param>
 		/// <returns>An asyncronous task</returns>
-		private async Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, StringContent content, int retriesRemaining, CancellationToken cancellationToken = default(CancellationToken))
+		private async Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, string content, int retriesRemaining, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			try
 			{
@@ -316,7 +357,7 @@ namespace StrongGrid
 				{
 					Method = new HttpMethod(methodAsString),
 					RequestUri = new Uri(string.Format("{0}{1}{2}", _baseUri, endpoint.StartsWith("/", StringComparison.Ordinal) ? string.Empty : "/", endpoint)),
-					Content = content
+					Content = (content == null ? null : new StringContent(content, Encoding.UTF8, MEDIA_TYPE))
 				};
 				var response = await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
 				retriesRemaining--;

@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
-using System.ComponentModel;
-using System.Linq;
 using System.Net.Http;
-using System.Reflection;
 
 namespace StrongGrid.Utilities
 {
