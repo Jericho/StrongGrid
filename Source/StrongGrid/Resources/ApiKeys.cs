@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using StrongGrid.Model;
 using StrongGrid.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -45,6 +46,10 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get all API Keys belonging to the authenticated user
 		/// </summary>
+		/// <remarks>
+		/// The response does not include the permissions associated with each api key.
+		/// In order to get the permission for a given key, you need to <see cref="GetAsync(string, CancellationToken)">retrieve keys one at a time</see>.
+		/// </remarks>
 		/// <param name="cancellationToken"></param>
 		/// <returns></returns>
 		public async Task<ApiKey[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
@@ -131,6 +136,24 @@ namespace StrongGrid.Resources
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 			var apikey = JObject.Parse(responseContent).ToObject<ApiKey>();
 			return apikey;
+		}
+
+		/// <summary>
+		/// Generate a new API Key for billing 
+		/// </summary>
+		/// <param name="name"></param>
+		/// <param name="cancellationToken"></param>
+		/// <returns></returns>
+		public  Task<ApiKey> CreateWithBillingPermissionsAsync(string name, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var scopes = new[]
+			{
+				"billing.delete",
+				"billing.read",
+				"billing.update"
+			};
+
+			return this.CreateAsync(name, scopes, cancellationToken);
 		}
 
 		private static JObject CreateJObjectForApiKey(string name = null, IEnumerable<string> scopes = null)
