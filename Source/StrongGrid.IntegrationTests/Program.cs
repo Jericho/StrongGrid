@@ -11,7 +11,7 @@ namespace StrongGrid.IntegrationTests
 			// -----------------------------------------------------------------------------
 
 			// Do you want to proxy requests through Fiddler (useful for debugging)?
-			var useFiddler = true;
+			var useFiddler = false;
 
 			// Set this variable to true if you want to pause after each test 
 			// which gives you an opportunity to review the output in the console.
