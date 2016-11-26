@@ -309,7 +309,7 @@ namespace StrongGrid
 		/// <returns>An asyncronous task</returns>
 		private Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, JObject data, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var content = (data == null ? null : new StringContent(data.ToString(), Encoding.UTF8, MEDIA_TYPE));
+			var content = data?.ToString();
 			return RequestAsync(method, endpoint, content, MAX_RETRIES, cancellationToken);
 		}
 
@@ -322,7 +322,7 @@ namespace StrongGrid
 		/// <returns>An asyncronous task</returns>
 		private Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, JArray data, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var content = (data == null ? null : new StringContent(data.ToString(), Encoding.UTF8, MEDIA_TYPE));
+			var content = data?.ToString();
 			return RequestAsync(method, endpoint, content, MAX_RETRIES, cancellationToken);
 		}
 
@@ -333,7 +333,7 @@ namespace StrongGrid
 		/// <param name="endpoint">Resource endpoint</param>
 		/// <param name="content">A StringContent representing the content of the http request</param>
 		/// <returns>An asyncronous task</returns>
-		private async Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, StringContent content, int retriesRemaining, CancellationToken cancellationToken = default(CancellationToken))
+		private async Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, string content, int retriesRemaining, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			try
 			{
@@ -357,7 +357,7 @@ namespace StrongGrid
 				{
 					Method = new HttpMethod(methodAsString),
 					RequestUri = new Uri(string.Format("{0}{1}{2}", _baseUri, endpoint.StartsWith("/", StringComparison.Ordinal) ? string.Empty : "/", endpoint)),
-					Content = content
+					Content = (content == null ? null : new StringContent(content, Encoding.UTF8, MEDIA_TYPE))
 				};
 				var response = await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
 				retriesRemaining--;
