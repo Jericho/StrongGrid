@@ -47,11 +47,11 @@ namespace StrongGrid.IntegrationTests
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine("\n\n*************************");
-				Console.WriteLine("*************************");
+				Console.WriteLine("\n\n**************************************************");
+				Console.WriteLine("**************************************************");
 				Console.WriteLine($"AN EXCEPTION OCCURED: {e.Message}");
-				Console.WriteLine("*************************");
-				Console.WriteLine("*************************");
+				Console.WriteLine("**************************************************");
+				Console.WriteLine("**************************************************");
 			}
 			finally
 			{
@@ -172,10 +172,17 @@ namespace StrongGrid.IntegrationTests
 			client.ApiKeys.DeleteAsync(newApiKey.KeyId).Wait();
 			Console.WriteLine("Api Key {0} deleted", newApiKey.KeyId);
 
-			// CREATE AND DELETE A BILING API KEY
-			var billingKey = client.ApiKeys.CreateWithBillingPermissionsAsync("Integration testing billing Key").Result;
-			client.ApiKeys.DeleteAsync(billingKey.KeyId).Wait();
-			Console.WriteLine("Created and deleted the billing key");
+			// GET THE CURRENT USER'S PERMISSIONS
+			var permissions = client.User.GetPermissionsAsync().Result;
+			Console.WriteLine("Current user has been granted {0} permissions", permissions.Length);
+
+			// CREATE AND DELETE A BILLING API KEY (if authorized)
+			if (permissions.Any(p => p.StartsWith("billing.", StringComparison.OrdinalIgnoreCase)))
+			{
+				var billingKey = client.ApiKeys.CreateWithBillingPermissionsAsync("Integration testing billing Key").Result;
+				client.ApiKeys.DeleteAsync(billingKey.KeyId).Wait();
+				Console.WriteLine("Created and deleted the billing key");
+			}
 
 			// CREATE AND DELETE AN API KEY WITH ALL PERMISSIONS
 			var superKey = client.ApiKeys.CreateWithAllPermissionsAsync("Integration testing Super Key").Result;
