@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// IP validation results
+	/// </summary>
 	public class IpValidationResults
 	{
 		/// <summary>

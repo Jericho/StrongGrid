@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Unsubscribe options
+	/// </summary>
 	public class UnsubscribeOptions
 	{
 		/// <summary>

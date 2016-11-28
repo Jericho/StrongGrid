@@ -2,6 +2,14 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// A link whitelabel consists of a subdomain and domain that will be used to rewrite links
+	/// in mail messages. Our customer will be asked to create a couple CNAME records for the
+	/// links to be rewritten to and for us to verify that they are the domain owners.
+	/// </summary>
+	/// <remarks>
+	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/links.html
+	/// </remarks>
 	public class WhitelabelLink
 	{
 		/// <summary>
@@ -59,7 +67,7 @@ namespace StrongGrid.Model
 		public bool IsDefault { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating if this withe label link is valid.
+		/// Gets or sets a value indicating whether this withe label link is valid.
 		/// </summary>
 		/// <value>
 		///   <c>true</c> if this instance is valid; otherwise, <c>false</c>.

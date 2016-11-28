@@ -7,10 +7,7 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// Templates are re-usable email layouts, that may be created and interacted with through the API.
-	/// These are intended to be a specific type of message, such as ‘Weekly Product Update’.
-	/// Templates may have multiple versions with different content, these may be changed and activated
-	/// through the API. These allow split testing, multiple languages of the same template, etc.
+	/// Allows you to manage templates.
 	/// </summary>
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Transactional_Templates/templates.html

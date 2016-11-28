@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// IP validation
+	/// </summary>
 	public class IpValidation
 	{
 		/// <summary>
@@ -14,7 +17,7 @@ namespace StrongGrid.Model
 		public long IpId { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating if the IP is valid.
+		/// Gets or sets a value indicating whether the IP is valid.
 		/// </summary>
 		/// <value>
 		///   <c>true</c> if this instance is valid; otherwise, <c>false</c>.

@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Enforce TLS settings
+	/// </summary>
 	public class EnforcedTlsSettings
 	{
 		/// <summary>
@@ -14,10 +17,10 @@ namespace StrongGrid.Model
 		public bool RequireTls { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating whether [require valid certificate].
+		/// Gets or sets a value indicating whether a valid certificate is required.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if [require valid certificate]; otherwise, <c>false</c>.
+		/// <c>true</c> if a valid certificate is required; otherwise, <c>false</c>.
 		/// </value>
 		[JsonProperty("require_valid_cert")]
 		public bool RequireValidCertificate { get; set; }

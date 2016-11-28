@@ -2,6 +2,10 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Suppression Groups allow you to segment your email by a grouping which is most often defined
+	/// by the types of email. Example: Receipts, Deals emails, and notification.
+	/// </summary>
 	public class SuppressionGroup
 	{
 		/// <summary>

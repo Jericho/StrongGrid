@@ -4,6 +4,9 @@ using System;
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Information about a blocked email address
+	/// </summary>
 	public class Block
 	{
 		/// <summary>

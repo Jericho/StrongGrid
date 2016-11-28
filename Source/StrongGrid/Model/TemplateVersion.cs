@@ -4,6 +4,9 @@ using System;
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Template version
+	/// </summary>
 	public class TemplateVersion
 	{
 		/// <summary>

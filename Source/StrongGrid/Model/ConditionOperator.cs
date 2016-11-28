@@ -4,6 +4,9 @@ using System.Runtime.Serialization;
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Enumeration to indicate a condition operator.
+	/// </summary>
 	[JsonConverter(typeof(StringEnumConverter))]
 	public enum ConditionOperator
 	{

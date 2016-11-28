@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Metrics
+	/// </summary>
 	public class Metrics
 	{
 		/// <summary>

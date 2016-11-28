@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Stat
+	/// </summary>
 	public class Stat
 	{
 		/// <summary>

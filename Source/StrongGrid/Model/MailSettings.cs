@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Mail settings
+	/// </summary>
 	public class MailSettings
 	{
 		/// <summary>

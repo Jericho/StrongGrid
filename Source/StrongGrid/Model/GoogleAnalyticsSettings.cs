@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Allows you to enable tracking provided by Google Analytics.
+	/// </summary>
 	public class GoogleAnalyticsSettings
 	{
 		/// <summary>

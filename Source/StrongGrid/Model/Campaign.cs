@@ -3,7 +3,9 @@
 namespace StrongGrid.Model
 {
 	/// <summary>
-	/// An email merketing campaign
+	/// A campaign requires a title to be created. In order to send or schedule the campaign,
+	/// you will be required to provide a subject, sender ID, content (we suggest both html
+	/// and plain text), and at least one list or segment ID.
 	/// </summary>
 	public class Campaign
 	{

@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// Suppression Group allow you to segment your email by a grouping which is most often defined
-	/// by the types of email. Example: Receipts, Deals emails, and notification.
+	/// Allows you to manage suppression groups.
 	/// </summary>
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/groups.html

@@ -11,8 +11,7 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// API Keys allow you to generate an API Key credential which can be used for authentication
-	/// with the SendGrid v3 Web API, the v3 Mail Send endpoint, and the v2 Mail Send endpoint.
+	/// Allows you to manage API Keys.
 	/// </summary>
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/API_Keys/index.html

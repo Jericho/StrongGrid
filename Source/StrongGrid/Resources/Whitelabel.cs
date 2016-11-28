@@ -7,15 +7,8 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// A domain whitelabel consists of a subdomain and domain that will be used to set the appropriate DKIM, SPF, and Return-Path. There is an option to allow SendGrid to manage security or the customers may manage their own DNS records. For customers using the manual security option, they will need to create the appropriate MX, DKIM, and SPF records with their hosting provider. With automatic security, the customer will just need to create a few CNAMEs to SendGrid, and SendGrid will manage the MX, DKIM and SPF records.
-	/// A IP whitelabel consists of a subdomain and domain that will be used to generate a reverse DNS record for a given IP. Once SendGrid has verified that the customer has created the appropriate A record for their IP, SendGrid will create the appropriate reverse DNS record for the IP.
-	/// A link whitelabel consists of a subdomain and domain that will be used to rewrite links in mail messages. Our customer will be asked to create a couple CNAME records for the links to be rewritten to and for us to verify that they are the domain owners.
+	/// Allows you to manage whitelabeling settings
 	/// </summary>
-	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/domains.html
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/ips.html
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/links.html
-	/// </remarks>
 	public class Whitelabel
 	{
 		private readonly string _endpoint;

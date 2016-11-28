@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Link validation results
+	/// </summary>
 	public class LinkValidationResults
 	{
 		/// <summary>

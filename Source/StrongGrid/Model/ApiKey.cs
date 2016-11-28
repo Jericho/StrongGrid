@@ -2,6 +2,10 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// API Keys allow you to generate an API Key credential which can be used for
+	/// authentication with the SendGrid Web API.
+	/// </summary>
 	public class ApiKey
 	{
 		/// <summary>

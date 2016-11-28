@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Segment
+	/// </summary>
 	public class Segment
 	{
 		/// <summary>

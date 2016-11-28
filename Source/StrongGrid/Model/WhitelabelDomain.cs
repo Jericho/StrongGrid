@@ -2,6 +2,18 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// A domain whitelabel consists of a subdomain and domain that will be used to set the
+	/// appropriate DKIM, SPF, and Return-Path. There is an option to allow SendGrid to manage
+	/// security or the customers may manage their own DNS records. For customers using the
+	/// manual security option, they will need to create the appropriate MX, DKIM, and SPF
+	/// records with their hosting provider. With automatic security, the customer will just
+	/// need to create a few CNAMEs to SendGrid, and SendGrid will manage the MX, DKIM and SPF
+	/// records.
+	/// </summary>
+	/// <remarks>
+	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/domains.html
+	/// </remarks>
 	public class WhitelabelDomain
 	{
 		/// <summary>
@@ -85,11 +97,17 @@ namespace StrongGrid.Model
 		[JsonProperty("legacy")]
 		public bool IsLegacy { get; set; }
 
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is automatic security.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this instance is automatic security; otherwise, <c>false</c>.
+		/// </value>
 		[JsonProperty("automatic_security")]
 		public bool IsAutomaticSecurity { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating if this white label domain is valid.
+		/// Gets or sets a value indicating whether this white label domain is valid.
 		/// </summary>
 		/// <value>
 		///   <c>true</c> if this instance is valid; otherwise, <c>false</c>.

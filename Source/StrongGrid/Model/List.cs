@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// A list of contacts
+	/// </summary>
 	public class List
 	{
 		/// <summary>

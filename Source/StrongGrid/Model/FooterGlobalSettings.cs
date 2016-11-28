@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Footer global settings
+	/// </summary>
 	public class FooterGlobalSettings
 	{
 		/// <summary>

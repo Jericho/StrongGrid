@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// BCC settings
+	/// </summary>
 	public class BccSettings
 	{
 		/// <summary>

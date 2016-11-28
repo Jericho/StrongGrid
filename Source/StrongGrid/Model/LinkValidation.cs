@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Link validation
+	/// </summary>
 	public class LinkValidation
 	{
 		/// <summary>
@@ -14,7 +17,7 @@ namespace StrongGrid.Model
 		public long LinkId { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating if this link is valid.
+		/// Gets or sets a value indicating whether this link is valid.
 		/// </summary>
 		/// <value>
 		///   <c>true</c> if this instance is valid; otherwise, <c>false</c>.

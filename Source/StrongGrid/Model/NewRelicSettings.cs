@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// New Relic settings
+	/// </summary>
 	public class NewRelicSettings
 	{
 		/// <summary>

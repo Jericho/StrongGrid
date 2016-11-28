@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Template settings
+	/// </summary>
 	public class TemplateSettings
 	{
 		/// <summary>

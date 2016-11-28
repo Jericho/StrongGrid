@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// An error
+	/// </summary>
 	public class Error
 	{
 		/// <summary>

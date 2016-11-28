@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// The footer that you would like appended to the bottom of every email.
+	/// </summary>
 	public class FooterSettings
 	{
 		/// <summary>

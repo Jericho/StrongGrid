@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Whitelabel link DNS
+	/// </summary>
 	public class WhitelabelLinkDns
 	{
 		/// <summary>

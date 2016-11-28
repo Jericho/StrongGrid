@@ -2,10 +2,13 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Validation result
+	/// </summary>
 	public class ValidationResult
 	{
 		/// <summary>
-		/// Gets or sets a value indicating if valiudation is valid.
+		/// Gets or sets a value indicating whetherthis validation is valid.
 		/// </summary>
 		/// <value>
 		///   <c>true</c> if this instance is valid; otherwise, <c>false</c>.

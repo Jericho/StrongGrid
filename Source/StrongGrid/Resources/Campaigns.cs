@@ -10,9 +10,7 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// A campaign requires a title to be created. In order to send or schedule the campaign,
-	/// you will be required to provide a subject, sender ID, content (we suggest both html
-	/// and plain text), and at least one list or segment ID.
+	/// Allows you to manage <see cref="Campaign">campaigns</see>.
 	/// </summary>
 	/// <remarks>
 	/// See also: https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/campaigns.html

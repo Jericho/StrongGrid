@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// Categories help organize your email analytics by enabling you to tag emails you send by topics you define.
+	/// Allows you to manage categories
 	/// </summary>
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Categories/categories.html

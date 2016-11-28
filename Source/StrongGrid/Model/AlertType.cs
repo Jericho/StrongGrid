@@ -4,6 +4,9 @@ using System.Runtime.Serialization;
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Enumeration to indicate the type of alert
+	/// </summary>
 	[JsonConverter(typeof(StringEnumConverter))]
 	public enum AlertType
 	{

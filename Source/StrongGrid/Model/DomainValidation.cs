@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Domain validation
+	/// </summary>
 	public class DomainValidation
 	{
 		/// <summary>
@@ -14,7 +17,7 @@ namespace StrongGrid.Model
 		public long DomainId { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating if domain is valid.
+		/// Gets or sets a value indicating whether the domain is valid.
 		/// </summary>
 		/// <value>
 		///   <c>true</c> if this instance is valid; otherwise, <c>false</c>.

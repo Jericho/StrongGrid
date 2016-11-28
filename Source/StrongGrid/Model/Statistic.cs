@@ -3,6 +3,9 @@ using System;
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Statistic
+	/// </summary>
 	public class Statistic
 	{
 		/// <summary>

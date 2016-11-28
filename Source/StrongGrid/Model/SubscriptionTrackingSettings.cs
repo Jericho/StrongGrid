@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Subscription tracking settings
+	/// </summary>
 	public class SubscriptionTrackingSettings
 	{
 		/// <summary>

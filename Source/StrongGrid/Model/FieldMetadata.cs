@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Metadata about a field
+	/// </summary>
 	public class FieldMetadata
 	{
 		/// <summary>

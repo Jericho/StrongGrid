@@ -4,6 +4,9 @@ using System;
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// An invalid email address
+	/// </summary>
 	public class InvalidEmail
 	{
 		/// <summary>

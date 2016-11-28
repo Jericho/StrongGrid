@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// User profile
+	/// </summary>
 	public class UserProfile
 	{
 		/// <summary>

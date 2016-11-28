@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// Allows you to manage cusotm fields.
+	/// Allows you to manage custom fields.
 	/// </summary>
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/contactdb.html

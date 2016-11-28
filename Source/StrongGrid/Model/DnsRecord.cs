@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// DNS record
+	/// </summary>
 	public class DnsRecord
 	{
 		/// <summary>
@@ -32,7 +35,7 @@ namespace StrongGrid.Model
 		public string Data { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating if the dns record is valid.
+		/// Gets or sets a value indicating whether the dns record is valid.
 		/// </summary>
 		/// <value>
 		///   <c>true</c> if this instance is valid; otherwise, <c>false</c>.

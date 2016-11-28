@@ -4,6 +4,9 @@ using System;
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Sender identity
+	/// </summary>
 	public class SenderIdentity
 	{
 		/// <summary>
