@@ -35,7 +35,9 @@ namespace StrongGrid.Resources
 		/// <param name="limit">Optional field to limit the number of results returned.</param>
 		/// <param name="offset">Optional beginning point in the list to retrieve from.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of strings representing the catgories.
+		/// </returns>
 		public async Task<string[]> GetAsync(string searchPrefix = null, int limit = 50, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}?category={1}&limit={2}&offset={3}", _endpoint, searchPrefix, limit, offset);

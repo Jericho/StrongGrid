@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// 
+	/// Allows you to create and manage segments.
 	/// </summary>
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/campaigns.html
@@ -20,7 +20,7 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Campaigns" /> class.
+		/// Initializes a new instance of the <see cref="Segments" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
 		/// <param name="endpoint">Resource endpoint</param>
@@ -37,7 +37,9 @@ namespace StrongGrid.Resources
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="conditions">The conditions.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="Segment" />.
+		/// </returns>
 		public async Task<Segment> CreateAsync(string name, long listId, IEnumerable<SearchCondition> conditions, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			conditions = conditions ?? Enumerable.Empty<SearchCondition>();
@@ -60,7 +62,9 @@ namespace StrongGrid.Resources
 		/// Gets all asynchronous.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="Segment" />.
+		/// </returns>
 		public async Task<Segment[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(_endpoint, cancellationToken).ConfigureAwait(false);
@@ -100,7 +104,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="segmentId">The segment identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="Segment" />.
+		/// </returns>
 		public async Task<Segment> GetAsync(long segmentId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(string.Format("{0}/{1}", _endpoint, segmentId), cancellationToken).ConfigureAwait(false);
@@ -119,7 +125,9 @@ namespace StrongGrid.Resources
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="conditions">The conditions.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="Segment" />.
+		/// </returns>
 		public async Task<Segment> UpdateAsync(long segmentId, string name = null, long? listId = null, IEnumerable<SearchCondition> conditions = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			conditions = conditions ?? Enumerable.Empty<SearchCondition>();
@@ -157,7 +165,9 @@ namespace StrongGrid.Resources
 		/// <param name="recordsPerPage">The records per page.</param>
 		/// <param name="page">The page.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="Contact" />.
+		/// </returns>
 		public async Task<Contact[]> GetRecipientsAsync(long segmentId, int recordsPerPage = 100, int page = 1, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(string.Format("{0}/{1}/recipients?page_size={2}&page={3}", _endpoint, segmentId, recordsPerPage, page), cancellationToken).ConfigureAwait(false);

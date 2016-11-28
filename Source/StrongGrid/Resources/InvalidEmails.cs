@@ -4,17 +4,16 @@ using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// 
+	/// Allows you to manage email addresses that have been declared invalid.
 	/// </summary>
 	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/alerts.html
+	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/invalid_emails.html
 	/// </remarks>
 	public class InvalidEmails
 	{
@@ -40,7 +39,9 @@ namespace StrongGrid.Resources
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="InvalidEmail" />.
+		/// </returns>
 		public async Task<InvalidEmail[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 25, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}?start_time={1}&end_time={2}&limit={3}&offset={4}", _endpoint, startDate, endDate, limit, offset);
@@ -57,7 +58,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="emailAddress">The email address.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="InvalidEmail" />.
+		/// </returns>
 		public async Task<InvalidEmail> GetAsync(string emailAddress, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/{1}", _endpoint, emailAddress);

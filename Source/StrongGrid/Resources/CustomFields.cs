@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// 
+	/// Allows you to manage cusotm fields.
 	/// </summary>
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/contactdb.html
@@ -36,7 +36,7 @@ namespace StrongGrid.Resources
 		/// <param name="name">The name.</param>
 		/// <param name="type">The type.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>The <see cref="CustomFieldMetadata">metadata</see> about the new field.</returns>
 		public async Task<CustomFieldMetadata> CreateAsync(string name, FieldType type, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
@@ -56,7 +56,9 @@ namespace StrongGrid.Resources
 		/// Gets all asynchronous.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="CustomFieldMetadata">metadata</see> about the fields.
+		/// </returns>
 		public async Task<CustomFieldMetadata[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(_endpoint, cancellationToken).ConfigureAwait(false);
@@ -97,7 +99,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="fieldId">The field identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="CustomFieldMetadata">metadata</see> about the field.
+		/// </returns>
 		public async Task<CustomFieldMetadata> GetAsync(int fieldId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(string.Format("{0}/{1}", _endpoint, fieldId), cancellationToken).ConfigureAwait(false);
@@ -124,7 +128,9 @@ namespace StrongGrid.Resources
 		/// Gets the reserved fields asynchronous.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="Field" />.
+		/// </returns>
 		public async Task<Field[]> GetReservedFieldsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync("/contactdb/reserved_fields", cancellationToken).ConfigureAwait(false);

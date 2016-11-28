@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// 
+	/// Allows you to manage email addresses that will not receive any emails.
 	/// </summary>
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/global_suppressions.html
@@ -34,7 +34,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="email">email address to check</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		///   <c>true</c> if the email address is in the global suppression group; otherwise, <c>false</c>.
+		/// </returns>
 		public async Task<bool> IsUnsubscribedAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(string.Format("{0}/{1}", _endpoint, email), cancellationToken).ConfigureAwait(false);

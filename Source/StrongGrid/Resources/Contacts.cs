@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// 
+	/// Allows you to manage contacts (which are sometimes refered to as 'recipients').
 	/// </summary>
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/contactdb.html
@@ -39,7 +39,9 @@ namespace StrongGrid.Resources
 		/// <param name="lastName">The last name.</param>
 		/// <param name="customFields">The custom fields.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The identifier of the new contact.
+		/// </returns>
 		/// <exception cref="System.Exception">Thrown when an exception occured while creating the contact.</exception>
 		public async Task<string> CreateAsync(string email, string firstName = null, string lastName = null, IEnumerable<Field> customFields = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -87,7 +89,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="contacts">The contacts.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="ImportResult">result</see> of the operation.
+		/// </returns>
 		public async Task<ImportResult> ImportAsync(IEnumerable<Contact> contacts, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JArray();
@@ -133,7 +137,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="contactId">The contact identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="Contact" />.
+		/// </returns>
 		public async Task<Contact> GetAsync(string contactId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(_endpoint + "/" + contactId, cancellationToken).ConfigureAwait(false);
@@ -150,7 +156,9 @@ namespace StrongGrid.Resources
 		/// <param name="recordsPerPage">The records per page.</param>
 		/// <param name="page">The page.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="Contact" />.
+		/// </returns>
 		public async Task<Contact[]> GetAsync(int recordsPerPage = 100, int page = 1, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(string.Format("{0}?page_size={1}&page={2}", _endpoint, recordsPerPage, page), cancellationToken).ConfigureAwait(false);
@@ -197,10 +205,12 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Gets the billable count asynchronous.
+		/// Gets the billable count.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The number of billable contacts.
+		/// </returns>
 		public async Task<long> GetBillableCountAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(string.Format("{0}/billable_count", _endpoint), cancellationToken).ConfigureAwait(false);
@@ -221,10 +231,12 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Gets the total count asynchronous.
+		/// Gets the total count.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The total number of contacts.
+		/// </returns>
 		public async Task<long> GetTotalCountAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(string.Format("{0}/count", _endpoint), cancellationToken).ConfigureAwait(false);
@@ -245,12 +257,14 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Searches the asynchronous.
+		/// Searches for contacts matching the specified conditions.
 		/// </summary>
 		/// <param name="conditions">The conditions.</param>
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="Contact" />.
+		/// </returns>
 		public async Task<Contact[]> SearchAsync(IEnumerable<SearchCondition> conditions, int? listId = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
