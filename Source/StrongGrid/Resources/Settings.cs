@@ -225,11 +225,10 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<bool> UpdateClickTrackingSettingsAsync(bool enabled, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var clickTrackingSettings = new Setting
+			var data = new JObject
 			{
-				Enabled = enabled
+				{ "enabled", enabled }
 			};
-			var data = JObject.FromObject(clickTrackingSettings);
 			var response = await _client.PatchAsync("/tracking_settings/click", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
@@ -331,11 +330,10 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<bool> UpdateOpenTrackingSettingsAsync(bool enabled, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var openTrackingSettings = new Setting
+			var data = new JObject
 			{
-				Enabled = enabled
+				{ "enabled", enabled }
 			};
-			var data = JObject.FromObject(openTrackingSettings);
 			var response = await _client.PatchAsync("/tracking_settings/open", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
@@ -647,11 +645,10 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<bool> UpdatPlainContentMailSettingsAsync(bool enabled, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var plainContentSettings = new Setting
+			var data = new JObject
 			{
-				Enabled = enabled
+				{ "enabled", enabled }
 			};
-			var data = JObject.FromObject(plainContentSettings);
 			var response = await _client.PatchAsync("/mail_settings/plain_content", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
