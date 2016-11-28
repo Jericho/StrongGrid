@@ -216,7 +216,9 @@ namespace StrongGrid.Resources
 		/// <param name="oldPassword">The old password.</param>
 		/// <param name="newPassword">The new password.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task UpdatePasswordAsync(string oldPassword, string newPassword, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();

@@ -104,7 +104,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task Cancel(string batchId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
@@ -121,7 +123,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task Pause(string batchId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
@@ -155,7 +159,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task Resume(string batchId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/{1}", _endpoint, batchId);

@@ -139,7 +139,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task DeleteAsync(string templateId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.DeleteAsync(string.Format("{0}/{1}", _endpoint, templateId), cancellationToken);
@@ -252,7 +254,9 @@ namespace StrongGrid.Resources
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="versionId">The version identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task DeleteVersionAsync(string templateId, string versionId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.DeleteAsync(string.Format("{0}/{1}/versions/{2}", _endpoint, templateId, versionId), cancellationToken).ConfigureAwait(false);

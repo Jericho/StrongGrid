@@ -54,7 +54,9 @@ namespace StrongGrid.Resources
 		/// <param name="ipPoolName">Name of the ip pool.</param>
 		/// <param name="mailSettings">The mail settings.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		/// <remarks>
 		/// This is a convenience method with simplified parameters.
 		/// If you need more options, use the <see cref="SendAsync" /> method.
@@ -108,7 +110,9 @@ namespace StrongGrid.Resources
 		/// <param name="ipPoolName">Name of the ip pool.</param>
 		/// <param name="mailSettings">The mail settings.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		/// <remarks>
 		/// This is a convenience method with simplified parameters.
 		/// If you need more options, use the <see cref="SendAsync" /> method.

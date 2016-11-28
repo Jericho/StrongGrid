@@ -131,7 +131,9 @@ namespace StrongGrid.Resources
 		/// <param name="zip">The zip.</param>
 		/// <param name="country">The country.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="SenderIdentity" />.
+		/// </returns>
 		public async Task<SenderIdentity> UpdateAsync(long senderId, string nickname = null, MailAddress from = null, MailAddress replyTo = null, string address1 = null, string address2 = null, string city = null, string state = null, string zip = null, string country = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = CreateJObjectForSenderIdentity(nickname, from, replyTo, address1, address2, city, state, zip, country);
@@ -149,7 +151,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="senderId">The sender identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task DeleteAsync(long senderId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.DeleteAsync(_endpoint + "/" + senderId, cancellationToken).ConfigureAwait(false);
@@ -161,7 +165,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="senderId">The sender identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task ResendVerification(long senderId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.PostAsync(string.Format("{0}/{1}/resend_verification", _endpoint, senderId), (JObject)null, cancellationToken).ConfigureAwait(false);

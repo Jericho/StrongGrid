@@ -73,7 +73,9 @@ namespace StrongGrid.Resources
 		/// Delete all bounces
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task DeleteAllAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject(new JProperty("delete_all", true));
@@ -86,7 +88,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="emails">The emails.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task DeleteAsync(IEnumerable<string> emails, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject(new JProperty("emails", JArray.FromObject(emails.ToArray())));
@@ -99,7 +103,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="email">The email.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task DeleteAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.DeleteAsync(string.Format("{0}/{1}", _endpoint, email), cancellationToken).ConfigureAwait(false);

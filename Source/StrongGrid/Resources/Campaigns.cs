@@ -141,7 +141,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="campaignId">The id of the campaign</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task DeleteAsync(long campaignId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.DeleteAsync(string.Format("{0}/{1}", _endpoint, campaignId), cancellationToken).ConfigureAwait(false);
@@ -187,7 +189,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="campaignId">The id of the campaign</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task SendNowAsync(long campaignId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = (JObject)null;
@@ -201,7 +205,9 @@ namespace StrongGrid.Resources
 		/// <param name="campaignId">The id of the campaign</param>
 		/// <param name="sendOn">The send on.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task ScheduleAsync(long campaignId, DateTime sendOn, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
@@ -218,7 +224,9 @@ namespace StrongGrid.Resources
 		/// <param name="campaignId">The id of the campaign</param>
 		/// <param name="sendOn">The send on.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task RescheduleAsync(long campaignId, DateTime sendOn, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
@@ -263,7 +271,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="campaignId">The id of the campaign</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task UnscheduleAsync(long campaignId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.DeleteAsync(string.Format("{0}/{1}/schedules", _endpoint, campaignId), cancellationToken).ConfigureAwait(false);
@@ -276,7 +286,9 @@ namespace StrongGrid.Resources
 		/// <param name="campaignId">The id of the campaign</param>
 		/// <param name="emailAddresses">The email addresses.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		/// <exception cref="System.ArgumentException">You must specify at least one email address</exception>
 		public async Task SendTestAsync(long campaignId, IEnumerable<string> emailAddresses, CancellationToken cancellationToken = default(CancellationToken))
 		{

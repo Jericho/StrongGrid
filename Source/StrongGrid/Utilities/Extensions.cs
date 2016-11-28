@@ -16,7 +16,9 @@ namespace StrongGrid.Utilities
 		/// January 1st 1970) to a .Net <see cref="DateTime" />.
 		/// </summary>
 		/// <param name="unixTime">The unix time.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="DateTime" />.
+		/// </returns>
 		public static DateTime FromUnixTime(this long unixTime)
 		{
 			return EPOCH.AddSeconds(unixTime);
@@ -27,7 +29,9 @@ namespace StrongGrid.Utilities
 		/// of seconds since midnight on January 1st 1970).
 		/// </summary>
 		/// <param name="date">The date.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The numer of seconds since midnight on January 1st 1970.
+		/// </returns>
 		public static long ToUnixTime(this DateTime date)
 		{
 			return Convert.ToInt64((date.ToUniversalTime() - EPOCH).TotalSeconds);

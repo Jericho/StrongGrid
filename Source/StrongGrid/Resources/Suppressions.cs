@@ -56,7 +56,9 @@ namespace StrongGrid.Resources
 		/// <param name="groupId">ID of the suppression group</param>
 		/// <param name="email">Email address to add to the suppression group</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public Task AddAddressToUnsubscribeGroupAsync(int groupId, string email, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return AddAddressToUnsubscribeGroupAsync(groupId, new[] { email }, cancellationToken);
@@ -69,7 +71,9 @@ namespace StrongGrid.Resources
 		/// <param name="groupId">ID of the suppression group</param>
 		/// <param name="emails">Email addresses to add to the suppression group</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task AddAddressToUnsubscribeGroupAsync(int groupId, IEnumerable<string> emails, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject(new JProperty("recipient_emails", JArray.FromObject(emails.ToArray())));
@@ -83,7 +87,9 @@ namespace StrongGrid.Resources
 		/// <param name="groupId">ID of the suppression group to delete</param>
 		/// <param name="email">Email address to remove from the suppression group</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task RemoveAddressFromSuppressionGroupAsync(int groupId, string email, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.DeleteAsync(string.Format("{0}/{1}/suppressions/{2}", _endpoint, groupId, email), cancellationToken).ConfigureAwait(false);

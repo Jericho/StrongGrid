@@ -99,7 +99,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="alertId">The alert identifier.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task DeleteAsync(long alertId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/{1}", _endpoint, alertId);

@@ -62,7 +62,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="emails">Array of email addresses to add to the suppression group</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task AddAsync(IEnumerable<string> emails, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject(new JProperty("recipient_emails", JArray.FromObject(emails.ToArray())));
@@ -75,7 +77,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="email">email address to be removed from the global suppressions group</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task RemoveAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.DeleteAsync(string.Format("{0}/{1}", _endpoint, email), cancellationToken).ConfigureAwait(false);

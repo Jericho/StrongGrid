@@ -65,7 +65,9 @@ namespace StrongGrid.Resources
 		/// <param name="lastName">The last name.</param>
 		/// <param name="customFields">The custom fields.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		/// <exception cref="System.Exception">Thrown when an exception occured while updating the contact.</exception>
 		public async Task UpdateAsync(string email, string firstName = null, string lastName = null, IEnumerable<Field> customFields = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -113,7 +115,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="contactId">The contact identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public Task DeleteAsync(string contactId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return DeleteAsync(new[] { contactId }, cancellationToken);
@@ -124,7 +128,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="contactId">The contact identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task DeleteAsync(IEnumerable<string> contactId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = JArray.FromObject(contactId.ToArray());

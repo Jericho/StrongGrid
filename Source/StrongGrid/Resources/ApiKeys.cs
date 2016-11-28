@@ -113,7 +113,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="keyId">The key identifier.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task DeleteAsync(string keyId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.DeleteAsync(string.Format("{0}/{1}", _endpoint, keyId), cancellationToken).ConfigureAwait(false);

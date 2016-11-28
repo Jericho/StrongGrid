@@ -89,7 +89,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task DeleteAsync(long listId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.DeleteAsync(string.Format("{0}/{1}", _endpoint, listId), cancellationToken).ConfigureAwait(false);
@@ -101,7 +103,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="listIds">The list ids.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task DeleteAsync(IEnumerable<long> listIds, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = JArray.FromObject(listIds.ToArray());
@@ -133,7 +137,9 @@ namespace StrongGrid.Resources
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="name">The name.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task UpdateAsync(long listId, string name, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
@@ -192,7 +198,9 @@ namespace StrongGrid.Resources
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="contactId">The contact identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task AddRecipientAsync(long listId, string contactId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.PostAsync(string.Format("{0}/{1}/recipients/{2}", _endpoint, listId, contactId), (JObject)null, cancellationToken).ConfigureAwait(false);
@@ -205,7 +213,9 @@ namespace StrongGrid.Resources
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="contactId">The contact identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task RemoveRecipientAsync(long listId, string contactId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.DeleteAsync(string.Format("{0}/{1}/recipients/{2}", _endpoint, listId, contactId), cancellationToken).ConfigureAwait(false);
@@ -218,7 +228,9 @@ namespace StrongGrid.Resources
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="contactIds">The contact ids.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task AddRecipientsAsync(long listId, IEnumerable<string> contactIds, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = JArray.FromObject(contactIds.ToArray());

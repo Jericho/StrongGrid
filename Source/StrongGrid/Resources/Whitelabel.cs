@@ -144,7 +144,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="id">The identifier.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task DeleteDomainAsync(long id, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/domains/{1}", _endpoint, id);
@@ -245,7 +247,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="username">The username.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task DisassociateDomainAsync(string username = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/domains/subuser?username={1}", _endpoint, username);
@@ -483,7 +487,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="linkId">The link identifier.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task DeleteLinkAsync(long linkId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/links/{1}", _endpoint, linkId);
@@ -559,7 +565,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="username">The username.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task DisassociateLinkAsync(string username = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/links/subuser?username={1}", _endpoint, username);

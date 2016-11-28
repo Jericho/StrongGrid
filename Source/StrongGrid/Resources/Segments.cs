@@ -151,7 +151,9 @@ namespace StrongGrid.Resources
 		/// <param name="segmentId">The segment identifier.</param>
 		/// <param name="deleteMatchingContacts">if set to <c>true</c> [delete matching contacts].</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task DeleteAsync(long segmentId, bool deleteMatchingContacts = false, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.DeleteAsync(string.Format("{0}/{1}?delete_contacts={2}", _endpoint, segmentId, deleteMatchingContacts ? "true" : "false"), cancellationToken).ConfigureAwait(false);

@@ -78,7 +78,9 @@ namespace StrongGrid.Resources
 		/// Delete all blocks.
 		/// </summary>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task DeleteAllAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
@@ -94,7 +96,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="emailAddresses">The email addresses.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task DeleteMultipleAsync(IEnumerable<string> emailAddresses, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
@@ -110,7 +114,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="emailAddress">The email address.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task DeleteAsync(string emailAddress, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/{1}", _endpoint, emailAddress);

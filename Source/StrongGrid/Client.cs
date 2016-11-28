@@ -335,6 +335,9 @@ namespace StrongGrid
 			_httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", string.Format("StrongGrid/{0}", Version));
 		}
 
+		/// <summary>
+		/// Finalizes an instance of the <see cref="Client"/> class.
+		/// </summary>
 		~Client()
 		{
 			// The object went out of scope and finalized is called.
