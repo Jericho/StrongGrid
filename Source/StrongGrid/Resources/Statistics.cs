@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// 
+	/// The stats APIs provide a read-only access to your SendGrid email statistics.
 	/// </summary>
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Stats/index.html
@@ -40,7 +40,9 @@ namespace StrongGrid.Resources
 		/// <param name="endDate">The end date of the statistics to retrieve. Defaults to today.</param>
 		/// <param name="aggregatedBy">How to group the statistics, must be day|week|month</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="Statistic" />.
+		/// </returns>
 		public async Task<Statistic[]> GetGlobalStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
@@ -64,7 +66,9 @@ namespace StrongGrid.Resources
 		/// <param name="endDate">The end date of the statistics to retrieve. Defaults to today.</param>
 		/// <param name="aggregatedBy">How to group the statistics, must be day|week|month</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="Statistic" />.
+		/// </returns>
 		public async Task<Statistic[]> GetCategoriesStatisticsAsync(IEnumerable<string> categories, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("/categories{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
@@ -95,7 +99,9 @@ namespace StrongGrid.Resources
 		/// <param name="endDate">The end date of the statistics to retrieve. Defaults to today.</param>
 		/// <param name="aggregatedBy">How to group the statistics, must be day|week|month</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="Statistic" />.
+		/// </returns>
 		public async Task<Statistic[]> GetSubusersStatisticsAsync(IEnumerable<string> subusers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("/subusers{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
@@ -126,7 +132,9 @@ namespace StrongGrid.Resources
 		/// <param name="endDate">The end date of the statistics to retrieve. Defaults to today.</param>
 		/// <param name="aggregatedBy">How to group the statistics, must be day|week|month</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="Statistic" />.
+		/// </returns>
 		public async Task<Statistic[]> GetCountryStatisticsAsync(string country, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("/geo{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
@@ -150,7 +158,9 @@ namespace StrongGrid.Resources
 		/// <param name="endDate">The end date of the statistics to retrieve. Defaults to today.</param>
 		/// <param name="aggregatedBy">How to group the statistics, must be day|week|month</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="Statistic" />.
+		/// </returns>
 		public async Task<Statistic[]> GetDeviceTypesStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("/devices{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
@@ -173,7 +183,9 @@ namespace StrongGrid.Resources
 		/// <param name="endDate">The end date of the statistics to retrieve. Defaults to today.</param>
 		/// <param name="aggregatedBy">How to group the statistics, must be day|week|month</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="Statistic" />.
+		/// </returns>
 		public async Task<Statistic[]> GetClientTypesStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("/clients{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
@@ -197,7 +209,9 @@ namespace StrongGrid.Resources
 		/// <param name="endDate">The end date of the statistics to retrieve. Defaults to today.</param>
 		/// <param name="aggregatedBy">How to group the statistics, must be day|week|month</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="Statistic" />.
+		/// </returns>
 		public async Task<Statistic[]> GetInboxProvidersStatisticsAsync(IEnumerable<string> providers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("/mailbox_providers{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
@@ -228,7 +242,9 @@ namespace StrongGrid.Resources
 		/// <param name="endDate">The end date of the statistics to retrieve. Defaults to today.</param>
 		/// <param name="aggregatedBy">How to group the statistics, must be day|week|month</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="Statistic" />.
+		/// </returns>
 		public async Task<Statistic[]> GetBrowsersStatisticsAsync(IEnumerable<string> browsers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("/browsers{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));

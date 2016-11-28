@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// 
+	/// Suppression Group allow you to segment your email by a grouping which is most often defined
+	/// by the types of email. Example: Receipts, Deals emails, and notification.
 	/// </summary>
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/groups.html
@@ -33,7 +34,9 @@ namespace StrongGrid.Resources
 		/// Retrieve all suppression groups associated with the user.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="SuppressionGroup" />.
+		/// </returns>
 		public async Task<SuppressionGroup[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(_endpoint, cancellationToken).ConfigureAwait(false);
@@ -49,7 +52,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="groupId">ID of the suppression group to delete</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="SuppressionGroup" />.
+		/// </returns>
 		public async Task<SuppressionGroup> GetAsync(int groupId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(string.Format("{0}/{1}", _endpoint, groupId), cancellationToken).ConfigureAwait(false);
@@ -67,7 +72,9 @@ namespace StrongGrid.Resources
 		/// <param name="description">A description of the suppression group</param>
 		/// <param name="isDefault">Default value is false</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="SuppressionGroup" />.
+		/// </returns>
 		public async Task<SuppressionGroup> CreateAsync(string name, string description, bool isDefault, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
@@ -91,7 +98,9 @@ namespace StrongGrid.Resources
 		/// <param name="name">The name of the new suppression group</param>
 		/// <param name="description">A description of the suppression group</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="SuppressionGroup" />.
+		/// </returns>
 		public async Task<SuppressionGroup> UpdateAsync(int groupId, string name = null, string description = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();

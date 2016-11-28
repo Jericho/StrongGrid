@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// 
+	/// Templates are re-usable email layouts, that may be created and interacted with through the API.
+	/// These are intended to be a specific type of message, such as ‘Weekly Product Update’.
+	/// Templates may have multiple versions with different content, these may be changed and activated
+	/// through the API. These allow split testing, multiple languages of the same template, etc.
 	/// </summary>
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Transactional_Templates/templates.html
@@ -33,7 +36,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="Template" />.
+		/// </returns>
 		public async Task<Template> CreateAsync(string name, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
@@ -52,7 +57,9 @@ namespace StrongGrid.Resources
 		/// Gets all asynchronous.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="Template" />.
+		/// </returns>
 		public async Task<Template[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(_endpoint, cancellationToken).ConfigureAwait(false);
@@ -91,7 +98,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="Template" />.
+		/// </returns>
 		public async Task<Template> GetAsync(string templateId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(string.Format("{0}/{1}", _endpoint, templateId), cancellationToken).ConfigureAwait(false);
@@ -108,7 +117,9 @@ namespace StrongGrid.Resources
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="name">The name.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="Template" />.
+		/// </returns>
 		public async Task<Template> UpdateAsync(string templateId, string name, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
@@ -145,7 +156,9 @@ namespace StrongGrid.Resources
 		/// <param name="textContent">Content of the text.</param>
 		/// <param name="isActive">if set to <c>true</c> [is active].</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="TemplateVersion" />.
+		/// </returns>
 		public async Task<TemplateVersion> CreateVersionAsync(string templateId, string name, string subject, string htmlContent, string textContent, bool isActive, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
@@ -170,7 +183,9 @@ namespace StrongGrid.Resources
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="versionId">The version identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="TemplateVersion" />.
+		/// </returns>
 		public async Task<TemplateVersion> ActivateVersionAsync(string templateId, string versionId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.PostAsync(string.Format("{0}/{1}/versions/{2}/activate", _endpoint, templateId, versionId), (JObject)null, cancellationToken).ConfigureAwait(false);
@@ -187,7 +202,9 @@ namespace StrongGrid.Resources
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="versionId">The version identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="TemplateVersion" />.
+		/// </returns>
 		public async Task<TemplateVersion> GetVersionAsync(string templateId, string versionId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(string.Format("{0}/{1}/versions/{2}", _endpoint, templateId, versionId), cancellationToken).ConfigureAwait(false);
@@ -209,7 +226,9 @@ namespace StrongGrid.Resources
 		/// <param name="textContent">Content of the text.</param>
 		/// <param name="isActive">The is active.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="TemplateVersion" />.
+		/// </returns>
 		public async Task<TemplateVersion> UpdateVersionAsync(string templateId, string versionId, string name = null, string subject = null, string htmlContent = null, string textContent = null, bool? isActive = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();

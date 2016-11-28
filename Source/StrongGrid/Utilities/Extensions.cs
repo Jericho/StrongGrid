@@ -4,6 +4,9 @@ using System.Net.Http;
 
 namespace StrongGrid.Utilities
 {
+	/// <summary>
+	/// Extension methods
+	/// </summary>
 	public static class Extensions
 	{
 		private static readonly DateTime EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -31,7 +34,7 @@ namespace StrongGrid.Utilities
 		}
 
 		/// <summary>
-		/// Ensures that the response was a success. Throws an <see cref="Exception" />  otherwise.
+		/// Ensures that the response was a success. Throws an <see cref="Exception" /> otherwise.
 		/// </summary>
 		/// <param name="response">The response.</param>
 		/// <exception cref="System.Exception">Thrown when the response indicates that something went wrong.</exception>
@@ -64,7 +67,8 @@ namespace StrongGrid.Utilities
 
 					content = firstError.message.ToString();
 #pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
-				} catch
+				}
+				catch
 #pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
 				{
 					// Intentionally ignore parsing errors

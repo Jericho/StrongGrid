@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// 
+	/// Allows you to create and manage sender identities for Marketing Campaigns.
 	/// </summary>
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/sender_identities.html
@@ -41,7 +41,9 @@ namespace StrongGrid.Resources
 		/// <param name="zip">The zip.</param>
 		/// <param name="country">The country.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="SenderIdentity" />.
+		/// </returns>
 		public async Task<SenderIdentity> CreateAsync(string nickname, MailAddress from, MailAddress replyTo, string address1, string address2, string city, string state, string zip, string country, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = CreateJObjectForSenderIdentity(nickname, from, replyTo, address1, address2, city, state, zip, country);
@@ -58,7 +60,9 @@ namespace StrongGrid.Resources
 		/// Gets all asynchronous.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="SenderIdentity" />.
+		/// </returns>
 		public async Task<SenderIdentity[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(_endpoint, cancellationToken).ConfigureAwait(false);
@@ -100,7 +104,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="senderId">The sender identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="SenderIdentity" />.
+		/// </returns>
 		public async Task<SenderIdentity> GetAsync(long senderId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(string.Format("{0}/{1}", _endpoint, senderId), cancellationToken).ConfigureAwait(false);
@@ -126,7 +132,7 @@ namespace StrongGrid.Resources
 		/// <param name="country">The country.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns></returns>
-		public async Task<Segment> UpdateAsync(long senderId, string nickname = null, MailAddress from = null, MailAddress replyTo = null, string address1 = null, string address2 = null, string city = null, string state = null, string zip = null, string country = null, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<SenderIdentity> UpdateAsync(long senderId, string nickname = null, MailAddress from = null, MailAddress replyTo = null, string address1 = null, string address2 = null, string city = null, string state = null, string zip = null, string country = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = CreateJObjectForSenderIdentity(nickname, from, replyTo, address1, address2, city, state, zip, country);
 
@@ -134,7 +140,7 @@ namespace StrongGrid.Resources
 			response.EnsureSuccess();
 
 			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-			var segment = JObject.Parse(responseContent).ToObject<Segment>();
+			var segment = JObject.Parse(responseContent).ToObject<SenderIdentity>();
 			return segment;
 		}
 

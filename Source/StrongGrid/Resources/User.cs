@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// 
+	/// Allows access to information about the current user.
 	/// </summary>
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html
@@ -34,7 +34,9 @@ namespace StrongGrid.Resources
 		/// Get your user profile
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="UserProfile" />.
+		/// </returns>
 		public async Task<UserProfile> GetProfileAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(_endpoint, cancellationToken).ConfigureAwait(false);
@@ -59,7 +61,9 @@ namespace StrongGrid.Resources
 		/// <param name="website">The website.</param>
 		/// <param name="zip">The zip.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="UserProfile" />.
+		/// </returns>
 		public async Task<UserProfile> UpdateProfileAsync(string address = null, string city = null, string company = null, string country = null, string firstName = null, string lastName = null, string phone = null, string state = null, string website = null, string zip = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = CreateJObjectForUserProfile(address, city, company, country, firstName, lastName, phone, state, website, zip);
@@ -75,7 +79,9 @@ namespace StrongGrid.Resources
 		/// Get your user account
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="Account" />.
+		/// </returns>
 		public async Task<Account> GetAccountAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync("/user/account", cancellationToken).ConfigureAwait(false);
@@ -90,7 +96,9 @@ namespace StrongGrid.Resources
 		/// Retrieve the email address on file for your account
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The email address from your user profile.
+		/// </returns>
 		public async Task<string> GetEmailAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync("/user/email", cancellationToken).ConfigureAwait(false);
@@ -112,7 +120,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="email">The email.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The email address from your user profile.
+		/// </returns>
 		public async Task<string> UpdateEmailAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
@@ -136,7 +146,9 @@ namespace StrongGrid.Resources
 		/// Retrieve your account username
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The username from your user profile.
+		/// </returns>
 		public async Task<string> GetUsernameAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync("/user/username", cancellationToken).ConfigureAwait(false);
@@ -159,7 +171,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="username">The username.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The username from your user profile.
+		/// </returns>
 		public async Task<string> UpdateUsernameAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
@@ -183,7 +197,9 @@ namespace StrongGrid.Resources
 		/// Retrieve the current credit balance for your account
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="UserCredits"/>.
+		/// </returns>
 		public async Task<UserCredits> GetCreditsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync("/user/credits", cancellationToken).ConfigureAwait(false);
@@ -215,7 +231,9 @@ namespace StrongGrid.Resources
 		/// List all available scopes for a user
 		/// </summary>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of string representing the permissions (aka scopes).
+		/// </returns>
 		public async Task<string[]> GetPermissionsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync("/scopes", cancellationToken).ConfigureAwait(false);
@@ -232,7 +250,7 @@ namespace StrongGrid.Resources
 
 			// I contacted SendGrid on 11/23/2016 to report this problem: https://support.sendgrid.com/hc/en-us/requests/806220
 
-			// A support engineer from SendGrid confirmed the issue on 11/24/2016 and said: 
+			// A support engineer from SendGrid confirmed the issue on 11/24/2016 and said:
 			// 		I will put in a new feature request to our engineers to see if they will be able to have
 			// 		the charset removed from that API call
 

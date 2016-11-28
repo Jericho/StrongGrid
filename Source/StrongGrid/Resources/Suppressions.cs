@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// 
+	/// Suppressions are email addresses that can be added to groups to prevent certain types of emails
+	/// from being delivered to those addresses.
 	/// </summary>
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/suppressions.html
@@ -35,7 +36,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="groupId">ID of the suppression group</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of string representing the email addresses
+		/// </returns>
 		public async Task<string[]> GetUnsubscribedAddressesAsync(int groupId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(string.Format("{0}/{1}/suppressions", _endpoint, groupId), cancellationToken).ConfigureAwait(false);
