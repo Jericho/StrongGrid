@@ -13,11 +13,11 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the Global Suppressions class.
+		/// Initializes a new instance of the <see cref="GlobalSuppressions"/> class.
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/global_suppressions.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint, do not prepend slash</param>
+		/// <param name="endpoint">Resource endpoint</param>
 		public GlobalSuppressions(IClient client, string endpoint = "/asm/suppressions/global")
 		{
 			_endpoint = endpoint;

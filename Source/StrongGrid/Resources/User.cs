@@ -14,11 +14,11 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the Users class.
+		/// Initializes a new instance of the <see cref="User"/> class.
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint, do not prepend slash</param>
+		/// <param name="endpoint">Resource endpoint</param>
 		public User(IClient client, string endpoint = "/user/profile")
 		{
 			_endpoint = endpoint;
@@ -186,7 +186,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// List all available scopes for a user
 		/// </summary>
-		/// <param name="cancellationToken"></param>
+		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns></returns>
 		public async Task<string[]> GetPermissionsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -199,17 +199,17 @@ namespace StrongGrid.Resources
 			// The fact that the charset is slightly misspelled prevents the .Net HttpClient from
 			// being able to parse the body of the reponse. The HttpClient throws the following exception
 			// when we try to get the content of the response like so: response.Content.ReadAsStreamAsync()
-			//		The character set provided in ContentType is invalid. Cannot read content as string using
-			//		an invalid character set. System.ArgumentException: 'utf8' is not a supported encoding name
-			
+			// 		The character set provided in ContentType is invalid. Cannot read content as string using
+			// 		an invalid character set. System.ArgumentException: 'utf8' is not a supported encoding name
+
 			// I contacted SendGrid on 11/23/2016 to report this problem: https://support.sendgrid.com/hc/en-us/requests/806220
-			
+
 			// A support engineer from SendGrid confirmed the issue on 11/24/2016 and said: 
-			//		I will put in a new feature request to our engineers to see if they will be able to have
-			//		the charset removed from that API call
+			// 		I will put in a new feature request to our engineers to see if they will be able to have
+			// 		the charset removed from that API call
 
 			// Until SendGrid solves the problem on their end by either omiting the charset or fixing the misspelling,
-			// we must read the content into a stream and convert the stream to a string which allows us to specify 
+			// we must read the content into a stream and convert the stream to a string which allows us to specify
 			// the desired charset (which is Encoding.UTF8 in this case).
 			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 			var responseContent = string.Empty;

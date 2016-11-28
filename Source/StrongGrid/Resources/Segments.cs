@@ -14,11 +14,11 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the Campaigns class.
+		/// Initializes a new instance of the <see cref="Campaigns"/> class.
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/campaigns.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint, do not prepend slash</param>
+		/// <param name="endpoint">Resource endpoint</param>
 		public Segments(IClient client, string endpoint = "/contactdb/segments")
 		{
 			_endpoint = endpoint;
@@ -27,7 +27,7 @@ namespace StrongGrid.Resources
 
 		public async Task<Segment> CreateAsync(string name, long listId, IEnumerable<SearchCondition> conditions, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			conditions = (conditions ?? Enumerable.Empty<SearchCondition>());
+			conditions = conditions ?? Enumerable.Empty<SearchCondition>();
 
 			var data = new JObject
 			{
@@ -89,7 +89,7 @@ namespace StrongGrid.Resources
 
 		public async Task<Segment> UpdateAsync(long segmentId, string name = null, long? listId = null, IEnumerable<SearchCondition> conditions = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			conditions = (conditions ?? Enumerable.Empty<SearchCondition>());
+			conditions = conditions ?? Enumerable.Empty<SearchCondition>();
 
 			var data = new JObject();
 			if (!string.IsNullOrEmpty(name)) data.Add("name", name);

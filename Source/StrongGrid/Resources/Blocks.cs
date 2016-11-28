@@ -17,7 +17,7 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the Blocks class.
+		/// Initializes a new instance of the <see cref="Blocks"/> class.
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/blocks.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
@@ -31,7 +31,11 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve all blocks.
 		/// </summary>
-		/// <param name="cancellationToken"></param>
+		/// <param name="startDate"></param>
+		/// <param name="endDate"></param>
+		/// <param name="limit"></param>
+		/// <param name="offset"></param>
+		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns></returns>
 		public async Task<Block[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 25, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -47,6 +51,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve a specific block.
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task<Block> GetAsync(string emailAddress, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/{1}", _endpoint, emailAddress);
@@ -61,6 +66,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Delete all blocks.
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task DeleteAllAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
@@ -74,6 +80,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Delete multiple blocks.
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task DeleteMultipleAsync(IEnumerable<string> emailAddresses, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
@@ -87,6 +94,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Delete a specific block.
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task DeleteAsync(string emailAddress, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/{1}", _endpoint, emailAddress);

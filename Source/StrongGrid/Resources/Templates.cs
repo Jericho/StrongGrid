@@ -12,11 +12,11 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the Templates class.
+		/// Initializes a new instance of the <see cref="Templates"/> class.
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Transactional_Templates/templates.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint, do not prepend slash</param>
+		/// <param name="endpoint">Resource endpoint</param>
 		public Templates(IClient client, string endpoint = "/templates")
 		{
 			_endpoint = endpoint;

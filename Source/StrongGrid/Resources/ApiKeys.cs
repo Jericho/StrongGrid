@@ -10,13 +10,17 @@ using System.Threading.Tasks;
 
 namespace StrongGrid.Resources
 {
+	/// <summary>
+	/// API Keys allow you to generate an API Key credential which can be used for authentication
+	/// with the SendGrid v3 Web API, the v3 Mail Send endpoint, and the v2 Mail Send endpoint.
+	/// </summary>
 	public class ApiKeys
 	{
 		private readonly string _endpoint;
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the APIKeys class.
+		/// Initializes a new instance of the <see cref="ApiKeys"/> class.
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/API_Keys/index.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
@@ -31,7 +35,7 @@ namespace StrongGrid.Resources
 		/// Get an existing API Key
 		/// </summary>
 		/// <param name="keyId"></param>
-		/// <param name="cancellationToken"></param>
+		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns></returns>
 		public async Task<ApiKey> GetAsync(string keyId, CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -50,7 +54,7 @@ namespace StrongGrid.Resources
 		/// The response does not include the permissions associated with each api key.
 		/// In order to get the permission for a given key, you need to <see cref="GetAsync(string, CancellationToken)">retrieve keys one at a time</see>.
 		/// </remarks>
-		/// <param name="cancellationToken"></param>
+		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns></returns>
 		public async Task<ApiKey[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -81,11 +85,11 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="name"></param>
 		/// <param name="scopes"></param>
-		/// <param name="cancellationToken"></param>
+		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns></returns>
 		public async Task<ApiKey> CreateAsync(string name, IEnumerable<string> scopes = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			scopes = (scopes ?? Enumerable.Empty<string>());
+			scopes = scopes ?? Enumerable.Empty<string>();
 
 			var data = CreateJObjectForApiKey(name, scopes);
 			var response = await _client.PostAsync(_endpoint, data, cancellationToken).ConfigureAwait(false);
@@ -100,7 +104,7 @@ namespace StrongGrid.Resources
 		/// Revoke an existing API Key
 		/// </summary>
 		/// <param name="keyId"></param>
-		/// <param name="cancellationToken"></param>
+		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns></returns>
 		public async Task DeleteAsync(string keyId, CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -114,11 +118,11 @@ namespace StrongGrid.Resources
 		/// <param name="keyId"></param>
 		/// <param name="name"></param>
 		/// <param name="scopes"></param>
-		/// <param name="cancellationToken"></param>
+		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns></returns>
 		public async Task<ApiKey> UpdateAsync(string keyId, string name, IEnumerable<string> scopes = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			scopes = (scopes ?? Enumerable.Empty<string>());
+			scopes = scopes ?? Enumerable.Empty<string>();
 
 			HttpResponseMessage response = null;
 			var data = CreateJObjectForApiKey(name, scopes);
@@ -139,12 +143,12 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Generate a new API Key for billing 
+		/// Generate a new API Key for billing
 		/// </summary>
 		/// <param name="name"></param>
-		/// <param name="cancellationToken"></param>
+		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns></returns>
-		public  Task<ApiKey> CreateWithBillingPermissionsAsync(string name, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<ApiKey> CreateWithBillingPermissionsAsync(string name, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var scopes = new[]
 			{
@@ -164,7 +168,7 @@ namespace StrongGrid.Resources
 		/// If you specify a username and password when instanciating the <see cref="Client"/>, the new API Key will inherit the permissions of that user.
 		/// </remarks>
 		/// <param name="name"></param>
-		/// <param name="cancellationToken"></param>
+		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns></returns>
 		public async Task<ApiKey> CreateWithAllPermissionsAsync(string name, CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -172,8 +176,8 @@ namespace StrongGrid.Resources
 			var permissions = await _client.User.GetPermissionsAsync(cancellationToken).ConfigureAwait(false);
 
 			// The SendGrid documentation clearly states:
-			//		Billing permissions are mutually exclusive from all others. 
-			//		An API Key can either have Billing Permissions, or any other set of Permissions.
+			// 		Billing permissions are mutually exclusive from all others.
+			// 		An API Key can either have Billing Permissions, or any other set of Permissions.
 			// Therefore it's important to exclude 'billing' permissions.
 			permissions = permissions.Where(p => !p.StartsWith("Billing", StringComparison.OrdinalIgnoreCase)).ToArray();
 

@@ -15,11 +15,11 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the Bounces class.
+		/// Initializes a new instance of the <see cref="Bounces"/> class.
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/bounces.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint, do not prepend slash</param>
+		/// <param name="endpoint">Resource endpoint</param>
 		public Bounces(IClient client, string endpoint = "/suppression/bounces")
 		{
 			_endpoint = endpoint;

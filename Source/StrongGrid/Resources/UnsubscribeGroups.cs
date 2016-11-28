@@ -12,11 +12,11 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the UnsubscribeGroups class.
+		/// Initializes a new instance of the <see cref="UnsubscribeGroups"/> class.
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/groups.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint, do not prepend slash</param>
+		/// <param name="endpoint">Resource endpoint</param>
 		public UnsubscribeGroups(IClient client, string endpoint = "/asm/groups")
 		{
 			_endpoint = endpoint;
@@ -78,8 +78,10 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Update an existing suppression group.
 		/// </summary>
+		/// <param name="groupId"></param>
 		/// <param name="name">The name of the new suppression group</param>
 		/// <param name="description">A description of the suppression group</param>
+		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/groups.html</returns>
 		public async Task<SuppressionGroup> UpdateAsync(int groupId, string name = null, string description = null, CancellationToken cancellationToken = default(CancellationToken))
 		{

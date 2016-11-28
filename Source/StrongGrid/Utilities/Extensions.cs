@@ -46,7 +46,9 @@ namespace StrongGrid.Utilities
 					dynamic firstError = dynamicArray.First;
 
 					content = firstError.message.ToString();
+#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
 				} catch
+#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
 				{
 					// Intentionally ignore parsing errors
 				}

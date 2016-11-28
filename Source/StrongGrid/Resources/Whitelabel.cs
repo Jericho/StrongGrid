@@ -12,11 +12,11 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the Whitelabel class.
+		/// Initializes a new instance of the <see cref="Whitelabel"/> class.
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/domains.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint, do not prepend slash</param>
+		/// <param name="endpoint">Resource endpoint</param>
 		public Whitelabel(IClient client, string endpoint = "/whitelabel")
 		{
 			_endpoint = endpoint;
@@ -49,6 +49,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get a specific domain whitelabel
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task<WhitelabelDomain> GetDomainAsync(long domainId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/domains/{1}", _endpoint, domainId);
@@ -63,6 +64,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Create a new domain whitelabel
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task<WhitelabelDomain> CreateDomainAsync(string domain, string subdomain, bool automaticSecurity = false, bool customSpf = false, bool isDefault = false, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/domains", _endpoint);
@@ -85,6 +87,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Update a whitelabel domain.
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task<WhitelabelDomain> UpdateDomainAsync(long domainId, bool isDefault = false, bool customSpf = false, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/domains/{1}", _endpoint, domainId);
@@ -104,6 +107,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Delete a whitelabel domain.
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task DeleteDomainAsync(long id, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/domains/{1}", _endpoint, id);
@@ -114,6 +118,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Add an IP to a Domain
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task<WhitelabelDomain> AddIpAddressToDomainAsync(long domainId, string ipAddress, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/domains/{1}/ips", _endpoint, domainId);
@@ -132,6 +137,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Remove an IP from a Domain
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task<WhitelabelDomain> DeleteIpAddressFromDomainAsync(long domainId, string ipAddress, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/domains/{1}/ips/{2}", _endpoint, domainId, ipAddress);
@@ -146,6 +152,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Validate a Domain
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task<DomainValidation> ValidateDomainAsync(long domainId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/domains/{1}/validate", _endpoint, domainId);
@@ -166,6 +173,7 @@ namespace StrongGrid.Resources
 		/// parent account must first create a Whitelabel and validate it. Then the parent may associate
 		/// the Whitelabel in subuser management.
 		/// </remarks>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task<WhitelabelDomain> GetAssociatedDomainAsync(string username = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/domains/subuser?username={1}", _endpoint, username);
@@ -180,6 +188,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Disassociate Domain
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task DisassociateDomainAsync(string username = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/domains/subuser?username={1}", _endpoint, username);
@@ -190,6 +199,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Associate Domain
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task<WhitelabelDomain> AssociateDomainAsync(long domainId, string username = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/domains/{1}/subuser", _endpoint, domainId);
@@ -215,6 +225,7 @@ namespace StrongGrid.Resources
 		/// the IP.
 		/// </remarks>
 		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/ips.html</returns>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task<WhitelabelIp[]> GetAllIpsAsync(string segmentPrefix = null, int limit = 50, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/ips?limit={1}&offset={2}&ip={3}", _endpoint, limit, offset, segmentPrefix);
@@ -230,6 +241,7 @@ namespace StrongGrid.Resources
 		/// Get a specific IP whitelabel
 		/// </summary>
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/ips.html
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task<WhitelabelIp> GetIpAsync(long id, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/ips/{1}", _endpoint, id);
@@ -244,6 +256,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Create an IP
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task<WhitelabelIp> CreateIpAsync(string ipAddress, string domain, string subdomain, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/ips", _endpoint);
@@ -264,6 +277,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Delete an IP
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task DeleteIpAsync(long ipId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/ips/{1}", _endpoint, ipId);
@@ -274,6 +288,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Validate an IP
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task<IpValidation> ValidateIpAsync(long ipId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/ips/{1}/validate", _endpoint, ipId);
@@ -294,6 +309,7 @@ namespace StrongGrid.Resources
 		/// rewritten to and for us to verify that they are the domain owners.
 		/// </remarks>
 		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/links.html</returns>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task<WhitelabelLink[]> GetAllLinksAsync(string segmentPrefix = null, int limit = 50, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/links?limit={1}&offset={2}&ip={3}", _endpoint, limit, offset, segmentPrefix);
@@ -308,6 +324,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get a specific Link whitelabel
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task<WhitelabelLink> GetLinkAsync(long id, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/links/{1}", _endpoint, id);
@@ -322,6 +339,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Create a Link
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task<WhitelabelLink> CreateLinkAsync(string domain, string subdomain, bool isDefault, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/links", _endpoint);
@@ -342,6 +360,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Update a Link
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task<WhitelabelLink> UpdateLinkAsync(long linkId, bool isDefault, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/links/{1}", _endpoint, linkId);
@@ -360,6 +379,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Delete a link
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task DeleteLinkAsync(long linkId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/links/{1}", _endpoint, linkId);
@@ -370,6 +390,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get the default link for a domain
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task<WhitelabelLink> GetDefaultLinkAsync(string domain, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/links/default?domain={1}", _endpoint, domain);
@@ -384,6 +405,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Validate a link
 		/// </summary>
+		/// <param name="linkId"></param>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task<LinkValidation> ValidateLinkAsync(long linkId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/links/{1}/validate", _endpoint, linkId);
@@ -404,6 +427,8 @@ namespace StrongGrid.Resources
 		/// account must first create a Whitelabel and validate it. Then the parent may associate the
 		/// Whitelabel in subuser management.
 		/// </remarks>
+		/// <param name="username"></param>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task<WhitelabelLink> GetAssociatedLinkAsync(string username = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/links/subuser?username={1}", _endpoint, username);
@@ -418,6 +443,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Disassociate Link
 		/// </summary>
+		/// <param name="username"></param>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task DisassociateLinkAsync(string username = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/links/subuser?username={1}", _endpoint, username);
@@ -428,6 +455,9 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Associate Link
 		/// </summary>
+		/// <param name="linkId"></param>
+		/// <param name="username"></param>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task<WhitelabelLink> AssociateLinkAsync(long linkId, string username = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/links/{1}/subuser", _endpoint, linkId);

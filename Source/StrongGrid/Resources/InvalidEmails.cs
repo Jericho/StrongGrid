@@ -16,7 +16,7 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the InvalidEmails class.
+		/// Initializes a new instance of the <see cref="InvalidEmails"/> class.
 		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/alerts.html
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
@@ -30,7 +30,11 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve all invalid emails.
 		/// </summary>
-		/// <param name="cancellationToken"></param>
+		/// <param name="startDate"></param>
+		/// <param name="endDate"></param>
+		/// <param name="limit"></param>
+		/// <param name="offset"></param>
+		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns></returns>
 		public async Task<InvalidEmail[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 25, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -46,6 +50,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve a specific invalid email.
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task<InvalidEmail> GetAsync(string emailAddress, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/{1}", _endpoint, emailAddress);
@@ -60,6 +65,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Delete all invalid emails.
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task DeleteAllAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
@@ -73,6 +79,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Delete multiple invalid emails.
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task DeleteMultipleAsync(IEnumerable<string> emailAddresses, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
@@ -86,6 +93,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Delete a specific invalid emails.
 		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
 		public async Task DeleteAsync(string emailAddress, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/{1}", _endpoint, emailAddress);
