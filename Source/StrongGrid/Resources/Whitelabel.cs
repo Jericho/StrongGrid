@@ -359,7 +359,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="ipId">The ip identifier.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task DeleteIpAsync(long ipId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/ips/{1}", _endpoint, ipId);

@@ -120,7 +120,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="groupId">ID of the suppression group to delete</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task DeleteAsync(int groupId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.DeleteAsync(string.Format("{0}/{1}", _endpoint, groupId), cancellationToken).ConfigureAwait(false);

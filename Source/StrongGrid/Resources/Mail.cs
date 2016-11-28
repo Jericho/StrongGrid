@@ -180,7 +180,9 @@ namespace StrongGrid.Resources
 		/// <param name="mailSettings">The mail settings.</param>
 		/// <param name="trackingSettings">The tracking settings.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task SendAsync(
 			IEnumerable<MailPersonalization> personalizations,
 			string subject,

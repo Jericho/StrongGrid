@@ -43,13 +43,13 @@
   <files>
     <file src="StrongGrid/bin/Release/net452/StrongGrid.dll" target="lib/net452" />
     <file src="StrongGrid/bin/Release/net452/StrongGrid.pdb" target="lib/net452" />
-    <file src="StrongGrid/bin/Release/net452/StrongGrid.xml" target="lib/net462" />
+    <file src="StrongGrid/bin/Release/net452/StrongGrid.xml" target="lib/net452" />
     <file src="StrongGrid/bin/Release/net46/StrongGrid.dll" target="lib/net46" />
     <file src="StrongGrid/bin/Release/net46/StrongGrid.pdb" target="lib/net46" />
-    <file src="StrongGrid/bin/Release/net46/StrongGrid.xml" target="lib/net462" />
+    <file src="StrongGrid/bin/Release/net46/StrongGrid.xml" target="lib/net46" />
     <file src="StrongGrid/bin/Release/net461/StrongGrid.dll" target="lib/net461" />
     <file src="StrongGrid/bin/Release/net461/StrongGrid.pdb" target="lib/net461" />
-    <file src="StrongGrid/bin/Release/net461/StrongGrid.xml" target="lib/net462" />
+    <file src="StrongGrid/bin/Release/net461/StrongGrid.xml" target="lib/net461" />
     <file src="StrongGrid/bin/Release/net462/StrongGrid.dll" target="lib/net462" />
     <file src="StrongGrid/bin/Release/net462/StrongGrid.pdb" target="lib/net462" />
     <file src="StrongGrid/bin/Release/net462/StrongGrid.xml" target="lib/net462" />
