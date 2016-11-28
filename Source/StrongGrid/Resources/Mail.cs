@@ -9,14 +9,19 @@ using System.Threading.Tasks;
 
 namespace StrongGrid.Resources
 {
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <remarks>
+	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Mail/index.html
+	/// </remarks>
 	public class Mail
 	{
 		private readonly string _endpoint;
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Mail"/> class.
-		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Mail/index.html
+		/// Initializes a new instance of the <see cref="Mail" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
 		/// <param name="endpoint">Resource endpoint</param>
@@ -29,9 +34,30 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Send an email to a single recipient
 		/// </summary>
+		/// <param name="to">To.</param>
+		/// <param name="from">From.</param>
+		/// <param name="subject">The subject.</param>
+		/// <param name="htmlContent">Content of the HTML.</param>
+		/// <param name="textContent">Content of the text.</param>
+		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
+		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
+		/// <param name="subscriptionTracking">The subscription tracking.</param>
+		/// <param name="replyTo">The reply to.</param>
+		/// <param name="attachments">The attachments.</param>
+		/// <param name="templateId">The template identifier.</param>
+		/// <param name="sections">The sections.</param>
+		/// <param name="headers">The headers.</param>
+		/// <param name="categories">The categories.</param>
+		/// <param name="sendAt">The send at.</param>
+		/// <param name="batchId">The batch identifier.</param>
+		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
+		/// <param name="ipPoolName">Name of the ip pool.</param>
+		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
 		/// <remarks>
 		/// This is a convenience method with simplified parameters.
-		/// If you need more options, use the <see cref="SendAsync"/> method.
+		/// If you need more options, use the <see cref="SendAsync" /> method.
 		/// </remarks>
 		public Task SendToSingleRecipientAsync(
 			MailAddress to,
@@ -62,9 +88,30 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Send the same email to multiple recipients
 		/// </summary>
+		/// <param name="recipients">The recipients.</param>
+		/// <param name="from">From.</param>
+		/// <param name="subject">The subject.</param>
+		/// <param name="htmlContent">Content of the HTML.</param>
+		/// <param name="textContent">Content of the text.</param>
+		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
+		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
+		/// <param name="subscriptionTracking">The subscription tracking.</param>
+		/// <param name="replyTo">The reply to.</param>
+		/// <param name="attachments">The attachments.</param>
+		/// <param name="templateId">The template identifier.</param>
+		/// <param name="sections">The sections.</param>
+		/// <param name="headers">The headers.</param>
+		/// <param name="categories">The categories.</param>
+		/// <param name="sendAt">The send at.</param>
+		/// <param name="batchId">The batch identifier.</param>
+		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
+		/// <param name="ipPoolName">Name of the ip pool.</param>
+		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
 		/// <remarks>
 		/// This is a convenience method with simplified parameters.
-		/// If you need more options, use the <see cref="SendAsync"/> method.
+		/// If you need more options, use the <see cref="SendAsync" /> method.
 		/// </remarks>
 		public Task SendToMultipleRecipientsAsync(
 			IEnumerable<MailAddress> recipients,
@@ -112,7 +159,24 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Send email(s) over SendGrid’s v3 Web API
 		/// </summary>
+		/// <param name="personalizations">The personalizations.</param>
+		/// <param name="subject">The subject.</param>
+		/// <param name="contents">The contents.</param>
+		/// <param name="from">From.</param>
+		/// <param name="replyTo">The reply to.</param>
+		/// <param name="attachments">The attachments.</param>
+		/// <param name="templateId">The template identifier.</param>
+		/// <param name="sections">The sections.</param>
+		/// <param name="headers">The headers.</param>
+		/// <param name="categories">The categories.</param>
+		/// <param name="sendAt">The send at.</param>
+		/// <param name="batchId">The batch identifier.</param>
+		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
+		/// <param name="ipPoolName">Name of the ip pool.</param>
+		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="trackingSettings">The tracking settings.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns></returns>
 		public async Task SendAsync(
 			IEnumerable<MailPersonalization> personalizations,
 			string subject,

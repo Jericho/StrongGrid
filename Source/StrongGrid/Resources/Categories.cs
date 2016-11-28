@@ -9,14 +9,16 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Categories help organize your email analytics by enabling you to tag emails you send by topics you define.
 	/// </summary>
+	/// <remarks>
+	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Categories/categories.html
+	/// </remarks>
 	public class Categories
 	{
 		private readonly string _endpoint;
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Categories"/> class.
-		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Categories/categories.html
+		/// Initializes a new instance of the <see cref="Categories" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
 		/// <param name="endpoint">Resource endpoint</param>

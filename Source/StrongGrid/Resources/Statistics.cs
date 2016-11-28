@@ -10,14 +10,19 @@ using System.Threading.Tasks;
 
 namespace StrongGrid.Resources
 {
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <remarks>
+	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Stats/index.html
+	/// </remarks>
 	public class Statistics
 	{
 		private readonly string _endpoint;
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Statistics"/> class.
-		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Stats/index.html
+		/// Initializes a new instance of the <see cref="Statistics" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
 		/// <param name="endpoint">Resource endpoint</param>
@@ -34,6 +39,7 @@ namespace StrongGrid.Resources
 		/// <param name="startDate">The starting date of the statistics to retrieve.</param>
 		/// <param name="endDate">The end date of the statistics to retrieve. Defaults to today.</param>
 		/// <param name="aggregatedBy">How to group the statistics, must be day|week|month</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns></returns>
 		public async Task<Statistic[]> GetGlobalStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -57,6 +63,7 @@ namespace StrongGrid.Resources
 		/// <param name="startDate">The starting date of the statistics to retrieve.</param>
 		/// <param name="endDate">The end date of the statistics to retrieve. Defaults to today.</param>
 		/// <param name="aggregatedBy">How to group the statistics, must be day|week|month</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns></returns>
 		public async Task<Statistic[]> GetCategoriesStatisticsAsync(IEnumerable<string> categories, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -87,6 +94,7 @@ namespace StrongGrid.Resources
 		/// <param name="startDate">The starting date of the statistics to retrieve.</param>
 		/// <param name="endDate">The end date of the statistics to retrieve. Defaults to today.</param>
 		/// <param name="aggregatedBy">How to group the statistics, must be day|week|month</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns></returns>
 		public async Task<Statistic[]> GetSubusersStatisticsAsync(IEnumerable<string> subusers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -117,6 +125,7 @@ namespace StrongGrid.Resources
 		/// <param name="startDate">The starting date of the statistics to retrieve.</param>
 		/// <param name="endDate">The end date of the statistics to retrieve. Defaults to today.</param>
 		/// <param name="aggregatedBy">How to group the statistics, must be day|week|month</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns></returns>
 		public async Task<Statistic[]> GetCountryStatisticsAsync(string country, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -140,6 +149,7 @@ namespace StrongGrid.Resources
 		/// <param name="startDate">The starting date of the statistics to retrieve.</param>
 		/// <param name="endDate">The end date of the statistics to retrieve. Defaults to today.</param>
 		/// <param name="aggregatedBy">How to group the statistics, must be day|week|month</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns></returns>
 		public async Task<Statistic[]> GetDeviceTypesStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -162,6 +172,7 @@ namespace StrongGrid.Resources
 		/// <param name="startDate">The starting date of the statistics to retrieve.</param>
 		/// <param name="endDate">The end date of the statistics to retrieve. Defaults to today.</param>
 		/// <param name="aggregatedBy">How to group the statistics, must be day|week|month</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns></returns>
 		public async Task<Statistic[]> GetClientTypesStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -185,6 +196,7 @@ namespace StrongGrid.Resources
 		/// <param name="startDate">The starting date of the statistics to retrieve.</param>
 		/// <param name="endDate">The end date of the statistics to retrieve. Defaults to today.</param>
 		/// <param name="aggregatedBy">How to group the statistics, must be day|week|month</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns></returns>
 		public async Task<Statistic[]> GetInboxProvidersStatisticsAsync(IEnumerable<string> providers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -215,6 +227,7 @@ namespace StrongGrid.Resources
 		/// <param name="startDate">The starting date of the statistics to retrieve.</param>
 		/// <param name="endDate">The end date of the statistics to retrieve. Defaults to today.</param>
 		/// <param name="aggregatedBy">How to group the statistics, must be day|week|month</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns></returns>
 		public async Task<Statistic[]> GetBrowsersStatisticsAsync(IEnumerable<string> browsers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{

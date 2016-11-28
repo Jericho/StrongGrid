@@ -13,7 +13,7 @@ namespace StrongGrid.Resources
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Batches"/> class.
+		/// Initializes a new instance of the <see cref="Batches" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
 		/// <param name="endpoint">Resource endpoint</param>
@@ -48,7 +48,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Validate whether or not a batch id is valid
 		/// </summary>
-		/// <param name="batchId"></param>
+		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns></returns>
 		public async Task<bool> ValidateBatchIdAsync(string batchId, CancellationToken cancellationToken = default(CancellationToken))
@@ -95,7 +95,7 @@ namespace StrongGrid.Resources
 		/// The Cancel Scheduled Sends feature allows the customer to cancel a scheduled send based on a Batch ID.
 		/// Scheduled sends cancelled less than 10 minutes before the scheduled time are not guaranteed to be cancelled
 		/// </summary>
-		/// <param name="batchId"></param>
+		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns></returns>
 		public async Task Cancel(string batchId, CancellationToken cancellationToken = default(CancellationToken))
@@ -112,7 +112,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// The Pause Scheduled Sends feature allows the customer to pause a scheduled send based on a Batch ID.
 		/// </summary>
-		/// <param name="batchId"></param>
+		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns></returns>
 		public async Task Pause(string batchId, CancellationToken cancellationToken = default(CancellationToken))
@@ -144,7 +144,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Delete the cancellation/pause of a scheduled send.
 		/// </summary>
-		/// <param name="batchId"></param>
+		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns></returns>
 		public async Task Resume(string batchId, CancellationToken cancellationToken = default(CancellationToken))

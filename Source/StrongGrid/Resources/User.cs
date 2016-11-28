@@ -8,14 +8,19 @@ using System.Threading.Tasks;
 
 namespace StrongGrid.Resources
 {
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <remarks>
+	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html
+	/// </remarks>
 	public class User
 	{
 		private readonly string _endpoint;
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="User"/> class.
-		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html
+		/// Initializes a new instance of the <see cref="User" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
 		/// <param name="endpoint">Resource endpoint</param>
@@ -28,7 +33,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get your user profile
 		/// </summary>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html</returns>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
 		public async Task<UserProfile> GetProfileAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(_endpoint, cancellationToken).ConfigureAwait(false);
@@ -42,7 +48,18 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Update your user profile
 		/// </summary>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html</returns>
+		/// <param name="address">The address.</param>
+		/// <param name="city">The city.</param>
+		/// <param name="company">The company.</param>
+		/// <param name="country">The country.</param>
+		/// <param name="firstName">The first name.</param>
+		/// <param name="lastName">The last name.</param>
+		/// <param name="phone">The phone.</param>
+		/// <param name="state">The state.</param>
+		/// <param name="website">The website.</param>
+		/// <param name="zip">The zip.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
 		public async Task<UserProfile> UpdateProfileAsync(string address = null, string city = null, string company = null, string country = null, string firstName = null, string lastName = null, string phone = null, string state = null, string website = null, string zip = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = CreateJObjectForUserProfile(address, city, company, country, firstName, lastName, phone, state, website, zip);
@@ -57,7 +74,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get your user account
 		/// </summary>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html</returns>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
 		public async Task<Account> GetAccountAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync("/user/account", cancellationToken).ConfigureAwait(false);
@@ -71,7 +89,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve the email address on file for your account
 		/// </summary>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html</returns>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
 		public async Task<string> GetEmailAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync("/user/email", cancellationToken).ConfigureAwait(false);
@@ -91,7 +110,9 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Update the email address on file for your account
 		/// </summary>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html</returns>
+		/// <param name="email">The email.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
 		public async Task<string> UpdateEmailAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
@@ -114,7 +135,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve your account username
 		/// </summary>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html</returns>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
 		public async Task<string> GetUsernameAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync("/user/username", cancellationToken).ConfigureAwait(false);
@@ -135,7 +157,9 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Update your account username
 		/// </summary>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html</returns>
+		/// <param name="username">The username.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
 		public async Task<string> UpdateUsernameAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
@@ -158,7 +182,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve the current credit balance for your account
 		/// </summary>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html</returns>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
 		public async Task<UserCredits> GetCreditsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync("/user/credits", cancellationToken).ConfigureAwait(false);
@@ -172,7 +197,10 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Update the password for your account
 		/// </summary>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html</returns>
+		/// <param name="oldPassword">The old password.</param>
+		/// <param name="newPassword">The new password.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
 		public async Task UpdatePasswordAsync(string oldPassword, string newPassword, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();

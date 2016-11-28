@@ -9,14 +9,19 @@ using System.Threading.Tasks;
 
 namespace StrongGrid.Resources
 {
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <remarks>
+	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/contactdb.html
+	/// </remarks>
 	public class Contacts
 	{
 		private readonly string _endpoint;
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Contacts"/> class.
-		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/contactdb.html
+		/// Initializes a new instance of the <see cref="Contacts" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
 		/// <param name="endpoint">Resource endpoint</param>
@@ -26,6 +31,16 @@ namespace StrongGrid.Resources
 			_client = client;
 		}
 
+		/// <summary>
+		/// Creates the asynchronous.
+		/// </summary>
+		/// <param name="email">The email.</param>
+		/// <param name="firstName">The first name.</param>
+		/// <param name="lastName">The last name.</param>
+		/// <param name="customFields">The custom fields.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
+		/// <exception cref="System.Exception">Thrown when an exception occured while creating the contact.</exception>
 		public async Task<string> CreateAsync(string email, string firstName = null, string lastName = null, IEnumerable<Field> customFields = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var contact = new Contact(email, firstName, lastName, customFields);
@@ -40,6 +55,16 @@ namespace StrongGrid.Resources
 			return importResult.PersistedRecipients.Single();
 		}
 
+		/// <summary>
+		/// Updates the asynchronous.
+		/// </summary>
+		/// <param name="email">The email.</param>
+		/// <param name="firstName">The first name.</param>
+		/// <param name="lastName">The last name.</param>
+		/// <param name="customFields">The custom fields.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
+		/// <exception cref="System.Exception">Thrown when an exception occured while updating the contact.</exception>
 		public async Task UpdateAsync(string email, string firstName = null, string lastName = null, IEnumerable<Field> customFields = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var contact = new Contact(email, firstName, lastName, customFields);
@@ -57,6 +82,12 @@ namespace StrongGrid.Resources
 			}
 		}
 
+		/// <summary>
+		/// Imports the asynchronous.
+		/// </summary>
+		/// <param name="contacts">The contacts.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
 		public async Task<ImportResult> ImportAsync(IEnumerable<Contact> contacts, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JArray();
@@ -73,11 +104,23 @@ namespace StrongGrid.Resources
 			return importResult;
 		}
 
+		/// <summary>
+		/// Deletes the asynchronous.
+		/// </summary>
+		/// <param name="contactId">The contact identifier.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
 		public Task DeleteAsync(string contactId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return DeleteAsync(new[] { contactId }, cancellationToken);
 		}
 
+		/// <summary>
+		/// Deletes the asynchronous.
+		/// </summary>
+		/// <param name="contactId">The contact identifier.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
 		public async Task DeleteAsync(IEnumerable<string> contactId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = JArray.FromObject(contactId.ToArray());
@@ -85,6 +128,12 @@ namespace StrongGrid.Resources
 			response.EnsureSuccess();
 		}
 
+		/// <summary>
+		/// Gets the asynchronous.
+		/// </summary>
+		/// <param name="contactId">The contact identifier.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
 		public async Task<Contact> GetAsync(string contactId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(_endpoint + "/" + contactId, cancellationToken).ConfigureAwait(false);
@@ -95,6 +144,13 @@ namespace StrongGrid.Resources
 			return contact;
 		}
 
+		/// <summary>
+		/// Gets the asynchronous.
+		/// </summary>
+		/// <param name="recordsPerPage">The records per page.</param>
+		/// <param name="page">The page.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
 		public async Task<Contact[]> GetAsync(int recordsPerPage = 100, int page = 1, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(string.Format("{0}?page_size={1}&page={2}", _endpoint, recordsPerPage, page), cancellationToken).ConfigureAwait(false);
@@ -140,6 +196,11 @@ namespace StrongGrid.Resources
 			return recipients;
 		}
 
+		/// <summary>
+		/// Gets the billable count asynchronous.
+		/// </summary>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
 		public async Task<long> GetBillableCountAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(string.Format("{0}/billable_count", _endpoint), cancellationToken).ConfigureAwait(false);
@@ -159,6 +220,11 @@ namespace StrongGrid.Resources
 			return count;
 		}
 
+		/// <summary>
+		/// Gets the total count asynchronous.
+		/// </summary>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
 		public async Task<long> GetTotalCountAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(string.Format("{0}/count", _endpoint), cancellationToken).ConfigureAwait(false);
@@ -178,6 +244,13 @@ namespace StrongGrid.Resources
 			return count;
 		}
 
+		/// <summary>
+		/// Searches the asynchronous.
+		/// </summary>
+		/// <param name="conditions">The conditions.</param>
+		/// <param name="listId">The list identifier.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
 		public async Task<Contact[]> SearchAsync(IEnumerable<SearchCondition> conditions, int? listId = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();

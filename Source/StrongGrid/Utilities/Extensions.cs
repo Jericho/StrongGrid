@@ -8,16 +8,33 @@ namespace StrongGrid.Utilities
 	{
 		private static readonly DateTime EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
+		/// <summary>
+		/// Converts a 'unix time' (which is expressed as the number of seconds since midnight on
+		/// January 1st 1970) to a .Net <see cref="DateTime" />.
+		/// </summary>
+		/// <param name="unixTime">The unix time.</param>
+		/// <returns></returns>
 		public static DateTime FromUnixTime(this long unixTime)
 		{
 			return EPOCH.AddSeconds(unixTime);
 		}
 
+		/// <summary>
+		/// Converts a .Net <see cref="DateTime" /> into a 'unit time' (which is expressed as the number
+		/// of seconds since midnight on January 1st 1970).
+		/// </summary>
+		/// <param name="date">The date.</param>
+		/// <returns></returns>
 		public static long ToUnixTime(this DateTime date)
 		{
 			return Convert.ToInt64((date.ToUniversalTime() - EPOCH).TotalSeconds);
 		}
 
+		/// <summary>
+		/// Ensures that the response was a success. Throws an <see cref="Exception" />  otherwise.
+		/// </summary>
+		/// <param name="response">The response.</param>
+		/// <exception cref="System.Exception">Thrown when the response indicates that something went wrong.</exception>
 		public static void EnsureSuccess(this HttpResponseMessage response)
 		{
 			if (response.IsSuccessStatusCode) return;

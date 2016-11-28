@@ -9,14 +9,19 @@ using System.Threading.Tasks;
 
 namespace StrongGrid.Resources
 {
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <remarks>
+	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/spam_reports.html
+	/// </remarks>
 	public class SpamReports
 	{
 		private readonly string _endpoint;
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SpamReport"/> class.
-		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/spam_reports.html
+		/// Initializes a new instance of the <see cref="SpamReport" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
 		/// <param name="endpoint">Resource endpoint</param>
@@ -29,7 +34,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve a specific spam report.
 		/// </summary>
-		/// <param name="emailAddress"></param>
+		/// <param name="emailAddress">The email address.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns></returns>
 		public async Task<SpamReport[]> GetAsync(string emailAddress, CancellationToken cancellationToken = default(CancellationToken))
@@ -46,10 +51,10 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// List all spam reports.
 		/// </summary>
-		/// <param name="startDate"></param>
-		/// <param name="endDate"></param>
-		/// <param name="limit"></param>
-		/// <param name="offset"></param>
+		/// <param name="startDate">The start date.</param>
+		/// <param name="endDate">The end date.</param>
+		/// <param name="limit">The limit.</param>
+		/// <param name="offset">The offset.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns></returns>
 		public async Task<SpamReport[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 25, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
@@ -67,6 +72,7 @@ namespace StrongGrid.Resources
 		/// Delete all spam reports.
 		/// </summary>
 		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns></returns>
 		public async Task DeleteAllAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
@@ -80,7 +86,9 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Delete multiple spam reports.
 		/// </summary>
+		/// <param name="emailAddresses">The email addresses.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns></returns>
 		public async Task DeleteMultipleAsync(IEnumerable<string> emailAddresses, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
@@ -94,7 +102,9 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Delete a specific spam report.
 		/// </summary>
+		/// <param name="emailAddress">The email address.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns></returns>
 		public async Task DeleteAsync(string emailAddress, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/{1}", _endpoint, emailAddress);

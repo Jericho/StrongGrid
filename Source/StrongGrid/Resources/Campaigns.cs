@@ -14,14 +14,16 @@ namespace StrongGrid.Resources
 	/// you will be required to provide a subject, sender ID, content (we suggest both html
 	/// and plain text), and at least one list or segment ID.
 	/// </summary>
+	/// <remarks>
+	/// See also: https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/campaigns.html
+	/// </remarks>
 	public class Campaigns
 	{
 		private string _endpoint;
 		private IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Campaigns"/> class.
-		/// See also: https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/campaigns.html
+		/// Initializes a new instance of the <see cref="Campaigns" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
 		/// <param name="endpoint">Resource endpoint</param>
@@ -34,17 +36,17 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Create a campaign.
 		/// </summary>
-		/// <param name="title"></param>
-		/// <param name="suppressionGroupId"></param>
-		/// <param name="senderId"></param>
-		/// <param name="subject"></param>
-		/// <param name="htmlContent"></param>
-		/// <param name="textContent"></param>
-		/// <param name="listIds"></param>
-		/// <param name="segmentIds"></param>
-		/// <param name="categories"></param>
-		/// <param name="customUnsubscribeUrl"></param>
-		/// <param name="ipPool"></param>
+		/// <param name="title">The title.</param>
+		/// <param name="suppressionGroupId">The suppression group identifier.</param>
+		/// <param name="senderId">The sender identifier.</param>
+		/// <param name="subject">The subject.</param>
+		/// <param name="htmlContent">Content of the HTML.</param>
+		/// <param name="textContent">Content of the text.</param>
+		/// <param name="listIds">The list ids.</param>
+		/// <param name="segmentIds">The segment ids.</param>
+		/// <param name="categories">The categories.</param>
+		/// <param name="customUnsubscribeUrl">The custom unsubscribe URL.</param>
+		/// <param name="ipPool">The ip pool.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns></returns>
 		public async Task<Campaign> CreateAsync(string title, long suppressionGroupId, long senderId, string subject = null, string htmlContent = null, string textContent = null, IEnumerable<long> listIds = null, IEnumerable<long> segmentIds = null, IEnumerable<string> categories = null, string customUnsubscribeUrl = null, string ipPool = null, CancellationToken cancellationToken = default(CancellationToken))
@@ -65,8 +67,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve all campaigns.
 		/// </summary>
-		/// <param name="limit"></param>
-		/// <param name="offset"></param>
+		/// <param name="limit">The limit.</param>
+		/// <param name="offset">The offset.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns></returns>
 		public async Task<Campaign[]> GetAllAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
@@ -144,17 +146,17 @@ namespace StrongGrid.Resources
 		/// Update a campaign
 		/// </summary>
 		/// <param name="campaignId">The id of the campaign</param>
-		/// <param name="title"></param>
-		/// <param name="suppressionGroupId"></param>
-		/// <param name="senderId"></param>
-		/// <param name="subject"></param>
-		/// <param name="htmlContent"></param>
-		/// <param name="textContent"></param>
-		/// <param name="listIds"></param>
-		/// <param name="segmentIds"></param>
-		/// <param name="categories"></param>
-		/// <param name="customUnsubscribeUrl"></param>
-		/// <param name="ipPool"></param>
+		/// <param name="title">The title.</param>
+		/// <param name="suppressionGroupId">The suppression group identifier.</param>
+		/// <param name="senderId">The sender identifier.</param>
+		/// <param name="subject">The subject.</param>
+		/// <param name="htmlContent">Content of the HTML.</param>
+		/// <param name="textContent">Content of the text.</param>
+		/// <param name="listIds">The list ids.</param>
+		/// <param name="segmentIds">The segment ids.</param>
+		/// <param name="categories">The categories.</param>
+		/// <param name="customUnsubscribeUrl">The custom unsubscribe URL.</param>
+		/// <param name="ipPool">The ip pool.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns></returns>
 		public async Task<Campaign> UpdateAsync(long campaignId, string title = null, long? suppressionGroupId = null, long? senderId = null, string subject = null, string htmlContent = null, string textContent = null, IEnumerable<long> listIds = null, IEnumerable<long> segmentIds = null, IEnumerable<string> categories = null, string customUnsubscribeUrl = null, string ipPool = null, CancellationToken cancellationToken = default(CancellationToken))
@@ -189,7 +191,7 @@ namespace StrongGrid.Resources
 		/// Schedule a campaign to be sewnt at a later time.
 		/// </summary>
 		/// <param name="campaignId">The id of the campaign</param>
-		/// <param name="sendOn"></param>
+		/// <param name="sendOn">The send on.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns></returns>
 		public async Task ScheduleAsync(long campaignId, DateTime sendOn, CancellationToken cancellationToken = default(CancellationToken))
@@ -206,7 +208,7 @@ namespace StrongGrid.Resources
 		/// Change the date a campaign is scheduled to be sent
 		/// </summary>
 		/// <param name="campaignId">The id of the campaign</param>
-		/// <param name="sendOn"></param>
+		/// <param name="sendOn">The send on.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns></returns>
 		public async Task RescheduleAsync(long campaignId, DateTime sendOn, CancellationToken cancellationToken = default(CancellationToken))
@@ -261,9 +263,10 @@ namespace StrongGrid.Resources
 		/// Send a test campaign
 		/// </summary>
 		/// <param name="campaignId">The id of the campaign</param>
-		/// <param name="emailAddresses"></param>
+		/// <param name="emailAddresses">The email addresses.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns></returns>
+		/// <exception cref="System.ArgumentException">You must specify at least one email address</exception>
 		public async Task SendTestAsync(long campaignId, IEnumerable<string> emailAddresses, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			emailAddresses = emailAddresses ?? Enumerable.Empty<string>();

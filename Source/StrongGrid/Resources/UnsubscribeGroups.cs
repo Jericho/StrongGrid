@@ -6,14 +6,20 @@ using System.Threading.Tasks;
 
 namespace StrongGrid.Resources
 {
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <remarks>
+	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/groups.html
+	/// </remarks>
 	public class UnsubscribeGroups
 	{
 		private readonly string _endpoint;
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="UnsubscribeGroups"/> class.
-		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/groups.html
+		/// Initializes a new instance of the <see cref="UnsubscribeGroups" /> class.
+		/// See
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
 		/// <param name="endpoint">Resource endpoint</param>
@@ -26,7 +32,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve all suppression groups associated with the user.
 		/// </summary>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/groups.html</returns>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
 		public async Task<SuppressionGroup[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(_endpoint, cancellationToken).ConfigureAwait(false);
@@ -41,7 +48,8 @@ namespace StrongGrid.Resources
 		/// Get information on a single suppression group.
 		/// </summary>
 		/// <param name="groupId">ID of the suppression group to delete</param>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/groups.html</returns>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
 		public async Task<SuppressionGroup> GetAsync(int groupId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(string.Format("{0}/{1}", _endpoint, groupId), cancellationToken).ConfigureAwait(false);
@@ -58,7 +66,8 @@ namespace StrongGrid.Resources
 		/// <param name="name">The name of the new suppression group</param>
 		/// <param name="description">A description of the suppression group</param>
 		/// <param name="isDefault">Default value is false</param>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/groups.html</returns>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
 		public async Task<SuppressionGroup> CreateAsync(string name, string description, bool isDefault, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
@@ -78,11 +87,11 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Update an existing suppression group.
 		/// </summary>
-		/// <param name="groupId"></param>
+		/// <param name="groupId">The group identifier.</param>
 		/// <param name="name">The name of the new suppression group</param>
 		/// <param name="description">A description of the suppression group</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/groups.html</returns>
+		/// <returns></returns>
 		public async Task<SuppressionGroup> UpdateAsync(int groupId, string name = null, string description = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
@@ -101,7 +110,8 @@ namespace StrongGrid.Resources
 		/// Delete a suppression group.
 		/// </summary>
 		/// <param name="groupId">ID of the suppression group to delete</param>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/groups.html</returns>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns></returns>
 		public async Task DeleteAsync(int groupId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.DeleteAsync(string.Format("{0}/{1}", _endpoint, groupId), cancellationToken).ConfigureAwait(false);
