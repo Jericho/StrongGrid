@@ -38,7 +38,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="keyId">The key identifier.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="ApiKey" />.
+		/// </returns>
 		public async Task<ApiKey> GetAsync(string keyId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(string.Format("{0}/{1}", _endpoint, keyId), cancellationToken).ConfigureAwait(false);
@@ -53,7 +55,9 @@ namespace StrongGrid.Resources
 		/// Get all API Keys belonging to the authenticated user
 		/// </summary>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="ApiKey" />.
+		/// </returns>
 		/// <remarks>
 		/// The response does not include the permissions associated with each api key.
 		/// In order to get the permission for a given key, you need to <see cref="GetAsync(string, CancellationToken)">retrieve keys one at a time</see>.
@@ -88,7 +92,9 @@ namespace StrongGrid.Resources
 		/// <param name="name">The name.</param>
 		/// <param name="scopes">The scopes.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="ApiKey" />.
+		/// </returns>
 		public async Task<ApiKey> CreateAsync(string name, IEnumerable<string> scopes = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			scopes = scopes ?? Enumerable.Empty<string>();
@@ -121,7 +127,7 @@ namespace StrongGrid.Resources
 		/// <param name="name">The name.</param>
 		/// <param name="scopes">The scopes.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>The <see cref="ApiKey"/>.</returns>
 		public async Task<ApiKey> UpdateAsync(string keyId, string name, IEnumerable<string> scopes = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			scopes = scopes ?? Enumerable.Empty<string>();
@@ -149,7 +155,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="ApiKey" />.
+		/// </returns>
 		public Task<ApiKey> CreateWithBillingPermissionsAsync(string name, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var scopes = new[]
@@ -167,7 +175,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="ApiKey" />.
+		/// </returns>
 		/// <remarks>
 		/// If you specify an API Key when instanciating the <see cref="Client" />, the new API Key will inherit the permissions of that API Key.
 		/// If you specify a username and password when instanciating the <see cref="Client" />, the new API Key will inherit the permissions of that user.

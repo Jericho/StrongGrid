@@ -48,7 +48,9 @@ namespace StrongGrid.Resources
 		/// <param name="customUnsubscribeUrl">The custom unsubscribe URL.</param>
 		/// <param name="ipPool">The ip pool.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="Campaign" />.
+		/// </returns>
 		public async Task<Campaign> CreateAsync(string title, long suppressionGroupId, long senderId, string subject = null, string htmlContent = null, string textContent = null, IEnumerable<long> listIds = null, IEnumerable<long> segmentIds = null, IEnumerable<string> categories = null, string customUnsubscribeUrl = null, string ipPool = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			listIds = listIds ?? Enumerable.Empty<long>();
@@ -70,7 +72,9 @@ namespace StrongGrid.Resources
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="Campaign" />.
+		/// </returns>
 		public async Task<Campaign[]> GetAllAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}?limit={1}&offset={2}", _endpoint, limit, offset);
@@ -119,7 +123,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="campaignId">The id of the campaign</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="Campaign" />.
+		/// </returns>
 		public async Task<Campaign> GetAsync(long campaignId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(string.Format("{0}/{1}", _endpoint, campaignId), cancellationToken).ConfigureAwait(false);
@@ -158,7 +164,9 @@ namespace StrongGrid.Resources
 		/// <param name="customUnsubscribeUrl">The custom unsubscribe URL.</param>
 		/// <param name="ipPool">The ip pool.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="Campaign" />.
+		/// </returns>
 		public async Task<Campaign> UpdateAsync(long campaignId, string title = null, long? suppressionGroupId = null, long? senderId = null, string subject = null, string htmlContent = null, string textContent = null, IEnumerable<long> listIds = null, IEnumerable<long> segmentIds = null, IEnumerable<string> categories = null, string customUnsubscribeUrl = null, string ipPool = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			listIds = listIds ?? Enumerable.Empty<long>();
@@ -226,7 +234,10 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="campaignId">The id of the campaign</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="DateTime" /> the campaign is cheduled to be sent or <c>null</c> if the campaign is
+		/// not scheduled to be sent.
+		/// </returns>
 		public async Task<DateTime?> GetScheduledDateAsync(long campaignId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(string.Format("{0}/{1}/schedules", _endpoint, campaignId), cancellationToken).ConfigureAwait(false);

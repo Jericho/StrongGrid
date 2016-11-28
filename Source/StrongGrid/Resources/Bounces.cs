@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// 
+	/// Allows you to manage email addresses that have bounced.
 	/// </summary>
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/bounces.html
@@ -37,7 +37,9 @@ namespace StrongGrid.Resources
 		/// <param name="start">The start.</param>
 		/// <param name="end">The end.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="Bounce" />.
+		/// </returns>
 		public async Task<Bounce[]> GetAsync(DateTime? start = null, DateTime? end = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}?start_time={1}&end_time={2}", _endpoint, start.Value.ToUnixTime().ToString(), end.Value.ToUnixTime().ToString());
@@ -54,7 +56,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="email">The email.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="Bounce" />.
+		/// </returns>
 		public async Task<Bounce[]> GetAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(string.Format("{0}/{1}", _endpoint, email), cancellationToken).ConfigureAwait(false);

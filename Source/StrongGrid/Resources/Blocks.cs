@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// 
+	/// Allows you to manage blocked email addresses.
 	/// </summary>
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/blocks.html
@@ -41,7 +41,9 @@ namespace StrongGrid.Resources
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="Block">Blocks</see>.
+		/// </returns>
 		public async Task<Block[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 25, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}?start_time={1}&end_time={2}&limit={3}&offset={4}", _endpoint, startDate, endDate, limit, offset);
@@ -58,7 +60,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="emailAddress">The email address.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="Block" />.
+		/// </returns>
 		public async Task<Block> GetAsync(string emailAddress, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/{1}", _endpoint, emailAddress);

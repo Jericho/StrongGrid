@@ -41,7 +41,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="alertId">The alert identifier.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="Alert" />.
+		/// </returns>
 		public async Task<Alert> GetAsync(long alertId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/{1}", _endpoint, alertId);
@@ -57,7 +59,9 @@ namespace StrongGrid.Resources
 		/// Retrieve all alerts.
 		/// </summary>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="Alert" />.
+		/// </returns>
 		public async Task<Alert[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(_endpoint, cancellationToken).ConfigureAwait(false);
@@ -69,14 +73,16 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Create a new alert
+		/// Create a new alert.
 		/// </summary>
 		/// <param name="type">The type.</param>
 		/// <param name="emailTo">The email to.</param>
 		/// <param name="frequency">The frequency.</param>
 		/// <param name="percentage">The percentage.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="Alert" />.
+		/// </returns>
 		public async Task<Alert> CreateAsync(AlertType type, string emailTo = null, Frequency? frequency = null, int? percentage = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = CreateJObjectForAlert(type, emailTo, frequency, percentage);
@@ -110,7 +116,9 @@ namespace StrongGrid.Resources
 		/// <param name="frequency">The frequency.</param>
 		/// <param name="percentage">The percentage.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The <see cref="Alert" />.
+		/// </returns>
 		public async Task<Alert> UpdateAsync(long alertId, AlertType? type, string emailTo = null, Frequency? frequency = null, int? percentage = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/{1}", _endpoint, alertId);

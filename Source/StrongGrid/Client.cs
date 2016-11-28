@@ -347,85 +347,133 @@ namespace StrongGrid
 
 		#region PUBLIC METHODS
 
+		/// <summary>
+		/// Execute a GET operation asynchronously.
+		/// </summary>
 		/// <param name="endpoint">Resource endpoint</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns>The response from the HTTP request</returns>
+		/// <returns>
+		/// The response from the HTTP request
+		/// </returns>
 		public Task<HttpResponseMessage> GetAsync(string endpoint, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return RequestAsync(Methods.GET, endpoint, (JObject)null, cancellationToken);
 		}
 
+		/// <summary>
+		/// Execute a POST operation asynchronously.
+		/// </summary>
 		/// <param name="endpoint">Resource endpoint</param>
 		/// <param name="data">An JObject representing the resource's data</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns>The response from the HTTP request</returns>
+		/// <returns>
+		/// The response from the HTTP request
+		/// </returns>
 		public Task<HttpResponseMessage> PostAsync(string endpoint, JObject data, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return RequestAsync(Methods.POST, endpoint, data, cancellationToken);
 		}
 
+		/// <summary>
+		/// Execute a POST operation asynchronously.
+		/// </summary>
 		/// <param name="endpoint">Resource endpoint</param>
 		/// <param name="data">An JArray representing the resource's data</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns>The response from the HTTP request</returns>
+		/// <returns>
+		/// The response from the HTTP request
+		/// </returns>
 		public Task<HttpResponseMessage> PostAsync(string endpoint, JArray data, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return RequestAsync(Methods.POST, endpoint, data, cancellationToken);
 		}
 
+		/// <summary>
+		/// Execute a DELETE operation asynchronously.
+		/// </summary>
 		/// <param name="endpoint">Resource endpoint</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns>The response from the HTTP request</returns>
+		/// <returns>
+		/// The response from the HTTP request
+		/// </returns>
 		public Task<HttpResponseMessage> DeleteAsync(string endpoint, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return RequestAsync(Methods.DELETE, endpoint, (JObject)null, cancellationToken);
 		}
 
+		/// <summary>
+		/// Execute a DELETE operation asynchronously.
+		/// </summary>
 		/// <param name="endpoint">Resource endpoint</param>
 		/// <param name="data">An optional JObject representing the resource's data</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns>The response from the HTTP request</returns>
+		/// <returns>
+		/// The response from the HTTP request
+		/// </returns>
 		public Task<HttpResponseMessage> DeleteAsync(string endpoint, JObject data = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return RequestAsync(Methods.DELETE, endpoint, data, cancellationToken);
 		}
 
+		/// <summary>
+		/// Execute a DELETE operation asynchronously.
+		/// </summary>
 		/// <param name="endpoint">Resource endpoint</param>
 		/// <param name="data">An optional JArray representing the resource's data</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns>The response from the HTTP request</returns>
+		/// <returns>
+		/// The response from the HTTP request
+		/// </returns>
 		public Task<HttpResponseMessage> DeleteAsync(string endpoint, JArray data = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return RequestAsync(Methods.DELETE, endpoint, data, cancellationToken);
 		}
 
+		/// <summary>
+		/// Execute a PATCH operation asynchronously.
+		/// </summary>
 		/// <param name="endpoint">Resource endpoint</param>
 		/// <param name="data">An JObject representing the resource's data</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns>The response from the HTTP request</returns>
+		/// <returns>
+		/// The response from the HTTP request
+		/// </returns>
 		public Task<HttpResponseMessage> PatchAsync(string endpoint, JObject data, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return RequestAsync(Methods.PATCH, endpoint, data, cancellationToken);
 		}
 
+		/// <summary>
+		/// Execute a PATCH operation asynchronously.
+		/// </summary>
 		/// <param name="endpoint">Resource endpoint</param>
 		/// <param name="data">An JArray representing the resource's data</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns>The response from the HTTP request</returns>
+		/// <returns>
+		/// The response from the HTTP request
+		/// </returns>
 		public Task<HttpResponseMessage> PatchAsync(string endpoint, JArray data, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return RequestAsync(Methods.PATCH, endpoint, data, cancellationToken);
 		}
 
+		/// <summary>
+		/// Execute a PUT operation asynchronously.
+		/// </summary>
 		/// <param name="endpoint">Resource endpoint</param>
 		/// <param name="data">An JObject representing the resource's data</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns>The response from the HTTP request</returns>
+		/// <returns>
+		/// The response from the HTTP request
+		/// </returns>
 		public Task<HttpResponseMessage> PutAsync(string endpoint, JObject data, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return RequestAsync(Methods.PUT, endpoint, data, cancellationToken);
 		}
 
+		/// <summary>
+		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+		/// </summary>
 		public void Dispose()
 		{
 			// Call 'Dispose' to release resources
@@ -435,6 +483,10 @@ namespace StrongGrid
 			GC.SuppressFinalize(this);
 		}
 
+		/// <summary>
+		/// Releases unmanaged and - optionally - managed resources.
+		/// </summary>
+		/// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
 		protected virtual void Dispose(bool disposing)
 		{
 			if (disposing)

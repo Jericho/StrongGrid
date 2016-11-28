@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace StrongGrid.Resources
 {
+	/// <summary>
+	/// Allows you to manages batches.
+	/// </summary>
 	public class Batches
 	{
 		private readonly string _endpoint;
@@ -27,7 +30,9 @@ namespace StrongGrid.Resources
 		/// Generate a new Batch ID to associate with scheduled sends
 		/// </summary>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// The batch id.
+		/// </returns>
 		public async Task<string> GenerateBatchIdAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.PostAsync(_endpoint, (JObject)null, cancellationToken).ConfigureAwait(false);
@@ -50,7 +55,9 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		///   <c>true</c> if the batch id is valid; otherwise, <c>false</c>.
+		/// </returns>
 		public async Task<bool> ValidateBatchIdAsync(string batchId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/{1}", _endpoint, batchId);
@@ -130,7 +137,9 @@ namespace StrongGrid.Resources
 		/// Get all cancel/paused scheduled send information
 		/// </summary>
 		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns></returns>
+		/// <returns>
+		/// An array of <see cref="BatchInfo" />.
+		/// </returns>
 		public async Task<BatchInfo[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync("/user/scheduled_sends", cancellationToken).ConfigureAwait(false);
