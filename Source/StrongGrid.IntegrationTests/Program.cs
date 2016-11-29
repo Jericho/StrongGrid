@@ -73,20 +73,28 @@ namespace StrongGrid.IntegrationTests
 			var from = new MailAddress("test@example.com", "John Smith");
 			var to1 = new MailAddress("recipient1@mailinator.com", "Recipient1");
 			var to2 = new MailAddress("recipient2@mailinator.com", "Recipient2");
-			var subject = "Hello World!";
+			var subject = "Dear {{customer_type}}";
 			var textContent = new MailContent("text/plain", "Hello world!");
-			var htmlContent = new MailContent("text/html", "<html><body>Hello <b><i>world!</i></b><br/><a href=\"http://microsoft.com\">Microsoft's web site</a></body></html>");
+			var htmlContent = new MailContent("text/html", "<html><body>Hello <b><i>{{first_name}}!</i></b><br/></body></html>");
 			var personalizations = new[]
 			{
 				new MailPersonalization
 				{
 					To = new[] { to1 },
-					Subject = "Dear friend"
+					Substitutions = new KeyValuePair<string, string>[] 
+					{
+						new  KeyValuePair<string, string>("{{customer_type}}", "friend"),
+						new  KeyValuePair<string, string>("{{first_name}}", "Bob")
+					}
 				},
 				new MailPersonalization
 				{
 					To = new[] { to2 },
-					Subject = "Dear customer"
+					Substitutions = new KeyValuePair<string, string>[]
+					{
+						new  KeyValuePair<string, string>("{{customer_type}}", "customer"),
+						new  KeyValuePair<string, string>("{{first_name}}", "John")
+					}
 				}
 			};
 			var mailSettings = new MailSettings
@@ -113,7 +121,7 @@ namespace StrongGrid.IntegrationTests
 				Footer = new FooterSettings
 				{
 					Enabled = true,
-					HtmlContent = "<p>This email was sent with the help of the <b>StrongGrid</b> library</p>",
+					HtmlContent = "<p>This email was sent with the help of the <b><a href=\"https://www.nuget.org/packages/StrongGrid/\">StrongGrid</a></b> library</p>",
 					TextContent = "This email was sent with the help of the StrongGrid library"
 				}
 			};
@@ -128,7 +136,13 @@ namespace StrongGrid.IntegrationTests
 				GoogleAnalytics = new GoogleAnalyticsSettings { Enabled = false },
 				SubscriptionTracking = new SubscriptionTrackingSettings { Enabled = false }
 			};
+			var headers = new KeyValuePair<string, string>[]
+			{
+				new  KeyValuePair<string, string>("customerId", "1234"),
+			};
+
 			client.Mail.SendAsync(personalizations, subject, new[] { textContent, htmlContent }, from,
+				headers: headers,
 				mailSettings: mailSettings,
 				trackingSettings: trackingSettings
 			).Wait();
