@@ -26,7 +26,7 @@
 	"frameworks": {
 		"netstandard1.3": {
 			"buildOptions": {
-				"define": [ "NETSTANDARD", "NETSTANDARD13" ]
+				"define": [ "NETSTANDARD" ]
 			},
 			"imports": "dnxcore50",
 			"dependencies": {
@@ -42,45 +42,6 @@
 			"dependencies": {
 				"Newtonsoft.Json": "9.0.1",
 				"System.Net.Http": "4.0.0"
-			},
-			"frameworkAssemblies": {
-				"System.Runtime.Serialization": "4.0.0"
-			}
-		},
-		"net46": {
-			"buildOptions": {
-				"define": [ "NET46" ]
-			},
-			"dependencies": {
-				"Newtonsoft.Json": "9.0.1",
-				"System.Net.Http": "4.0.0",
-				"System.Reflection.TypeExtensions": "4.3.0"
-			},
-			"frameworkAssemblies": {
-				"System.Runtime.Serialization": "4.0.0"
-			}
-		},
-		"net461": {
-			"buildOptions": {
-				"define": [ "NET461" ]
-			},
-			"dependencies": {
-				"Newtonsoft.Json": "9.0.1",
-				"System.Net.Http": "4.0.0",
-				"System.Reflection.TypeExtensions": "4.3.0"
-			},
-			"frameworkAssemblies": {
-				"System.Runtime.Serialization": "4.0.0"
-			}
-		},
-		"net462": {
-			"buildOptions": {
-				"define": [ "NET462" ]
-			},
-			"dependencies": {
-				"Newtonsoft.Json": "9.0.1",
-				"System.Net.Http": "4.0.0",
-				"System.Reflection.TypeExtensions": "4.3.0"
 			},
 			"frameworkAssemblies": {
 				"System.Runtime.Serialization": "4.0.0"
