@@ -133,25 +133,25 @@ namespace StrongGrid.UnitTests
 				.With(request => request.Content == null)
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
-			// Fake delay for testing purposes
-			var mockDelayer = new Mock<IAsyncDelayer>(MockBehavior.Strict);
-			mockDelayer
-				.Setup(d => d.CalculateDelay(It.IsAny<HttpResponseHeaders>()))
-				.Returns(TimeSpan.FromMilliseconds(1))
+			// Retry strategy
+			var mockRetryStrategy = new Mock<IRetryStrategy>(MockBehavior.Strict);
+			mockRetryStrategy
+				.Setup(rs => rs.ShouldRetry(It.IsAny<int>(), It.IsAny<HttpResponseMessage>()))
+				.Returns<int, HttpResponseMessage>((attempts, response) => response.StatusCode == (HttpStatusCode)429)
 				.Verifiable();
-			mockDelayer
-				.Setup(d => d.Delay(It.Is<TimeSpan>(t => t.Milliseconds == 1)))
-				.Returns(Task.FromResult(0))
+			mockRetryStrategy
+				.Setup(rs => rs.GetNextDelay(It.IsAny<int>(), It.IsAny<HttpResponseMessage>()))
+				.Returns(TimeSpan.Zero)
 				.Verifiable();
 
 			var httpClient = new HttpClient(mockHttp);
-			var client = new Client(apiKey: API_KEY, httpClient: httpClient, asyncDelayer: mockDelayer.Object);
+			var client = new Client(apiKey: API_KEY, httpClient: httpClient, retryStrategy: mockRetryStrategy.Object);
 
 			// Act
 			var result = client.GetAsync("myendpoint", CancellationToken.None).Result;
 
 			// Assert
-			mockDelayer.VerifyAll();
+			mockRetryStrategy.VerifyAll();
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 			result.IsSuccessStatusCode.ShouldBeTrue();
@@ -174,25 +174,25 @@ namespace StrongGrid.UnitTests
 				.With(request => request.Content == null)
 				.Respond((HttpStatusCode)429);
 
-			// Fake delay for testing purposes
-			var mockDelayer = new Mock<IAsyncDelayer>(MockBehavior.Strict);
-			mockDelayer
-				.Setup(d => d.CalculateDelay(It.IsAny<HttpResponseHeaders>()))
-				.Returns(TimeSpan.FromMilliseconds(1))
+			// Retry strategy
+			var mockRetryStrategy = new Mock<IRetryStrategy>(MockBehavior.Strict);
+			mockRetryStrategy
+				.Setup(rs => rs.ShouldRetry(It.IsAny<int>(), It.IsAny<HttpResponseMessage>()))
+				.Returns<int, HttpResponseMessage>((attempts, response) => attempts < 3)
 				.Verifiable();
-			mockDelayer
-				.Setup(d => d.Delay(It.Is<TimeSpan>(t => t.Milliseconds == 1)))
-				.Returns(Task.FromResult(0))
+			mockRetryStrategy
+				.Setup(rs => rs.GetNextDelay(It.IsAny<int>(), It.IsAny<HttpResponseMessage>()))
+				.Returns(TimeSpan.Zero)
 				.Verifiable();
 
 			var httpClient = new HttpClient(mockHttp);
-			var client = new Client(apiKey: API_KEY, httpClient: httpClient, asyncDelayer: mockDelayer.Object);
+			var client = new Client(apiKey: API_KEY, httpClient: httpClient, retryStrategy: mockRetryStrategy.Object);
 
 			// Act
 			var result = client.GetAsync("myendpoint", CancellationToken.None).Result;
 
 			// Assert
-			mockDelayer.VerifyAll();
+			mockRetryStrategy.VerifyAll();
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 			result.IsSuccessStatusCode.ShouldBeFalse();

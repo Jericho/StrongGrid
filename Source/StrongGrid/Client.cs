@@ -20,13 +20,12 @@ namespace StrongGrid
 		#region FIELDS
 
 		private const string MEDIA_TYPE = "application/json";
-		private const int MAX_RETRIES = 3;
 		private const string DEFAULT_BASE_URI = "https://api.sendgrid.com";
 		private const string DEFAULT_API_VERSION = "v3";
 
 		private readonly Uri _baseUri;
 		private readonly bool _mustDisposeHttpClient;
-		private readonly IAsyncDelayer _asyncDelayer;
+		private readonly IRetryStrategy _retryStrategy;
 
 		private HttpClient _httpClient;
 
@@ -248,15 +247,15 @@ namespace StrongGrid
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Client"/> class.
+		/// Initializes a new instance of the <see cref="Client" /> class.
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key</param>
 		/// <param name="baseUri">Base SendGrid API Uri</param>
 		/// <param name="apiVersion">The SendGrid API version. Please note: currently, only 'v3' is supported</param>
 		/// <param name="httpClient">Allows you to inject your own HttpClient. This is useful, for example, to setup the HtppClient with a proxy</param>
-		/// <param name="asyncDelayer">Allows you to inject your own logic to delay calls when the SendGrid API returns 'TOO MANY REQUESTS'</param>
-		public Client(string apiKey, string baseUri = DEFAULT_BASE_URI, string apiVersion = DEFAULT_API_VERSION, HttpClient httpClient = null, IAsyncDelayer asyncDelayer = null)
-			: this(apiKey, null, null, baseUri, apiVersion, httpClient, asyncDelayer)
+		/// <param name="retryStrategy">The retry strategy.</param>
+		public Client(string apiKey, string baseUri = DEFAULT_BASE_URI, string apiVersion = DEFAULT_API_VERSION, HttpClient httpClient = null, IRetryStrategy retryStrategy = null)
+			: this(apiKey, null, null, baseUri, apiVersion, httpClient, retryStrategy)
 		{
 		}
 
@@ -283,23 +282,23 @@ namespace StrongGrid
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Client"/> class.
+		/// Initializes a new instance of the <see cref="Client" /> class.
 		/// </summary>
 		/// <param name="username">Your username</param>
 		/// <param name="password">Your password</param>
 		/// <param name="baseUri">Base SendGrid API Uri</param>
 		/// <param name="apiVersion">The SendGrid API version. Please note: currently, only 'v3' is supported</param>
 		/// <param name="httpClient">Allows you to inject your own HttpClient. This is useful, for example, to setup the HtppClient with a proxy</param>
-		/// <param name="asyncDelayer">Allows you to inject your own logic to delay calls when the SendGrid API returns 'TOO MANY REQUESTS'</param>
-		public Client(string username, string password, string baseUri = DEFAULT_BASE_URI, string apiVersion = DEFAULT_API_VERSION, HttpClient httpClient = null, IAsyncDelayer asyncDelayer = null)
-			: this(null, username, password, baseUri, apiVersion, httpClient, asyncDelayer)
+		/// <param name="retryStrategy">The retry strategy.</param>
+		public Client(string username, string password, string baseUri = DEFAULT_BASE_URI, string apiVersion = DEFAULT_API_VERSION, HttpClient httpClient = null, IRetryStrategy retryStrategy = null)
+			: this(null, username, password, baseUri, apiVersion, httpClient, retryStrategy)
 		{
 		}
 
-		private Client(string apiKey, string username, string password, string baseUri, string apiVersion, HttpClient httpClient, IAsyncDelayer asyncDelayer)
+		private Client(string apiKey, string username, string password, string baseUri, string apiVersion, HttpClient httpClient, IRetryStrategy retryStrategy)
 		{
 			_baseUri = new Uri(string.Format("{0}/{1}", baseUri, apiVersion));
-			_asyncDelayer = asyncDelayer ?? new AsyncDelayer();
+			_retryStrategy = retryStrategy ?? new SendGridRetryStrategy();
 
 			Alerts = new Alerts(this);
 			ApiKeys = new ApiKeys(this);
@@ -520,7 +519,7 @@ namespace StrongGrid
 		private Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, JObject data, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var content = data?.ToString();
-			return RequestAsync(method, endpoint, content, MAX_RETRIES, cancellationToken);
+			return RequestWithRetriesAsync(method, endpoint, content, cancellationToken);
 		}
 
 		/// <summary>
@@ -534,7 +533,28 @@ namespace StrongGrid
 		private Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, JArray data, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var content = data?.ToString();
-			return RequestAsync(method, endpoint, content, MAX_RETRIES, cancellationToken);
+			return RequestWithRetriesAsync(method, endpoint, content, cancellationToken);
+		}
+
+		private async Task<HttpResponseMessage> RequestWithRetriesAsync(Methods method, string endpoint, string content, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var attempts = 0;
+			var response = await RequestAsync(method, endpoint, content, cancellationToken).ConfigureAwait(false);
+			attempts++;
+
+			while (_retryStrategy.ShouldRetry(attempts, response))
+			{
+				var timespan = _retryStrategy.GetNextDelay(attempts, response);
+				if (timespan > TimeSpan.Zero)
+				{
+					await Task.Delay(timespan).ConfigureAwait(false);
+				}
+
+				response = await RequestAsync(method, endpoint, content, cancellationToken).ConfigureAwait(false);
+				attempts++;
+			}
+
+			return response;
 		}
 
 		/// <summary>
@@ -543,10 +563,9 @@ namespace StrongGrid
 		/// <param name="method">HTTP verb, case-insensitive</param>
 		/// <param name="endpoint">Resource endpoint</param>
 		/// <param name="content">A string representing the content of the http request</param>
-		/// <param name="retriesRemaining">The number of retries remaining in case SendGrid responds with HTTP 429 (aka TOO MANY REQUESTS)</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>The response from the HTTP request</returns>
-		private async Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, string content, int retriesRemaining, CancellationToken cancellationToken = default(CancellationToken))
+		private async Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, string content, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			try
 			{
@@ -573,19 +592,6 @@ namespace StrongGrid
 					Content = content == null ? null : new StringContent(content, Encoding.UTF8, MEDIA_TYPE)
 				};
 				var response = await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
-				retriesRemaining--;
-
-				// Handle HTTP429 (TOO MANY REQUESTS)
-				if (response.StatusCode == (HttpStatusCode)429 && retriesRemaining > 0)
-				{
-					// Wait
-					var waitTime = _asyncDelayer.CalculateDelay(response.Headers);
-					await _asyncDelayer.Delay(waitTime).ConfigureAwait(false);
-
-					// Retry
-					return await RequestAsync(method, endpoint, content, retriesRemaining, cancellationToken).ConfigureAwait(false);
-				}
-
 				return response;
 			}
 			catch (Exception ex)
