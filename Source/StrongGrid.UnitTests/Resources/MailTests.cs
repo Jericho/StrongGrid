@@ -32,7 +32,7 @@ namespace StrongGrid.Resources.UnitTests
 			var mail = new Mail(mockClient.Object, ENDPOINT);
 
 			// Act
-			mail.SendAsync(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, CancellationToken.None).Wait();
+			mail.SendAsync(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, CancellationToken.None).Wait();
 
 			// Assert
 		}

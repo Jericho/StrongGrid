@@ -49,6 +49,7 @@ namespace StrongGrid.Resources
 		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
+		/// <param name="customArgs">The custom arguments.</param>
 		/// <param name="sendAt">The send at.</param>
 		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
@@ -77,6 +78,7 @@ namespace StrongGrid.Resources
 			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
+			IEnumerable<KeyValuePair<string, string>> customArgs = null,
 			DateTime? sendAt = null,
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
@@ -85,7 +87,7 @@ namespace StrongGrid.Resources
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var recipients = new[] { to };
-			return SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, templateId, sections, headers, categories, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, cancellationToken);
+			return SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, templateId, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, cancellationToken);
 		}
 
 		/// <summary>
@@ -105,6 +107,7 @@ namespace StrongGrid.Resources
 		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
+		/// <param name="customArgs">The custom arguments.</param>
 		/// <param name="sendAt">The send at.</param>
 		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
@@ -133,6 +136,7 @@ namespace StrongGrid.Resources
 			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
+			IEnumerable<KeyValuePair<string, string>> customArgs = null,
 			DateTime? sendAt = null,
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
@@ -158,7 +162,7 @@ namespace StrongGrid.Resources
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return SendAsync(personalizations, subject, contents, from, replyTo, attachments, templateId, sections, headers, categories, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, cancellationToken);
+			return SendAsync(personalizations, subject, contents, from, replyTo, attachments, templateId, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, cancellationToken);
 		}
 
 		/// <summary>
@@ -174,6 +178,7 @@ namespace StrongGrid.Resources
 		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
+		/// <param name="customArgs">The custom arguments.</param>
 		/// <param name="sendAt">The send at.</param>
 		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
@@ -195,6 +200,7 @@ namespace StrongGrid.Resources
 			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
+			IEnumerable<KeyValuePair<string, string>> customArgs = null,
 			DateTime? sendAt = null,
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
@@ -239,6 +245,17 @@ namespace StrongGrid.Resources
 				}
 
 				data.Add("headers", hdrs);
+			}
+
+			if (customArgs != null && customArgs.Any())
+			{
+				var args = new JObject();
+				foreach (var customArg in customArgs)
+				{
+					args.Add(customArg.Key, customArg.Value);
+				}
+
+				data.Add("custom_args", args);
 			}
 
 			var response = await _client.PostAsync(string.Format("{0}/send", _endpoint), data, cancellationToken).ConfigureAwait(false);

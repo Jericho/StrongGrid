@@ -86,6 +86,10 @@ namespace StrongGrid.IntegrationTests
 					{
 						new  KeyValuePair<string, string>("{{customer_type}}", "friend"),
 						new  KeyValuePair<string, string>("{{first_name}}", "Bob")
+					},
+					CustomArguments = new KeyValuePair<string, string>[]
+					{
+						new  KeyValuePair<string, string>("some_value_specific_to_this_person", "ABC_123")
 					}
 				},
 				new MailPersonalization
@@ -95,6 +99,10 @@ namespace StrongGrid.IntegrationTests
 					{
 						new  KeyValuePair<string, string>("{{customer_type}}", "customer"),
 						new  KeyValuePair<string, string>("{{first_name}}", "John")
+					},
+					CustomArguments = new KeyValuePair<string, string>[]
+					{
+						new  KeyValuePair<string, string>("some_value_specific_to_this_person", "ZZZ_999")
 					}
 				}
 			};
@@ -141,9 +149,15 @@ namespace StrongGrid.IntegrationTests
 			{
 				new  KeyValuePair<string, string>("customerId", "1234"),
 			};
+			var customArgs = new KeyValuePair<string, string>[]
+			{
+				new  KeyValuePair<string, string>("sent_on", DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ss")),
+				new  KeyValuePair<string, string>("some_other_value", "QWERTY")
+			};
 
 			client.Mail.SendAsync(personalizations, subject, new[] { textContent, htmlContent }, from,
 				headers: headers,
+				customArgs: customArgs,
 				mailSettings: mailSettings,
 				trackingSettings: trackingSettings
 			).Wait();

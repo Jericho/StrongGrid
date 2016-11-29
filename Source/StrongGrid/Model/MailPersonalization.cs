@@ -76,6 +76,16 @@ namespace StrongGrid.Model
 		public KeyValuePair<string, string>[] Substitutions { get; set; }
 
 		/// <summary>
+		/// Gets or sets the custom arguments.
+		/// </summary>
+		/// <value>
+		/// The custom arguments.
+		/// </value>
+		[JsonProperty("custom_args", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonConverter(typeof(KeyValuePairEnumerationConverter))]
+		public KeyValuePair<string, string>[] CustomArguments { get; set; }
+
+		/// <summary>
 		/// Gets or sets the timestamp allowing you to specify when you want your email to be sent from SendGrid.
 		/// </summary>
 		/// <value>
