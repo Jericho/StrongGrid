@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
 
@@ -61,7 +62,18 @@ namespace StrongGrid.Model
 		/// The headers.
 		/// </value>
 		[JsonProperty("headers", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonConverter(typeof(KeyValuePairEnumerationConverter))]
 		public KeyValuePair<string, string>[] Headers { get; set; }
+
+		/// <summary>
+		/// Gets or sets the substitutions.
+		/// </summary>
+		/// <value>
+		/// The substitutions.
+		/// </value>
+		[JsonProperty("substitutions", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonConverter(typeof(KeyValuePairEnumerationConverter))]
+		public KeyValuePair<string, string>[] Substitutions { get; set; }
 
 		/// <summary>
 		/// Gets or sets the timestamp allowing you to specify when you want your email to be sent from SendGrid.
