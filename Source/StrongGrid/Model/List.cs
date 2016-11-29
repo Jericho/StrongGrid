@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id")]
+		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
 		public long Id { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The name.
 		/// </value>
-		[JsonProperty("name")]
+		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
 		public string Name { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The recipient count.
 		/// </value>
-		[JsonProperty("recipient_count")]
+		[JsonProperty("recipient_count", NullValueHandling = NullValueHandling.Ignore)]
 		public long RecipientCount { get; set; }
 	}
 }

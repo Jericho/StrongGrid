@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id")]
+		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
 		public long Id { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The name.
 		/// </value>
-		[JsonProperty("name")]
+		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
 		public string Name { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The list identifier.
 		/// </value>
-		[JsonProperty("list_id")]
+		[JsonProperty("list_id", NullValueHandling = NullValueHandling.Ignore)]
 		public long ListId { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The conditions.
 		/// </value>
-		[JsonProperty("conditions")]
+		[JsonProperty("conditions", NullValueHandling = NullValueHandling.Ignore)]
 		public SearchCondition[] Conditions { get; set; }
 	}
 }

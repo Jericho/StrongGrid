@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The domain.
 		/// </value>
-		[JsonProperty("domain_cname")]
+		[JsonProperty("domain_cname", NullValueHandling = NullValueHandling.Ignore)]
 		public DnsRecord Domain { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The owner.
 		/// </value>
-		[JsonProperty("owner_cname")]
+		[JsonProperty("owner_cname", NullValueHandling = NullValueHandling.Ignore)]
 		public DnsRecord Owner { get; set; }
 	}
 }

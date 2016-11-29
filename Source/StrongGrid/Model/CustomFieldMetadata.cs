@@ -14,7 +14,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id")]
+		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
 		public int Id { get; set; }
 	}
 }

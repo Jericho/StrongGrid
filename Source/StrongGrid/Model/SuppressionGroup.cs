@@ -14,7 +14,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id")]
+		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
 		public int Id { get; set; }
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The name.
 		/// </value>
-		[JsonProperty("name")]
+		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
 		public string Name { get; set; }
 
 		/// <summary>
@@ -32,7 +32,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The description.
 		/// </value>
-		[JsonProperty("description")]
+		[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
 		public string Description { get; set; }
 
 		/// <summary>
@@ -41,7 +41,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// <c>true</c> if this instance is default; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("is_default")]
+		[JsonProperty("is_default", NullValueHandling = NullValueHandling.Ignore)]
 		public bool IsDefault { get; set; }
 	}
 }

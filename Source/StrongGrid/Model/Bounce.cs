@@ -15,7 +15,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The created on.
 		/// </value>
-		[JsonProperty("created")]
+		[JsonProperty("created", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(EpochConverter))]
 		public DateTime CreatedOn { get; set; }
 
@@ -25,7 +25,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The email address.
 		/// </value>
-		[JsonProperty("email")]
+		[JsonProperty("email", NullValueHandling = NullValueHandling.Ignore)]
 		public string EmailAddress { get; set; }
 
 		/// <summary>
@@ -34,7 +34,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The reason.
 		/// </value>
-		[JsonProperty("reason")]
+		[JsonProperty("reason", NullValueHandling = NullValueHandling.Ignore)]
 		public string Reason { get; set; }
 
 		/// <summary>
@@ -43,7 +43,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The status.
 		/// </value>
-		[JsonProperty("status")]
+		[JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
 		public string Status { get; set; }
 	}
 }

@@ -19,7 +19,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id")]
+		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
 		public long Id { get; set; }
 
 		/// <summary>
@@ -28,7 +28,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The ip address.
 		/// </value>
-		[JsonProperty("ip")]
+		[JsonProperty("ip", NullValueHandling = NullValueHandling.Ignore)]
 		public string IpAddress { get; set; }
 
 		/// <summary>
@@ -37,7 +37,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The RDNS.
 		/// </value>
-		[JsonProperty("rdns")]
+		[JsonProperty("rdns", NullValueHandling = NullValueHandling.Ignore)]
 		public string RDNS { get; set; }
 
 		/// <summary>
@@ -46,7 +46,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The subdomain.
 		/// </value>
-		[JsonProperty("subdomain")]
+		[JsonProperty("subdomain", NullValueHandling = NullValueHandling.Ignore)]
 		public string Subdomain { get; set; }
 
 		/// <summary>
@@ -55,7 +55,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The domain.
 		/// </value>
-		[JsonProperty("domain")]
+		[JsonProperty("domain", NullValueHandling = NullValueHandling.Ignore)]
 		public string Domain { get; set; }
 
 		/// <summary>
@@ -64,7 +64,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if this instance is valid; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("valid")]
+		[JsonProperty("valid", NullValueHandling = NullValueHandling.Ignore)]
 		public bool IsValid { get; set; }
 
 		/// <summary>
@@ -73,7 +73,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if this instance is legacy; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("legacy")]
+		[JsonProperty("legacy", NullValueHandling = NullValueHandling.Ignore)]
 		public bool IsLegacy { get; set; }
 
 		/// <summary>
@@ -82,7 +82,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// a record.
 		/// </value>
-		[JsonProperty("a_record")]
+		[JsonProperty("a_record", NullValueHandling = NullValueHandling.Ignore)]
 		public DnsRecord ARecord { get; set; }
 	}
 }

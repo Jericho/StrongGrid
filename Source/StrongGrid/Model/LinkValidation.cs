@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The link identifier.
 		/// </value>
-		[JsonProperty("id")]
+		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
 		public long LinkId { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if this instance is valid; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("valid")]
+		[JsonProperty("valid", NullValueHandling = NullValueHandling.Ignore)]
 		public bool IsValid { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The validation results.
 		/// </value>
-		[JsonProperty("validation_results")]
+		[JsonProperty("validation_results", NullValueHandling = NullValueHandling.Ignore)]
 		public LinkValidationResults ValidationResults { get; set; }
 	}
 }

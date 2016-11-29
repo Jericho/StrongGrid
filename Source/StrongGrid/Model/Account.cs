@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The type.
 		/// </value>
-		[JsonProperty("type")]
+		[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
 		public string Type { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The reputation.
 		/// </value>
-		[JsonProperty("reputation")]
+		[JsonProperty("reputation", NullValueHandling = NullValueHandling.Ignore)]
 		public float Reputation { get; set; }
 	}
 }

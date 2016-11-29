@@ -15,7 +15,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The remaining.
 		/// </value>
-		[JsonProperty("remain")]
+		[JsonProperty("remain", NullValueHandling = NullValueHandling.Ignore)]
 		public long Remaining { get; set; }
 
 		/// <summary>
@@ -24,7 +24,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The total.
 		/// </value>
-		[JsonProperty("total")]
+		[JsonProperty("total", NullValueHandling = NullValueHandling.Ignore)]
 		public long Total { get; set; }
 
 		/// <summary>
@@ -33,7 +33,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The overage.
 		/// </value>
-		[JsonProperty("overage")]
+		[JsonProperty("overage", NullValueHandling = NullValueHandling.Ignore)]
 		public long Overage { get; set; }
 
 		/// <summary>
@@ -42,7 +42,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The used.
 		/// </value>
-		[JsonProperty("used")]
+		[JsonProperty("used", NullValueHandling = NullValueHandling.Ignore)]
 		public long Used { get; set; }
 
 		/// <summary>
@@ -51,7 +51,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The last reset.
 		/// </value>
-		[JsonProperty("last_reset")]
+		[JsonProperty("last_reset", NullValueHandling = NullValueHandling.Ignore)]
 		public DateTime LastReset { get; set; }
 
 		/// <summary>
@@ -60,7 +60,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The next reset.
 		/// </value>
-		[JsonProperty("next_reset")]
+		[JsonProperty("next_reset", NullValueHandling = NullValueHandling.Ignore)]
 		public DateTime NextReset { get; set; }
 
 		/// <summary>
@@ -69,7 +69,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The reset frequency.
 		/// </value>
-		[JsonProperty("reset_frequency")]
+		[JsonProperty("reset_frequency", NullValueHandling = NullValueHandling.Ignore)]
 		public string ResetFrequency { get; set; }
 	}
 }

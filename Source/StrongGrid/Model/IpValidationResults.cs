@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// a record.
 		/// </value>
-		[JsonProperty("a_record")]
+		[JsonProperty("a_record", NullValueHandling = NullValueHandling.Ignore)]
 		public ValidationResult ARecord { get; set; }
 	}
 }

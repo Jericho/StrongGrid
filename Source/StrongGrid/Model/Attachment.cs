@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The content.
 		/// </value>
-		[JsonProperty("content")]
+		[JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
 		public string Content { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The type.
 		/// </value>
-		[JsonProperty("type")]
+		[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
 		public string Type { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The name of the file.
 		/// </value>
-		[JsonProperty("filename")]
+		[JsonProperty("filename", NullValueHandling = NullValueHandling.Ignore)]
 		public string FileName { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The disposition.
 		/// </value>
-		[JsonProperty("disposition")]
+		[JsonProperty("disposition", NullValueHandling = NullValueHandling.Ignore)]
 		public string Disposition { get; set; }
 
 		/// <summary>
@@ -49,7 +49,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The content identifier.
 		/// </value>
-		[JsonProperty("content_id")]
+		[JsonProperty("content_id", NullValueHandling = NullValueHandling.Ignore)]
 		public string ContentId { get; set; }
 	}
 }

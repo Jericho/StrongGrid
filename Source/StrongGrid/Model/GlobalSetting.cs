@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("enabled")]
+		[JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
 		public bool Enabled { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The name.
 		/// </value>
-		[JsonProperty("name")]
+		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
 		public string Name { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The title.
 		/// </value>
-		[JsonProperty("title")]
+		[JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
 		public string Title { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The description.
 		/// </value>
-		[JsonProperty("description")]
+		[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
 		public string Description { get; set; }
 	}
 }

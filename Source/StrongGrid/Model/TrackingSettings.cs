@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The click tracking.
 		/// </value>
-		[JsonProperty("click_tracking")]
+		[JsonProperty("click_tracking", NullValueHandling = NullValueHandling.Ignore)]
 		public ClickTrackingSettings ClickTracking { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The open tracking.
 		/// </value>
-		[JsonProperty("open_tracking")]
+		[JsonProperty("open_tracking", NullValueHandling = NullValueHandling.Ignore)]
 		public OpenTrackingSettings OpenTracking { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The subscription tracking.
 		/// </value>
-		[JsonProperty("subscription_tracking")]
+		[JsonProperty("subscription_tracking", NullValueHandling = NullValueHandling.Ignore)]
 		public SubscriptionTrackingSettings SubscriptionTracking { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The google analytics.
 		/// </value>
-		[JsonProperty("ganalytics")]
+		[JsonProperty("ganalytics", NullValueHandling = NullValueHandling.Ignore)]
 		public GoogleAnalyticsSettings GoogleAnalytics { get; set; }
 	}
 }

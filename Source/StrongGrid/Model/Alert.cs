@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id")]
+		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
 		public long Id { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The email to.
 		/// </value>
-		[JsonProperty("email_to")]
+		[JsonProperty("email_to", NullValueHandling = NullValueHandling.Ignore)]
 		public string EmailTo { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The frequency.
 		/// </value>
-		[JsonProperty("frequency")]
+		[JsonProperty("frequency", NullValueHandling = NullValueHandling.Ignore)]
 		public Frequency Frequency { get; set; }
 
 		/// <summary>
@@ -49,7 +49,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The type.
 		/// </value>
-		[JsonProperty("type")]
+		[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
 		public AlertType Type { get; set; }
 
 		/// <summary>
@@ -58,7 +58,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The created on.
 		/// </value>
-		[JsonProperty("created_at")]
+		[JsonProperty("created_at", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(EpochConverter))]
 		public DateTime CreatedOn { get; set; }
 
@@ -68,7 +68,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The modified on.
 		/// </value>
-		[JsonProperty("updated_at")]
+		[JsonProperty("updated_at", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(EpochConverter))]
 		public DateTime ModifiedOn { get; set; }
 	}

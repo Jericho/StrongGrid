@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The field.
 		/// </value>
-		[JsonProperty("field")]
+		[JsonProperty("field", NullValueHandling = NullValueHandling.Ignore)]
 		public string Field { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The value.
 		/// </value>
-		[JsonProperty("value")]
+		[JsonProperty("value", NullValueHandling = NullValueHandling.Ignore)]
 		public string Value { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The operator.
 		/// </value>
-		[JsonProperty("operator")]
+		[JsonProperty("operator", NullValueHandling = NullValueHandling.Ignore)]
 		public ConditionOperator Operator { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The logical operator.
 		/// </value>
-		[JsonProperty("and_or")]
+		[JsonProperty("and_or", NullValueHandling = NullValueHandling.Ignore)]
 		public LogicalOperator LogicalOperator { get; set; }
 	}
 }

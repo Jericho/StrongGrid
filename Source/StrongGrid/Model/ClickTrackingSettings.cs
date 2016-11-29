@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// <c>true</c> if [enabled in HTML content]; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("enable")]
+		[JsonProperty("enable", NullValueHandling = NullValueHandling.Ignore)]
 		public bool EnabledInHtmlContent { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// <c>true</c> if [enabled in text content]; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("enable_text")]
+		[JsonProperty("enable_text", NullValueHandling = NullValueHandling.Ignore)]
 		public bool EnabledInTextContent { get; set; }
 	}
 }

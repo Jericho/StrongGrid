@@ -18,7 +18,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id")]
+		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
 		public long Id { get; set; }
 
 		/// <summary>
@@ -27,7 +27,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The domain.
 		/// </value>
-		[JsonProperty("domain")]
+		[JsonProperty("domain", NullValueHandling = NullValueHandling.Ignore)]
 		public string Domain { get; set; }
 
 		/// <summary>
@@ -36,7 +36,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The subdomain.
 		/// </value>
-		[JsonProperty("subdomain")]
+		[JsonProperty("subdomain", NullValueHandling = NullValueHandling.Ignore)]
 		public string Subdomain { get; set; }
 
 		/// <summary>
@@ -45,7 +45,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The username.
 		/// </value>
-		[JsonProperty("username")]
+		[JsonProperty("username", NullValueHandling = NullValueHandling.Ignore)]
 		public string Username { get; set; }
 
 		/// <summary>
@@ -54,7 +54,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The user identifier.
 		/// </value>
-		[JsonProperty("user_id")]
+		[JsonProperty("user_id", NullValueHandling = NullValueHandling.Ignore)]
 		public long UserId { get; set; }
 
 		/// <summary>
@@ -63,7 +63,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if this instance is default; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("default")]
+		[JsonProperty("default", NullValueHandling = NullValueHandling.Ignore)]
 		public bool IsDefault { get; set; }
 
 		/// <summary>
@@ -72,7 +72,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if this instance is valid; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("valid")]
+		[JsonProperty("valid", NullValueHandling = NullValueHandling.Ignore)]
 		public bool IsValid { get; set; }
 
 		/// <summary>
@@ -81,7 +81,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if this instance is legacy; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("legacy")]
+		[JsonProperty("legacy", NullValueHandling = NullValueHandling.Ignore)]
 		public bool IsLegacy { get; set; }
 
 		/// <summary>
@@ -90,7 +90,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The DNS.
 		/// </value>
-		[JsonProperty("dns")]
+		[JsonProperty("dns", NullValueHandling = NullValueHandling.Ignore)]
 		public WhitelabelLinkDns DNS { get; set; }
 	}
 }

@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("enable")]
+		[JsonProperty("enable", NullValueHandling = NullValueHandling.Ignore)]
 		public bool Enabled { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The text.
 		/// </value>
-		[JsonProperty("text")]
+		[JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
 		public string Text { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The HTML.
 		/// </value>
-		[JsonProperty("html")]
+		[JsonProperty("html", NullValueHandling = NullValueHandling.Ignore)]
 		public string Html { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The substitution tag.
 		/// </value>
-		[JsonProperty("substitution_tag")]
+		[JsonProperty("substitution_tag", NullValueHandling = NullValueHandling.Ignore)]
 		public string SubstitutionTag { get; set; }
 	}
 }

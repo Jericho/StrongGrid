@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The message.
 		/// </value>
-		[JsonProperty("message")]
+		[JsonProperty("message", NullValueHandling = NullValueHandling.Ignore)]
 		public string Message { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The error indices.
 		/// </value>
-		[JsonProperty("error_indices")]
+		[JsonProperty("error_indices", NullValueHandling = NullValueHandling.Ignore)]
 		public int[] ErrorIndices { get; set; }
 	}
 }
