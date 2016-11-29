@@ -2,18 +2,45 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Domain validation results
+	/// </summary>
 	public class DomainValidationResults
 	{
-		[JsonProperty("mail_cname")]
+		/// <summary>
+		/// Gets or sets the mail.
+		/// </summary>
+		/// <value>
+		/// The mail.
+		/// </value>
+		[JsonProperty("mail_cname", NullValueHandling = NullValueHandling.Ignore)]
 		public ValidationResult Mail { get; set; }
 
-		[JsonProperty("dkim1")]
+		/// <summary>
+		/// Gets or sets the dkim1.
+		/// </summary>
+		/// <value>
+		/// The dkim1.
+		/// </value>
+		[JsonProperty("dkim1", NullValueHandling = NullValueHandling.Ignore)]
 		public ValidationResult Dkim1 { get; set; }
 
-		[JsonProperty("dkim2")]
+		/// <summary>
+		/// Gets or sets the dkim2.
+		/// </summary>
+		/// <value>
+		/// The dkim2.
+		/// </value>
+		[JsonProperty("dkim2", NullValueHandling = NullValueHandling.Ignore)]
 		public ValidationResult Dkim2 { get; set; }
 
-		[JsonProperty("spf")]
+		/// <summary>
+		/// Gets or sets the SPF.
+		/// </summary>
+		/// <value>
+		/// The SPF.
+		/// </value>
+		[JsonProperty("spf", NullValueHandling = NullValueHandling.Ignore)]
 		public ValidationResult Spf { get; set; }
 	}
 }

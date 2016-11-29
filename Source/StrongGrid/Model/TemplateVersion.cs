@@ -4,28 +4,73 @@ using System;
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Template version
+	/// </summary>
 	public class TemplateVersion
 	{
-		[JsonProperty("id")]
+		/// <summary>
+		/// Gets or sets the identifier.
+		/// </summary>
+		/// <value>
+		/// The identifier.
+		/// </value>
+		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
 		public string Id { get; set; }
 
-		[JsonProperty("template_id")]
+		/// <summary>
+		/// Gets or sets the template identifier.
+		/// </summary>
+		/// <value>
+		/// The template identifier.
+		/// </value>
+		[JsonProperty("template_id", NullValueHandling = NullValueHandling.Ignore)]
 		public string TemplateId { get; set; }
 
-		[JsonProperty("active")]
+		/// <summary>
+		/// Gets or sets a value indicating whether this template version is active.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this instance is active; otherwise, <c>false</c>.
+		/// </value>
+		[JsonProperty("active", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(IntegerBooleanConverter))]
 		public bool IsActive { get; set; }
 
-		[JsonProperty("name")]
+		/// <summary>
+		/// Gets or sets the name.
+		/// </summary>
+		/// <value>
+		/// The name.
+		/// </value>
+		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
 		public string Name { get; set; }
 
-		[JsonProperty("html_content")]
+		/// <summary>
+		/// Gets or sets the HTML content.
+		/// </summary>
+		/// <value>
+		/// The content of the HTML.
+		/// </value>
+		[JsonProperty("html_content", NullValueHandling = NullValueHandling.Ignore)]
 		public string HtmlContent { get; set; }
 
-		[JsonProperty("plain_content")]
+		/// <summary>
+		/// Gets or sets the plain text content.
+		/// </summary>
+		/// <value>
+		/// The content of the text.
+		/// </value>
+		[JsonProperty("plain_content", NullValueHandling = NullValueHandling.Ignore)]
 		public string TextContent { get; set; }
 
-		[JsonProperty("updated_at")]
+		/// <summary>
+		/// Gets or sets the updated on.
+		/// </summary>
+		/// <value>
+		/// The updated on.
+		/// </value>
+		[JsonProperty("updated_at", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(SendGridDateTimeConverter))]
 		public DateTime UpdatedOn { get; set; }
 	}

@@ -42,12 +42,8 @@ using StrongGrid;
 
 StrongGrid supports the following .NET frameworks:
 
-- 4.5.2
-- 4.6
-- 4.6.1
-- 4.6.2
-- .Net Standard 1.3
-- .Net Standard 1.6
+- 4.5.2 (and more recent versions as well)
+- .Net Core
 
 
 ## Usage

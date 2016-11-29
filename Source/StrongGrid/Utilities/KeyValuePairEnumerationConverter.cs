@@ -1,13 +1,14 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace StrongGrid.Utilities
 {
 	/// <summary>
-	/// Converts a boolean expressed as  1 for True or 0 for False to and from JSON.
+	/// Converts an enumeration of KeyValuePair to and from JSON.
 	/// </summary>
 	/// <seealso cref="Newtonsoft.Json.JsonConverter" />
-	public class IntegerBooleanConverter : JsonConverter
+	public class KeyValuePairEnumerationConverter : JsonConverter
 	{
 		/// <summary>
 		/// Determines whether this instance can convert the specified object type.
@@ -18,7 +19,7 @@ namespace StrongGrid.Utilities
 		/// </returns>
 		public override bool CanConvert(Type objectType)
 		{
-			return objectType == typeof(bool);
+			return true;
 		}
 
 		/// <summary>
@@ -31,7 +32,15 @@ namespace StrongGrid.Utilities
 		{
 			if (value == null) return;
 
-			writer.WriteValue(((bool)value) ? 1 : 0);
+			writer.WriteStartObject();
+
+			foreach (var pair in (IEnumerable<KeyValuePair<string, string>>)value)
+			{
+				writer.WritePropertyName(pair.Key);
+				serializer.Serialize(writer, pair.Value);
+			}
+
+			writer.WriteEndObject();
 		}
 
 		/// <summary>
@@ -46,8 +55,7 @@ namespace StrongGrid.Utilities
 		/// </returns>
 		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 		{
-			if (reader.Value == null) return null;
-			return reader.Value.ToString() == "1";
+			throw new NotImplementedException();
 		}
 	}
 }

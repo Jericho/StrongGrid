@@ -2,12 +2,27 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Validation result
+	/// </summary>
 	public class ValidationResult
 	{
-		[JsonProperty("valid")]
+		/// <summary>
+		/// Gets or sets a value indicating whetherthis validation is valid.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this instance is valid; otherwise, <c>false</c>.
+		/// </value>
+		[JsonProperty("valid", NullValueHandling = NullValueHandling.Ignore)]
 		public bool IsValid { get; set; }
 
-		[JsonProperty("reason")]
+		/// <summary>
+		/// Gets or sets the reason.
+		/// </summary>
+		/// <value>
+		/// The reason.
+		/// </value>
+		[JsonProperty("reason", NullValueHandling = NullValueHandling.Ignore)]
 		public string Reason { get; set; }
 	}
 }

@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace StrongGrid
 {
+	/// <summary>
+	/// REST client for interacting with SendGrid's API
+	/// </summary>
 	public class Client : IClient, IDisposable
 	{
 		#region FIELDS
@@ -36,50 +39,188 @@ namespace StrongGrid
 
 		#region PROPERTIES
 
+		/// <summary>
+		/// Gets the Alerts resource which allows you to receive notifications regarding your email usage or statistics.
+		/// </summary>
+		/// <value>
+		/// The alerts.
+		/// </value>
 		public Alerts Alerts { get; private set; }
 
+		/// <summary>
+		/// Gets the API Keys resource which allows you to manage your API Keys.
+		/// </summary>
+		/// <value>
+		/// The API keys.
+		/// </value>
 		public ApiKeys ApiKeys { get; private set; }
 
+		/// <summary>
+		/// Gets the Batches resource.
+		/// </summary>
+		/// <value>
+		/// The batches.
+		/// </value>
 		public Batches Batches { get; private set; }
 
+		/// <summary>
+		/// Gets the Blocks resource which allows you to manage blacked email addresses.
+		/// </summary>
+		/// <value>
+		/// The blocks.
+		/// </value>
 		public Blocks Blocks { get; private set; }
 
+		/// <summary>
+		/// Gets the Campaigns resource which allows you to manage your campaigns.
+		/// </summary>
+		/// <value>
+		/// The campaigns.
+		/// </value>
 		public Campaigns Campaigns { get; private set; }
 
+		/// <summary>
+		/// Gets the Categories resource which allows you to manages your categories.
+		/// </summary>
+		/// <value>
+		/// The categories.
+		/// </value>
 		public Categories Categories { get; private set; }
 
+		/// <summary>
+		/// Gets the Contacts resource which allows you to manage your contacts (also sometimes refered to as 'recipients').
+		/// </summary>
+		/// <value>
+		/// The contacts.
+		/// </value>
 		public Contacts Contacts { get; private set; }
 
+		/// <summary>
+		/// Gets the CustomFields resource which allows you to manage your custom fields.
+		/// </summary>
+		/// <value>
+		/// The custom fields.
+		/// </value>
 		public CustomFields CustomFields { get; private set; }
 
+		/// <summary>
+		/// Gets the GlobalSuppressions resource.
+		/// </summary>
+		/// <value>
+		/// The global suppressions.
+		/// </value>
 		public GlobalSuppressions GlobalSuppressions { get; private set; }
 
+		/// <summary>
+		/// Gets the InvalidEmails resource.
+		/// </summary>
+		/// <value>
+		/// The invalid emails.
+		/// </value>
 		public InvalidEmails InvalidEmails { get; private set; }
 
+		/// <summary>
+		/// Gets the Lists resource.
+		/// </summary>
+		/// <value>
+		/// The lists.
+		/// </value>
 		public Lists Lists { get; private set; }
 
+		/// <summary>
+		/// Gets the Mail resource.
+		/// </summary>
+		/// <value>
+		/// The mail.
+		/// </value>
 		public Mail Mail { get; private set; }
 
+		/// <summary>
+		/// Gets the Segments resource.
+		/// </summary>
+		/// <value>
+		/// The segments.
+		/// </value>
 		public Segments Segments { get; private set; }
 
+		/// <summary>
+		/// Gets the SenderIdentities resource.
+		/// </summary>
+		/// <value>
+		/// The sender identities.
+		/// </value>
 		public SenderIdentities SenderIdentities { get; private set; }
 
+		/// <summary>
+		/// Gets the Settings resource.
+		/// </summary>
+		/// <value>
+		/// The settings.
+		/// </value>
 		public Settings Settings { get; private set; }
 
+		/// <summary>
+		/// Gets the SpamReports resource.
+		/// </summary>
+		/// <value>
+		/// The spam reports.
+		/// </value>
 		public SpamReports SpamReports { get; private set; }
 
+		/// <summary>
+		/// Gets the Statistics resource.
+		/// </summary>
+		/// <value>
+		/// The statistics.
+		/// </value>
 		public Statistics Statistics { get; private set; }
 
+		/// <summary>
+		/// Gets the Suppressions resource.
+		/// </summary>
+		/// <value>
+		/// The suppressions.
+		/// </value>
 		public Suppressions Suppressions { get; private set; }
 
+		/// <summary>
+		/// Gets the Templates resource.
+		/// </summary>
+		/// <value>
+		/// The templates.
+		/// </value>
 		public Templates Templates { get; private set; }
 
+		/// <summary>
+		/// Gets the UnsubscribeGroups resource.
+		/// </summary>
+		/// <value>
+		/// The unsubscribe groups.
+		/// </value>
 		public UnsubscribeGroups UnsubscribeGroups { get; private set; }
 
+		/// <summary>
+		/// Gets the User resource.
+		/// </summary>
+		/// <value>
+		/// The user.
+		/// </value>
 		public User User { get; private set; }
 
+		/// <summary>
+		/// Gets the Version.
+		/// </summary>
+		/// <value>
+		/// The version.
+		/// </value>
 		public string Version { get; private set; }
 
+		/// <summary>
+		/// Gets the Whitelabel resource.
+		/// </summary>
+		/// <value>
+		/// The whitelabel.
+		/// </value>
 		public Whitelabel Whitelabel { get; private set; }
 
 		#endregion
@@ -87,7 +228,7 @@ namespace StrongGrid
 		#region CTOR
 
 		/// <summary>
-		/// Initializes a new instance of the Client class.
+		/// Initializes a new instance of the <see cref="Client"/> class.
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key</param>
 		public Client(string apiKey)
@@ -96,7 +237,7 @@ namespace StrongGrid
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the Client class.
+		/// Initializes a new instance of the <see cref="Client"/> class.
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key</param>
 		/// <param name="proxy">Allows you to specify a proxy</param>
@@ -107,7 +248,7 @@ namespace StrongGrid
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the Client class.
+		/// Initializes a new instance of the <see cref="Client"/> class.
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key</param>
 		/// <param name="baseUri">Base SendGrid API Uri</param>
@@ -120,16 +261,20 @@ namespace StrongGrid
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the Client class.
+		/// Initializes a new instance of the <see cref="Client"/> class.
 		/// </summary>
+		/// <param name="username">Your username</param>
+		/// <param name="password">Your password</param>
 		public Client(string username, string password)
 			: this(null, username, password, DEFAULT_BASE_URI, DEFAULT_API_VERSION, null, null)
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the Client class.
+		/// Initializes a new instance of the <see cref="Client"/> class.
 		/// </summary>
+		/// <param name="username">Your username</param>
+		/// <param name="password">Your password</param>
 		/// <param name="proxy">Allows you to specify a proxy</param>
 		public Client(string username, string password, IWebProxy proxy = null)
 			: this(null, username, password, DEFAULT_BASE_URI, DEFAULT_API_VERSION, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }), null)
@@ -138,7 +283,7 @@ namespace StrongGrid
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the Client class.
+		/// Initializes a new instance of the <see cref="Client"/> class.
 		/// </summary>
 		/// <param name="username">Your username</param>
 		/// <param name="password">Your password</param>
@@ -190,6 +335,9 @@ namespace StrongGrid
 			_httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", string.Format("StrongGrid/{0}", Version));
 		}
 
+		/// <summary>
+		/// Finalizes an instance of the <see cref="Client"/> class.
+		/// </summary>
 		~Client()
 		{
 			// The object went out of scope and finalized is called.
@@ -202,76 +350,133 @@ namespace StrongGrid
 
 		#region PUBLIC METHODS
 
+		/// <summary>
+		/// Execute a GET operation asynchronously.
+		/// </summary>
 		/// <param name="endpoint">Resource endpoint</param>
-		/// <returns>The resulting message from the API call</returns>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// The response from the HTTP request
+		/// </returns>
 		public Task<HttpResponseMessage> GetAsync(string endpoint, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return RequestAsync(Methods.GET, endpoint, (JObject)null, cancellationToken);
 		}
 
+		/// <summary>
+		/// Execute a POST operation asynchronously.
+		/// </summary>
 		/// <param name="endpoint">Resource endpoint</param>
 		/// <param name="data">An JObject representing the resource's data</param>
-		/// <returns>The resulting message from the API call</returns>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// The response from the HTTP request
+		/// </returns>
 		public Task<HttpResponseMessage> PostAsync(string endpoint, JObject data, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return RequestAsync(Methods.POST, endpoint, data, cancellationToken);
 		}
 
+		/// <summary>
+		/// Execute a POST operation asynchronously.
+		/// </summary>
 		/// <param name="endpoint">Resource endpoint</param>
 		/// <param name="data">An JArray representing the resource's data</param>
-		/// <returns>The resulting message from the API call</returns>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// The response from the HTTP request
+		/// </returns>
 		public Task<HttpResponseMessage> PostAsync(string endpoint, JArray data, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return RequestAsync(Methods.POST, endpoint, data, cancellationToken);
 		}
 
+		/// <summary>
+		/// Execute a DELETE operation asynchronously.
+		/// </summary>
 		/// <param name="endpoint">Resource endpoint</param>
-		/// <returns>The resulting message from the API call</returns>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// The response from the HTTP request
+		/// </returns>
 		public Task<HttpResponseMessage> DeleteAsync(string endpoint, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return RequestAsync(Methods.DELETE, endpoint, (JObject)null, cancellationToken);
 		}
 
+		/// <summary>
+		/// Execute a DELETE operation asynchronously.
+		/// </summary>
 		/// <param name="endpoint">Resource endpoint</param>
 		/// <param name="data">An optional JObject representing the resource's data</param>
-		/// <returns>The resulting message from the API call</returns>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// The response from the HTTP request
+		/// </returns>
 		public Task<HttpResponseMessage> DeleteAsync(string endpoint, JObject data = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return RequestAsync(Methods.DELETE, endpoint, data, cancellationToken);
 		}
 
+		/// <summary>
+		/// Execute a DELETE operation asynchronously.
+		/// </summary>
 		/// <param name="endpoint">Resource endpoint</param>
 		/// <param name="data">An optional JArray representing the resource's data</param>
-		/// <returns>The resulting message from the API call</returns>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// The response from the HTTP request
+		/// </returns>
 		public Task<HttpResponseMessage> DeleteAsync(string endpoint, JArray data = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return RequestAsync(Methods.DELETE, endpoint, data, cancellationToken);
 		}
 
+		/// <summary>
+		/// Execute a PATCH operation asynchronously.
+		/// </summary>
 		/// <param name="endpoint">Resource endpoint</param>
 		/// <param name="data">An JObject representing the resource's data</param>
-		/// <returns>The resulting message from the API call</returns>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// The response from the HTTP request
+		/// </returns>
 		public Task<HttpResponseMessage> PatchAsync(string endpoint, JObject data, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return RequestAsync(Methods.PATCH, endpoint, data, cancellationToken);
 		}
 
+		/// <summary>
+		/// Execute a PATCH operation asynchronously.
+		/// </summary>
 		/// <param name="endpoint">Resource endpoint</param>
 		/// <param name="data">An JArray representing the resource's data</param>
-		/// <returns>The resulting message from the API call</returns>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// The response from the HTTP request
+		/// </returns>
 		public Task<HttpResponseMessage> PatchAsync(string endpoint, JArray data, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return RequestAsync(Methods.PATCH, endpoint, data, cancellationToken);
 		}
 
+		/// <summary>
+		/// Execute a PUT operation asynchronously.
+		/// </summary>
 		/// <param name="endpoint">Resource endpoint</param>
 		/// <param name="data">An JObject representing the resource's data</param>
-		/// <returns>The resulting message from the API call</returns>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// The response from the HTTP request
+		/// </returns>
 		public Task<HttpResponseMessage> PutAsync(string endpoint, JObject data, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return RequestAsync(Methods.PUT, endpoint, data, cancellationToken);
 		}
 
+		/// <summary>
+		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+		/// </summary>
 		public void Dispose()
 		{
 			// Call 'Dispose' to release resources
@@ -281,6 +486,10 @@ namespace StrongGrid
 			GC.SuppressFinalize(this);
 		}
 
+		/// <summary>
+		/// Releases unmanaged and - optionally - managed resources.
+		/// </summary>
+		/// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
 		protected virtual void Dispose(bool disposing)
 		{
 			if (disposing)
@@ -301,12 +510,13 @@ namespace StrongGrid
 		#region PRIVATE METHODS
 
 		/// <summary>
-		///     Create a client that connects to the SendGrid Web API
+		/// Issue a request to the SendGrid Web API
 		/// </summary>
 		/// <param name="method">HTTP verb, case-insensitive</param>
 		/// <param name="endpoint">Resource endpoint</param>
 		/// <param name="data">An JObject representing the resource's data</param>
-		/// <returns>An asyncronous task</returns>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>The response from the HTTP request</returns>
 		private Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, JObject data, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var content = data?.ToString();
@@ -314,12 +524,13 @@ namespace StrongGrid
 		}
 
 		/// <summary>
-		///     Create a client that connects to the SendGrid Web API
+		/// Issue a request to the SendGrid Web API
 		/// </summary>
 		/// <param name="method">HTTP verb, case-insensitive</param>
 		/// <param name="endpoint">Resource endpoint</param>
 		/// <param name="data">An JArray representing the resource's data</param>
-		/// <returns>An asyncronous task</returns>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>The response from the HTTP request</returns>
 		private Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, JArray data, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var content = data?.ToString();
@@ -327,12 +538,14 @@ namespace StrongGrid
 		}
 
 		/// <summary>
-		///     Create a client that connects to the SendGrid Web API
+		/// Issue a request to the SendGrid Web API
 		/// </summary>
 		/// <param name="method">HTTP verb, case-insensitive</param>
 		/// <param name="endpoint">Resource endpoint</param>
-		/// <param name="content">A StringContent representing the content of the http request</param>
-		/// <returns>An asyncronous task</returns>
+		/// <param name="content">A string representing the content of the http request</param>
+		/// <param name="retriesRemaining">The number of retries remaining in case SendGrid responds with HTTP 429 (aka TOO MANY REQUESTS)</param>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>The response from the HTTP request</returns>
 		private async Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, string content, int retriesRemaining, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			try
@@ -357,7 +570,7 @@ namespace StrongGrid
 				{
 					Method = new HttpMethod(methodAsString),
 					RequestUri = new Uri(string.Format("{0}{1}{2}", _baseUri, endpoint.StartsWith("/", StringComparison.Ordinal) ? string.Empty : "/", endpoint)),
-					Content = (content == null ? null : new StringContent(content, Encoding.UTF8, MEDIA_TYPE))
+					Content = content == null ? null : new StringContent(content, Encoding.UTF8, MEDIA_TYPE)
 				};
 				var response = await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
 				retriesRemaining--;

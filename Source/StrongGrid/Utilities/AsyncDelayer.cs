@@ -5,16 +5,29 @@ using System.Threading.Tasks;
 
 namespace StrongGrid.Utilities
 {
+	/// <summary>
+	/// Async delayer
+	/// </summary>
+	/// <seealso cref="StrongGrid.Utilities.IAsyncDelayer" />
 	public class AsyncDelayer : IAsyncDelayer
 	{
 		private static readonly TimeSpan DEFAULT_DELAY = TimeSpan.FromSeconds(1);
 		private readonly ISystemClock _systemClock;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncDelayer"/> class.
+		/// </summary>
+		/// <param name="systemClock">The system clock.</param>
 		public AsyncDelayer(ISystemClock systemClock = null)
 		{
 			_systemClock = systemClock ?? SystemClock.Instance;
 		}
 
+		/// <summary>
+		/// Calculates the delay.
+		/// </summary>
+		/// <param name="headers">The headers.</param>
+		/// <returns>The time span</returns>
 		public TimeSpan CalculateDelay(HttpHeaders headers)
 		{
 			// Default value in case the 'reset' time is missing from HTTP headers
@@ -40,6 +53,11 @@ namespace StrongGrid.Utilities
 			return waitTime;
 		}
 
+		/// <summary>
+		/// Delays the specified time span.
+		/// </summary>
+		/// <param name="timeSpan">The time span.</param>
+		/// <returns>Async task</returns>
 		public Task Delay(TimeSpan timeSpan)
 		{
 			return Task.Delay(timeSpan);

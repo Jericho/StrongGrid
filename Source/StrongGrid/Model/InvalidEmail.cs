@@ -4,15 +4,36 @@ using System;
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// An invalid email address
+	/// </summary>
 	public class InvalidEmail
 	{
-		[JsonProperty("email")]
+		/// <summary>
+		/// Gets or sets the email.
+		/// </summary>
+		/// <value>
+		/// The email.
+		/// </value>
+		[JsonProperty("email", NullValueHandling = NullValueHandling.Ignore)]
 		public string Email { get; set; }
 
-		[JsonProperty("reason")]
+		/// <summary>
+		/// Gets or sets the reason.
+		/// </summary>
+		/// <value>
+		/// The reason.
+		/// </value>
+		[JsonProperty("reason", NullValueHandling = NullValueHandling.Ignore)]
 		public string Reason { get; set; }
 
-		[JsonProperty("created")]
+		/// <summary>
+		/// Gets or sets the created on.
+		/// </summary>
+		/// <value>
+		/// The created on.
+		/// </value>
+		[JsonProperty("created", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(EpochConverter))]
 		public DateTime CreatedOn { get; set; }
 	}

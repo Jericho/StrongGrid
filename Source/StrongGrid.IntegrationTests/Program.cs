@@ -1,5 +1,6 @@
 ﻿using StrongGrid.Model;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace StrongGrid.IntegrationTests
@@ -47,11 +48,11 @@ namespace StrongGrid.IntegrationTests
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine("\n\n*************************");
-				Console.WriteLine("*************************");
+				Console.WriteLine("\n\n**************************************************");
+				Console.WriteLine("**************************************************");
 				Console.WriteLine($"AN EXCEPTION OCCURED: {e.Message}");
-				Console.WriteLine("*************************");
-				Console.WriteLine("*************************");
+				Console.WriteLine("**************************************************");
+				Console.WriteLine("**************************************************");
 			}
 			finally
 			{
@@ -73,20 +74,36 @@ namespace StrongGrid.IntegrationTests
 			var from = new MailAddress("test@example.com", "John Smith");
 			var to1 = new MailAddress("recipient1@mailinator.com", "Recipient1");
 			var to2 = new MailAddress("recipient2@mailinator.com", "Recipient2");
-			var subject = "Hello World!";
+			var subject = "Dear {{customer_type}}";
 			var textContent = new MailContent("text/plain", "Hello world!");
-			var htmlContent = new MailContent("text/html", "<html><body>Hello <b><i>world!</i></b><br/><a href=\"http://microsoft.com\">Microsoft's web site</a></body></html>");
+			var htmlContent = new MailContent("text/html", "<html><body>Hello <b><i>{{first_name}}!</i></b><br/></body></html>");
 			var personalizations = new[]
 			{
 				new MailPersonalization
 				{
 					To = new[] { to1 },
-					Subject = "Dear friend"
+					Substitutions = new KeyValuePair<string, string>[] 
+					{
+						new  KeyValuePair<string, string>("{{customer_type}}", "friend"),
+						new  KeyValuePair<string, string>("{{first_name}}", "Bob")
+					},
+					CustomArguments = new KeyValuePair<string, string>[]
+					{
+						new  KeyValuePair<string, string>("some_value_specific_to_this_person", "ABC_123")
+					}
 				},
 				new MailPersonalization
 				{
 					To = new[] { to2 },
-					Subject = "Dear customer"
+					Substitutions = new KeyValuePair<string, string>[]
+					{
+						new  KeyValuePair<string, string>("{{customer_type}}", "customer"),
+						new  KeyValuePair<string, string>("{{first_name}}", "John")
+					},
+					CustomArguments = new KeyValuePair<string, string>[]
+					{
+						new  KeyValuePair<string, string>("some_value_specific_to_this_person", "ZZZ_999")
+					}
 				}
 			};
 			var mailSettings = new MailSettings
@@ -113,7 +130,7 @@ namespace StrongGrid.IntegrationTests
 				Footer = new FooterSettings
 				{
 					Enabled = true,
-					HtmlContent = "<p>This email was sent with the help of the <b>StrongGrid</b> library</p>",
+					HtmlContent = "<p>This email was sent with the help of the <b><a href=\"https://www.nuget.org/packages/StrongGrid/\">StrongGrid</a></b> library</p>",
 					TextContent = "This email was sent with the help of the StrongGrid library"
 				}
 			};
@@ -128,7 +145,19 @@ namespace StrongGrid.IntegrationTests
 				GoogleAnalytics = new GoogleAnalyticsSettings { Enabled = false },
 				SubscriptionTracking = new SubscriptionTrackingSettings { Enabled = false }
 			};
+			var headers = new KeyValuePair<string, string>[]
+			{
+				new  KeyValuePair<string, string>("customerId", "1234"),
+			};
+			var customArgs = new KeyValuePair<string, string>[]
+			{
+				new  KeyValuePair<string, string>("sent_on", DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ss")),
+				new  KeyValuePair<string, string>("some_other_value", "QWERTY")
+			};
+
 			client.Mail.SendAsync(personalizations, subject, new[] { textContent, htmlContent }, from,
+				headers: headers,
+				customArgs: customArgs,
 				mailSettings: mailSettings,
 				trackingSettings: trackingSettings
 			).Wait();
@@ -172,10 +201,17 @@ namespace StrongGrid.IntegrationTests
 			client.ApiKeys.DeleteAsync(newApiKey.KeyId).Wait();
 			Console.WriteLine("Api Key {0} deleted", newApiKey.KeyId);
 
-			// CREATE AND DELETE A BILING API KEY
-			var billingKey = client.ApiKeys.CreateWithBillingPermissionsAsync("Integration testing billing Key").Result;
-			client.ApiKeys.DeleteAsync(billingKey.KeyId).Wait();
-			Console.WriteLine("Created and deleted the billing key");
+			// GET THE CURRENT USER'S PERMISSIONS
+			var permissions = client.User.GetPermissionsAsync().Result;
+			Console.WriteLine("Current user has been granted {0} permissions", permissions.Length);
+
+			// CREATE AND DELETE A BILLING API KEY (if authorized)
+			if (permissions.Any(p => p.StartsWith("billing.", StringComparison.OrdinalIgnoreCase)))
+			{
+				var billingKey = client.ApiKeys.CreateWithBillingPermissionsAsync("Integration testing billing Key").Result;
+				client.ApiKeys.DeleteAsync(billingKey.KeyId).Wait();
+				Console.WriteLine("Created and deleted the billing key");
+			}
 
 			// CREATE AND DELETE AN API KEY WITH ALL PERMISSIONS
 			var superKey = client.ApiKeys.CreateWithAllPermissionsAsync("Integration testing Super Key").Result;

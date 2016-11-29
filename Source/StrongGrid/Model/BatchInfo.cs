@@ -2,12 +2,27 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// Information about a batch
+	/// </summary>
 	public class BatchInfo
 	{
-		[JsonProperty("batch_id")]
+		/// <summary>
+		/// Gets or sets the batch identifier.
+		/// </summary>
+		/// <value>
+		/// The batch identifier.
+		/// </value>
+		[JsonProperty("batch_id", NullValueHandling = NullValueHandling.Ignore)]
 		public string BatchId { get; set; }
 
-		[JsonProperty("status")]
+		/// <summary>
+		/// Gets or sets the status.
+		/// </summary>
+		/// <value>
+		/// The status.
+		/// </value>
+		[JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
 		public BatchStatus Status { get; set; }
 	}
 }

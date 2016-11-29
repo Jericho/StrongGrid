@@ -2,9 +2,18 @@
 
 namespace StrongGrid.Model
 {
+	/// <summary>
+	/// IP validation results
+	/// </summary>
 	public class IpValidationResults
 	{
-		[JsonProperty("a_record")]
+		/// <summary>
+		/// Gets or sets a record.
+		/// </summary>
+		/// <value>
+		/// a record.
+		/// </value>
+		[JsonProperty("a_record", NullValueHandling = NullValueHandling.Ignore)]
 		public ValidationResult ARecord { get; set; }
 	}
 }

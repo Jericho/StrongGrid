@@ -7,14 +7,19 @@ using System.Threading.Tasks;
 
 namespace StrongGrid.Resources
 {
+	/// <summary>
+	/// Allows you to manage Alerts
+	/// </summary>
+	/// <remarks>
+	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/alerts.html
+	/// </remarks>
 	public class Alerts
 	{
 		private readonly string _endpoint;
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the Alerts class.
-		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/alerts.html
+		/// Initializes a new instance of the <see cref="Alerts" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
 		/// <param name="endpoint">Resource endpoint</param>
@@ -27,9 +32,11 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve a specific alert.
 		/// </summary>
-		/// <param name="alertId"></param>
-		/// <param name="cancellationToken"></param>
-		/// <returns></returns>
+		/// <param name="alertId">The alert identifier.</param>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// The <see cref="Alert" />.
+		/// </returns>
 		public async Task<Alert> GetAsync(long alertId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/{1}", _endpoint, alertId);
@@ -44,8 +51,10 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve all alerts.
 		/// </summary>
-		/// <param name="cancellationToken"></param>
-		/// <returns></returns>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// An array of <see cref="Alert" />.
+		/// </returns>
 		public async Task<Alert[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(_endpoint, cancellationToken).ConfigureAwait(false);
@@ -57,8 +66,16 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Create a new alert
+		/// Create a new alert.
 		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="emailTo">The email to.</param>
+		/// <param name="frequency">The frequency.</param>
+		/// <param name="percentage">The percentage.</param>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// The <see cref="Alert" />.
+		/// </returns>
 		public async Task<Alert> CreateAsync(AlertType type, string emailTo = null, Frequency? frequency = null, int? percentage = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = CreateJObjectForAlert(type, emailTo, frequency, percentage);
@@ -73,9 +90,11 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Delete an alert.
 		/// </summary>
-		/// <param name="alertId"></param>
-		/// <param name="cancellationToken"></param>
-		/// <returns></returns>
+		/// <param name="alertId">The alert identifier.</param>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task DeleteAsync(long alertId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/{1}", _endpoint, alertId);
@@ -86,6 +105,15 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Update an alert.
 		/// </summary>
+		/// <param name="alertId">The alert identifier.</param>
+		/// <param name="type">The type.</param>
+		/// <param name="emailTo">The email to.</param>
+		/// <param name="frequency">The frequency.</param>
+		/// <param name="percentage">The percentage.</param>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// The <see cref="Alert" />.
+		/// </returns>
 		public async Task<Alert> UpdateAsync(long alertId, AlertType? type, string emailTo = null, Frequency? frequency = null, int? percentage = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/{1}", _endpoint, alertId);
