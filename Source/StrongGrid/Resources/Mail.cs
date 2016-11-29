@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using StrongGrid.Model;
 using StrongGrid.Utilities;
 using System;
@@ -211,7 +212,6 @@ namespace StrongGrid.Resources
 			if (attachments != null && attachments.Any()) data.Add("attachments", JToken.FromObject(attachments.ToArray()));
 			if (!string.IsNullOrEmpty(templateId)) data.Add("template_id", templateId);
 			if (sections != null && sections.Any()) data.Add("sections", JToken.FromObject(sections.ToArray()));
-			if (headers != null && headers.Any()) data.Add("headers", JToken.FromObject(headers.ToArray()));
 			if (categories != null && categories.Any()) data.Add("categories", JToken.FromObject(categories.ToArray()));
 			if (sendAt.HasValue) data.Add("send_at", sendAt.Value.ToUnixTime());
 			if (!string.IsNullOrEmpty(batchId)) data.Add("batch_id", batchId);
@@ -219,6 +219,17 @@ namespace StrongGrid.Resources
 			if (!string.IsNullOrEmpty(ipPoolName)) data.Add("ip_pool_name", ipPoolName);
 			if (mailSettings != null) data.Add("mail_settings", JToken.FromObject(mailSettings));
 			if (trackingSettings != null) data.Add("tracking_settings", JToken.FromObject(trackingSettings));
+
+			if (headers != null && headers.Any())
+			{
+				var hdrs = new JObject();
+				foreach (var header in headers)
+				{
+					hdrs.Add(header.Key, header.Value);
+				}
+
+				data.Add("headers", hdrs);
+			}
 
 			var response = await _client.PostAsync(string.Format("{0}/send", _endpoint), data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
