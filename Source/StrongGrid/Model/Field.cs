@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id")]
+		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
 		public int Id { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The name.
 		/// </value>
-		[JsonProperty("name")]
+		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
 		public string Name { get; set; }
 	}
 
@@ -56,7 +56,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The value.
 		/// </value>
-		[JsonProperty("value")]
+		[JsonProperty("value", NullValueHandling = NullValueHandling.Ignore)]
 		public T Value { get; set; }
 	}
 }

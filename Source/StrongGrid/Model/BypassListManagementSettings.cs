@@ -16,7 +16,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("enable")]
+		[JsonProperty("enable", NullValueHandling = NullValueHandling.Ignore)]
 		public bool Enabled { get; set; }
 	}
 }

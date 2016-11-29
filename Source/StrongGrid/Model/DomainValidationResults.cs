@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The mail.
 		/// </value>
-		[JsonProperty("mail_cname")]
+		[JsonProperty("mail_cname", NullValueHandling = NullValueHandling.Ignore)]
 		public ValidationResult Mail { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The dkim1.
 		/// </value>
-		[JsonProperty("dkim1")]
+		[JsonProperty("dkim1", NullValueHandling = NullValueHandling.Ignore)]
 		public ValidationResult Dkim1 { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The dkim2.
 		/// </value>
-		[JsonProperty("dkim2")]
+		[JsonProperty("dkim2", NullValueHandling = NullValueHandling.Ignore)]
 		public ValidationResult Dkim2 { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The SPF.
 		/// </value>
-		[JsonProperty("spf")]
+		[JsonProperty("spf", NullValueHandling = NullValueHandling.Ignore)]
 		public ValidationResult Spf { get; set; }
 	}
 }

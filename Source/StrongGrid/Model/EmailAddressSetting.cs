@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("enabled")]
+		[JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
 		public bool Enabled { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The email address.
 		/// </value>
-		[JsonProperty("email")]
+		[JsonProperty("email", NullValueHandling = NullValueHandling.Ignore)]
 		public string EmailAddress { get; set; }
 	}
 }

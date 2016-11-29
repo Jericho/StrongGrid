@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("enabled")]
+		[JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
 		public bool Enabled { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The utm source.
 		/// </value>
-		[JsonProperty("utm_source")]
+		[JsonProperty("utm_source", NullValueHandling = NullValueHandling.Ignore)]
 		public string UtmSource { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The utm medium.
 		/// </value>
-		[JsonProperty("utm_medium")]
+		[JsonProperty("utm_medium", NullValueHandling = NullValueHandling.Ignore)]
 		public string UtmMedium { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The utm term.
 		/// </value>
-		[JsonProperty("utm_term")]
+		[JsonProperty("utm_term", NullValueHandling = NullValueHandling.Ignore)]
 		public string UtmTerm { get; set; }
 
 		/// <summary>
@@ -49,7 +49,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The content of the utm.
 		/// </value>
-		[JsonProperty("utm_content")]
+		[JsonProperty("utm_content", NullValueHandling = NullValueHandling.Ignore)]
 		public string UtmContent { get; set; }
 
 		/// <summary>
@@ -58,7 +58,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The utm campaign.
 		/// </value>
-		[JsonProperty("utm_campaign")]
+		[JsonProperty("utm_campaign", NullValueHandling = NullValueHandling.Ignore)]
 		public string UtmCampaign { get; set; }
 	}
 }

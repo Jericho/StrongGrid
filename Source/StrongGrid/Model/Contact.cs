@@ -39,7 +39,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The created on.
 		/// </value>
-		[JsonProperty("created_at")]
+		[JsonProperty("created_at", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(EpochConverter))]
 		public DateTime CreatedOn { get; set; }
 
@@ -49,7 +49,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The email.
 		/// </value>
-		[JsonProperty("email")]
+		[JsonProperty("email", NullValueHandling = NullValueHandling.Ignore)]
 		public string Email { get; set; }
 
 		/// <summary>
@@ -58,7 +58,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The first name.
 		/// </value>
-		[JsonProperty("first_name")]
+		[JsonProperty("first_name", NullValueHandling = NullValueHandling.Ignore)]
 		public string FirstName { get; set; }
 
 		/// <summary>
@@ -67,7 +67,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id")]
+		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
 		public string Id { get; set; }
 
 		/// <summary>
@@ -76,7 +76,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The last clicked on.
 		/// </value>
-		[JsonProperty("last_clicked")]
+		[JsonProperty("last_clicked", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(EpochConverter))]
 		public DateTime? LastClickedOn { get; set; }
 
@@ -86,7 +86,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The last emailed on.
 		/// </value>
-		[JsonProperty("last_emailed")]
+		[JsonProperty("last_emailed", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(EpochConverter))]
 		public DateTime? LastEmailedOn { get; set; }
 
@@ -96,7 +96,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The last name.
 		/// </value>
-		[JsonProperty("last_name")]
+		[JsonProperty("last_name", NullValueHandling = NullValueHandling.Ignore)]
 		public string LastName { get; set; }
 
 		/// <summary>
@@ -105,7 +105,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The last opened on.
 		/// </value>
-		[JsonProperty("last_opened")]
+		[JsonProperty("last_opened", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(EpochConverter))]
 		public DateTime? LastOpenedOn { get; set; }
 
@@ -115,7 +115,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The modified on.
 		/// </value>
-		[JsonProperty("updated_at")]
+		[JsonProperty("updated_at", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(EpochConverter))]
 		public DateTime ModifiedOn { get; set; }
 
@@ -125,7 +125,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The custom fields.
 		/// </value>
-		[JsonProperty("custom_fields")]
+		[JsonProperty("custom_fields", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(CustomFieldsConverter))]
 		public Field[] CustomFields { get; set; }
 	}

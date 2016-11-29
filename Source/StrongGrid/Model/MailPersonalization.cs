@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
 
@@ -20,7 +21,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// To.
 		/// </value>
-		[JsonProperty("to")]
+		[JsonProperty("to", NullValueHandling = NullValueHandling.Ignore)]
 		public MailAddress[] To { get; set; }
 
 		/// <summary>
@@ -31,7 +32,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The cc.
 		/// </value>
-		[JsonProperty("cc")]
+		[JsonProperty("cc", NullValueHandling = NullValueHandling.Ignore)]
 		public MailAddress[] Cc { get; set; }
 
 		/// <summary>
@@ -42,7 +43,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The BCC.
 		/// </value>
-		[JsonProperty("bcc")]
+		[JsonProperty("bcc", NullValueHandling = NullValueHandling.Ignore)]
 		public MailAddress[] Bcc { get; set; }
 
 		/// <summary>
@@ -51,7 +52,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The subject.
 		/// </value>
-		[JsonProperty("subject")]
+		[JsonProperty("subject", NullValueHandling = NullValueHandling.Ignore)]
 		public string Subject { get; set; }
 
 		/// <summary>
@@ -60,8 +61,29 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The headers.
 		/// </value>
-		[JsonProperty("headers")]
+		[JsonProperty("headers", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonConverter(typeof(KeyValuePairEnumerationConverter))]
 		public KeyValuePair<string, string>[] Headers { get; set; }
+
+		/// <summary>
+		/// Gets or sets the substitutions.
+		/// </summary>
+		/// <value>
+		/// The substitutions.
+		/// </value>
+		[JsonProperty("substitutions", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonConverter(typeof(KeyValuePairEnumerationConverter))]
+		public KeyValuePair<string, string>[] Substitutions { get; set; }
+
+		/// <summary>
+		/// Gets or sets the custom arguments.
+		/// </summary>
+		/// <value>
+		/// The custom arguments.
+		/// </value>
+		[JsonProperty("custom_args", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonConverter(typeof(KeyValuePairEnumerationConverter))]
+		public KeyValuePair<string, string>[] CustomArguments { get; set; }
 
 		/// <summary>
 		/// Gets or sets the timestamp allowing you to specify when you want your email to be sent from SendGrid.
@@ -69,7 +91,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The send at.
 		/// </value>
-		[JsonProperty("sendat")]
+		[JsonProperty("send_at", NullValueHandling = NullValueHandling.Ignore)]
 		public DateTime? SendAt { get; set; }
 	}
 }

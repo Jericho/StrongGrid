@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The BCC.
 		/// </value>
-		[JsonProperty("bcc")]
+		[JsonProperty("bcc", NullValueHandling = NullValueHandling.Ignore)]
 		public BccSettings Bcc { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The bypass list management.
 		/// </value>
-		[JsonProperty("bypass_list_management")]
+		[JsonProperty("bypass_list_management", NullValueHandling = NullValueHandling.Ignore)]
 		public BypassListManagementSettings BypassListManagement { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The footer.
 		/// </value>
-		[JsonProperty("footer")]
+		[JsonProperty("footer", NullValueHandling = NullValueHandling.Ignore)]
 		public FooterSettings Footer { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The sandbox mode.
 		/// </value>
-		[JsonProperty("sandbox_mode")]
+		[JsonProperty("sandbox_mode", NullValueHandling = NullValueHandling.Ignore)]
 		public SandboxModeSettings SandboxMode { get; set; }
 
 		/// <summary>
@@ -49,7 +49,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The spam checking.
 		/// </value>
-		[JsonProperty("spam_check")]
+		[JsonProperty("spam_check", NullValueHandling = NullValueHandling.Ignore)]
 		public SpamCheckingSettings SpamChecking { get; set; }
 	}
 }

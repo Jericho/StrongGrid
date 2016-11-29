@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The address.
 		/// </value>
-		[JsonProperty("address")]
+		[JsonProperty("address", NullValueHandling = NullValueHandling.Ignore)]
 		public string Address { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The city.
 		/// </value>
-		[JsonProperty("city")]
+		[JsonProperty("city", NullValueHandling = NullValueHandling.Ignore)]
 		public string City { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The company.
 		/// </value>
-		[JsonProperty("company")]
+		[JsonProperty("company", NullValueHandling = NullValueHandling.Ignore)]
 		public string Company { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The country.
 		/// </value>
-		[JsonProperty("country")]
+		[JsonProperty("country", NullValueHandling = NullValueHandling.Ignore)]
 		public string Country { get; set; }
 
 		/// <summary>
@@ -49,7 +49,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The first name.
 		/// </value>
-		[JsonProperty("first_name")]
+		[JsonProperty("first_name", NullValueHandling = NullValueHandling.Ignore)]
 		public string FirstName { get; set; }
 
 		/// <summary>
@@ -58,7 +58,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The last name.
 		/// </value>
-		[JsonProperty("last_name")]
+		[JsonProperty("last_name", NullValueHandling = NullValueHandling.Ignore)]
 		public string LastName { get; set; }
 
 		/// <summary>
@@ -67,7 +67,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The phone.
 		/// </value>
-		[JsonProperty("phone")]
+		[JsonProperty("phone", NullValueHandling = NullValueHandling.Ignore)]
 		public string Phone { get; set; }
 
 		/// <summary>
@@ -76,7 +76,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The state.
 		/// </value>
-		[JsonProperty("state")]
+		[JsonProperty("state", NullValueHandling = NullValueHandling.Ignore)]
 		public string State { get; set; }
 
 		/// <summary>
@@ -85,7 +85,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The website.
 		/// </value>
-		[JsonProperty("website")]
+		[JsonProperty("website", NullValueHandling = NullValueHandling.Ignore)]
 		public string Website { get; set; }
 
 		/// <summary>
@@ -94,7 +94,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The zip code.
 		/// </value>
-		[JsonProperty("zip")]
+		[JsonProperty("zip", NullValueHandling = NullValueHandling.Ignore)]
 		public string ZipCode { get; set; }
 	}
 }

@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("enable")]
+		[JsonProperty("enable", NullValueHandling = NullValueHandling.Ignore)]
 		public bool Enabled { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The threshold.
 		/// </value>
-		[JsonProperty("threshold")]
+		[JsonProperty("threshold", NullValueHandling = NullValueHandling.Ignore)]
 		public int Threshold { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The post to URL.
 		/// </value>
-		[JsonProperty("post_to_url")]
+		[JsonProperty("post_to_url", NullValueHandling = NullValueHandling.Ignore)]
 		public string PostToUrl { get; set; }
 	}
 }

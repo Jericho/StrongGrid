@@ -14,7 +14,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The name.
 		/// </value>
-		[JsonProperty("name")]
+		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
 		public string Name { get; set; }
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The key.
 		/// </value>
-		[JsonProperty("api_key")]
+		[JsonProperty("api_key", NullValueHandling = NullValueHandling.Ignore)]
 		public string Key { get; set; }
 
 		/// <summary>
@@ -32,7 +32,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The key identifier.
 		/// </value>
-		[JsonProperty("api_key_id")]
+		[JsonProperty("api_key_id", NullValueHandling = NullValueHandling.Ignore)]
 		public string KeyId { get; set; }
 
 		/// <summary>
@@ -41,7 +41,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The scopes.
 		/// </value>
-		[JsonProperty("scopes")]
+		[JsonProperty("scopes", NullValueHandling = NullValueHandling.Ignore)]
 		public string[] Scopes { get; set; }
 	}
 }

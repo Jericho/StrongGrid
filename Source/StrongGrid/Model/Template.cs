@@ -16,7 +16,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id")]
+		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
 		public string Id { get; set; }
 
 		/// <summary>
@@ -25,7 +25,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The name.
 		/// </value>
-		[JsonProperty("name")]
+		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
 		public string Name { get; set; }
 
 		/// <summary>
@@ -34,7 +34,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The versions.
 		/// </value>
-		[JsonProperty("versions")]
+		[JsonProperty("versions", NullValueHandling = NullValueHandling.Ignore)]
 		public TemplateVersion[] Versions { get; set; }
 	}
 }

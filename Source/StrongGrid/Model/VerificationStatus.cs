@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// <c>true</c> if this instance is completed; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("status")]
+		[JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
 		public bool IsCompleted { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The reason.
 		/// </value>
-		[JsonProperty("reason")]
+		[JsonProperty("reason", NullValueHandling = NullValueHandling.Ignore)]
 		public string Reason { get; set; }
 	}
 }

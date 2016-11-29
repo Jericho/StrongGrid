@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using StrongGrid.Model;
 using StrongGrid.Utilities;
 using System;
@@ -48,6 +49,7 @@ namespace StrongGrid.Resources
 		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
+		/// <param name="customArgs">The custom arguments.</param>
 		/// <param name="sendAt">The send at.</param>
 		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
@@ -76,6 +78,7 @@ namespace StrongGrid.Resources
 			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
+			IEnumerable<KeyValuePair<string, string>> customArgs = null,
 			DateTime? sendAt = null,
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
@@ -84,7 +87,7 @@ namespace StrongGrid.Resources
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var recipients = new[] { to };
-			return SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, templateId, sections, headers, categories, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, cancellationToken);
+			return SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, templateId, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, cancellationToken);
 		}
 
 		/// <summary>
@@ -104,6 +107,7 @@ namespace StrongGrid.Resources
 		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
+		/// <param name="customArgs">The custom arguments.</param>
 		/// <param name="sendAt">The send at.</param>
 		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
@@ -132,6 +136,7 @@ namespace StrongGrid.Resources
 			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
+			IEnumerable<KeyValuePair<string, string>> customArgs = null,
 			DateTime? sendAt = null,
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
@@ -157,7 +162,7 @@ namespace StrongGrid.Resources
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return SendAsync(personalizations, subject, contents, from, replyTo, attachments, templateId, sections, headers, categories, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, cancellationToken);
+			return SendAsync(personalizations, subject, contents, from, replyTo, attachments, templateId, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, cancellationToken);
 		}
 
 		/// <summary>
@@ -173,6 +178,7 @@ namespace StrongGrid.Resources
 		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
+		/// <param name="customArgs">The custom arguments.</param>
 		/// <param name="sendAt">The send at.</param>
 		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
@@ -194,6 +200,7 @@ namespace StrongGrid.Resources
 			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
+			IEnumerable<KeyValuePair<string, string>> customArgs = null,
 			DateTime? sendAt = null,
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
@@ -210,8 +217,6 @@ namespace StrongGrid.Resources
 			if (contents != null && contents.Any()) data.Add("content", JToken.FromObject(contents.ToArray()));
 			if (attachments != null && attachments.Any()) data.Add("attachments", JToken.FromObject(attachments.ToArray()));
 			if (!string.IsNullOrEmpty(templateId)) data.Add("template_id", templateId);
-			if (sections != null && sections.Any()) data.Add("sections", JToken.FromObject(sections.ToArray()));
-			if (headers != null && headers.Any()) data.Add("headers", JToken.FromObject(headers.ToArray()));
 			if (categories != null && categories.Any()) data.Add("categories", JToken.FromObject(categories.ToArray()));
 			if (sendAt.HasValue) data.Add("send_at", sendAt.Value.ToUnixTime());
 			if (!string.IsNullOrEmpty(batchId)) data.Add("batch_id", batchId);
@@ -219,6 +224,39 @@ namespace StrongGrid.Resources
 			if (!string.IsNullOrEmpty(ipPoolName)) data.Add("ip_pool_name", ipPoolName);
 			if (mailSettings != null) data.Add("mail_settings", JToken.FromObject(mailSettings));
 			if (trackingSettings != null) data.Add("tracking_settings", JToken.FromObject(trackingSettings));
+
+			if (sections != null && sections.Any())
+			{
+				var sctns = new JObject();
+				foreach (var section in sections)
+				{
+					sctns.Add(section.Key, section.Value);
+				}
+
+				data.Add("sections", sctns);
+			}
+
+			if (headers != null && headers.Any())
+			{
+				var hdrs = new JObject();
+				foreach (var header in headers)
+				{
+					hdrs.Add(header.Key, header.Value);
+				}
+
+				data.Add("headers", hdrs);
+			}
+
+			if (customArgs != null && customArgs.Any())
+			{
+				var args = new JObject();
+				foreach (var customArg in customArgs)
+				{
+					args.Add(customArg.Key, customArg.Value);
+				}
+
+				data.Add("custom_args", args);
+			}
 
 			var response = await _client.PostAsync(string.Format("{0}/send", _endpoint), data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();

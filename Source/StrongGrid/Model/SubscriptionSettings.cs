@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("enabled")]
+		[JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
 		public bool Enabled { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The landing page HTML.
 		/// </value>
-		[JsonProperty("landing")]
+		[JsonProperty("landing", NullValueHandling = NullValueHandling.Ignore)]
 		public string LandingPageHtml { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The URL.
 		/// </value>
-		[JsonProperty("url")]
+		[JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
 		public string Url { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The replacement tag.
 		/// </value>
-		[JsonProperty("replace")]
+		[JsonProperty("replace", NullValueHandling = NullValueHandling.Ignore)]
 		public string ReplacementTag { get; set; }
 
 		/// <summary>
@@ -49,7 +49,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The content of the HTML.
 		/// </value>
-		[JsonProperty("html_content")]
+		[JsonProperty("html_content", NullValueHandling = NullValueHandling.Ignore)]
 		public string HtmlContent { get; set; }
 
 		/// <summary>
@@ -58,7 +58,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The content of the text.
 		/// </value>
-		[JsonProperty("plain_content")]
+		[JsonProperty("plain_content", NullValueHandling = NullValueHandling.Ignore)]
 		public string TextContent { get; set; }
 	}
 }

@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("enabled")]
+		[JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
 		public bool Enabled { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The license key.
 		/// </value>
-		[JsonProperty("license_key")]
+		[JsonProperty("license_key", NullValueHandling = NullValueHandling.Ignore)]
 		public string LicenseKey { get; set; }
 	}
 }

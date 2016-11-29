@@ -15,7 +15,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id")]
+		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
 		public string Id { get; set; }
 
 		/// <summary>
@@ -24,7 +24,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The template identifier.
 		/// </value>
-		[JsonProperty("template_id")]
+		[JsonProperty("template_id", NullValueHandling = NullValueHandling.Ignore)]
 		public string TemplateId { get; set; }
 
 		/// <summary>
@@ -33,7 +33,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if this instance is active; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("active")]
+		[JsonProperty("active", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(IntegerBooleanConverter))]
 		public bool IsActive { get; set; }
 
@@ -43,7 +43,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The name.
 		/// </value>
-		[JsonProperty("name")]
+		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
 		public string Name { get; set; }
 
 		/// <summary>
@@ -52,7 +52,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The content of the HTML.
 		/// </value>
-		[JsonProperty("html_content")]
+		[JsonProperty("html_content", NullValueHandling = NullValueHandling.Ignore)]
 		public string HtmlContent { get; set; }
 
 		/// <summary>
@@ -61,7 +61,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The content of the text.
 		/// </value>
-		[JsonProperty("plain_content")]
+		[JsonProperty("plain_content", NullValueHandling = NullValueHandling.Ignore)]
 		public string TextContent { get; set; }
 
 		/// <summary>
@@ -70,7 +70,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The updated on.
 		/// </value>
-		[JsonProperty("updated_at")]
+		[JsonProperty("updated_at", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(SendGridDateTimeConverter))]
 		public DateTime UpdatedOn { get; set; }
 	}

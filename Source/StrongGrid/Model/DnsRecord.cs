@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The host.
 		/// </value>
-		[JsonProperty("host")]
+		[JsonProperty("host", NullValueHandling = NullValueHandling.Ignore)]
 		public string Host { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The type.
 		/// </value>
-		[JsonProperty("type")]
+		[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
 		public string Type { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The data.
 		/// </value>
-		[JsonProperty("data")]
+		[JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
 		public string Data { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if this instance is valid; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("valid")]
+		[JsonProperty("valid", NullValueHandling = NullValueHandling.Ignore)]
 		public bool IsValid { get; set; }
 	}
 }

@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The blocks.
 		/// </value>
-		[JsonProperty("blocks")]
+		[JsonProperty("blocks", NullValueHandling = NullValueHandling.Ignore)]
 		public long Blocks { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The bounce drops.
 		/// </value>
-		[JsonProperty("bounce_drops")]
+		[JsonProperty("bounce_drops", NullValueHandling = NullValueHandling.Ignore)]
 		public long BounceDrops { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The bounces.
 		/// </value>
-		[JsonProperty("bounces")]
+		[JsonProperty("bounces", NullValueHandling = NullValueHandling.Ignore)]
 		public long Bounces { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The clicks.
 		/// </value>
-		[JsonProperty("clicks")]
+		[JsonProperty("clicks", NullValueHandling = NullValueHandling.Ignore)]
 		public long Clicks { get; set; }
 
 		/// <summary>
@@ -49,7 +49,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The deferred.
 		/// </value>
-		[JsonProperty("deferred")]
+		[JsonProperty("deferred", NullValueHandling = NullValueHandling.Ignore)]
 		public long Deferred { get; set; }
 
 		/// <summary>
@@ -58,7 +58,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The delivered.
 		/// </value>
-		[JsonProperty("delivered")]
+		[JsonProperty("delivered", NullValueHandling = NullValueHandling.Ignore)]
 		public long Delivered { get; set; }
 
 		/// <summary>
@@ -67,7 +67,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The invalid emails.
 		/// </value>
-		[JsonProperty("invalid_emails")]
+		[JsonProperty("invalid_emails", NullValueHandling = NullValueHandling.Ignore)]
 		public long InvalidEmails { get; set; }
 
 		/// <summary>
@@ -76,7 +76,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The opens.
 		/// </value>
-		[JsonProperty("opens")]
+		[JsonProperty("opens", NullValueHandling = NullValueHandling.Ignore)]
 		public long Opens { get; set; }
 
 		/// <summary>
@@ -85,7 +85,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The processed.
 		/// </value>
-		[JsonProperty("processed")]
+		[JsonProperty("processed", NullValueHandling = NullValueHandling.Ignore)]
 		public long Processed { get; set; }
 
 		/// <summary>
@@ -94,7 +94,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The requests.
 		/// </value>
-		[JsonProperty("requests")]
+		[JsonProperty("requests", NullValueHandling = NullValueHandling.Ignore)]
 		public long Requests { get; set; }
 
 		/// <summary>
@@ -103,7 +103,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The spam report drops.
 		/// </value>
-		[JsonProperty("spam_report_drops")]
+		[JsonProperty("spam_report_drops", NullValueHandling = NullValueHandling.Ignore)]
 		public long SpamReportDrops { get; set; }
 
 		/// <summary>
@@ -112,7 +112,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The spam reports.
 		/// </value>
-		[JsonProperty("spam_reports")]
+		[JsonProperty("spam_reports", NullValueHandling = NullValueHandling.Ignore)]
 		public long SpamReports { get; set; }
 
 		/// <summary>
@@ -121,7 +121,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The unique clicks.
 		/// </value>
-		[JsonProperty("unique_clicks")]
+		[JsonProperty("unique_clicks", NullValueHandling = NullValueHandling.Ignore)]
 		public long UniqueClicks { get; set; }
 
 		/// <summary>
@@ -130,7 +130,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The unique opens.
 		/// </value>
-		[JsonProperty("unique_opens")]
+		[JsonProperty("unique_opens", NullValueHandling = NullValueHandling.Ignore)]
 		public long UniqueOpens { get; set; }
 
 		/// <summary>
@@ -139,7 +139,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The unsubscribe drops.
 		/// </value>
-		[JsonProperty("unsubscribe_drops")]
+		[JsonProperty("unsubscribe_drops", NullValueHandling = NullValueHandling.Ignore)]
 		public long UnsubscribeDrops { get; set; }
 
 		/// <summary>
@@ -148,7 +148,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The unsubscribes.
 		/// </value>
-		[JsonProperty("unsubscribes")]
+		[JsonProperty("unsubscribes", NullValueHandling = NullValueHandling.Ignore)]
 		public long Unsubscribes { get; set; }
 	}
 }

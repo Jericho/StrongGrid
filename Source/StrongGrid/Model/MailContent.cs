@@ -14,7 +14,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The type.
 		/// </value>
-		[JsonProperty("type")]
+		[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
 		public string Type { get; set; }
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The value.
 		/// </value>
-		[JsonProperty("value")]
+		[JsonProperty("value", NullValueHandling = NullValueHandling.Ignore)]
 		public string Value { get; set; }
 
 		/// <summary>

@@ -14,7 +14,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The date.
 		/// </value>
-		[JsonProperty("date")]
+		[JsonProperty("date", NullValueHandling = NullValueHandling.Ignore)]
 		public DateTime Date { get; set; }
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The stats.
 		/// </value>
-		[JsonProperty("stats")]
+		[JsonProperty("stats", NullValueHandling = NullValueHandling.Ignore)]
 		public Stat[] Stats { get; set; }
 	}
 }

@@ -15,7 +15,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id")]
+		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
 		public long Id { get; set; }
 
 		/// <summary>
@@ -24,7 +24,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The title.
 		/// </value>
-		[JsonProperty("title")]
+		[JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
 		public string Title { get; set; }
 
 		/// <summary>
@@ -33,7 +33,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The subject.
 		/// </value>
-		[JsonProperty("subject")]
+		[JsonProperty("subject", NullValueHandling = NullValueHandling.Ignore)]
 		public string Subject { get; set; }
 
 		/// <summary>
@@ -42,7 +42,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The sender identifier.
 		/// </value>
-		[JsonProperty("sender_id")]
+		[JsonProperty("sender_id", NullValueHandling = NullValueHandling.Ignore)]
 		public long SenderId { get; set; }
 
 		/// <summary>
@@ -51,7 +51,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The lists.
 		/// </value>
-		[JsonProperty("list_ids")]
+		[JsonProperty("list_ids", NullValueHandling = NullValueHandling.Ignore)]
 		public long[] Lists { get; set; }
 
 		/// <summary>
@@ -60,7 +60,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The segments.
 		/// </value>
-		[JsonProperty("segment_ids")]
+		[JsonProperty("segment_ids", NullValueHandling = NullValueHandling.Ignore)]
 		public long[] Segments { get; set; }
 
 		/// <summary>
@@ -69,7 +69,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The categories.
 		/// </value>
-		[JsonProperty("categories")]
+		[JsonProperty("categories", NullValueHandling = NullValueHandling.Ignore)]
 		public string[] Categories { get; set; }
 
 		/// <summary>
@@ -78,7 +78,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The suppression group identifier.
 		/// </value>
-		[JsonProperty("suppression_group_id")]
+		[JsonProperty("suppression_group_id", NullValueHandling = NullValueHandling.Ignore)]
 		public long? SuppressionGroupId { get; set; }
 
 		/// <summary>
@@ -87,7 +87,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The custom unsubscribe URL.
 		/// </value>
-		[JsonProperty("custom_unsubscribe_url")]
+		[JsonProperty("custom_unsubscribe_url", NullValueHandling = NullValueHandling.Ignore)]
 		public string CustomUnsubscribeUrl { get; set; }
 
 		/// <summary>
@@ -96,7 +96,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The ip pool.
 		/// </value>
-		[JsonProperty("ip_pool")]
+		[JsonProperty("ip_pool", NullValueHandling = NullValueHandling.Ignore)]
 		public string IpPool { get; set; }
 
 		/// <summary>
@@ -105,7 +105,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The content of the HTML.
 		/// </value>
-		[JsonProperty("html_content")]
+		[JsonProperty("html_content", NullValueHandling = NullValueHandling.Ignore)]
 		public string HtmlContent { get; set; }
 
 		/// <summary>
@@ -114,7 +114,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The content of the text.
 		/// </value>
-		[JsonProperty("plain_content")]
+		[JsonProperty("plain_content", NullValueHandling = NullValueHandling.Ignore)]
 		public string TextContent { get; set; }
 
 		/// <summary>
@@ -123,7 +123,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The status.
 		/// </value>
-		[JsonProperty("status")]
+		[JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
 		public CampaignStatus Status { get; set; }
 	}
 }

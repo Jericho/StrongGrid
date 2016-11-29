@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The error count.
 		/// </value>
-		[JsonProperty("error_count")]
+		[JsonProperty("error_count", NullValueHandling = NullValueHandling.Ignore)]
 		public int ErrorCount { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The error indices.
 		/// </value>
-		[JsonProperty("error_indices")]
+		[JsonProperty("error_indices", NullValueHandling = NullValueHandling.Ignore)]
 		public int[] ErrorIndices { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The new count.
 		/// </value>
-		[JsonProperty("new_count")]
+		[JsonProperty("new_count", NullValueHandling = NullValueHandling.Ignore)]
 		public int NewCount { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The persisted recipients.
 		/// </value>
-		[JsonProperty("persisted_recipients")]
+		[JsonProperty("persisted_recipients", NullValueHandling = NullValueHandling.Ignore)]
 		public string[] PersistedRecipients { get; set; }
 
 		/// <summary>
@@ -49,7 +49,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The updated count.
 		/// </value>
-		[JsonProperty("updated_count")]
+		[JsonProperty("updated_count", NullValueHandling = NullValueHandling.Ignore)]
 		public int UpdatedCount { get; set; }
 
 		/// <summary>
@@ -58,7 +58,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The errors.
 		/// </value>
-		[JsonProperty("errors")]
+		[JsonProperty("errors", NullValueHandling = NullValueHandling.Ignore)]
 		public Error[] Errors { get; set; }
 	}
 }

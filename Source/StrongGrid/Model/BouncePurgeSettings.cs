@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("enabled")]
+		[JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
 		public bool Enabled { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The hard bounces.
 		/// </value>
-		[JsonProperty("hard_bounces")]
+		[JsonProperty("hard_bounces", NullValueHandling = NullValueHandling.Ignore)]
 		public int HardBounces { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The soft bounces.
 		/// </value>
-		[JsonProperty("soft_bounces")]
+		[JsonProperty("soft_bounces", NullValueHandling = NullValueHandling.Ignore)]
 		public int SoftBounces { get; set; }
 	}
 }

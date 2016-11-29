@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if [require TLS]; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("require_tls")]
+		[JsonProperty("require_tls", NullValueHandling = NullValueHandling.Ignore)]
 		public bool RequireTls { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// <c>true</c> if a valid certificate is required; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("require_valid_cert")]
+		[JsonProperty("require_valid_cert", NullValueHandling = NullValueHandling.Ignore)]
 		public bool RequireValidCertificate { get; set; }
 	}
 }

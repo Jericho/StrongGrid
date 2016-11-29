@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The group identifier.
 		/// </value>
-		[JsonProperty("group_id")]
+		[JsonProperty("group_id", NullValueHandling = NullValueHandling.Ignore)]
 		public int GroupId { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The groups to display.
 		/// </value>
-		[JsonProperty("groups_to_display")]
+		[JsonProperty("groups_to_display", NullValueHandling = NullValueHandling.Ignore)]
 		public int[] GroupsToDisplay { get; set; }
 	}
 }
