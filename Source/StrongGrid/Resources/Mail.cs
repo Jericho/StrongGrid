@@ -211,7 +211,6 @@ namespace StrongGrid.Resources
 			if (contents != null && contents.Any()) data.Add("content", JToken.FromObject(contents.ToArray()));
 			if (attachments != null && attachments.Any()) data.Add("attachments", JToken.FromObject(attachments.ToArray()));
 			if (!string.IsNullOrEmpty(templateId)) data.Add("template_id", templateId);
-			if (sections != null && sections.Any()) data.Add("sections", JToken.FromObject(sections.ToArray()));
 			if (categories != null && categories.Any()) data.Add("categories", JToken.FromObject(categories.ToArray()));
 			if (sendAt.HasValue) data.Add("send_at", sendAt.Value.ToUnixTime());
 			if (!string.IsNullOrEmpty(batchId)) data.Add("batch_id", batchId);
@@ -219,6 +218,17 @@ namespace StrongGrid.Resources
 			if (!string.IsNullOrEmpty(ipPoolName)) data.Add("ip_pool_name", ipPoolName);
 			if (mailSettings != null) data.Add("mail_settings", JToken.FromObject(mailSettings));
 			if (trackingSettings != null) data.Add("tracking_settings", JToken.FromObject(trackingSettings));
+
+			if (sections != null && sections.Any())
+			{
+				var sctns = new JObject();
+				foreach (var section in sections)
+				{
+					sctns.Add(section.Key, section.Value);
+				}
+
+				data.Add("sections", sctns);
+			}
 
 			if (headers != null && headers.Any())
 			{
