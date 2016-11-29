@@ -8,17 +8,22 @@ using System.Threading.Tasks;
 
 namespace StrongGrid.Resources
 {
+	/// <summary>
+	/// Allows access to information about the current user.
+	/// </summary>
+	/// <remarks>
+	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html
+	/// </remarks>
 	public class User
 	{
 		private readonly string _endpoint;
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the Users class.
-		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html
+		/// Initializes a new instance of the <see cref="User" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint, do not prepend slash</param>
+		/// <param name="endpoint">Resource endpoint</param>
 		public User(IClient client, string endpoint = "/user/profile")
 		{
 			_endpoint = endpoint;
@@ -28,7 +33,10 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get your user profile
 		/// </summary>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html</returns>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="UserProfile" />.
+		/// </returns>
 		public async Task<UserProfile> GetProfileAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(_endpoint, cancellationToken).ConfigureAwait(false);
@@ -42,7 +50,20 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Update your user profile
 		/// </summary>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html</returns>
+		/// <param name="address">The address.</param>
+		/// <param name="city">The city.</param>
+		/// <param name="company">The company.</param>
+		/// <param name="country">The country.</param>
+		/// <param name="firstName">The first name.</param>
+		/// <param name="lastName">The last name.</param>
+		/// <param name="phone">The phone.</param>
+		/// <param name="state">The state.</param>
+		/// <param name="website">The website.</param>
+		/// <param name="zip">The zip.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="UserProfile" />.
+		/// </returns>
 		public async Task<UserProfile> UpdateProfileAsync(string address = null, string city = null, string company = null, string country = null, string firstName = null, string lastName = null, string phone = null, string state = null, string website = null, string zip = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = CreateJObjectForUserProfile(address, city, company, country, firstName, lastName, phone, state, website, zip);
@@ -57,7 +78,10 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get your user account
 		/// </summary>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html</returns>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="Account" />.
+		/// </returns>
 		public async Task<Account> GetAccountAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync("/user/account", cancellationToken).ConfigureAwait(false);
@@ -71,7 +95,10 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve the email address on file for your account
 		/// </summary>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html</returns>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The email address from your user profile.
+		/// </returns>
 		public async Task<string> GetEmailAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync("/user/email", cancellationToken).ConfigureAwait(false);
@@ -91,7 +118,11 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Update the email address on file for your account
 		/// </summary>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html</returns>
+		/// <param name="email">The email.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The email address from your user profile.
+		/// </returns>
 		public async Task<string> UpdateEmailAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
@@ -114,7 +145,10 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve your account username
 		/// </summary>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html</returns>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The username from your user profile.
+		/// </returns>
 		public async Task<string> GetUsernameAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync("/user/username", cancellationToken).ConfigureAwait(false);
@@ -135,7 +169,11 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Update your account username
 		/// </summary>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html</returns>
+		/// <param name="username">The username.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The username from your user profile.
+		/// </returns>
 		public async Task<string> UpdateUsernameAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
@@ -158,7 +196,10 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve the current credit balance for your account
 		/// </summary>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html</returns>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="UserCredits"/>.
+		/// </returns>
 		public async Task<UserCredits> GetCreditsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync("/user/credits", cancellationToken).ConfigureAwait(false);
@@ -172,7 +213,12 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Update the password for your account
 		/// </summary>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html</returns>
+		/// <param name="oldPassword">The old password.</param>
+		/// <param name="newPassword">The new password.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task UpdatePasswordAsync(string oldPassword, string newPassword, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
@@ -186,8 +232,10 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// List all available scopes for a user
 		/// </summary>
-		/// <param name="cancellationToken"></param>
-		/// <returns></returns>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// An array of string representing the permissions (aka scopes).
+		/// </returns>
 		public async Task<string[]> GetPermissionsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync("/scopes", cancellationToken).ConfigureAwait(false);
@@ -199,17 +247,17 @@ namespace StrongGrid.Resources
 			// The fact that the charset is slightly misspelled prevents the .Net HttpClient from
 			// being able to parse the body of the reponse. The HttpClient throws the following exception
 			// when we try to get the content of the response like so: response.Content.ReadAsStreamAsync()
-			//		The character set provided in ContentType is invalid. Cannot read content as string using
-			//		an invalid character set. System.ArgumentException: 'utf8' is not a supported encoding name
-			
+			// 		The character set provided in ContentType is invalid. Cannot read content as string using
+			// 		an invalid character set. System.ArgumentException: 'utf8' is not a supported encoding name
+
 			// I contacted SendGrid on 11/23/2016 to report this problem: https://support.sendgrid.com/hc/en-us/requests/806220
-			
-			// A support engineer from SendGrid confirmed the issue on 11/24/2016 and said: 
-			//		I will put in a new feature request to our engineers to see if they will be able to have
-			//		the charset removed from that API call
+
+			// A support engineer from SendGrid confirmed the issue on 11/24/2016 and said:
+			// 		I will put in a new feature request to our engineers to see if they will be able to have
+			// 		the charset removed from that API call
 
 			// Until SendGrid solves the problem on their end by either omiting the charset or fixing the misspelling,
-			// we must read the content into a stream and convert the stream to a string which allows us to specify 
+			// we must read the content into a stream and convert the stream to a string which allows us to specify
 			// the desired charset (which is Encoding.UTF8 in this case).
 			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 			var responseContent = string.Empty;

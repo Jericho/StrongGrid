@@ -7,17 +7,22 @@ using System.Threading.Tasks;
 
 namespace StrongGrid.Resources
 {
+	/// <summary>
+	/// Allows you to manage email addresses that will not receive any emails.
+	/// </summary>
+	/// <remarks>
+	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/global_suppressions.html
+	/// </remarks>
 	public class GlobalSuppressions
 	{
 		private readonly string _endpoint;
 		private readonly IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the Global Suppressions class.
-		/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/global_suppressions.html
+		/// Initializes a new instance of the <see cref="GlobalSuppressions" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint, do not prepend slash</param>
+		/// <param name="endpoint">Resource endpoint</param>
 		public GlobalSuppressions(IClient client, string endpoint = "/asm/suppressions/global")
 		{
 			_endpoint = endpoint;
@@ -28,7 +33,10 @@ namespace StrongGrid.Resources
 		/// Check if a recipient address is in the global suppressions group.
 		/// </summary>
 		/// <param name="email">email address to check</param>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/global_suppressions.html</returns>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		///   <c>true</c> if the email address is in the global suppression group; otherwise, <c>false</c>.
+		/// </returns>
 		public async Task<bool> IsUnsubscribedAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.GetAsync(string.Format("{0}/{1}", _endpoint, email), cancellationToken).ConfigureAwait(false);
@@ -53,7 +61,10 @@ namespace StrongGrid.Resources
 		/// Add recipient addresses to the global suppression group.
 		/// </summary>
 		/// <param name="emails">Array of email addresses to add to the suppression group</param>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/global_suppressions.html</returns>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task AddAsync(IEnumerable<string> emails, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject(new JProperty("recipient_emails", JArray.FromObject(emails.ToArray())));
@@ -65,7 +76,10 @@ namespace StrongGrid.Resources
 		/// Delete a recipient email from the global suppressions group.
 		/// </summary>
 		/// <param name="email">email address to be removed from the global suppressions group</param>
-		/// <returns>https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/global_suppressions.html</returns>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The async task.
+		/// </returns>
 		public async Task RemoveAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var response = await _client.DeleteAsync(string.Format("{0}/{1}", _endpoint, email), cancellationToken).ConfigureAwait(false);
