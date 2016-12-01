@@ -77,6 +77,19 @@ namespace StrongGrid.UnitTests
 			'cert_err' : '0'
 		}";
 
+		private const string DROPPED_JSON = @"
+		{
+			'sg_event_id':'sendgrid_internal_event_id',
+			'sg_message_id':'sendgrid_internal_message_id',
+			'email':'email@example.com',
+			'timestamp':1249948800,
+			'smtp-id':'<original-smtp-id@domain.com>',
+			'unique_arg_key':'unique_arg_value',
+			'category':['category1', 'category2'],
+			'reason':'Bounced Address',
+			'event':'dropped'
+		}";
+
 		[Fact]
 		public void Parse_processed_JSON()
 		{
@@ -175,6 +188,34 @@ namespace StrongGrid.UnitTests
 		}
 
 		[Fact]
+		public void Parse_dropped_JSON()
+		{
+			// Arrange
+
+			// Act
+			var result = (DroppedEvent)JsonConvert.DeserializeObject<Event>(DROPPED_JSON, new WebHookEventConverter());
+
+			// Assert
+			result.Categories.Length.ShouldBe(2);
+			result.Categories[0].ShouldBe("category1");
+			result.Categories[1].ShouldBe("category2");
+			result.CertificateValidationError.ShouldBeFalse();
+			result.Email.ShouldBe("email@example.com");
+			result.EventType.ShouldBe(EventType.Dropped);
+			result.InternalEventId.ShouldBe("sendgrid_internal_event_id");
+			result.InternalMessageId.ShouldBe("sendgrid_internal_message_id");
+			result.IpAddress.ShouldBeNull();
+			result.Reason.ShouldBe("Bounced Address");
+			result.SmtpId.ShouldBe("<original-smtp-id@domain.com>");
+			result.Timestamp.ToUnixTime().ShouldBe(1249948800);
+			result.Tls.ShouldBeFalse();
+			result.UniqueArguments.ShouldNotBeNull();
+			result.UniqueArguments.Count.ShouldBe(1);
+			result.UniqueArguments.Keys.ShouldContain("unique_arg_key");
+			result.UniqueArguments["unique_arg_key"].ShouldBe("unique_arg_value");
+		}
+
+		[Fact]
 		public void Processed()
 		{
 			// Arrange
@@ -223,6 +264,23 @@ namespace StrongGrid.UnitTests
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(1);
 			result[0].GetType().ShouldBe(typeof(DeferredEvent));
+		}
+
+		[Fact]
+		public void Dropped()
+		{
+			// Arrange
+			var responseContent = $"[{DROPPED_JSON}]";
+			var parser = new WebhookParser();
+			var mockResponse = GetMockRequest(responseContent);
+
+			// Act
+			var result = parser.ParseWebhookEventsAsync(mockResponse.Object).Result;
+
+			// Assert
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(1);
+			result[0].GetType().ShouldBe(typeof(DroppedEvent));
 		}
 
 		private Mock<HttpRequest> GetMockRequest(string responseContent)

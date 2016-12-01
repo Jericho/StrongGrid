@@ -99,6 +99,9 @@ namespace StrongGrid.Utilities
 				case EventType.Deferred:
 					webHookEvent = jsonObject.ToObject<DeferredEvent>(serializer);
 					break;
+				case EventType.Dropped:
+					webHookEvent = jsonObject.ToObject<DroppedEvent>(serializer);
+					break;
 				case EventType.Processed:
 					webHookEvent = jsonObject.ToObject<ProcessedEvent>(serializer);
 					break;
