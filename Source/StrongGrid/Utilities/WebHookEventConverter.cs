@@ -12,6 +12,7 @@ namespace StrongGrid.Utilities
 		private static readonly string[] _knownProperties =
 		{
 			"asm_group_id",
+			"attempt",
 			"category",
 			"cert_err",
 			"email",
@@ -95,11 +96,14 @@ namespace StrongGrid.Utilities
 				case EventType.Bounce:
 					webHookEvent = jsonObject.ToObject<BouncedEvent>(serializer);
 					break;
+				case EventType.Deferred:
+					webHookEvent = jsonObject.ToObject<DeferredEvent>(serializer);
+					break;
 				case EventType.Processed:
 					webHookEvent = jsonObject.ToObject<ProcessedEvent>(serializer);
 					break;
 				default:
-					throw new ArgumentOutOfRangeException(nameof(eventType), eventTypeJsonProperty.ToString());
+					throw new Exception($"{eventTypeJsonProperty.ToString()} is an unknown type of event");
 			}
 
 			var properties = jsonObject
