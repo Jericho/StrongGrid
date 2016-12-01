@@ -112,6 +112,30 @@ namespace StrongGrid.UnitTests
 			'cert_err' : '1'
 		}";
 
+		private const string CLICK_JSON = @"
+		{
+			'sg_event_id':'sendgrid_internal_event_id',
+			'sg_message_id':'sendgrid_internal_message_id',
+			'ip':'255.255.255.255',
+			'useragent':'Mozilla/5.0 (iPhone; CPU iPhone OS 7_1_2 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Version/7.0 Mobile/11D257 Safari/9537.53',
+			'event':'click',
+			'email':'email@example.com',
+			'timestamp':1249948800,
+			'url':'http://yourdomain.com/blog/news.html',
+			'url_offset': {
+				'index': 0,
+				'type': 'html'
+			},
+			'unique_arg_key':'unique_arg_value',
+			'category':['category1', 'category2'],
+			'newsletter': {
+				'newsletter_user_list_id': '10557865',
+				'newsletter_id': '1943530',
+				'newsletter_send_id': '2308608'
+			},
+			'asm_group_id': 1
+		}";
+
 		[Fact]
 		public void Parse_processed_JSON()
 		{
@@ -271,6 +295,40 @@ namespace StrongGrid.UnitTests
 		}
 
 		[Fact]
+		public void Parse_click_JSON()
+		{
+			// Arrange
+
+			// Act
+			var result = (ClickEvent)JsonConvert.DeserializeObject<Event>(CLICK_JSON, new WebHookEventConverter());
+
+			// Assert
+			result.AsmGroupId.ShouldBe(1);
+			result.Categories.Length.ShouldBe(2);
+			result.Categories[0].ShouldBe("category1");
+			result.Categories[1].ShouldBe("category2");
+			result.Email.ShouldBe("email@example.com");
+			result.EventType.ShouldBe(EventType.Click);
+			result.InternalEventId.ShouldBe("sendgrid_internal_event_id");
+			result.InternalMessageId.ShouldBe("sendgrid_internal_message_id");
+			result.IpAddress.ShouldBe("255.255.255.255");
+			result.Newsletter.ShouldNotBeNull();
+			result.Newsletter.Id.ShouldBe("1943530");
+			result.Newsletter.SendId.ShouldBe("2308608");
+			result.Newsletter.UserListId.ShouldBe("10557865");
+			result.Timestamp.ToUnixTime().ShouldBe(1249948800);
+			result.UniqueArguments.ShouldNotBeNull();
+			result.UniqueArguments.Count.ShouldBe(1);
+			result.UniqueArguments.Keys.ShouldContain("unique_arg_key");
+			result.UniqueArguments["unique_arg_key"].ShouldBe("unique_arg_value");
+			result.Url.ShouldBe("http://yourdomain.com/blog/news.html");
+			result.UrlOffset.ShouldNotBeNull();
+			result.UrlOffset.Index.ShouldBe(0);
+			result.UrlOffset.Type.ShouldBe("html");
+			result.UserAgent.ShouldBe("Mozilla/5.0 (iPhone; CPU iPhone OS 7_1_2 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Version/7.0 Mobile/11D257 Safari/9537.53");
+		}
+
+		[Fact]
 		public void Processed()
 		{
 			// Arrange
@@ -336,6 +394,23 @@ namespace StrongGrid.UnitTests
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(1);
 			result[0].GetType().ShouldBe(typeof(DroppedEvent));
+		}
+
+		[Fact]
+		public void Click()
+		{
+			// Arrange
+			var responseContent = $"[{CLICK_JSON}]";
+			var parser = new WebhookParser();
+			var mockResponse = GetMockRequest(responseContent);
+
+			// Act
+			var result = parser.ParseWebhookEventsAsync(mockResponse.Object).Result;
+
+			// Assert
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(1);
+			result[0].GetType().ShouldBe(typeof(ClickEvent));
 		}
 
 		private Mock<HttpRequest> GetMockRequest(string responseContent)
