@@ -90,6 +90,28 @@ namespace StrongGrid.UnitTests
 			'event':'dropped'
 		}";
 
+		private const string DELIVERED_JSON = @"
+		{
+			'response':'250 OK',
+			'sg_event_id':'sendgrid_internal_event_id',
+			'sg_message_id':'sendgrid_internal_message_id',
+			'event':'delivered',
+			'email':'email@example.com',
+			'timestamp':1249948800,
+			'smtp-id':'<original-smtp-id@domain.com>',
+			'unique_arg_key':'unique_arg_value',
+			'category':['category1', 'category2'],
+			'newsletter': {
+				'newsletter_user_list_id': '10557865',
+				'newsletter_id': '1943530',
+				'newsletter_send_id': '2308608'
+			},
+			'asm_group_id': 1,
+			'ip' : '127.0.0.1',
+			'tls' : '1',
+			'cert_err' : '1'
+		}";
+
 		[Fact]
 		public void Parse_processed_JSON()
 		{
@@ -209,6 +231,39 @@ namespace StrongGrid.UnitTests
 			result.SmtpId.ShouldBe("<original-smtp-id@domain.com>");
 			result.Timestamp.ToUnixTime().ShouldBe(1249948800);
 			result.Tls.ShouldBeFalse();
+			result.UniqueArguments.ShouldNotBeNull();
+			result.UniqueArguments.Count.ShouldBe(1);
+			result.UniqueArguments.Keys.ShouldContain("unique_arg_key");
+			result.UniqueArguments["unique_arg_key"].ShouldBe("unique_arg_value");
+		}
+
+		[Fact]
+		public void Parse_delivered_JSON()
+		{
+			// Arrange
+
+			// Act
+			var result = (DeliveredEvent)JsonConvert.DeserializeObject<Event>(DELIVERED_JSON, new WebHookEventConverter());
+
+			// Assert
+			result.AsmGroupId.ShouldBe(1);
+			result.Categories.Length.ShouldBe(2);
+			result.Categories[0].ShouldBe("category1");
+			result.Categories[1].ShouldBe("category2");
+			result.CertificateValidationError.ShouldBeTrue();
+			result.Email.ShouldBe("email@example.com");
+			result.EventType.ShouldBe(EventType.Delivered);
+			result.InternalEventId.ShouldBe("sendgrid_internal_event_id");
+			result.InternalMessageId.ShouldBe("sendgrid_internal_message_id");
+			result.IpAddress.ShouldBe("127.0.0.1");
+			result.Newsletter.ShouldNotBeNull();
+			result.Newsletter.Id.ShouldBe("1943530");
+			result.Newsletter.SendId.ShouldBe("2308608");
+			result.Newsletter.UserListId.ShouldBe("10557865");
+			result.Response.ShouldBe("250 OK");
+			result.SmtpId.ShouldBe("<original-smtp-id@domain.com>");
+			result.Timestamp.ToUnixTime().ShouldBe(1249948800);
+			result.Tls.ShouldBeTrue();
 			result.UniqueArguments.ShouldNotBeNull();
 			result.UniqueArguments.Count.ShouldBe(1);
 			result.UniqueArguments.Keys.ShouldContain("unique_arg_key");
