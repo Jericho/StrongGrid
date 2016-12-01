@@ -114,6 +114,9 @@ namespace StrongGrid.Utilities
 				case EventType.Processed:
 					webHookEvent = jsonObject.ToObject<ProcessedEvent>(serializer);
 					break;
+				case EventType.SpamReport:
+					webHookEvent = jsonObject.ToObject<SpamReportEvent>(serializer);
+					break;
 				default:
 					throw new Exception($"{eventTypeJsonProperty.ToString()} is an unknown type of event");
 			}
