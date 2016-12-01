@@ -92,6 +92,9 @@ namespace StrongGrid.Utilities
 			var webHookEvent = (Event)null;
 			switch (eventType)
 			{
+				case EventType.Bounce:
+					webHookEvent = jsonObject.ToObject<BouncedEvent>(serializer);
+					break;
 				case EventType.Processed:
 					webHookEvent = jsonObject.ToObject<ProcessedEvent>(serializer);
 					break;
