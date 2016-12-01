@@ -12,7 +12,8 @@
 		"dotnet-test-xunit": "2.2.0-preview2-build1029",
 		"RichardSzalay.MockHttp": "1.3.1",
 		"Moq": "4.6.38-alpha",
-		"Shouldly": "2.8.2"
+        "Shouldly": "2.8.2",
+        "Microsoft.AspNetCore.Http.Abstractions": "1.0.0"
 	},
 
 	"frameworks": {
