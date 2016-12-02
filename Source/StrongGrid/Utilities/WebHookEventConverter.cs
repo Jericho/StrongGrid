@@ -7,6 +7,10 @@ using System.Linq;
 
 namespace StrongGrid.Utilities
 {
+	/// <summary>
+	/// Converts a JSON string received from a webhook into and array of <see cref="Event">events</see>.
+	/// </summary>
+	/// <seealso cref="Newtonsoft.Json.JsonConverter" />
 	public class WebHookEventConverter : JsonConverter
 	{
 		private static readonly string[] _knownProperties =
@@ -49,11 +53,23 @@ namespace StrongGrid.Utilities
 			return objectType == typeof(Event) || objectType == typeof(Event[]);
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="T:Newtonsoft.Json.JsonConverter" /> can read JSON.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="T:Newtonsoft.Json.JsonConverter" /> can read JSON; otherwise, <c>false</c>.
+		/// </value>
 		public override bool CanRead
 		{
 			get { return true; }
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="T:Newtonsoft.Json.JsonConverter" /> can write JSON.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="T:Newtonsoft.Json.JsonConverter" /> can write JSON; otherwise, <c>false</c>.
+		/// </value>
 		public override bool CanWrite
 		{
 			get { return false; }

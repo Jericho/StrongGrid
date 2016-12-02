@@ -393,7 +393,7 @@ namespace StrongGrid.UnitTests
 			result.Url.ShouldBe("http://yourdomain.com/blog/news.html");
 			result.UrlOffset.ShouldNotBeNull();
 			result.UrlOffset.Index.ShouldBe(0);
-			result.UrlOffset.Type.ShouldBe("html");
+			result.UrlOffset.Type.ShouldBe(UrlType.Html);
 			result.UserAgent.ShouldBe("Mozilla/5.0 (iPhone; CPU iPhone OS 7_1_2 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Version/7.0 Mobile/11D257 Safari/9537.53");
 		}
 

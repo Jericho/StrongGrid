@@ -3,6 +3,10 @@ using StrongGrid.Utilities;
 
 namespace StrongGrid.Model.Webhooks
 {
+	/// <summary>
+	/// An event  related to the delivery of a message.
+	/// </summary>
+	/// <seealso cref="StrongGrid.Model.Webhooks.Event" />
 	public class DeliveryEvent : Event
 	{
 		/// <summary>

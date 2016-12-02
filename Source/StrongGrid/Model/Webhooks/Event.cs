@@ -75,18 +75,48 @@ namespace StrongGrid.Model.Webhooks
 		[JsonProperty("sg_message_id", NullValueHandling = NullValueHandling.Ignore)]
 		public string InternalMessageId { get; set; }
 
+		/// <summary>
+		/// Gets or sets the marketing campaign identifier.
+		/// </summary>
+		/// <value>
+		/// The marketing campaign identifier.
+		/// </value>
 		[JsonProperty("marketing_campaign_id", NullValueHandling = NullValueHandling.Ignore)]
 		public long? MarketingCampaignId { get; set; }
 
+		/// <summary>
+		/// Gets or sets the name of the marketing campaign.
+		/// </summary>
+		/// <value>
+		/// The name of the marketing campaign.
+		/// </value>
 		[JsonProperty("marketing_campaign_name", NullValueHandling = NullValueHandling.Ignore)]
 		public string MarketingCampaignName { get; set; }
 
+		/// <summary>
+		/// Gets or sets the marketing campaign version.
+		/// </summary>
+		/// <value>
+		/// The marketing campaign version.
+		/// </value>
 		[JsonProperty("marketing_campaign_version", NullValueHandling = NullValueHandling.Ignore)]
 		public string MarketingCampaignVersion { get; set; }
 
+		/// <summary>
+		/// Gets or sets the marketing campaign split identifier.
+		/// </summary>
+		/// <value>
+		/// The marketing campaign split identifier.
+		/// </value>
 		[JsonProperty("marketing_campaign_split_id", NullValueHandling = NullValueHandling.Ignore)]
 		public long MarketingCampaignSplitId { get; set; }
 
+		/// <summary>
+		/// Gets the unique arguments.
+		/// </summary>
+		/// <value>
+		/// The unique arguments.
+		/// </value>
 		[JsonIgnore]
 		public IDictionary<string, string> UniqueArguments { get; } = new Dictionary<string, string>();
 	}

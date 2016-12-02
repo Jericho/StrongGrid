@@ -1,10 +1,10 @@
-﻿using StrongGrid.Utilities;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using System.IO;
+﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using StrongGrid.Model.Webhooks;
+using StrongGrid.Utilities;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace StrongGrid
 {
@@ -39,7 +39,7 @@ namespace StrongGrid
 		/// Parses the webhook events asynchronously.
 		/// </summary>
 		/// <param name="httpContext">The HTTP context.</param>
-		/// <returns></returns>
+		/// <returns>An array of <see cref="Event">events</see>.</returns>
 		public Task<Event[]> ParseWebhookEventsAsync(HttpContext httpContext)
 		{
 			return ParseWebhookEventsAsync(httpContext.Request);
@@ -49,7 +49,7 @@ namespace StrongGrid
 		/// Parses the webhook events asynchronously.
 		/// </summary>
 		/// <param name="httpRequest">The HTTP request.</param>
-		/// <returns></returns>
+		/// <returns>An array of <see cref="Event">events</see>.</returns>
 		public Task<Event[]> ParseWebhookEventsAsync(HttpRequest httpRequest)
 		{
 			return ParseWebhookEventsAsync(httpRequest.Body);
@@ -59,7 +59,7 @@ namespace StrongGrid
 		/// Parses the webhook events asynchronously.
 		/// </summary>
 		/// <param name="stream">The stream.</param>
-		/// <returns></returns>
+		/// <returns>An array of <see cref="Event">events</see>.</returns>
 		public async Task<Event[]> ParseWebhookEventsAsync(Stream stream)
 		{
 			string requestBody;

@@ -1,9 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using StrongGrid.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace StrongGrid.Utilities
 {
@@ -25,11 +21,23 @@ namespace StrongGrid.Utilities
 			return true;
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="T:Newtonsoft.Json.JsonConverter" /> can read JSON.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="T:Newtonsoft.Json.JsonConverter" /> can read JSON; otherwise, <c>false</c>.
+		/// </value>
 		public override bool CanRead
 		{
 			get { return true; }
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="T:Newtonsoft.Json.JsonConverter" /> can write JSON.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="T:Newtonsoft.Json.JsonConverter" /> can write JSON; otherwise, <c>false</c>.
+		/// </value>
 		public override bool CanWrite
 		{
 			get { return false; }
