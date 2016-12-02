@@ -251,7 +251,7 @@ namespace StrongGrid.Resources
 			//    "alerts.read"
 			//  ]
 			// }
-			// We use a dynamic object to get rid of the 'scopes' property and return an array os strings
+			// We use a dynamic object to get rid of the 'scopes' property and return an array of strings
 			dynamic dynamicObject = JObject.Parse(responseContent);
 			dynamic dynamicArray = dynamicObject.scopes;
 
