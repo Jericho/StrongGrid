@@ -98,7 +98,7 @@ namespace StrongGrid.Utilities
 		/// automatically calculated based on the charset in the response. Also, UTF-8
 		/// encoding will be used if the charset is absent from the response, is blank
 		/// or contains an invalid value.</param>
-		/// <returns></returns>
+		/// <returns>The string content of the response</returns>
 		/// <remarks>
 		/// This method is an improvement over the built-in ReadAsStringAsync method
 		/// because it can handle invalid charset returned in the response. For example
@@ -106,7 +106,7 @@ namespace StrongGrid.Utilities
 		/// mispelled one like 'utf8' instead of the correctly spelled 'utf-8'. The
 		/// built-in method throws an exception if an invalid charset is specified
 		/// while this method uses the UTF-8 encoding in that situation.
-		/// 
+		///
 		/// My motivation for writing this extension method was to work around a situation
 		/// where the 3rd party API I was sending requests to would sometimes return 'utf8'
 		/// as the charset and an exception would be thrown when I called the ReadAsStringAsync
@@ -124,12 +124,12 @@ namespace StrongGrid.Utilities
 		/// <code>
 		/// var httpRequest = new HttpRequestMessage
 		/// {
-		///		Method = HttpMethod.Get,
-		///		RequestUri = new Uri("https://api.vendor.com/v1/endpoint")
-		///	};
-		///	var httpClient = new HttpClient();
-		///	var response = await httpClient.SendAsync(httpRequest, CancellationToken.None).ConfigureAwait(false);
-		///	var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
+		/// 	Method = HttpMethod.Get,
+		/// 	RequestUri = new Uri("https://api.vendor.com/v1/endpoint")
+		/// };
+		/// var httpClient = new HttpClient();
+		/// var response = await httpClient.SendAsync(httpRequest, CancellationToken.None).ConfigureAwait(false);
+		/// var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 		/// </code>
 		/// </example>
 		public static async Task<string> ReadAsStringAsync(this HttpContent content, Encoding encoding)
@@ -173,7 +173,6 @@ namespace StrongGrid.Utilities
 		/// </example>
 		public static Encoding GetEncoding(this HttpContent content, Encoding defaultEncoding)
 		{
-
 			var encoding = defaultEncoding;
 			var charset = content.Headers.ContentType.CharSet;
 			if (!string.IsNullOrEmpty(charset))
