@@ -18,9 +18,14 @@ In October 2016 I decided to release this library as a nuget package since SendG
 
 ## Nuget
 
-StrongGrid is available as a Nuget package.
+StrongGrid is available as a Nuget package:
 
 [![NuGet Version](http://img.shields.io/nuget/v/StrongGrid.svg)](https://www.nuget.org/packages/StrongGrid/)
+
+
+Pre-release packages are available on my MyGet feed:
+
+[![MyGet Pre Release](https://img.shields.io/myget/jericho/vpre/StrongGrid.svg)](http://myget.org/gallery/jericho)
 
 
 ## Installation
