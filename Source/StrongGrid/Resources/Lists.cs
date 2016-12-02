@@ -47,7 +47,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PostAsync(_endpoint, data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var bulkUpsertResult = JObject.Parse(responseContent).ToObject<List>();
 			return bulkUpsertResult;
 		}
@@ -64,7 +64,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(_endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 
 			// Response looks like this:
 			// {
@@ -126,7 +126,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(string.Format("{0}/{1}", _endpoint, listId), cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var list = JObject.Parse(responseContent).ToObject<List>();
 			return list;
 		}
@@ -166,7 +166,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 
 			// Response looks like this:
 			// {

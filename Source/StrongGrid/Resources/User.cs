@@ -42,7 +42,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(_endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var profile = JObject.Parse(responseContent).ToObject<UserProfile>();
 			return profile;
 		}
@@ -70,7 +70,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PatchAsync(_endpoint, data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var profile = JObject.Parse(responseContent).ToObject<UserProfile>();
 			return profile;
 		}
@@ -87,7 +87,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync("/user/account", cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var account = JObject.Parse(responseContent).ToObject<Account>();
 			return account;
 		}
@@ -104,7 +104,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync("/user/email", cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 
 			// Response looks like this:
 			// {
@@ -131,7 +131,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PutAsync("/user/email", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 
 			// Response looks like this:
 			// {
@@ -154,7 +154,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync("/user/username", cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 
 			// Response looks like this:
 			// {
@@ -182,7 +182,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PutAsync("/user/username", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 
 			// Response looks like this:
 			// {
@@ -205,7 +205,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync("/user/credits", cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var userCredits = JObject.Parse(responseContent).ToObject<UserCredits>();
 			return userCredits;
 		}
@@ -241,30 +241,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync("/scopes", cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			// WARNING:
-			// The response contains the following header: Content-Type: application/json; charset=utf8
-			// The specified charset is not valid. The correct syntax is: charset=utf-8
-			// The fact that the charset is slightly misspelled prevents the .Net HttpClient from
-			// being able to parse the body of the reponse. The HttpClient throws the following exception
-			// when we try to get the content of the response like so: response.Content.ReadAsStreamAsync()
-			// 		The character set provided in ContentType is invalid. Cannot read content as string using
-			// 		an invalid character set. System.ArgumentException: 'utf8' is not a supported encoding name
-
-			// I contacted SendGrid on 11/23/2016 to report this problem: https://support.sendgrid.com/hc/en-us/requests/806220
-
-			// A support engineer from SendGrid confirmed the issue on 11/24/2016 and said:
-			// 		I will put in a new feature request to our engineers to see if they will be able to have
-			// 		the charset removed from that API call
-
-			// Until SendGrid solves the problem on their end by either omiting the charset or fixing the misspelling,
-			// we must read the content into a stream and convert the stream to a string which allows us to specify
-			// the desired charset (which is Encoding.UTF8 in this case).
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			var responseContent = string.Empty;
-			using (var sr = new StreamReader(responseStream, Encoding.UTF8))
-			{
-				responseContent = await sr.ReadToEndAsync().ConfigureAwait(false);
-			}
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 
 			// Response looks like this:
 			// {
@@ -274,7 +251,7 @@ namespace StrongGrid.Resources
 			//    "alerts.read"
 			//  ]
 			// }
-			// We use a dynamic object to get rid of the 'scopes' property and return an array os strings
+			// We use a dynamic object to get rid of the 'scopes' property and return an array of strings
 			dynamic dynamicObject = JObject.Parse(responseContent);
 			dynamic dynamicArray = dynamicObject.scopes;
 

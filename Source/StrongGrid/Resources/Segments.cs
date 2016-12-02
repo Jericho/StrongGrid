@@ -53,7 +53,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PostAsync(_endpoint, data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var segment = JObject.Parse(responseContent).ToObject<Segment>();
 			return segment;
 		}
@@ -70,7 +70,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(_endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 
 			// Response looks like this:
 			// {
@@ -112,7 +112,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(string.Format("{0}/{1}", _endpoint, segmentId), cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var segment = JObject.Parse(responseContent).ToObject<Segment>();
 			return segment;
 		}
@@ -140,7 +140,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PatchAsync(string.Format("{0}/{1}", _endpoint, segmentId), data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var segment = JObject.Parse(responseContent).ToObject<Segment>();
 			return segment;
 		}
@@ -175,7 +175,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(string.Format("{0}/{1}/recipients?page_size={2}&page={3}", _endpoint, segmentId, recordsPerPage, page), cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 
 			// Response looks like this:
 			// {

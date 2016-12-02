@@ -2,6 +2,6 @@ mode: ContinuousDelivery
 branches:
   dev(elop)?(ment)?$:
     mode: ContinuousDeployment
-    tag: pre
+    tag: alpha
 ignore:
   sha: []

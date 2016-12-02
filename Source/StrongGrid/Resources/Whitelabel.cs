@@ -51,7 +51,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var domains = JArray.Parse(responseContent).ToObject<WhitelabelDomain[]>();
 			return domains;
 		}
@@ -70,7 +70,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var domain = JObject.Parse(responseContent).ToObject<WhitelabelDomain>();
 			return domain;
 		}
@@ -101,7 +101,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PostAsync(endpoint, data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var whitelabelDomain = JObject.Parse(responseContent).ToObject<WhitelabelDomain>();
 			return whitelabelDomain;
 		}
@@ -127,7 +127,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PatchAsync(endpoint, data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var whitelabelDomain = JObject.Parse(responseContent).ToObject<WhitelabelDomain>();
 			return whitelabelDomain;
 		}
@@ -166,7 +166,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PostAsync(endpoint, data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var whitelabelDomain = JObject.Parse(responseContent).ToObject<WhitelabelDomain>();
 			return whitelabelDomain;
 		}
@@ -186,7 +186,7 @@ namespace StrongGrid.Resources
 			var response = await _client.DeleteAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var whitelabelDomain = JObject.Parse(responseContent).ToObject<WhitelabelDomain>();
 			return whitelabelDomain;
 		}
@@ -205,7 +205,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PostAsync(endpoint, (JObject)null, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var domainValidation = JObject.Parse(responseContent).ToObject<DomainValidation>();
 			return domainValidation;
 		}
@@ -230,7 +230,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var domain = JObject.Parse(responseContent).ToObject<WhitelabelDomain>();
 			return domain;
 		}
@@ -269,7 +269,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PostAsync(endpoint, data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var domain = JObject.Parse(responseContent).ToObject<WhitelabelDomain>();
 			return domain;
 		}
@@ -296,7 +296,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var ips = JArray.Parse(responseContent).ToObject<WhitelabelIp[]>();
 			return ips;
 		}
@@ -315,7 +315,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var ip = JObject.Parse(responseContent).ToObject<WhitelabelIp>();
 			return ip;
 		}
@@ -342,7 +342,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PostAsync(endpoint, data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var whitelabelIp = JObject.Parse(responseContent).ToObject<WhitelabelIp>();
 			return whitelabelIp;
 		}
@@ -376,7 +376,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PostAsync(endpoint, (JObject)null, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var ipValidation = JObject.Parse(responseContent).ToObject<IpValidation>();
 			return ipValidation;
 		}
@@ -402,7 +402,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var links = JArray.Parse(responseContent).ToObject<WhitelabelLink[]>();
 			return links;
 		}
@@ -421,7 +421,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var link = JObject.Parse(responseContent).ToObject<WhitelabelLink>();
 			return link;
 		}
@@ -448,7 +448,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PostAsync(endpoint, data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var whitelabelLink = JObject.Parse(responseContent).ToObject<WhitelabelLink>();
 			return whitelabelLink;
 		}
@@ -472,7 +472,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PatchAsync(endpoint, data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var whitelabelLink = JObject.Parse(responseContent).ToObject<WhitelabelLink>();
 			return whitelabelLink;
 		}
@@ -506,7 +506,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var link = JObject.Parse(responseContent).ToObject<WhitelabelLink>();
 			return link;
 		}
@@ -525,7 +525,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PostAsync(endpoint, (JObject)null, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var linkValidation = JObject.Parse(responseContent).ToObject<LinkValidation>();
 			return linkValidation;
 		}
@@ -550,7 +550,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var link = JObject.Parse(responseContent).ToObject<WhitelabelLink>();
 			return link;
 		}
@@ -589,7 +589,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PostAsync(endpoint, data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var link = JObject.Parse(responseContent).ToObject<WhitelabelLink>();
 			return link;
 		}
