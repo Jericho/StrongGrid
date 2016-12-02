@@ -32,6 +32,10 @@ var testCoverageExcludeByFile = "*/*Designer.cs;*/*AssemblyInfo.cs";
 
 var nuGetApiUrl = EnvironmentVariable("NUGET_API_URL");
 var nuGetApiKey = EnvironmentVariable("NUGET_API_KEY");
+
+var myGetApiUrl = EnvironmentVariable("MYGET_API_URL");
+var myGetApiKey = EnvironmentVariable("MYGET_API_KEY");
+
 var gitHubUserName = EnvironmentVariable("GITHUB_USERNAME");
 var gitHubPassword = EnvironmentVariable("GITHUB_PASSWORD");
 
@@ -296,6 +300,26 @@ Task("Publish-NuGet")
 	}
 });
 
+Task("Publish-MyGet")
+	.IsDependentOn("Create-NuGet-Package")
+	.WithCriteria(() => !isLocalBuild)
+	.WithCriteria(() => !isPullRequest)
+	.WithCriteria(() => isMainRepo)
+	.Does(() =>
+{
+	if(string.IsNullOrEmpty(nuGetApiKey)) throw new InvalidOperationException("Could not resolve MyGet API key.");
+	if(string.IsNullOrEmpty(nuGetApiUrl)) throw new InvalidOperationException("Could not resolve MyGet API url.");
+
+	foreach(var package in GetFiles(outputDir + "*.nupkg"))
+	{
+		// Push the package.
+		NuGetPush(package, new NuGetPushSettings {
+			ApiKey = myGetApiKey,
+			Source = myGetApiUrl
+		});
+	}
+});
+
 Task("Create-Release-Notes")
 	.Does(() =>
 {
@@ -348,6 +372,7 @@ Task("AppVeyor")
 	.IsDependentOn("Upload-Coverage-Result")
 	.IsDependentOn("Create-NuGet-Package")
 	.IsDependentOn("Upload-AppVeyor-Artifacts")
+	.IsDependentOn("Publish-MyGet")
 	.IsDependentOn("Publish-NuGet")
 	.IsDependentOn("Publish-GitHub-Release");
 
