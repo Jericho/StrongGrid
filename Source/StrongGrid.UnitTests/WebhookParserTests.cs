@@ -178,6 +178,19 @@ namespace StrongGrid.UnitTests
 			'asm_group_id': 1
 		}";
 
+		private const string GROUPUNSUBSCRIBE_JSON = @"
+		{
+			'sg_message_id':'sendgrid_internal_message_id',
+			'email':'email@example.com',
+			'timestamp':1249948800,
+			'unique_arg_key':'unique_arg_value',
+			'category':['category1', 'category2'],
+			'event':'group_unsubscribe',
+			'asm_group_id':1,
+			'useragent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36',
+			'ip':'255.255.255.255'
+		}";
+
 		[Fact]
 		public void Parse_processed_JSON()
 		{
@@ -453,6 +466,32 @@ namespace StrongGrid.UnitTests
 		}
 
 		[Fact]
+		public void Parse_groupunsubscribe_JSON()
+		{
+			// Arrange
+
+			// Act
+			var result = (GroupUnsubscribeEvent)JsonConvert.DeserializeObject<Event>(GROUPUNSUBSCRIBE_JSON, new WebHookEventConverter());
+
+			// Assert
+			result.AsmGroupId.ShouldBe(1);
+			result.Categories.Length.ShouldBe(2);
+			result.Categories[0].ShouldBe("category1");
+			result.Categories[1].ShouldBe("category2");
+			result.Email.ShouldBe("email@example.com");
+			result.EventType.ShouldBe(EventType.GroupUnsubscribe);
+			result.InternalEventId.ShouldBeNull();
+			result.InternalMessageId.ShouldBe("sendgrid_internal_message_id");
+			result.IpAddress.ShouldBe("255.255.255.255");
+			result.Timestamp.ToUnixTime().ShouldBe(1249948800);
+			result.UniqueArguments.ShouldNotBeNull();
+			result.UniqueArguments.Count.ShouldBe(1);
+			result.UniqueArguments.Keys.ShouldContain("unique_arg_key");
+			result.UniqueArguments["unique_arg_key"].ShouldBe("unique_arg_value");
+			result.UserAgent.ShouldBe("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36");
+		}
+
+		[Fact]
 		public void Processed()
 		{
 			// Arrange
@@ -569,6 +608,23 @@ namespace StrongGrid.UnitTests
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(1);
 			result[0].GetType().ShouldBe(typeof(UnsubscribeEvent));
+		}
+
+		[Fact]
+		public void GroupUnsubscribe()
+		{
+			// Arrange
+			var responseContent = $"[{GROUPUNSUBSCRIBE_JSON}]";
+			var parser = new WebhookParser();
+			var mockResponse = GetMockRequest(responseContent);
+
+			// Act
+			var result = parser.ParseWebhookEventsAsync(mockResponse.Object).Result;
+
+			// Assert
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(1);
+			result[0].GetType().ShouldBe(typeof(GroupUnsubscribeEvent));
 		}
 
 		private Mock<HttpRequest> GetMockRequest(string responseContent)

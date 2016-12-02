@@ -108,6 +108,9 @@ namespace StrongGrid.Utilities
 				case EventType.Dropped:
 					webHookEvent = jsonObject.ToObject<DroppedEvent>(serializer);
 					break;
+				case EventType.GroupUnsubscribe:
+					webHookEvent = jsonObject.ToObject<GroupUnsubscribeEvent>(serializer);
+					break;
 				case EventType.Open:
 					webHookEvent = jsonObject.ToObject<OpenEvent>(serializer);
 					break;
@@ -121,7 +124,7 @@ namespace StrongGrid.Utilities
 					webHookEvent = jsonObject.ToObject<UnsubscribeEvent>(serializer);
 					break;
 				default:
-					throw new Exception($"{eventTypeJsonProperty.ToString()} is an unknown type of event");
+					throw new Exception($"{eventTypeJsonProperty.ToString()} is an unknown event type");
 			}
 
 			var properties = jsonObject

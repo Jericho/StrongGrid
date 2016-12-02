@@ -76,7 +76,7 @@ namespace StrongGrid.Model.Webhooks
 		/// Recipient unsubscribed from specific group, by either direct link or updating preferences.
 		/// You need to enable Subscription Tracking for getting this type of event.
 		/// </summary>
-		[EnumMember(Value = "groupunsubscribe")]
+		[EnumMember(Value = "group_unsubscribe")]
 		GroupUnsubscribe,
 
 		/// <summary>
