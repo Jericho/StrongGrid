@@ -18,11 +18,11 @@
 		}
 	},
 	"dependencies": {
-        "Microsoft.AspNetCore.Http.Abstractions": "1.0.0",
-        "StyleCop.Analyzers": {
-            "version": "1.0.0",
-            "type": "build"
-        }
+		"Microsoft.AspNetCore.Http.Abstractions": "1.0.0",
+		"StyleCop.Analyzers": {
+			"version": "1.0.0",
+			"type": "build"
+		}
 	},
 	"frameworks": {
 		"netstandard1.3": {
@@ -49,5 +49,5 @@
 			}
 		}
 	},
-	"version": "0.14.0-*"
+	"version": "0.15.0-*"
 }
