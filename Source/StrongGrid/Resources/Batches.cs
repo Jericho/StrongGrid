@@ -38,7 +38,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PostAsync(_endpoint, (JObject)null, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 
 			// Response looks like this:
 			// {
@@ -74,7 +74,7 @@ namespace StrongGrid.Resources
 				//     }
 				//   ]
 				// }
-				var badRequestResponseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+				var badRequestResponseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 				dynamic dynamicObject = JObject.Parse(badRequestResponseContent);
 				dynamic dynamicArray = dynamicObject.errors;
 
@@ -87,7 +87,7 @@ namespace StrongGrid.Resources
 
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 
 			// If the batch id is valid, the response looks like this:
 			// {
@@ -149,7 +149,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync("/user/scheduled_sends", cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var batches = JArray.Parse(responseContent).ToObject<BatchInfo[]>();
 			return batches;
 		}

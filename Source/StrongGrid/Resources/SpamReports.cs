@@ -45,7 +45,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var spamReports = JArray.Parse(responseContent).ToObject<SpamReport[]>();
 			return spamReports;
 		}
@@ -67,7 +67,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var spamReports = JArray.Parse(responseContent).ToObject<SpamReport[]>();
 			return spamReports;
 		}
