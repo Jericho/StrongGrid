@@ -15,6 +15,14 @@ It started out in February 2016 as a [fork](https://github.com/Jericho/sendgrid-
 
 In October 2016 I decided to release this library as a nuget package since SendGrid's library was still using `dynamic` and lacking strong typing.
 
+StrongGrid includes a client that allows you to interact with all the "resources" in the SendGrid API (e.g.: send an email, manage lists, contacts and segments, search for contacts matching criteria, create API keys, etc.).
+
+StrongGrid also includes a parser for webhook sent from SendGrid to your own WebAPI. This parser supports the two types of webhooks that SendGrid can post to your API: the event webhook and the inbound parse webhook. 
+
+If you information about how to setup the SendGrid webhooks, please consult the following resources:
+- [Webhooks Overview](https://sendgrid.com/docs/API_Reference/Webhooks/debug.html)
+- [Guide to debug webhooks](https://sendgrid.com/docs/API_Reference/Webhooks/index.html)
+
 
 ## Nuget
 
@@ -50,6 +58,7 @@ StrongGrid supports the `4.5.2` .NET framework as well as `.Net Core`.
 
 ## Usage
 
+#### Client
 You declare your client variable like so:
 ```csharp
 var apiKey = "... your api key...";
@@ -84,4 +93,32 @@ var globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, en
 
 // Create a new email template
 var template = await client.Templates.CreateAsync("My template");
+```
+
+#### Parser
+ 
+
+```csharp
+[OverrideExceptionFilters]
+[OverrideAuthentication]
+[OverrideAuthorization]
+[AllowAnonymous]
+[RoutePrefix("API/Webhooks")]
+public class SendGridWebhooksController : ApiController
+{
+	[Route("SendGrid")]
+	[HttpPost]
+	public async Task<IHttpActionResult> SendGrid()
+	{
+		var parser = new StrongGrid.WebHookParser();
+		var events = await parser.ParseWebhookEventsAsync(Request.Content));
+
+		foreach (var event in events)
+		{
+			... do something with the event ...
+		}
+
+		return Ok();
+	}
+}
 ```
