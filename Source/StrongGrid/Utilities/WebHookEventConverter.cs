@@ -108,6 +108,9 @@ namespace StrongGrid.Utilities
 				case EventType.Dropped:
 					webHookEvent = jsonObject.ToObject<DroppedEvent>(serializer);
 					break;
+				case EventType.GroupResubscribe:
+					webHookEvent = jsonObject.ToObject<GroupResubscribeEvent>(serializer);
+					break;
 				case EventType.GroupUnsubscribe:
 					webHookEvent = jsonObject.ToObject<GroupUnsubscribeEvent>(serializer);
 					break;

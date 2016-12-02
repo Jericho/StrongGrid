@@ -83,7 +83,7 @@ namespace StrongGrid.Model.Webhooks
 		/// Recipient resubscribes to specific group by updating preferences.
 		/// You need to enable Subscription Tracking for getting this type of event.
 		/// </summary>
-		[EnumMember(Value = "groupresubscribe")]
+		[EnumMember(Value = "group_resubscribe")]
 		GroupResubscribe
 	}
 }
