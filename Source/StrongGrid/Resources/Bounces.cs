@@ -46,7 +46,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var bounces = JArray.Parse(responseContent).ToObject<Bounce[]>();
 			return bounces;
 		}
@@ -64,7 +64,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(string.Format("{0}/{1}", _endpoint, email), cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var bounces = JArray.Parse(responseContent).ToObject<Bounce[]>();
 			return bounces;
 		}

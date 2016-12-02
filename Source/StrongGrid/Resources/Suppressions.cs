@@ -44,7 +44,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(string.Format("{0}/{1}/suppressions", _endpoint, groupId), cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var suppressedAddresses = JArray.Parse(responseContent).ToObject<string[]>();
 			return suppressedAddresses;
 		}

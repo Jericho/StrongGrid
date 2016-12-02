@@ -42,7 +42,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync("/user/settings/enforced_tls", cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var settings = JObject.Parse(responseContent).ToObject<EnforcedTlsSettings>();
 			return settings;
 		}
@@ -67,7 +67,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PatchAsync("/user/settings/enforced_tls", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var updatedSettings = JObject.Parse(responseContent).ToObject<EnforcedTlsSettings>();
 			return updatedSettings;
 		}
@@ -87,7 +87,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 
 			// Response looks like this:
 			// {
@@ -120,7 +120,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync("/partner_settings/new_relic", cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var newRelicSettings = JObject.Parse(responseContent).ToObject<NewRelicSettings>();
 			return newRelicSettings;
 		}
@@ -145,7 +145,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PatchAsync("/partner_settings/new_relic", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var updatedSettings = JObject.Parse(responseContent).ToObject<NewRelicSettings>();
 			return updatedSettings;
 		}
@@ -165,7 +165,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 
 			// Response looks like this:
 			// {
@@ -198,7 +198,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync("/tracking_settings/click", cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 
 			// Response looks like this:
 			// {
@@ -232,7 +232,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PatchAsync("/tracking_settings/click", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 
 			// Response looks like this:
 			// {
@@ -257,7 +257,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync("/tracking_settings/google_analytics", cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var googleAnalyticsGlobalSettings = JObject.Parse(responseContent).ToObject<GoogleAnalyticsGlobalSettings>();
 			return googleAnalyticsGlobalSettings;
 		}
@@ -290,7 +290,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PatchAsync("/tracking_settings/google_analytics", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var updatedSettings = JObject.Parse(responseContent).ToObject<GoogleAnalyticsGlobalSettings>();
 			return updatedSettings;
 		}
@@ -307,7 +307,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync("/tracking_settings/open", cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 
 			// Response looks like this:
 			// {
@@ -337,7 +337,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PatchAsync("/tracking_settings/open", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 
 			// Response looks like this:
 			// {
@@ -362,7 +362,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync("/tracking_settings/subscription", cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var subscriptionSettings = JObject.Parse(responseContent).ToObject<SubscriptionSettings>();
 			return subscriptionSettings;
 		}
@@ -395,7 +395,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PatchAsync("/tracking_settings/subscription", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var subscriptionSettings = JObject.Parse(responseContent).ToObject<SubscriptionSettings>();
 			return subscriptionSettings;
 		}
@@ -415,7 +415,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 
 			// Response looks like this:
 			// {
@@ -448,7 +448,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync("/mail_settings/bcc", cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var bccMailSettings = JObject.Parse(responseContent).ToObject<EmailAddressSetting>();
 			return bccMailSettings;
 		}
@@ -473,7 +473,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PatchAsync("/mail_settings/bcc", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var updatedSettings = JObject.Parse(responseContent).ToObject<EmailAddressSetting>();
 			return updatedSettings;
 		}
@@ -490,7 +490,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync("/mail_settings/address_whitelist", cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var addressWhitelistSettings = JObject.Parse(responseContent).ToObject<AddressWhitelistSettings>();
 			return addressWhitelistSettings;
 		}
@@ -515,7 +515,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PatchAsync("/mail_settings/address_whitelist", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var updatedSettings = JObject.Parse(responseContent).ToObject<AddressWhitelistSettings>();
 			return updatedSettings;
 		}
@@ -532,7 +532,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync("/mail_settings/footer", cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var bccMailSettings = JObject.Parse(responseContent).ToObject<FooterGlobalSettings>();
 			return bccMailSettings;
 		}
@@ -559,7 +559,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PatchAsync("/mail_settings/footer", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var updatedSettings = JObject.Parse(responseContent).ToObject<FooterGlobalSettings>();
 			return updatedSettings;
 		}
@@ -576,7 +576,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync("/mail_settings/forward_spam", cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var forwardSpamMailSettins = JObject.Parse(responseContent).ToObject<EmailAddressSetting>();
 			return forwardSpamMailSettins;
 		}
@@ -601,7 +601,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PatchAsync("/mail_settings/forward_spam", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var updatedSettings = JObject.Parse(responseContent).ToObject<EmailAddressSetting>();
 			return updatedSettings;
 		}
@@ -618,7 +618,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync("/mail_settings/plain_content", cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 
 			// Response looks like this:
 			// {
@@ -652,7 +652,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PatchAsync("/mail_settings/plain_content", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 
 			// Response looks like this:
 			// {
@@ -677,7 +677,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync("/mail_settings/spam_check", cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var spamCheckMailSettings = JObject.Parse(responseContent).ToObject<SpamCheckSettings>();
 			return spamCheckMailSettings;
 		}
@@ -704,7 +704,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PatchAsync("/mail_settings/spam_check", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var updatedSettings = JObject.Parse(responseContent).ToObject<SpamCheckSettings>();
 			return updatedSettings;
 		}
@@ -721,7 +721,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync("/mail_settings/template", cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var templateMailSettings = JObject.Parse(responseContent).ToObject<TemplateSettings>();
 			return templateMailSettings;
 		}
@@ -746,7 +746,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PatchAsync("/mail_settings/template", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var updatedSettings = JObject.Parse(responseContent).ToObject<TemplateSettings>();
 			return updatedSettings;
 		}
@@ -763,7 +763,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync("/mail_settings/bounce_purge", cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var bouncePurgeSettings = JObject.Parse(responseContent).ToObject<BouncePurgeSettings>();
 			return bouncePurgeSettings;
 		}
@@ -790,7 +790,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PatchAsync("/mail_settings/bounce_purge", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var updatedSettings = JObject.Parse(responseContent).ToObject<BouncePurgeSettings>();
 			return updatedSettings;
 		}
@@ -807,7 +807,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync("/mail_settings/forward_bounce", cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var forwardSpamMailSettings = JObject.Parse(responseContent).ToObject<EmailAddressSetting>();
 			return forwardSpamMailSettings;
 		}
@@ -832,7 +832,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PatchAsync("/mail_settings/forward_bounce", data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var updatedSettings = JObject.Parse(responseContent).ToObject<EmailAddressSetting>();
 			return updatedSettings;
 		}

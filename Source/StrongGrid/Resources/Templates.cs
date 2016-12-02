@@ -45,7 +45,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PostAsync(_endpoint, data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var template = JObject.Parse(responseContent).ToObject<Template>();
 			return template;
 		}
@@ -62,7 +62,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(_endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 
 			// Response looks like this:
 			// {
@@ -103,7 +103,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(string.Format("{0}/{1}", _endpoint, templateId), cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var template = JObject.Parse(responseContent).ToObject<Template>();
 			return template;
 		}
@@ -126,7 +126,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PatchAsync(string.Format("{0}/{1}", _endpoint, templateId), data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var template = JObject.Parse(responseContent).ToObject<Template>();
 			return template;
 		}
@@ -171,7 +171,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PostAsync(string.Format("{0}/{1}/versions", _endpoint, templateId), data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var templateVersion = JObject.Parse(responseContent).ToObject<TemplateVersion>();
 			return templateVersion;
 		}
@@ -190,7 +190,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PostAsync(string.Format("{0}/{1}/versions/{2}/activate", _endpoint, templateId, versionId), (JObject)null, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var templateVersion = JObject.Parse(responseContent).ToObject<TemplateVersion>();
 			return templateVersion;
 		}
@@ -209,7 +209,7 @@ namespace StrongGrid.Resources
 			var response = await _client.GetAsync(string.Format("{0}/{1}/versions/{2}", _endpoint, templateId, versionId), cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var templateVersion = JObject.Parse(responseContent).ToObject<TemplateVersion>();
 			return templateVersion;
 		}
@@ -240,7 +240,7 @@ namespace StrongGrid.Resources
 			var response = await _client.PatchAsync(string.Format("{0}/{1}/versions/{2}", _endpoint, templateId, versionId), data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
-			var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var templateVersion = JObject.Parse(responseContent).ToObject<TemplateVersion>();
 			return templateVersion;
 		}
