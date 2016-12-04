@@ -50,7 +50,7 @@ namespace StrongGrid.Utilities
 		/// </returns>
 		public override bool CanConvert(Type objectType)
 		{
-			return objectType == typeof(Event) || objectType == typeof(Event[]);
+			return objectType == typeof(Event);
 		}
 
 		/// <summary>
