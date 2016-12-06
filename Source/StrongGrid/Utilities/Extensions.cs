@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using HttpMultipartParser;
+using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -188,6 +189,19 @@ namespace StrongGrid.Utilities
 			}
 
 			return encoding;
+		}
+
+		/// <summary>
+		/// Returns the value of a parameter or the default value if it doesn't exist.
+		/// </summary>
+		/// <param name="parser">The parser.</param>
+		/// <param name="name">The name of the parameter.</param>
+		/// <param name="defaultValue">The default value.</param>
+		/// <returns>The value of the parameter</returns>
+		public static string GetParameterValue(this MultipartFormDataParser parser, string name, string defaultValue)
+		{
+			if (parser.HasParameter(name)) return parser.GetParameterValue(name);
+			else return defaultValue;
 		}
 	}
 }
