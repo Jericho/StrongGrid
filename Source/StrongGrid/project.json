@@ -18,7 +18,9 @@
 		}
 	},
 	"dependencies": {
+		"HttpMultipartParser": "2.2.0",
 		"Microsoft.AspNetCore.Http.Abstractions": "1.0.0",
+		"Newtonsoft.Json": "9.0.1",
 		"StyleCop.Analyzers": {
 			"version": "1.0.0",
 			"type": "build"
@@ -32,7 +34,6 @@
 			"imports": "dnxcore50",
 			"dependencies": {
 				"NETStandard.Library": "1.6.1",
-				"Newtonsoft.Json": "9.0.1",
 				"System.Reflection.TypeExtensions": "4.1.0"
 			}
 		},
@@ -41,7 +42,6 @@
 				"define": [ "NET452" ]
 			},
 			"dependencies": {
-				"Newtonsoft.Json": "9.0.1",
 				"System.Net.Http": "4.0.0"
 			},
 			"frameworkAssemblies": {
