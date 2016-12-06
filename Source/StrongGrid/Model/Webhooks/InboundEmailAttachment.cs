@@ -3,9 +3,11 @@ using System.IO;
 
 namespace StrongGrid.Model.Webhooks
 {
+	/// <summary>
+	/// Strongly typed representation of the information sudmited by SendGrid in a 'inbound parse' webhook
+	/// </summary>
 	public class InboundEmailAttachment
 	{
-
 		/// <summary>
 		/// Gets or sets the identifier.
 		/// </summary>
@@ -23,7 +25,7 @@ namespace StrongGrid.Model.Webhooks
 		public string ContentType { get; set; }
 
 		/// <summary>
-		/// Gets the data.
+		/// Gets or sets the data.
 		/// </summary>
 		/// <value>
 		/// The data.

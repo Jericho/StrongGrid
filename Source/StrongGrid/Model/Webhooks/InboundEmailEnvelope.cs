@@ -20,7 +20,6 @@ namespace StrongGrid.Model.Webhooks
 
 		/// <summary>
 		/// Gets or sets from, which is the return path for the message.
-
 		/// </summary>
 		/// <value>
 		/// From.

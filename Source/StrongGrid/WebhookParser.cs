@@ -1,16 +1,16 @@
 ﻿using HttpMultipartParser;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using StrongGrid.Model;
 using StrongGrid.Model.Webhooks;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using System.Linq;
-using Newtonsoft.Json.Linq;
 using System.Text;
-using StrongGrid.Model;
+using System.Threading.Tasks;
 
 namespace StrongGrid
 {
@@ -79,7 +79,7 @@ namespace StrongGrid
 
 			// Convert the 'headers' from a string into array of KeyValuePair
 			var rawHeaders = parser
-				.GetParameterValue("headers", "")
+				.GetParameterValue("headers", string.Empty)
 				.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
 			var headers = rawHeaders
 				.Select(header =>
@@ -122,14 +122,14 @@ namespace StrongGrid
 			var envelope = JsonConvert.DeserializeObject<InboundEmailEnvelope>(parser.GetParameterValue("envelope", "{}"));
 
 			// Convert the 'from' from a string into a strongly typed object
-			var rawFrom = parser.GetParameterValue("from", "");
+			var rawFrom = parser.GetParameterValue("from", string.Empty);
 			var piecesFrom = rawFrom.Split(new[] { '<', '>' }, StringSplitOptions.RemoveEmptyEntries);
-			var from = new MailAddress(piecesFrom[1], piecesFrom[0].Replace("\"", "").Trim());
+			var from = new MailAddress(piecesFrom[1], piecesFrom[0].Replace("\"", string.Empty).Trim());
 
 			// Convert the 'to' from a string into a strongly typed object
-			var rawTo = parser.GetParameterValue("to", "");
+			var rawTo = parser.GetParameterValue("to", string.Empty);
 			var piecesTo = rawFrom.Split(new[] { '<', '>' }, StringSplitOptions.RemoveEmptyEntries);
-			var to = new MailAddress(piecesFrom[1], piecesFrom[0].Replace("\"", "").Trim());
+			var to = new MailAddress(piecesFrom[1], piecesFrom[0].Replace("\"", string.Empty).Trim());
 
 			// Arrange the InboundEmail
 			var inboundEmail = new InboundEmail

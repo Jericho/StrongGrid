@@ -96,7 +96,7 @@ namespace StrongGrid.Model.Webhooks
 		public string SpamScore { get; set; }
 
 		/// <summary>
-		/// Gets or sets the attachment. 
+		/// Gets or sets the attachment.
 		/// </summary>
 		/// <value>
 		/// The attachment.
