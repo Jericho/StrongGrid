@@ -22,6 +22,7 @@ StrongGrid also includes a parser for webhook sent from SendGrid to your own Web
 If you information about how to setup the SendGrid webhooks, please consult the following resources:
 - [Webhooks Overview](https://sendgrid.com/docs/API_Reference/Webhooks/debug.html)
 - [Guide to debug webhooks](https://sendgrid.com/docs/API_Reference/Webhooks/index.html)
+- [Setting up the inbound parse webhook](https://sendgrid.com/docs/Classroom/Basics/Inbound_Parse_Webhook/setting_up_the_inbound_parse_webhook.html)
 
 
 ## Nuget
@@ -97,28 +98,47 @@ var template = await client.Templates.CreateAsync("My template");
 
 #### Parser
  
-
+Here's a basic example of an API controller which parses the webhook from SendGrid into an array of Events:
 ```csharp
-[OverrideExceptionFilters]
-[OverrideAuthentication]
-[OverrideAuthorization]
-[AllowAnonymous]
-[RoutePrefix("API/Webhooks")]
-public class SendGridWebhooksController : ApiController
+namespace WebApplication1.Controllers
 {
-	[Route("SendGrid")]
-	[HttpPost]
-	public async Task<IHttpActionResult> SendGrid()
+	[Route("api/SendGridWebhooks")]
+	public class SendGridController : Controller
 	{
-		var parser = new StrongGrid.WebHookParser();
-		var events = await parser.ParseWebhookEventsAsync(Request.Content));
-
-		foreach (var event in events)
+		[HttpPost]
+		[Route("Events")]
+		public async Task<IActionResult> ReceiveEvents()
 		{
-			... do something with the event ...
-		}
+			var parser = new WebhookParser();
+			var events = await parser.ParseWebhookEventsAsync(Request.Body).ConfigureAwait(false);
+			
+			... do something with the events ...
 
-		return Ok();
+			return Ok();
+		}
+	}
+}
+```
+
+
+Here's a basic example of an API controller which parses the webhook from SendGrid into an InboundEmail:
+```csharp
+namespace WebApplication1.Controllers
+{
+	[Route("api/SendGridWebhooks")]
+	public class SendGridController : Controller
+	{
+		[HttpPost]
+		[Route("InboundEmail")]
+		public IActionResult ReceiveInboundEmail()
+		{
+			var parser = new WebhookParser();
+			var inboundEmail = parser.ParseInboundEmailWebhook(Request.Body);
+
+			... do something with the inbound email ...
+
+			return Ok();
+		}
 	}
 }
 ```
