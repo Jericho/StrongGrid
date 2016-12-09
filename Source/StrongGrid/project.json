@@ -18,7 +18,7 @@
 		}
 	},
 	"dependencies": {
-		"HttpMultipartParser": "2.2.0",
+		"HttpMultipartParser": "2.2.1",
 		"Newtonsoft.Json": "9.0.1",
 		"StyleCop.Analyzers": {
 			"version": "1.0.0",
