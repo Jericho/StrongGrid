@@ -133,7 +133,7 @@ namespace StrongGrid.Resources.UnitTests
 			var campaigns = new Campaigns(mockClient.Object, ENDPOINT);
 
 			// Act
-			var result = campaigns.CreateAsync(title, suppressionGroupId, senderId, null, null, null, null, null, null, null, null, CancellationToken.None).Result;
+			var result = campaigns.CreateAsync(title, senderId, null, null, null, null, null, null, suppressionGroupId, null, null, CancellationToken.None).Result;
 
 			// Assert
 			result.ShouldNotBeNull();
