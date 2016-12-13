@@ -225,7 +225,7 @@ namespace StrongGrid.Resources.UnitTests
 			var campaigns = new Campaigns(mockClient.Object, ENDPOINT);
 
 			// Act
-			var result = campaigns.UpdateAsync(campaignId, title, suppressionGroupId, senderId, null, null, null, null, null, null, null, null, CancellationToken.None).Result;
+			var result = campaigns.UpdateAsync(campaignId, title, suppressionGroupId, null, null, null, null, null, null, senderId, null, null, CancellationToken.None).Result;
 
 			// Assert
 			result.ShouldNotBeNull();

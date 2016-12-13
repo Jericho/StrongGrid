@@ -167,7 +167,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Campaign" />.
 		/// </returns>
-		public async Task<Campaign> UpdateAsync(long campaignId, string title = null, long? suppressionGroupId = null, long? senderId = null, string subject = null, string htmlContent = null, string textContent = null, IEnumerable<long> listIds = null, IEnumerable<long> segmentIds = null, IEnumerable<string> categories = null, string customUnsubscribeUrl = null, string ipPool = null, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<Campaign> UpdateAsync(long campaignId, string title = null, long? senderId = null, string subject = null, string htmlContent = null, string textContent = null, IEnumerable<long> listIds = null, IEnumerable<long> segmentIds = null, IEnumerable<string> categories = null, long? suppressionGroupId = null, string customUnsubscribeUrl = null, string ipPool = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			listIds = listIds ?? Enumerable.Empty<long>();
 			segmentIds = segmentIds ?? Enumerable.Empty<long>();
