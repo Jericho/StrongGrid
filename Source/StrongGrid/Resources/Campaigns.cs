@@ -35,7 +35,6 @@ namespace StrongGrid.Resources
 		/// Create a campaign.
 		/// </summary>
 		/// <param name="title">The title.</param>
-		/// <param name="suppressionGroupId">The suppression group identifier.</param>
 		/// <param name="senderId">The sender identifier.</param>
 		/// <param name="subject">The subject.</param>
 		/// <param name="htmlContent">Content of the HTML.</param>
@@ -43,19 +42,20 @@ namespace StrongGrid.Resources
 		/// <param name="listIds">The list ids.</param>
 		/// <param name="segmentIds">The segment ids.</param>
 		/// <param name="categories">The categories.</param>
+		/// <param name="suppressionGroupId">The suppression group identifier.</param>
 		/// <param name="customUnsubscribeUrl">The custom unsubscribe URL.</param>
 		/// <param name="ipPool">The ip pool.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The <see cref="Campaign" />.
 		/// </returns>
-		public async Task<Campaign> CreateAsync(string title, long suppressionGroupId, long senderId, string subject = null, string htmlContent = null, string textContent = null, IEnumerable<long> listIds = null, IEnumerable<long> segmentIds = null, IEnumerable<string> categories = null, string customUnsubscribeUrl = null, string ipPool = null, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<Campaign> CreateAsync(string title, long senderId, string subject = null, string htmlContent = null, string textContent = null, IEnumerable<long> listIds = null, IEnumerable<long> segmentIds = null, IEnumerable<string> categories = null, long? suppressionGroupId = null, string customUnsubscribeUrl = null, string ipPool = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			listIds = listIds ?? Enumerable.Empty<long>();
 			segmentIds = segmentIds ?? Enumerable.Empty<long>();
 			categories = categories ?? Enumerable.Empty<string>();
 
-			var data = CreateJObjectForCampaign(title, suppressionGroupId, senderId, subject, htmlContent, textContent, listIds, segmentIds, categories, customUnsubscribeUrl, ipPool);
+			var data = CreateJObjectForCampaign(title, senderId, subject, htmlContent, textContent, listIds, segmentIds, categories, suppressionGroupId, customUnsubscribeUrl, ipPool);
 			var response = await _client.PostAsync(_endpoint, data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
@@ -153,7 +153,6 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="campaignId">The id of the campaign</param>
 		/// <param name="title">The title.</param>
-		/// <param name="suppressionGroupId">The suppression group identifier.</param>
 		/// <param name="senderId">The sender identifier.</param>
 		/// <param name="subject">The subject.</param>
 		/// <param name="htmlContent">Content of the HTML.</param>
@@ -161,19 +160,20 @@ namespace StrongGrid.Resources
 		/// <param name="listIds">The list ids.</param>
 		/// <param name="segmentIds">The segment ids.</param>
 		/// <param name="categories">The categories.</param>
+		/// <param name="suppressionGroupId">The suppression group identifier.</param>
 		/// <param name="customUnsubscribeUrl">The custom unsubscribe URL.</param>
 		/// <param name="ipPool">The ip pool.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The <see cref="Campaign" />.
 		/// </returns>
-		public async Task<Campaign> UpdateAsync(long campaignId, string title = null, long? suppressionGroupId = null, long? senderId = null, string subject = null, string htmlContent = null, string textContent = null, IEnumerable<long> listIds = null, IEnumerable<long> segmentIds = null, IEnumerable<string> categories = null, string customUnsubscribeUrl = null, string ipPool = null, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<Campaign> UpdateAsync(long campaignId, string title = null, long? senderId = null, string subject = null, string htmlContent = null, string textContent = null, IEnumerable<long> listIds = null, IEnumerable<long> segmentIds = null, IEnumerable<string> categories = null, long? suppressionGroupId = null, string customUnsubscribeUrl = null, string ipPool = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			listIds = listIds ?? Enumerable.Empty<long>();
 			segmentIds = segmentIds ?? Enumerable.Empty<long>();
 			categories = categories ?? Enumerable.Empty<string>();
 
-			var data = CreateJObjectForCampaign(title, suppressionGroupId, senderId, subject, htmlContent, textContent, listIds, segmentIds, categories, customUnsubscribeUrl, ipPool);
+			var data = CreateJObjectForCampaign(title, senderId, subject, htmlContent, textContent, listIds, segmentIds, categories, suppressionGroupId, customUnsubscribeUrl, ipPool);
 			var response = await _client.PatchAsync(string.Format("{0}/{1}", _endpoint, campaignId), data, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
@@ -301,7 +301,7 @@ namespace StrongGrid.Resources
 			response.EnsureSuccess();
 		}
 
-		private static JObject CreateJObjectForCampaign(string title = null, long? suppressionGroupId = null, long? senderId = null, string subject = null, string htmlContent = null, string textContent = null, IEnumerable<long> listIds = null, IEnumerable<long> segmentIds = null, IEnumerable<string> categories = null, string customUnsubscribeUrl = null, string ipPool = null)
+		private static JObject CreateJObjectForCampaign(string title = null, long? senderId = null, string subject = null, string htmlContent = null, string textContent = null, IEnumerable<long> listIds = null, IEnumerable<long> segmentIds = null, IEnumerable<string> categories = null, long? suppressionGroupId = null, string customUnsubscribeUrl = null, string ipPool = null)
 		{
 			var result = new JObject();
 			if (!string.IsNullOrEmpty(title)) result.Add("title", title);

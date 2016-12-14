@@ -626,7 +626,7 @@ namespace StrongGrid.IntegrationTests
 				Console.WriteLine("Unsubscribe group created");
 			}
 
-			var campaign = client.Campaigns.CreateAsync("Integration testing campaign", unsubscribeGroup.Id, sender.Id, "This is the subject", "<html><body>Hello <b>World</b><p><a href='[unsubscribe]'>Click Here to Unsubscribe</a></p></body></html", "Hello world. To unsubscribe, visit [unsubscribe]", new[] { list.Id }).Result;
+			var campaign = client.Campaigns.CreateAsync("Integration testing campaign", sender.Id, "This is the subject", "<html><body>Hello <b>World</b><p><a href='[unsubscribe]'>Click Here to Unsubscribe</a></p></body></html", "Hello world. To unsubscribe, visit [unsubscribe]", new[] { list.Id }, null, null, unsubscribeGroup.Id, null, null).Result;
 			Console.WriteLine("Campaign '{0}' created. Id: {1}", campaign.Title, campaign.Id);
 
 			client.Campaigns.UpdateAsync(campaign.Id, categories: new[] { "category1", "category2" }).Wait();
