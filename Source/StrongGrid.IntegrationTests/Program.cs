@@ -45,6 +45,7 @@ namespace StrongGrid.IntegrationTests
 				InvalidEmails(client, pauseAfterTests);
 				Batches(client, pauseAfterTests);
 				Whitelabel(client, pauseAfterTests);
+				SubUsers(client, pauseAfterTests);
 			}
 			catch (Exception e)
 			{
@@ -768,6 +769,16 @@ namespace StrongGrid.IntegrationTests
 
 			client.Whitelabel.DeleteLinkAsync(newLink.Id).Wait();
 			Console.WriteLine($"Whitelabel link {newLink.Id} deleted.");
+
+			ConcludeTests(pauseAfterTests);
+		}
+
+		private static void SubUsers(IClient client, bool pauseAfterTests)
+		{
+			Console.WriteLine("\n***** SUB-USERS *****");
+
+			var subusers = client.SubUsers.GetAllAsync().Result;
+			Console.WriteLine($"All sub-users retrieved. There are {subusers.Length} sub-users");
 
 			ConcludeTests(pauseAfterTests);
 		}
