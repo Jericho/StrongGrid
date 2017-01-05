@@ -54,22 +54,22 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Retrieve a specific invalid email.
+		/// Retrieve invalid emails for a given email address.
 		/// </summary>
 		/// <param name="emailAddress">The email address.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
-		/// The <see cref="InvalidEmail" />.
+		/// An array of <see cref="InvalidEmail" />.
 		/// </returns>
-		public async Task<InvalidEmail> GetAsync(string emailAddress, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<InvalidEmail[]> GetAsync(string emailAddress, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}/{1}", _endpoint, emailAddress);
 			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
 			response.EnsureSuccess();
 
 			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var invalidEmail = JObject.Parse(responseContent).ToObject<InvalidEmail>();
-			return invalidEmail;
+			var invalidEmails = JArray.Parse(responseContent).ToObject<InvalidEmail[]>();
+			return invalidEmails;
 		}
 
 		/// <summary>
