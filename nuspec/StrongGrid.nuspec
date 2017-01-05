@@ -15,7 +15,7 @@
     <copyright>Copyright (c) Jeremie Desautels and contributors</copyright>
     <language>en-US</language>
     <tags>StrongGrid SendGrid</tags>
-    <releaseNotes>BREAKING CHANGES: the order of the parameters on the Campaign.CreateAsync and Campaigns.UpdateAsync has changed slightly</releaseNotes>
+    <releaseNotes></releaseNotes>
     <dependencies>
       <group targetFramework="net452">
         <dependency id="HttpMultipartParser" version="2.2.0" />
