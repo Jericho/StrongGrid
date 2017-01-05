@@ -144,7 +144,7 @@ namespace StrongGrid.Resources.UnitTests
 			var mockClient = mockRepository.Create<IClient>();
 			mockClient
 				.Setup(c => c.GetAsync($"{ENDPOINT}/{emailAddress}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_INVALID_EMAIL_JSON) })
+				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_INVALID_EMAILS_JSON) })
 				.Verifiable();
 
 			var invalidEmails = new InvalidEmails(mockClient.Object, ENDPOINT);
@@ -154,6 +154,7 @@ namespace StrongGrid.Resources.UnitTests
 
 			// Assert
 			result.ShouldNotBeNull();
+			result.Length.ShouldBe(2);
 		}
 	}
 }
