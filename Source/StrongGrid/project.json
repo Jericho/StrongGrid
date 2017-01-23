@@ -33,8 +33,7 @@
 			},
 			"imports": "dnxcore50",
 			"dependencies": {
-				"NETStandard.Library": "1.6.1",
-				"System.Reflection.TypeExtensions": "4.1.0"
+				"NETStandard.Library": "1.6.1"
 			}
 		},
 		"net452": {
