@@ -38,7 +38,7 @@ namespace StrongGrid.UnitTests
 				.With(request => request.Content == null)
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
-			var httpClient = new HttpClient(mockHttp);
+			var httpClient = mockHttp.ToHttpClient();
 			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
 
 			// Act
@@ -59,7 +59,7 @@ namespace StrongGrid.UnitTests
 				.With(request => request.Content == null)
 				.Throw(new Exception("Let's pretend something wrong happened"));
 
-			var httpClient = new HttpClient(mockHttp);
+			var httpClient = mockHttp.ToHttpClient();
 			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
 
 			// Act
@@ -81,7 +81,7 @@ namespace StrongGrid.UnitTests
 				.With(request => request.Content == null)
 				.Throw(new HttpRequestException("Let's pretend something wrong happened"));
 
-			var httpClient = new HttpClient(mockHttp);
+			var httpClient = mockHttp.ToHttpClient();
 			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
 
 			// Act
@@ -103,7 +103,7 @@ namespace StrongGrid.UnitTests
 				.With(request => request.Content == null)
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
-			var httpClient = new HttpClient(mockHttp);
+			var httpClient = mockHttp.ToHttpClient();
 			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
 
 			// Act
@@ -142,7 +142,7 @@ namespace StrongGrid.UnitTests
 				.Returns(TimeSpan.Zero)
 				.Verifiable();
 
-			var httpClient = new HttpClient(mockHttp);
+			var httpClient = mockHttp.ToHttpClient();
 			var client = new Client(apiKey: API_KEY, httpClient: httpClient, retryStrategy: mockRetryStrategy.Object);
 
 			// Act
@@ -183,7 +183,7 @@ namespace StrongGrid.UnitTests
 				.Returns(TimeSpan.Zero)
 				.Verifiable();
 
-			var httpClient = new HttpClient(mockHttp);
+			var httpClient = mockHttp.ToHttpClient();
 			var client = new Client(apiKey: API_KEY, httpClient: httpClient, retryStrategy: mockRetryStrategy.Object);
 
 			// Act
@@ -208,7 +208,7 @@ namespace StrongGrid.UnitTests
 				.With(request => request.Content == null)
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
-			var httpClient = new HttpClient(mockHttp);
+			var httpClient = mockHttp.ToHttpClient();
 			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
 
 			// Act
@@ -233,7 +233,7 @@ namespace StrongGrid.UnitTests
 				.WithContent(data.ToString())
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
-			var httpClient = new HttpClient(mockHttp);
+			var httpClient = mockHttp.ToHttpClient();
 			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
 
 			// Act
@@ -256,7 +256,7 @@ namespace StrongGrid.UnitTests
 				.With(request => request.Content == null)
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
-			var httpClient = new HttpClient(mockHttp);
+			var httpClient = mockHttp.ToHttpClient();
 			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
 
 			// Act
@@ -287,7 +287,7 @@ namespace StrongGrid.UnitTests
 				.WithContent(data.ToString())
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
-			var httpClient = new HttpClient(mockHttp);
+			var httpClient = mockHttp.ToHttpClient();
 			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
 
 			// Act
@@ -308,7 +308,7 @@ namespace StrongGrid.UnitTests
 				.With(request => request.Content == null)
 				.Respond(HttpStatusCode.NoContent);
 
-			var httpClient = new HttpClient(mockHttp);
+			var httpClient = mockHttp.ToHttpClient();
 			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
 
 			// Act
@@ -331,7 +331,7 @@ namespace StrongGrid.UnitTests
 				.With(request => request.Content == null)
 				.Respond(HttpStatusCode.NoContent);
 
-			var httpClient = new HttpClient(mockHttp);
+			var httpClient = mockHttp.ToHttpClient();
 			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
 
 			// Act
@@ -356,7 +356,7 @@ namespace StrongGrid.UnitTests
 				.WithContent(data.ToString())
 				.Respond(HttpStatusCode.NoContent);
 
-			var httpClient = new HttpClient(mockHttp);
+			var httpClient = mockHttp.ToHttpClient();
 			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
 
 			// Act
@@ -379,7 +379,7 @@ namespace StrongGrid.UnitTests
 				.With(request => request.Content == null)
 				.Respond(HttpStatusCode.NoContent);
 
-			var httpClient = new HttpClient(mockHttp);
+			var httpClient = mockHttp.ToHttpClient();
 			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
 
 			// Act
@@ -410,7 +410,7 @@ namespace StrongGrid.UnitTests
 				.WithContent(data.ToString())
 				.Respond(HttpStatusCode.NoContent);
 
-			var httpClient = new HttpClient(mockHttp);
+			var httpClient = mockHttp.ToHttpClient();
 			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
 
 			// Act
@@ -433,7 +433,7 @@ namespace StrongGrid.UnitTests
 				.With(request => request.Content == null)
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
-			var httpClient = new HttpClient(mockHttp);
+			var httpClient = mockHttp.ToHttpClient();
 			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
 
 			// Act
@@ -458,7 +458,7 @@ namespace StrongGrid.UnitTests
 				.WithContent(data.ToString())
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
-			var httpClient = new HttpClient(mockHttp);
+			var httpClient = mockHttp.ToHttpClient();
 			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
 
 			// Act
@@ -481,7 +481,7 @@ namespace StrongGrid.UnitTests
 				.With(request => request.Content == null)
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
-			var httpClient = new HttpClient(mockHttp);
+			var httpClient = mockHttp.ToHttpClient();
 			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
 
 			// Act
@@ -512,7 +512,7 @@ namespace StrongGrid.UnitTests
 				.WithContent(data.ToString())
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
-			var httpClient = new HttpClient(mockHttp);
+			var httpClient = mockHttp.ToHttpClient();
 			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
 
 			// Act
@@ -535,7 +535,7 @@ namespace StrongGrid.UnitTests
 				.With(request => request.Content == null)
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
-			var httpClient = new HttpClient(mockHttp);
+			var httpClient = mockHttp.ToHttpClient();
 			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
 
 			// Act
@@ -560,7 +560,7 @@ namespace StrongGrid.UnitTests
 				.WithContent(data.ToString())
 				.Respond("application/json", "{'name' : 'This is a test'}");
 
-			var httpClient = new HttpClient(mockHttp);
+			var httpClient = mockHttp.ToHttpClient();
 			var client = new Client(apiKey: API_KEY, httpClient: httpClient);
 
 			// Act
