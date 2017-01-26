@@ -16,6 +16,8 @@ namespace StrongGrid.UnitTests
 {
 	public class WebhookParserTests
 	{
+		#region FIELDS
+
 		private const string PROCESSED_JSON = @"
 		{
 			'sg_event_id':'sendgrid_internal_event_id',
@@ -209,6 +211,8 @@ namespace StrongGrid.UnitTests
 			'useragent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36',
 			'ip':'255.255.255.255'
 		}";
+
+		#endregion
 
 		[Fact]
 		public void Parse_processed_JSON()
@@ -536,7 +540,11 @@ namespace StrongGrid.UnitTests
 			result.UserAgent.ShouldBe("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36");
 		}
 
+#if NETFULL
+		[Fact(Skip ="This unit test not possible in NETFULL because HttpRequest is sealed")]
+#else
 		[Fact]
+#endif
 		public void Processed()
 		{
 			// Arrange
@@ -553,7 +561,12 @@ namespace StrongGrid.UnitTests
 			result[0].GetType().ShouldBe(typeof(ProcessedEvent));
 		}
 
+
+#if NETFULL
+		[Fact(Skip ="This unit test not possible in NETFULL because HttpRequest is sealed")]
+#else
 		[Fact]
+#endif
 		public void Bounced()
 		{
 			// Arrange
@@ -570,7 +583,12 @@ namespace StrongGrid.UnitTests
 			result[0].GetType().ShouldBe(typeof(BouncedEvent));
 		}
 
+
+#if NETFULL
+		[Fact(Skip ="This unit test not possible in NETFULL because HttpRequest is sealed")]
+#else
 		[Fact]
+#endif
 		public void Deferred()
 		{
 			// Arrange
@@ -587,7 +605,12 @@ namespace StrongGrid.UnitTests
 			result[0].GetType().ShouldBe(typeof(DeferredEvent));
 		}
 
+
+#if NETFULL
+		[Fact(Skip ="This unit test not possible in NETFULL because HttpRequest is sealed")]
+#else
 		[Fact]
+#endif
 		public void Dropped()
 		{
 			// Arrange
@@ -604,7 +627,12 @@ namespace StrongGrid.UnitTests
 			result[0].GetType().ShouldBe(typeof(DroppedEvent));
 		}
 
+
+#if NETFULL
+		[Fact(Skip ="This unit test not possible in NETFULL because HttpRequest is sealed")]
+#else
 		[Fact]
+#endif
 		public void Click()
 		{
 			// Arrange
@@ -621,7 +649,12 @@ namespace StrongGrid.UnitTests
 			result[0].GetType().ShouldBe(typeof(ClickEvent));
 		}
 
+
+#if NETFULL
+		[Fact(Skip ="This unit test not possible in NETFULL because HttpRequest is sealed")]
+#else
 		[Fact]
+#endif
 		public void Open()
 		{
 			// Arrange
@@ -638,7 +671,12 @@ namespace StrongGrid.UnitTests
 			result[0].GetType().ShouldBe(typeof(OpenEvent));
 		}
 
+
+#if NETFULL
+		[Fact(Skip ="This unit test not possible in NETFULL because HttpRequest is sealed")]
+#else
 		[Fact]
+#endif
 		public void Unsubscribe()
 		{
 			// Arrange
@@ -655,7 +693,12 @@ namespace StrongGrid.UnitTests
 			result[0].GetType().ShouldBe(typeof(UnsubscribeEvent));
 		}
 
+
+#if NETFULL
+		[Fact(Skip ="This unit test not possible in NETFULL because HttpRequest is sealed")]
+#else
 		[Fact]
+#endif
 		public void GroupUnsubscribe()
 		{
 			// Arrange
@@ -672,7 +715,12 @@ namespace StrongGrid.UnitTests
 			result[0].GetType().ShouldBe(typeof(GroupUnsubscribeEvent));
 		}
 
+
+#if NETFULL
+		[Fact(Skip ="This unit test not possible in NETFULL because HttpRequest is sealed")]
+#else
 		[Fact]
+#endif
 		public void GroupResubscribe()
 		{
 			// Arrange
@@ -691,13 +739,10 @@ namespace StrongGrid.UnitTests
 
 		private Mock<HttpRequest> GetMockRequest(string responseContent)
 		{
+#if NETCORE
 			var mockRequest = new Mock<HttpRequest>(MockBehavior.Strict);
 			mockRequest
-#if NETFULL
-				.SetupGet(r => r.InputStream)
-#else
 				.SetupGet(r => r.Body)
-#endif
 				.Returns(() =>
 				{
 					var ms = new MemoryStream();
@@ -709,6 +754,9 @@ namespace StrongGrid.UnitTests
 				});
 
 			return mockRequest;
+#else
+			return null;
+#endif
 		}
 	}
 }
