@@ -32,6 +32,9 @@
 			}
 		},
 		"net452": {
+			"buildOptions": {
+				"define": [ "NETFULL" ]
+			},
 			"dependencies": {
 			},
 			"frameworkAssemblies": {

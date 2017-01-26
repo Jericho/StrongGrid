@@ -1,10 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿#if NETCORE
+using Microsoft.AspNetCore.Http;
+#endif
 using Moq;
 using Newtonsoft.Json;
 using Shouldly;
 using StrongGrid.Model.Webhooks;
 using StrongGrid.Utilities;
 using System.IO;
+#if NETFULL
+using System.Web;
+#endif
 using Xunit;
 
 namespace StrongGrid.UnitTests
@@ -688,7 +693,11 @@ namespace StrongGrid.UnitTests
 		{
 			var mockRequest = new Mock<HttpRequest>(MockBehavior.Strict);
 			mockRequest
+#if NETFULL
+				.SetupGet(r => r.InputStream)
+#else
 				.SetupGet(r => r.Body)
+#endif
 				.Returns(() =>
 				{
 					var ms = new MemoryStream();

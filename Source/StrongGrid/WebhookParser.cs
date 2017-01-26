@@ -1,5 +1,7 @@
 ﻿using HttpMultipartParser;
+#if NETSTANDARD
 using Microsoft.AspNetCore.Http;
+#endif
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StrongGrid.Model;
@@ -11,6 +13,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+#if NETFULL
+using System.Web;
+#endif
 
 namespace StrongGrid
 {
@@ -20,14 +25,6 @@ namespace StrongGrid
 	/// </summary>
 	public class WebhookParser
 	{
-		#region FIELDS
-
-		#endregion
-
-		#region PROPERTIES
-
-		#endregion
-
 		#region PUBLIC METHODS
 
 		/// <summary>
@@ -37,7 +34,12 @@ namespace StrongGrid
 		/// <returns>An array of <see cref="Event">events</see>.</returns>
 		public Task<Event[]> ParseWebhookEventsAsync(HttpRequest httpRequest)
 		{
-			return ParseWebhookEventsAsync(httpRequest.Body);
+#if NETSTANDARD
+			var stream = httpRequest.Body;
+#else
+			var stream = httpRequest.InputStream;
+#endif
+			return ParseWebhookEventsAsync(stream);
 		}
 
 		/// <summary>
@@ -64,7 +66,12 @@ namespace StrongGrid
 		/// <returns>The <see cref="InboundEmail"/></returns>
 		public InboundEmail ParseInboundEmailWebhook(HttpRequest httpRequest)
 		{
-			return ParseInboundEmailWebhook(httpRequest.Body);
+#if NETSTANDARD
+			var stream = httpRequest.Body;
+#else
+			var stream = httpRequest.InputStream;
+#endif
+			return ParseInboundEmailWebhook(stream);
 		}
 
 		/// <summary>
