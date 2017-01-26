@@ -755,6 +755,7 @@ namespace StrongGrid.UnitTests
 
 			return mockRequest;
 #else
+			var dummy = responseContent;	// This line is simply to avoid warning RECS0154: "Parameter is never used"
 			return null;
 #endif
 		}
