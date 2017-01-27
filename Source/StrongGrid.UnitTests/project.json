@@ -8,7 +8,7 @@
 
 	"dependencies": {
 		"StrongGrid": { "target": "project" },
-		"xunit": "2.2.0-beta4-build3444",
+		"xunit": "2.2.0-beta5-build3474",
 		"dotnet-test-xunit": "2.2.0-preview2-build1029",
 		"Moq": "4.6.38-alpha",
 		"Shouldly": "2.8.2",
