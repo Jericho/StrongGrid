@@ -34,12 +34,23 @@ namespace StrongGrid
 				requestBody = await streamReader.ReadToEndAsync().ConfigureAwait(false);
 			}
 
+			var webHookEvents = ParseWebhookEvents(requestBody);
+			return webHookEvents;
+		}
+
+		/// <summary>
+		/// Parses the webhook events.
+		/// </summary>
+		/// <param name="requestBody">The content submitted by Sendgrid's WebHook.</param>
+		/// <returns>An array of <see cref="Event">events</see>.</returns>
+		public Event[] ParseWebhookEvents(string requestBody)
+		{
 			var webHookEvents = JsonConvert.DeserializeObject<List<Event>>(requestBody, new WebHookEventConverter());
 			return webHookEvents.ToArray();
 		}
 
 		/// <summary>
-		/// Parses the inbound email webhook asynchronously.
+		/// Parses the inbound email webhook.
 		/// </summary>
 		/// <param name="stream">The stream.</param>
 		/// <returns>The <see cref="InboundEmail"/></returns>
