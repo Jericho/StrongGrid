@@ -20,5 +20,5 @@ branches:
 
 # Build cache
 cache:
-- Source\packages -> Source\**\packages.config
-- tools -> build.cake, tools\packages.config
+  - Source\packages -> Source\**\project.json
+  - tools -> build.cake, tools\packages.config
