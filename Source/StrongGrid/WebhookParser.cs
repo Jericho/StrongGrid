@@ -1,7 +1,4 @@
 ﻿using HttpMultipartParser;
-#if NETSTANDARD
-using Microsoft.AspNetCore.Http;
-#endif
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StrongGrid.Model;
@@ -13,9 +10,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-#if NETFULL
-using System.Web;
-#endif
 
 namespace StrongGrid
 {
@@ -26,21 +20,6 @@ namespace StrongGrid
 	public class WebhookParser
 	{
 		#region PUBLIC METHODS
-
-		/// <summary>
-		/// Parses the webhook events asynchronously.
-		/// </summary>
-		/// <param name="httpRequest">The HTTP request.</param>
-		/// <returns>An array of <see cref="Event">events</see>.</returns>
-		public Task<Event[]> ParseWebhookEventsAsync(HttpRequest httpRequest)
-		{
-#if NETSTANDARD
-			var stream = httpRequest.Body;
-#else
-			var stream = httpRequest.InputStream;
-#endif
-			return ParseWebhookEventsAsync(stream);
-		}
 
 		/// <summary>
 		/// Parses the webhook events asynchronously.
@@ -57,21 +36,6 @@ namespace StrongGrid
 
 			var webHookEvents = JsonConvert.DeserializeObject<List<Event>>(requestBody, new WebHookEventConverter());
 			return webHookEvents.ToArray();
-		}
-
-		/// <summary>
-		/// Parses the inbound email webhook asynchronously.
-		/// </summary>
-		/// <param name="httpRequest">The HTTP request.</param>
-		/// <returns>The <see cref="InboundEmail"/></returns>
-		public InboundEmail ParseInboundEmailWebhook(HttpRequest httpRequest)
-		{
-#if NETSTANDARD
-			var stream = httpRequest.Body;
-#else
-			var stream = httpRequest.InputStream;
-#endif
-			return ParseInboundEmailWebhook(stream);
 		}
 
 		/// <summary>

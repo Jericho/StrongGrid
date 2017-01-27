@@ -43,8 +43,7 @@
 				"System.Net.Http": "4.0.0"
 			},
 			"frameworkAssemblies": {
-				"System.Runtime.Serialization": "4.0.0",
-				"System.Web": "4.0.0.0"
+				"System.Runtime.Serialization": "4.0.0"
 			}
 		}
 	},

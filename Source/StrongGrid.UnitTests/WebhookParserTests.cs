@@ -1,15 +1,9 @@
-﻿#if NETCORE
-using Microsoft.AspNetCore.Http;
-#endif
-using Moq;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Shouldly;
 using StrongGrid.Model.Webhooks;
 using StrongGrid.Utilities;
 using System.IO;
-#if NETFULL
-using System.Web;
-#endif
+using System.Text;
 using Xunit;
 
 namespace StrongGrid.UnitTests
@@ -540,20 +534,16 @@ namespace StrongGrid.UnitTests
 			result.UserAgent.ShouldBe("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36");
 		}
 
-#if NETFULL
-		[Fact(Skip ="This unit test not possible in NETFULL because HttpRequest is sealed")]
-#else
 		[Fact]
-#endif
 		public void Processed()
 		{
 			// Arrange
 			var responseContent = $"[{PROCESSED_JSON}]";
 			var parser = new WebhookParser();
-			var mockResponse = GetMockRequest(responseContent);
+			var stream = GetStream(responseContent);
 				
 			// Act
-			var result = parser.ParseWebhookEventsAsync(mockResponse.Object).Result;
+			var result = parser.ParseWebhookEventsAsync(stream).Result;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -561,21 +551,16 @@ namespace StrongGrid.UnitTests
 			result[0].GetType().ShouldBe(typeof(ProcessedEvent));
 		}
 
-
-#if NETFULL
-		[Fact(Skip ="This unit test not possible in NETFULL because HttpRequest is sealed")]
-#else
 		[Fact]
-#endif
 		public void Bounced()
 		{
 			// Arrange
 			var responseContent = $"[{BOUNCED_JSON}]";
 			var parser = new WebhookParser();
-			var mockResponse = GetMockRequest(responseContent);
+			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(mockResponse.Object).Result;
+			var result = parser.ParseWebhookEventsAsync(stream).Result;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -583,21 +568,16 @@ namespace StrongGrid.UnitTests
 			result[0].GetType().ShouldBe(typeof(BouncedEvent));
 		}
 
-
-#if NETFULL
-		[Fact(Skip ="This unit test not possible in NETFULL because HttpRequest is sealed")]
-#else
 		[Fact]
-#endif
 		public void Deferred()
 		{
 			// Arrange
 			var responseContent = $"[{DEFERRED_JSON}]";
 			var parser = new WebhookParser();
-			var mockResponse = GetMockRequest(responseContent);
+			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(mockResponse.Object).Result;
+			var result = parser.ParseWebhookEventsAsync(stream).Result;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -605,21 +585,16 @@ namespace StrongGrid.UnitTests
 			result[0].GetType().ShouldBe(typeof(DeferredEvent));
 		}
 
-
-#if NETFULL
-		[Fact(Skip ="This unit test not possible in NETFULL because HttpRequest is sealed")]
-#else
 		[Fact]
-#endif
 		public void Dropped()
 		{
 			// Arrange
 			var responseContent = $"[{DROPPED_JSON}]";
 			var parser = new WebhookParser();
-			var mockResponse = GetMockRequest(responseContent);
+			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(mockResponse.Object).Result;
+			var result = parser.ParseWebhookEventsAsync(stream).Result;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -627,21 +602,16 @@ namespace StrongGrid.UnitTests
 			result[0].GetType().ShouldBe(typeof(DroppedEvent));
 		}
 
-
-#if NETFULL
-		[Fact(Skip ="This unit test not possible in NETFULL because HttpRequest is sealed")]
-#else
 		[Fact]
-#endif
 		public void Click()
 		{
 			// Arrange
 			var responseContent = $"[{CLICK_JSON}]";
 			var parser = new WebhookParser();
-			var mockResponse = GetMockRequest(responseContent);
+			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(mockResponse.Object).Result;
+			var result = parser.ParseWebhookEventsAsync(stream).Result;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -649,21 +619,16 @@ namespace StrongGrid.UnitTests
 			result[0].GetType().ShouldBe(typeof(ClickEvent));
 		}
 
-
-#if NETFULL
-		[Fact(Skip ="This unit test not possible in NETFULL because HttpRequest is sealed")]
-#else
 		[Fact]
-#endif
 		public void Open()
 		{
 			// Arrange
 			var responseContent = $"[{OPEN_JSON}]";
 			var parser = new WebhookParser();
-			var mockResponse = GetMockRequest(responseContent);
+			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(mockResponse.Object).Result;
+			var result = parser.ParseWebhookEventsAsync(stream).Result;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -671,21 +636,16 @@ namespace StrongGrid.UnitTests
 			result[0].GetType().ShouldBe(typeof(OpenEvent));
 		}
 
-
-#if NETFULL
-		[Fact(Skip ="This unit test not possible in NETFULL because HttpRequest is sealed")]
-#else
 		[Fact]
-#endif
 		public void Unsubscribe()
 		{
 			// Arrange
 			var responseContent = $"[{UNSUBSCRIBE_JSON}]";
 			var parser = new WebhookParser();
-			var mockResponse = GetMockRequest(responseContent);
+			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(mockResponse.Object).Result;
+			var result = parser.ParseWebhookEventsAsync(stream).Result;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -693,21 +653,16 @@ namespace StrongGrid.UnitTests
 			result[0].GetType().ShouldBe(typeof(UnsubscribeEvent));
 		}
 
-
-#if NETFULL
-		[Fact(Skip ="This unit test not possible in NETFULL because HttpRequest is sealed")]
-#else
 		[Fact]
-#endif
 		public void GroupUnsubscribe()
 		{
 			// Arrange
 			var responseContent = $"[{GROUPUNSUBSCRIBE_JSON}]";
 			var parser = new WebhookParser();
-			var mockResponse = GetMockRequest(responseContent);
+			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(mockResponse.Object).Result;
+			var result = parser.ParseWebhookEventsAsync(stream).Result;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -716,20 +671,16 @@ namespace StrongGrid.UnitTests
 		}
 
 
-#if NETFULL
-		[Fact(Skip ="This unit test not possible in NETFULL because HttpRequest is sealed")]
-#else
 		[Fact]
-#endif
 		public void GroupResubscribe()
 		{
 			// Arrange
 			var responseContent = $"[{GROUPRESUBSCRIBE_JSON}]";
 			var parser = new WebhookParser();
-			var mockResponse = GetMockRequest(responseContent);
+			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(mockResponse.Object).Result;
+			var result = parser.ParseWebhookEventsAsync(stream).Result;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -737,27 +688,11 @@ namespace StrongGrid.UnitTests
 			result[0].GetType().ShouldBe(typeof(GroupResubscribeEvent));
 		}
 
-		private Mock<HttpRequest> GetMockRequest(string responseContent)
+		private Stream GetStream(string responseContent)
 		{
-#if NETCORE
-			var mockRequest = new Mock<HttpRequest>(MockBehavior.Strict);
-			mockRequest
-				.SetupGet(r => r.Body)
-				.Returns(() =>
-				{
-					var ms = new MemoryStream();
-					var sw = new StreamWriter(ms);
-					sw.Write(responseContent);
-					sw.Flush();
-					ms.Position = 0;
-					return ms;
-				});
-
-			return mockRequest;
-#else
-			var dummy = responseContent;	// This line is simply to avoid warning RECS0154: "Parameter is never used"
-			return null;
-#endif
+			var byteArray = Encoding.UTF8.GetBytes(responseContent);
+			var stream = new MemoryStream(byteArray);
+			return stream;
 		}
 	}
 }
