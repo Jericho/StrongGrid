@@ -8,12 +8,11 @@
 
 	"dependencies": {
 		"StrongGrid": { "target": "project" },
-		"xunit": "2.2.0-beta4-build3444",
+		"xunit": "2.2.0-beta5-build3474",
 		"dotnet-test-xunit": "2.2.0-preview2-build1029",
-		"RichardSzalay.MockHttp": "1.3.1",
 		"Moq": "4.6.38-alpha",
-        "Shouldly": "2.8.2",
-        "Microsoft.AspNetCore.Http.Abstractions": "1.0.0"
+		"Shouldly": "2.8.2",
+		"RichardSzalay.MockHttp": "1.4.1"
 	},
 
 	"frameworks": {
@@ -32,6 +31,9 @@
 			}
 		},
 		"net452": {
+			"buildOptions": {
+				"define": [ "NETFULL" ]
+			},
 			"dependencies": {
 			},
 			"frameworkAssemblies": {

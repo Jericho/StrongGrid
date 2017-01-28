@@ -1,16 +1,17 @@
-﻿using Microsoft.AspNetCore.Http;
-using Moq;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Shouldly;
 using StrongGrid.Model.Webhooks;
 using StrongGrid.Utilities;
 using System.IO;
+using System.Text;
 using Xunit;
 
 namespace StrongGrid.UnitTests
 {
 	public class WebhookParserTests
 	{
+		#region FIELDS
+
 		private const string PROCESSED_JSON = @"
 		{
 			'sg_event_id':'sendgrid_internal_event_id',
@@ -204,6 +205,8 @@ namespace StrongGrid.UnitTests
 			'useragent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36',
 			'ip':'255.255.255.255'
 		}";
+
+		#endregion
 
 		[Fact]
 		public void Parse_processed_JSON()
@@ -537,10 +540,10 @@ namespace StrongGrid.UnitTests
 			// Arrange
 			var responseContent = $"[{PROCESSED_JSON}]";
 			var parser = new WebhookParser();
-			var mockResponse = GetMockRequest(responseContent);
+			var stream = GetStream(responseContent);
 				
 			// Act
-			var result = parser.ParseWebhookEventsAsync(mockResponse.Object).Result;
+			var result = parser.ParseWebhookEventsAsync(stream).Result;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -554,10 +557,10 @@ namespace StrongGrid.UnitTests
 			// Arrange
 			var responseContent = $"[{BOUNCED_JSON}]";
 			var parser = new WebhookParser();
-			var mockResponse = GetMockRequest(responseContent);
+			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(mockResponse.Object).Result;
+			var result = parser.ParseWebhookEventsAsync(stream).Result;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -571,10 +574,10 @@ namespace StrongGrid.UnitTests
 			// Arrange
 			var responseContent = $"[{DEFERRED_JSON}]";
 			var parser = new WebhookParser();
-			var mockResponse = GetMockRequest(responseContent);
+			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(mockResponse.Object).Result;
+			var result = parser.ParseWebhookEventsAsync(stream).Result;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -588,10 +591,10 @@ namespace StrongGrid.UnitTests
 			// Arrange
 			var responseContent = $"[{DROPPED_JSON}]";
 			var parser = new WebhookParser();
-			var mockResponse = GetMockRequest(responseContent);
+			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(mockResponse.Object).Result;
+			var result = parser.ParseWebhookEventsAsync(stream).Result;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -605,10 +608,10 @@ namespace StrongGrid.UnitTests
 			// Arrange
 			var responseContent = $"[{CLICK_JSON}]";
 			var parser = new WebhookParser();
-			var mockResponse = GetMockRequest(responseContent);
+			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(mockResponse.Object).Result;
+			var result = parser.ParseWebhookEventsAsync(stream).Result;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -622,10 +625,10 @@ namespace StrongGrid.UnitTests
 			// Arrange
 			var responseContent = $"[{OPEN_JSON}]";
 			var parser = new WebhookParser();
-			var mockResponse = GetMockRequest(responseContent);
+			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(mockResponse.Object).Result;
+			var result = parser.ParseWebhookEventsAsync(stream).Result;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -639,10 +642,10 @@ namespace StrongGrid.UnitTests
 			// Arrange
 			var responseContent = $"[{UNSUBSCRIBE_JSON}]";
 			var parser = new WebhookParser();
-			var mockResponse = GetMockRequest(responseContent);
+			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(mockResponse.Object).Result;
+			var result = parser.ParseWebhookEventsAsync(stream).Result;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -656,10 +659,10 @@ namespace StrongGrid.UnitTests
 			// Arrange
 			var responseContent = $"[{GROUPUNSUBSCRIBE_JSON}]";
 			var parser = new WebhookParser();
-			var mockResponse = GetMockRequest(responseContent);
+			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(mockResponse.Object).Result;
+			var result = parser.ParseWebhookEventsAsync(stream).Result;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -667,16 +670,17 @@ namespace StrongGrid.UnitTests
 			result[0].GetType().ShouldBe(typeof(GroupUnsubscribeEvent));
 		}
 
+
 		[Fact]
 		public void GroupResubscribe()
 		{
 			// Arrange
 			var responseContent = $"[{GROUPRESUBSCRIBE_JSON}]";
 			var parser = new WebhookParser();
-			var mockResponse = GetMockRequest(responseContent);
+			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(mockResponse.Object).Result;
+			var result = parser.ParseWebhookEventsAsync(stream).Result;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -684,22 +688,11 @@ namespace StrongGrid.UnitTests
 			result[0].GetType().ShouldBe(typeof(GroupResubscribeEvent));
 		}
 
-		private Mock<HttpRequest> GetMockRequest(string responseContent)
+		private Stream GetStream(string responseContent)
 		{
-			var mockRequest = new Mock<HttpRequest>(MockBehavior.Strict);
-			mockRequest
-				.SetupGet(r => r.Body)
-				.Returns(() =>
-				{
-					var ms = new MemoryStream();
-					var sw = new StreamWriter(ms);
-					sw.Write(responseContent);
-					sw.Flush();
-					ms.Position = 0;
-					return ms;
-				});
-
-			return mockRequest;
+			var byteArray = Encoding.UTF8.GetBytes(responseContent);
+			var stream = new MemoryStream(byteArray);
+			return stream;
 		}
 	}
 }
