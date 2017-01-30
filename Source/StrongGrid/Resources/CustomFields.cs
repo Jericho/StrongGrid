@@ -32,7 +32,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Creates the asynchronous.
+		/// Create a custom field.
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <param name="type">The type.</param>
@@ -53,7 +53,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Gets all asynchronous.
+		/// Retrieve all custom fields.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
@@ -68,7 +68,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Gets the asynchronous.
+		/// Retrieve a custom field.
 		/// </summary>
 		/// <param name="fieldId">The field identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
@@ -85,7 +85,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Deletes the asynchronous.
+		/// Delete a custom field.
 		/// </summary>
 		/// <param name="fieldId">The field identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
@@ -102,7 +102,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Gets the reserved fields asynchronous.
+		/// Retrieve the reserved fields.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>

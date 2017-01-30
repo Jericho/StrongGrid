@@ -32,7 +32,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Creates the asynchronous.
+		/// Create a list.
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
@@ -55,7 +55,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Gets all asynchronous.
+		/// Retrieve all lists.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
@@ -72,7 +72,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Deletes the asynchronous.
+		/// Delete a list.
 		/// </summary>
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
@@ -89,7 +89,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Deletes the asynchronous.
+		/// Delete multiple lists.
 		/// </summary>
 		/// <param name="listIds">The list ids.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
@@ -107,7 +107,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Gets the asynchronous.
+		/// Retrieve a list.
 		/// </summary>
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
@@ -126,7 +126,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Updates the asynchronous.
+		/// Update a list.
 		/// </summary>
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="name">The name.</param>
@@ -148,7 +148,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Gets the recipients asynchronous.
+		/// Retrieve the recipients on a list.
 		/// </summary>
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="recordsPerPage">The records per page.</param>
@@ -169,7 +169,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Adds the recipient asynchronous.
+		/// Add a recipient to a list.
 		/// </summary>
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="contactId">The contact identifier.</param>
@@ -187,7 +187,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Removes the recipient asynchronous.
+		/// Remove a recipient from a list.
 		/// </summary>
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="contactId">The contact identifier.</param>
@@ -205,7 +205,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Adds the recipients asynchronous.
+		/// Add multiple recipients to a list.
 		/// </summary>
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="contactIds">The contact ids.</param>

@@ -32,7 +32,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Creates the asynchronous.
+		/// Create a segment.
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <param name="listId">The list identifier.</param>
@@ -59,7 +59,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Gets all asynchronous.
+		/// Retrieve all segments.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
@@ -74,7 +74,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Gets the asynchronous.
+		/// Retrieve a segment.
 		/// </summary>
 		/// <param name="segmentId">The segment identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
@@ -91,7 +91,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Updates the asynchronous.
+		/// Update a segment.
 		/// </summary>
 		/// <param name="segmentId">The segment identifier.</param>
 		/// <param name="name">The name.</param>
@@ -119,7 +119,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Deletes the asynchronous.
+		/// Delete a segment.
 		/// </summary>
 		/// <param name="segmentId">The segment identifier.</param>
 		/// <param name="deleteMatchingContacts">if set to <c>true</c> [delete matching contacts].</param>
@@ -138,7 +138,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Gets the recipients asynchronous.
+		/// Retrieve the recipients on a segment.
 		/// </summary>
 		/// <param name="segmentId">The segment identifier.</param>
 		/// <param name="recordsPerPage">The records per page.</param>

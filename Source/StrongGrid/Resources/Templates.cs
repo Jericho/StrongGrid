@@ -30,7 +30,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Creates the asynchronous.
+		/// Create a template.
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
@@ -51,7 +51,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Gets all asynchronous.
+		/// Retrieve all templates.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
@@ -66,7 +66,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Gets the asynchronous.
+		/// Retrieve a template.
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
@@ -82,7 +82,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Updates the asynchronous.
+		/// Update a template.
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="name">The name.</param>
@@ -104,7 +104,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Deletes the asynchronous.
+		/// Delete a template.
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
@@ -120,7 +120,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Creates the version asynchronous.
+		/// Create a template version.
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="name">The name.</param>
@@ -150,7 +150,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Activates the version asynchronous.
+		/// Activate a version.
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="versionId">The version identifier.</param>
@@ -167,7 +167,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Gets the version asynchronous.
+		/// Retrieve a template version.
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="versionId">The version identifier.</param>
@@ -184,7 +184,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Updates the version asynchronous.
+		/// Update a template version.
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="versionId">The version identifier.</param>
@@ -214,7 +214,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Deletes the version asynchronous.
+		/// Delete a template version.
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="versionId">The version identifier.</param>

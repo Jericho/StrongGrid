@@ -33,7 +33,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Creates the asynchronous.
+		/// Creates a contact.
 		/// </summary>
 		/// <param name="email">The email.</param>
 		/// <param name="firstName">The first name.</param>
@@ -59,7 +59,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Updates the asynchronous.
+		/// Updates the contact.
 		/// </summary>
 		/// <param name="email">The email.</param>
 		/// <param name="firstName">The first name.</param>
@@ -91,7 +91,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Imports the asynchronous.
+		/// Import contacts.
 		/// </summary>
 		/// <param name="contacts">The contacts.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
@@ -114,7 +114,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Deletes the asynchronous.
+		/// Delete a contact.
 		/// </summary>
 		/// <param name="contactId">The contact identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
@@ -127,7 +127,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Deletes the asynchronous.
+		/// Delete contacts.
 		/// </summary>
 		/// <param name="contactId">The contact identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
@@ -145,7 +145,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Gets the asynchronous.
+		/// Retrieve a contact.
 		/// </summary>
 		/// <param name="contactId">The contact identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
@@ -162,7 +162,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Gets the asynchronous.
+		/// Retrieve multiple contacts.
 		/// </summary>
 		/// <param name="recordsPerPage">The records per page.</param>
 		/// <param name="page">The page.</param>

@@ -30,7 +30,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Creates the asynchronous.
+		/// Create a sender identity.
 		/// </summary>
 		/// <param name="nickname">The nickname.</param>
 		/// <param name="from">From.</param>
@@ -57,7 +57,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Gets all asynchronous.
+		/// Retrieve all sender identities.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
@@ -72,7 +72,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Gets the asynchronous.
+		/// Retrieve a sender identity.
 		/// </summary>
 		/// <param name="senderId">The sender identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
@@ -89,7 +89,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Updates the asynchronous.
+		/// Update a sender identity.
 		/// </summary>
 		/// <param name="senderId">The sender identifier.</param>
 		/// <param name="nickname">The nickname.</param>
@@ -117,7 +117,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Deletes the asynchronous.
+		/// Delete a sender identity.
 		/// </summary>
 		/// <param name="senderId">The sender identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
@@ -134,7 +134,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Resends the verification.
+		/// Resend the verification to a sender.
 		/// </summary>
 		/// <param name="senderId">The sender identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
