@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Pathoschild.Http.Client;
 using StrongGrid.Model;
 using StrongGrid.Utilities;
 using System;
@@ -19,14 +20,14 @@ namespace StrongGrid.Resources
 	public class Mail
 	{
 		private readonly string _endpoint;
-		private readonly IClient _client;
+		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Mail" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
 		/// <param name="endpoint">Resource endpoint</param>
-		public Mail(IClient client, string endpoint = "/mail")
+		public Mail(Pathoschild.Http.Client.IClient client, string endpoint = "/mail")
 		{
 			_endpoint = endpoint;
 			_client = client;
@@ -189,7 +190,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public async Task SendAsync(
+		public Task SendAsync(
 			IEnumerable<MailPersonalization> personalizations,
 			string subject,
 			IEnumerable<MailContent> contents,
@@ -258,8 +259,12 @@ namespace StrongGrid.Resources
 				data.Add("custom_args", args);
 			}
 
-			var response = await _client.PostAsync(string.Format("{0}/send", _endpoint), data, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
+			var endpoint = $"{_endpoint}/send";
+			return _client
+				.PostAsync(endpoint)
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsResponse();
 		}
 	}
 }

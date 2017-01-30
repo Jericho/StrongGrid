@@ -1,8 +1,8 @@
-﻿using Moq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Model;
+using StrongGrid.UnitTests;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -14,6 +14,7 @@ namespace StrongGrid.Resources.UnitTests
 	{
 		#region FIELDS
 
+		private const string BASE_URI = "https://api.sendgrid.com";
 		private const string ENDPOINT = "/api_keys";
 
 		private const string SINGLE_API_KEY_JSON = @"{
@@ -64,20 +65,18 @@ namespace StrongGrid.Resources.UnitTests
 			var name = "My API Key";
 			var scopes = new[] { "mail.send", "alerts.create", "alerts.read" };
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync(ENDPOINT, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_API_KEY_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, ENDPOINT).Respond("application/json", SINGLE_API_KEY_JSON);
 
-			var apiKeys = new ApiKeys(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var apiKeys = new ApiKeys(client, ENDPOINT);
 
 			// Act
 			var result = apiKeys.CreateAsync(name, scopes, CancellationToken.None).Result;
 
 			// Assert
-			mockRepository.VerifyAll();
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
 
@@ -87,19 +86,18 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var keyId = "xxxxxxxx";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync($"{ENDPOINT}/{keyId}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_API_KEY_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/{keyId}").Respond("application/json", SINGLE_API_KEY_JSON);
 
-			var apiKeys = new ApiKeys(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var apiKeys = new ApiKeys(client, ENDPOINT);
 
 			// Act
 			var result = apiKeys.GetAsync(keyId, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
 
@@ -107,19 +105,18 @@ namespace StrongGrid.Resources.UnitTests
 		public void GetAll()
 		{
 			// Arrange
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync(ENDPOINT, It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_API_KEY_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, ENDPOINT).Respond("application/json", MULTIPLE_API_KEY_JSON);
 
-			var apiKeys = new ApiKeys(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var apiKeys = new ApiKeys(client, ENDPOINT);
 
 			// Act
 			var result = apiKeys.GetAllAsync(CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(2);
 		}
@@ -130,19 +127,18 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var keyId = "xxxxxxxx";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.DeleteAsync($"{ENDPOINT}/{keyId}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK))
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Delete, $"{ENDPOINT}/{keyId}").Respond(HttpStatusCode.OK);
 
-			var apiKeys = new ApiKeys(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var apiKeys = new ApiKeys(client, ENDPOINT);
 
 			// Act
 			apiKeys.DeleteAsync(keyId, CancellationToken.None).Wait(CancellationToken.None);
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -153,19 +149,18 @@ namespace StrongGrid.Resources.UnitTests
 			var name = "My API Key";
 			var scopes = new[] { "mail.send", "alerts.create", "alerts.read" };
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PutAsync($"{ENDPOINT}/{keyId}", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_API_KEY_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Put, $"{ENDPOINT}/{keyId}").Respond("application/json", SINGLE_API_KEY_JSON);
 
-			var apiKeys = new ApiKeys(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var apiKeys = new ApiKeys(client, ENDPOINT);
 
 			// Act
 			var result = apiKeys.UpdateAsync(keyId, name, scopes, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
 
@@ -177,19 +172,18 @@ namespace StrongGrid.Resources.UnitTests
 			var name = "My API Key";
 			var scopes = (string[])null;
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PatchAsync($"{ENDPOINT}/{keyId}", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_API_KEY_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(new HttpMethod("PATCH"), $"{ENDPOINT}/{keyId}").Respond("application/json", SINGLE_API_KEY_JSON);
 
-			var apiKeys = new ApiKeys(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var apiKeys = new ApiKeys(client, ENDPOINT);
 
 			// Act
 			var result = apiKeys.UpdateAsync(keyId, name, scopes, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
 	}

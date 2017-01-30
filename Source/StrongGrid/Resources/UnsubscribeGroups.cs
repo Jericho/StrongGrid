@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using Pathoschild.Http.Client;
 using StrongGrid.Model;
 using StrongGrid.Utilities;
 using System.Threading;
@@ -15,7 +16,7 @@ namespace StrongGrid.Resources
 	public class UnsubscribeGroups
 	{
 		private readonly string _endpoint;
-		private readonly IClient _client;
+		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="UnsubscribeGroups" /> class.
@@ -23,7 +24,7 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
 		/// <param name="endpoint">Resource endpoint</param>
-		public UnsubscribeGroups(IClient client, string endpoint = "/asm/groups")
+		public UnsubscribeGroups(Pathoschild.Http.Client.IClient client, string endpoint = "/asm/groups")
 		{
 			_endpoint = endpoint;
 			_client = client;
@@ -36,14 +37,12 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="SuppressionGroup" />.
 		/// </returns>
-		public async Task<SuppressionGroup[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SuppressionGroup[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.GetAsync(_endpoint, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var groups = JArray.Parse(responseContent).ToObject<SuppressionGroup[]>();
-			return groups;
+			return _client
+				.GetAsync(_endpoint)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<SuppressionGroup[]>();
 		}
 
 		/// <summary>
@@ -54,14 +53,12 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SuppressionGroup" />.
 		/// </returns>
-		public async Task<SuppressionGroup> GetAsync(int groupId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SuppressionGroup> GetAsync(int groupId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.GetAsync(string.Format("{0}/{1}", _endpoint, groupId), cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var group = JObject.Parse(responseContent).ToObject<SuppressionGroup>();
-			return group;
+			return _client
+				.GetAsync(string.Format("{0}/{1}", _endpoint, groupId))
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<SuppressionGroup>();
 		}
 
 		/// <summary>
@@ -74,7 +71,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SuppressionGroup" />.
 		/// </returns>
-		public async Task<SuppressionGroup> CreateAsync(string name, string description, bool isDefault, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SuppressionGroup> CreateAsync(string name, string description, bool isDefault, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
 			{
@@ -82,12 +79,11 @@ namespace StrongGrid.Resources
 				{ "description", description },
 				{ "is_default", isDefault }
 			};
-			var response = await _client.PostAsync(_endpoint, data, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var group = JObject.Parse(responseContent).ToObject<SuppressionGroup>();
-			return group;
+			return _client
+				.PostAsync(_endpoint)
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<SuppressionGroup>();
 		}
 
 		/// <summary>
@@ -100,18 +96,17 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SuppressionGroup" />.
 		/// </returns>
-		public async Task<SuppressionGroup> UpdateAsync(int groupId, string name = null, string description = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SuppressionGroup> UpdateAsync(int groupId, string name = null, string description = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
 			if (name != null) data.Add("name", name);
 			if (description != null) data.Add("description", description);
 
-			var response = await _client.PatchAsync(string.Format("{0}/{1}", _endpoint, groupId), data, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var group = JObject.Parse(responseContent).ToObject<SuppressionGroup>();
-			return group;
+			return _client
+				.PatchAsync(string.Format("{0}/{1}", _endpoint, groupId))
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<SuppressionGroup>();
 		}
 
 		/// <summary>
@@ -122,10 +117,12 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public async Task DeleteAsync(int groupId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(int groupId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.DeleteAsync(string.Format("{0}/{1}", _endpoint, groupId), cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
+			return _client
+				.DeleteAsync(string.Format("{0}/{1}", _endpoint, groupId))
+				.WithCancellationToken(cancellationToken)
+				.AsResponse();
 		}
 	}
 }

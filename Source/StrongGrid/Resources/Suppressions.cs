@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using Pathoschild.Http.Client;
 using StrongGrid;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
@@ -18,14 +19,14 @@ namespace StrongGrid.Resources
 	public class Suppressions
 	{
 		private readonly string _endpoint;
-		private readonly IClient _client;
+		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Suppressions" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
 		/// <param name="endpoint">Resource endpoint</param>
-		public Suppressions(IClient client, string endpoint = "/asm/groups")
+		public Suppressions(Pathoschild.Http.Client.IClient client, string endpoint = "/asm/groups")
 		{
 			_endpoint = endpoint;
 			_client = client;
@@ -39,14 +40,12 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of string representing the email addresses
 		/// </returns>
-		public async Task<string[]> GetUnsubscribedAddressesAsync(int groupId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<string[]> GetUnsubscribedAddressesAsync(int groupId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.GetAsync(string.Format("{0}/{1}/suppressions", _endpoint, groupId), cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var suppressedAddresses = JArray.Parse(responseContent).ToObject<string[]>();
-			return suppressedAddresses;
+			return _client
+				.GetAsync(string.Format("{0}/{1}/suppressions", _endpoint, groupId))
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<string[]>();
 		}
 
 		/// <summary>
@@ -74,11 +73,14 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public async Task AddAddressToUnsubscribeGroupAsync(int groupId, IEnumerable<string> emails, CancellationToken cancellationToken = default(CancellationToken))
+		public Task AddAddressToUnsubscribeGroupAsync(int groupId, IEnumerable<string> emails, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject(new JProperty("recipient_emails", JArray.FromObject(emails.ToArray())));
-			var response = await _client.PostAsync(string.Format("{0}/{1}/suppressions", _endpoint, groupId), data, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
+			return _client
+				.PostAsync(string.Format("{0}/{1}/suppressions", _endpoint, groupId))
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsResponse();
 		}
 
 		/// <summary>
@@ -90,10 +92,12 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public async Task RemoveAddressFromSuppressionGroupAsync(int groupId, string email, CancellationToken cancellationToken = default(CancellationToken))
+		public Task RemoveAddressFromSuppressionGroupAsync(int groupId, string email, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.DeleteAsync(string.Format("{0}/{1}/suppressions/{2}", _endpoint, groupId, email), cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
+			return _client
+				.DeleteAsync(string.Format("{0}/{1}/suppressions/{2}", _endpoint, groupId, email))
+				.WithCancellationToken(cancellationToken)
+				.AsResponse();
 		}
 	}
 }

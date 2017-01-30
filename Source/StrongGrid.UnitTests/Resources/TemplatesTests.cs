@@ -1,8 +1,10 @@
 ﻿using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Model;
+using StrongGrid.UnitTests;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -105,19 +107,18 @@ namespace StrongGrid.Resources.UnitTests
 			var name = "My template";
 			var scopes = new[] { "mail.send", "alerts.create", "alerts.read" };
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync(ENDPOINT, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_TEMPLATE_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, ENDPOINT).Respond("application/json", SINGLE_TEMPLATE_JSON);
 
-			var templates = new Templates(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var templates = new Templates(client, ENDPOINT);
 
 			// Act
 			var result = templates.CreateAsync(name, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
 
@@ -127,19 +128,18 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var templateId = "e8ac01d5-a07a-4a71-b14c-4721136fe6aa";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync($"{ENDPOINT}/{templateId}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_TEMPLATE_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/{templateId}").Respond("application/json", SINGLE_TEMPLATE_JSON);
 
-			var templates = new Templates(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var templates = new Templates(client, ENDPOINT);
 
 			// Act
 			var result = templates.GetAsync(templateId, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Id.ShouldBe(templateId);
 			result.Name.ShouldBe("example template name");
@@ -149,19 +149,18 @@ namespace StrongGrid.Resources.UnitTests
 		public void GetAll()
 		{
 			// Arrange
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync(ENDPOINT, It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_TEMPLATES_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, ENDPOINT).Respond("application/json", MULTIPLE_TEMPLATES_JSON);
 
-			var templates = new Templates(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var templates = new Templates(client, ENDPOINT);
 
 			// Act
 			var result = templates.GetAllAsync(CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(1);
 		}
@@ -172,19 +171,18 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var templateId = "xxxxxxxx";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.DeleteAsync($"{ENDPOINT}/{templateId}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK))
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Delete, $"{ENDPOINT}/{templateId}").Respond(HttpStatusCode.OK);
 
-			var templates = new Templates(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var templates = new Templates(client, ENDPOINT);
 
 			// Act
 			templates.DeleteAsync(templateId, CancellationToken.None).Wait(CancellationToken.None);
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -194,19 +192,18 @@ namespace StrongGrid.Resources.UnitTests
 			var templateId = "733ba07f-ead1-41fc-933a-3976baa23716";
 			var name = "new_example_name";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PatchAsync($"{ENDPOINT}/{templateId}", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_TEMPLATE_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(new HttpMethod("PATCH"), $"{ENDPOINT}/{templateId}").Respond("application/json", SINGLE_TEMPLATE_JSON);
 
-			var templates = new Templates(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var templates = new Templates(client, ENDPOINT);
 
 			// Act
 			var result = templates.UpdateAsync(templateId, name, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
 
@@ -221,19 +218,18 @@ namespace StrongGrid.Resources.UnitTests
 			var textContent = "<%body%>";
 			var isActive = true;
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync($"{ENDPOINT}/{templateId}/versions", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_TEMPLATE_VERSION_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, $"{ENDPOINT}/{templateId}/versions").Respond("application/json", SINGLE_TEMPLATE_VERSION_JSON);
 
-			var templates = new Templates(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var templates = new Templates(client, ENDPOINT);
 
 			// Act
 			var result = templates.CreateVersionAsync(templateId, name, subject, htmlContent, textContent, isActive, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
 
@@ -244,19 +240,18 @@ namespace StrongGrid.Resources.UnitTests
 			var templateId = "e3a61852-1acb-4b32-a1bc-b44b3814ab78";
 			var versionId = "8aefe0ee-f12b-4575-b5b7-c97e21cb36f3";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync($"{ENDPOINT}/{templateId}/versions/{versionId}/activate", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_TEMPLATE_VERSION_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, $"{ENDPOINT}/{templateId}/versions/{versionId}/activate").Respond("application/json", SINGLE_TEMPLATE_VERSION_JSON);
 
-			var templates = new Templates(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var templates = new Templates(client, ENDPOINT);
 
 			// Act
 			var result = templates.ActivateVersionAsync(templateId, versionId, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
 
@@ -267,19 +262,18 @@ namespace StrongGrid.Resources.UnitTests
 			var templateId = "d51480ca-ca3f-465c-bc3e-ceb71d73c38d";
 			var versionId = "5997fcf6-2b9f-484d-acd5-7e9a99f0dc1f";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync($"{ENDPOINT}/{templateId}/versions/{versionId}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_TEMPLATE_VERSION_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/{templateId}/versions/{versionId}").Respond("application/json", SINGLE_TEMPLATE_VERSION_JSON);
 
-			var templates = new Templates(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var templates = new Templates(client, ENDPOINT);
 
 			// Act
 			var result = templates.GetVersionAsync(templateId, versionId, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
 
@@ -291,19 +285,18 @@ namespace StrongGrid.Resources.UnitTests
 			var versionId = "8aefe0ee-f12b-4575-b5b7-c97e21cb36f3";
 			var name = "updated_example_name";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PatchAsync($"{ENDPOINT}/{templateId}/versions/{versionId}", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_TEMPLATE_VERSION_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(new HttpMethod("PATCH"), $"{ENDPOINT}/{templateId}/versions/{versionId}").Respond("application/json", SINGLE_TEMPLATE_VERSION_JSON);
 
-			var templates = new Templates(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var templates = new Templates(client, ENDPOINT);
 
 			// Act
 			var result = templates.UpdateVersionAsync(templateId, versionId, name, null, null, null, null, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
 
@@ -314,19 +307,18 @@ namespace StrongGrid.Resources.UnitTests
 			var templateId = "ddb96bbc-9b92-425e-8979-99464621b543";
 			var versionId = "8aefe0ee-f12b-4575-b5b7-c97e21cb36f3";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.DeleteAsync($"{ENDPOINT}/{templateId}/versions/{versionId}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent))
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Delete, $"{ENDPOINT}/{templateId}/versions/{versionId}").Respond(HttpStatusCode.NoContent);
 
-			var templates = new Templates(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var templates = new Templates(client, ENDPOINT);
 
 			// Act
 			templates.DeleteVersionAsync(templateId, versionId, CancellationToken.None).Wait();
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 	}
 }

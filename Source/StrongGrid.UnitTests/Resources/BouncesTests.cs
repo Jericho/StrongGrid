@@ -1,8 +1,10 @@
 ﻿using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Model;
+using StrongGrid.UnitTests;
 using StrongGrid.Utilities;
 using System;
 using System.Net;
@@ -64,19 +66,18 @@ namespace StrongGrid.Resources.UnitTests
 			var start = new DateTime(2015, 6, 8, 0, 0, 0, DateTimeKind.Utc);
 			var end = new DateTime(2015, 9, 30, 23, 59, 59, DateTimeKind.Utc);
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync($"{ENDPOINT}?start_time={start.ToUnixTime()}&end_time={end.ToUnixTime()}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_BOUNCES_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}?start_time={start.ToUnixTime()}&end_time={end.ToUnixTime()}").Respond("application/json", MULTIPLE_BOUNCES_JSON);
 
-			var bounces = new Bounces(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var bounces = new Bounces(client, ENDPOINT);
 
 			// Act
 			var result = bounces.GetAsync(start, end, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(2);
 		}
@@ -87,19 +88,18 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var email = "bounce1@test.com";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync($"{ENDPOINT}/{email}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_BOUNCES_JSON) }).
-				Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/{email}").Respond("application/json", MULTIPLE_BOUNCES_JSON);
 
-			var bounces = new Bounces(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var bounces = new Bounces(client, ENDPOINT);
 
 			// Act
 			var result = bounces.GetAsync(email, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(2);
 		}
@@ -108,19 +108,18 @@ namespace StrongGrid.Resources.UnitTests
 		public void DeleteAll()
 		{
 			// Arrange
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.DeleteAsync(ENDPOINT, It.Is<JObject>(o => o["delete_all"].ToObject<bool>()), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent))
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Delete, ENDPOINT).Respond(HttpStatusCode.NoContent);
 
-			var bounces = new Bounces(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var bounces = new Bounces(client, ENDPOINT);
 
 			// Act
 			bounces.DeleteAllAsync(CancellationToken.None).Wait();
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -129,19 +128,18 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var email = "email1@test.com";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.DeleteAsync($"{ENDPOINT}/{email}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent))
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Delete, $"{ENDPOINT}/{email}").Respond(HttpStatusCode.NoContent);
 
-			var bounces = new Bounces(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var bounces = new Bounces(client, ENDPOINT);
 
 			// Act
 			bounces.DeleteAsync(email, CancellationToken.None).Wait();
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -150,19 +148,18 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var emails = new[] { "email1@test.com", "email2@test.com" };
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.DeleteAsync(ENDPOINT, It.Is<JObject>(o => o["emails"].ToObject<JArray>().Count == emails.Length), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent))
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Delete, ENDPOINT).Respond(HttpStatusCode.NoContent);
 
-			var bounces = new Bounces(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var bounces = new Bounces(client, ENDPOINT);
 
 			// Act
 			bounces.DeleteAsync(emails, CancellationToken.None).Wait();
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 	}
 }

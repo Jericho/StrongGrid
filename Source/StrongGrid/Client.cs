@@ -1,14 +1,10 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Pathoschild.Http.Client;
 using StrongGrid.Resources;
 using StrongGrid.Utilities;
 using System;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace StrongGrid
 {
@@ -24,15 +20,9 @@ namespace StrongGrid
 		private const string DEFAULT_API_VERSION = "v3";
 
 		private readonly Uri _baseUri;
-		private readonly bool _mustDisposeHttpClient;
-		private readonly IRetryStrategy _retryStrategy;
 
-		private HttpClient _httpClient;
+		private Pathoschild.Http.Client.IClient _fluentClient;
 
-		private enum Methods
-		{
-			GET, PUT, POST, PATCH, DELETE
-		}
 
 		#endregion
 
@@ -231,7 +221,7 @@ namespace StrongGrid
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key</param>
 		public Client(string apiKey)
-			: this(apiKey, null, null, DEFAULT_BASE_URI, DEFAULT_API_VERSION, null, null)
+			: this(apiKey, null, null, DEFAULT_BASE_URI, DEFAULT_API_VERSION, null)
 		{
 		}
 
@@ -241,9 +231,8 @@ namespace StrongGrid
 		/// <param name="apiKey">Your SendGrid API Key</param>
 		/// <param name="proxy">Allows you to specify a proxy</param>
 		public Client(string apiKey, IWebProxy proxy = null)
-			: this(apiKey, null, null, DEFAULT_BASE_URI, DEFAULT_API_VERSION, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }), null)
+			: this(apiKey, null, null, DEFAULT_BASE_URI, DEFAULT_API_VERSION, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }))
 		{
-			_mustDisposeHttpClient = true;
 		}
 
 		/// <summary>
@@ -253,9 +242,8 @@ namespace StrongGrid
 		/// <param name="baseUri">Base SendGrid API Uri</param>
 		/// <param name="apiVersion">The SendGrid API version. Please note: currently, only 'v3' is supported</param>
 		/// <param name="httpClient">Allows you to inject your own HttpClient. This is useful, for example, to setup the HtppClient with a proxy</param>
-		/// <param name="retryStrategy">The retry strategy.</param>
-		public Client(string apiKey, string baseUri = DEFAULT_BASE_URI, string apiVersion = DEFAULT_API_VERSION, HttpClient httpClient = null, IRetryStrategy retryStrategy = null)
-			: this(apiKey, null, null, baseUri, apiVersion, httpClient, retryStrategy)
+		public Client(string apiKey, string baseUri = DEFAULT_BASE_URI, string apiVersion = DEFAULT_API_VERSION, HttpClient httpClient = null)
+			: this(apiKey, null, null, baseUri, apiVersion, httpClient)
 		{
 		}
 
@@ -265,7 +253,7 @@ namespace StrongGrid
 		/// <param name="username">Your username</param>
 		/// <param name="password">Your password</param>
 		public Client(string username, string password)
-			: this(null, username, password, DEFAULT_BASE_URI, DEFAULT_API_VERSION, null, null)
+			: this(null, username, password, DEFAULT_BASE_URI, DEFAULT_API_VERSION, null)
 		{
 		}
 
@@ -276,9 +264,8 @@ namespace StrongGrid
 		/// <param name="password">Your password</param>
 		/// <param name="proxy">Allows you to specify a proxy</param>
 		public Client(string username, string password, IWebProxy proxy = null)
-			: this(null, username, password, DEFAULT_BASE_URI, DEFAULT_API_VERSION, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }), null)
+			: this(null, username, password, DEFAULT_BASE_URI, DEFAULT_API_VERSION, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }))
 		{
-			_mustDisposeHttpClient = true;
 		}
 
 		/// <summary>
@@ -289,49 +276,48 @@ namespace StrongGrid
 		/// <param name="baseUri">Base SendGrid API Uri</param>
 		/// <param name="apiVersion">The SendGrid API version. Please note: currently, only 'v3' is supported</param>
 		/// <param name="httpClient">Allows you to inject your own HttpClient. This is useful, for example, to setup the HtppClient with a proxy</param>
-		/// <param name="retryStrategy">The retry strategy.</param>
-		public Client(string username, string password, string baseUri = DEFAULT_BASE_URI, string apiVersion = DEFAULT_API_VERSION, HttpClient httpClient = null, IRetryStrategy retryStrategy = null)
-			: this(null, username, password, baseUri, apiVersion, httpClient, retryStrategy)
+		public Client(string username, string password, string baseUri = DEFAULT_BASE_URI, string apiVersion = DEFAULT_API_VERSION, HttpClient httpClient = null)
+			: this(null, username, password, baseUri, apiVersion, httpClient)
 		{
 		}
 
-		private Client(string apiKey, string username, string password, string baseUri, string apiVersion, HttpClient httpClient, IRetryStrategy retryStrategy)
+		private Client(string apiKey, string username, string password, string baseUri, string apiVersion, HttpClient httpClient)
 		{
-			_baseUri = new Uri(string.Format("{0}/{1}", baseUri, apiVersion));
-			_retryStrategy = retryStrategy ?? new SendGridRetryStrategy();
-
-			Alerts = new Alerts(this);
-			ApiKeys = new ApiKeys(this);
-			Batches = new Batches(this);
-			Blocks = new Blocks(this);
-			Campaigns = new Campaigns(this);
-			Categories = new Categories(this);
-			Contacts = new Contacts(this);
-			CustomFields = new CustomFields(this);
-			GlobalSuppressions = new GlobalSuppressions(this);
-			InvalidEmails = new InvalidEmails(this);
-			Lists = new Lists(this);
-			Mail = new Mail(this);
-			Segments = new Segments(this);
-			SenderIdentities = new SenderIdentities(this);
-			Settings = new Settings(this);
-			SpamReports = new SpamReports(this);
-			Statistics = new Statistics(this);
-			Suppressions = new Suppressions(this);
-			Templates = new Templates(this);
-			UnsubscribeGroups = new UnsubscribeGroups(this);
-			User = new User(this);
 			Version = typeof(Client).GetTypeInfo().Assembly.GetName().Version.ToString();
-			Whitelabel = new Whitelabel(this);
 
-			_mustDisposeHttpClient = httpClient == null;
-			_httpClient = httpClient ?? new HttpClient();
-			_httpClient.BaseAddress = _baseUri;
-			_httpClient.DefaultRequestHeaders.Accept.Clear();
-			_httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MEDIA_TYPE));
-			if (!string.IsNullOrEmpty(apiKey)) _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
-			if (!string.IsNullOrEmpty(username)) _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes(string.Concat(username, ":", password))));
-			_httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", string.Format("StrongGrid/{0}", Version));
+			_baseUri = new Uri(string.Format("{0}/{1}", baseUri, apiVersion));
+
+			_fluentClient = new FluentClient(string.Format("{0}/{1}", baseUri, apiVersion), httpClient)
+				.SetUserAgent($"StrongGrid/{Version} (+https://github.com/Jericho/StrongGrid)")
+				.SetRequestCoordinator(new SendGridRetryStrategy());
+
+			_fluentClient.Filters.Add(new SendGridErrorHandler());
+
+			if (!string.IsNullOrEmpty(apiKey)) _fluentClient.SetBearerAuthentication(apiKey);
+			if (!string.IsNullOrEmpty(username)) _fluentClient.SetBasicAuthentication(username, password);
+
+			Alerts = new Alerts(_fluentClient);
+			ApiKeys = new ApiKeys(_fluentClient);
+			Batches = new Batches(_fluentClient);
+			Blocks = new Blocks(_fluentClient);
+			Campaigns = new Campaigns(_fluentClient);
+			Categories = new Categories(_fluentClient);
+			Contacts = new Contacts(_fluentClient);
+			CustomFields = new CustomFields(_fluentClient);
+			GlobalSuppressions = new GlobalSuppressions(_fluentClient);
+			InvalidEmails = new InvalidEmails(_fluentClient);
+			Lists = new Lists(_fluentClient);
+			Mail = new Mail(_fluentClient);
+			Segments = new Segments(_fluentClient);
+			SenderIdentities = new SenderIdentities(_fluentClient);
+			Settings = new Settings(_fluentClient);
+			SpamReports = new SpamReports(_fluentClient);
+			Statistics = new Statistics(_fluentClient);
+			Suppressions = new Suppressions(_fluentClient);
+			Templates = new Templates(_fluentClient);
+			UnsubscribeGroups = new UnsubscribeGroups(_fluentClient);
+			User = new User(_fluentClient);
+			Whitelabel = new Whitelabel(_fluentClient);
 		}
 
 		/// <summary>
@@ -348,130 +334,6 @@ namespace StrongGrid
 		#endregion
 
 		#region PUBLIC METHODS
-
-		/// <summary>
-		/// Execute a GET operation asynchronously.
-		/// </summary>
-		/// <param name="endpoint">Resource endpoint</param>
-		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns>
-		/// The response from the HTTP request
-		/// </returns>
-		public Task<HttpResponseMessage> GetAsync(string endpoint, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			return RequestAsync(Methods.GET, endpoint, (JObject)null, cancellationToken);
-		}
-
-		/// <summary>
-		/// Execute a POST operation asynchronously.
-		/// </summary>
-		/// <param name="endpoint">Resource endpoint</param>
-		/// <param name="data">An JObject representing the resource's data</param>
-		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns>
-		/// The response from the HTTP request
-		/// </returns>
-		public Task<HttpResponseMessage> PostAsync(string endpoint, JObject data, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			return RequestAsync(Methods.POST, endpoint, data, cancellationToken);
-		}
-
-		/// <summary>
-		/// Execute a POST operation asynchronously.
-		/// </summary>
-		/// <param name="endpoint">Resource endpoint</param>
-		/// <param name="data">An JArray representing the resource's data</param>
-		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns>
-		/// The response from the HTTP request
-		/// </returns>
-		public Task<HttpResponseMessage> PostAsync(string endpoint, JArray data, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			return RequestAsync(Methods.POST, endpoint, data, cancellationToken);
-		}
-
-		/// <summary>
-		/// Execute a DELETE operation asynchronously.
-		/// </summary>
-		/// <param name="endpoint">Resource endpoint</param>
-		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns>
-		/// The response from the HTTP request
-		/// </returns>
-		public Task<HttpResponseMessage> DeleteAsync(string endpoint, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			return RequestAsync(Methods.DELETE, endpoint, (JObject)null, cancellationToken);
-		}
-
-		/// <summary>
-		/// Execute a DELETE operation asynchronously.
-		/// </summary>
-		/// <param name="endpoint">Resource endpoint</param>
-		/// <param name="data">An optional JObject representing the resource's data</param>
-		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns>
-		/// The response from the HTTP request
-		/// </returns>
-		public Task<HttpResponseMessage> DeleteAsync(string endpoint, JObject data = null, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			return RequestAsync(Methods.DELETE, endpoint, data, cancellationToken);
-		}
-
-		/// <summary>
-		/// Execute a DELETE operation asynchronously.
-		/// </summary>
-		/// <param name="endpoint">Resource endpoint</param>
-		/// <param name="data">An optional JArray representing the resource's data</param>
-		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns>
-		/// The response from the HTTP request
-		/// </returns>
-		public Task<HttpResponseMessage> DeleteAsync(string endpoint, JArray data = null, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			return RequestAsync(Methods.DELETE, endpoint, data, cancellationToken);
-		}
-
-		/// <summary>
-		/// Execute a PATCH operation asynchronously.
-		/// </summary>
-		/// <param name="endpoint">Resource endpoint</param>
-		/// <param name="data">An JObject representing the resource's data</param>
-		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns>
-		/// The response from the HTTP request
-		/// </returns>
-		public Task<HttpResponseMessage> PatchAsync(string endpoint, JObject data, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			return RequestAsync(Methods.PATCH, endpoint, data, cancellationToken);
-		}
-
-		/// <summary>
-		/// Execute a PATCH operation asynchronously.
-		/// </summary>
-		/// <param name="endpoint">Resource endpoint</param>
-		/// <param name="data">An JArray representing the resource's data</param>
-		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns>
-		/// The response from the HTTP request
-		/// </returns>
-		public Task<HttpResponseMessage> PatchAsync(string endpoint, JArray data, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			return RequestAsync(Methods.PATCH, endpoint, data, cancellationToken);
-		}
-
-		/// <summary>
-		/// Execute a PUT operation asynchronously.
-		/// </summary>
-		/// <param name="endpoint">Resource endpoint</param>
-		/// <param name="data">An JObject representing the resource's data</param>
-		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns>
-		/// The response from the HTTP request
-		/// </returns>
-		public Task<HttpResponseMessage> PutAsync(string endpoint, JObject data, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			return RequestAsync(Methods.PUT, endpoint, data, cancellationToken);
-		}
 
 		/// <summary>
 		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -508,108 +370,12 @@ namespace StrongGrid
 
 		#region PRIVATE METHODS
 
-		/// <summary>
-		/// Issue a request to the SendGrid Web API
-		/// </summary>
-		/// <param name="method">HTTP verb, case-insensitive</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		/// <param name="data">An JObject representing the resource's data</param>
-		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns>The response from the HTTP request</returns>
-		private Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, JObject data, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			var content = data?.ToString();
-			return RequestWithRetriesAsync(method, endpoint, content, cancellationToken);
-		}
-
-		/// <summary>
-		/// Issue a request to the SendGrid Web API
-		/// </summary>
-		/// <param name="method">HTTP verb, case-insensitive</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		/// <param name="data">An JArray representing the resource's data</param>
-		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns>The response from the HTTP request</returns>
-		private Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, JArray data, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			var content = data?.ToString();
-			return RequestWithRetriesAsync(method, endpoint, content, cancellationToken);
-		}
-
-		private async Task<HttpResponseMessage> RequestWithRetriesAsync(Methods method, string endpoint, string content, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			var attempts = 0;
-			var response = await RequestAsync(method, endpoint, content, cancellationToken).ConfigureAwait(false);
-			attempts++;
-
-			while (_retryStrategy.ShouldRetry(attempts, response))
-			{
-				var timespan = _retryStrategy.GetNextDelay(attempts, response);
-				if (timespan > TimeSpan.Zero)
-				{
-					await Task.Delay(timespan).ConfigureAwait(false);
-				}
-
-				response = await RequestAsync(method, endpoint, content, cancellationToken).ConfigureAwait(false);
-				attempts++;
-			}
-
-			return response;
-		}
-
-		/// <summary>
-		/// Issue a request to the SendGrid Web API
-		/// </summary>
-		/// <param name="method">HTTP verb, case-insensitive</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		/// <param name="content">A string representing the content of the http request</param>
-		/// <param name="cancellationToken">Cancellation token</param>
-		/// <returns>The response from the HTTP request</returns>
-		private async Task<HttpResponseMessage> RequestAsync(Methods method, string endpoint, string content, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			try
-			{
-				var methodAsString = string.Empty;
-				switch (method)
-				{
-					case Methods.GET: methodAsString = "GET"; break;
-					case Methods.PUT: methodAsString = "PUT"; break;
-					case Methods.POST: methodAsString = "POST"; break;
-					case Methods.PATCH: methodAsString = "PATCH"; break;
-					case Methods.DELETE: methodAsString = "DELETE"; break;
-					default:
-						var message = "{\"errors\":[{\"message\":\"Bad method call, supported methods are GET, PUT, POST, PATCH and DELETE\"}]}";
-						return new HttpResponseMessage(HttpStatusCode.MethodNotAllowed)
-						{
-							Content = new StringContent(message)
-						};
-				}
-
-				var httpRequest = new HttpRequestMessage
-				{
-					Method = new HttpMethod(methodAsString),
-					RequestUri = new Uri(string.Format("{0}{1}{2}", _baseUri, endpoint.StartsWith("/", StringComparison.Ordinal) ? string.Empty : "/", endpoint)),
-					Content = content == null ? null : new StringContent(content, Encoding.UTF8, MEDIA_TYPE)
-				};
-				var response = await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
-				return response;
-			}
-			catch (Exception ex)
-			{
-				var message = string.Format(".NET {0}, raw message: \n\n{1}", (ex is HttpRequestException) ? "HttpRequestException" : "Exception", ex.GetBaseException().Message);
-				return new HttpResponseMessage(HttpStatusCode.BadRequest)
-				{
-					Content = new StringContent(message)
-				};
-			}
-		}
-
 		private void ReleaseManagedResources()
 		{
-			if (_httpClient != null && _mustDisposeHttpClient)
+			if (_fluentClient != null)
 			{
-				_httpClient.Dispose();
-				_httpClient = null;
+				_fluentClient.Dispose();
+				_fluentClient = null;
 			}
 		}
 

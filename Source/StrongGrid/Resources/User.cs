@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using Pathoschild.Http.Client;
 using StrongGrid.Model;
 using StrongGrid.Utilities;
 using System.IO;
@@ -17,14 +18,14 @@ namespace StrongGrid.Resources
 	public class User
 	{
 		private readonly string _endpoint;
-		private readonly IClient _client;
+		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="User" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
 		/// <param name="endpoint">Resource endpoint</param>
-		public User(IClient client, string endpoint = "/user/profile")
+		public User(Pathoschild.Http.Client.IClient client, string endpoint = "/user/profile")
 		{
 			_endpoint = endpoint;
 			_client = client;
@@ -37,14 +38,12 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="UserProfile" />.
 		/// </returns>
-		public async Task<UserProfile> GetProfileAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<UserProfile> GetProfileAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.GetAsync(_endpoint, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var profile = JObject.Parse(responseContent).ToObject<UserProfile>();
-			return profile;
+			return _client
+				.GetAsync(_endpoint)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<UserProfile>();
 		}
 
 		/// <summary>
@@ -64,15 +63,14 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="UserProfile" />.
 		/// </returns>
-		public async Task<UserProfile> UpdateProfileAsync(string address = null, string city = null, string company = null, string country = null, string firstName = null, string lastName = null, string phone = null, string state = null, string website = null, string zip = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<UserProfile> UpdateProfileAsync(string address = null, string city = null, string company = null, string country = null, string firstName = null, string lastName = null, string phone = null, string state = null, string website = null, string zip = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = CreateJObjectForUserProfile(address, city, company, country, firstName, lastName, phone, state, website, zip);
-			var response = await _client.PatchAsync(_endpoint, data, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var profile = JObject.Parse(responseContent).ToObject<UserProfile>();
-			return profile;
+			return _client
+				.PatchAsync(_endpoint)
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<UserProfile>();
 		}
 
 		/// <summary>
@@ -82,14 +80,12 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Account" />.
 		/// </returns>
-		public async Task<Account> GetAccountAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Account> GetAccountAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.GetAsync("/user/account", cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var account = JObject.Parse(responseContent).ToObject<Account>();
-			return account;
+			return _client
+				.GetAsync("/user/account")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<Account>();
 		}
 
 		/// <summary>
@@ -99,20 +95,12 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The email address from your user profile.
 		/// </returns>
-		public async Task<string> GetEmailAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<string> GetEmailAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.GetAsync("/user/email", cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-
-			// Response looks like this:
-			// {
-			//  "email": "test@example.com"
-			// }
-			// We use a dynamic object to get rid of the 'email' property and simply return a string
-			dynamic dynamicObject = JObject.Parse(responseContent);
-			return dynamicObject.email;
+			return _client
+				.GetAsync("/user/email")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<string>("email");
 		}
 
 		/// <summary>
@@ -123,23 +111,16 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The email address from your user profile.
 		/// </returns>
-		public async Task<string> UpdateEmailAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<string> UpdateEmailAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
 			data.Add("email", email);
 
-			var response = await _client.PutAsync("/user/email", data, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-
-			// Response looks like this:
-			// {
-			//  "email": "test@example.com"
-			// }
-			// We use a dynamic object to get rid of the 'email' property and simply return a string
-			dynamic dynamicObject = JObject.Parse(responseContent);
-			return dynamicObject.email;
+			return _client
+				.PutAsync("/user/email")
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<string>("email");
 		}
 
 		/// <summary>
@@ -149,21 +130,12 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The username from your user profile.
 		/// </returns>
-		public async Task<string> GetUsernameAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<string> GetUsernameAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.GetAsync("/user/username", cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-
-			// Response looks like this:
-			// {
-			//  "username": "test_username",
-			//  "user_id": 1
-			// }
-			// We use a dynamic object to get rid of the 'user_id' property and simply return the string content of the 'username' property
-			dynamic dynamicObject = JObject.Parse(responseContent);
-			return dynamicObject.username;
+			return _client
+				.GetAsync("/user/username")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<string>("username");
 		}
 
 		/// <summary>
@@ -174,23 +146,16 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The username from your user profile.
 		/// </returns>
-		public async Task<string> UpdateUsernameAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<string> UpdateUsernameAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
 			data.Add("username", username);
 
-			var response = await _client.PutAsync("/user/username", data, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-
-			// Response looks like this:
-			// {
-			//  "username": "test_username"
-			// }
-			// We use a dynamic object to get rid of the 'username' property and simply return a string
-			dynamic dynamicObject = JObject.Parse(responseContent);
-			return dynamicObject.username;
+			return _client
+				.PutAsync("/user/username")
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<string>("username");
 		}
 
 		/// <summary>
@@ -200,14 +165,12 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="UserCredits"/>.
 		/// </returns>
-		public async Task<UserCredits> GetCreditsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<UserCredits> GetCreditsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.GetAsync("/user/credits", cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var userCredits = JObject.Parse(responseContent).ToObject<UserCredits>();
-			return userCredits;
+			return _client
+				.GetAsync("/user/credits")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<UserCredits>();
 		}
 
 		/// <summary>
@@ -219,14 +182,17 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public async Task UpdatePasswordAsync(string oldPassword, string newPassword, CancellationToken cancellationToken = default(CancellationToken))
+		public Task UpdatePasswordAsync(string oldPassword, string newPassword, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
 			data.Add("new_password", oldPassword);
 			data.Add("old_password", newPassword);
 
-			var response = await _client.PutAsync("/user/password", data, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
+			return _client
+				.PutAsync("/user/password")
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsResponse();
 		}
 
 		/// <summary>
@@ -236,27 +202,12 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of string representing the permissions (aka scopes).
 		/// </returns>
-		public async Task<string[]> GetPermissionsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<string[]> GetPermissionsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.GetAsync("/scopes", cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-
-			// Response looks like this:
-			// {
-			//  "scopes": [
-			//    "mail.send",
-			//    "alerts.create",
-			//    "alerts.read"
-			//  ]
-			// }
-			// We use a dynamic object to get rid of the 'scopes' property and return an array of strings
-			dynamic dynamicObject = JObject.Parse(responseContent);
-			dynamic dynamicArray = dynamicObject.scopes;
-
-			var permissions = dynamicArray.ToObject<string[]>();
-			return permissions;
+			return _client
+				.GetAsync("/scopes")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<string[]>("scopes");
 		}
 
 		private static JObject CreateJObjectForUserProfile(string address = null, string city = null, string company = null, string country = null, string firstName = null, string lastName = null, string phone = null, string state = null, string website = null, string zip = null)

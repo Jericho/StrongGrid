@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using Pathoschild.Http.Client;
 using StrongGrid.Utilities;
 using System.Linq;
 using System.Threading;
@@ -15,14 +16,14 @@ namespace StrongGrid.Resources
 	public class Categories
 	{
 		private readonly string _endpoint;
-		private readonly IClient _client;
+		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Categories" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
 		/// <param name="endpoint">Resource endpoint</param>
-		public Categories(IClient client, string endpoint = "/categories")
+		public Categories(Pathoschild.Http.Client.IClient client, string endpoint = "/categories")
 		{
 			_endpoint = endpoint;
 			_client = client;
@@ -41,10 +42,11 @@ namespace StrongGrid.Resources
 		public async Task<string[]> GetAsync(string searchPrefix = null, int limit = 50, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var endpoint = string.Format("{0}?category={1}&limit={2}&offset={3}", _endpoint, searchPrefix, limit, offset);
-			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
+			var responseContent = await _client
+				.GetAsync(endpoint)
+				.WithCancellationToken(cancellationToken)
+				.AsString(null)
+				.ConfigureAwait(false);
 
 			// Response looks like this:
 			// [

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using Pathoschild.Http.Client;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,14 +17,14 @@ namespace StrongGrid.Resources
 	public class GlobalSuppressions
 	{
 		private readonly string _endpoint;
-		private readonly IClient _client;
+		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="GlobalSuppressions" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
 		/// <param name="endpoint">Resource endpoint</param>
-		public GlobalSuppressions(IClient client, string endpoint = "/asm/suppressions/global")
+		public GlobalSuppressions(Pathoschild.Http.Client.IClient client, string endpoint = "/asm/suppressions/global")
 		{
 			_endpoint = endpoint;
 			_client = client;
@@ -39,10 +40,12 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<bool> IsUnsubscribedAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.GetAsync(string.Format("{0}/{1}", _endpoint, email), cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
+			var endpoint = $"{_endpoint}/{email}";
+			var responseContent = await _client
+				.GetAsync(endpoint)
+				.WithCancellationToken(cancellationToken)
+				.AsString(null)
+				.ConfigureAwait(false);
 
 			// If the email address is on the global suppression list, the response will look like this:
 			//  {
@@ -65,11 +68,14 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public async Task AddAsync(IEnumerable<string> emails, CancellationToken cancellationToken = default(CancellationToken))
+		public Task AddAsync(IEnumerable<string> emails, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject(new JProperty("recipient_emails", JArray.FromObject(emails.ToArray())));
-			var response = await _client.PostAsync(_endpoint, data, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
+			return _client
+				.PostAsync(_endpoint)
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsResponse();
 		}
 
 		/// <summary>
@@ -80,10 +86,13 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public async Task RemoveAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
+		public Task RemoveAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.DeleteAsync(string.Format("{0}/{1}", _endpoint, email), cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
+			var endpoint = $"{_endpoint}/{email}";
+			return _client
+				.DeleteAsync(endpoint)
+				.WithCancellationToken(cancellationToken)
+				.AsResponse();
 		}
 	}
 }

@@ -1,6 +1,7 @@
-﻿using Moq;
-using Newtonsoft.Json.Linq;
+﻿using RichardSzalay.MockHttp;
 using Shouldly;
+using StrongGrid.UnitTests;
+using StrongGrid.Utilities;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -12,6 +13,7 @@ namespace StrongGrid.Resources.UnitTests
 	{
 		#region FIELDS
 
+		private const string BASE_URI = "https://api.sendgrid.com";
 		private const string ENDPOINT = "/mail/batch";
 
 		private const string SINGLE_BATCH_JSON = @"{
@@ -35,19 +37,18 @@ namespace StrongGrid.Resources.UnitTests
 		public void GenerateBatchId()
 		{
 			// Arrange
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync(ENDPOINT, (JObject)null, It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_BATCH_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, ENDPOINT).Respond("application/json", SINGLE_BATCH_JSON);
 
-			var batches = new Batches(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var batches = new Batches(client, ENDPOINT);
 
 			// Act
 			var batchId = batches.GenerateBatchIdAsync().Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			string.IsNullOrEmpty(batchId).ShouldBeFalse();
 		}
 
@@ -61,19 +62,19 @@ namespace StrongGrid.Resources.UnitTests
 				'batch_id': 'ABC123'
 			}";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync($"{ENDPOINT}/{batchId}", It.IsAny<CancellationToken>()))
-					.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
-					.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/{batchId}").Respond("application/json", apiResponse);
 
-			var batches = new Batches(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			client.Filters.Add(new SendGridErrorHandler()); // <-- This is important. The expected exception will not be thrown if this error handler is not registered.
+			var batches = new Batches(client, ENDPOINT);
 
 			// Act
 			var result = batches.ValidateBatchIdAsync(batchId).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldBeTrue();
 		}
 
@@ -92,19 +93,19 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync($"{ENDPOINT}/{batchId}", It.IsAny<CancellationToken>()))
-					.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
-					.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/{batchId}").Respond("application/json", apiResponse);
 
-			var batches = new Batches(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			client.Filters.Add(new SendGridErrorHandler());	// <-- This is important. The expected exception will not be thrown if this error handler is not registered.
+			var batches = new Batches(client, ENDPOINT);
 
 			// Act
 			var result = batches.ValidateBatchIdAsync(batchId).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldBeFalse();
 		}
 
@@ -114,19 +115,18 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var batchId = "YOUR_BATCH_ID";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync("/user/scheduled_sends", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_BATCH_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, "/user/scheduled_sends").Respond("application/json", SINGLE_BATCH_JSON);
 
-			var batches = new Batches(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var batches = new Batches(client, ENDPOINT);
 
 			// Act
 			batches.Cancel(batchId).Wait(CancellationToken.None);
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -135,38 +135,36 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var batchId = "YOUR_BATCH_ID";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync("/user/scheduled_sends", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_BATCH_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, "/user/scheduled_sends").Respond("application/json", SINGLE_BATCH_JSON);
 
-			var batches = new Batches(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var batches = new Batches(client, ENDPOINT);
 
 			// Act
 			batches.Pause(batchId).Wait(CancellationToken.None);
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
 		public void GetAll()
 		{
 			// Arrange
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync("/user/scheduled_sends", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_BATCHES_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, "/user/scheduled_sends").Respond("application/json", MULTIPLE_BATCHES_JSON);
 
-			var batches = new Batches(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var batches = new Batches(client, ENDPOINT);
 
 			// Act
 			var result = batches.GetAllAsync().Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(2);
 		}
@@ -177,19 +175,18 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var batchId = "YOUR_BATCH_ID";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.DeleteAsync($"{ENDPOINT}/{batchId}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent))
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Delete, $"{ENDPOINT}/{batchId}").Respond(HttpStatusCode.NoContent);
 
-			var batches = new Batches(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var batches = new Batches(client, ENDPOINT);
 
 			// Act
 			batches.Resume(batchId).Wait(CancellationToken.None);
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 	}
 }

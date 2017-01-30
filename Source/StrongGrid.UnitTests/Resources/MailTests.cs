@@ -1,7 +1,9 @@
 ﻿using Moq;
 using Newtonsoft.Json.Linq;
+using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Model;
+using StrongGrid.UnitTests;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -22,19 +24,18 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync($"{ENDPOINT}/send", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.Accepted))
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, $"{ENDPOINT}/send").Respond(HttpStatusCode.Accepted);
 
-			var mail = new Mail(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var mail = new Mail(client, ENDPOINT);
 
 			// Act
 			mail.SendAsync(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, CancellationToken.None).Wait();
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -42,19 +43,18 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync($"{ENDPOINT}/send", It.Is<JObject>(o => o["personalizations"].ToObject<MailPersonalization[]>().Length == 1), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.Accepted))
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, $"{ENDPOINT}/send").Respond(HttpStatusCode.Accepted);
 
-			var mail = new Mail(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var mail = new Mail(client, ENDPOINT);
 
 			// Act
 			mail.SendToSingleRecipientAsync(null, null, null, null, null).Wait(CancellationToken.None);
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -62,12 +62,8 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync($"{ENDPOINT}/send", It.Is<JObject>(o => o["personalizations"].ToObject<MailPersonalization[]>().Length == 3), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.Accepted))
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, $"{ENDPOINT}/send").Respond(HttpStatusCode.Accepted);
 
 			var recipients = new[]
 			{
@@ -75,12 +71,16 @@ namespace StrongGrid.Resources.UnitTests
 				new MailAddress("b@b.com", "b"),
 				new MailAddress("c@c.com", "c")
 			};
-			var mail = new Mail(mockClient.Object, ENDPOINT);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var mail = new Mail(client, ENDPOINT);
 
 			// Act
 			mail.SendToMultipleRecipientsAsync(recipients, null, null, null, null).Wait(CancellationToken.None);
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 	}
 }
