@@ -4,6 +4,7 @@ using Pathoschild.Http.Client;
 using Pathoschild.Http.Client.Extensibility;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -225,6 +226,11 @@ namespace StrongGrid.Utilities
 		{
 			IResponse response = await request.AsResponse().ConfigureAwait(false);
 			return await response.AsString(encoding).ConfigureAwait(false);
+		}
+
+		public static Uri Append(this Uri uri, params string[] paths)
+		{
+			return new Uri(paths.Aggregate(uri.AbsoluteUri, (current, path) => $"{current.TrimEnd('/')}/{path.TrimStart('/')}"));
 		}
 
 		/// <summary>Asynchronously converts the JSON encoded content aand convert it to a 'SendGrid' object of the desired type.</summary>

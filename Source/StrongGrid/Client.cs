@@ -19,8 +19,6 @@ namespace StrongGrid
 		private const string DEFAULT_BASE_URI = "https://api.sendgrid.com";
 		private const string DEFAULT_API_VERSION = "v3";
 
-		private readonly Uri _baseUri;
-
 		private Pathoschild.Http.Client.IClient _fluentClient;
 
 
@@ -285,9 +283,8 @@ namespace StrongGrid
 		{
 			Version = typeof(Client).GetTypeInfo().Assembly.GetName().Version.ToString();
 
-			_baseUri = new Uri(string.Format("{0}/{1}", baseUri, apiVersion));
-
-			_fluentClient = new FluentClient(string.Format("{0}/{1}", baseUri, apiVersion), httpClient)
+			var sendGridUri = (new Uri(baseUri)).Append(apiVersion);
+			_fluentClient = new FluentClient(sendGridUri, httpClient)
 				.SetUserAgent($"StrongGrid/{Version} (+https://github.com/Jericho/StrongGrid)")
 				.SetRequestCoordinator(new SendGridRetryStrategy());
 
