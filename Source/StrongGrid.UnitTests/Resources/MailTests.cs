@@ -4,6 +4,7 @@ using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Model;
 using StrongGrid.UnitTests;
+using StrongGrid.Utilities;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -15,7 +16,7 @@ namespace StrongGrid.Resources.UnitTests
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "/mail";
+		private const string ENDPOINT = "mail";
 
 		#endregion
 
@@ -25,10 +26,10 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, $"{ENDPOINT}/send").Respond(HttpStatusCode.Accepted);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "send")).Respond(HttpStatusCode.Accepted);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var mail = new Mail(client, ENDPOINT);
+			var mail = new Mail(client);
 
 			// Act
 			mail.SendAsync(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, CancellationToken.None).Wait();
@@ -44,10 +45,10 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, $"{ENDPOINT}/send").Respond(HttpStatusCode.Accepted);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "send")).Respond(HttpStatusCode.Accepted);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var mail = new Mail(client, ENDPOINT);
+			var mail = new Mail(client);
 
 			// Act
 			mail.SendToSingleRecipientAsync(null, null, null, null, null).Wait(CancellationToken.None);
@@ -63,7 +64,7 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, $"{ENDPOINT}/send").Respond(HttpStatusCode.Accepted);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "send")).Respond(HttpStatusCode.Accepted);
 
 			var recipients = new[]
 			{
@@ -73,7 +74,7 @@ namespace StrongGrid.Resources.UnitTests
 			};
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var mail = new Mail(client, ENDPOINT);
+			var mail = new Mail(client);
 
 			// Act
 			mail.SendToMultipleRecipientsAsync(recipients, null, null, null, null).Wait(CancellationToken.None);

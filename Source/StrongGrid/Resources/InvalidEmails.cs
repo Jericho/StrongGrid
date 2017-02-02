@@ -18,17 +18,15 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class InvalidEmails
 	{
-		private readonly string _endpoint;
+		private const string _endpoint = "suppression/invalid_emails";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="InvalidEmails" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public InvalidEmails(Pathoschild.Http.Client.IClient client, string endpoint = "/suppression/invalid_emails")
+		public InvalidEmails(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
@@ -45,9 +43,12 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<InvalidEmail[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 25, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}?start_time={startDate}&end_time={endDate}&limit={limit}&offset={offset}";
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync(_endpoint)
+				.WithArgument("start_time", startDate)
+				.WithArgument("end_time", endDate)
+				.WithArgument("limit", limit)
+				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<InvalidEmail[]>();
 		}
@@ -62,9 +63,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<InvalidEmail[]> GetAsync(string emailAddress, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{emailAddress}";
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/{emailAddress}")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<InvalidEmail[]>();
 		}
@@ -120,9 +120,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(string emailAddress, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{emailAddress}";
 			return _client
-				.DeleteAsync(endpoint)
+				.DeleteAsync($"{_endpoint}/{emailAddress}")
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}

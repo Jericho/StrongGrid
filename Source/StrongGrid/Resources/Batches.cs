@@ -13,17 +13,15 @@ namespace StrongGrid.Resources
 	/// </summary>
 	public class Batches
 	{
-		private readonly string _endpoint;
+		private const string _endpoint = "mail/batch";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Batches" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public Batches(Pathoschild.Http.Client.IClient client, string endpoint = "/mail/batch")
+		public Batches(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
@@ -54,9 +52,8 @@ namespace StrongGrid.Resources
 		{
 			try
 			{
-				var endpoint = string.Format("{0}/{1}", _endpoint, batchId);
 				var batch_id = await _client
-					.GetAsync(endpoint)
+					.GetAsync($"{_endpoint}/{batchId}")
 					.WithCancellationToken(cancellationToken)
 					.AsSendGridObject<string>("batch_id")
 					.ConfigureAwait(false);
@@ -86,7 +83,7 @@ namespace StrongGrid.Resources
 				{ "status", "cancel" }
 			};
 			return _client
-				.PostAsync("/user/scheduled_sends")
+				.PostAsync("user/scheduled_sends")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
@@ -108,7 +105,7 @@ namespace StrongGrid.Resources
 				{ "status", "pause" }
 			};
 			return _client
-				.PostAsync("/user/scheduled_sends")
+				.PostAsync("user/scheduled_sends")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
@@ -124,7 +121,7 @@ namespace StrongGrid.Resources
 		public Task<BatchInfo[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync("/user/scheduled_sends")
+				.GetAsync("user/scheduled_sends")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<BatchInfo[]>();
 		}
@@ -139,9 +136,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task Resume(string batchId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/{1}", _endpoint, batchId);
 			return _client
-				.DeleteAsync(endpoint)
+				.DeleteAsync($"{_endpoint}/{batchId}")
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}

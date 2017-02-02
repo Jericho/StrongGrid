@@ -16,17 +16,15 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class GlobalSuppressions
 	{
-		private readonly string _endpoint;
+		private const string _endpoint = "asm/suppressions/global";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="GlobalSuppressions" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public GlobalSuppressions(Pathoschild.Http.Client.IClient client, string endpoint = "/asm/suppressions/global")
+		public GlobalSuppressions(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
@@ -40,9 +38,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<bool> IsUnsubscribedAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{email}";
 			var responseContent = await _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/{email}")
 				.WithCancellationToken(cancellationToken)
 				.AsString(null)
 				.ConfigureAwait(false);
@@ -88,9 +85,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task RemoveAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{email}";
 			return _client
-				.DeleteAsync(endpoint)
+				.DeleteAsync($"{_endpoint}/{email}")
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}

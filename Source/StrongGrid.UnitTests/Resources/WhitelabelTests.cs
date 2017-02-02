@@ -5,6 +5,7 @@ using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Model;
 using StrongGrid.UnitTests;
+using StrongGrid.Utilities;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -16,7 +17,7 @@ namespace StrongGrid.Resources.UnitTests
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "/whitelabel";
+		private const string ENDPOINT = "whitelabel";
 
 		private const string SINGLE_DOMAIN_JSON = @"{
 			'id': 1,
@@ -343,10 +344,10 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/domains?exclude_subusers=false&limit=50&offset=0&username=&domain=").Respond("application/json", MULTIPLE_DOMAINS_JSON);
+			mockHttp.Expect(HttpMethod.Get,Utils.GetSendGridApiUri(ENDPOINT) + "?exclude_subusers=false&limit=50&offset=0&username=&domain=").Respond("application/json", MULTIPLE_DOMAINS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			var result = whitelabel.GetAllDomainsAsync(excludeSubusers: false).Result;
@@ -363,10 +364,10 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/domains?exclude_subusers=true&limit=50&offset=0&username=&domain=").Respond("application/json", MULTIPLE_DOMAINS_JSON);
+			mockHttp.Expect(HttpMethod.Get,Utils.GetSendGridApiUri(ENDPOINT) + "?exclude_subusers=true&limit=50&offset=0&username=&domain=").Respond("application/json", MULTIPLE_DOMAINS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			var result = whitelabel.GetAllDomainsAsync(excludeSubusers: true).Result;
@@ -385,10 +386,10 @@ namespace StrongGrid.Resources.UnitTests
 			var domainId = 123L;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/domains/{domainId}").Respond("application/json", SINGLE_DOMAIN_JSON);
+			mockHttp.Expect(HttpMethod.Get,Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			var result = whitelabel.GetDomainAsync(domainId).Result;
@@ -410,10 +411,10 @@ namespace StrongGrid.Resources.UnitTests
 			var isDefault = true;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, $"{ENDPOINT}/domains").Respond("application/json", SINGLE_DOMAIN_JSON);
+			mockHttp.Expect(HttpMethod.Post,Utils.GetSendGridApiUri(ENDPOINT, "domains")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			var result = whitelabel.CreateDomainAsync(domain, subdomain, automaticSecurity, customSpf, isDefault, CancellationToken.None).Result;
@@ -433,10 +434,10 @@ namespace StrongGrid.Resources.UnitTests
 			var isDefault = false;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), $"{ENDPOINT}/domains/{domainId}").Respond("application/json", SINGLE_DOMAIN_JSON);
+			mockHttp.Expect(new HttpMethod("PATCH"),Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			var result = whitelabel.UpdateDomainAsync(domainId, isDefault, customSpf, CancellationToken.None).Result;
@@ -454,10 +455,10 @@ namespace StrongGrid.Resources.UnitTests
 			var domainId = 48L;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete, $"{ENDPOINT}/domains/{domainId}").Respond(HttpStatusCode.OK);
+			mockHttp.Expect(HttpMethod.Delete,Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}")).Respond(HttpStatusCode.OK);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			whitelabel.DeleteDomainAsync(domainId, CancellationToken.None).Wait(CancellationToken.None);
@@ -475,10 +476,10 @@ namespace StrongGrid.Resources.UnitTests
 			var ipAddress = "192.168.77.1";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, $"{ENDPOINT}/domains/{domainId}/ips").Respond("application/json", SINGLE_DOMAIN_JSON);
+			mockHttp.Expect(HttpMethod.Post,Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}/ips")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			var result = whitelabel.AddIpAddressToDomainAsync(domainId, ipAddress, CancellationToken.None).Result;
@@ -497,10 +498,10 @@ namespace StrongGrid.Resources.UnitTests
 			var ipAddress = "192.168.77.1";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete, $"{ENDPOINT}/domains/{domainId}/ips/{ipAddress}").Respond("application/json", SINGLE_DOMAIN_JSON);
+			mockHttp.Expect(HttpMethod.Delete,Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}/ips/{ipAddress}")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			var result = whitelabel.DeleteIpAddressFromDomainAsync(domainId, ipAddress, CancellationToken.None).Result;
@@ -541,10 +542,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, $"{ENDPOINT}/domains/{domainId}/validate").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}/validate")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			var result = whitelabel.ValidateDomainAsync(domainId).Result;
@@ -572,10 +573,10 @@ namespace StrongGrid.Resources.UnitTests
 			var username = "abc123";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/domains/subuser?username={username}").Respond("application/json", SINGLE_DOMAIN_JSON);
+			mockHttp.Expect(HttpMethod.Get,Utils.GetSendGridApiUri(ENDPOINT, $"domains/subuser?username={username}")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			var result = whitelabel.GetAssociatedDomainAsync(username, CancellationToken.None).Result;
@@ -593,10 +594,10 @@ namespace StrongGrid.Resources.UnitTests
 			var username = "abc123";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete, $"{ENDPOINT}/domains/subuser?username={username}").Respond(HttpStatusCode.OK);
+			mockHttp.Expect(HttpMethod.Delete,Utils.GetSendGridApiUri(ENDPOINT, $"domains/subuser?username={username}")).Respond(HttpStatusCode.OK);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			whitelabel.DisassociateDomainAsync(username, CancellationToken.None).Wait(CancellationToken.None);
@@ -614,10 +615,10 @@ namespace StrongGrid.Resources.UnitTests
 			var ipAddress = "192.168.77.1";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, $"{ENDPOINT}/domains/{domainId}/subuser").Respond("application/json", SINGLE_DOMAIN_JSON);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}/subuser")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			var result = whitelabel.AssociateDomainAsync(domainId, ipAddress, CancellationToken.None).Result;
@@ -633,10 +634,10 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/ips?limit=50&offset=0&ip=").Respond("application/json", MULTIPLE_IPS_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "ips?limit=50&offset=0&ip=")).Respond("application/json", MULTIPLE_IPS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			var result = whitelabel.GetAllIpsAsync().Result;
@@ -655,10 +656,10 @@ namespace StrongGrid.Resources.UnitTests
 			var id = 123L;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/ips/{id}").Respond("application/json", SINGLE_IP_JSON);
+			mockHttp.Expect(HttpMethod.Get,Utils.GetSendGridApiUri(ENDPOINT, $"ips/{id}")).Respond("application/json", SINGLE_IP_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			var result = whitelabel.GetIpAsync(id).Result;
@@ -678,10 +679,10 @@ namespace StrongGrid.Resources.UnitTests
 			var subdomain = "mail";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, $"{ENDPOINT}/ips").Respond("application/json", SINGLE_IP_JSON);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "ips")).Respond("application/json", SINGLE_IP_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			var result = whitelabel.CreateIpAsync(ipAddress, domain, subdomain, CancellationToken.None).Result;
@@ -699,10 +700,10 @@ namespace StrongGrid.Resources.UnitTests
 			var domainId = 48L;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete, $"{ENDPOINT}/ips/{domainId}").Respond(HttpStatusCode.OK);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, "ips", domainId)).Respond(HttpStatusCode.OK);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			whitelabel.DeleteIpAsync(domainId, CancellationToken.None).Wait(CancellationToken.None);
@@ -730,10 +731,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, $"{ENDPOINT}/ips/{id}/validate").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "ips", id, "validate")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			var result = whitelabel.ValidateIpAsync(id).Result;
@@ -755,10 +756,10 @@ namespace StrongGrid.Resources.UnitTests
 			var linkId = 123L;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/links/{linkId}").Respond("application/json", SINGLE_LINK_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "links", linkId)).Respond("application/json", SINGLE_LINK_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			var result = whitelabel.GetLinkAsync(linkId).Result;
@@ -778,10 +779,10 @@ namespace StrongGrid.Resources.UnitTests
 			var isDefault = false;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, $"{ENDPOINT}/links").Respond("application/json", SINGLE_LINK_JSON);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "links")).Respond("application/json", SINGLE_LINK_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			var result = whitelabel.CreateLinkAsync(domain, subdomain, isDefault, CancellationToken.None).Result;
@@ -800,10 +801,10 @@ namespace StrongGrid.Resources.UnitTests
 			var isDefault = true;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), $"{ENDPOINT}/links/{linkId}").Respond("application/json", SINGLE_LINK_JSON);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(ENDPOINT, "links", linkId)).Respond("application/json", SINGLE_LINK_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			var result = whitelabel.UpdateLinkAsync(linkId, isDefault).Result;
@@ -821,10 +822,10 @@ namespace StrongGrid.Resources.UnitTests
 			var linkId = 48L;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete, $"{ENDPOINT}/links/{linkId}").Respond(HttpStatusCode.OK);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, "links", linkId)).Respond(HttpStatusCode.OK);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			whitelabel.DeleteLinkAsync(linkId, CancellationToken.None).Wait(CancellationToken.None);
@@ -841,10 +842,10 @@ namespace StrongGrid.Resources.UnitTests
 			var domain = "example.com";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/links/default?domain={domain}").Respond("application/json", SINGLE_LINK_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, $"links/default?domain={domain}")).Respond("application/json", SINGLE_LINK_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			var result = whitelabel.GetDefaultLinkAsync(domain).Result;
@@ -877,10 +878,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, $"{ENDPOINT}/links/{linkId}/validate").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "links", linkId, "validate")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			var result = whitelabel.ValidateLinkAsync(linkId).Result;
@@ -904,10 +905,10 @@ namespace StrongGrid.Resources.UnitTests
 			var username = "abc123";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/links/subuser?username={username}").Respond("application/json", SINGLE_LINK_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, $"links/subuser?username={username}")).Respond("application/json", SINGLE_LINK_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			var result = whitelabel.GetAssociatedLinkAsync(username, CancellationToken.None).Result;
@@ -925,10 +926,10 @@ namespace StrongGrid.Resources.UnitTests
 			var username = "abc123";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete, $"{ENDPOINT}/links/subuser?username={username}").Respond(HttpStatusCode.OK);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, $"links/subuser?username={username}")).Respond(HttpStatusCode.OK);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			whitelabel.DisassociateLinkAsync(username, CancellationToken.None).Wait(CancellationToken.None);
@@ -946,10 +947,10 @@ namespace StrongGrid.Resources.UnitTests
 			var username = "abc123";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, $"{ENDPOINT}/links/{linkId}/subuser").Respond("application/json", SINGLE_DOMAIN_JSON);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, $"links/{linkId}/subuser")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			var result = whitelabel.AssociateLinkAsync(linkId, username, CancellationToken.None).Result;
@@ -965,10 +966,10 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/links?limit=50&offset=0&ip=").Respond("application/json", MULTIPLE_LINKS_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "links?limit=50&offset=0&ip=")).Respond("application/json", MULTIPLE_LINKS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client, ENDPOINT);
+			var whitelabel = new Whitelabel(client);
 
 			// Act
 			var result = whitelabel.GetAllLinksAsync().Result;

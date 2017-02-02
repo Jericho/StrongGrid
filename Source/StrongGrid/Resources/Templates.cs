@@ -15,17 +15,15 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class Templates
 	{
-		private readonly string _endpoint;
+		private const string _endpoint = "templates";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Templates" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public Templates(Pathoschild.Http.Client.IClient client, string endpoint = "/templates")
+		public Templates(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
@@ -76,7 +74,7 @@ namespace StrongGrid.Resources
 		public Task<Template> GetAsync(string templateId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync(string.Format("{0}/{1}", _endpoint, templateId))
+				.GetAsync($"{_endpoint}/{templateId}")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Template>();
 		}
@@ -97,7 +95,7 @@ namespace StrongGrid.Resources
 				{ "name", name }
 			};
 			return _client
-				.PatchAsync(string.Format("{0}/{1}", _endpoint, templateId))
+				.PatchAsync($"{_endpoint}/{templateId}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Template>();
@@ -114,7 +112,7 @@ namespace StrongGrid.Resources
 		public Task DeleteAsync(string templateId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.DeleteAsync(string.Format("{0}/{1}", _endpoint, templateId))
+				.DeleteAsync($"{_endpoint}/{templateId}")
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -143,7 +141,7 @@ namespace StrongGrid.Resources
 				{ "active", isActive ? 1 : 0 }
 			};
 			return _client
-				.PostAsync(string.Format("{0}/{1}/versions", _endpoint, templateId))
+				.PostAsync($"{_endpoint}/{templateId}/versions")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<TemplateVersion>();
@@ -161,7 +159,7 @@ namespace StrongGrid.Resources
 		public Task<TemplateVersion> ActivateVersionAsync(string templateId, string versionId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.PostAsync(string.Format("{0}/{1}/versions/{2}/activate", _endpoint, templateId, versionId))
+				.PostAsync($"{_endpoint}/{templateId}/versions/{versionId}/activate")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<TemplateVersion>();
 		}
@@ -178,7 +176,7 @@ namespace StrongGrid.Resources
 		public Task<TemplateVersion> GetVersionAsync(string templateId, string versionId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync(string.Format("{0}/{1}/versions/{2}", _endpoint, templateId, versionId))
+				.GetAsync($"{_endpoint}/{templateId}/versions/{versionId}")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<TemplateVersion>();
 		}
@@ -207,7 +205,7 @@ namespace StrongGrid.Resources
 			if (isActive.HasValue) data.Add("active", isActive.Value ? 1 : 0);
 
 			return _client
-				.PatchAsync(string.Format("{0}/{1}/versions/{2}", _endpoint, templateId, versionId))
+				.PatchAsync($"{_endpoint}/{templateId}/versions/{versionId}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<TemplateVersion>();
@@ -225,7 +223,7 @@ namespace StrongGrid.Resources
 		public Task DeleteVersionAsync(string templateId, string versionId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.DeleteAsync(string.Format("{0}/{1}/versions/{2}", _endpoint, templateId, versionId))
+				.DeleteAsync($"{_endpoint}/{templateId}/versions/{versionId}")
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}

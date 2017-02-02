@@ -5,6 +5,7 @@ using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Model;
 using StrongGrid.UnitTests;
+using StrongGrid.Utilities;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -17,7 +18,7 @@ namespace StrongGrid.Resources.UnitTests
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "/user/profile";
+		private const string ENDPOINT = "user/profile";
 
 		private const string SINGLE_PROFILE_JSON = @"{
 			'address': '814 West Chapman Avenue',
@@ -63,10 +64,10 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, ENDPOINT).Respond("application/json", SINGLE_PROFILE_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", SINGLE_PROFILE_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var user = new User(client, ENDPOINT);
+			var user = new User(client);
 
 			// Act
 			var result = user.GetProfileAsync(CancellationToken.None).Result;
@@ -87,10 +88,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, "/user/account").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("user/account")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var user = new User(client, ENDPOINT);
+			var user = new User(client);
 
 			// Act
 			var result = user.GetAccountAsync(CancellationToken.None).Result;
@@ -110,10 +111,10 @@ namespace StrongGrid.Resources.UnitTests
 			var city = "New York";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), ENDPOINT).Respond("application/json", SINGLE_PROFILE_JSON);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", SINGLE_PROFILE_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var user = new User(client, ENDPOINT);
+			var user = new User(client);
 
 			// Act
 			var result = user.UpdateProfileAsync(null, city, null, null, null, null, null, null, null, null, CancellationToken.None).Result;
@@ -133,10 +134,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, "/user/email").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("user/email")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var user = new User(client, ENDPOINT);
+			var user = new User(client);
 
 			// Act
 			var result = user.GetEmailAsync(CancellationToken.None).Result;
@@ -158,10 +159,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Put, "/user/email").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Put, Utils.GetSendGridApiUri("user/email")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var user = new User(client, ENDPOINT);
+			var user = new User(client);
 
 			// Act
 			var result = user.UpdateEmailAsync(email, CancellationToken.None).Result;
@@ -181,10 +182,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, "/user/username").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("user/username")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var user = new User(client, ENDPOINT);
+			var user = new User(client);
 
 			// Act
 			var result = user.GetUsernameAsync(CancellationToken.None).Result;
@@ -206,10 +207,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Put, "/user/username").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Put, Utils.GetSendGridApiUri("user/username")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var user = new User(client, ENDPOINT);
+			var user = new User(client);
 
 			// Act
 			var result = user.UpdateUsernameAsync(username, CancellationToken.None).Result;
@@ -235,10 +236,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, "/user/credits").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("user/credits")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var user = new User(client, ENDPOINT);
+			var user = new User(client);
 
 			// Act
 			var result = user.GetCreditsAsync(CancellationToken.None).Result;
@@ -264,10 +265,10 @@ namespace StrongGrid.Resources.UnitTests
 			var newPassword = "qwerty";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Put, "/user/password").Respond(HttpStatusCode.OK);
+			mockHttp.Expect(HttpMethod.Put, Utils.GetSendGridApiUri("user/password")).Respond(HttpStatusCode.OK);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var user = new User(client, ENDPOINT);
+			var user = new User(client);
 
 			// Act
 			user.UpdatePasswordAsync(oldPassword, newPassword, CancellationToken.None).Wait(CancellationToken.None);

@@ -283,7 +283,7 @@ namespace StrongGrid
 		{
 			Version = typeof(Client).GetTypeInfo().Assembly.GetName().Version.ToString();
 
-			var sendGridUri = (new Uri(baseUri)).Append(apiVersion);
+			var sendGridUri = new Uri($"{baseUri.TrimEnd('/')}/{apiVersion.TrimStart('/')}");
 			_fluentClient = new FluentClient(sendGridUri, httpClient)
 				.SetUserAgent($"StrongGrid/{Version} (+https://github.com/Jericho/StrongGrid)")
 				.SetRequestCoordinator(new SendGridRetryStrategy());

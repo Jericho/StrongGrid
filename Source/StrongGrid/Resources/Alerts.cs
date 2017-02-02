@@ -17,17 +17,15 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class Alerts
 	{
-		private readonly string _endpoint;
+		private const string _endpoint = "alerts";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Alerts" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public Alerts(Pathoschild.Http.Client.IClient client, string endpoint = "/alerts")
+		public Alerts(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
@@ -41,9 +39,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Alert> GetAsync(long alertId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/{1}", _endpoint, alertId);
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/{alertId}")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Alert>();
 		}
@@ -94,9 +91,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(long alertId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/{1}", _endpoint, alertId);
 			return _client
-				.DeleteAsync(endpoint)
+				.DeleteAsync($"{_endpoint}/{alertId}")
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -115,10 +111,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Alert> UpdateAsync(long alertId, AlertType? type, string emailTo = null, Frequency? frequency = null, int? percentage = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/{1}", _endpoint, alertId);
 			var data = CreateJObjectForAlert(type, emailTo, frequency, percentage);
 			return _client
-				.PatchAsync(endpoint)
+				.PatchAsync($"{_endpoint}/{alertId}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Alert>();

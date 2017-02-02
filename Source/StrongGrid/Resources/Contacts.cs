@@ -18,17 +18,15 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class Contacts
 	{
-		private readonly string _endpoint;
+		private const string _endpoint = "contactdb/recipients";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Contacts" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public Contacts(Pathoschild.Http.Client.IClient client, string endpoint = "/contactdb/recipients")
+		public Contacts(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
@@ -106,11 +104,15 @@ namespace StrongGrid.Resources
 				data.Add(ConvertContactToJObject(contact));
 			}
 
-			return _client
+			var request = _client
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
-				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<ImportResult>();
+				.WithCancellationToken(cancellationToken);
+
+			// We must turn off error handling because SendGrid may intentionally return 'Errors' to indicate that some records did not import
+			request.Filters.Remove<SendGridErrorHandler>();
+
+			return request.As<ImportResult>();
 		}
 
 		/// <summary>
@@ -154,9 +156,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Contact> GetAsync(string contactId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{contactId}";
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/{contactId}")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Contact>();
 		}
@@ -172,9 +173,10 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Contact[]> GetAsync(int recordsPerPage = 100, int page = 1, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}?page_size={recordsPerPage}&page={page}";
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync(_endpoint)
+				.WithArgument("page_size", recordsPerPage)
+				.WithArgument("page", page)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Contact[]>("recipients");
 		}
@@ -188,9 +190,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<long> GetBillableCountAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/billable_count";
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/billable_count")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<long>("recipient_count");
 		}
@@ -204,9 +205,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<long> GetTotalCountAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/count";
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/count")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<long>("recipient_count");
 		}
@@ -222,13 +222,12 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Contact[]> SearchAsync(IEnumerable<SearchCondition> conditions, int? listId = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/search";
 			var data = new JObject();
 			if (listId.HasValue) data.Add("list_id", listId.Value);
 			if (conditions != null) data.Add("conditions", JArray.FromObject(conditions));
 
 			return _client
-				.PostAsync(endpoint)
+				.PostAsync($"{_endpoint}/search")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Contact[]>("recipients");

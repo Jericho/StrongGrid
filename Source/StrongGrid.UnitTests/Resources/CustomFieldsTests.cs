@@ -5,6 +5,7 @@ using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Model;
 using StrongGrid.UnitTests;
+using StrongGrid.Utilities;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -16,7 +17,7 @@ namespace StrongGrid.Resources.UnitTests
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "/contactdb/custom_fields";
+		private const string ENDPOINT = "contactdb/custom_fields";
 
 		private const string SINGLE_CUSTOM_FIELD_JSON = @"{
 			'id': 1,
@@ -68,10 +69,10 @@ namespace StrongGrid.Resources.UnitTests
 			var type = FieldType.Text;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, ENDPOINT).Respond("application/json", SINGLE_CUSTOM_FIELD_JSON);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", SINGLE_CUSTOM_FIELD_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var customFields = new CustomFields(client, ENDPOINT);
+			var customFields = new CustomFields(client);
 
 			// Act
 			var result = customFields.CreateAsync(name, type, CancellationToken.None).Result;
@@ -89,10 +90,10 @@ namespace StrongGrid.Resources.UnitTests
 			var fieldId = 1;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/{fieldId}").Respond("application/json", SINGLE_CUSTOM_FIELD_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, fieldId)).Respond("application/json", SINGLE_CUSTOM_FIELD_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var customFields = new CustomFields(client, ENDPOINT);
+			var customFields = new CustomFields(client);
 
 			// Act
 			var result = customFields.GetAsync(fieldId, CancellationToken.None).Result;
@@ -108,10 +109,10 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, ENDPOINT).Respond("application/json", MULTIPLE_CUSTOM_FIELDS_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", MULTIPLE_CUSTOM_FIELDS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var customFields = new CustomFields(client, ENDPOINT);
+			var customFields = new CustomFields(client);
 
 			// Act
 			var result = customFields.GetAllAsync(CancellationToken.None).Result;
@@ -130,10 +131,10 @@ namespace StrongGrid.Resources.UnitTests
 			var fieldId = 1;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete, $"{ENDPOINT}/{fieldId}").Respond(HttpStatusCode.Accepted);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, fieldId)).Respond(HttpStatusCode.Accepted);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var customFields = new CustomFields(client, ENDPOINT);
+			var customFields = new CustomFields(client);
 
 			// Act
 			customFields.DeleteAsync(fieldId, CancellationToken.None).Wait(CancellationToken.None);
@@ -189,10 +190,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, "/contactdb/reserved_fields").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("contactdb/reserved_fields")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var customFields = new CustomFields(client, ENDPOINT);
+			var customFields = new CustomFields(client);
 
 			// Act
 			var result = customFields.GetReservedFieldsAsync(CancellationToken.None).Result;

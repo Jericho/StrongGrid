@@ -14,7 +14,7 @@ namespace StrongGrid.Resources.UnitTests
 		#region FIELDS
 
 		private const string BASE_URI = "https://api.sendgrid.com";
-		private const string ENDPOINT = "/mail/batch";
+		private const string ENDPOINT = "mail/batch";
 
 		private const string SINGLE_BATCH_JSON = @"{
 			'batch_id': 'BATCH_ID_1',
@@ -38,10 +38,10 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, ENDPOINT).Respond("application/json", SINGLE_BATCH_JSON);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", SINGLE_BATCH_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var batches = new Batches(client, ENDPOINT);
+			var batches = new Batches(client);
 
 			// Act
 			var batchId = batches.GenerateBatchIdAsync().Result;
@@ -63,11 +63,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/{batchId}").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, batchId)).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			client.Filters.Add(new SendGridErrorHandler()); // <-- This is important. The expected exception will not be thrown if this error handler is not registered.
-			var batches = new Batches(client, ENDPOINT);
+			var batches = new Batches(client);
 
 			// Act
 			var result = batches.ValidateBatchIdAsync(batchId).Result;
@@ -94,11 +93,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/{batchId}").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, batchId)).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			client.Filters.Add(new SendGridErrorHandler());	// <-- This is important. The expected exception will not be thrown if this error handler is not registered.
-			var batches = new Batches(client, ENDPOINT);
+			var batches = new Batches(client);
 
 			// Act
 			var result = batches.ValidateBatchIdAsync(batchId).Result;
@@ -116,10 +114,10 @@ namespace StrongGrid.Resources.UnitTests
 			var batchId = "YOUR_BATCH_ID";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, "/user/scheduled_sends").Respond("application/json", SINGLE_BATCH_JSON);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri("user/scheduled_sends")).Respond("application/json", SINGLE_BATCH_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var batches = new Batches(client, ENDPOINT);
+			var batches = new Batches(client);
 
 			// Act
 			batches.Cancel(batchId).Wait(CancellationToken.None);
@@ -136,10 +134,10 @@ namespace StrongGrid.Resources.UnitTests
 			var batchId = "YOUR_BATCH_ID";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, "/user/scheduled_sends").Respond("application/json", SINGLE_BATCH_JSON);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri("user/scheduled_sends")).Respond("application/json", SINGLE_BATCH_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var batches = new Batches(client, ENDPOINT);
+			var batches = new Batches(client);
 
 			// Act
 			batches.Pause(batchId).Wait(CancellationToken.None);
@@ -154,10 +152,10 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, "/user/scheduled_sends").Respond("application/json", MULTIPLE_BATCHES_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("user/scheduled_sends")).Respond("application/json", MULTIPLE_BATCHES_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var batches = new Batches(client, ENDPOINT);
+			var batches = new Batches(client);
 
 			// Act
 			var result = batches.GetAllAsync().Result;
@@ -176,10 +174,10 @@ namespace StrongGrid.Resources.UnitTests
 			var batchId = "YOUR_BATCH_ID";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete, $"{ENDPOINT}/{batchId}").Respond(HttpStatusCode.NoContent);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, batchId)).Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var batches = new Batches(client, ENDPOINT);
+			var batches = new Batches(client);
 
 			// Act
 			batches.Resume(batchId).Wait(CancellationToken.None);

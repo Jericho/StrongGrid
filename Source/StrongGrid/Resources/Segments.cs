@@ -17,17 +17,15 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class Segments
 	{
-		private readonly string _endpoint;
+		private const string _endpoint = "contactdb/segments";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Segments" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public Segments(Pathoschild.Http.Client.IClient client, string endpoint = "/contactdb/segments")
+		public Segments(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
@@ -83,9 +81,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Segment> GetAsync(long segmentId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{segmentId}";
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/{segmentId}")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Segment>();
 		}
@@ -110,9 +107,8 @@ namespace StrongGrid.Resources
 			if (listId.HasValue) data.Add("list_id", listId.Value);
 			if (conditions.Any()) data.Add("conditions", JArray.FromObject(conditions.ToArray()));
 
-			var endpoint = $"{_endpoint}/{segmentId}";
 			return _client
-				.PatchAsync(endpoint)
+				.PatchAsync($"{_endpoint}/{segmentId}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Segment>();
@@ -129,9 +125,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(long segmentId, bool deleteMatchingContacts = false, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{segmentId}";
 			return _client
-				.DeleteAsync(endpoint)
+				.DeleteAsync($"{_endpoint}/{segmentId}")
 				.WithArgument("delete_contacts", deleteMatchingContacts ? "true" : "false")
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
@@ -149,9 +144,10 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Contact[]> GetRecipientsAsync(long segmentId, int recordsPerPage = 100, int page = 1, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{segmentId}/recipients?page_size={recordsPerPage}&page={page}";
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/{segmentId}/recipients")
+				.WithArgument("page_size", recordsPerPage)
+				.WithArgument("page", page)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Contact[]>("recipients");
 		}

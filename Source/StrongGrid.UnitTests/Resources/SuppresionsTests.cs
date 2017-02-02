@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.UnitTests;
+using StrongGrid.Utilities;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -14,7 +15,7 @@ namespace StrongGrid.Resources.UnitTests
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "/asm/groups";
+		private const string ENDPOINT = "asm/groups";
 
 		#endregion
 
@@ -30,10 +31,10 @@ namespace StrongGrid.Resources.UnitTests
 			]";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/{groupId}/suppressions").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, groupId, "suppressions")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var suppresions = new Suppressions(client, ENDPOINT);
+			var suppresions = new Suppressions(client);
 
 			// Act
 			var result = suppresions.GetUnsubscribedAddressesAsync(groupId, CancellationToken.None).Result;
@@ -62,10 +63,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, $"{ENDPOINT}/{groupId}/suppressions").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, groupId, "suppressions")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var suppressions = new Suppressions(client, ENDPOINT);
+			var suppressions = new Suppressions(client);
 
 			// Act
 			suppressions.AddAddressToUnsubscribeGroupAsync(groupId, email, CancellationToken.None).Wait();
@@ -90,10 +91,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, $"{ENDPOINT}/{groupId}/suppressions").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, groupId, "suppressions")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var suppressions = new Suppressions(client, ENDPOINT);
+			var suppressions = new Suppressions(client);
 
 			// Act
 			suppressions.AddAddressToUnsubscribeGroupAsync(groupId, emails, CancellationToken.None).Wait();
@@ -112,10 +113,10 @@ namespace StrongGrid.Resources.UnitTests
 
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete, $"{ENDPOINT}/{groupId}/suppressions/{email}").Respond(HttpStatusCode.NoContent);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, groupId, "suppressions", email)).Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var suppressions = new Suppressions(client, ENDPOINT);
+			var suppressions = new Suppressions(client);
 
 			// Act
 			suppressions.RemoveAddressFromSuppressionGroupAsync(groupId, email, CancellationToken.None).Wait();

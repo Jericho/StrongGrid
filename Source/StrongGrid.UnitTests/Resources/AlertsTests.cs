@@ -19,7 +19,7 @@ namespace StrongGrid.Resources.UnitTests
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "/alerts";
+		private const string ENDPOINT = "alerts";
 
 		private const string SINGLE_ALERT_JSON = @"{
 			'created_at': 1451520930,
@@ -86,10 +86,10 @@ namespace StrongGrid.Resources.UnitTests
 			var percentage = 75;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, ENDPOINT).Respond("application/json", SINGLE_ALERT_JSON);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", SINGLE_ALERT_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var alerts = new Alerts(client, ENDPOINT);
+			var alerts = new Alerts(client);
 
 			// Act
 			var result = alerts.CreateAsync(type, emailTo, frequency, percentage, CancellationToken.None).Result;
@@ -107,10 +107,10 @@ namespace StrongGrid.Resources.UnitTests
 			var alertId = 48;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/{alertId}").Respond("application/json", SINGLE_ALERT_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, alertId)).Respond("application/json", SINGLE_ALERT_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var alerts = new Alerts(client, ENDPOINT);
+			var alerts = new Alerts(client);
 
 			// Act
 			var result = alerts.GetAsync(alertId, CancellationToken.None).Result;
@@ -126,10 +126,10 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, ENDPOINT).Respond("application/json", MULTIPLE_ALERTS_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", MULTIPLE_ALERTS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var alerts = new Alerts(client, ENDPOINT);
+			var alerts = new Alerts(client);
 
 			// Act
 			var result = alerts.GetAllAsync(CancellationToken.None).Result;
@@ -148,10 +148,10 @@ namespace StrongGrid.Resources.UnitTests
 			var alertId = 48;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete, $"{ENDPOINT}/{alertId}").Respond(HttpStatusCode.OK);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, alertId)).Respond(HttpStatusCode.OK);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var alerts = new Alerts(client, ENDPOINT);
+			var alerts = new Alerts(client);
 
 			// Act
 			alerts.DeleteAsync(alertId, CancellationToken.None).Wait(CancellationToken.None);
@@ -169,10 +169,10 @@ namespace StrongGrid.Resources.UnitTests
 			var emailTo = "test@example.com";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), $"{ENDPOINT}/{alertId}").Respond("application/json", SINGLE_ALERT_JSON);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(ENDPOINT, alertId)).Respond("application/json", SINGLE_ALERT_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var alerts = new Alerts(client, ENDPOINT);
+			var alerts = new Alerts(client);
 
 			// Act
 			var result = alerts.UpdateAsync(alertId, null, emailTo, null, null, CancellationToken.None).Result;

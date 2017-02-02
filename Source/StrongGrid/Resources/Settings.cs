@@ -17,17 +17,15 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class Settings
 	{
-		private readonly string _endpoint;
+		private const string _endpoint = "settings";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Settings" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public Settings(Pathoschild.Http.Client.IClient client, string endpoint = "/settings")
+		public Settings(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
@@ -40,9 +38,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<EnforcedTlsSettings> GetEnforcedTlsSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = "/user/settings/enforced_tls";
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync("user/settings/enforced_tls")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EnforcedTlsSettings>();
 		}
@@ -58,7 +55,6 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<EnforcedTlsSettings> UpdateEnforcedTlsSettingsAsync(bool requireTls, bool requireValidCert, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = "/user/settings/enforced_tls";
 			var enforcedTlsSettings = new EnforcedTlsSettings
 			{
 				RequireTls = requireTls,
@@ -66,7 +62,7 @@ namespace StrongGrid.Resources
 			};
 			var data = JObject.FromObject(enforcedTlsSettings);
 			return _client
-				.PatchAsync(endpoint)
+				.PatchAsync("user/settings/enforced_tls")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EnforcedTlsSettings>();
@@ -83,9 +79,10 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<GlobalSetting[]> GetAllPartnerSettingsAsync(int limit = 25, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"/partner_settings?limit={limit}&offset={offset}";
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync("partner_settings")
+				.WithArgument("limit", limit)
+				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<GlobalSetting[]>("result");
 		}
@@ -99,9 +96,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<NewRelicSettings> GetNewRelicSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = "/partner_settings/new_relic";
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync("partner_settings/new_relic")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<NewRelicSettings>();
 		}
@@ -124,7 +120,7 @@ namespace StrongGrid.Resources
 			};
 			var data = JObject.FromObject(newRelicSettings);
 			return _client
-				.PatchAsync("/partner_settings/new_relic")
+				.PatchAsync("partner_settings/new_relic")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<NewRelicSettings>();
@@ -141,9 +137,10 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<GlobalSetting[]> GetAllTrackingSettingsAsync(int limit = 25, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("/tracking_settings?limit={0}&offset={1}", limit, offset);
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync("tracking_settings")
+				.WithArgument("limit", limit)
+				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<GlobalSetting[]>("result");
 		}
@@ -158,7 +155,7 @@ namespace StrongGrid.Resources
 		public async Task<bool> GetClickTrackingSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var responseContent = await _client
-				.GetAsync("/tracking_settings/click")
+				.GetAsync("tracking_settings/click")
 				.WithCancellationToken(cancellationToken)
 				.AsString(null).
 				ConfigureAwait(false);
@@ -193,7 +190,7 @@ namespace StrongGrid.Resources
 				{ "enabled", enabled }
 			};
 			return _client
-				.PatchAsync("/tracking_settings/click")
+				.PatchAsync("tracking_settings/click")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<bool>("enabled");
@@ -209,7 +206,7 @@ namespace StrongGrid.Resources
 		public Task<GoogleAnalyticsGlobalSettings> GetGoogleAnalyticsGlobalSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync("/tracking_settings/google_analytics")
+				.GetAsync("tracking_settings/google_analytics")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<GoogleAnalyticsGlobalSettings>();
 		}
@@ -240,7 +237,7 @@ namespace StrongGrid.Resources
 			};
 			var data = JObject.FromObject(googleAnalyticsGlobalSettings);
 			return _client
-				.PatchAsync("/tracking_settings/google_analytics")
+				.PatchAsync("tracking_settings/google_analytics")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<GoogleAnalyticsGlobalSettings>();
@@ -256,7 +253,7 @@ namespace StrongGrid.Resources
 		public Task<bool> GetOpenTrackingSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync("/tracking_settings/open")
+				.GetAsync("tracking_settings/open")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<bool>("enabled");
 		}
@@ -276,7 +273,7 @@ namespace StrongGrid.Resources
 				{ "enabled", enabled }
 			};
 			return _client
-				.PatchAsync("/tracking_settings/open")
+				.PatchAsync("tracking_settings/open")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<bool>("enabled");
@@ -292,7 +289,7 @@ namespace StrongGrid.Resources
 		public Task<SubscriptionSettings> GetSubscriptionTrackingSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync("/tracking_settings/subscription")
+				.GetAsync("tracking_settings/subscription")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<SubscriptionSettings>();
 		}
@@ -323,7 +320,7 @@ namespace StrongGrid.Resources
 			};
 			var data = JObject.FromObject(subscriptionTrackingSettings);
 			return _client
-				.PatchAsync("/tracking_settings/subscription")
+				.PatchAsync("tracking_settings/subscription")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<SubscriptionSettings>();
@@ -340,9 +337,10 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<GlobalSetting[]> GetAllMailSettingsAsync(int limit = 25, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("/mail_settings?limit={0}&offset={1}", limit, offset);
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync("mail_settings")
+				.WithArgument("limit", limit)
+				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<GlobalSetting[]>("result");
 		}
@@ -357,7 +355,7 @@ namespace StrongGrid.Resources
 		public Task<EmailAddressSetting> GetBccMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync("/mail_settings/bcc")
+				.GetAsync("mail_settings/bcc")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EmailAddressSetting>();
 		}
@@ -380,7 +378,7 @@ namespace StrongGrid.Resources
 			};
 			var data = JObject.FromObject(bccMailSettings);
 			return _client
-				.PatchAsync("/mail_settings/bcc")
+				.PatchAsync("mail_settings/bcc")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EmailAddressSetting>();
@@ -396,7 +394,7 @@ namespace StrongGrid.Resources
 		public Task<AddressWhitelistSettings> GetAddressWhitelistMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync("/mail_settings/address_whitelist")
+				.GetAsync("mail_settings/address_whitelist")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<AddressWhitelistSettings>();
 		}
@@ -419,7 +417,7 @@ namespace StrongGrid.Resources
 			};
 			var data = JObject.FromObject(addressWhitelistSettings);
 			return _client
-				.PatchAsync("/mail_settings/address_whitelist")
+				.PatchAsync("mail_settings/address_whitelist")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<AddressWhitelistSettings>();
@@ -435,7 +433,7 @@ namespace StrongGrid.Resources
 		public Task<FooterGlobalSettings> GetFooterMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync("/mail_settings/footer")
+				.GetAsync("mail_settings/footer")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<FooterGlobalSettings>();
 		}
@@ -460,7 +458,7 @@ namespace StrongGrid.Resources
 			};
 			var data = JObject.FromObject(footerGlobalSetting);
 			return _client
-				.PatchAsync("/mail_settings/footer")
+				.PatchAsync("mail_settings/footer")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<FooterGlobalSettings>();
@@ -476,7 +474,7 @@ namespace StrongGrid.Resources
 		public Task<EmailAddressSetting> GetForwardSpamMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync("/mail_settings/forward_spam")
+				.GetAsync("mail_settings/forward_spam")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EmailAddressSetting>();
 		}
@@ -499,7 +497,7 @@ namespace StrongGrid.Resources
 			};
 			var data = JObject.FromObject(forwardSpamMailSettins);
 			return _client
-				.PatchAsync("/mail_settings/forward_spam")
+				.PatchAsync("mail_settings/forward_spam")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EmailAddressSetting>();
@@ -515,7 +513,7 @@ namespace StrongGrid.Resources
 		public Task<bool> GetPlainContentMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync("/mail_settings/plain_content")
+				.GetAsync("mail_settings/plain_content")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<bool>("enabled");
 		}
@@ -535,7 +533,7 @@ namespace StrongGrid.Resources
 				{ "enabled", enabled }
 			};
 			return _client
-				.PatchAsync("/mail_settings/plain_content")
+				.PatchAsync("mail_settings/plain_content")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<bool>("enabled");
@@ -551,7 +549,7 @@ namespace StrongGrid.Resources
 		public Task<SpamCheckSettings> GetSpamCheckMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync("/mail_settings/spam_check")
+				.GetAsync("mail_settings/spam_check")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<SpamCheckSettings>();
 		}
@@ -576,7 +574,7 @@ namespace StrongGrid.Resources
 			};
 			var data = JObject.FromObject(spamCheckMailSettings);
 			return _client
-				.PatchAsync("/mail_settings/spam_check")
+				.PatchAsync("mail_settings/spam_check")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<SpamCheckSettings>();
@@ -592,7 +590,7 @@ namespace StrongGrid.Resources
 		public Task<TemplateSettings> GetTemplateMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync("/mail_settings/template")
+				.GetAsync("mail_settings/template")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<TemplateSettings>();
 		}
@@ -615,7 +613,7 @@ namespace StrongGrid.Resources
 			};
 			var data = JObject.FromObject(templateMailSettings);
 			return _client
-				.PatchAsync("/mail_settings/template")
+				.PatchAsync("mail_settings/template")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<TemplateSettings>();
@@ -631,7 +629,7 @@ namespace StrongGrid.Resources
 		public Task<BouncePurgeSettings> GetBouncePurgeMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync("/mail_settings/bounce_purge")
+				.GetAsync("mail_settings/bounce_purge")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<BouncePurgeSettings>();
 		}
@@ -656,7 +654,7 @@ namespace StrongGrid.Resources
 			};
 			var data = JObject.FromObject(bouncePurgeSettings);
 			return _client
-				.PatchAsync("/mail_settings/bounce_purge")
+				.PatchAsync("mail_settings/bounce_purge")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<BouncePurgeSettings>();
@@ -672,7 +670,7 @@ namespace StrongGrid.Resources
 		public Task<EmailAddressSetting> GetForwardBounceMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync("/mail_settings/forward_bounce")
+				.GetAsync("mail_settings/forward_bounce")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EmailAddressSetting>();
 		}
@@ -695,7 +693,7 @@ namespace StrongGrid.Resources
 			};
 			var data = JObject.FromObject(forwardSpamMailSettings);
 			return _client
-				.PatchAsync("/mail_settings/forward_bounce")
+				.PatchAsync("mail_settings/forward_bounce")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EmailAddressSetting>();

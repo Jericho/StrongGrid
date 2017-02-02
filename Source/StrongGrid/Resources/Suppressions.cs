@@ -18,17 +18,15 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class Suppressions
 	{
-		private readonly string _endpoint;
+		private const string _endpoint = "asm/groups";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Suppressions" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public Suppressions(Pathoschild.Http.Client.IClient client, string endpoint = "/asm/groups")
+		public Suppressions(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
@@ -43,7 +41,7 @@ namespace StrongGrid.Resources
 		public Task<string[]> GetUnsubscribedAddressesAsync(int groupId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync(string.Format("{0}/{1}/suppressions", _endpoint, groupId))
+				.GetAsync($"{_endpoint}/{groupId}/suppressions")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<string[]>();
 		}
@@ -77,7 +75,7 @@ namespace StrongGrid.Resources
 		{
 			var data = new JObject(new JProperty("recipient_emails", JArray.FromObject(emails.ToArray())));
 			return _client
-				.PostAsync(string.Format("{0}/{1}/suppressions", _endpoint, groupId))
+				.PostAsync($"{_endpoint}/{groupId}/suppressions")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
@@ -95,7 +93,7 @@ namespace StrongGrid.Resources
 		public Task RemoveAddressFromSuppressionGroupAsync(int groupId, string email, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.DeleteAsync(string.Format("{0}/{1}/suppressions/{2}", _endpoint, groupId, email))
+				.DeleteAsync($"{_endpoint}/{groupId}/suppressions/{email}")
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}

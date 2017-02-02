@@ -15,7 +15,7 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class UnsubscribeGroups
 	{
-		private readonly string _endpoint;
+		private const string _endpoint = "asm/groups";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
@@ -23,10 +23,8 @@ namespace StrongGrid.Resources
 		/// See
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public UnsubscribeGroups(Pathoschild.Http.Client.IClient client, string endpoint = "/asm/groups")
+		public UnsubscribeGroups(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
@@ -56,7 +54,7 @@ namespace StrongGrid.Resources
 		public Task<SuppressionGroup> GetAsync(int groupId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync(string.Format("{0}/{1}", _endpoint, groupId))
+				.GetAsync($"{_endpoint}/{groupId}")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<SuppressionGroup>();
 		}
@@ -103,7 +101,7 @@ namespace StrongGrid.Resources
 			if (description != null) data.Add("description", description);
 
 			return _client
-				.PatchAsync(string.Format("{0}/{1}", _endpoint, groupId))
+				.PatchAsync($"{_endpoint}/{groupId}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<SuppressionGroup>();
@@ -120,7 +118,7 @@ namespace StrongGrid.Resources
 		public Task DeleteAsync(int groupId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.DeleteAsync(string.Format("{0}/{1}", _endpoint, groupId))
+				.DeleteAsync($"{_endpoint}/{groupId}")
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}

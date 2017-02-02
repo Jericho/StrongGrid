@@ -5,6 +5,7 @@ using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Model;
 using StrongGrid.UnitTests;
+using StrongGrid.Utilities;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -17,7 +18,7 @@ namespace StrongGrid.Resources.UnitTests
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "/templates";
+		private const string ENDPOINT = "templates";
 
 		private const string SINGLE_TEMPLATE_JSON = @"{
 			'id': 'e8ac01d5-a07a-4a71-b14c-4721136fe6aa',
@@ -108,10 +109,10 @@ namespace StrongGrid.Resources.UnitTests
 			var scopes = new[] { "mail.send", "alerts.create", "alerts.read" };
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, ENDPOINT).Respond("application/json", SINGLE_TEMPLATE_JSON);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", SINGLE_TEMPLATE_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var templates = new Templates(client, ENDPOINT);
+			var templates = new Templates(client);
 
 			// Act
 			var result = templates.CreateAsync(name, CancellationToken.None).Result;
@@ -129,10 +130,10 @@ namespace StrongGrid.Resources.UnitTests
 			var templateId = "e8ac01d5-a07a-4a71-b14c-4721136fe6aa";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/{templateId}").Respond("application/json", SINGLE_TEMPLATE_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, templateId)).Respond("application/json", SINGLE_TEMPLATE_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var templates = new Templates(client, ENDPOINT);
+			var templates = new Templates(client);
 
 			// Act
 			var result = templates.GetAsync(templateId, CancellationToken.None).Result;
@@ -150,10 +151,10 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, ENDPOINT).Respond("application/json", MULTIPLE_TEMPLATES_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", MULTIPLE_TEMPLATES_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var templates = new Templates(client, ENDPOINT);
+			var templates = new Templates(client);
 
 			// Act
 			var result = templates.GetAllAsync(CancellationToken.None).Result;
@@ -172,10 +173,10 @@ namespace StrongGrid.Resources.UnitTests
 			var templateId = "xxxxxxxx";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete, $"{ENDPOINT}/{templateId}").Respond(HttpStatusCode.OK);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, templateId)).Respond(HttpStatusCode.OK);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var templates = new Templates(client, ENDPOINT);
+			var templates = new Templates(client);
 
 			// Act
 			templates.DeleteAsync(templateId, CancellationToken.None).Wait(CancellationToken.None);
@@ -193,10 +194,10 @@ namespace StrongGrid.Resources.UnitTests
 			var name = "new_example_name";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), $"{ENDPOINT}/{templateId}").Respond("application/json", SINGLE_TEMPLATE_JSON);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(ENDPOINT, templateId)).Respond("application/json", SINGLE_TEMPLATE_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var templates = new Templates(client, ENDPOINT);
+			var templates = new Templates(client);
 
 			// Act
 			var result = templates.UpdateAsync(templateId, name, CancellationToken.None).Result;
@@ -219,10 +220,10 @@ namespace StrongGrid.Resources.UnitTests
 			var isActive = true;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, $"{ENDPOINT}/{templateId}/versions").Respond("application/json", SINGLE_TEMPLATE_VERSION_JSON);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, templateId, "versions")).Respond("application/json", SINGLE_TEMPLATE_VERSION_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var templates = new Templates(client, ENDPOINT);
+			var templates = new Templates(client);
 
 			// Act
 			var result = templates.CreateVersionAsync(templateId, name, subject, htmlContent, textContent, isActive, CancellationToken.None).Result;
@@ -241,10 +242,10 @@ namespace StrongGrid.Resources.UnitTests
 			var versionId = "8aefe0ee-f12b-4575-b5b7-c97e21cb36f3";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, $"{ENDPOINT}/{templateId}/versions/{versionId}/activate").Respond("application/json", SINGLE_TEMPLATE_VERSION_JSON);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, templateId, "versions", versionId, "activate")).Respond("application/json", SINGLE_TEMPLATE_VERSION_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var templates = new Templates(client, ENDPOINT);
+			var templates = new Templates(client);
 
 			// Act
 			var result = templates.ActivateVersionAsync(templateId, versionId, CancellationToken.None).Result;
@@ -263,10 +264,10 @@ namespace StrongGrid.Resources.UnitTests
 			var versionId = "5997fcf6-2b9f-484d-acd5-7e9a99f0dc1f";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/{templateId}/versions/{versionId}").Respond("application/json", SINGLE_TEMPLATE_VERSION_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, templateId, "versions", versionId)).Respond("application/json", SINGLE_TEMPLATE_VERSION_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var templates = new Templates(client, ENDPOINT);
+			var templates = new Templates(client);
 
 			// Act
 			var result = templates.GetVersionAsync(templateId, versionId, CancellationToken.None).Result;
@@ -286,10 +287,10 @@ namespace StrongGrid.Resources.UnitTests
 			var name = "updated_example_name";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), $"{ENDPOINT}/{templateId}/versions/{versionId}").Respond("application/json", SINGLE_TEMPLATE_VERSION_JSON);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(ENDPOINT, templateId, "versions", versionId)).Respond("application/json", SINGLE_TEMPLATE_VERSION_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var templates = new Templates(client, ENDPOINT);
+			var templates = new Templates(client);
 
 			// Act
 			var result = templates.UpdateVersionAsync(templateId, versionId, name, null, null, null, null, CancellationToken.None).Result;
@@ -308,10 +309,10 @@ namespace StrongGrid.Resources.UnitTests
 			var versionId = "8aefe0ee-f12b-4575-b5b7-c97e21cb36f3";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete, $"{ENDPOINT}/{templateId}/versions/{versionId}").Respond(HttpStatusCode.NoContent);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, templateId, "versions", versionId)).Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var templates = new Templates(client, ENDPOINT);
+			var templates = new Templates(client);
 
 			// Act
 			templates.DeleteVersionAsync(templateId, versionId, CancellationToken.None).Wait();

@@ -18,17 +18,15 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class Campaigns
 	{
-		private string _endpoint;
+		private const string _endpoint = "campaigns";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Campaigns" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public Campaigns(Pathoschild.Http.Client.IClient client, string endpoint = "/campaigns")
+		public Campaigns(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
@@ -75,9 +73,10 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Campaign[]> GetAllAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}?limit={limit}&offset={offset}";
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync(_endpoint)
+				.WithArgument("limit", limit)
+				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Campaign[]>("result");
 		}
@@ -92,9 +91,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Campaign> GetAsync(long campaignId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{campaignId}";
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/{campaignId}")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Campaign>();
 		}
@@ -109,9 +107,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(long campaignId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{campaignId}";
 			return _client
-				.DeleteAsync(endpoint)
+				.DeleteAsync($"{_endpoint}/{campaignId}")
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -141,10 +138,9 @@ namespace StrongGrid.Resources
 			segmentIds = segmentIds ?? Enumerable.Empty<long>();
 			categories = categories ?? Enumerable.Empty<string>();
 
-			var endpoint = $"{_endpoint}/{campaignId}";
 			var data = CreateJObjectForCampaign(title, senderId, subject, htmlContent, textContent, listIds, segmentIds, categories, suppressionGroupId, customUnsubscribeUrl, ipPool);
 			return _client
-				.PatchAsync(endpoint)
+				.PatchAsync($"{_endpoint}/{campaignId}")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Campaign>();
 		}
@@ -159,10 +155,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task SendNowAsync(long campaignId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{campaignId}/schedules/now";
 			var data = (JObject)null;
 			return _client
-				.PostAsync(endpoint)
+				.PostAsync($"{_endpoint}/{campaignId}/schedules/now")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
@@ -179,13 +174,12 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task ScheduleAsync(long campaignId, DateTime sendOn, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{campaignId}/schedules";
 			var data = new JObject
 			{
 				{ "send_at", sendOn.ToUnixTime() }
 			};
 			return _client
-				.PostAsync(endpoint)
+				.PostAsync($"{_endpoint}/{campaignId}/schedules")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
@@ -202,13 +196,12 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task RescheduleAsync(long campaignId, DateTime sendOn, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{campaignId}/schedules";
 			var data = new JObject
 			{
 				{ "send_at", sendOn.ToUnixTime() }
 			};
 			return _client
-				.PatchAsync(endpoint)
+				.PatchAsync($"{_endpoint}/{campaignId}/schedules")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
@@ -225,9 +218,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<DateTime?> GetScheduledDateAsync(long campaignId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{campaignId}/schedules";
 			var unixTime = await _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/{campaignId}/schedules")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<long>("send_at")
 				.ConfigureAwait(false);
@@ -246,9 +238,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task UnscheduleAsync(long campaignId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{campaignId}/schedules";
 			return _client
-				.DeleteAsync(endpoint)
+				.DeleteAsync($"{_endpoint}/{campaignId}/schedules")
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -272,9 +263,8 @@ namespace StrongGrid.Resources
 			if (emailAddresses.Count() == 1) data.Add("to", emailAddresses.First());
 			else data.Add("to", JArray.FromObject(emailAddresses.ToArray()));
 
-			var endpoint = $"{_endpoint}/{campaignId}/schedules/test";
 			return _client
-				.PostAsync(endpoint)
+				.PostAsync($"{_endpoint}/{campaignId}/schedules/test")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();

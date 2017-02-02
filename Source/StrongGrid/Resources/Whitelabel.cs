@@ -12,17 +12,15 @@ namespace StrongGrid.Resources
 	/// </summary>
 	public class Whitelabel
 	{
-		private readonly string _endpoint;
+		private const string _endpoint = "whitelabel";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Whitelabel" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public Whitelabel(Pathoschild.Http.Client.IClient client, string endpoint = "/whitelabel")
+		public Whitelabel(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
@@ -48,9 +46,13 @@ namespace StrongGrid.Resources
 		/// </remarks>
 		public Task<WhitelabelDomain[]> GetAllDomainsAsync(int limit = 50, int offset = 0, bool excludeSubusers = false, string username = null, string domain = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/domains?exclude_subusers={1}&limit={2}&offset={3}&username={4}&domain={5}", _endpoint, excludeSubusers ? "true" : "false", limit, offset, username, domain);
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync(_endpoint)
+				.WithArgument("exclude_subusers", excludeSubusers ? "true" : "false")
+				.WithArgument("limit", limit)
+				.WithArgument("offset", offset)
+				.WithArgument("username", username)
+				.WithArgument("domain", domain)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelDomain[]>();
 		}
@@ -65,9 +67,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<WhitelabelDomain> GetDomainAsync(long domainId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/domains/{1}", _endpoint, domainId);
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/domains/{domainId}")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelDomain>();
 		}
@@ -86,7 +87,6 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<WhitelabelDomain> CreateDomainAsync(string domain, string subdomain, bool automaticSecurity = false, bool customSpf = false, bool isDefault = false, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/domains", _endpoint);
 			var data = new JObject
 			{
 				{ "domain", domain },
@@ -96,7 +96,7 @@ namespace StrongGrid.Resources
 				{ "default", isDefault }
 			};
 			return _client
-				.PostAsync(endpoint)
+				.PostAsync($"{_endpoint}/domains")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelDomain>();
@@ -114,14 +114,13 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<WhitelabelDomain> UpdateDomainAsync(long domainId, bool isDefault = false, bool customSpf = false, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/domains/{1}", _endpoint, domainId);
 			var data = new JObject
 			{
 				{ "custom_spf", customSpf },
 				{ "default", isDefault }
 			};
 			return _client
-				.PatchAsync(endpoint)
+				.PatchAsync($"{_endpoint}/domains/{domainId}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelDomain>();
@@ -130,16 +129,15 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Delete a whitelabel domain.
 		/// </summary>
-		/// <param name="id">The identifier.</param>
+		/// <param name="domainId">The identifier.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteDomainAsync(long id, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteDomainAsync(long domainId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/domains/{1}", _endpoint, id);
 			return _client
-				.DeleteAsync(endpoint)
+				.DeleteAsync($"{_endpoint}/domains/{domainId}")
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -155,13 +153,12 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<WhitelabelDomain> AddIpAddressToDomainAsync(long domainId, string ipAddress, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/domains/{1}/ips", _endpoint, domainId);
 			var data = new JObject
 			{
 				{ "ip", ipAddress }
 			};
 			return _client
-				.PostAsync(endpoint)
+				.PostAsync($"{_endpoint}/domains/{domainId}/ips")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelDomain>();
@@ -178,9 +175,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<WhitelabelDomain> DeleteIpAddressFromDomainAsync(long domainId, string ipAddress, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/domains/{1}/ips/{2}", _endpoint, domainId, ipAddress);
 			return _client
-				.DeleteAsync(endpoint)
+				.DeleteAsync($"{_endpoint}/domains/{domainId}/ips/{ipAddress}")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelDomain>();
 		}
@@ -195,9 +191,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<DomainValidation> ValidateDomainAsync(long domainId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/domains/{1}/validate", _endpoint, domainId);
 			return _client
-				.PostAsync(endpoint)
+				.PostAsync($"{_endpoint}/domains/{domainId}/validate")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<DomainValidation>();
 		}
@@ -218,9 +213,9 @@ namespace StrongGrid.Resources
 		/// </remarks>
 		public Task<WhitelabelDomain> GetAssociatedDomainAsync(string username = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/domains/subuser?username={1}", _endpoint, username);
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/domains/subuser")
+				.WithArgument("username", username)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelDomain>();
 		}
@@ -235,9 +230,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DisassociateDomainAsync(string username = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/domains/subuser?username={1}", _endpoint, username);
 			return _client
-				.DeleteAsync(endpoint)
+				.DeleteAsync($"{_endpoint}/domains/subuser")
+				.WithArgument("username", username)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -253,13 +248,12 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<WhitelabelDomain> AssociateDomainAsync(long domainId, string username = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/domains/{1}/subuser", _endpoint, domainId);
 			var data = new JObject
 			{
 				{ "username", username }
 			};
 			return _client
-				.PostAsync(endpoint)
+				.PostAsync($"{_endpoint}/domains/{domainId}/subuser")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelDomain>();
@@ -283,9 +277,11 @@ namespace StrongGrid.Resources
 		/// </remarks>
 		public Task<WhitelabelIp[]> GetAllIpsAsync(string segmentPrefix = null, int limit = 50, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/ips?limit={1}&offset={2}&ip={3}", _endpoint, limit, offset, segmentPrefix);
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/ips")
+				.WithArgument("limit", limit)
+				.WithArgument("offset", offset)
+				.WithArgument("ip", segmentPrefix)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelIp[]>();
 		}
@@ -293,16 +289,15 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get a specific IP whitelabel
 		/// </summary>
-		/// <param name="id">The identifier.</param>
+		/// <param name="ipId">The identifier.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The <see cref="WhitelabelIp" />.
 		/// </returns>
-		public Task<WhitelabelIp> GetIpAsync(long id, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<WhitelabelIp> GetIpAsync(long ipId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/ips/{1}", _endpoint, id);
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/ips/{ipId}")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelIp>();
 		}
@@ -319,7 +314,6 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<WhitelabelIp> CreateIpAsync(string ipAddress, string domain, string subdomain, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/ips", _endpoint);
 			var data = new JObject
 			{
 				{ "ip", ipAddress },
@@ -327,7 +321,7 @@ namespace StrongGrid.Resources
 				{ "subdomain", subdomain }
 			};
 			return _client
-				.PostAsync(endpoint)
+				.PostAsync($"{_endpoint}/ips")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelIp>();
@@ -343,9 +337,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteIpAsync(long ipId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/ips/{1}", _endpoint, ipId);
 			return _client
-				.DeleteAsync(endpoint)
+				.DeleteAsync($"{_endpoint}/ips/{ipId}")
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -360,9 +353,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<IpValidation> ValidateIpAsync(long ipId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/ips/{1}/validate", _endpoint, ipId);
 			return _client
-				.PostAsync(endpoint)
+				.PostAsync($"{_endpoint}/ips/{ipId}/validate")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<IpValidation>();
 		}
@@ -384,9 +376,11 @@ namespace StrongGrid.Resources
 		/// </remarks>
 		public Task<WhitelabelLink[]> GetAllLinksAsync(string segmentPrefix = null, int limit = 50, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/links?limit={1}&offset={2}&ip={3}", _endpoint, limit, offset, segmentPrefix);
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/links")
+				.WithArgument("limit", limit)
+				.WithArgument("offset", offset)
+				.WithArgument("ip", segmentPrefix)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelLink[]>();
 		}
@@ -394,16 +388,15 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get a specific Link whitelabel
 		/// </summary>
-		/// <param name="id">The identifier.</param>
+		/// <param name="linkId">The identifier.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The <see cref="WhitelabelLink" />.
 		/// </returns>
-		public Task<WhitelabelLink> GetLinkAsync(long id, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<WhitelabelLink> GetLinkAsync(long linkId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/links/{1}", _endpoint, id);
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/links/{linkId}")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelLink>();
 		}
@@ -420,7 +413,6 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<WhitelabelLink> CreateLinkAsync(string domain, string subdomain, bool isDefault, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/links", _endpoint);
 			var data = new JObject
 			{
 				{ "default", isDefault },
@@ -428,7 +420,7 @@ namespace StrongGrid.Resources
 				{ "subdomain", subdomain }
 			};
 			return _client
-				.PostAsync(endpoint)
+				.PostAsync($"{_endpoint}/links")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelLink>();
@@ -445,13 +437,12 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<WhitelabelLink> UpdateLinkAsync(long linkId, bool isDefault, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/links/{1}", _endpoint, linkId);
 			var data = new JObject
 			{
 				{ "default", isDefault }
 			};
 			return _client
-				.PatchAsync(endpoint)
+				.PatchAsync($"{_endpoint}/links/{linkId}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelLink>();
@@ -467,9 +458,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteLinkAsync(long linkId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/links/{1}", _endpoint, linkId);
 			return _client
-				.DeleteAsync(endpoint)
+				.DeleteAsync($"{_endpoint}/links/{linkId}")
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -484,9 +474,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<WhitelabelLink> GetDefaultLinkAsync(string domain, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/links/default?domain={1}", _endpoint, domain);
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/links/default")
+				.WithArgument("domain", domain)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelLink>();
 		}
@@ -501,9 +491,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<LinkValidation> ValidateLinkAsync(long linkId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/links/{1}/validate", _endpoint, linkId);
 			return _client
-				.PostAsync(endpoint)
+				.PostAsync($"{_endpoint}/links/{linkId}/validate")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<LinkValidation>();
 		}
@@ -524,9 +513,9 @@ namespace StrongGrid.Resources
 		/// </remarks>
 		public Task<WhitelabelLink> GetAssociatedLinkAsync(string username = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/links/subuser?username={1}", _endpoint, username);
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/links/subuser")
+				.WithArgument("username", username)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelLink>();
 		}
@@ -541,9 +530,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DisassociateLinkAsync(string username = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/links/subuser?username={1}", _endpoint, username);
 			return _client
-				.DeleteAsync(endpoint)
+				.DeleteAsync($"{_endpoint}/links/subuser")
+				.WithArgument("username", username)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -559,13 +548,12 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<WhitelabelLink> AssociateLinkAsync(long linkId, string username = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/links/{1}/subuser", _endpoint, linkId);
 			var data = new JObject
 			{
 				{ "username", username }
 			};
 			return _client
-				.PostAsync(endpoint)
+				.PostAsync($"{_endpoint}/links/{linkId}/subuser")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelLink>();

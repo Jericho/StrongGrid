@@ -5,6 +5,7 @@ using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Model;
 using StrongGrid.UnitTests;
+using StrongGrid.Utilities;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -16,7 +17,7 @@ namespace StrongGrid.Resources.UnitTests
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "/alerts";
+		private const string ENDPOINT = "alerts";
 
 		private const string SINGLE_GLOBAL_SETTING_JSON = @"{
 			'name': 'bcc',
@@ -53,10 +54,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, "/user/settings/enforced_tls").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("user/settings/enforced_tls")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.GetEnforcedTlsSettingsAsync(CancellationToken.None).Result;
@@ -82,10 +83,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), "/user/settings/enforced_tls").Respond("application/json", apiResponse);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("user/settings/enforced_tls")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.UpdateEnforcedTlsSettingsAsync(requireTls, requireValidCert, CancellationToken.None).Result;
@@ -117,10 +118,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"/mail_settings?limit={limit}&offset={offset}").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri($"mail_settings?limit={limit}&offset={offset}")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.GetAllMailSettingsAsync(limit, offset, CancellationToken.None).Result;
@@ -152,10 +153,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"/partner_settings?limit={limit}&offset={offset}").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri($"partner_settings?limit={limit}&offset={offset}")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.GetAllPartnerSettingsAsync(limit, offset, CancellationToken.None).Result;
@@ -178,10 +179,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, "/partner_settings/new_relic").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("partner_settings/new_relic")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.GetNewRelicSettingsAsync(CancellationToken.None).Result;
@@ -207,10 +208,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), "/partner_settings/new_relic").Respond("application/json", apiResponse);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("partner_settings/new_relic")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.UpdateNewRelicSettingsAsync(enabled, licenseKey, CancellationToken.None).Result;
@@ -242,10 +243,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"/tracking_settings?limit={limit}&offset={offset}").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri($"tracking_settings?limit={limit}&offset={offset}")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.GetAllTrackingSettingsAsync(limit, offset, CancellationToken.None).Result;
@@ -267,10 +268,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, "/tracking_settings/click").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("tracking_settings/click")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.GetClickTrackingSettingsAsync(CancellationToken.None).Result;
@@ -292,10 +293,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), "/tracking_settings/click").Respond("application/json", apiResponse);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("tracking_settings/click")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.UpdateClickTrackingSettingsAsync(enabled, CancellationToken.None).Result;
@@ -320,10 +321,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, "/tracking_settings/google_analytics").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("tracking_settings/google_analytics")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.GetGoogleAnalyticsGlobalSettingsAsync(CancellationToken.None).Result;
@@ -361,10 +362,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), "/tracking_settings/google_analytics").Respond("application/json", apiResponse);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("tracking_settings/google_analytics")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.UpdateGoogleAnalyticsGlobalSettingsAsync(enabled, utmSource, utmMedium, utmTerm, utmContent, utmCampaign, CancellationToken.None).Result;
@@ -384,10 +385,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, "/tracking_settings/open").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("tracking_settings/open")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.GetOpenTrackingSettingsAsync(CancellationToken.None).Result;
@@ -409,10 +410,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), "/tracking_settings/open").Respond("application/json", apiResponse);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("tracking_settings/open")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.UpdateOpenTrackingSettingsAsync(enabled, CancellationToken.None).Result;
@@ -437,10 +438,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, "/tracking_settings/subscription").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("tracking_settings/subscription")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.GetSubscriptionTrackingSettingsAsync(CancellationToken.None).Result;
@@ -478,10 +479,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), "/tracking_settings/subscription").Respond("application/json", apiResponse);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("tracking_settings/subscription")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.UpdateSubscriptionTrackingSettingsAsync(enabled, landingPageHtml, url, replacementTag, htmlContent, textContent, CancellationToken.None).Result;
@@ -502,10 +503,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, "/mail_settings/bcc").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("mail_settings/bcc")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.GetBccMailSettingsAsync(CancellationToken.None).Result;
@@ -531,10 +532,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), "/mail_settings/bcc").Respond("application/json", apiResponse);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("mail_settings/bcc")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.UpdateBccMailSettingsAsync(enabled, email, CancellationToken.None).Result;
@@ -558,10 +559,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, "/mail_settings/address_whitelist").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("mail_settings/address_whitelist")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.GetAddressWhitelistMailSettingsAsync(CancellationToken.None).Result;
@@ -593,10 +594,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), "/mail_settings/address_whitelist").Respond("application/json", apiResponse);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("mail_settings/address_whitelist")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.UpdateAddressWhitelistMailSettingsAsync(enabled, emailAddresses, CancellationToken.None).Result;
@@ -618,10 +619,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, "/mail_settings/footer").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("mail_settings/footer")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.GetFooterMailSettingsAsync(CancellationToken.None).Result;
@@ -650,10 +651,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), "/mail_settings/footer").Respond("application/json", apiResponse);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("mail_settings/footer")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.UpdateFooterMailSettingsAsync(enabled, htmlContent, textContent, CancellationToken.None).Result;
@@ -674,10 +675,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, "/mail_settings/forward_spam").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("mail_settings/forward_spam")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.GetForwardSpamMailSettingsAsync(CancellationToken.None).Result;
@@ -703,10 +704,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), "/mail_settings/forward_spam").Respond("application/json", apiResponse);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("mail_settings/forward_spam")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.UpdateForwardSpamMailSettingsAsync(enabled, email, CancellationToken.None).Result;
@@ -726,10 +727,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, "/mail_settings/plain_content").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("mail_settings/plain_content")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.GetPlainContentMailSettingsAsync(CancellationToken.None).Result;
@@ -751,10 +752,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), "/mail_settings/plain_content").Respond("application/json", apiResponse);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("mail_settings/plain_content")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.UpdatePlainContentMailSettingsAsync(enabled, CancellationToken.None).Result;
@@ -776,10 +777,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, "/mail_settings/spam_check").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("mail_settings/spam_check")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.GetSpamCheckMailSettingsAsync(CancellationToken.None).Result;
@@ -808,10 +809,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), "/mail_settings/spam_check").Respond("application/json", apiResponse);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("mail_settings/spam_check")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.UpdateSpamCheckMailSettingsAsync(enabled, postToUrl, threshold, CancellationToken.None).Result;
@@ -832,10 +833,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, "/mail_settings/template").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("mail_settings/template")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.GetTemplateMailSettingsAsync(CancellationToken.None).Result;
@@ -861,10 +862,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), "/mail_settings/template").Respond("application/json", apiResponse);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("mail_settings/template")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.UpdateTemplateMailSettingsAsync(enabled, htmlContent, CancellationToken.None).Result;
@@ -886,10 +887,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, "/mail_settings/bounce_purge").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("mail_settings/bounce_purge")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.GetBouncePurgeMailSettingsAsync(CancellationToken.None).Result;
@@ -918,10 +919,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), "/mail_settings/bounce_purge").Respond("application/json", apiResponse);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("mail_settings/bounce_purge")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.UpdatBouncePurgeMailSettingsAsync(enabled, hardBounces, softBounces, CancellationToken.None).Result;
@@ -942,10 +943,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, "/mail_settings/forward_bounce").Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("mail_settings/forward_bounce")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.GetForwardBounceMailSettingsAsync(CancellationToken.None).Result;
@@ -971,10 +972,10 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), "/mail_settings/forward_bounce").Respond("application/json", apiResponse);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("mail_settings/forward_bounce")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client, ENDPOINT);
+			var settings = new Settings(client);
 
 			// Act
 			var result = settings.UpdateForwardBounceMailSettingsAsync(enabled, email, CancellationToken.None).Result;

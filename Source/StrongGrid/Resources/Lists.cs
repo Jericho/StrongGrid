@@ -17,17 +17,15 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class Lists
 	{
-		private readonly string _endpoint;
+		private const string _endpoint = "contactdb/lists";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Lists" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public Lists(Pathoschild.Http.Client.IClient client, string endpoint = "/contactdb/lists")
+		public Lists(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
@@ -81,9 +79,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(long listId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{listId}";
 			return _client
-				.DeleteAsync(endpoint)
+				.DeleteAsync($"{_endpoint}/{listId}")
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -116,9 +113,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<List> GetAsync(long listId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{listId}";
 			var list = await _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/{listId}")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<List>()
 				.ConfigureAwait(false);
@@ -136,13 +132,12 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task UpdateAsync(long listId, string name, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{listId}";
 			var data = new JObject
 			{
 				new JProperty("name", name)
 			};
 			return _client
-				.PatchAsync(endpoint)
+				.PatchAsync($"{_endpoint}/{listId}")
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -159,9 +154,10 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<Contact[]> GetRecipientsAsync(long listId, int recordsPerPage = 100, int page = 1, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{listId}/recipients?page_size={recordsPerPage}&page={page}";
 			var recipients = await _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/{listId}/recipients")
+				.WithArgument("page_size", recordsPerPage)
+				.WithArgument("page", page)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Contact[]>("recipients")
 				.ConfigureAwait(false);
@@ -179,9 +175,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task AddRecipientAsync(long listId, string contactId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{listId}/recipients/{contactId}";
 			return _client
-				.PostAsync(endpoint)
+				.PostAsync($"{_endpoint}/{listId}/recipients/{contactId}")
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -197,9 +192,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task RemoveRecipientAsync(long listId, string contactId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{listId}/recipients/{contactId}";
 			return _client
-				.DeleteAsync(endpoint)
+				.DeleteAsync($"{_endpoint}/{listId}/recipients/{contactId}")
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -215,10 +209,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task AddRecipientsAsync(long listId, IEnumerable<string> contactIds, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{listId}/recipients";
 			var data = JArray.FromObject(contactIds.ToArray());
 			return _client
-				.PostAsync(endpoint)
+				.PostAsync($"{_endpoint}/{listId}/recipients")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();

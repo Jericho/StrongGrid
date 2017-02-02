@@ -5,6 +5,7 @@ using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Model;
 using StrongGrid.UnitTests;
+using StrongGrid.Utilities;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -17,7 +18,7 @@ namespace StrongGrid.Resources.UnitTests
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "/suppression/spam_reports";
+		private const string ENDPOINT = "suppression/spam_reports";
 
 		private const string SINGLE_SPAM_REPORT_JSON = @"[
 				{
@@ -62,10 +63,10 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}?start_time=&end_time=&limit=25&offset=0").Respond("application/json", MULTIPLE_SPAM_REPORTS_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?start_time=&end_time=&limit=25&offset=0").Respond("application/json", MULTIPLE_SPAM_REPORTS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var spamReports = new SpamReports(client, ENDPOINT);
+			var spamReports = new SpamReports(client);
 
 			// Act
 			var result = spamReports.GetAllAsync().Result;
@@ -82,10 +83,10 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete, ENDPOINT).Respond(HttpStatusCode.NoContent);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT)).Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var spamReports = new SpamReports(client, ENDPOINT);
+			var spamReports = new SpamReports(client);
 
 			// Act
 			spamReports.DeleteAllAsync().Wait(CancellationToken.None);
@@ -102,10 +103,10 @@ namespace StrongGrid.Resources.UnitTests
 			var emailAddresses = new[] { "email1@test.com", "email2@test.com" };
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete, ENDPOINT).Respond(HttpStatusCode.NoContent);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT)).Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var spamReports = new SpamReports(client, ENDPOINT);
+			var spamReports = new SpamReports(client);
 
 			// Act
 			spamReports.DeleteMultipleAsync(emailAddresses).Wait(CancellationToken.None);
@@ -122,10 +123,10 @@ namespace StrongGrid.Resources.UnitTests
 			var emailAddress = "spam1@test.com";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete, $"{ENDPOINT}/{emailAddress}").Respond(HttpStatusCode.NoContent);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, emailAddress)).Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var spamReports = new SpamReports(client, ENDPOINT);
+			var spamReports = new SpamReports(client);
 
 			// Act
 			spamReports.DeleteAsync(emailAddress).Wait(CancellationToken.None);
@@ -142,10 +143,10 @@ namespace StrongGrid.Resources.UnitTests
 			var emailAddress = "test1@example.com";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/{emailAddress}").Respond("application/json", SINGLE_SPAM_REPORT_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, emailAddress)).Respond("application/json", SINGLE_SPAM_REPORT_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var spamReports = new SpamReports(client, ENDPOINT);
+			var spamReports = new SpamReports(client);
 
 			// Act
 			var result = spamReports.GetAsync(emailAddress, CancellationToken.None).Result;

@@ -19,17 +19,15 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class Mail
 	{
-		private readonly string _endpoint;
+		private const string _endpoint = "mail";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Mail" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public Mail(Pathoschild.Http.Client.IClient client, string endpoint = "/mail")
+		public Mail(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
@@ -259,9 +257,8 @@ namespace StrongGrid.Resources
 				data.Add("custom_args", args);
 			}
 
-			var endpoint = $"{_endpoint}/send";
 			return _client
-				.PostAsync(endpoint)
+				.PostAsync($"{_endpoint}/send")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();

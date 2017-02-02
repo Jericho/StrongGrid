@@ -19,17 +19,15 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class ApiKeys
 	{
-		private readonly string _endpoint;
+		private const string _endpoint = "api_keys";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ApiKeys" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public ApiKeys(Pathoschild.Http.Client.IClient client, string endpoint = "/api_keys")
+		public ApiKeys(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
@@ -43,9 +41,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<ApiKey> GetAsync(string keyId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/{1}", _endpoint, keyId);
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/{keyId}")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<ApiKey>();
 		}
@@ -100,9 +97,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(string keyId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}/{1}", _endpoint, keyId);
 			return _client
-				.DeleteAsync(endpoint)
+				.DeleteAsync($"{_endpoint}/{keyId}")
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -119,9 +115,8 @@ namespace StrongGrid.Resources
 		{
 			scopes = scopes ?? Enumerable.Empty<string>();
 
-			var endpoint = string.Format("{0}/{1}", _endpoint, keyId);
 			var data = CreateJObjectForApiKey(name, scopes);
-			return (scopes.Any() ? _client.PutAsync(endpoint) : _client.PatchAsync(endpoint))
+			return (scopes.Any() ? _client.PutAsync($"{_endpoint}/{keyId}") : _client.PatchAsync($"{_endpoint}/{keyId}"))
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<ApiKey>();

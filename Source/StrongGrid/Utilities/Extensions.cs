@@ -228,11 +228,6 @@ namespace StrongGrid.Utilities
 			return await response.AsString(encoding).ConfigureAwait(false);
 		}
 
-		public static Uri Append(this Uri uri, params string[] paths)
-		{
-			return new Uri(paths.Aggregate(uri.AbsoluteUri, (current, path) => $"{current.TrimEnd('/')}/{path.TrimStart('/')}"));
-		}
-
 		/// <summary>Asynchronously converts the JSON encoded content aand convert it to a 'SendGrid' object of the desired type.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="httpContent">The content</param>

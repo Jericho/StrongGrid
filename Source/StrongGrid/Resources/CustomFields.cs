@@ -17,17 +17,15 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class CustomFields
 	{
-		private readonly string _endpoint;
+		private const string _endpoint = "contactdb/custom_fields";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CustomFields" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public CustomFields(Pathoschild.Http.Client.IClient client, string endpoint = "/contactdb/custom_fields")
+		public CustomFields(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
@@ -77,9 +75,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<CustomFieldMetadata> GetAsync(int fieldId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{fieldId}";
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/{fieldId}")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<CustomFieldMetadata>();
 		}
@@ -94,9 +91,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(int fieldId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{fieldId}";
 			return _client
-				.DeleteAsync(endpoint)
+				.DeleteAsync($"{_endpoint}/{fieldId}")
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -110,9 +106,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Field[]> GetReservedFieldsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = "/contactdb/reserved_fields";
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync("contactdb/reserved_fields")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Field[]>("reserved_fields");
 		}

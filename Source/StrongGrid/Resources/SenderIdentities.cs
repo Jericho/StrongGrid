@@ -15,17 +15,15 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class SenderIdentities
 	{
-		private readonly string _endpoint;
+		private const string _endpoint = "senders";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SenderIdentities" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public SenderIdentities(Pathoschild.Http.Client.IClient client, string endpoint = "/senders")
+		public SenderIdentities(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
@@ -81,9 +79,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<SenderIdentity> GetAsync(long senderId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{senderId}";
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/{senderId}")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<SenderIdentity>();
 		}
@@ -107,11 +104,10 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<SenderIdentity> UpdateAsync(long senderId, string nickname = null, MailAddress from = null, MailAddress replyTo = null, string address1 = null, string address2 = null, string city = null, string state = null, string zip = null, string country = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{senderId}";
 			var data = CreateJObjectForSenderIdentity(nickname, from, replyTo, address1, address2, city, state, zip, country);
 
 			return _client
-				.PatchAsync(endpoint)
+				.PatchAsync($"{_endpoint}/{senderId}")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<SenderIdentity>();
 		}
@@ -126,9 +122,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(long senderId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{senderId}";
 			return _client
-				.DeleteAsync(endpoint)
+				.DeleteAsync($"{_endpoint}/{senderId}")
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -143,9 +138,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task ResendVerification(long senderId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{senderId}/resend_verification";
 			return _client
-				.PostAsync(endpoint)
+				.PostAsync($"{_endpoint}/{senderId}/resend_verification")
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}

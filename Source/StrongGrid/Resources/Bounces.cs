@@ -18,17 +18,15 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class Bounces
 	{
-		private readonly string _endpoint;
+		private const string _endpoint = "suppression/bounces";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Bounces" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public Bounces(Pathoschild.Http.Client.IClient client, string endpoint = "/suppression/bounces")
+		public Bounces(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
@@ -43,9 +41,10 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Bounce[]> GetAsync(DateTime? start = null, DateTime? end = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}?start_time={start.Value.ToUnixTime().ToString()}&end_time={end.Value.ToUnixTime().ToString()}";
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync(_endpoint)
+				.WithArgument("start_time", start.Value.ToUnixTime())
+				.WithArgument("end_time", end.Value.ToUnixTime())
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Bounce[]>();
 		}
@@ -60,9 +59,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Bounce[]> GetAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{email}";
 			return _client
-				.GetAsync(endpoint)
+				.GetAsync($"{_endpoint}/{email}")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Bounce[]>();
 		}
@@ -112,9 +110,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = $"{_endpoint}/{email}";
 			return _client
-				.DeleteAsync(endpoint)
+				.DeleteAsync($"{_endpoint}/{email}")
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}

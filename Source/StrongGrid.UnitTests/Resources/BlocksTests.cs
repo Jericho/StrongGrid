@@ -5,6 +5,7 @@ using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Model;
 using StrongGrid.UnitTests;
+using StrongGrid.Utilities;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -16,7 +17,7 @@ namespace StrongGrid.Resources.UnitTests
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "/suppression/blocks";
+		private const string ENDPOINT = "suppression/blocks";
 
 		private const string SINGLE_BLOCK_JSON = @"{
 			'created': 1443651154,
@@ -56,10 +57,10 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}?start_time=&end_time=&limit=25&offset=0").Respond("application/json", MULTIPLE_BLOCKS_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?start_time=&end_time=&limit=25&offset=0").Respond("application/json", MULTIPLE_BLOCKS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var blocks = new Blocks(client, ENDPOINT);
+			var blocks = new Blocks(client);
 
 			// Act
 			var result = blocks.GetAllAsync().Result;
@@ -77,10 +78,10 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete, ENDPOINT).Respond(HttpStatusCode.NoContent);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT)).Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var blocks = new Blocks(client, ENDPOINT);
+			var blocks = new Blocks(client);
 
 			// Act
 			blocks.DeleteAllAsync().Wait(CancellationToken.None);
@@ -97,10 +98,10 @@ namespace StrongGrid.Resources.UnitTests
 			var emailAddresses = new[] { "email1@test.com", "email2@test.com" };
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete, ENDPOINT).Respond(HttpStatusCode.NoContent);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT)).Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var blocks = new Blocks(client, ENDPOINT);
+			var blocks = new Blocks(client);
 
 			// Act
 			blocks.DeleteMultipleAsync(emailAddresses).Wait(CancellationToken.None);
@@ -117,10 +118,10 @@ namespace StrongGrid.Resources.UnitTests
 			var emailAddress = "spam1@test.com";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete, $"{ENDPOINT}/{emailAddress}").Respond(HttpStatusCode.NoContent);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, emailAddress)).Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var blocks = new Blocks(client, ENDPOINT);
+			var blocks = new Blocks(client);
 
 			// Act
 			blocks.DeleteAsync(emailAddress).Wait(CancellationToken.None);
@@ -137,10 +138,10 @@ namespace StrongGrid.Resources.UnitTests
 			var emailAddress = "user1@example.com";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/{emailAddress}").Respond("application/json", SINGLE_BLOCK_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, emailAddress)).Respond("application/json", SINGLE_BLOCK_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var blocks = new Blocks(client, ENDPOINT);
+			var blocks = new Blocks(client);
 
 			// Act
 			var result = blocks.GetAsync(emailAddress, CancellationToken.None).Result;

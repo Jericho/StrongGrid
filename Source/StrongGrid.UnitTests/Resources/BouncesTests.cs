@@ -18,7 +18,7 @@ namespace StrongGrid.Resources.UnitTests
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "/suppression/bounces";
+		private const string ENDPOINT = "suppression/bounces";
 
 		private const string SINGLE_BOUNCE_JSON = @"{
 			'created': 1443651125,
@@ -67,10 +67,10 @@ namespace StrongGrid.Resources.UnitTests
 			var end = new DateTime(2015, 9, 30, 23, 59, 59, DateTimeKind.Utc);
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}?start_time={start.ToUnixTime()}&end_time={end.ToUnixTime()}").Respond("application/json", MULTIPLE_BOUNCES_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?start_time={start.ToUnixTime()}&end_time={end.ToUnixTime()}").Respond("application/json", MULTIPLE_BOUNCES_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var bounces = new Bounces(client, ENDPOINT);
+			var bounces = new Bounces(client);
 
 			// Act
 			var result = bounces.GetAsync(start, end, CancellationToken.None).Result;
@@ -89,10 +89,10 @@ namespace StrongGrid.Resources.UnitTests
 			var email = "bounce1@test.com";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/{email}").Respond("application/json", MULTIPLE_BOUNCES_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, email)).Respond("application/json", MULTIPLE_BOUNCES_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var bounces = new Bounces(client, ENDPOINT);
+			var bounces = new Bounces(client);
 
 			// Act
 			var result = bounces.GetAsync(email, CancellationToken.None).Result;
@@ -109,10 +109,10 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete, ENDPOINT).Respond(HttpStatusCode.NoContent);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT)).Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var bounces = new Bounces(client, ENDPOINT);
+			var bounces = new Bounces(client);
 
 			// Act
 			bounces.DeleteAllAsync(CancellationToken.None).Wait();
@@ -129,10 +129,10 @@ namespace StrongGrid.Resources.UnitTests
 			var email = "email1@test.com";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete, $"{ENDPOINT}/{email}").Respond(HttpStatusCode.NoContent);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, email)).Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var bounces = new Bounces(client, ENDPOINT);
+			var bounces = new Bounces(client);
 
 			// Act
 			bounces.DeleteAsync(email, CancellationToken.None).Wait();
@@ -149,10 +149,10 @@ namespace StrongGrid.Resources.UnitTests
 			var emails = new[] { "email1@test.com", "email2@test.com" };
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete, ENDPOINT).Respond(HttpStatusCode.NoContent);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT)).Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var bounces = new Bounces(client, ENDPOINT);
+			var bounces = new Bounces(client);
 
 			// Act
 			bounces.DeleteAsync(emails, CancellationToken.None).Wait();

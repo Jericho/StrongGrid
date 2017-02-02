@@ -2,6 +2,7 @@ using Moq;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.UnitTests;
+using StrongGrid.Utilities;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -13,7 +14,7 @@ namespace StrongGrid.Resources.UnitTests
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "/categories";
+		private const string ENDPOINT = "categories";
 
 		private const string MULTIPLE_CATEGORIES_JSON = @"[
 			{ 'category': 'cat1' },
@@ -33,10 +34,10 @@ namespace StrongGrid.Resources.UnitTests
 			var offset = 0;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}?category=&limit={limit}&offset={offset}").Respond("application/json", MULTIPLE_CATEGORIES_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?category=&limit={limit}&offset={offset}").Respond("application/json", MULTIPLE_CATEGORIES_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var categories = new Categories(client, ENDPOINT);
+			var categories = new Categories(client);
 
 			// Act
 			var result = categories.GetAsync(null, limit, offset, CancellationToken.None).Result;

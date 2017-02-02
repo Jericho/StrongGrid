@@ -3,6 +3,7 @@ using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Model;
 using StrongGrid.UnitTests;
+using StrongGrid.Utilities;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -15,7 +16,7 @@ namespace StrongGrid.Resources.UnitTests
 		#region FIELDS
 
 		private const string BASE_URI = "https://api.sendgrid.com";
-		private const string ENDPOINT = "/api_keys";
+		private const string ENDPOINT = "api_keys";
 
 		private const string SINGLE_API_KEY_JSON = @"{
 			'api_key': 'SG.xxxxxxxx.yyyyyyyy',
@@ -66,10 +67,10 @@ namespace StrongGrid.Resources.UnitTests
 			var scopes = new[] { "mail.send", "alerts.create", "alerts.read" };
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, ENDPOINT).Respond("application/json", SINGLE_API_KEY_JSON);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", SINGLE_API_KEY_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var apiKeys = new ApiKeys(client, ENDPOINT);
+			var apiKeys = new ApiKeys(client);
 
 			// Act
 			var result = apiKeys.CreateAsync(name, scopes, CancellationToken.None).Result;
@@ -87,10 +88,10 @@ namespace StrongGrid.Resources.UnitTests
 			var keyId = "xxxxxxxx";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, $"{ENDPOINT}/{keyId}").Respond("application/json", SINGLE_API_KEY_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, keyId)).Respond("application/json", SINGLE_API_KEY_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var apiKeys = new ApiKeys(client, ENDPOINT);
+			var apiKeys = new ApiKeys(client);
 
 			// Act
 			var result = apiKeys.GetAsync(keyId, CancellationToken.None).Result;
@@ -106,10 +107,10 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, ENDPOINT).Respond("application/json", MULTIPLE_API_KEY_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", MULTIPLE_API_KEY_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var apiKeys = new ApiKeys(client, ENDPOINT);
+			var apiKeys = new ApiKeys(client);
 
 			// Act
 			var result = apiKeys.GetAllAsync(CancellationToken.None).Result;
@@ -128,10 +129,10 @@ namespace StrongGrid.Resources.UnitTests
 			var keyId = "xxxxxxxx";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete, $"{ENDPOINT}/{keyId}").Respond(HttpStatusCode.OK);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, keyId)).Respond(HttpStatusCode.OK);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var apiKeys = new ApiKeys(client, ENDPOINT);
+			var apiKeys = new ApiKeys(client);
 
 			// Act
 			apiKeys.DeleteAsync(keyId, CancellationToken.None).Wait(CancellationToken.None);
@@ -150,10 +151,10 @@ namespace StrongGrid.Resources.UnitTests
 			var scopes = new[] { "mail.send", "alerts.create", "alerts.read" };
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Put, $"{ENDPOINT}/{keyId}").Respond("application/json", SINGLE_API_KEY_JSON);
+			mockHttp.Expect(HttpMethod.Put, Utils.GetSendGridApiUri(ENDPOINT, keyId)).Respond("application/json", SINGLE_API_KEY_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var apiKeys = new ApiKeys(client, ENDPOINT);
+			var apiKeys = new ApiKeys(client);
 
 			// Act
 			var result = apiKeys.UpdateAsync(keyId, name, scopes, CancellationToken.None).Result;
@@ -173,10 +174,10 @@ namespace StrongGrid.Resources.UnitTests
 			var scopes = (string[])null;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), $"{ENDPOINT}/{keyId}").Respond("application/json", SINGLE_API_KEY_JSON);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(ENDPOINT, keyId)).Respond("application/json", SINGLE_API_KEY_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var apiKeys = new ApiKeys(client, ENDPOINT);
+			var apiKeys = new ApiKeys(client);
 
 			// Act
 			var result = apiKeys.UpdateAsync(keyId, name, scopes, CancellationToken.None).Result;

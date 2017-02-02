@@ -17,17 +17,15 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class User
 	{
-		private readonly string _endpoint;
+		private const string _endpoint = "user/profile";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="User" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public User(Pathoschild.Http.Client.IClient client, string endpoint = "/user/profile")
+		public User(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
@@ -83,7 +81,7 @@ namespace StrongGrid.Resources
 		public Task<Account> GetAccountAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync("/user/account")
+				.GetAsync("user/account")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Account>();
 		}
@@ -98,7 +96,7 @@ namespace StrongGrid.Resources
 		public Task<string> GetEmailAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync("/user/email")
+				.GetAsync("user/email")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<string>("email");
 		}
@@ -117,7 +115,7 @@ namespace StrongGrid.Resources
 			data.Add("email", email);
 
 			return _client
-				.PutAsync("/user/email")
+				.PutAsync("user/email")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<string>("email");
@@ -133,7 +131,7 @@ namespace StrongGrid.Resources
 		public Task<string> GetUsernameAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync("/user/username")
+				.GetAsync("user/username")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<string>("username");
 		}
@@ -152,7 +150,7 @@ namespace StrongGrid.Resources
 			data.Add("username", username);
 
 			return _client
-				.PutAsync("/user/username")
+				.PutAsync("user/username")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<string>("username");
@@ -168,7 +166,7 @@ namespace StrongGrid.Resources
 		public Task<UserCredits> GetCreditsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync("/user/credits")
+				.GetAsync("user/credits")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<UserCredits>();
 		}
@@ -189,7 +187,7 @@ namespace StrongGrid.Resources
 			data.Add("old_password", newPassword);
 
 			return _client
-				.PutAsync("/user/password")
+				.PutAsync("user/password")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
@@ -205,7 +203,7 @@ namespace StrongGrid.Resources
 		public Task<string[]> GetPermissionsAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync("/scopes")
+				.GetAsync("scopes")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<string[]>("scopes");
 		}
