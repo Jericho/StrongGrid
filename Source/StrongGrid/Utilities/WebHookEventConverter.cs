@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StrongGrid.Model.Webhooks;
 using System;
@@ -37,8 +37,10 @@ namespace StrongGrid.Utilities
 			"url",
 			"url_offset",
 			"useragent",
-			"userid",
-			"pool"
+			"sg_user_id",
+			"pool",
+			"marketing_campaign_id",
+			"marketing_campaign_name"
 		};
 
 		/// <summary>
