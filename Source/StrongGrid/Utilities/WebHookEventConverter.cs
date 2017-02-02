@@ -40,7 +40,9 @@ namespace StrongGrid.Utilities
 			"sg_user_id",
 			"pool",
 			"marketing_campaign_id",
-			"marketing_campaign_name"
+			"marketing_campaign_name",
+			"marketing_campaign_version",
+			"marketing_campaign_split_id"
 		};
 
 		/// <summary>
