@@ -23,7 +23,8 @@ namespace StrongGrid.Utilities
 
 		/// <summary>Method invoked just after the HTTP response is received. This method can modify the incoming HTTP response.</summary>
 		/// <param name="response">The HTTP response.</param>
-		public void OnResponse(IResponse response)
+		/// <param name="httpErrorAsException">Whether HTTP error responses should be raised as exceptions.</param>
+		public void OnResponse(IResponse response, bool httpErrorAsException)
 		{
 			// The default FluentHttpClient error filter handles HTTP problems
 			if (!response.Message.IsSuccessStatusCode) return;
