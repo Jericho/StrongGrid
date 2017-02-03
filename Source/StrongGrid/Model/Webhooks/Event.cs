@@ -109,7 +109,16 @@ namespace StrongGrid.Model.Webhooks
 		/// The marketing campaign split identifier.
 		/// </value>
 		[JsonProperty("marketing_campaign_split_id", NullValueHandling = NullValueHandling.Ignore)]
-		public long MarketingCampaignSplitId { get; set; }
+		public long? MarketingCampaignSplitId { get; set; }
+
+		/// <summary>
+		/// Gets or sets the user identifier.
+		/// </summary>
+		/// <value>
+		/// Theuser identifier.
+		/// </value>
+		[JsonProperty("sg_user_id", NullValueHandling = NullValueHandling.Ignore)]
+		public long? UserId { get; set; }
 
 		/// <summary>
 		/// Gets the unique arguments.
