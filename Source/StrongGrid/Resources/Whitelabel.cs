@@ -47,7 +47,7 @@ namespace StrongGrid.Resources
 		public Task<WhitelabelDomain[]> GetAllDomainsAsync(int limit = 50, int offset = 0, bool excludeSubusers = false, string username = null, string domain = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync(_endpoint)
+				.GetAsync($"{_endpoint}/domains")
 				.WithArgument("exclude_subusers", excludeSubusers ? "true" : "false")
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
