@@ -3,6 +3,7 @@ using Pathoschild.Http.Client;
 using Pathoschild.Http.Client.Extensibility;
 using System;
 using System.IO;
+using System.Net.Http;
 
 namespace StrongGrid.Utilities
 {
@@ -26,9 +27,19 @@ namespace StrongGrid.Utilities
 		/// <param name="httpErrorAsException">Whether HTTP error responses should be raised as exceptions.</param>
 		public void OnResponse(IResponse response, bool httpErrorAsException)
 		{
-			// The default FluentHttpClient error filter handles HTTP problems
-			if (!response.Message.IsSuccessStatusCode) return;
+			if (response.Message.IsSuccessStatusCode) return;
 
+			var errorMessage = GetErrorMessage(response.Message);
+			if (string.IsNullOrEmpty(errorMessage))
+			{
+				errorMessage = $"{(int)response.Message.StatusCode}: {response.Message.ReasonPhrase}";
+			}
+
+			throw new Exception(errorMessage);
+		}
+
+		private static string GetErrorMessage(HttpResponseMessage message)
+		{
 			// In case of an error, the SendGrid API returns a JSON string that looks like this:
 			// {
 			//   "errors": [
@@ -40,24 +51,22 @@ namespace StrongGrid.Utilities
 			//  ]
 			// }
 
-			// We assume no error occured if there is no content
-			if (response.Message.Content == null) return;
+			if (message.Content == null) return null;
 
-			var isError = false;
 			var errorMessage = string.Empty;
 			var responseContent = string.Empty;
 
 			// This is important: we must make a copy of the response stream otherwise we won't be able to read it outside of this error handler
 			using (var ms = new MemoryStream())
 			{
-				response.Message.Content.CopyToAsync(ms).Wait();
+				message.Content.CopyToAsync(ms).Wait();
 				ms.Position = 0;
 				var sr = new StreamReader(ms);
 				responseContent = sr.ReadToEnd();
 			}
 
 			// We assume no error occured if the content is empty
-			if (string.IsNullOrEmpty(responseContent)) return;
+			if (string.IsNullOrEmpty(responseContent)) return null;
 
 			try
 			{
@@ -65,13 +74,10 @@ namespace StrongGrid.Utilities
 				var jObject = JObject.Parse(responseContent);
 				var errorsArray = (JArray)jObject["errors"];
 
-				isError = errorsArray != null;
+				if (errorsArray == null || errorsArray.Count == 0) return null;
 
 				// Get the first error message
-				if (isError && errorsArray.Count >= 1)
-				{
-					errorMessage = errorsArray[0]["message"].ToString();
-				}
+				errorMessage = errorsArray[0]["message"].ToString();
 #pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
 			}
 			catch
@@ -80,15 +86,7 @@ namespace StrongGrid.Utilities
 				// Intentionally ignore parsing errors
 			}
 
-			if (isError)
-			{
-				if (string.IsNullOrEmpty(errorMessage))
-				{
-					errorMessage = $"StatusCode: {response.Message.StatusCode}";
-				}
-
-				throw new Exception(errorMessage);
-			}
+			return errorMessage;
 		}
 
 		#endregion

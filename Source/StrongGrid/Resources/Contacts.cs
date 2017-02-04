@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
+using Pathoschild.Http.Client.Extensibility;
 using StrongGrid.Model;
 using StrongGrid.Utilities;
 using System;
@@ -104,15 +105,11 @@ namespace StrongGrid.Resources
 				data.Add(ConvertContactToJObject(contact));
 			}
 
-			var request = _client
+			return _client
 				.PostAsync(_endpoint)
 				.WithBody(data)
-				.WithCancellationToken(cancellationToken);
-
-			// We must turn off error handling because SendGrid may intentionally return 'Errors' to indicate that some records did not import
-			request.Filters.Remove<SendGridErrorHandler>();
-
-			return request.As<ImportResult>();
+				.WithCancellationToken(cancellationToken)
+				.As<ImportResult>();
 		}
 
 		/// <summary>

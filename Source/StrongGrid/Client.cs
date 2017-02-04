@@ -1,4 +1,5 @@
 ﻿using Pathoschild.Http.Client;
+using Pathoschild.Http.Client.Extensibility;
 using StrongGrid.Resources;
 using StrongGrid.Utilities;
 using System;
@@ -288,6 +289,7 @@ namespace StrongGrid
 				.SetUserAgent($"StrongGrid/{Version} (+https://github.com/Jericho/StrongGrid)")
 				.SetRequestCoordinator(new SendGridRetryStrategy());
 
+			_fluentClient.Filters.Remove<DefaultErrorFilter>();
 			_fluentClient.Filters.Add(new SendGridErrorHandler());
 
 			if (!string.IsNullOrEmpty(apiKey)) _fluentClient.SetBearerAuthentication(apiKey);
