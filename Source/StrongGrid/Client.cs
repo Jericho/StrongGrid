@@ -174,6 +174,8 @@ namespace StrongGrid
 		/// </value>
 		public Statistics Statistics { get; private set; }
 
+		public SubUsers SubUsers { get; private set; }
+
 		/// <summary>
 		/// Gets the Suppressions resource.
 		/// </summary>
@@ -317,6 +319,7 @@ namespace StrongGrid
 			Settings = new Settings(this);
 			SpamReports = new SpamReports(this);
 			Statistics = new Statistics(this);
+			SubUsers = new SubUsers(this);
 			Suppressions = new Suppressions(this);
 			Templates = new Templates(this);
 			UnsubscribeGroups = new UnsubscribeGroups(this);

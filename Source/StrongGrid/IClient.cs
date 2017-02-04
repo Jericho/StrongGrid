@@ -147,6 +147,8 @@ namespace StrongGrid
 		/// </value>
 		Statistics Statistics { get; }
 
+		SubUsers SubUsers { get; }
+
 		/// <summary>
 		/// Gets the Suppressions resource.
 		/// </summary>
