@@ -191,16 +191,6 @@ namespace StrongGrid.Utilities
 			return request.WithBody(body, new MediaTypeHeaderValue("application/json"));
 		}
 
-		/// <summary>Create an asynchronous HTTP PATCH request message (but don't dispatch it yet).</summary>
-		/// <param name="client">The client.</param>
-		/// <param name="resource">The URI to send the request to.</param>
-		/// <returns>Returns a request builder.</returns>
-		/// <exception cref="ObjectDisposedException">The instance has been disposed.</exception>
-		public static IRequest PatchAsync(this Pathoschild.Http.Client.IClient client, string resource)
-		{
-			return client.SendAsync(new HttpMethod("PATCH"), resource);
-		}
-
 		/// <summary>Asynchronously retrieve the response body as a <see cref="string"/>.</summary>
 		/// <param name="response">The response</param>
 		/// <param name="encoding">The encoding. You can leave this parameter null and the encoding will be
