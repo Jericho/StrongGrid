@@ -45,7 +45,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PostAsync(_endpoint)
-				.WithJsonBody(data)
+				.WithBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<CustomFieldMetadata>();
 		}

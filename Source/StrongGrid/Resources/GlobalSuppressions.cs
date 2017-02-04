@@ -70,7 +70,7 @@ namespace StrongGrid.Resources
 			var data = new JObject(new JProperty("recipient_emails", JArray.FromObject(emails.ToArray())));
 			return _client
 				.PostAsync(_endpoint)
-				.WithJsonBody(data)
+				.WithBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}

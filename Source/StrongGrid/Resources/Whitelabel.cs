@@ -97,7 +97,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PostAsync($"{_endpoint}/domains")
-				.WithJsonBody(data)
+				.WithBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelDomain>();
 		}
@@ -121,7 +121,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PatchAsync($"{_endpoint}/domains/{domainId}")
-				.WithJsonBody(data)
+				.WithBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelDomain>();
 		}
@@ -159,7 +159,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PostAsync($"{_endpoint}/domains/{domainId}/ips")
-				.WithJsonBody(data)
+				.WithBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelDomain>();
 		}
@@ -254,7 +254,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PostAsync($"{_endpoint}/domains/{domainId}/subuser")
-				.WithJsonBody(data)
+				.WithBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelDomain>();
 		}
@@ -322,7 +322,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PostAsync($"{_endpoint}/ips")
-				.WithJsonBody(data)
+				.WithBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelIp>();
 		}
@@ -421,7 +421,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PostAsync($"{_endpoint}/links")
-				.WithJsonBody(data)
+				.WithBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelLink>();
 		}
@@ -443,7 +443,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PatchAsync($"{_endpoint}/links/{linkId}")
-				.WithJsonBody(data)
+				.WithBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelLink>();
 		}
@@ -554,7 +554,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PostAsync($"{_endpoint}/links/{linkId}/subuser")
-				.WithJsonBody(data)
+				.WithBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelabelLink>();
 		}

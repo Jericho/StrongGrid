@@ -181,16 +181,6 @@ namespace StrongGrid.Utilities
 			return await response.Content.AsSendGridObject<T>(propertyName).ConfigureAwait(false);
 		}
 
-		/// <summary>Set the body content of the HTTP request.</summary>
-		/// <typeparam name="T">The type of object to serialize into a JSON string.</typeparam>
-		/// <param name="request">The request.</param>
-		/// <param name="body">The value to serialize into the HTTP body content.</param>
-		/// <returns>Returns the request builder for chaining.</returns>
-		public static IRequest WithJsonBody<T>(this IRequest request, T body)
-		{
-			return request.WithBody(body, new MediaTypeHeaderValue("application/json"));
-		}
-
 		/// <summary>Asynchronously retrieve the response body as a <see cref="string"/>.</summary>
 		/// <param name="response">The response</param>
 		/// <param name="encoding">The encoding. You can leave this parameter null and the encoding will be

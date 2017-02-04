@@ -84,7 +84,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PostAsync("user/scheduled_sends")
-				.WithJsonBody(data)
+				.WithBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -106,7 +106,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PostAsync("user/scheduled_sends")
-				.WithJsonBody(data)
+				.WithBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}

@@ -45,7 +45,7 @@ namespace StrongGrid.Resources
 			};
 			var list = await _client
 				.PostAsync(_endpoint)
-				.WithJsonBody(data)
+				.WithBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<List>()
 				.ConfigureAwait(false);
@@ -98,7 +98,7 @@ namespace StrongGrid.Resources
 			var data = JArray.FromObject(listIds.ToArray());
 			return _client
 				.DeleteAsync(_endpoint)
-				.WithJsonBody(data)
+				.WithBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -138,6 +138,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PatchAsync($"{_endpoint}/{listId}")
+				.WithBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -212,7 +213,7 @@ namespace StrongGrid.Resources
 			var data = JArray.FromObject(contactIds.ToArray());
 			return _client
 				.PostAsync($"{_endpoint}/{listId}/recipients")
-				.WithJsonBody(data)
+				.WithBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}

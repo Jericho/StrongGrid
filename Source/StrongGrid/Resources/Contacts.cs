@@ -74,7 +74,7 @@ namespace StrongGrid.Resources
 			var data = new JArray(ConvertContactToJObject(contact));
 			var responseContent = await _client
 				.PatchAsync(_endpoint)
-				.WithJsonBody(data)
+				.WithBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsString(null)
 				.ConfigureAwait(false);
@@ -106,7 +106,7 @@ namespace StrongGrid.Resources
 
 			var request = _client
 				.PostAsync(_endpoint)
-				.WithJsonBody(data)
+				.WithBody(data)
 				.WithCancellationToken(cancellationToken);
 
 			// We must turn off error handling because SendGrid may intentionally return 'Errors' to indicate that some records did not import
@@ -141,7 +141,7 @@ namespace StrongGrid.Resources
 			var data = JArray.FromObject(contactId.ToArray());
 			return _client
 				.DeleteAsync(_endpoint)
-				.WithJsonBody(data)
+				.WithBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -228,7 +228,7 @@ namespace StrongGrid.Resources
 
 			return _client
 				.PostAsync($"{_endpoint}/search")
-				.WithJsonBody(data)
+				.WithBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Contact[]>("recipients");
 		}
