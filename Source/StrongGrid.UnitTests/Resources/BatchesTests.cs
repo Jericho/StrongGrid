@@ -93,7 +93,7 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, batchId)).Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, batchId)).Respond(HttpStatusCode.BadRequest, "application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var batches = new Batches(client);
