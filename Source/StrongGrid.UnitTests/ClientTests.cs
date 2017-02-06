@@ -1,13 +1,5 @@
-﻿using Moq;
-using Newtonsoft.Json.Linq;
-using Pathoschild.Http.Client.Retry;
-using RichardSzalay.MockHttp;
-using Shouldly;
-using StrongGrid.Utilities;
-using System;
+﻿using Shouldly;
 using System.Net;
-using System.Net.Http;
-using System.Threading;
 using Xunit;
 
 namespace StrongGrid.UnitTests

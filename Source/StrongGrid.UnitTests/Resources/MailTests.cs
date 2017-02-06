@@ -1,10 +1,6 @@
-﻿using Moq;
-using Newtonsoft.Json.Linq;
-using RichardSzalay.MockHttp;
-using Shouldly;
+﻿using RichardSzalay.MockHttp;
 using StrongGrid.Model;
 using StrongGrid.UnitTests;
-using StrongGrid.Utilities;
 using System.Net;
 using System.Net.Http;
 using System.Threading;

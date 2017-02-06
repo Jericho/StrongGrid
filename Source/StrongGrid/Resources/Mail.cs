@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Model;
 using StrongGrid.Utilities;

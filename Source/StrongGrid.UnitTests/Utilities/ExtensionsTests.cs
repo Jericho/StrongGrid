@@ -1,8 +1,6 @@
 ﻿using Shouldly;
 using StrongGrid.Utilities;
 using System;
-using System.Net;
-using System.Net.Http;
 using Xunit;
 
 namespace StrongGrid.UnitTests

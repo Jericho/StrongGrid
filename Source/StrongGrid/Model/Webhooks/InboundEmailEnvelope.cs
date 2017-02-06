@@ -1,12 +1,10 @@
 ﻿using Newtonsoft.Json;
-using StrongGrid.Utilities;
-using System;
 
 namespace StrongGrid.Model.Webhooks
 {
-/// <summary>
-/// The SMTP envelope
-/// </summary>
+	/// <summary>
+	/// The SMTP envelope
+	/// </summary>
 	public class InboundEmailEnvelope
 	{
 		/// <summary>

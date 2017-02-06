@@ -1,8 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using StrongGrid.Resources;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using StrongGrid.Resources;
 
 namespace StrongGrid
 {

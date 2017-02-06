@@ -1,12 +1,10 @@
-﻿using Moq;
-using Pathoschild.Http.Client;
+﻿using Pathoschild.Http.Client;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Utilities;
 using System;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using Xunit;
 
 namespace StrongGrid.UnitTests

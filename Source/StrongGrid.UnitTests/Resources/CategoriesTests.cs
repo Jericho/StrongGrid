@@ -1,9 +1,6 @@
-using Moq;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.UnitTests;
-using StrongGrid.Utilities;
-using System.Net;
 using System.Net.Http;
 using System.Threading;
 using Xunit;

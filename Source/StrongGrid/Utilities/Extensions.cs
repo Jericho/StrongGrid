@@ -1,12 +1,9 @@
 ﻿using HttpMultipartParser;
 using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
-using Pathoschild.Http.Client.Extensibility;
 using System;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
