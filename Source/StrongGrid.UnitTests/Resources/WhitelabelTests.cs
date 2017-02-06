@@ -341,7 +341,7 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get,Utils.GetSendGridApiUri(ENDPOINT) + "?exclude_subusers=false&limit=50&offset=0&username=&domain=").Respond("application/json", MULTIPLE_DOMAINS_JSON);
+			mockHttp.Expect(HttpMethod.Get,Utils.GetSendGridApiUri(ENDPOINT, "domains?exclude_subusers=false&limit=50&offset=0&username=&domain=")).Respond("application/json", MULTIPLE_DOMAINS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var whitelabel = new Whitelabel(client);
@@ -361,7 +361,7 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get,Utils.GetSendGridApiUri(ENDPOINT) + "?exclude_subusers=true&limit=50&offset=0&username=&domain=").Respond("application/json", MULTIPLE_DOMAINS_JSON);
+			mockHttp.Expect(HttpMethod.Get,Utils.GetSendGridApiUri(ENDPOINT, "domains?exclude_subusers=true&limit=50&offset=0&username=&domain=")).Respond("application/json", MULTIPLE_DOMAINS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var whitelabel = new Whitelabel(client);
