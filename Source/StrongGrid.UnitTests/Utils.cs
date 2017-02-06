@@ -2,10 +2,7 @@
 using Pathoschild.Http.Client.Extensibility;
 using RichardSzalay.MockHttp;
 using StrongGrid.Utilities;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace StrongGrid.UnitTests
 {
@@ -17,6 +14,7 @@ namespace StrongGrid.UnitTests
 		{
 			var httpClient = httpMessageHandler.ToHttpClient();
 			var client = new FluentClient(SENDGRID_API_BASE_URI, httpClient);
+			client.SetRequestCoordinator(new SendGridRetryStrategy());
 			client.Filters.Remove<DefaultErrorFilter>();
 			client.Filters.Add(new SendGridErrorHandler());
 			return client;

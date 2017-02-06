@@ -1,4 +1,6 @@
 ﻿using Moq;
+using Pathoschild.Http.Client;
+using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Utilities;
 using System;
@@ -140,6 +142,48 @@ namespace StrongGrid.UnitTests
 
 			// Assert
 			result.ShouldBe(TimeSpan.FromSeconds(5));
+		}
+		[Fact]
+		public void Retry_success()
+		{
+			// Arrange
+			var mockUri = Utils.GetSendGridApiUri("testing");
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, mockUri).Respond((HttpStatusCode)429);
+			mockHttp.Expect(HttpMethod.Get, mockUri).Respond("application/json", "Success!");
+
+			var client = Utils.GetFluentClient(mockHttp);
+
+			// Act
+			var result = client.SendAsync(HttpMethod.Get, "testing").AsString().Result;
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldBe("Success!");
+		}
+
+		[Fact]
+		public void Retry_failure()
+		{
+			// Arrange
+			var mockUri = Utils.GetSendGridApiUri("testing");
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, mockUri).Respond((HttpStatusCode)429);
+			mockHttp.Expect(HttpMethod.Get, mockUri).Respond((HttpStatusCode)429);
+			mockHttp.Expect(HttpMethod.Get, mockUri).Respond((HttpStatusCode)429);
+			mockHttp.Expect(HttpMethod.Get, mockUri).Respond((HttpStatusCode)429);
+			mockHttp.Expect(HttpMethod.Get, mockUri).Respond((HttpStatusCode)429);
+
+			var client = Utils.GetFluentClient(mockHttp);
+
+			// Act
+			Should.ThrowAsync<Exception>(() => client.SendAsync(HttpMethod.Get, "testing").AsResponse())
+				.Result.Message.ShouldBe("The HTTP request failed, and the retry coordinator gave up after the maximum 5 retries");
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 	}
 }
