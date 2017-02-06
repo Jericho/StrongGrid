@@ -22,7 +22,6 @@ namespace StrongGrid
 
 		private Pathoschild.Http.Client.IClient _fluentClient;
 
-
 		#endregion
 
 		#region PROPERTIES

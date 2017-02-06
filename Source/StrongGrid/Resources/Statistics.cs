@@ -157,7 +157,6 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Statistic[]> GetDeviceTypesStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
-
 			var request = _client
 				.GetAsync($"devices/{_endpoint}")
 				.WithArgument("start_date", startDate.ToString("yyyy-MM-dd"))
