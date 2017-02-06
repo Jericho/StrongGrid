@@ -30,60 +30,57 @@ namespace StrongGrid.Utilities
 			if (response.Message.IsSuccessStatusCode) return;
 
 			var errorMessage = GetErrorMessage(response.Message);
-			if (string.IsNullOrEmpty(errorMessage))
-			{
-				errorMessage = $"{(int)response.Message.StatusCode}: {response.Message.ReasonPhrase}";
-			}
-
 			throw new Exception(errorMessage);
 		}
 
 		private static string GetErrorMessage(HttpResponseMessage message)
 		{
-			// In case of an error, the SendGrid API returns a JSON string that looks like this:
-			// {
-			//   "errors": [
-			//     {
-			//       "message": "An error has occured",
-			//       "field": null,
-			//       "help": null
-			//     }
-			//  ]
-			// }
+			// Default error message
+			var errorMessage = $"{(int)message.StatusCode}: {message.ReasonPhrase}";
 
-			if (message.Content == null) return null;
-
-			var errorMessage = string.Empty;
-			var responseContent = string.Empty;
-
-			// This is important: we must make a copy of the response stream otherwise we won't be able to read it outside of this error handler
-			using (var ms = new MemoryStream())
+			if (message.Content != null)
 			{
-				message.Content.CopyToAsync(ms).Wait();
-				ms.Position = 0;
-				var sr = new StreamReader(ms);
-				responseContent = sr.ReadToEnd();
-			}
+				// In case of an error, the SendGrid API returns a JSON string that looks like this:
+				// {
+				//   "errors": [
+				//     {
+				//       "message": "An error has occured",
+				//       "field": null,
+				//       "help": null
+				//     }
+				//  ]
+				// }
 
-			// We assume no error occured if the content is empty
-			if (string.IsNullOrEmpty(responseContent)) return null;
+				// This is important: we must make a copy of the response stream otherwise we won't be able to read it outside of this error handler
+				var responseContent = string.Empty;
+				using (var ms = new MemoryStream())
+				{
+					message.Content.CopyToAsync(ms).Wait();
+					ms.Position = 0;
+					var sr = new StreamReader(ms);
+					responseContent = sr.ReadToEnd();
+				}
 
-			try
-			{
-				// Check for the presence of property called 'errors' to determine if an error occured
-				var jObject = JObject.Parse(responseContent);
-				var errorsArray = (JArray)jObject["errors"];
-
-				if (errorsArray == null || errorsArray.Count == 0) return null;
-
-				// Get the first error message
-				errorMessage = errorsArray[0]["message"].ToString();
+				if (!string.IsNullOrEmpty(responseContent))
+				{
+					try
+					{
+						// Check for the presence of property called 'errors' to determine if an error occured
+						var jObject = JObject.Parse(responseContent);
+						var errorsArray = (JArray)jObject["errors"];
+						if (errorsArray != null && errorsArray.Count > 0)
+						{
+							// Get the first error message
+							errorMessage = errorsArray[0]["message"].ToString();
+						}
 #pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
-			}
-			catch
+					}
+					catch
 #pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
-			{
-				// Intentionally ignore parsing errors
+					{
+						// Intentionally ignore parsing errors
+					}
+				}
 			}
 
 			return errorMessage;
