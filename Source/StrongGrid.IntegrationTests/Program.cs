@@ -27,23 +27,23 @@ namespace StrongGrid.IntegrationTests
 
 			try
 			{
-				//ApiKeys(client, pauseAfterTests);
-				//Campaigns(client, pauseAfterTests);
-				//Categories(client, pauseAfterTests);
-				//ContactsAndCustomFields(client, pauseAfterTests);
-				//GlobalSuppressions(client, pauseAfterTests);
-				//ListsAndSegments(client, pauseAfterTests);
-				//Mail(client, pauseAfterTests);
-				//UnsubscribeGroups(client, pauseAfterTests);
-				//User(client, pauseAfterTests);
-				//Statistics(client, pauseAfterTests);
-				//Templates(client, pauseAfterTests);
-				//Settings(client, pauseAfterTests);
-				//Alerts(client, pauseAfterTests);
-				//Blocks(client, pauseAfterTests);
-				//SpamReports(client, pauseAfterTests);
-				//InvalidEmails(client, pauseAfterTests);
-				//Batches(client, pauseAfterTests);
+				ApiKeys(client, pauseAfterTests);
+				Campaigns(client, pauseAfterTests);
+				Categories(client, pauseAfterTests);
+				ContactsAndCustomFields(client, pauseAfterTests);
+				GlobalSuppressions(client, pauseAfterTests);
+				ListsAndSegments(client, pauseAfterTests);
+				Mail(client, pauseAfterTests);
+				UnsubscribeGroups(client, pauseAfterTests);
+				User(client, pauseAfterTests);
+				Statistics(client, pauseAfterTests);
+				Templates(client, pauseAfterTests);
+				Settings(client, pauseAfterTests);
+				Alerts(client, pauseAfterTests);
+				Blocks(client, pauseAfterTests);
+				SpamReports(client, pauseAfterTests);
+				InvalidEmails(client, pauseAfterTests);
+				Batches(client, pauseAfterTests);
 				Whitelabel(client, pauseAfterTests);
 			}
 			catch (Exception e)
