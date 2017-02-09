@@ -20,7 +20,7 @@
 	"dependencies": {
 		"HttpMultipartParser": "2.2.1",
 		"Newtonsoft.Json": "9.0.1",
-        "Pathoschild.Http.FluentClient": "3.0.0",
+		"Pathoschild.Http.FluentClient": "3.0.0",
 		"StyleCop.Analyzers": {
 			"version": "1.0.0",
 			"type": "build"
@@ -41,7 +41,6 @@
 				"define": [ "NETFULL" ]
 			},
 			"dependencies": {
-				"System.Net.Http": "4.0.0"
 			},
 			"frameworkAssemblies": {
 				"System.Runtime.Serialization": "4.0.0"
