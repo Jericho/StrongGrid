@@ -16,10 +16,12 @@ namespace StrongGrid
 	{
 		#region FIELDS
 
-		private const string MEDIA_TYPE = "application/json";
 		private const string DEFAULT_BASE_URI = "https://api.sendgrid.com";
 		private const string DEFAULT_API_VERSION = "v3";
 
+		private readonly bool _mustDisposeHttpClient;
+
+		private HttpClient _httpClient;
 		private Pathoschild.Http.Client.IClient _fluentClient;
 
 		#endregion
@@ -231,6 +233,7 @@ namespace StrongGrid
 		public Client(string apiKey, IWebProxy proxy = null)
 			: this(apiKey, null, null, DEFAULT_BASE_URI, DEFAULT_API_VERSION, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }))
 		{
+			_mustDisposeHttpClient = true;
 		}
 
 		/// <summary>
@@ -281,10 +284,12 @@ namespace StrongGrid
 
 		private Client(string apiKey, string username, string password, string baseUri, string apiVersion, HttpClient httpClient)
 		{
+			_mustDisposeHttpClient = httpClient == null;
+			_httpClient = httpClient;
+
 			Version = typeof(Client).GetTypeInfo().Assembly.GetName().Version.ToString();
 
-			var sendGridUri = new Uri($"{baseUri.TrimEnd('/')}/{apiVersion.TrimStart('/')}");
-			_fluentClient = new FluentClient(sendGridUri, httpClient)
+			_fluentClient = new FluentClient(new Uri($"{baseUri.TrimEnd('/')}/{apiVersion.TrimStart('/')}"), httpClient)
 				.SetUserAgent($"StrongGrid/{Version} (+https://github.com/Jericho/StrongGrid)")
 				.SetRequestCoordinator(new SendGridRetryStrategy());
 
@@ -374,6 +379,11 @@ namespace StrongGrid
 			{
 				_fluentClient.Dispose();
 				_fluentClient = null;
+			}
+			if (_httpClient != null && _mustDisposeHttpClient)
+			{
+				_httpClient.Dispose();
+				_httpClient = null;
 			}
 		}
 
