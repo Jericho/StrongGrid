@@ -205,7 +205,7 @@ namespace StrongGrid.Utilities
 			return await response.AsString(encoding).ConfigureAwait(false);
 		}
 
-		/// <summary>Asynchronously converts the JSON encoded content aand convert it to a 'SendGrid' object of the desired type.</summary>
+		/// <summary>Asynchronously converts the JSON encoded content and converts it to a 'SendGrid' object of the desired type.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="httpContent">The content</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored</param>

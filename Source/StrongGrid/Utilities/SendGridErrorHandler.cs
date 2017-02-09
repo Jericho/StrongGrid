@@ -8,10 +8,7 @@ using System.Net.Http;
 namespace StrongGrid.Utilities
 {
 	/// <summary>
-	/// Implements IRetryConfig with back off based on a wait time derived from the
-	/// "X-RateLimit-Reset" response header. The value in this header contains the
-	/// date and time (expressed as the number of seconds since midnight on January
-	/// 1st 1970) when the next attempt can take place.
+	/// Error handler for requests dispatched to the SendGrid API
 	/// </summary>
 	/// <seealso cref="Pathoschild.Http.Client.Extensibility.IHttpFilter" />
 	public class SendGridErrorHandler : IHttpFilter
