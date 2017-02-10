@@ -1,8 +1,8 @@
-﻿using Moq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Model;
+using StrongGrid.UnitTests;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -14,7 +14,7 @@ namespace StrongGrid.Resources.UnitTests
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "/contactdb/segments";
+		private const string ENDPOINT = "contactdb/segments";
 
 		private const string SINGLE_SEGMENT_JSON = @"{
 			'id': 1,
@@ -126,19 +126,18 @@ namespace StrongGrid.Resources.UnitTests
 				}
 			};
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync(ENDPOINT, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_SEGMENT_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", SINGLE_SEGMENT_JSON);
 
-			var segments = new Segments(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var segments = new Segments(client);
 
 			// Act
 			var result = segments.CreateAsync(name, listId, conditions, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
 
@@ -146,19 +145,18 @@ namespace StrongGrid.Resources.UnitTests
 		public void GetAll()
 		{
 			// Arrange
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync(ENDPOINT, It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_SEGMENTS_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", MULTIPLE_SEGMENTS_JSON);
 
-			var segments = new Segments(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var segments = new Segments(client);
 
 			// Act
 			var result = segments.GetAllAsync(CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(1);
 		}
@@ -169,19 +167,18 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var segmentId = 1;
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync($"{ENDPOINT}/{segmentId}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_SEGMENT_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, segmentId)).Respond("application/json", SINGLE_SEGMENT_JSON);
 
-			var segments = new Segments(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var segments = new Segments(client);
 
 			// Act
 			var result = segments.GetAsync(segmentId, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
 
@@ -203,19 +200,18 @@ namespace StrongGrid.Resources.UnitTests
 				}
 			};
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PatchAsync($"{ENDPOINT}/{segmentId}", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_SEGMENT_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(ENDPOINT, segmentId)).Respond("application/json", SINGLE_SEGMENT_JSON);
 
-			var segments = new Segments(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var segments = new Segments(client);
 
 			// Act
 			var result = segments.UpdateAsync(segmentId, name, listId, conditions, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
 
@@ -226,19 +222,18 @@ namespace StrongGrid.Resources.UnitTests
 			var segmentId = 1;
 			var deleteContacts = false;
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.DeleteAsync($"{ENDPOINT}/{segmentId}?delete_contacts=false", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent))
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, segmentId) + "?delete_contacts=false").Respond(HttpStatusCode.NoContent);
 
-			var segments = new Segments(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var segments = new Segments(client);
 
 			// Act
 			segments.DeleteAsync(segmentId, deleteContacts, CancellationToken.None).Wait(CancellationToken.None);
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -248,19 +243,18 @@ namespace StrongGrid.Resources.UnitTests
 			var segmentId = 1;
 			var deleteContacts = true;
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.DeleteAsync($"{ENDPOINT}/{segmentId}?delete_contacts=true", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent))
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, segmentId) + "?delete_contacts=true").Respond(HttpStatusCode.NoContent);
 
-			var segments = new Segments(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var segments = new Segments(client);
 
 			// Act
 			segments.DeleteAsync(segmentId, deleteContacts, CancellationToken.None).Wait(CancellationToken.None);
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -295,19 +289,18 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync($"{ENDPOINT}/{segmentId}/recipients?page_size={recordsPerPage}&page={page}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, $"{segmentId}/recipients?page_size={recordsPerPage}&page={page}")).Respond("application/json", apiResponse);
 
-			var segments = new Segments(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var segments = new Segments(client);
 
 			// Act
 			var result = segments.GetRecipientsAsync(segmentId, recordsPerPage, page, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(1);
 			result[0].Email.ShouldBe("jones@example.com");

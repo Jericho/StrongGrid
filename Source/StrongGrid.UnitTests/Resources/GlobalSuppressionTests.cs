@@ -1,6 +1,6 @@
-﻿using Moq;
-using Newtonsoft.Json.Linq;
+﻿using RichardSzalay.MockHttp;
 using Shouldly;
+using StrongGrid.UnitTests;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -12,7 +12,7 @@ namespace StrongGrid.Resources.UnitTests
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "/asm/suppressions/global";
+		private const string ENDPOINT = "asm/suppressions/global";
 
 		#endregion
 
@@ -28,19 +28,18 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync(ENDPOINT, It.Is<JObject>(o => o["recipient_emails"].ToObject<JArray>().Count == emails.Length), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", apiResponse);
 
-			var globalSuppressions = new GlobalSuppressions(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var globalSuppressions = new GlobalSuppressions(client);
 
 			// Act
 			globalSuppressions.AddAsync(emails, CancellationToken.None).Wait();
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -50,19 +49,18 @@ namespace StrongGrid.Resources.UnitTests
 			var email = "test1@example.com";
 
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.DeleteAsync($"{ENDPOINT}/{email}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent))
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, email)).Respond(HttpStatusCode.NoContent);
 
-			var globalSuppressions = new GlobalSuppressions(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var globalSuppressions = new GlobalSuppressions(client);
 
 			// Act
 			globalSuppressions.RemoveAsync(email, CancellationToken.None).Wait();
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -75,19 +73,18 @@ namespace StrongGrid.Resources.UnitTests
 				'recipient_email': 'test1@example.com'
 			}";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync($"{ENDPOINT}/{email}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, email)).Respond("application/json", apiResponse);
 
-			var globalSuppressions = new GlobalSuppressions(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var globalSuppressions = new GlobalSuppressions(client);
 
 			// Act
 			var result = globalSuppressions.IsUnsubscribedAsync(email, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldBeTrue();
 		}
 
@@ -100,19 +97,18 @@ namespace StrongGrid.Resources.UnitTests
 			var apiResponse = @"{
 			}";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync($"{ENDPOINT}/{email}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, email)).Respond("application/json", apiResponse);
 
-			var globalSuppressions = new GlobalSuppressions(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var globalSuppressions = new GlobalSuppressions(client);
 
 			// Act
 			var result = globalSuppressions.IsUnsubscribedAsync(email, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldBeFalse();
 		}
 	}

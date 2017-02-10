@@ -1,10 +1,9 @@
-using Moq;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Model;
+using StrongGrid.UnitTests;
 using System;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -16,7 +15,7 @@ namespace StrongGrid.Resources.UnitTests
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "/contactdb/recipients";
+		private const string ENDPOINT = "contactdb/recipients";
 
 		private const string SINGLE_RECIPIENT_JSON = @"{
 			'created_at': 1422313607,
@@ -118,19 +117,18 @@ namespace StrongGrid.Resources.UnitTests
 				'updated_count': 0
 			}";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync(ENDPOINT, It.Is<JArray>(o => o.Count == 1), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", apiResponse);
 
-			var contacts = new Contacts(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var contacts = new Contacts(client);
 
 			// Act
 			var result = contacts.CreateAsync(email, firstName, lastName, null, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
 
@@ -163,21 +161,19 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync(ENDPOINT, It.Is<JArray>(o => o.Count == 1), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", apiResponse);
 
-			var contacts = new Contacts(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var contacts = new Contacts(client);
 
 			// Act
 			Should.ThrowAsync<Exception>(() => contacts.CreateAsync(email, firstName, lastName, null, CancellationToken.None))
 				.Result.Message.ShouldBe("Invalid email.");
 
 			// Assert
-			mockRepository.VerifyAll();
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -215,19 +211,18 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync(ENDPOINT, It.Is<JArray>(o => o.Count == 3), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", apiResponse);
 
-			var contacts = new Contacts(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var contacts = new Contacts(client);
 
 			// Act
 			var result = contacts.ImportAsync(records, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.ErrorCount.ShouldBe(1);
 			result.ErrorIndices.ShouldBe(new[] { 2 });
@@ -260,19 +255,18 @@ namespace StrongGrid.Resources.UnitTests
 				'updated_count': 1
 			}";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PatchAsync(ENDPOINT, It.Is<JArray>(o => o.Count == 1), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", apiResponse);
 
-			var contacts = new Contacts(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var contacts = new Contacts(client);
 
 			// Act
 			contacts.UpdateAsync(email, null, lastName, null, CancellationToken.None).Wait();
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -303,21 +297,19 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PatchAsync(ENDPOINT, It.Is<JArray>(o => o.Count == 1), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", apiResponse);
 
-			var contacts = new Contacts(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var contacts = new Contacts(client);
 
 			// Act
 			Should.ThrowAsync<Exception>(() => contacts.UpdateAsync(email, null, lastName, null, CancellationToken.None))
 				.Result.Message.ShouldBe("Invalid email.");
 
 			// Assert
-			mockRepository.VerifyAll();
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -326,19 +318,18 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var contactId = "YUBh";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync($"{ENDPOINT}/{contactId}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_RECIPIENT_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, contactId)).Respond("application/json", SINGLE_RECIPIENT_JSON);
 
-			var contacts = new Contacts(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var contacts = new Contacts(client);
 
 			// Act
 			var result = contacts.GetAsync(contactId, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.LastName.ShouldBe("Jones");
 			result.Email.ShouldBe("jones@example.com");
@@ -354,19 +345,18 @@ namespace StrongGrid.Resources.UnitTests
 			var recordsPerPage = 25;
 			var page = 1;
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync($"{ENDPOINT}?page_size={recordsPerPage}&page={page}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_RECIPIENTS_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?page_size={recordsPerPage}&page={page}").Respond("application/json", MULTIPLE_RECIPIENTS_JSON);
 
-			var contacts = new Contacts(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var contacts = new Contacts(client);
 
 			// Act
 			var result = contacts.GetAsync(recordsPerPage, page, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(1);
 			result[0].Email.ShouldBe("jones@example.com");
@@ -383,19 +373,18 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var contactId = "recipient_id1";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.DeleteAsync(ENDPOINT, It.Is<JArray>(o => o.Count == 1), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK))
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT)).Respond(HttpStatusCode.OK);
 
-			var contacts = new Contacts(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var contacts = new Contacts(client);
 
 			// Act
 			contacts.DeleteAsync(contactId, CancellationToken.None).Wait(CancellationToken.None);
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -404,19 +393,18 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var contactIds = new[] { "recipient_id1", "recipient_id2" };
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.DeleteAsync(ENDPOINT, It.Is<JArray>(o => o.Count == 2), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK))
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT)).Respond(HttpStatusCode.OK);
 
-			var contacts = new Contacts(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var contacts = new Contacts(client);
 
 			// Act
 			contacts.DeleteAsync(contactIds, CancellationToken.None).Wait(CancellationToken.None);
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -427,19 +415,18 @@ namespace StrongGrid.Resources.UnitTests
 				'recipient_count': 2
 			}";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync($"{ENDPOINT}/billable_count", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "billable_count")).Respond("application/json", apiResponse);
 
-			var contacts = new Contacts(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var contacts = new Contacts(client);
 
 			// Act
 			var result = contacts.GetBillableCountAsync(CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldBe(2);
 		}
 
@@ -451,19 +438,18 @@ namespace StrongGrid.Resources.UnitTests
 				'recipient_count': 3
 			}";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync($"{ENDPOINT}/count", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "count")).Respond("application/json", apiResponse);
 
-			var contacts = new Contacts(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var contacts = new Contacts(client);
 
 			// Act
 			var result = contacts.GetTotalCountAsync(CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldBe(3);
 		}
 
@@ -526,19 +512,18 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync($"{ENDPOINT}/search", It.Is<JObject>(o => o.Properties().Count() == 2), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "search")).Respond("application/json", apiResponse);
 
-			var contacts = new Contacts(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var contacts = new Contacts(client);
 
 			// Act
 			var result = contacts.SearchAsync(conditions, listId, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(1);
 			result[0].Email.ShouldBe("jones@example.com");
@@ -585,19 +570,18 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync($"{ENDPOINT}/search", It.Is<JObject>(o => o.Properties().Count() == 0), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "search")).Respond("application/json", apiResponse);
 
-			var contacts = new Contacts(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var contacts = new Contacts(client);
 
 			// Act
 			var result = contacts.SearchAsync(conditions, listId, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(1);
 			result[0].Email.ShouldBe("jones@example.com");

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Pathoschild.Http.Client;
 using StrongGrid.Model;
 using StrongGrid.Utilities;
 using System;
@@ -18,17 +19,15 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class Statistics
 	{
-		private readonly string _endpoint;
-		private readonly IClient _client;
+		private const string _endpoint = "stats";
+		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Statistics" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public Statistics(IClient client, string endpoint = "/stats")
+		public Statistics(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
@@ -43,18 +42,17 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		public async Task<Statistic[]> GetGlobalStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Statistic[]> GetGlobalStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
-			if (endDate.HasValue) endpoint += string.Format("&end_date={0}", endDate.Value.ToString("yyyy-MM-dd"));
-			if (aggregatedBy != AggregateBy.None) endpoint += string.Format("&aggregated_by={0}", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy))).ToString();
+			var request = _client
+				.GetAsync(_endpoint)
+				.WithArgument("start_date", startDate.ToString("yyyy-MM-dd"))
+				.WithCancellationToken(cancellationToken);
 
-			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
+			if (endDate.HasValue) request.WithArgument("end_date", endDate.Value.ToString("yyyy-MM-dd"));
+			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString());
 
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var statistics = JArray.Parse(responseContent).ToObject<Statistic[]>();
-			return statistics;
+			return request.AsSendGridObject<Statistic[]>();
 		}
 
 		/// <summary>
@@ -69,25 +67,23 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		public async Task<Statistic[]> GetCategoriesStatisticsAsync(IEnumerable<string> categories, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Statistic[]> GetCategoriesStatisticsAsync(IEnumerable<string> categories, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("/categories{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
-			if (endDate.HasValue) endpoint += "&end_date=" + endDate.Value.ToString("yyyy-MM-dd");
-			if (aggregatedBy != AggregateBy.None) endpoint += "&aggregated_by=" + JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString();
+			var request = _client.GetAsync($"categories/{_endpoint}")
+				.WithArgument("start_date", startDate.ToString("yyyy-MM-dd"))
+				.WithCancellationToken(cancellationToken);
+
+			if (endDate.HasValue) request.WithArgument("end_date", endDate.Value.ToString("yyyy-MM-dd"));
+			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString());
 			if (categories != null && categories.Any())
 			{
 				foreach (var category in categories)
 				{
-					endpoint += "&categories=" + category;
+					request.WithArgument("categories", category);
 				}
 			}
 
-			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var statistics = JArray.Parse(responseContent).ToObject<Statistic[]>();
-			return statistics;
+			return request.AsSendGridObject<Statistic[]>();
 		}
 
 		/// <summary>
@@ -102,25 +98,24 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		public async Task<Statistic[]> GetSubusersStatisticsAsync(IEnumerable<string> subusers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Statistic[]> GetSubusersStatisticsAsync(IEnumerable<string> subusers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("/subusers{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
-			if (endDate.HasValue) endpoint += "&end_date=" + endDate.Value.ToString("yyyy-MM-dd");
-			if (aggregatedBy != AggregateBy.None) endpoint += "&aggregated_by=" + JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString();
+			var request = _client
+				.GetAsync($"subusers/{_endpoint}")
+				.WithArgument("start_date", startDate.ToString("yyyy-MM-dd"))
+				.WithCancellationToken(cancellationToken);
+
+			if (endDate.HasValue) request.WithArgument("end_date", endDate.Value.ToString("yyyy-MM-dd"));
+			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString());
 			if (subusers != null && subusers.Any())
 			{
 				foreach (var subuser in subusers)
 				{
-					endpoint += "&subusers=" + subuser;
+					request.WithArgument("subusers", subuser);
 				}
 			}
 
-			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var statistics = JArray.Parse(responseContent).ToObject<Statistic[]>();
-			return statistics;
+			return request.AsSendGridObject<Statistic[]>();
 		}
 
 		/// <summary>
@@ -135,19 +130,18 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		public async Task<Statistic[]> GetCountryStatisticsAsync(string country, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Statistic[]> GetCountryStatisticsAsync(string country, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("/geo{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
-			if (endDate.HasValue) endpoint += "&end_date=" + endDate.Value.ToString("yyyy-MM-dd");
-			if (aggregatedBy != AggregateBy.None) endpoint += "&aggregated_by=" + JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString();
-			if (!string.IsNullOrEmpty(country)) endpoint += "&country=" + country;
+			var request = _client
+				.GetAsync($"geo/{_endpoint}")
+				.WithArgument("start_date", startDate.ToString("yyyy-MM-dd"))
+				.WithCancellationToken(cancellationToken);
 
-			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
+			if (endDate.HasValue) request.WithArgument("end_date", endDate.Value.ToString("yyyy-MM-dd"));
+			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString());
+			if (!string.IsNullOrEmpty(country)) request.WithArgument("country", country);
 
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var statistics = JArray.Parse(responseContent).ToObject<Statistic[]>();
-			return statistics;
+			return request.AsSendGridObject<Statistic[]>();
 		}
 
 		/// <summary>
@@ -161,18 +155,17 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		public async Task<Statistic[]> GetDeviceTypesStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Statistic[]> GetDeviceTypesStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("/devices{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
-			if (endDate.HasValue) endpoint += "&end_date=" + endDate.Value.ToString("yyyy-MM-dd");
-			if (aggregatedBy != AggregateBy.None) endpoint += "&aggregated_by=" + JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString();
+			var request = _client
+				.GetAsync($"devices/{_endpoint}")
+				.WithArgument("start_date", startDate.ToString("yyyy-MM-dd"))
+				.WithCancellationToken(cancellationToken);
 
-			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
+			if (endDate.HasValue) request.WithArgument("end_date", endDate.Value.ToString("yyyy-MM-dd"));
+			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString());
 
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var statistics = JArray.Parse(responseContent).ToObject<Statistic[]>();
-			return statistics;
+			return request.AsSendGridObject<Statistic[]>();
 		}
 
 		/// <summary>
@@ -186,18 +179,17 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		public async Task<Statistic[]> GetClientTypesStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Statistic[]> GetClientTypesStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("/clients{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
-			if (endDate.HasValue) endpoint += "&end_date=" + endDate.Value.ToString("yyyy-MM-dd");
-			if (aggregatedBy != AggregateBy.None) endpoint += "&aggregated_by=" + JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString();
+			var request = _client
+				.GetAsync($"clients/{_endpoint}")
+				.WithArgument("start_date", startDate.ToString("yyyy-MM-dd"))
+				.WithCancellationToken(cancellationToken);
 
-			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
+			if (endDate.HasValue) request.WithArgument("end_date", endDate.Value.ToString("yyyy-MM-dd"));
+			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString());
 
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var statistics = JArray.Parse(responseContent).ToObject<Statistic[]>();
-			return statistics;
+			return request.AsSendGridObject<Statistic[]>();
 		}
 
 		/// <summary>
@@ -212,25 +204,25 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		public async Task<Statistic[]> GetInboxProvidersStatisticsAsync(IEnumerable<string> providers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Statistic[]> GetInboxProvidersStatisticsAsync(IEnumerable<string> providers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("/mailbox_providers{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
-			if (endDate.HasValue) endpoint += "&end_date=" + endDate.Value.ToString("yyyy-MM-dd");
-			if (aggregatedBy != AggregateBy.None) endpoint += "&aggregated_by=" + JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString();
+			var request = _client
+				.GetAsync($"mailbox_providers/{_endpoint}")
+				.WithArgument("start_date", startDate.ToString("yyyy-MM-dd"))
+				.WithCancellationToken(cancellationToken);
+
+			if (endDate.HasValue) request.WithArgument("end_date", endDate.Value.ToString("yyyy-MM-dd"));
+			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString());
+
 			if (providers != null && providers.Any())
 			{
 				foreach (var provider in providers)
 				{
-					endpoint += "&mailbox_providers=" + provider;
+					request.WithArgument("mailbox_providers", provider);
 				}
 			}
 
-			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var statistics = JArray.Parse(responseContent).ToObject<Statistic[]>();
-			return statistics;
+			return request.AsSendGridObject<Statistic[]>();
 		}
 
 		/// <summary>
@@ -245,25 +237,25 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		public async Task<Statistic[]> GetBrowsersStatisticsAsync(IEnumerable<string> browsers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Statistic[]> GetBrowsersStatisticsAsync(IEnumerable<string> browsers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var endpoint = string.Format("/browsers{0}?start_date={1}", _endpoint, startDate.ToString("yyyy-MM-dd"));
-			if (endDate.HasValue) endpoint += "&end_date=" + endDate.Value.ToString("yyyy-MM-dd");
-			if (aggregatedBy != AggregateBy.None) endpoint += "&aggregated_by=" + JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString();
+			var request = _client
+				.GetAsync($"browsers/{_endpoint}")
+				.WithArgument("start_date", startDate.ToString("yyyy-MM-dd"))
+				.WithCancellationToken(cancellationToken);
+
+			if (endDate.HasValue) request.WithArgument("end_date", endDate.Value.ToString("yyyy-MM-dd"));
+			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString());
+
 			if (browsers != null && browsers.Any())
 			{
 				foreach (var browser in browsers)
 				{
-					endpoint += "&browsers=" + browser;
+					request.WithArgument("browsers", browser);
 				}
 			}
 
-			var response = await _client.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var statistics = JArray.Parse(responseContent).ToObject<Statistic[]>();
-			return statistics;
+			return request.AsSendGridObject<Statistic[]>();
 		}
 	}
 }

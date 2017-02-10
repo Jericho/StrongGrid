@@ -1,8 +1,8 @@
-﻿using Moq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Model;
+using StrongGrid.UnitTests;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -14,7 +14,7 @@ namespace StrongGrid.Resources.UnitTests
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "/contactdb/custom_fields";
+		private const string ENDPOINT = "contactdb/custom_fields";
 
 		private const string SINGLE_CUSTOM_FIELD_JSON = @"{
 			'id': 1,
@@ -65,19 +65,18 @@ namespace StrongGrid.Resources.UnitTests
 			var name = "customfield1";
 			var type = FieldType.Text;
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync(ENDPOINT, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_CUSTOM_FIELD_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", SINGLE_CUSTOM_FIELD_JSON);
 
-			var customFields = new CustomFields(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var customFields = new CustomFields(client);
 
 			// Act
 			var result = customFields.CreateAsync(name, type, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
 
@@ -87,19 +86,18 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var fieldId = 1;
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync($"{ENDPOINT}/{fieldId}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_CUSTOM_FIELD_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, fieldId)).Respond("application/json", SINGLE_CUSTOM_FIELD_JSON);
 
-			var customFields = new CustomFields(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var customFields = new CustomFields(client);
 
 			// Act
 			var result = customFields.GetAsync(fieldId, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
 
@@ -107,19 +105,18 @@ namespace StrongGrid.Resources.UnitTests
 		public void GetAll()
 		{
 			// Arrange
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync(ENDPOINT, It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_CUSTOM_FIELDS_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", MULTIPLE_CUSTOM_FIELDS_JSON);
 
-			var customFields = new CustomFields(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var customFields = new CustomFields(client);
 
 			// Act
 			var result = customFields.GetAllAsync(CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(3);
 		}
@@ -130,19 +127,18 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var fieldId = 1;
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.DeleteAsync($"{ENDPOINT}/{fieldId}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.Accepted))
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, fieldId)).Respond(HttpStatusCode.Accepted);
 
-			var customFields = new CustomFields(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var customFields = new CustomFields(client);
 
 			// Act
 			customFields.DeleteAsync(fieldId, CancellationToken.None).Wait(CancellationToken.None);
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -190,19 +186,18 @@ namespace StrongGrid.Resources.UnitTests
 				]
 			}";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync("/contactdb/reserved_fields", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("contactdb/reserved_fields")).Respond("application/json", apiResponse);
 
-			var customFields = new CustomFields(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var customFields = new CustomFields(client);
 
 			// Act
 			var result = customFields.GetReservedFieldsAsync(CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(9);
 			result[0].Name.ShouldBe("first_name");

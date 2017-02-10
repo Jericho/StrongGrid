@@ -1,8 +1,8 @@
-﻿using Moq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Model;
+using StrongGrid.UnitTests;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -15,7 +15,7 @@ namespace StrongGrid.Resources.UnitTests
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "/campaigns";
+		private const string ENDPOINT = "campaigns";
 
 		private const string SINGLE_CAMPAIGN_JSON = @"{
 			'id': 986724,
@@ -123,19 +123,18 @@ namespace StrongGrid.Resources.UnitTests
 			var suppressionGroupId = 42;
 			var senderId = 124451;
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync(ENDPOINT, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_CAMPAIGN_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", SINGLE_CAMPAIGN_JSON);
 
-			var campaigns = new Campaigns(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var campaigns = new Campaigns(client);
 
 			// Act
 			var result = campaigns.CreateAsync(title, senderId, null, null, null, null, null, null, suppressionGroupId, null, null, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
 
@@ -146,19 +145,18 @@ namespace StrongGrid.Resources.UnitTests
 			var limit = 2;
 			var offset = 0;
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync($"{ENDPOINT}?limit={limit}&offset={offset}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_CAMPAIGNS_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&offset={offset}").Respond("application/json", MULTIPLE_CAMPAIGNS_JSON);
 
-			var campaigns = new Campaigns(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var campaigns = new Campaigns(client);
 
 			// Act
 			var result = campaigns.GetAllAsync(limit, offset, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(2);
 		}
@@ -169,19 +167,18 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var campaignId = 986724;
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync($"{ENDPOINT}/{campaignId}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_CAMPAIGN_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, campaignId)).Respond("application/json", SINGLE_CAMPAIGN_JSON);
 
-			var campaigns = new Campaigns(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var campaigns = new Campaigns(client);
 
 			// Act
 			var result = campaigns.GetAsync(campaignId, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
 
@@ -191,19 +188,18 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var campaignId = 123;
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.DeleteAsync($"{ENDPOINT}/{campaignId}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK))
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, campaignId)).Respond(HttpStatusCode.OK);
 
-			var campaigns = new Campaigns(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var campaigns = new Campaigns(client);
 
 			// Act
 			campaigns.DeleteAsync(campaignId, CancellationToken.None).Wait(CancellationToken.None);
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -215,19 +211,18 @@ namespace StrongGrid.Resources.UnitTests
 			var suppressionGroupId = 42;
 			var senderId = 124451;
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PatchAsync($"{ENDPOINT}/{campaignId}", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_CAMPAIGN_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(ENDPOINT, campaignId)).Respond("application/json", SINGLE_CAMPAIGN_JSON);
 
-			var campaigns = new Campaigns(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var campaigns = new Campaigns(client);
 
 			// Act
 			var result = campaigns.UpdateAsync(campaignId, title, suppressionGroupId, null, null, null, null, null, null, senderId, null, null, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Id.ShouldBe(986724);
 			result.Title.ShouldBe(title);
@@ -244,19 +239,18 @@ namespace StrongGrid.Resources.UnitTests
 				'status': 'Scheduled'
 			}";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync($"{ENDPOINT}/{campaignId}/schedules/now", (JObject)null, It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, campaignId, "schedules/now")).Respond("application/json", apiResponse);
 
-			var campaigns = new Campaigns(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var campaigns = new Campaigns(client);
 
 			// Act
 			campaigns.SendNowAsync(campaignId, CancellationToken.None).Wait();
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -272,19 +266,18 @@ namespace StrongGrid.Resources.UnitTests
 				'status': 'Scheduled'
 			}";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync($"{ENDPOINT}/{campaignId}/schedules", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, campaignId, "schedules")).Respond("application/json", apiResponse);
 
-			var campaigns = new Campaigns(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var campaigns = new Campaigns(client);
 
 			// Act
 			campaigns.ScheduleAsync(campaignId, sendOn, CancellationToken.None).Wait();
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -300,19 +293,18 @@ namespace StrongGrid.Resources.UnitTests
 				'status': 'Scheduled'
 			}";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PatchAsync($"{ENDPOINT}/{campaignId}/schedules", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(ENDPOINT, campaignId, "schedules")).Respond("application/json", apiResponse);
 
-			var campaigns = new Campaigns(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var campaigns = new Campaigns(client);
 
 			// Act
 			campaigns.RescheduleAsync(campaignId, sendOn, CancellationToken.None).Wait();
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -324,19 +316,18 @@ namespace StrongGrid.Resources.UnitTests
 				'send_at': 1489771528
 			}";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync($"{ENDPOINT}/{campaignId}/schedules", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(apiResponse) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, campaignId, "schedules")).Respond("application/json", apiResponse);
 
-			var campaigns = new Campaigns(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var campaigns = new Campaigns(client);
 
 			// Act
 			var result = campaigns.GetScheduledDateAsync(campaignId, CancellationToken.None).Result;
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.HasValue.ShouldBeTrue();
 		}
@@ -347,19 +338,18 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var campaignId = 986724;
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.DeleteAsync($"{ENDPOINT}/{campaignId}/schedules", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent))
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, campaignId, "schedules")).Respond(HttpStatusCode.NoContent);
 
-			var campaigns = new Campaigns(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var campaigns = new Campaigns(client);
 
 			// Act
 			campaigns.UnscheduleAsync(campaignId, CancellationToken.None).Wait();
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -369,19 +359,18 @@ namespace StrongGrid.Resources.UnitTests
 			var campaignId = 986724;
 			var emailAddresses = new[] { "test1@example.com" };
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync($"{ENDPOINT}/{campaignId}/schedules/test", It.Is<JObject>(o => o["to"].ToString() == emailAddresses[0]), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent))
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, campaignId, "schedules/test")).Respond(HttpStatusCode.NoContent);
 
-			var campaigns = new Campaigns(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var campaigns = new Campaigns(client);
 
 			// Act
 			campaigns.SendTestAsync(campaignId, emailAddresses, CancellationToken.None).Wait();
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -391,19 +380,18 @@ namespace StrongGrid.Resources.UnitTests
 			var campaignId = 986724;
 			var emailAddresses = new[] { "test1@example.com", "test2@exmaple.com" };
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync($"{ENDPOINT}/{campaignId}/schedules/test", It.Is<JObject>(o => o["to"].ToObject<JArray>().Count == emailAddresses.Length), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent))
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, campaignId, "schedules/test")).Respond(HttpStatusCode.NoContent);
 
-			var campaigns = new Campaigns(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var campaigns = new Campaigns(client);
 
 			// Act
 			campaigns.SendTestAsync(campaignId, emailAddresses, CancellationToken.None).Wait();
 
 			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 	}
 }

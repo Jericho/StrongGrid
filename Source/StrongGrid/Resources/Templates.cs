@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using Pathoschild.Http.Client;
 using StrongGrid.Model;
 using StrongGrid.Utilities;
 using System.Threading;
@@ -14,102 +15,72 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class Templates
 	{
-		private readonly string _endpoint;
-		private readonly IClient _client;
+		private const string _endpoint = "templates";
+		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Templates" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public Templates(IClient client, string endpoint = "/templates")
+		public Templates(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
 		/// <summary>
-		/// Creates the asynchronous.
+		/// Create a template.
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Template" />.
 		/// </returns>
-		public async Task<Template> CreateAsync(string name, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Template> CreateAsync(string name, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
 			{
 				{ "name", name }
 			};
-			var response = await _client.PostAsync(_endpoint, data, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var template = JObject.Parse(responseContent).ToObject<Template>();
-			return template;
+			return _client
+				.PostAsync(_endpoint)
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<Template>();
 		}
 
 		/// <summary>
-		/// Gets all asynchronous.
+		/// Retrieve all templates.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Template" />.
 		/// </returns>
-		public async Task<Template[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Template[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.GetAsync(_endpoint, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-
-			// Response looks like this:
-			// {
-			//   "templates": [
-			//     {
-			//       "id": "e8ac01d5-a07a-4a71-b14c-4721136fe6aa",
-			//       "name": "example template name",
-			//       "versions": [
-			//         {
-			//           "id": "5997fcf6-2b9f-484d-acd5-7e9a99f0dc1f",
-			//           "template_id": "9c59c1fb-931a-40fc-a658-50f871f3e41c",
-			//           "active": 1,
-			//           "name": "example version name",
-			//           "updated_at": "2014-03-19 18:56:33"
-			//         }
-			//       ]
-			//     }
-			//   ]
-			// }
-			// We use a dynamic object to get rid of the 'templates' property and simply return an array of templates
-			dynamic dynamicObject = JObject.Parse(responseContent);
-			dynamic dynamicArray = dynamicObject.templates;
-
-			var templates = dynamicArray.ToObject<Template[]>();
-			return templates;
+			return _client
+				.GetAsync(_endpoint)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<Template[]>("templates");
 		}
 
 		/// <summary>
-		/// Gets the asynchronous.
+		/// Retrieve a template.
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Template" />.
 		/// </returns>
-		public async Task<Template> GetAsync(string templateId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Template> GetAsync(string templateId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.GetAsync(string.Format("{0}/{1}", _endpoint, templateId), cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var template = JObject.Parse(responseContent).ToObject<Template>();
-			return template;
+			return _client
+				.GetAsync($"{_endpoint}/{templateId}")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<Template>();
 		}
 
 		/// <summary>
-		/// Updates the asynchronous.
+		/// Update a template.
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="name">The name.</param>
@@ -117,36 +88,37 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Template" />.
 		/// </returns>
-		public async Task<Template> UpdateAsync(string templateId, string name, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Template> UpdateAsync(string templateId, string name, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
 			{
 				{ "name", name }
 			};
-			var response = await _client.PatchAsync(string.Format("{0}/{1}", _endpoint, templateId), data, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var template = JObject.Parse(responseContent).ToObject<Template>();
-			return template;
+			return _client
+				.PatchAsync($"{_endpoint}/{templateId}")
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<Template>();
 		}
 
 		/// <summary>
-		/// Deletes the asynchronous.
+		/// Delete a template.
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public async Task DeleteAsync(string templateId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(string templateId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.DeleteAsync(string.Format("{0}/{1}", _endpoint, templateId), cancellationToken);
-			response.EnsureSuccess();
+			return _client
+				.DeleteAsync($"{_endpoint}/{templateId}")
+				.WithCancellationToken(cancellationToken)
+				.AsResponse();
 		}
 
 		/// <summary>
-		/// Creates the version asynchronous.
+		/// Create a template version.
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="name">The name.</param>
@@ -158,7 +130,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="TemplateVersion" />.
 		/// </returns>
-		public async Task<TemplateVersion> CreateVersionAsync(string templateId, string name, string subject, string htmlContent, string textContent, bool isActive, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<TemplateVersion> CreateVersionAsync(string templateId, string name, string subject, string htmlContent, string textContent, bool isActive, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
 			{
@@ -168,16 +140,15 @@ namespace StrongGrid.Resources
 				{ "plain_content", textContent },
 				{ "active", isActive ? 1 : 0 }
 			};
-			var response = await _client.PostAsync(string.Format("{0}/{1}/versions", _endpoint, templateId), data, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var templateVersion = JObject.Parse(responseContent).ToObject<TemplateVersion>();
-			return templateVersion;
+			return _client
+				.PostAsync($"{_endpoint}/{templateId}/versions")
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<TemplateVersion>();
 		}
 
 		/// <summary>
-		/// Activates the version asynchronous.
+		/// Activate a version.
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="versionId">The version identifier.</param>
@@ -185,18 +156,16 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="TemplateVersion" />.
 		/// </returns>
-		public async Task<TemplateVersion> ActivateVersionAsync(string templateId, string versionId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<TemplateVersion> ActivateVersionAsync(string templateId, string versionId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.PostAsync(string.Format("{0}/{1}/versions/{2}/activate", _endpoint, templateId, versionId), (JObject)null, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var templateVersion = JObject.Parse(responseContent).ToObject<TemplateVersion>();
-			return templateVersion;
+			return _client
+				.PostAsync($"{_endpoint}/{templateId}/versions/{versionId}/activate")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<TemplateVersion>();
 		}
 
 		/// <summary>
-		/// Gets the version asynchronous.
+		/// Retrieve a template version.
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="versionId">The version identifier.</param>
@@ -204,18 +173,16 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="TemplateVersion" />.
 		/// </returns>
-		public async Task<TemplateVersion> GetVersionAsync(string templateId, string versionId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<TemplateVersion> GetVersionAsync(string templateId, string versionId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.GetAsync(string.Format("{0}/{1}/versions/{2}", _endpoint, templateId, versionId), cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var templateVersion = JObject.Parse(responseContent).ToObject<TemplateVersion>();
-			return templateVersion;
+			return _client
+				.GetAsync($"{_endpoint}/{templateId}/versions/{versionId}")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<TemplateVersion>();
 		}
 
 		/// <summary>
-		/// Updates the version asynchronous.
+		/// Update a template version.
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="versionId">The version identifier.</param>
@@ -228,7 +195,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="TemplateVersion" />.
 		/// </returns>
-		public async Task<TemplateVersion> UpdateVersionAsync(string templateId, string versionId, string name = null, string subject = null, string htmlContent = null, string textContent = null, bool? isActive = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<TemplateVersion> UpdateVersionAsync(string templateId, string versionId, string name = null, string subject = null, string htmlContent = null, string textContent = null, bool? isActive = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
 			if (!string.IsNullOrEmpty(name)) data.Add("name", name);
@@ -237,16 +204,15 @@ namespace StrongGrid.Resources
 			if (!string.IsNullOrEmpty(textContent)) data.Add("plain_content", textContent);
 			if (isActive.HasValue) data.Add("active", isActive.Value ? 1 : 0);
 
-			var response = await _client.PatchAsync(string.Format("{0}/{1}/versions/{2}", _endpoint, templateId, versionId), data, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var templateVersion = JObject.Parse(responseContent).ToObject<TemplateVersion>();
-			return templateVersion;
+			return _client
+				.PatchAsync($"{_endpoint}/{templateId}/versions/{versionId}")
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<TemplateVersion>();
 		}
 
 		/// <summary>
-		/// Deletes the version asynchronous.
+		/// Delete a template version.
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="versionId">The version identifier.</param>
@@ -254,10 +220,12 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public async Task DeleteVersionAsync(string templateId, string versionId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteVersionAsync(string templateId, string versionId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.DeleteAsync(string.Format("{0}/{1}/versions/{2}", _endpoint, templateId, versionId), cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
+			return _client
+				.DeleteAsync($"{_endpoint}/{templateId}/versions/{versionId}")
+				.WithCancellationToken(cancellationToken)
+				.AsResponse();
 		}
 	}
 }
