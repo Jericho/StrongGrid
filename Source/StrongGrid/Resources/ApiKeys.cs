@@ -82,7 +82,7 @@ namespace StrongGrid.Resources
 			var data = CreateJObjectForApiKey(name, scopes);
 			return _client
 				.PostAsync(_endpoint)
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<ApiKey>();
 		}
@@ -117,7 +117,7 @@ namespace StrongGrid.Resources
 
 			var data = CreateJObjectForApiKey(name, scopes);
 			return (scopes.Any() ? _client.PutAsync($"{_endpoint}/{keyId}") : _client.PatchAsync($"{_endpoint}/{keyId}"))
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<ApiKey>();
 		}

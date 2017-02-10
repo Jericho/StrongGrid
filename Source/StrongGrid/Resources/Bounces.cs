@@ -77,7 +77,7 @@ namespace StrongGrid.Resources
 			var data = new JObject(new JProperty("delete_all", true));
 			return _client
 				.DeleteAsync(_endpoint)
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -95,7 +95,7 @@ namespace StrongGrid.Resources
 			var data = new JObject(new JProperty("emails", JArray.FromObject(emails.ToArray())));
 			return _client
 				.DeleteAsync(_endpoint)
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}

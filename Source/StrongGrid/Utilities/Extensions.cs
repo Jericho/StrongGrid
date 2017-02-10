@@ -4,6 +4,7 @@ using Pathoschild.Http.Client;
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -176,6 +177,22 @@ namespace StrongGrid.Utilities
 		{
 			var response = await request.AsMessage().ConfigureAwait(false);
 			return await response.Content.AsSendGridObject<T>(propertyName).ConfigureAwait(false);
+		}
+
+		/// <summary>Set the body content of the HTTP request.</summary>
+		/// <typeparam name="T">The type of object to serialize into a JSON string.</typeparam>
+		/// <param name="request">The request.</param>
+		/// <param name="body">The value to serialize into the HTTP body content.</param>
+		/// <returns>Returns the request builder for chaining.</returns>
+		/// <remarks>
+		/// This method is equivalent to IRequest.AsBody&lt;T&gt;(T body) because omitting the media type
+		/// causes the first formatter in MediaTypeFormatterCollection to be used by default and the first 
+		/// formatter happens to be the JSON formatter. However, I don't feel good about relying on the
+		/// default ordering of the items in the MediaTypeFormatterCollection.
+		/// </remarks>
+		public static IRequest WithJsonBody<T>(this IRequest request, T body)
+		{
+			return request.WithBody(body, new MediaTypeHeaderValue("application/json"));
 		}
 
 		/// <summary>Asynchronously retrieve the response body as a <see cref="string"/>.</summary>

@@ -84,7 +84,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.DeleteAsync(_endpoint)
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -105,7 +105,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.DeleteAsync(_endpoint)
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}

@@ -57,7 +57,7 @@ namespace StrongGrid.Resources
 			var data = CreateJObjectForCampaign(title, senderId, subject, htmlContent, textContent, listIds, segmentIds, categories, suppressionGroupId, customUnsubscribeUrl, ipPool);
 			return _client
 				.PostAsync(_endpoint)
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Campaign>();
 		}
@@ -141,7 +141,7 @@ namespace StrongGrid.Resources
 			var data = CreateJObjectForCampaign(title, senderId, subject, htmlContent, textContent, listIds, segmentIds, categories, suppressionGroupId, customUnsubscribeUrl, ipPool);
 			return _client
 				.PatchAsync($"{_endpoint}/{campaignId}")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Campaign>();
 		}
@@ -159,7 +159,7 @@ namespace StrongGrid.Resources
 			var data = (JObject)null;
 			return _client
 				.PostAsync($"{_endpoint}/{campaignId}/schedules/now")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -181,7 +181,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PostAsync($"{_endpoint}/{campaignId}/schedules")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -203,7 +203,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PatchAsync($"{_endpoint}/{campaignId}/schedules")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -266,7 +266,7 @@ namespace StrongGrid.Resources
 
 			return _client
 				.PostAsync($"{_endpoint}/{campaignId}/schedules/test")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}

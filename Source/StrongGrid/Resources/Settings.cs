@@ -63,7 +63,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(enforcedTlsSettings);
 			return _client
 				.PatchAsync("user/settings/enforced_tls")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EnforcedTlsSettings>();
 		}
@@ -121,7 +121,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(newRelicSettings);
 			return _client
 				.PatchAsync("partner_settings/new_relic")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<NewRelicSettings>();
 		}
@@ -191,7 +191,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PatchAsync("tracking_settings/click")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<bool>("enabled");
 		}
@@ -238,7 +238,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(googleAnalyticsGlobalSettings);
 			return _client
 				.PatchAsync("tracking_settings/google_analytics")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<GoogleAnalyticsGlobalSettings>();
 		}
@@ -274,7 +274,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PatchAsync("tracking_settings/open")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<bool>("enabled");
 		}
@@ -321,7 +321,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(subscriptionTrackingSettings);
 			return _client
 				.PatchAsync("tracking_settings/subscription")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<SubscriptionSettings>();
 		}
@@ -379,7 +379,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(bccMailSettings);
 			return _client
 				.PatchAsync("mail_settings/bcc")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EmailAddressSetting>();
 		}
@@ -418,7 +418,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(addressWhitelistSettings);
 			return _client
 				.PatchAsync("mail_settings/address_whitelist")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<AddressWhitelistSettings>();
 		}
@@ -459,7 +459,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(footerGlobalSetting);
 			return _client
 				.PatchAsync("mail_settings/footer")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<FooterGlobalSettings>();
 		}
@@ -498,7 +498,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(forwardSpamMailSettins);
 			return _client
 				.PatchAsync("mail_settings/forward_spam")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EmailAddressSetting>();
 		}
@@ -534,7 +534,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PatchAsync("mail_settings/plain_content")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<bool>("enabled");
 		}
@@ -575,7 +575,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(spamCheckMailSettings);
 			return _client
 				.PatchAsync("mail_settings/spam_check")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<SpamCheckSettings>();
 		}
@@ -614,7 +614,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(templateMailSettings);
 			return _client
 				.PatchAsync("mail_settings/template")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<TemplateSettings>();
 		}
@@ -655,7 +655,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(bouncePurgeSettings);
 			return _client
 				.PatchAsync("mail_settings/bounce_purge")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<BouncePurgeSettings>();
 		}
@@ -694,7 +694,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(forwardSpamMailSettings);
 			return _client
 				.PatchAsync("mail_settings/forward_bounce")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EmailAddressSetting>();
 		}

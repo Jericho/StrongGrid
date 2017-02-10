@@ -51,7 +51,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PostAsync(_endpoint)
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Segment>();
 		}
@@ -109,7 +109,7 @@ namespace StrongGrid.Resources
 
 			return _client
 				.PatchAsync($"{_endpoint}/{segmentId}")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Segment>();
 		}

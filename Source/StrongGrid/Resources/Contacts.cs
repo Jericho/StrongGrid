@@ -74,7 +74,7 @@ namespace StrongGrid.Resources
 			var data = new JArray(ConvertContactToJObject(contact));
 			var responseContent = await _client
 				.PatchAsync(_endpoint)
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsString(null)
 				.ConfigureAwait(false);
@@ -106,7 +106,7 @@ namespace StrongGrid.Resources
 
 			return _client
 				.PostAsync(_endpoint)
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.As<ImportResult>();
 		}
@@ -137,7 +137,7 @@ namespace StrongGrid.Resources
 			var data = JArray.FromObject(contactId.ToArray());
 			return _client
 				.DeleteAsync(_endpoint)
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}
@@ -224,7 +224,7 @@ namespace StrongGrid.Resources
 
 			return _client
 				.PostAsync($"{_endpoint}/search")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Contact[]>("recipients");
 		}

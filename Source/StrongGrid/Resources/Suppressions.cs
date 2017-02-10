@@ -75,7 +75,7 @@ namespace StrongGrid.Resources
 			var data = new JObject(new JProperty("recipient_emails", JArray.FromObject(emails.ToArray())));
 			return _client
 				.PostAsync($"{_endpoint}/{groupId}/suppressions")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}

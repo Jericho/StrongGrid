@@ -79,7 +79,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PostAsync(_endpoint)
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<SuppressionGroup>();
 		}
@@ -102,7 +102,7 @@ namespace StrongGrid.Resources
 
 			return _client
 				.PatchAsync($"{_endpoint}/{groupId}")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<SuppressionGroup>();
 		}

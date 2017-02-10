@@ -258,7 +258,7 @@ namespace StrongGrid.Resources
 
 			return _client
 				.PostAsync($"{_endpoint}/send")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}

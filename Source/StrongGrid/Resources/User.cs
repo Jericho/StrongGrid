@@ -64,7 +64,7 @@ namespace StrongGrid.Resources
 			var data = CreateJObjectForUserProfile(address, city, company, country, firstName, lastName, phone, state, website, zip);
 			return _client
 				.PatchAsync(_endpoint)
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<UserProfile>();
 		}
@@ -114,7 +114,7 @@ namespace StrongGrid.Resources
 
 			return _client
 				.PutAsync("user/email")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<string>("email");
 		}
@@ -149,7 +149,7 @@ namespace StrongGrid.Resources
 
 			return _client
 				.PutAsync("user/username")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<string>("username");
 		}
@@ -186,7 +186,7 @@ namespace StrongGrid.Resources
 
 			return _client
 				.PutAsync("user/password")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse();
 		}

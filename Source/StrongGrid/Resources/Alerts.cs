@@ -76,7 +76,7 @@ namespace StrongGrid.Resources
 			var data = CreateJObjectForAlert(type, emailTo, frequency, percentage);
 			return _client
 				.PostAsync(_endpoint)
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Alert>();
 		}
@@ -114,7 +114,7 @@ namespace StrongGrid.Resources
 			var data = CreateJObjectForAlert(type, emailTo, frequency, percentage);
 			return _client
 				.PatchAsync($"{_endpoint}/{alertId}")
-				.WithBody(data)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Alert>();
 		}
