@@ -186,7 +186,7 @@ namespace StrongGrid.Utilities
 		/// <returns>Returns the request builder for chaining.</returns>
 		/// <remarks>
 		/// This method is equivalent to IRequest.AsBody&lt;T&gt;(T body) because omitting the media type
-		/// causes the first formatter in MediaTypeFormatterCollection to be used by default and the first 
+		/// causes the first formatter in MediaTypeFormatterCollection to be used by default and the first
 		/// formatter happens to be the JSON formatter. However, I don't feel good about relying on the
 		/// default ordering of the items in the MediaTypeFormatterCollection.
 		/// </remarks>

@@ -380,6 +380,7 @@ namespace StrongGrid
 				_fluentClient.Dispose();
 				_fluentClient = null;
 			}
+
 			if (_httpClient != null && _mustDisposeHttpClient)
 			{
 				_httpClient.Dispose();
