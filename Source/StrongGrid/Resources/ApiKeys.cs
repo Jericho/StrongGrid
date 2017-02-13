@@ -164,8 +164,8 @@ namespace StrongGrid.Resources
 				.ConfigureAwait(false);
 
 			// The SendGrid documentation clearly states:
-			// 		Billing permissions are mutually exclusive from all others.
-			// 		An API Key can either have Billing Permissions, or any other set of Permissions.
+			//     Billing permissions are mutually exclusive from all others.
+			//     An API Key can either have Billing Permissions, or any other set of Permissions.
 			// Therefore it's important to exclude 'billing' permissions.
 			permissions = permissions.Where(p => !p.StartsWith("billing.", StringComparison.OrdinalIgnoreCase)).ToArray();
 
