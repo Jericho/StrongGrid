@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using Pathoschild.Http.Client;
 using StrongGrid.Model;
 using StrongGrid.Utilities;
 using System;
@@ -17,22 +18,20 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class Contacts
 	{
-		private readonly string _endpoint;
-		private readonly IClient _client;
+		private const string _endpoint = "contactdb/recipients";
+		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Contacts" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public Contacts(IClient client, string endpoint = "/contactdb/recipients")
+		public Contacts(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
 		/// <summary>
-		/// Creates the asynchronous.
+		/// Creates a contact.
 		/// </summary>
 		/// <param name="email">The email.</param>
 		/// <param name="firstName">The first name.</param>
@@ -46,7 +45,7 @@ namespace StrongGrid.Resources
 		public async Task<string> CreateAsync(string email, string firstName = null, string lastName = null, IEnumerable<Field> customFields = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var contact = new Contact(email, firstName, lastName, customFields);
-			var importResult = await ImportAsync(new[] { contact }, cancellationToken);
+			var importResult = await ImportAsync(new[] { contact }, cancellationToken).ConfigureAwait(false);
 			if (importResult.ErrorCount > 0)
 			{
 				// There should only be one error message but to be safe let's combine all error messages into a single string
@@ -58,7 +57,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Updates the asynchronous.
+		/// Updates the contact.
 		/// </summary>
 		/// <param name="email">The email.</param>
 		/// <param name="firstName">The first name.</param>
@@ -73,10 +72,13 @@ namespace StrongGrid.Resources
 		{
 			var contact = new Contact(email, firstName, lastName, customFields);
 			var data = new JArray(ConvertContactToJObject(contact));
-			var response = await _client.PatchAsync(_endpoint, data, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
+			var responseContent = await _client
+				.PatchAsync(_endpoint)
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsString(null)
+				.ConfigureAwait(false);
 
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 			var importResult = JObject.Parse(responseContent).ToObject<ImportResult>();
 			if (importResult.ErrorCount > 0)
 			{
@@ -87,14 +89,14 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Imports the asynchronous.
+		/// Import contacts.
 		/// </summary>
 		/// <param name="contacts">The contacts.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="ImportResult">result</see> of the operation.
 		/// </returns>
-		public async Task<ImportResult> ImportAsync(IEnumerable<Contact> contacts, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<ImportResult> ImportAsync(IEnumerable<Contact> contacts, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JArray();
 			foreach (var contact in contacts)
@@ -102,16 +104,15 @@ namespace StrongGrid.Resources
 				data.Add(ConvertContactToJObject(contact));
 			}
 
-			var response = await _client.PostAsync(_endpoint, data, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var importResult = JObject.Parse(responseContent).ToObject<ImportResult>();
-			return importResult;
+			return _client
+				.PostAsync(_endpoint)
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.As<ImportResult>();
 		}
 
 		/// <summary>
-		/// Deletes the asynchronous.
+		/// Delete a contact.
 		/// </summary>
 		/// <param name="contactId">The contact identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
@@ -124,40 +125,41 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Deletes the asynchronous.
+		/// Delete contacts.
 		/// </summary>
 		/// <param name="contactId">The contact identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public async Task DeleteAsync(IEnumerable<string> contactId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(IEnumerable<string> contactId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = JArray.FromObject(contactId.ToArray());
-			var response = await _client.DeleteAsync(_endpoint, data, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
+			return _client
+				.DeleteAsync(_endpoint)
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsResponse();
 		}
 
 		/// <summary>
-		/// Gets the asynchronous.
+		/// Retrieve a contact.
 		/// </summary>
 		/// <param name="contactId">The contact identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Contact" />.
 		/// </returns>
-		public async Task<Contact> GetAsync(string contactId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Contact> GetAsync(string contactId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.GetAsync(_endpoint + "/" + contactId, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var contact = JObject.Parse(responseContent).ToObject<Contact>();
-			return contact;
+			return _client
+				.GetAsync($"{_endpoint}/{contactId}")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<Contact>();
 		}
 
 		/// <summary>
-		/// Gets the asynchronous.
+		/// Retrieve multiple contacts.
 		/// </summary>
 		/// <param name="recordsPerPage">The records per page.</param>
 		/// <param name="page">The page.</param>
@@ -165,49 +167,14 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Contact" />.
 		/// </returns>
-		public async Task<Contact[]> GetAsync(int recordsPerPage = 100, int page = 1, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Contact[]> GetAsync(int recordsPerPage = 100, int page = 1, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.GetAsync(string.Format("{0}?page_size={1}&page={2}", _endpoint, recordsPerPage, page), cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-
-			// Response looks like this:
-			// {
-			//  "recipients": [
-			//    {
-			//      "created_at": 1422395108,
-			//      "email": "e@example.com",
-			//      "first_name": "Ed",
-			//      "id": "YUBh",
-			//      "last_clicked": null,
-			//      "last_emailed": null,
-			//      "last_name": null,
-			//      "last_opened": null,
-			//      "updated_at": 1422395108,
-			//      "custom_fields": [
-			//        {
-			//          "id": 23,
-			//          "name": "pet",
-			//          "value": "Indiana",
-			//          "type": "text"
-			//        },
-			//        {
-			//          "id": 24,
-			//          "name": "age",
-			//          "value": 43,
-			//          "type": "number"
-			//        }
-			//      ]
-			//    }
-			//  ]
-			// }
-			// We use a dynamic object to get rid of the 'recipients' property and simply return an array of contacts
-			dynamic dynamicObject = JObject.Parse(responseContent);
-			dynamic dynamicArray = dynamicObject.recipients;
-
-			var recipients = dynamicArray.ToObject<Contact[]>();
-			return recipients;
+			return _client
+				.GetAsync(_endpoint)
+				.WithArgument("page_size", recordsPerPage)
+				.WithArgument("page", page)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<Contact[]>("recipients");
 		}
 
 		/// <summary>
@@ -217,23 +184,12 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The number of billable contacts.
 		/// </returns>
-		public async Task<long> GetBillableCountAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<long> GetBillableCountAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.GetAsync(string.Format("{0}/billable_count", _endpoint), cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-
-			// Response looks like this:
-			// {
-			//    "recipient_count": 2
-			// }
-			// We use a dynamic object to get rid of the 'recipient_count' property and simply return the numerical value
-			dynamic dynamicObject = JObject.Parse(responseContent);
-			dynamic dynamicValue = dynamicObject.recipient_count;
-
-			var count = dynamicValue.ToObject<long>();
-			return count;
+			return _client
+				.GetAsync($"{_endpoint}/billable_count")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<long>("recipient_count");
 		}
 
 		/// <summary>
@@ -243,23 +199,12 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The total number of contacts.
 		/// </returns>
-		public async Task<long> GetTotalCountAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<long> GetTotalCountAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.GetAsync(string.Format("{0}/count", _endpoint), cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-
-			// Response looks like this:
-			// {
-			//    "recipient_count": 2
-			// }
-			// We use a dynamic object to get rid of the 'recipient_count' property and simply return the numerical value
-			dynamic dynamicObject = JObject.Parse(responseContent);
-			dynamic dynamicValue = dynamicObject.recipient_count;
-
-			var count = dynamicValue.ToObject<long>();
-			return count;
+			return _client
+				.GetAsync($"{_endpoint}/count")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<long>("recipient_count");
 		}
 
 		/// <summary>
@@ -271,47 +216,17 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Contact" />.
 		/// </returns>
-		public async Task<Contact[]> SearchAsync(IEnumerable<SearchCondition> conditions, int? listId = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Contact[]> SearchAsync(IEnumerable<SearchCondition> conditions, int? listId = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
 			if (listId.HasValue) data.Add("list_id", listId.Value);
 			if (conditions != null) data.Add("conditions", JArray.FromObject(conditions));
 
-			var response = await _client.PostAsync(_endpoint + "/search", data, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-
-			// Response looks like this:
-			// {
-			//  "recipients": [
-			//    {
-			//      "created_at": 1422395108,
-			//      "email": "e@example.com",
-			//      "first_name": "Ed",
-			//      "id": "YUBh",
-			//      "last_clicked": null,
-			//      "last_emailed": null,
-			//      "last_name": null,
-			//      "last_opened": null,
-			//      "updated_at": 1422395108,
-			//      "custom_fields": [
-			//        {
-			//          "id": 23,
-			//          "name": "pet",
-			//          "value": "Fluffy",
-			//          "type": "text"
-			//        }
-			//      ]
-			//    }
-			//  ]
-			// }
-			// We use a dynamic object to get rid of the 'recipients' property and simply return an array of recipients
-			dynamic dynamicObject = JObject.Parse(responseContent);
-			dynamic dynamicArray = dynamicObject.recipients;
-
-			var recipients = dynamicArray.ToObject<Contact[]>();
-			return recipients;
+			return _client
+				.PostAsync($"{_endpoint}/search")
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<Contact[]>("recipients");
 		}
 
 		private static JObject ConvertContactToJObject(Contact contact)

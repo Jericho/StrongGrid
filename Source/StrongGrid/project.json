@@ -18,10 +18,11 @@
 		}
 	},
 	"dependencies": {
-		"HttpMultipartParser": "2.2.0",
+		"HttpMultipartParser": "2.2.1",
 		"Newtonsoft.Json": "9.0.1",
+		"Pathoschild.Http.FluentClient": "3.0.0",
 		"StyleCop.Analyzers": {
-			"version": "1.0.0",
+			"version": "1.1.0-beta001",
 			"type": "build"
 		}
 	},
@@ -40,12 +41,11 @@
 				"define": [ "NETFULL" ]
 			},
 			"dependencies": {
-				"System.Net.Http": "4.0.0"
 			},
 			"frameworkAssemblies": {
 				"System.Runtime.Serialization": "4.0.0"
 			}
 		}
 	},
-	"version": "0.18.3-*"
+	"version": "0.19.0-*"
 }

@@ -1,6 +1,4 @@
 ﻿using Newtonsoft.Json;
-using StrongGrid.Utilities;
-using System;
 
 namespace StrongGrid.Model.Webhooks
 {

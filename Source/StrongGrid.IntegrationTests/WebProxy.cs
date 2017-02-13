@@ -1,9 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Globalization;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
-using System;
-using System.Net;
 
 namespace StrongGrid.IntegrationTests
 {

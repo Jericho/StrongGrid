@@ -1,8 +1,10 @@
 ﻿using HttpMultipartParser;
 using Newtonsoft.Json.Linq;
+using Pathoschild.Http.Client;
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -42,56 +44,6 @@ namespace StrongGrid.Utilities
 		}
 
 		/// <summary>
-		/// Ensures that the response was a success. Throws an <see cref="Exception" /> otherwise.
-		/// </summary>
-		/// <param name="response">The response.</param>
-		/// <exception cref="System.Exception">Thrown when the response indicates that something went wrong.</exception>
-		public static void EnsureSuccess(this HttpResponseMessage response)
-		{
-			if (response.IsSuccessStatusCode) return;
-
-			var content = string.Empty;
-			if (response.Content != null)
-			{
-				content = response.Content.ReadAsStringAsync(null).Result;
-				response.Content.Dispose();
-
-				try
-				{
-					// Response looks like this:
-					// {
-					//   "errors": [
-					//     {
-					//       "message": "An error has occured",
-					//       "field": null,
-					//       "help": null
-					//     }
-					//  ]
-					// }
-					// We use a dynamic object to get rid of the 'errors' property and get the first error message
-					dynamic dynamicObject = JObject.Parse(content);
-					dynamic dynamicArray = dynamicObject.errors;
-					dynamic firstError = dynamicArray.First;
-
-					content = firstError.message.ToString();
-#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
-				}
-				catch
-#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
-				{
-					// Intentionally ignore parsing errors
-				}
-			}
-
-			if (string.IsNullOrEmpty(content))
-			{
-				content = string.Format("StatusCode: {0}", response.StatusCode);
-			}
-
-			throw new Exception(content);
-		}
-
-		/// <summary>
 		/// Reads the content of the HTTP response as string asynchronously.
 		/// </summary>
 		/// <param name="content">The content.</param>
@@ -125,8 +77,8 @@ namespace StrongGrid.Utilities
 		/// <code>
 		/// var httpRequest = new HttpRequestMessage
 		/// {
-		/// 	Method = HttpMethod.Get,
-		/// 	RequestUri = new Uri("https://api.vendor.com/v1/endpoint")
+		///     Method = HttpMethod.Get,
+		///     RequestUri = new Uri("https://api.vendor.com/v1/endpoint")
 		/// };
 		/// var httpClient = new HttpClient();
 		/// var response = await httpClient.SendAsync(httpRequest, CancellationToken.None).ConfigureAwait(false);
@@ -202,6 +154,97 @@ namespace StrongGrid.Utilities
 		{
 			if (parser.HasParameter(name)) return parser.GetParameterValue(name);
 			else return defaultValue;
+		}
+
+		/// <summary>Asynchronously retrieve the JSON encoded response body and convert it to a 'SendGrid' object of the desired type.</summary>
+		/// <typeparam name="T">The response model to deserialize into.</typeparam>
+		/// <param name="response">The response</param>
+		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored</param>
+		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+		/// <exception cref="ApiException">An error occurred processing the response.</exception>
+		public static Task<T> AsSendGridObject<T>(this IResponse response, string propertyName = null)
+		{
+			return response.Message.Content.AsSendGridObject<T>(propertyName);
+		}
+
+		/// <summary>Asynchronously retrieve the JSON encoded response body and convert it to a 'SendGrid' object of the desired type.</summary>
+		/// <typeparam name="T">The response model to deserialize into.</typeparam>
+		/// <param name="request">The request</param>
+		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored</param>
+		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+		/// <exception cref="ApiException">An error occurred processing the response.</exception>
+		public static async Task<T> AsSendGridObject<T>(this IRequest request, string propertyName = null)
+		{
+			var response = await request.AsMessage().ConfigureAwait(false);
+			return await response.Content.AsSendGridObject<T>(propertyName).ConfigureAwait(false);
+		}
+
+		/// <summary>Set the body content of the HTTP request.</summary>
+		/// <typeparam name="T">The type of object to serialize into a JSON string.</typeparam>
+		/// <param name="request">The request.</param>
+		/// <param name="body">The value to serialize into the HTTP body content.</param>
+		/// <returns>Returns the request builder for chaining.</returns>
+		/// <remarks>
+		/// This method is equivalent to IRequest.AsBody&lt;T&gt;(T body) because omitting the media type
+		/// causes the first formatter in MediaTypeFormatterCollection to be used by default and the first
+		/// formatter happens to be the JSON formatter. However, I don't feel good about relying on the
+		/// default ordering of the items in the MediaTypeFormatterCollection.
+		/// </remarks>
+		public static IRequest WithJsonBody<T>(this IRequest request, T body)
+		{
+			return request.WithBody(body, new MediaTypeHeaderValue("application/json"));
+		}
+
+		/// <summary>Asynchronously retrieve the response body as a <see cref="string"/>.</summary>
+		/// <param name="response">The response</param>
+		/// <param name="encoding">The encoding. You can leave this parameter null and the encoding will be
+		/// automatically calculated based on the charset in the response. Also, UTF-8
+		/// encoding will be used if the charset is absent from the response, is blank
+		/// or contains an invalid value.</param>
+		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+		/// <exception cref="ApiException">An error occurred processing the response.</exception>
+		public static Task<string> AsString(this IResponse response, Encoding encoding)
+		{
+			return response.Message.Content.ReadAsStringAsync(encoding);
+		}
+
+		/// <summary>Asynchronously retrieve the response body as a <see cref="string"/>.</summary>
+		/// <param name="request">The request</param>
+		/// <param name="encoding">The encoding. You can leave this parameter null and the encoding will be
+		/// automatically calculated based on the charset in the response. Also, UTF-8
+		/// encoding will be used if the charset is absent from the response, is blank
+		/// or contains an invalid value.</param>
+		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+		/// <exception cref="ApiException">An error occurred processing the response.</exception>
+		public static async Task<string> AsString(this IRequest request, Encoding encoding)
+		{
+			IResponse response = await request.AsResponse().ConfigureAwait(false);
+			return await response.AsString(encoding).ConfigureAwait(false);
+		}
+
+		/// <summary>Asynchronously converts the JSON encoded content and converts it to a 'SendGrid' object of the desired type.</summary>
+		/// <typeparam name="T">The response model to deserialize into.</typeparam>
+		/// <param name="httpContent">The content</param>
+		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored</param>
+		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+		/// <exception cref="ApiException">An error occurred processing the response.</exception>
+		private static async Task<T> AsSendGridObject<T>(this HttpContent httpContent, string propertyName = null)
+		{
+			var responseContent = await httpContent.ReadAsStringAsync(null).ConfigureAwait(false);
+
+			if (!string.IsNullOrEmpty(propertyName))
+			{
+				var jObject = JObject.Parse(responseContent);
+				return jObject[propertyName].ToObject<T>();
+			}
+			else if (typeof(T).IsArray)
+			{
+				return JArray.Parse(responseContent).ToObject<T>();
+			}
+			else
+			{
+				return JObject.Parse(responseContent).ToObject<T>();
+			}
 		}
 	}
 }

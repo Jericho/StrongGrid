@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using Pathoschild.Http.Client;
 using StrongGrid.Model;
 using StrongGrid.Utilities;
 using System;
@@ -18,17 +19,15 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class ApiKeys
 	{
-		private readonly string _endpoint;
-		private readonly IClient _client;
+		private const string _endpoint = "api_keys";
+		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ApiKeys" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public ApiKeys(IClient client, string endpoint = "/api_keys")
+		public ApiKeys(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
@@ -40,14 +39,12 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="ApiKey" />.
 		/// </returns>
-		public async Task<ApiKey> GetAsync(string keyId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<ApiKey> GetAsync(string keyId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.GetAsync(string.Format("{0}/{1}", _endpoint, keyId), cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var apikey = JObject.Parse(responseContent).ToObject<ApiKey>();
-			return apikey;
+			return _client
+				.GetAsync($"{_endpoint}/{keyId}")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<ApiKey>();
 		}
 
 		/// <summary>
@@ -61,28 +58,12 @@ namespace StrongGrid.Resources
 		/// The response does not include the permissions associated with each api key.
 		/// In order to get the permission for a given key, you need to <see cref="GetAsync(string, CancellationToken)">retrieve keys one at a time</see>.
 		/// </remarks>
-		public async Task<ApiKey[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<ApiKey[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.GetAsync(_endpoint, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-
-			// Response looks like this:
-			// {
-			//   "result": [
-			//     {
-			//       "name": "A New Hope",
-			//       "api_key_id": "xxxxxxxx"
-			//     }
-			//  ]
-			// }
-			// We use a dynamic object to get rid of the 'result' property and simply return an array of api keys
-			dynamic dynamicObject = JObject.Parse(responseContent);
-			dynamic dynamicArray = dynamicObject.result;
-
-			var apikeys = dynamicArray.ToObject<ApiKey[]>();
-			return apikeys;
+			return _client
+				.GetAsync(_endpoint)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<ApiKey[]>("result");
 		}
 
 		/// <summary>
@@ -94,17 +75,16 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="ApiKey" />.
 		/// </returns>
-		public async Task<ApiKey> CreateAsync(string name, IEnumerable<string> scopes = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<ApiKey> CreateAsync(string name, IEnumerable<string> scopes = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			scopes = scopes ?? Enumerable.Empty<string>();
 
 			var data = CreateJObjectForApiKey(name, scopes);
-			var response = await _client.PostAsync(_endpoint, data, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var apikey = JObject.Parse(responseContent).ToObject<ApiKey>();
-			return apikey;
+			return _client
+				.PostAsync(_endpoint)
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<ApiKey>();
 		}
 
 		/// <summary>
@@ -115,10 +95,12 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public async Task DeleteAsync(string keyId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(string keyId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.DeleteAsync(string.Format("{0}/{1}", _endpoint, keyId), cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
+			return _client
+				.DeleteAsync($"{_endpoint}/{keyId}")
+				.WithCancellationToken(cancellationToken)
+				.AsResponse();
 		}
 
 		/// <summary>
@@ -129,26 +111,15 @@ namespace StrongGrid.Resources
 		/// <param name="scopes">The scopes.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>The <see cref="ApiKey"/>.</returns>
-		public async Task<ApiKey> UpdateAsync(string keyId, string name, IEnumerable<string> scopes = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<ApiKey> UpdateAsync(string keyId, string name, IEnumerable<string> scopes = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			scopes = scopes ?? Enumerable.Empty<string>();
 
-			HttpResponseMessage response = null;
 			var data = CreateJObjectForApiKey(name, scopes);
-			if (scopes.Any())
-			{
-				response = await _client.PutAsync(string.Format("{0}/{1}", _endpoint, keyId), data, cancellationToken).ConfigureAwait(false);
-			}
-			else
-			{
-				response = await _client.PatchAsync(string.Format("{0}/{1}", _endpoint, keyId), data, cancellationToken).ConfigureAwait(false);
-			}
-
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var apikey = JObject.Parse(responseContent).ToObject<ApiKey>();
-			return apikey;
+			return (scopes.Any() ? _client.PutAsync($"{_endpoint}/{keyId}") : _client.PatchAsync($"{_endpoint}/{keyId}"))
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<ApiKey>();
 		}
 
 		/// <summary>
@@ -186,11 +157,15 @@ namespace StrongGrid.Resources
 		public async Task<ApiKey> CreateWithAllPermissionsAsync(string name, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			// Get the current user's permissions
-			var permissions = await _client.User.GetPermissionsAsync(cancellationToken).ConfigureAwait(false);
+			var permissions = await _client
+				.GetAsync("scopes")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<string[]>("scopes")
+				.ConfigureAwait(false);
 
 			// The SendGrid documentation clearly states:
-			// 		Billing permissions are mutually exclusive from all others.
-			// 		An API Key can either have Billing Permissions, or any other set of Permissions.
+			//     Billing permissions are mutually exclusive from all others.
+			//     An API Key can either have Billing Permissions, or any other set of Permissions.
 			// Therefore it's important to exclude 'billing' permissions.
 			permissions = permissions.Where(p => !p.StartsWith("billing.", StringComparison.OrdinalIgnoreCase)).ToArray();
 

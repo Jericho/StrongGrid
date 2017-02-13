@@ -599,7 +599,7 @@ namespace StrongGrid.IntegrationTests
 			if (sender == null)
 			{
 				sender = client.SenderIdentities.CreateAsync("Integration Testing identity", new MailAddress(YOUR_EMAIL, "John Doe"), new MailAddress(YOUR_EMAIL, "John Doe"), "123 Main Street", null, "Small Town", "ZZ", "12345", "USA").Result;
-				throw new Exception($"A new sender identity was create and a verification email was sent to {sender.From.Email}. You must complete the verification process before proceeding.");
+				throw new Exception($"A new sender identity was created and a verification email was sent to {sender.From.Email}. You must complete the verification process before proceeding.");
 			}
 			else if (!sender.Verification.IsCompleted)
 			{
@@ -736,17 +736,21 @@ namespace StrongGrid.IntegrationTests
 		{
 			Console.WriteLine("\n***** WHITELABEL DOMAINS *****");
 
-			var newDomain = client.Whitelabel.CreateDomainAsync("example.com", "email").Result;
-			Console.WriteLine($"Whitelabel domain created. Id: {newDomain.Id}");
-
 			var domains = client.Whitelabel.GetAllDomainsAsync().Result;
 			Console.WriteLine($"All whitelabel domains retrieved. There are {domains.Length} domains");
 
-			var domainValidation = client.Whitelabel.ValidateDomainAsync(newDomain.Id).Result;
+			var domain = domains.FirstOrDefault(d => d.Domain == "example.com");
+			if (domain == null)
+			{
+				domain = client.Whitelabel.CreateDomainAsync("example.com", "email").Result;
+				Console.WriteLine($"Whitelabel domain created. Id: {domain.Id}");
+			}
+
+			var domainValidation = client.Whitelabel.ValidateDomainAsync(domain.Id).Result;
 			Console.WriteLine($"Whitelabel domain validation: {domainValidation.IsValid}");
 
-			client.Whitelabel.DeleteDomainAsync(newDomain.Id).Wait();
-			Console.WriteLine($"Whitelabel domain {newDomain.Id} deleted.");
+			client.Whitelabel.DeleteDomainAsync(domain.Id).Wait();
+			Console.WriteLine($"Whitelabel domain {domain.Id} deleted.");
 
 
 			Console.WriteLine("\n***** WHITELABEL IPS *****");
@@ -757,17 +761,21 @@ namespace StrongGrid.IntegrationTests
 
 			Console.WriteLine("\n***** WHITELABEL LINKS *****");
 
-			var newLink = client.Whitelabel.CreateLinkAsync("example.com", "email", true).Result;
-			Console.WriteLine($"Whitelabel link created. Id: {newLink.Id}");
-
 			var links = client.Whitelabel.GetAllLinksAsync().Result;
 			Console.WriteLine($"All whitelabel links retrieved. There are {links.Length} links");
 
-			var linkValidation = client.Whitelabel.ValidateLinkAsync(newLink.Id).Result;
+			var link = links.FirstOrDefault(d => d.Domain == "example.com");
+			if (link == null)
+			{
+				link = client.Whitelabel.CreateLinkAsync("example.com", "email", true).Result;
+				Console.WriteLine($"Whitelabel link created. Id: {link.Id}");
+			}
+
+			var linkValidation = client.Whitelabel.ValidateLinkAsync(link.Id).Result;
 			Console.WriteLine($"Whitelabel validation: {linkValidation.IsValid}");
 
-			client.Whitelabel.DeleteLinkAsync(newLink.Id).Wait();
-			Console.WriteLine($"Whitelabel link {newLink.Id} deleted.");
+			client.Whitelabel.DeleteLinkAsync(link.Id).Wait();
+			Console.WriteLine($"Whitelabel link {link.Id} deleted.");
 
 			ConcludeTests(pauseAfterTests);
 		}

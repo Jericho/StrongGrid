@@ -1,8 +1,12 @@
 ﻿using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Pathoschild.Http.Client;
+using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Model;
+using StrongGrid.UnitTests;
+using StrongGrid.Utilities;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -15,7 +19,7 @@ namespace StrongGrid.Resources.UnitTests
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "/alerts";
+		private const string ENDPOINT = "alerts";
 
 		private const string SINGLE_ALERT_JSON = @"{
 			'created_at': 1451520930,
@@ -81,20 +85,18 @@ namespace StrongGrid.Resources.UnitTests
 			var frequency = Frequency.Weekly;
 			var percentage = 75;
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PostAsync(ENDPOINT, It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_ALERT_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", SINGLE_ALERT_JSON);
 
-			var alerts = new Alerts(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var alerts = new Alerts(client);
 
 			// Act
 			var result = alerts.CreateAsync(type, emailTo, frequency, percentage, CancellationToken.None).Result;
 
 			// Assert
-			mockRepository.VerifyAll();
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
 
@@ -104,20 +106,18 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var alertId = 48;
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync($"{ENDPOINT}/{alertId}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_ALERT_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, alertId)).Respond("application/json", SINGLE_ALERT_JSON);
 
-			var alerts = new Alerts(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var alerts = new Alerts(client);
 
 			// Act
 			var result = alerts.GetAsync(alertId, CancellationToken.None).Result;
 
 			// Assert
-			mockRepository.VerifyAll();
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
 
@@ -125,20 +125,18 @@ namespace StrongGrid.Resources.UnitTests
 		public void GetAll()
 		{
 			// Arrange
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.GetAsync(ENDPOINT, It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(MULTIPLE_ALERTS_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", MULTIPLE_ALERTS_JSON);
 
-			var alerts = new Alerts(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var alerts = new Alerts(client);
 
 			// Act
 			var result = alerts.GetAllAsync(CancellationToken.None).Result;
 
 			// Assert
-			mockRepository.VerifyAll();
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(3);
 		}
@@ -149,20 +147,18 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var alertId = 48;
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.DeleteAsync($"{ENDPOINT}/{alertId}", It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK))
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, alertId)).Respond(HttpStatusCode.OK);
 
-			var alerts = new Alerts(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var alerts = new Alerts(client);
 
 			// Act
 			alerts.DeleteAsync(alertId, CancellationToken.None).Wait(CancellationToken.None);
 
 			// Assert
-			mockRepository.VerifyAll();
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -172,20 +168,18 @@ namespace StrongGrid.Resources.UnitTests
 			var alertId = 48;
 			var emailTo = "test@example.com";
 
-			var mockRepository = new MockRepository(MockBehavior.Strict);
-			var mockClient = mockRepository.Create<IClient>();
-			mockClient
-				.Setup(c => c.PatchAsync($"{ENDPOINT}/{alertId}", It.IsAny<JObject>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SINGLE_ALERT_JSON) })
-				.Verifiable();
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(ENDPOINT, alertId)).Respond("application/json", SINGLE_ALERT_JSON);
 
-			var alerts = new Alerts(mockClient.Object, ENDPOINT);
+			var client = Utils.GetFluentClient(mockHttp);
+			var alerts = new Alerts(client);
 
 			// Act
 			var result = alerts.UpdateAsync(alertId, null, emailTo, null, null, CancellationToken.None).Result;
 
 			// Assert
-			mockRepository.VerifyAll();
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
 	}

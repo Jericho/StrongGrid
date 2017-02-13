@@ -22,12 +22,18 @@ namespace StrongGrid.Utilities
 			"email",
 			"event",
 			"ip",
+			"marketing_campaign_id",
+			"marketing_campaign_name",
+			"marketing_campaign_split_id",
+			"marketing_campaign_version",
 			"newsletter",
+			"pool",
 			"reason",
 			"response",
 			"send_at",
 			"sg_event_id",
 			"sg_message_id",
+			"sg_user_id",
 			"smtp-id",
 			"status",
 			"template",
@@ -36,13 +42,7 @@ namespace StrongGrid.Utilities
 			"type",
 			"url",
 			"url_offset",
-			"useragent",
-			"sg_user_id",
-			"pool",
-			"marketing_campaign_id",
-			"marketing_campaign_name",
-			"marketing_campaign_version",
-			"marketing_campaign_split_id"
+			"useragent"
 		};
 
 		/// <summary>

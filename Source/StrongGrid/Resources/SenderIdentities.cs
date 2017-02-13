@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using Pathoschild.Http.Client;
 using StrongGrid.Model;
 using StrongGrid.Utilities;
 using System.Threading;
@@ -14,22 +15,20 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class SenderIdentities
 	{
-		private readonly string _endpoint;
-		private readonly IClient _client;
+		private const string _endpoint = "senders";
+		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SenderIdentities" /> class.
 		/// </summary>
 		/// <param name="client">SendGrid Web API v3 client</param>
-		/// <param name="endpoint">Resource endpoint</param>
-		public SenderIdentities(IClient client, string endpoint = "/senders")
+		public SenderIdentities(Pathoschild.Http.Client.IClient client)
 		{
-			_endpoint = endpoint;
 			_client = client;
 		}
 
 		/// <summary>
-		/// Creates the asynchronous.
+		/// Create a sender identity.
 		/// </summary>
 		/// <param name="nickname">The nickname.</param>
 		/// <param name="from">From.</param>
@@ -44,81 +43,50 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SenderIdentity" />.
 		/// </returns>
-		public async Task<SenderIdentity> CreateAsync(string nickname, MailAddress from, MailAddress replyTo, string address1, string address2, string city, string state, string zip, string country, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SenderIdentity> CreateAsync(string nickname, MailAddress from, MailAddress replyTo, string address1, string address2, string city, string state, string zip, string country, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = CreateJObjectForSenderIdentity(nickname, from, replyTo, address1, address2, city, state, zip, country);
 
-			var response = await _client.PostAsync(_endpoint, data, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var senderIdentity = JObject.Parse(responseContent).ToObject<SenderIdentity>();
-			return senderIdentity;
+			return _client
+				.PostAsync(_endpoint)
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<SenderIdentity>();
 		}
 
 		/// <summary>
-		/// Gets all asynchronous.
+		/// Retrieve all sender identities.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="SenderIdentity" />.
 		/// </returns>
-		public async Task<SenderIdentity[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SenderIdentity[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.GetAsync(_endpoint, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-
-			// Contrary to what the documentation says, the response looks like this:
-			//  [
-			//    {
-			//      'id': 1,
-			//      'nickname': 'My Sender ID',
-			//      'from': {
-			//        'email': 'from@example.com',
-			//        'name': 'Example INC'
-			//      },
-			//      'reply_to': {
-			//        'email': 'replyto@example.com',
-			//        'name': 'Example INC'
-			//      },
-			//      'address': '123 Elm St.',
-			//      'address_2': 'Apt. 456',
-			//      'city': 'Denver',
-			//      'state': 'Colorado',
-			//      'zip': '80202',
-			//      'country': 'United States',
-			//      'verified': { 'status': true, 'reason': '' },
-			//      'updated_at': 1449872165,
-			//      'created_at': 1449872165,
-			//      'locked': false
-			//    }
-			//  ]
-			var senderIdentities = JArray.Parse(responseContent).ToObject<SenderIdentity[]>();
-			return senderIdentities;
+			return _client
+				.GetAsync(_endpoint)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<SenderIdentity[]>();
 		}
 
 		/// <summary>
-		/// Gets the asynchronous.
+		/// Retrieve a sender identity.
 		/// </summary>
 		/// <param name="senderId">The sender identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="SenderIdentity" />.
 		/// </returns>
-		public async Task<SenderIdentity> GetAsync(long senderId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SenderIdentity> GetAsync(long senderId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.GetAsync(string.Format("{0}/{1}", _endpoint, senderId), cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var segment = JObject.Parse(responseContent).ToObject<SenderIdentity>();
-			return segment;
+			return _client
+				.GetAsync($"{_endpoint}/{senderId}")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<SenderIdentity>();
 		}
 
 		/// <summary>
-		/// Updates the asynchronous.
+		/// Update a sender identity.
 		/// </summary>
 		/// <param name="senderId">The sender identifier.</param>
 		/// <param name="nickname">The nickname.</param>
@@ -134,44 +102,46 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SenderIdentity" />.
 		/// </returns>
-		public async Task<SenderIdentity> UpdateAsync(long senderId, string nickname = null, MailAddress from = null, MailAddress replyTo = null, string address1 = null, string address2 = null, string city = null, string state = null, string zip = null, string country = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SenderIdentity> UpdateAsync(long senderId, string nickname = null, MailAddress from = null, MailAddress replyTo = null, string address1 = null, string address2 = null, string city = null, string state = null, string zip = null, string country = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = CreateJObjectForSenderIdentity(nickname, from, replyTo, address1, address2, city, state, zip, country);
 
-			var response = await _client.PatchAsync(string.Format("{0}/{1}", _endpoint, senderId), data, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
-
-			var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-			var segment = JObject.Parse(responseContent).ToObject<SenderIdentity>();
-			return segment;
+			return _client
+				.PatchAsync($"{_endpoint}/{senderId}")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<SenderIdentity>();
 		}
 
 		/// <summary>
-		/// Deletes the asynchronous.
+		/// Delete a sender identity.
 		/// </summary>
 		/// <param name="senderId">The sender identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public async Task DeleteAsync(long senderId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(long senderId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.DeleteAsync(_endpoint + "/" + senderId, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
+			return _client
+				.DeleteAsync($"{_endpoint}/{senderId}")
+				.WithCancellationToken(cancellationToken)
+				.AsResponse();
 		}
 
 		/// <summary>
-		/// Resends the verification.
+		/// Resend the verification to a sender.
 		/// </summary>
 		/// <param name="senderId">The sender identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public async Task ResendVerification(long senderId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task ResendVerification(long senderId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var response = await _client.PostAsync(string.Format("{0}/{1}/resend_verification", _endpoint, senderId), (JObject)null, cancellationToken).ConfigureAwait(false);
-			response.EnsureSuccess();
+			return _client
+				.PostAsync($"{_endpoint}/{senderId}/resend_verification")
+				.WithCancellationToken(cancellationToken)
+				.AsResponse();
 		}
 
 		private static JObject CreateJObjectForSenderIdentity(string nickname = null, MailAddress from = null, MailAddress replyTo = null, string address1 = null, string address2 = null, string city = null, string state = null, string zip = null, string country = null)

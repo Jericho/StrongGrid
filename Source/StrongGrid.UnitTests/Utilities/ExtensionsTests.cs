@@ -1,8 +1,6 @@
 ﻿using Shouldly;
 using StrongGrid.Utilities;
 using System;
-using System.Net;
-using System.Net.Http;
 using Xunit;
 
 namespace StrongGrid.UnitTests
@@ -59,48 +57,6 @@ namespace StrongGrid.UnitTests
 
 			// Assert
 			result.ShouldBe(1468155111);
-		}
-
-		[Fact]
-		public void EnsureSuccess_success()
-		{
-			// Arrange
-			var httpResponse = new HttpResponseMessage(HttpStatusCode.OK);
-
-			// Act
-			httpResponse.EnsureSuccess();
-
-			// Assert
-			// Nothing to assert, we just want to make sure no exception was thrown
-		}
-
-		[Fact]
-		public void EnsureSuccess_failure()
-		{
-			// Arrange
-			var httpResponse = new HttpResponseMessage(HttpStatusCode.ServiceUnavailable);
-
-			// Act
-			Should.Throw<Exception>(() => httpResponse.EnsureSuccess())
-				.Message.ShouldBe("StatusCode: ServiceUnavailable");
-
-			// Assert
-			// Nothing to assert, we just want to make sure an exception was thrown
-		}
-
-		[Fact]
-		public void EnsureSuccess_failure_with_content()
-		{
-			// Arrange
-			var httpResponse = new HttpResponseMessage(HttpStatusCode.ServiceUnavailable);
-			httpResponse.Content = new StringContent("Hello World");
-
-			// Act
-			Should.Throw<Exception>(() => httpResponse.EnsureSuccess())
-				.Message.ShouldBe("Hello World");
-
-			// Assert
-			// Nothing to assert, we just want to make sure an exception was thrown
 		}
 	}
 }
