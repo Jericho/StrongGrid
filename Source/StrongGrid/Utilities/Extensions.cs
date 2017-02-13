@@ -77,8 +77,8 @@ namespace StrongGrid.Utilities
 		/// <code>
 		/// var httpRequest = new HttpRequestMessage
 		/// {
-		/// 	Method = HttpMethod.Get,
-		/// 	RequestUri = new Uri("https://api.vendor.com/v1/endpoint")
+		///     Method = HttpMethod.Get,
+		///     RequestUri = new Uri("https://api.vendor.com/v1/endpoint")
 		/// };
 		/// var httpClient = new HttpClient();
 		/// var response = await httpClient.SendAsync(httpRequest, CancellationToken.None).ConfigureAwait(false);
