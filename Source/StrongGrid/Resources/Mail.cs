@@ -61,7 +61,7 @@ namespace StrongGrid.Resources
 		/// This is a convenience method with simplified parameters.
 		/// If you need more options, use the <see cref="SendAsync" /> method.
 		/// </remarks>
-		public Task SendToSingleRecipientAsync(
+		public Task<string> SendToSingleRecipientAsync(
 			MailAddress to,
 			MailAddress from,
 			string subject,
@@ -119,7 +119,7 @@ namespace StrongGrid.Resources
 		/// This is a convenience method with simplified parameters.
 		/// If you need more options, use the <see cref="SendAsync" /> method.
 		/// </remarks>
-		public Task SendToMultipleRecipientsAsync(
+		public Task<string> SendToMultipleRecipientsAsync(
 			IEnumerable<MailAddress> recipients,
 			MailAddress from,
 			string subject,
@@ -187,7 +187,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task SendAsync(
+		public async Task<string> SendAsync(
 			IEnumerable<MailPersonalization> personalizations,
 			string subject,
 			IEnumerable<MailContent> contents,
@@ -256,11 +256,20 @@ namespace StrongGrid.Resources
 				data.Add("custom_args", args);
 			}
 
-			return _client
+			var response = await _client
 				.PostAsync($"{_endpoint}/send")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsResponse();
+				.AsResponse()
+				.ConfigureAwait(false);
+
+			var messageId = (string)null;
+			if (response.Message.Headers.Contains("X-Message-Id"))
+			{
+				messageId = response.Message.Headers.GetValues("X-Message-Id").FirstOrDefault();
+			}
+
+			return messageId;
 		}
 	}
 }
