@@ -155,19 +155,20 @@ namespace StrongGrid.IntegrationTests
 				new  KeyValuePair<string, string>("some_other_value", "QWERTY")
 			};
 
-			client.Mail.SendAsync(personalizations, subject, new[] { textContent, htmlContent }, from,
+			var messageId = client.Mail.SendAsync(personalizations, subject, new[] { textContent, htmlContent }, from,
 				headers: headers,
 				customArgs: customArgs,
 				mailSettings: mailSettings,
 				trackingSettings: trackingSettings
-			).Wait();
+			).Result;
+			Console.WriteLine("Email has been sent. Message Id: {0}", messageId);
 
 			/******
 				Here's the simplified way to send a single email to a single recipient:
-				await client.Mail.SendToSingleRecipientAsync(to, from, subject, htmlContent, textContent).ConfigureAwait(false);
+				var messageId = await client.Mail.SendToSingleRecipientAsync(to, from, subject, htmlContent, textContent).ConfigureAwait(false);
 
 				Here's the simplified way to send the same email to multiple recipients:
-				await client.Mail.SendToMultipleRecipientsAsync(new[] { to1, to2, to3 }, from, subject, htmlContent, textContent).ConfigureAwait(false);
+				var messageId = await client.Mail.SendToMultipleRecipientsAsync(new[] { to1, to2, to3 }, from, subject, htmlContent, textContent).ConfigureAwait(false);
 			******/
 
 			ConcludeTests(pauseAfterTests);
