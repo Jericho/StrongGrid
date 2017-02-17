@@ -129,7 +129,7 @@ namespace StrongGrid.Resources
 				.DeleteAsync($"{_endpoint}/{segmentId}")
 				.WithArgument("delete_contacts", deleteMatchingContacts ? "true" : "false")
 				.WithCancellationToken(cancellationToken)
-				.AsResponse();
+				.AsMessage();
 		}
 
 		/// <summary>

@@ -125,7 +125,7 @@ namespace StrongGrid.Resources
 			return _client
 				.DeleteAsync($"{_endpoint}/{senderId}")
 				.WithCancellationToken(cancellationToken)
-				.AsResponse();
+				.AsMessage();
 		}
 
 		/// <summary>
@@ -141,7 +141,7 @@ namespace StrongGrid.Resources
 			return _client
 				.PostAsync($"{_endpoint}/{senderId}/resend_verification")
 				.WithCancellationToken(cancellationToken)
-				.AsResponse();
+				.AsMessage();
 		}
 
 		private static JObject CreateJObjectForSenderIdentity(string nickname = null, MailAddress from = null, MailAddress replyTo = null, string address1 = null, string address2 = null, string city = null, string state = null, string zip = null, string country = null)

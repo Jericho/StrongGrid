@@ -1,9 +1,11 @@
 ﻿using RichardSzalay.MockHttp;
+using Shouldly;
 using StrongGrid.Model;
 using StrongGrid.UnitTests;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
@@ -28,11 +30,37 @@ namespace StrongGrid.Resources.UnitTests
 			var mail = new Mail(client);
 
 			// Act
-			mail.SendAsync(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, CancellationToken.None).Wait();
+			var result = mail.SendAsync(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, CancellationToken.None).Result;
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldBeNull();
+		}
+
+		[Fact]
+		public void Send_response_with_message_id()
+		{
+			// Arrange
+
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "send")).Respond((HttpRequestMessage request) =>
+			{
+				var response = new HttpResponseMessage(HttpStatusCode.OK);
+				response.Headers.Add("X-Message-Id", "abc123");
+				return response;
+			});
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var mail = new Mail(client);
+
+			// Act
+			var result = mail.SendAsync(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, CancellationToken.None).Result;
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldBe("abc123");
 		}
 
 		[Fact]
@@ -47,11 +75,12 @@ namespace StrongGrid.Resources.UnitTests
 			var mail = new Mail(client);
 
 			// Act
-			mail.SendToSingleRecipientAsync(null, null, null, null, null).Wait(CancellationToken.None);
+			var result = mail.SendToSingleRecipientAsync(null, null, null, null, null).Result;
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldBeNull();
 		}
 
 		[Fact]
@@ -73,11 +102,12 @@ namespace StrongGrid.Resources.UnitTests
 			var mail = new Mail(client);
 
 			// Act
-			mail.SendToMultipleRecipientsAsync(recipients, null, null, null, null).Wait(CancellationToken.None);
+			var result = mail.SendToMultipleRecipientsAsync(recipients, null, null, null, null).Result;
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldBeNull();
 		}
 	}
 }

@@ -188,7 +188,7 @@ namespace StrongGrid.Resources
 				.PutAsync("user/password")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsResponse();
+				.AsMessage();
 		}
 
 		/// <summary>

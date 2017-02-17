@@ -139,7 +139,7 @@ namespace StrongGrid.Resources
 				.DeleteAsync(_endpoint)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsResponse();
+				.AsMessage();
 		}
 
 		/// <summary>

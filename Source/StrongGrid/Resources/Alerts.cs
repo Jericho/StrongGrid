@@ -94,7 +94,7 @@ namespace StrongGrid.Resources
 			return _client
 				.DeleteAsync($"{_endpoint}/{alertId}")
 				.WithCancellationToken(cancellationToken)
-				.AsResponse();
+				.AsMessage();
 		}
 
 		/// <summary>

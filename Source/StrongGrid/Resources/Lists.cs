@@ -82,7 +82,7 @@ namespace StrongGrid.Resources
 			return _client
 				.DeleteAsync($"{_endpoint}/{listId}")
 				.WithCancellationToken(cancellationToken)
-				.AsResponse();
+				.AsMessage();
 		}
 
 		/// <summary>
@@ -100,7 +100,7 @@ namespace StrongGrid.Resources
 				.DeleteAsync(_endpoint)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsResponse();
+				.AsMessage();
 		}
 
 		/// <summary>
@@ -140,7 +140,7 @@ namespace StrongGrid.Resources
 				.PatchAsync($"{_endpoint}/{listId}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsResponse();
+				.AsMessage();
 		}
 
 		/// <summary>
@@ -179,7 +179,7 @@ namespace StrongGrid.Resources
 			return _client
 				.PostAsync($"{_endpoint}/{listId}/recipients/{contactId}")
 				.WithCancellationToken(cancellationToken)
-				.AsResponse();
+				.AsMessage();
 		}
 
 		/// <summary>
@@ -196,7 +196,7 @@ namespace StrongGrid.Resources
 			return _client
 				.DeleteAsync($"{_endpoint}/{listId}/recipients/{contactId}")
 				.WithCancellationToken(cancellationToken)
-				.AsResponse();
+				.AsMessage();
 		}
 
 		/// <summary>
@@ -215,7 +215,7 @@ namespace StrongGrid.Resources
 				.PostAsync($"{_endpoint}/{listId}/recipients")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsResponse();
+				.AsMessage();
 		}
 	}
 }
