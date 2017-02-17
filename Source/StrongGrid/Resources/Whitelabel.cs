@@ -139,7 +139,7 @@ namespace StrongGrid.Resources
 			return _client
 				.DeleteAsync($"{_endpoint}/domains/{domainId}")
 				.WithCancellationToken(cancellationToken)
-				.AsResponse();
+				.AsMessage();
 		}
 
 		/// <summary>
@@ -234,7 +234,7 @@ namespace StrongGrid.Resources
 				.DeleteAsync($"{_endpoint}/domains/subuser")
 				.WithArgument("username", username)
 				.WithCancellationToken(cancellationToken)
-				.AsResponse();
+				.AsMessage();
 		}
 
 		/// <summary>
@@ -340,7 +340,7 @@ namespace StrongGrid.Resources
 			return _client
 				.DeleteAsync($"{_endpoint}/ips/{ipId}")
 				.WithCancellationToken(cancellationToken)
-				.AsResponse();
+				.AsMessage();
 		}
 
 		/// <summary>
@@ -461,7 +461,7 @@ namespace StrongGrid.Resources
 			return _client
 				.DeleteAsync($"{_endpoint}/links/{linkId}")
 				.WithCancellationToken(cancellationToken)
-				.AsResponse();
+				.AsMessage();
 		}
 
 		/// <summary>
@@ -534,7 +534,7 @@ namespace StrongGrid.Resources
 				.DeleteAsync($"{_endpoint}/links/subuser")
 				.WithArgument("username", username)
 				.WithCancellationToken(cancellationToken)
-				.AsResponse();
+				.AsMessage();
 		}
 
 		/// <summary>

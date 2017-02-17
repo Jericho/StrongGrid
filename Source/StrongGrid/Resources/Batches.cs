@@ -86,7 +86,7 @@ namespace StrongGrid.Resources
 				.PostAsync("user/scheduled_sends")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsResponse();
+				.AsMessage();
 		}
 
 		/// <summary>
@@ -108,7 +108,7 @@ namespace StrongGrid.Resources
 				.PostAsync("user/scheduled_sends")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsResponse();
+				.AsMessage();
 		}
 
 		/// <summary>
@@ -139,7 +139,7 @@ namespace StrongGrid.Resources
 			return _client
 				.DeleteAsync($"{_endpoint}/{batchId}")
 				.WithCancellationToken(cancellationToken)
-				.AsResponse();
+				.AsMessage();
 		}
 	}
 }

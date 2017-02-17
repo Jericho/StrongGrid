@@ -77,7 +77,7 @@ namespace StrongGrid.Resources
 				.PostAsync($"{_endpoint}/{groupId}/suppressions")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsResponse();
+				.AsMessage();
 		}
 
 		/// <summary>
@@ -94,7 +94,7 @@ namespace StrongGrid.Resources
 			return _client
 				.DeleteAsync($"{_endpoint}/{groupId}/suppressions/{email}")
 				.WithCancellationToken(cancellationToken)
-				.AsResponse();
+				.AsMessage();
 		}
 	}
 }
