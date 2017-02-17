@@ -55,7 +55,7 @@ namespace StrongGrid.Resources
 		/// <param name="mailSettings">The mail settings.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The async task.
+		/// The message id.
 		/// </returns>
 		/// <remarks>
 		/// This is a convenience method with simplified parameters.
@@ -113,7 +113,7 @@ namespace StrongGrid.Resources
 		/// <param name="mailSettings">The mail settings.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The async task.
+		/// The message id.
 		/// </returns>
 		/// <remarks>
 		/// This is a convenience method with simplified parameters.
@@ -185,7 +185,7 @@ namespace StrongGrid.Resources
 		/// <param name="trackingSettings">The tracking settings.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
-		/// The async task.
+		/// The message id.
 		/// </returns>
 		public async Task<string> SendAsync(
 			IEnumerable<MailPersonalization> personalizations,
