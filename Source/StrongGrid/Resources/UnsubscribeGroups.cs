@@ -22,7 +22,7 @@ namespace StrongGrid.Resources
 		/// Initializes a new instance of the <see cref="UnsubscribeGroups" /> class.
 		/// See
 		/// </summary>
-		/// <param name="client">SendGrid Web API v3 client</param>
+		/// <param name="client">The HTTP client</param>
 		public UnsubscribeGroups(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
