@@ -42,10 +42,21 @@ namespace StrongGrid.Resources
 		/// The identifier of the new contact.
 		/// </returns>
 		/// <exception cref="System.Exception">Thrown when an exception occured while creating the contact.</exception>
-		public async Task<string> CreateAsync(string email, string firstName = null, string lastName = null, IEnumerable<Field> customFields = null, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<string> CreateAsync(
+			string email,
+			Parameter<string> firstName = default(Parameter<string>),
+			Parameter<string> lastName = default(Parameter<string>),
+			Parameter<IEnumerable<Field>> customFields = default(Parameter<IEnumerable<Field>>),
+			CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var contact = new Contact(email, firstName, lastName, customFields);
-			var importResult = await ImportAsync(new[] { contact }, cancellationToken).ConfigureAwait(false);
+			var data = ConvertToJObject(email, firstName, lastName, customFields);
+			var importResult = await _client
+				.PostAsync(_endpoint)
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.As<ImportResult>()
+				.ConfigureAwait(false);
+
 			if (importResult.ErrorCount > 0)
 			{
 				// There should only be one error message but to be safe let's combine all error messages into a single string
@@ -68,10 +79,14 @@ namespace StrongGrid.Resources
 		/// The async task.
 		/// </returns>
 		/// <exception cref="System.Exception">Thrown when an exception occured while updating the contact.</exception>
-		public async Task UpdateAsync(string email, string firstName = null, string lastName = null, IEnumerable<Field> customFields = null, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task UpdateAsync(
+			string email,
+			Parameter<string> firstName = default(Parameter<string>),
+			Parameter<string> lastName = default(Parameter<string>),
+			Parameter<IEnumerable<Field>> customFields = default(Parameter<IEnumerable<Field>>),
+			CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var contact = new Contact(email, firstName, lastName, customFields);
-			var data = new JArray(ConvertContactToJObject(contact));
+			var data = ConvertToJObject(email, firstName, lastName, customFields);
 			var responseContent = await _client
 				.PatchAsync(_endpoint)
 				.WithJsonBody(data)
@@ -101,7 +116,7 @@ namespace StrongGrid.Resources
 			var data = new JArray();
 			foreach (var contact in contacts)
 			{
-				data.Add(ConvertContactToJObject(contact));
+				data.Add(ConvertToJObject(contact));
 			}
 
 			return _client
@@ -229,43 +244,54 @@ namespace StrongGrid.Resources
 				.AsSendGridObject<Contact[]>("recipients");
 		}
 
-		private static JObject ConvertContactToJObject(Contact contact)
+		private static JObject ConvertToJObject(
+			Parameter<string> email,
+			Parameter<string> firstName,
+			Parameter<string> lastName,
+			Parameter<IEnumerable<Field>> customFields)
 		{
 			var result = new JObject();
-			if (!string.IsNullOrEmpty(contact.Id)) result.Add("id", contact.Id);
-			if (!string.IsNullOrEmpty(contact.Email)) result.Add("email", contact.Email);
-			if (!string.IsNullOrEmpty(contact.FirstName)) result.Add("first_name", contact.FirstName);
-			if (!string.IsNullOrEmpty(contact.LastName)) result.Add("last_name", contact.LastName);
+			if (email.HasValue) result.Add("email", email.Value);
+			if (firstName.HasValue) result.Add("first_name", firstName.Value);
+			if (lastName.HasValue) result.Add("last_name", lastName.Value);
 
-			if (contact.CustomFields != null)
+			if (customFields.HasValue && customFields.Value != null)
 			{
-				foreach (var customField in contact.CustomFields.OfType<Field<string>>())
+				foreach (var customField in customFields.Value.OfType<Field<string>>())
 				{
 					result.Add(customField.Name, customField.Value);
 				}
 
-				foreach (var customField in contact.CustomFields.OfType<Field<long>>())
+				foreach (var customField in customFields.Value.OfType<Field<long>>())
 				{
 					result.Add(customField.Name, customField.Value);
 				}
 
-				foreach (var customField in contact.CustomFields.OfType<Field<long?>>())
+				foreach (var customField in customFields.Value.OfType<Field<long?>>())
 				{
-					result.Add(customField.Name, customField.Value.GetValueOrDefault());
+					if (customField.Value.HasValue) result.Add(customField.Name, customField.Value.Value);
+					else result.Add(customField.Name, null);
 				}
 
-				foreach (var customField in contact.CustomFields.OfType<Field<DateTime>>())
+				foreach (var customField in customFields.Value.OfType<Field<DateTime>>())
 				{
 					result.Add(customField.Name, customField.Value.ToUnixTime());
 				}
 
-				foreach (var customField in contact.CustomFields.OfType<Field<DateTime?>>())
+				foreach (var customField in customFields.Value.OfType<Field<DateTime?>>())
 				{
 					if (customField.Value.HasValue) result.Add(customField.Name, customField.Value.Value.ToUnixTime());
 					else result.Add(customField.Name, null);
 				}
 			}
 
+			return result;
+		}
+
+		private static JObject ConvertToJObject(Contact contact)
+		{
+			var result = ConvertToJObject(contact.Email, contact.FirstName, contact.LastName, contact.CustomFields);
+			if (!string.IsNullOrEmpty(contact.Id)) result.Add("id", contact.Id);
 			return result;
 		}
 	}
