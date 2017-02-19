@@ -25,7 +25,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ApiKeys" /> class.
 		/// </summary>
-		/// <param name="client">SendGrid Web API v3 client</param>
+		/// <param name="client">The HTTP client</param>
 		public ApiKeys(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
@@ -75,11 +75,9 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="ApiKey" />.
 		/// </returns>
-		public Task<ApiKey> CreateAsync(string name, IEnumerable<string> scopes = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<ApiKey> CreateAsync(string name, Parameter<IEnumerable<string>> scopes = default(Parameter<IEnumerable<string>>), CancellationToken cancellationToken = default(CancellationToken))
 		{
-			scopes = scopes ?? Enumerable.Empty<string>();
-
-			var data = CreateJObjectForApiKey(name, scopes);
+			var data = CreateJObject(name, scopes);
 			return _client
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
@@ -111,12 +109,10 @@ namespace StrongGrid.Resources
 		/// <param name="scopes">The scopes.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>The <see cref="ApiKey"/>.</returns>
-		public Task<ApiKey> UpdateAsync(string keyId, string name, IEnumerable<string> scopes = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<ApiKey> UpdateAsync(string keyId, string name, Parameter<IEnumerable<string>> scopes = default(Parameter<IEnumerable<string>>), CancellationToken cancellationToken = default(CancellationToken))
 		{
-			scopes = scopes ?? Enumerable.Empty<string>();
-
-			var data = CreateJObjectForApiKey(name, scopes);
-			return (scopes.Any() ? _client.PutAsync($"{_endpoint}/{keyId}") : _client.PatchAsync($"{_endpoint}/{keyId}"))
+			var data = CreateJObject(name, scopes);
+			return (scopes.HasValue && (scopes.Value ?? Enumerable.Empty<string>()).Any() ? _client.PutAsync($"{_endpoint}/{keyId}") : _client.PatchAsync($"{_endpoint}/{keyId}"))
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<ApiKey>();
@@ -173,11 +169,11 @@ namespace StrongGrid.Resources
 			return superApiKey;
 		}
 
-		private static JObject CreateJObjectForApiKey(string name = null, IEnumerable<string> scopes = null)
+		private static JObject CreateJObject(string name, Parameter<IEnumerable<string>> scopes)
 		{
 			var result = new JObject();
 			if (!string.IsNullOrEmpty(name)) result.Add("name", name);
-			if (scopes != null && scopes.Any()) result.Add("scopes", JArray.FromObject(scopes.ToArray()));
+			if (scopes.HasValue) result.Add("scopes", scopes.Value == null ? null : JArray.FromObject(scopes.Value.ToArray()));
 			return result;
 		}
 	}

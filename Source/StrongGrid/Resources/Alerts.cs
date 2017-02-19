@@ -23,7 +23,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Alerts" /> class.
 		/// </summary>
-		/// <param name="client">SendGrid Web API v3 client</param>
+		/// <param name="client">The HTTP client</param>
 		public Alerts(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
@@ -71,9 +71,9 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		public Task<Alert> CreateAsync(AlertType type, string emailTo = null, Frequency? frequency = null, int? percentage = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Alert> CreateAsync(AlertType type, Parameter<string> emailTo = default(Parameter<string>), Parameter<Frequency?> frequency = default(Parameter<Frequency?>), Parameter<int?> percentage = default(Parameter<int?>), CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = CreateJObjectForAlert(type, emailTo, frequency, percentage);
+			var data = CreateJObject(type, emailTo, frequency, percentage);
 			return _client
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
@@ -109,9 +109,9 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		public Task<Alert> UpdateAsync(long alertId, AlertType? type, string emailTo = null, Frequency? frequency = null, int? percentage = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Alert> UpdateAsync(long alertId, Parameter<AlertType?> type = default(Parameter<AlertType?>), Parameter<string> emailTo = default(Parameter<string>), Parameter<Frequency?> frequency = default(Parameter<Frequency?>), Parameter<int?> percentage = default(Parameter<int?>), CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = CreateJObjectForAlert(type, emailTo, frequency, percentage);
+			var data = CreateJObject(type, emailTo, frequency, percentage);
 			return _client
 				.PatchAsync($"{_endpoint}/{alertId}")
 				.WithJsonBody(data)
@@ -119,13 +119,13 @@ namespace StrongGrid.Resources
 				.AsSendGridObject<Alert>();
 		}
 
-		private static JObject CreateJObjectForAlert(AlertType? type, string emailTo = null, Frequency? frequency = null, int? percentage = null)
+		private static JObject CreateJObject(Parameter<AlertType?> type, Parameter<string> emailTo, Parameter<Frequency?> frequency, Parameter<int?> percentage)
 		{
 			var result = new JObject();
-			if (type.HasValue) result.Add("type", JToken.Parse(JsonConvert.SerializeObject(type)).ToString());
-			if (!string.IsNullOrEmpty(emailTo)) result.Add("email_to", emailTo);
-			if (frequency.HasValue) result.Add("frequency", JToken.Parse(JsonConvert.SerializeObject(frequency)).ToString());
-			if (percentage.HasValue) result.Add("percentage", percentage.Value);
+			if (type.HasValue) result.Add("type", type.Value.HasValue ? JToken.Parse(JsonConvert.SerializeObject(type.Value.Value)).ToString() : null);
+			if (emailTo.HasValue) result.Add("email_to", emailTo.Value);
+			if (frequency.HasValue) result.Add("frequency", frequency.Value.HasValue ? JToken.Parse(JsonConvert.SerializeObject(frequency.Value.Value)).ToString() : null);
+			if (percentage.HasValue) result.Add("percentage", percentage.Value.HasValue ? JToken.Parse(JsonConvert.SerializeObject(percentage.Value.Value)).ToString() : null);
 			return result;
 		}
 	}

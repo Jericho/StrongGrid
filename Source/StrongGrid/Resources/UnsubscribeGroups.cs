@@ -22,7 +22,7 @@ namespace StrongGrid.Resources
 		/// Initializes a new instance of the <see cref="UnsubscribeGroups" /> class.
 		/// See
 		/// </summary>
-		/// <param name="client">SendGrid Web API v3 client</param>
+		/// <param name="client">The HTTP client</param>
 		public UnsubscribeGroups(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
@@ -94,11 +94,11 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SuppressionGroup" />.
 		/// </returns>
-		public Task<SuppressionGroup> UpdateAsync(int groupId, string name = null, string description = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SuppressionGroup> UpdateAsync(int groupId, Parameter<string> name = default(Parameter<string>), Parameter<string> description = default(Parameter<string>), CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
-			if (name != null) data.Add("name", name);
-			if (description != null) data.Add("description", description);
+			if (name.HasValue) data.Add("name", name.Value);
+			if (description.HasValue) data.Add("description", description.Value);
 
 			return _client
 				.PatchAsync($"{_endpoint}/{groupId}")

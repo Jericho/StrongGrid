@@ -21,7 +21,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SenderIdentities" /> class.
 		/// </summary>
-		/// <param name="client">SendGrid Web API v3 client</param>
+		/// <param name="client">The HTTP client</param>
 		public SenderIdentities(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
@@ -45,7 +45,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<SenderIdentity> CreateAsync(string nickname, MailAddress from, MailAddress replyTo, string address1, string address2, string city, string state, string zip, string country, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = CreateJObjectForSenderIdentity(nickname, from, replyTo, address1, address2, city, state, zip, country);
+			var data = CreateJObject(nickname, from, replyTo, address1, address2, city, state, zip, country);
 
 			return _client
 				.PostAsync(_endpoint)
@@ -102,9 +102,20 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SenderIdentity" />.
 		/// </returns>
-		public Task<SenderIdentity> UpdateAsync(long senderId, string nickname = null, MailAddress from = null, MailAddress replyTo = null, string address1 = null, string address2 = null, string city = null, string state = null, string zip = null, string country = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SenderIdentity> UpdateAsync(
+			long senderId,
+			Parameter<string> nickname = default(Parameter<string>),
+			Parameter<MailAddress> from = default(Parameter<MailAddress>),
+			Parameter<MailAddress> replyTo = default(Parameter<MailAddress>),
+			Parameter<string> address1 = default(Parameter<string>),
+			Parameter<string> address2 = default(Parameter<string>),
+			Parameter<string> city = default(Parameter<string>),
+			Parameter<string> state = default(Parameter<string>),
+			Parameter<string> zip = default(Parameter<string>),
+			Parameter<string> country = default(Parameter<string>),
+			CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = CreateJObjectForSenderIdentity(nickname, from, replyTo, address1, address2, city, state, zip, country);
+			var data = CreateJObject(nickname, from, replyTo, address1, address2, city, state, zip, country);
 
 			return _client
 				.PatchAsync($"{_endpoint}/{senderId}")
@@ -144,18 +155,27 @@ namespace StrongGrid.Resources
 				.AsMessage();
 		}
 
-		private static JObject CreateJObjectForSenderIdentity(string nickname = null, MailAddress from = null, MailAddress replyTo = null, string address1 = null, string address2 = null, string city = null, string state = null, string zip = null, string country = null)
+		private static JObject CreateJObject(
+			Parameter<string> nickname,
+			Parameter<MailAddress> from,
+			Parameter<MailAddress> replyTo,
+			Parameter<string> address1,
+			Parameter<string> address2,
+			Parameter<string> city,
+			Parameter<string> state,
+			Parameter<string> zip,
+			Parameter<string> country)
 		{
 			var result = new JObject();
-			if (!string.IsNullOrEmpty(nickname)) result.Add("nickname", nickname);
-			if (from != null) result.Add("from", JToken.FromObject(from));
-			if (replyTo != null) result.Add("reply_to", JToken.FromObject(replyTo));
-			if (!string.IsNullOrEmpty(address1)) result.Add("address", address1);
-			if (!string.IsNullOrEmpty(address2)) result.Add("address2", address2);
-			if (!string.IsNullOrEmpty(city)) result.Add("city", city);
-			if (!string.IsNullOrEmpty(state)) result.Add("state", state);
-			if (!string.IsNullOrEmpty(zip)) result.Add("zip", zip);
-			if (!string.IsNullOrEmpty(country)) result.Add("country", country);
+			if (nickname.HasValue) result.Add("nickname", nickname.Value);
+			if (from.HasValue) result.Add("from", from.Value == null ? null : JToken.FromObject(from.Value));
+			if (replyTo.HasValue) result.Add("reply_to", from.Value == null ? null : JToken.FromObject(replyTo.Value));
+			if (address1.HasValue) result.Add("address", address1.Value);
+			if (address2.HasValue) result.Add("address2", address2.Value);
+			if (city.HasValue) result.Add("city", city.Value);
+			if (state.HasValue) result.Add("state", state.Value);
+			if (zip.HasValue) result.Add("zip", zip.Value);
+			if (country.HasValue) result.Add("country", country.Value);
 			return result;
 		}
 	}

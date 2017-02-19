@@ -21,7 +21,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Initializes a new instance of the <see cref="User" /> class.
 		/// </summary>
-		/// <param name="client">SendGrid Web API v3 client</param>
+		/// <param name="client">The HTTP client</param>
 		public User(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
@@ -59,9 +59,20 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="UserProfile" />.
 		/// </returns>
-		public Task<UserProfile> UpdateProfileAsync(string address = null, string city = null, string company = null, string country = null, string firstName = null, string lastName = null, string phone = null, string state = null, string website = null, string zip = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<UserProfile> UpdateProfileAsync(
+			Parameter<string> address = default(Parameter<string>),
+			Parameter<string> city = default(Parameter<string>),
+			Parameter<string> company = default(Parameter<string>),
+			Parameter<string> country = default(Parameter<string>),
+			Parameter<string> firstName = default(Parameter<string>),
+			Parameter<string> lastName = default(Parameter<string>),
+			Parameter<string> phone = default(Parameter<string>),
+			Parameter<string> state = default(Parameter<string>),
+			Parameter<string> website = default(Parameter<string>),
+			Parameter<string> zip = default(Parameter<string>),
+			CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = CreateJObjectForUserProfile(address, city, company, country, firstName, lastName, phone, state, website, zip);
+			var data = CreateJObject(address, city, company, country, firstName, lastName, phone, state, website, zip);
 			return _client
 				.PatchAsync(_endpoint)
 				.WithJsonBody(data)
@@ -206,19 +217,29 @@ namespace StrongGrid.Resources
 				.AsSendGridObject<string[]>("scopes");
 		}
 
-		private static JObject CreateJObjectForUserProfile(string address = null, string city = null, string company = null, string country = null, string firstName = null, string lastName = null, string phone = null, string state = null, string website = null, string zip = null)
+		private static JObject CreateJObject(
+			Parameter<string> address = default(Parameter<string>),
+			Parameter<string> city = default(Parameter<string>),
+			Parameter<string> company = default(Parameter<string>),
+			Parameter<string> country = default(Parameter<string>),
+			Parameter<string> firstName = default(Parameter<string>),
+			Parameter<string> lastName = default(Parameter<string>),
+			Parameter<string> phone = default(Parameter<string>),
+			Parameter<string> state = default(Parameter<string>),
+			Parameter<string> website = default(Parameter<string>),
+			Parameter<string> zip = default(Parameter<string>))
 		{
 			var result = new JObject();
-			if (!string.IsNullOrEmpty(address)) result.Add("address", address);
-			if (!string.IsNullOrEmpty(city)) result.Add("city", city);
-			if (!string.IsNullOrEmpty(company)) result.Add("company", company);
-			if (!string.IsNullOrEmpty(country)) result.Add("country", country);
-			if (!string.IsNullOrEmpty(firstName)) result.Add("first_name", firstName);
-			if (!string.IsNullOrEmpty(lastName)) result.Add("last_name", lastName);
-			if (!string.IsNullOrEmpty(phone)) result.Add("phone", phone);
-			if (!string.IsNullOrEmpty(state)) result.Add("state", state);
-			if (!string.IsNullOrEmpty(website)) result.Add("website", website);
-			if (!string.IsNullOrEmpty(zip)) result.Add("zip", zip);
+			if (address.HasValue) result.Add("address", address.Value);
+			if (city.HasValue) result.Add("city", city.Value);
+			if (company.HasValue) result.Add("company", company.Value);
+			if (country.HasValue) result.Add("country", country.Value);
+			if (firstName.HasValue) result.Add("first_name", firstName.Value);
+			if (lastName.HasValue) result.Add("last_name", lastName.Value);
+			if (phone.HasValue) result.Add("phone", phone.Value);
+			if (state.HasValue) result.Add("state", state.Value);
+			if (website) result.Add("website", website.Value);
+			if (zip.HasValue) result.Add("zip", zip.Value);
 			return result;
 		}
 	}
