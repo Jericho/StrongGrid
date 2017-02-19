@@ -48,13 +48,21 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Campaign" />.
 		/// </returns>
-		public Task<Campaign> CreateAsync(string title, long senderId, string subject = null, string htmlContent = null, string textContent = null, IEnumerable<long> listIds = null, IEnumerable<long> segmentIds = null, IEnumerable<string> categories = null, long? suppressionGroupId = null, string customUnsubscribeUrl = null, string ipPool = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Campaign> CreateAsync(
+			string title,
+			long senderId,
+			Parameter<string> subject = default(Parameter<string>),
+			Parameter<string> htmlContent = default(Parameter<string>),
+			Parameter<string> textContent = default(Parameter<string>),
+			Parameter<IEnumerable<long>> listIds = default(Parameter<IEnumerable<long>>),
+			Parameter<IEnumerable<long>> segmentIds = default(Parameter<IEnumerable<long>>),
+			Parameter<IEnumerable<string>> categories = default(Parameter<IEnumerable<string>>),
+			Parameter<long?> suppressionGroupId = default(Parameter<long?>),
+			Parameter<string> customUnsubscribeUrl = default(Parameter<string>),
+			Parameter<string> ipPool = default(Parameter<string>),
+			CancellationToken cancellationToken = default(CancellationToken))
 		{
-			listIds = listIds ?? Enumerable.Empty<long>();
-			segmentIds = segmentIds ?? Enumerable.Empty<long>();
-			categories = categories ?? Enumerable.Empty<string>();
-
-			var data = CreateJObjectForCampaign(title, senderId, subject, htmlContent, textContent, listIds, segmentIds, categories, suppressionGroupId, customUnsubscribeUrl, ipPool);
+			var data = CreateJObject(title, senderId, subject, htmlContent, textContent, listIds, segmentIds, categories, suppressionGroupId, customUnsubscribeUrl, ipPool);
 			return _client
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
@@ -132,13 +140,22 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Campaign" />.
 		/// </returns>
-		public Task<Campaign> UpdateAsync(long campaignId, string title = null, long? senderId = null, string subject = null, string htmlContent = null, string textContent = null, IEnumerable<long> listIds = null, IEnumerable<long> segmentIds = null, IEnumerable<string> categories = null, long? suppressionGroupId = null, string customUnsubscribeUrl = null, string ipPool = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Campaign> UpdateAsync(
+			long campaignId,
+			Parameter<string> title = default(Parameter<string>),
+			Parameter<long?> senderId = default(Parameter<long?>),
+			Parameter<string> subject = default(Parameter<string>),
+			Parameter<string> htmlContent = default(Parameter<string>),
+			Parameter<string> textContent = default(Parameter<string>),
+			Parameter<IEnumerable<long>> listIds = default(Parameter<IEnumerable<long>>),
+			Parameter<IEnumerable<long>> segmentIds = default(Parameter<IEnumerable<long>>),
+			Parameter<IEnumerable<string>> categories = default(Parameter<IEnumerable<string>>),
+			Parameter<long?> suppressionGroupId = default(Parameter<long?>),
+			Parameter<string> customUnsubscribeUrl = default(Parameter<string>),
+			Parameter<string> ipPool = default(Parameter<string>),
+			CancellationToken cancellationToken = default(CancellationToken))
 		{
-			listIds = listIds ?? Enumerable.Empty<long>();
-			segmentIds = segmentIds ?? Enumerable.Empty<long>();
-			categories = categories ?? Enumerable.Empty<string>();
-
-			var data = CreateJObjectForCampaign(title, senderId, subject, htmlContent, textContent, listIds, segmentIds, categories, suppressionGroupId, customUnsubscribeUrl, ipPool);
+			var data = CreateJObject(title, senderId, subject, htmlContent, textContent, listIds, segmentIds, categories, suppressionGroupId, customUnsubscribeUrl, ipPool);
 			return _client
 				.PatchAsync($"{_endpoint}/{campaignId}")
 				.WithJsonBody(data)
@@ -271,20 +288,20 @@ namespace StrongGrid.Resources
 				.AsMessage();
 		}
 
-		private static JObject CreateJObjectForCampaign(string title = null, long? senderId = null, string subject = null, string htmlContent = null, string textContent = null, IEnumerable<long> listIds = null, IEnumerable<long> segmentIds = null, IEnumerable<string> categories = null, long? suppressionGroupId = null, string customUnsubscribeUrl = null, string ipPool = null)
+		private static JObject CreateJObject(Parameter<string> title, Parameter<long?> senderId, Parameter<string> subject, Parameter<string> htmlContent, Parameter<string> textContent, Parameter<IEnumerable<long>> listIds, Parameter<IEnumerable<long>> segmentIds, Parameter<IEnumerable<string>> categories, Parameter<long?> suppressionGroupId, Parameter<string> customUnsubscribeUrl, Parameter<string> ipPool)
 		{
 			var result = new JObject();
-			if (!string.IsNullOrEmpty(title)) result.Add("title", title);
-			if (!string.IsNullOrEmpty(subject)) result.Add("subject", subject);
+			if (title.HasValue) result.Add("title", title.Value);
+			if (subject.HasValue) result.Add("subject", subject.Value);
 			if (senderId.HasValue) result.Add("sender_id", senderId.Value);
-			if (!string.IsNullOrEmpty(htmlContent)) result.Add("html_content", htmlContent);
-			if (!string.IsNullOrEmpty(textContent)) result.Add("plain_content", textContent);
-			if (listIds.Any()) result.Add("list_ids", JArray.FromObject(listIds.ToArray()));
-			if (segmentIds.Any()) result.Add("segment_ids", JArray.FromObject(segmentIds.ToArray()));
-			if (categories.Any()) result.Add("categories", JArray.FromObject(categories.ToArray()));
+			if (htmlContent.HasValue) result.Add("html_content", htmlContent.Value);
+			if (textContent.HasValue) result.Add("plain_content", textContent.Value);
+			if (listIds.HasValue) result.Add("list_ids", listIds.Value == null ? null : JArray.FromObject(listIds.Value.ToArray()));
+			if (segmentIds.HasValue) result.Add("segment_ids", segmentIds.Value == null ? null : JArray.FromObject(segmentIds.Value.ToArray()));
+			if (categories.HasValue) result.Add("categories", categories.Value == null ? null : JArray.FromObject(categories.Value.ToArray()));
 			if (suppressionGroupId.HasValue) result.Add("suppression_group_id", suppressionGroupId.Value);
-			if (!string.IsNullOrEmpty(customUnsubscribeUrl)) result.Add("custom_unsubscribe_url", customUnsubscribeUrl);
-			if (!string.IsNullOrEmpty(ipPool)) result.Add("ip_pool", ipPool);
+			if (customUnsubscribeUrl.HasValue) result.Add("custom_unsubscribe_url", customUnsubscribeUrl.Value);
+			if (ipPool.HasValue) result.Add("ip_pool", ipPool.Value);
 			return result;
 		}
 	}
