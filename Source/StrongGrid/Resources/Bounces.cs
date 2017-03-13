@@ -43,8 +43,8 @@ namespace StrongGrid.Resources
 		{
 			return _client
 				.GetAsync(_endpoint)
-				.WithArgument("start_time", start.Value.ToUnixTime())
-				.WithArgument("end_time", end.Value.ToUnixTime())
+				.WithArgument("start_time", start?.ToUnixTime())
+				.WithArgument("end_time", end?.ToUnixTime())
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Bounce[]>();
 		}
