@@ -60,13 +60,21 @@ namespace StrongGrid
 		/// </value>
 		public Blocks Blocks { get; private set; }
 
-		/// <summary>
-		/// Gets the Campaigns resource which allows you to manage your campaigns.
-		/// </summary>
-		/// <value>
-		/// The campaigns.
-		/// </value>
-		public Campaigns Campaigns { get; private set; }
+        /// <summary>
+        /// Gets the Bounces resource which allows you to manage bounces.
+        /// </summary>
+        /// <value>
+        /// The bounces.
+        /// </value>
+        public Bounces Bounces { get; private set; }
+
+        /// <summary>
+        /// Gets the Campaigns resource which allows you to manage your campaigns.
+        /// </summary>
+        /// <value>
+        /// The campaigns.
+        /// </value>
+        public Campaigns Campaigns { get; private set; }
 
 		/// <summary>
 		/// Gets the Categories resource which allows you to manages your categories.
@@ -303,6 +311,7 @@ namespace StrongGrid
 			ApiKeys = new ApiKeys(_fluentClient);
 			Batches = new Batches(_fluentClient);
 			Blocks = new Blocks(_fluentClient);
+            Bounces = new Bounces(_fluentClient);
 			Campaigns = new Campaigns(_fluentClient);
 			Categories = new Categories(_fluentClient);
 			Contacts = new Contacts(_fluentClient);

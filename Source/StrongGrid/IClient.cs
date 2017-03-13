@@ -39,13 +39,21 @@ namespace StrongGrid
 		/// </value>
 		Blocks Blocks { get; }
 
-		/// <summary>
-		/// Gets the Campaigns resource which allows you to manage your campaigns.
-		/// </summary>
-		/// <value>
-		/// The campaigns.
-		/// </value>
-		Campaigns Campaigns { get; }
+        /// <summary>
+        /// Gets the Bounces resource which allows you to manage bounces.
+        /// </summary>
+        /// <value>
+        /// The bounces.
+        /// </value>
+        Bounces Bounces { get; }
+
+        /// <summary>
+        /// Gets the Campaigns resource which allows you to manage your campaigns.
+        /// </summary>
+        /// <value>
+        /// The campaigns.
+        /// </value>
+        Campaigns Campaigns { get; }
 
 		/// <summary>
 		/// Gets the Categories resource which allows you to manages your categories.
