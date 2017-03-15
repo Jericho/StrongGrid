@@ -143,13 +143,21 @@ namespace StrongGrid
 		/// </value>
 		Statistics Statistics { get; }
 
-		/// <summary>
-		/// Gets the Suppressions resource.
+        /// <summary>
+		/// Gets the Subusers resource which allows you to manage subusers.
 		/// </summary>
 		/// <value>
-		/// The suppressions.
+		/// The subusers.
 		/// </value>
-		Suppressions Suppressions { get; }
+		Subusers Subusers { get; }
+
+        /// <summary>
+        /// Gets the Suppressions resource.
+        /// </summary>
+        /// <value>
+        /// The suppressions.
+        /// </value>
+        Suppressions Suppressions { get; }
 
 		/// <summary>
 		/// Gets the Templates resource.
@@ -183,12 +191,20 @@ namespace StrongGrid
 		/// </value>
 		string Version { get; }
 
-		/// <summary>
-		/// Gets the Whitelabel resource.
+        /// <summary>
+		/// Gets the Webhooks resource.
 		/// </summary>
 		/// <value>
-		/// The whitelabel.
+		/// The webhooks.
 		/// </value>
-		Whitelabel Whitelabel { get; }
+		Webhooks Webhooks { get; }
+
+        /// <summary>
+        /// Gets the Whitelabel resource.
+        /// </summary>
+        /// <value>
+        /// The whitelabel.
+        /// </value>
+        Whitelabel Whitelabel { get; }
 	}
 }

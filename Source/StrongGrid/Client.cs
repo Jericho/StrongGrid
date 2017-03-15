@@ -164,13 +164,21 @@ namespace StrongGrid
 		/// </value>
 		public Statistics Statistics { get; private set; }
 
-		/// <summary>
-		/// Gets the Suppressions resource.
+        /// <summary>
+		/// Gets the Subusers resource.
 		/// </summary>
 		/// <value>
-		/// The suppressions.
+		/// The subusers.
 		/// </value>
-		public Suppressions Suppressions { get; private set; }
+		public Subusers Subusers { get; private set; }
+
+        /// <summary>
+        /// Gets the Suppressions resource.
+        /// </summary>
+        /// <value>
+        /// The suppressions.
+        /// </value>
+        public Suppressions Suppressions { get; private set; }
 
 		/// <summary>
 		/// Gets the Templates resource.
@@ -212,15 +220,23 @@ namespace StrongGrid
 		/// </value>
 		public Whitelabel Whitelabel { get; private set; }
 
-		#endregion
+        /// <summary>
+        /// Gets the Webhooks resource.
+        /// </summary>
+        /// <value>
+        /// The webhooks.
+        /// </value>
+        public Webhooks Webhooks { get; private set; }
 
-		#region CTOR
+        #endregion
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Client"/> class.
-		/// </summary>
-		/// <param name="apiKey">Your SendGrid API Key</param>
-		public Client(string apiKey)
+        #region CTOR
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Client"/> class.
+        /// </summary>
+        /// <param name="apiKey">Your SendGrid API Key</param>
+        public Client(string apiKey)
 			: this(apiKey, null, null, DEFAULT_BASE_URI, DEFAULT_API_VERSION, null)
 		{
 		}
@@ -316,10 +332,12 @@ namespace StrongGrid
 			Settings = new Settings(_fluentClient);
 			SpamReports = new SpamReports(_fluentClient);
 			Statistics = new Statistics(_fluentClient);
-			Suppressions = new Suppressions(_fluentClient);
-			Templates = new Templates(_fluentClient);
+			Subusers = new Subusers( _fluentClient);
+            Suppressions = new Suppressions( _fluentClient );
+            Templates = new Templates(_fluentClient);
 			UnsubscribeGroups = new UnsubscribeGroups(_fluentClient);
 			User = new User(_fluentClient);
+            Webhooks = new Webhooks(_fluentClient);
 			Whitelabel = new Whitelabel(_fluentClient);
 		}
 
