@@ -52,14 +52,12 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Subuser" />.
 		/// </returns>
-		/// <remarks>
-		/// </remarks>
 		public Task<Subuser[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync(_endpoint)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Subuser[]>("result");
+				.AsSendGridObject<Subuser[]>();
 		}
 
 		/// <summary>
@@ -99,7 +97,6 @@ namespace StrongGrid.Resources
 				.AsMessage();
 		}
 
-
 		/// <summary>
 		/// Update a Subuser.
 		/// </summary>
@@ -130,11 +127,11 @@ namespace StrongGrid.Resources
 			Parameter<IEnumerable<string>> ips = default(Parameter<IEnumerable<string>>))
 		{
 			var result = new JObject();
-			if(id.HasValue) result.Add("id", id.Value);
-			if(username.HasValue) result.Add("username", username.Value);
-			if(email.HasValue) result.Add("email", email.Value);
-			if(password.HasValue) result.Add("password", password.Value);
-			if(ips.HasValue) result.Add("ips", ips.Value == null ? null : JArray.FromObject(ips.Value.ToArray()));
+			if (id.HasValue) result.Add("id", id.Value);
+			if (username.HasValue) result.Add("username", username.Value);
+			if (email.HasValue) result.Add("email", email.Value);
+			if (password.HasValue) result.Add("password", password.Value);
+			if (ips.HasValue) result.Add("ips", ips.Value == null ? null : JArray.FromObject(ips.Value.ToArray()));
 			return result;
 		}
 	}

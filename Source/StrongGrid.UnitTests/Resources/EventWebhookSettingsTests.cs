@@ -142,7 +142,7 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("mail_settings/plain_content")).Respond("application/json", apiResponse);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("user/webhooks/event/settings")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var webhooks = new Webhooks(client);

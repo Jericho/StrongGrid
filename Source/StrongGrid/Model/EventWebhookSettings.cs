@@ -26,7 +26,7 @@ namespace StrongGrid.Model
 		public string Url { get; set; }
 
 		/// <summary>
-		/// Gets or sets whether the ASM Group Resubscribe notification is sent 
+		/// Gets or sets a value indicating whether the ASM Group Resubscribe notification is sent
 		/// </summary>
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
@@ -35,7 +35,7 @@ namespace StrongGrid.Model
 		public bool GroupResubscribe { get; set; }
 
 		/// <summary>
-		/// Gets or sets whether the ASM Group Unsubscribe notification is sent 
+		/// Gets or sets a value indicating whether the ASM Group Unsubscribe notification is sent
 		/// </summary>
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
@@ -44,7 +44,7 @@ namespace StrongGrid.Model
 		public bool GroupUnsubscribe { get; set; }
 
 		/// <summary>
-		/// Gets or sets whether the Delivered notification is sent 
+		/// Gets or sets a value indicating whether the Delivered notification is sent
 		/// </summary>
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
@@ -53,7 +53,7 @@ namespace StrongGrid.Model
 		public bool Delivered { get; set; }
 
 		/// <summary>
-		/// Gets or sets whether the SpamReport notification is sent 
+		/// Gets or sets a value indicating whether the SpamReport notification is sent
 		/// </summary>
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
@@ -62,7 +62,7 @@ namespace StrongGrid.Model
 		public bool SpamReport { get; set; }
 
 		/// <summary>
-		/// Gets or sets whether the Bounce notification is sent 
+		/// Gets or sets a value indicating whether the Bounce notification is sent
 		/// </summary>
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
@@ -71,7 +71,7 @@ namespace StrongGrid.Model
 		public bool Bounce { get; set; }
 
 		/// <summary>
-		/// Gets or sets whether the Deferred notification is sent 
+		/// Gets or sets a value indicating whether the Deferred notification is sent
 		/// </summary>
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
@@ -80,7 +80,7 @@ namespace StrongGrid.Model
 		public bool Deferred { get; set; }
 
 		/// <summary>
-		/// Gets or sets whether the Unsubscribe notification is sent 
+		/// Gets or sets a value indicating whether the Unsubscribe notification is sent
 		/// </summary>
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
@@ -89,7 +89,7 @@ namespace StrongGrid.Model
 		public bool Unsubscribe { get; set; }
 
 		/// <summary>
-		/// Gets or sets whether the Processed notification is sent 
+		/// Gets or sets a value indicating whether the Processed notification is sent
 		/// </summary>
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
@@ -98,7 +98,7 @@ namespace StrongGrid.Model
 		public bool Processed { get; set; }
 
 		/// <summary>
-		/// Gets or sets whether the Open notification is sent 
+		/// Gets or sets a value indicating whether the Open notification is sent
 		/// </summary>
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
@@ -107,7 +107,7 @@ namespace StrongGrid.Model
 		public bool Open { get; set; }
 
 		/// <summary>
-		/// Gets or sets whether the Click notification is sent 
+		/// Gets or sets a value indicating whether the Click notification is sent
 		/// </summary>
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
@@ -116,7 +116,7 @@ namespace StrongGrid.Model
 		public bool Click { get; set; }
 
 		/// <summary>
-		/// Gets or sets whether the Dropped notification is sent 
+		/// Gets or sets a value indicating whether the Dropped notification is sent
 		/// </summary>
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.

@@ -149,14 +149,14 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Update_with_scopes()
+		public void Update()
 		{
 			// Arrange
 			var username = "someuser";
 			var disabled = true;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Put, Utils.GetSendGridApiUri(ENDPOINT, username)).Respond("application/json", SINGLE_SUBUSER_JSON);
+			mockHttp.Expect(new HttpMethod( "PATCH" ), Utils.GetSendGridApiUri(ENDPOINT, username)).Respond("application/json", SINGLE_SUBUSER_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var subusers = new Subusers(client);

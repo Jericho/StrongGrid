@@ -101,6 +101,5 @@ namespace StrongGrid.Resources
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EventWebhookSettings>();
 		}
-
 	}
 }

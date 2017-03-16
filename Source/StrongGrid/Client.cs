@@ -312,8 +312,8 @@ namespace StrongGrid
 			_fluentClient.Filters.Remove<DefaultErrorFilter>();
 			_fluentClient.Filters.Add(new SendGridErrorHandler());
 
-			if(!string.IsNullOrEmpty(apiKey)) _fluentClient.SetBearerAuthentication(apiKey);
-			if(!string.IsNullOrEmpty(username)) _fluentClient.SetBasicAuthentication(username, password);
+			if (!string.IsNullOrEmpty(apiKey)) _fluentClient.SetBearerAuthentication(apiKey);
+			if (!string.IsNullOrEmpty(username)) _fluentClient.SetBasicAuthentication(username, password);
 
 			Alerts = new Alerts(_fluentClient);
 			ApiKeys = new ApiKeys(_fluentClient);
@@ -374,7 +374,7 @@ namespace StrongGrid
 		/// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
 		protected virtual void Dispose(bool disposing)
 		{
-			if(disposing)
+			if (disposing)
 			{
 				ReleaseManagedResources();
 			}
@@ -393,13 +393,13 @@ namespace StrongGrid
 
 		private void ReleaseManagedResources()
 		{
-			if(_fluentClient != null)
+			if (_fluentClient != null)
 			{
 				_fluentClient.Dispose();
 				_fluentClient = null;
 			}
 
-			if(_httpClient != null && _mustDisposeHttpClient)
+			if (_httpClient != null && _mustDisposeHttpClient)
 			{
 				_httpClient.Dispose();
 				_httpClient = null;
