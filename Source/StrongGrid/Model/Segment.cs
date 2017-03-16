@@ -42,5 +42,14 @@ namespace StrongGrid.Model
 		/// </value>
 		[JsonProperty("conditions", NullValueHandling = NullValueHandling.Ignore)]
 		public SearchCondition[] Conditions { get; set; }
+
+		/// <summary>
+		/// Gets or sets the recipient count.
+		/// </summary>
+		/// <value>
+		/// The recipient count.
+		/// </value>
+		[JsonProperty("recipient_count", NullValueHandling = NullValueHandling.Ignore)]
+		public long RecipientCount { get; set; }
 	}
 }
