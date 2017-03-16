@@ -31,7 +31,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get a list of bounces
+		/// Get all bounces
 		/// </summary>
 		/// <param name="start">The start.</param>
 		/// <param name="end">The end.</param>
@@ -39,7 +39,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Bounce" />.
 		/// </returns>
-		public Task<Bounce[]> GetAsync(DateTime? start = null, DateTime? end = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Bounce[]> GetAllAsync(DateTime? start = null, DateTime? end = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync(_endpoint)
