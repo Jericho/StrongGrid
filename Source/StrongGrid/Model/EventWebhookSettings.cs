@@ -13,7 +13,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty( "enabled", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
 		public bool Enabled { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The URL.
 		/// </value>
-		[JsonProperty( "url", NullValueHandling = NullValueHandling.Ignore )]
+		[JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
 		public string Url { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty( "group_resubscribe", NullValueHandling = NullValueHandling.Ignore )]
+		[JsonProperty("group_resubscribe", NullValueHandling = NullValueHandling.Ignore)]
 		public bool GroupResubscribe { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty( "group_unsubscribe", NullValueHandling = NullValueHandling.Ignore )]
+		[JsonProperty("group_unsubscribe", NullValueHandling = NullValueHandling.Ignore)]
 		public bool GroupUnsubscribe { get; set; }
 
 		/// <summary>
@@ -49,7 +49,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty( "delivered", NullValueHandling = NullValueHandling.Ignore )]
+		[JsonProperty("delivered", NullValueHandling = NullValueHandling.Ignore)]
 		public bool Delivered { get; set; }
 
 		/// <summary>
@@ -58,7 +58,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty( "spam_report", NullValueHandling = NullValueHandling.Ignore )]
+		[JsonProperty("spam_report", NullValueHandling = NullValueHandling.Ignore)]
 		public bool SpamReport { get; set; }
 
 		/// <summary>
@@ -67,7 +67,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty( "bounce", NullValueHandling = NullValueHandling.Ignore )]
+		[JsonProperty("bounce", NullValueHandling = NullValueHandling.Ignore)]
 		public bool Bounce { get; set; }
 
 		/// <summary>
@@ -76,7 +76,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty( "deferred", NullValueHandling = NullValueHandling.Ignore )]
+		[JsonProperty("deferred", NullValueHandling = NullValueHandling.Ignore)]
 		public bool Deferred { get; set; }
 
 		/// <summary>
@@ -85,7 +85,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty( "unsubscribe", NullValueHandling = NullValueHandling.Ignore )]
+		[JsonProperty("unsubscribe", NullValueHandling = NullValueHandling.Ignore)]
 		public bool Unsubscribe { get; set; }
 
 		/// <summary>
@@ -94,7 +94,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty( "processed", NullValueHandling = NullValueHandling.Ignore )]
+		[JsonProperty("processed", NullValueHandling = NullValueHandling.Ignore)]
 		public bool Processed { get; set; }
 
 		/// <summary>
@@ -103,7 +103,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty( "open", NullValueHandling = NullValueHandling.Ignore )]
+		[JsonProperty("open", NullValueHandling = NullValueHandling.Ignore)]
 		public bool Open { get; set; }
 
 		/// <summary>
@@ -112,7 +112,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty( "click", NullValueHandling = NullValueHandling.Ignore )]
+		[JsonProperty("click", NullValueHandling = NullValueHandling.Ignore)]
 		public bool Click { get; set; }
 
 		/// <summary>
@@ -121,7 +121,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty( "dropped", NullValueHandling = NullValueHandling.Ignore )]
+		[JsonProperty("dropped", NullValueHandling = NullValueHandling.Ignore)]
 		public bool Dropped { get; set; }
 	}
 }

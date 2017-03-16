@@ -2,10 +2,8 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Model;
 using StrongGrid.Utilities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,7 +24,7 @@ namespace StrongGrid.Resources
 		/// Initializes a new instance of the <see cref="Subusers" /> class.
 		/// </summary>
 		/// <param name="client">The HTTP client</param>
-		public Subusers( Pathoschild.Http.Client.IClient client)
+		public Subusers(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
 		}
@@ -75,7 +73,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Subuser" />.
 		/// </returns>
-		public Task<Subuser> CreateAsync(string username, string email, string password,  Parameter<IEnumerable<string>> ips = default(Parameter<IEnumerable<string>>), CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Subuser> CreateAsync(string username, string email, string password, Parameter<IEnumerable<string>> ips = default(Parameter<IEnumerable<string>>), CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = CreateJObject(username: username, email: email, password: password, ips: ips);
 			return _client
@@ -132,11 +130,11 @@ namespace StrongGrid.Resources
 			Parameter<IEnumerable<string>> ips = default(Parameter<IEnumerable<string>>))
 		{
 			var result = new JObject();
-			if (id.HasValue) result.Add("id", id.Value);
-			if (username.HasValue) result.Add("username", username.Value);
-			if (email.HasValue) result.Add("email", email.Value);
-			if (password.HasValue) result.Add("password", password.Value);
-			if (ips.HasValue) result.Add("ips", ips.Value == null ? null : JArray.FromObject(ips.Value.ToArray()));
+			if(id.HasValue) result.Add("id", id.Value);
+			if(username.HasValue) result.Add("username", username.Value);
+			if(email.HasValue) result.Add("email", email.Value);
+			if(password.HasValue) result.Add("password", password.Value);
+			if(ips.HasValue) result.Add("ips", ips.Value == null ? null : JArray.FromObject(ips.Value.ToArray()));
 			return result;
 		}
 	}

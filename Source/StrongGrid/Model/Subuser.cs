@@ -49,7 +49,7 @@ namespace StrongGrid.Model
 		/// <value>
 		///   <c>true</c> if this instance is disabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty( "disabled", NullValueHandling = NullValueHandling.Ignore )]
+		[JsonProperty("disabled", NullValueHandling = NullValueHandling.Ignore)]
 		public bool IsDisabled { get; set; }
 
 		/// <summary>
