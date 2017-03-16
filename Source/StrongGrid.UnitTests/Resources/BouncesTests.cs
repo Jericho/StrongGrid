@@ -58,7 +58,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Get_between_startdate_and_enddate()
+		public void GetAll_between_startdate_and_enddate()
 		{
 			// Arrange
 			var start = new DateTime(2015, 6, 8, 0, 0, 0, DateTimeKind.Utc);
@@ -71,7 +71,7 @@ namespace StrongGrid.Resources.UnitTests
 			var bounces = new Bounces(client);
 
 			// Act
-			var result = bounces.GetAsync(start, end, CancellationToken.None).Result;
+			var result = bounces.GetAllAsync(start, end, CancellationToken.None).Result;
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
