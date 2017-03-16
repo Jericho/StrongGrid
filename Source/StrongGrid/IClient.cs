@@ -40,6 +40,14 @@ namespace StrongGrid
 		Blocks Blocks { get; }
 
 		/// <summary>
+		/// Gets the Bounces resource which allows you to manage bounces.
+		/// </summary>
+		/// <value>
+		/// The bounces.
+		/// </value>
+		Bounces Bounces { get; }
+
+		/// <summary>
 		/// Gets the Campaigns resource which allows you to manage your campaigns.
 		/// </summary>
 		/// <value>
