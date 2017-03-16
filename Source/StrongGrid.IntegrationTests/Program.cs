@@ -41,6 +41,7 @@ namespace StrongGrid.IntegrationTests
 				Settings(client, pauseAfterTests);
 				Alerts(client, pauseAfterTests);
 				Blocks(client, pauseAfterTests);
+				Bounces(client, pauseAfterTests);
 				SpamReports(client, pauseAfterTests);
 				InvalidEmails(client, pauseAfterTests);
 				Batches(client, pauseAfterTests);
@@ -689,6 +690,16 @@ namespace StrongGrid.IntegrationTests
 
 			var blocks = client.Blocks.GetAllAsync().Result;
 			Console.WriteLine($"All blocks retrieved. There are {blocks.Length} blocks");
+
+			ConcludeTests(pauseAfterTests);
+		}
+
+		private static void Bounces(IClient client, bool pauseAfterTests)
+		{
+			Console.WriteLine("\n***** BOUNCES *****");
+
+			var bounces = client.Bounces.GetAllAsync().Result;
+			Console.WriteLine($"All bounces retrieved. There are {bounces.Length} bounces");
 
 			ConcludeTests(pauseAfterTests);
 		}
