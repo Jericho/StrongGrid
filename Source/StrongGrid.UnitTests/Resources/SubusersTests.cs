@@ -18,35 +18,35 @@ namespace StrongGrid.Resources.UnitTests
 		private const string ENDPOINT = "subusers";
 
 		private const string SINGLE_SUBUSER_JSON = @"{
-            'id': 1,
-            'username': 'TestUser',
-            'email': 'Test@example.com',
-            'disabled': true
-        }";
-        private const string SINGLE_SUBUSER_CREATED_JSON = @"{
-            'id': 1,
-            'username': 'TestUser',
-            'password': 'somepass',
-            'email': 'Test@example.com',
-            'ips': [
-                '1.1.1.1',
-                '2.2.2.2'
-            ]
-        }";
+			'id': 1,
+			'username': 'TestUser',
+			'email': 'Test@example.com',
+			'disabled': true
+		}";
+		private const string SINGLE_SUBUSER_CREATED_JSON = @"{
+			'id': 1,
+			'username': 'TestUser',
+			'password': 'somepass',
+			'email': 'Test@example.com',
+			'ips': [
+				'1.1.1.1',
+				'2.2.2.2'
+			]
+		}";
 		private const string MULTIPLE_SUBUSER_JSON = @"[
-              {
-                'id': 1,
-                'username': 'TestUser',
-                'email': 'Test@example.com',
-                'disabled': false
-              },
-              {
-                'id': 2,
-                'username': 'John',
-                'email': 'John@example.com',
-                'disabled': true
-              }
-        ]";
+			  {
+				'id': 1,
+				'username': 'TestUser',
+				'email': 'Test@example.com',
+				'disabled': false
+			  },
+			  {
+				'id': 2,
+				'username': 'John',
+				'email': 'John@example.com',
+				'disabled': true
+			  }
+		]";
 
 		#endregion
 
@@ -66,7 +66,7 @@ namespace StrongGrid.Resources.UnitTests
 			result.IsDisabled.ShouldBe(true);
 		}
 
-        [Fact]
+		[Fact]
 		public void Parse_json_created()
 		{
 			// Arrange
@@ -81,7 +81,7 @@ namespace StrongGrid.Resources.UnitTests
 			result.Email.ShouldBe("Test@example.com");
 			result.Password.ShouldBe("somepass");
 			result.IsDisabled.ShouldBe(false);
-            result.Ips.ShouldBe(new[] { "1.1.1.1", "2.2.2.2" });
+			result.Ips.ShouldBe(new[] { "1.1.1.1", "2.2.2.2" });
 		}
 
 		[Fact]
@@ -89,8 +89,8 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var username = "TestUser";
-            var password = "somepass";
-            var email = "Test@example.com";
+			var password = "somepass";
+			var email = "Test@example.com";
 			var ips = new[] { "1.1.1.1", "2.2.2.2" };
 
 			var mockHttp = new MockHttpMessageHandler();

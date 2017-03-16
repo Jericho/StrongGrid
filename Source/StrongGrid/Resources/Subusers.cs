@@ -11,35 +11,35 @@ using System.Threading.Tasks;
 
 namespace StrongGrid.Resources
 {
-    /// <summary>
-    /// Allows you to manage Subusers.
-    /// </summary>
-    /// <remarks>
-    /// See https://sendgrid.com/docs/API_Reference/Web_API_v3/subusers.html
-    /// </remarks>
-    public class Subusers
+	/// <summary>
+	/// Allows you to manage Subusers.
+	/// </summary>
+	/// <remarks>
+	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/subusers.html
+	/// </remarks>
+	public class Subusers
 	{
 		private const string _endpoint = "subusers";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Subusers" /> class.
-        /// </summary>
-        /// <param name="client">The HTTP client</param>
-        public Subusers( Pathoschild.Http.Client.IClient client)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Subusers" /> class.
+		/// </summary>
+		/// <param name="client">The HTTP client</param>
+		public Subusers( Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
 		}
 
-        /// <summary>
-        /// Get an existing Subuser
-        /// </summary>
-        /// <param name="username">The username.</param>
-        /// <param name="cancellationToken">Cancellation token</param>
-        /// <returns>
-        /// The <see cref="Subuser" />.
-        /// </returns>
-        public Task<Subuser> GetAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
+		/// <summary>
+		/// Get an existing Subuser
+		/// </summary>
+		/// <param name="username">The username.</param>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// The <see cref="Subuser" />.
+		/// </returns>
+		public Task<Subuser> GetAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{username}")
@@ -47,16 +47,16 @@ namespace StrongGrid.Resources
 				.AsSendGridObject<Subuser>();
 		}
 
-        /// <summary>
-        /// List all Subusers for a parent
-        /// </summary>
-        /// <param name="cancellationToken">Cancellation token</param>
-        /// <returns>
-        /// An array of <see cref="Subuser" />.
-        /// </returns>
-        /// <remarks>
-        /// </remarks>
-        public Task<Subuser[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
+		/// <summary>
+		/// List all Subusers for a parent
+		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// An array of <see cref="Subuser" />.
+		/// </returns>
+		/// <remarks>
+		/// </remarks>
+		public Task<Subuser[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync(_endpoint)
@@ -64,18 +64,18 @@ namespace StrongGrid.Resources
 				.AsSendGridObject<Subuser[]>("result");
 		}
 
-        /// <summary>
-        /// Create a new Subuser
-        /// </summary>
-        /// <param name="username">The username.</param>
-        /// <param name="email">The email address.</param>
-        /// <param name="password">The password.</param>
-        /// <param name="ips">The ip addresses.</param>
-        /// <param name="cancellationToken">Cancellation token</param>
-        /// <returns>
-        /// The <see cref="Subuser" />.
-        /// </returns>
-        public Task<Subuser> CreateAsync(string username, string email, string password,  Parameter<IEnumerable<string>> ips = default(Parameter<IEnumerable<string>>), CancellationToken cancellationToken = default(CancellationToken))
+		/// <summary>
+		/// Create a new Subuser
+		/// </summary>
+		/// <param name="username">The username.</param>
+		/// <param name="email">The email address.</param>
+		/// <param name="password">The password.</param>
+		/// <param name="ips">The ip addresses.</param>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// The <see cref="Subuser" />.
+		/// </returns>
+		public Task<Subuser> CreateAsync(string username, string email, string password,  Parameter<IEnumerable<string>> ips = default(Parameter<IEnumerable<string>>), CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = CreateJObject(username: username, email: email, password: password, ips: ips);
 			return _client
@@ -102,7 +102,7 @@ namespace StrongGrid.Resources
 		}
 
 
-        /// <summary>
+		/// <summary>
 		/// Update a Subuser.
 		/// </summary>
 		/// <param name="username">The template identifier.</param>
@@ -135,7 +135,7 @@ namespace StrongGrid.Resources
 			if (id.HasValue) result.Add("id", id.Value);
 			if (username.HasValue) result.Add("username", username.Value);
 			if (email.HasValue) result.Add("email", email.Value);
-            if (password.HasValue) result.Add("password", password.Value);
+			if (password.HasValue) result.Add("password", password.Value);
 			if (ips.HasValue) result.Add("ips", ips.Value == null ? null : JArray.FromObject(ips.Value.ToArray()));
 			return result;
 		}

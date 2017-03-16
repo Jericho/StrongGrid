@@ -25,7 +25,7 @@ namespace StrongGrid.Model
 		[JsonProperty("username", NullValueHandling = NullValueHandling.Ignore)]
 		public string Username { get; set; }
 
-        /// <summary>
+		/// <summary>
 		/// Gets or sets the password.
 		/// </summary>
 		/// <value>
@@ -43,16 +43,16 @@ namespace StrongGrid.Model
 		[JsonProperty("email", NullValueHandling = NullValueHandling.Ignore)]
 		public string Email { get; set; }
 
-        /// <summary>
+		/// <summary>
 		/// Gets or sets a value indicating whether the subuser is disabled.
 		/// </summary>
 		/// <value>
 		///   <c>true</c> if this instance is disabled; otherwise, <c>false</c>.
 		/// </value>
-        [JsonProperty( "disabled", NullValueHandling = NullValueHandling.Ignore )]
-        public bool IsDisabled { get; set; }
+		[JsonProperty( "disabled", NullValueHandling = NullValueHandling.Ignore )]
+		public bool IsDisabled { get; set; }
 
-        /// <summary>
+		/// <summary>
 		/// Gets or sets the ip addresses allocated to this subuser.
 		/// </summary>
 		/// <value>
@@ -60,5 +60,5 @@ namespace StrongGrid.Model
 		/// </value>
 		[JsonProperty("ips", NullValueHandling = NullValueHandling.Ignore)]
 		public string[] Ips { get; set; }
-    }
+	}
 }
