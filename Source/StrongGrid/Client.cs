@@ -189,6 +189,14 @@ namespace StrongGrid
 		public Suppressions Suppressions { get; private set; }
 
 		/// <summary>
+		/// Gets the Teammates resource.
+		/// </summary>
+		/// <value>
+		/// The Teammates.
+		/// </value>
+		public Teammates Teammates { get; private set; }
+
+		/// <summary>
 		/// Gets the Templates resource.
 		/// </summary>
 		/// <value>
@@ -344,6 +352,7 @@ namespace StrongGrid
 			Statistics = new Statistics(_fluentClient);
 			Subusers = new Subusers(_fluentClient);
 			Suppressions = new Suppressions(_fluentClient);
+			Teammates = new Teammates(_fluentClient);
 			Templates = new Templates(_fluentClient);
 			UnsubscribeGroups = new UnsubscribeGroups(_fluentClient);
 			User = new User(_fluentClient);

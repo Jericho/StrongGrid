@@ -168,6 +168,14 @@ namespace StrongGrid
 		Suppressions Suppressions { get; }
 
 		/// <summary>
+		/// Gets the Teammates resource.
+		/// </summary>
+		/// <value>
+		/// The Teammates.
+		/// </value>
+		Teammates Teammates { get; }
+
+		/// <summary>
 		/// Gets the Templates resource.
 		/// </summary>
 		/// <value>
