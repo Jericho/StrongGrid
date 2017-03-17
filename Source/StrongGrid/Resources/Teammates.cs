@@ -57,7 +57,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DenyAccessRequetsAsync(string requestId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DenyAccessRequestAsync(string requestId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.DeleteAsync($"scopes/requests/{requestId}")
@@ -73,7 +73,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task ApproveAccessRequetsAsync(string requestId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task ApproveAccessRequestAsync(string requestId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.PatchAsync($"scopes/requests/{requestId}")
@@ -115,7 +115,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync($"{_endpoint}/pending")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<TeammateInvitation[]>();
+				.AsSendGridObject<TeammateInvitation[]>("result");
 		}
 
 		/// <summary>
@@ -210,7 +210,7 @@ namespace StrongGrid.Resources
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Teammate[]>();
+				.AsSendGridObject<Teammate[]>("result");
 		}
 
 		/// <summary>
