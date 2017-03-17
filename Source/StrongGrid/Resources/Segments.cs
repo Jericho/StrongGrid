@@ -142,7 +142,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Contact" />.
 		/// </returns>
-		public Task<Contact[]> GetRecipientsAsync(long segmentId, int? recordsPerPage = null, int? page = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Contact[]> GetRecipientsAsync(long segmentId, int recordsPerPage = 100, int page = 1, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{segmentId}/recipients")
