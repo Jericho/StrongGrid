@@ -105,13 +105,11 @@ namespace StrongGrid
 
 			// Convert the 'from' from a string into a strongly typed object
 			var rawFrom = parser.GetParameterValue("from", string.Empty);
-			var piecesFrom = rawFrom.Split(new[] { '<', '>' }, StringSplitOptions.RemoveEmptyEntries);
-			var from = new MailAddress(piecesFrom[1], piecesFrom[0].Replace("\"", string.Empty).Trim());
+			var from = ParseEmailAddress(rawFrom);
 
 			// Convert the 'to' from a string into a strongly typed object
 			var rawTo = parser.GetParameterValue("to", string.Empty);
-			var piecesTo = rawTo.Split(new[] { '<', '>' }, StringSplitOptions.RemoveEmptyEntries);
-			var to = new MailAddress(piecesTo[1], piecesTo[0].Replace("\"", string.Empty).Trim());
+			var to = ParseEmailAddress(rawTo);
 
 			// Arrange the InboundEmail
 			var inboundEmail = new InboundEmail
@@ -132,6 +130,18 @@ namespace StrongGrid
 			};
 
 			return inboundEmail;
+		}
+
+		#endregion
+
+		#region PRIVATE METHODS
+
+		private MailAddress ParseEmailAddress(string rawEmailAddress)
+		{
+			var pieces = rawEmailAddress.Split(new[] { '<', '>' }, StringSplitOptions.RemoveEmptyEntries);
+			var email = pieces.Length == 2 ? pieces[1] : pieces[0];
+			var name = pieces.Length == 2 ? pieces[0].Replace("\"", string.Empty).Trim() : string.Empty;
+			return new MailAddress(email, name);
 		}
 
 		#endregion
