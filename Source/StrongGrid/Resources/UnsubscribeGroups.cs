@@ -2,6 +2,9 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Model;
 using StrongGrid.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -41,6 +44,30 @@ namespace StrongGrid.Resources
 				.GetAsync(_endpoint)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<SuppressionGroup[]>();
+		}
+
+		/// <summary>
+		/// Retrieve the suppression groups that match the specified ids.
+		/// </summary>
+		/// <param name="groupIds">The Ids of the desired groups.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="SuppressionGroup" />.
+		/// </returns>
+		public Task<SuppressionGroup[]> GetMultipleAsync(IEnumerable<string> groupIds, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			if (groupIds == null || !groupIds.Any()) throw new ArgumentNullException(nameof(groupIds), "You must specify at least one group id");
+
+			var request = _client
+				.GetAsync(_endpoint)
+				.WithCancellationToken(cancellationToken);
+
+			foreach (var id in groupIds)
+			{
+				request.WithArgument("id", id);
+			}
+
+			return request.AsSendGridObject<SuppressionGroup[]>();
 		}
 
 		/// <summary>
