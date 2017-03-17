@@ -30,7 +30,7 @@ namespace StrongGrid.Model.Webhooks
 		/// <value>
 		/// To.
 		/// </value>
-		public MailAddress To { get; set; }
+		public MailAddress[] To { get; set; }
 
 		/// <summary>
 		/// Gets or sets the HTML body of email.If not set, email did not have an HTML body.
