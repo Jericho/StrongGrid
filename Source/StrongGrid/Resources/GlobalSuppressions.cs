@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
+using StrongGrid.Model;
 using StrongGrid.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -26,6 +28,29 @@ namespace StrongGrid.Resources
 		public GlobalSuppressions(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
+		}
+
+		/// <summary>
+		/// Get all globally unsubscribed email addresses.
+		/// </summary>
+		/// <param name="startDate">The start date.</param>
+		/// <param name="endDate">The end date.</param>
+		/// <param name="limit">The limit.</param>
+		/// <param name="offset">The offset.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="GlobalSuppression"/>.
+		/// </returns>
+		public Task<GlobalSuppression[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 50, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			return _client
+				.GetAsync("suppression/unsubscribes")
+				.WithArgument("start_time", startDate?.ToUnixTime())
+				.WithArgument("end_time", endDate?.ToUnixTime())
+				.WithArgument("limit", limit)
+				.WithArgument("offset", offset)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<GlobalSuppression[]>();
 		}
 
 		/// <summary>
