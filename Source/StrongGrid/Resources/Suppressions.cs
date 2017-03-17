@@ -128,5 +128,32 @@ namespace StrongGrid.Resources
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
 		}
+
+		/// <summary>
+		/// Check if a recipient address is in the given suppression group.
+		/// </summary>
+		/// <param name="groupId">ID of the suppression group</param>
+		/// <param name="email">email address to check</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		///   <c>true</c> if the email address is in the global suppression group; otherwise, <c>false</c>.
+		/// </returns>
+		public async Task<bool> IsSuppressedAsync(int groupId, string email, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var data = new JObject
+			{
+				{ "recipient_emails", JArray.FromObject(new[] { email }) }
+			};
+			var result = await _client
+				.PostAsync($"{_endpoint}/groups/{groupId}/suppressions/search")
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<string[]>()
+				.ConfigureAwait(false);
+
+			// The response contains an array with the email addresses found to be in the suppression group.
+			// Therefore, we simply need to check for the presence of the email in this array
+			return result.Contains(email);
+		}
 	}
 }
