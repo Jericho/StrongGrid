@@ -688,8 +688,13 @@ namespace StrongGrid.IntegrationTests
 		{
 			Console.WriteLine("\n***** BLOCKS *****");
 
-			var blocks = client.Blocks.GetAllAsync().Result;
-			Console.WriteLine($"All blocks retrieved. There are {blocks.Length} blocks");
+			var thisYear = DateTime.UtcNow.Year;
+			var lastYear = thisYear - 1;
+			var startDate = new DateTime(lastYear, 1, 1, 0, 0, 0);
+			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
+
+			var blocks = client.Blocks.GetAllAsync(startDate, endDate).Result;
+			Console.WriteLine($"All blocks retrieved. There are {blocks.Length} blocks in {lastYear} and {thisYear}");
 
 			ConcludeTests(pauseAfterTests);
 		}
@@ -698,8 +703,13 @@ namespace StrongGrid.IntegrationTests
 		{
 			Console.WriteLine("\n***** BOUNCES *****");
 
-			var bounces = client.Bounces.GetAllAsync().Result;
-			Console.WriteLine($"All bounces retrieved. There are {bounces.Length} bounces");
+			var thisYear = DateTime.UtcNow.Year;
+			var lastYear = thisYear - 1;
+			var startDate = new DateTime(lastYear, 1, 1, 0, 0, 0);
+			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
+
+			var bounces = client.Bounces.GetAllAsync(startDate, endDate).Result;
+			Console.WriteLine($"All bounces retrieved. There are {bounces.Length} bounces in {lastYear} and {thisYear}");
 
 			ConcludeTests(pauseAfterTests);
 		}
@@ -708,8 +718,13 @@ namespace StrongGrid.IntegrationTests
 		{
 			Console.WriteLine("\n***** SPAM REPORTS *****");
 
-			var spamReports = client.SpamReports.GetAllAsync().Result;
-			Console.WriteLine($"All spam reports retrieved. There are {spamReports.Length} reports");
+			var thisYear = DateTime.UtcNow.Year;
+			var lastYear = thisYear - 1;
+			var startDate = new DateTime(lastYear, 1, 1, 0, 0, 0);
+			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
+
+			var spamReports = client.SpamReports.GetAllAsync(startDate, endDate).Result;
+			Console.WriteLine($"All spam reports retrieved. There are {spamReports.Length} reports in {lastYear} and {thisYear}");
 
 			ConcludeTests(pauseAfterTests);
 		}
@@ -718,8 +733,13 @@ namespace StrongGrid.IntegrationTests
 		{
 			Console.WriteLine("\n***** INVALID EMAILS *****");
 
-			var invalidEmails = client.InvalidEmails.GetAllAsync().Result;
-			Console.WriteLine($"All invalid emails retrieved. There are {invalidEmails.Length} invalid email addresses");
+			var thisYear = DateTime.UtcNow.Year;
+			var lastYear = thisYear - 1;
+			var startDate = new DateTime(lastYear, 1, 1, 0, 0, 0);
+			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
+
+			var invalidEmails = client.InvalidEmails.GetAllAsync(startDate, endDate).Result;
+			Console.WriteLine($"All invalid emails retrieved. There are {invalidEmails.Length} invalid email addresses in {lastYear} and {thisYear}");
 
 			ConcludeTests(pauseAfterTests);
 		}
