@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
+using StrongGrid.Model;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class Suppressions
 	{
-		private const string _endpoint = "asm/groups";
+		private const string _endpoint = "asm";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
@@ -27,6 +28,22 @@ namespace StrongGrid.Resources
 		public Suppressions(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
+		}
+
+		/// <summary>
+		/// Get all unsubscribe groups that the given email address has been added to.
+		/// </summary>
+		/// <param name="email">Email address to search for across all groups</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="Suppression"/>.
+		/// </returns>
+		public Task<SuppressionGroup[]> GetUnsubscribedGroupsAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			return _client
+				.GetAsync($"{_endpoint}/suppressions/{email}")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<SuppressionGroup[]>("suppressions");
 		}
 
 		/// <summary>
@@ -40,7 +57,7 @@ namespace StrongGrid.Resources
 		public Task<string[]> GetUnsubscribedAddressesAsync(int groupId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync($"{_endpoint}/{groupId}/suppressions")
+				.GetAsync($"{_endpoint}/groups/{groupId}/suppressions")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<string[]>();
 		}
@@ -74,7 +91,7 @@ namespace StrongGrid.Resources
 		{
 			var data = new JObject(new JProperty("recipient_emails", JArray.FromObject(emails.ToArray())));
 			return _client
-				.PostAsync($"{_endpoint}/{groupId}/suppressions")
+				.PostAsync($"{_endpoint}/groups/{groupId}/suppressions")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
@@ -92,7 +109,7 @@ namespace StrongGrid.Resources
 		public Task RemoveAddressFromSuppressionGroupAsync(int groupId, string email, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.DeleteAsync($"{_endpoint}/{groupId}/suppressions/{email}")
+				.DeleteAsync($"{_endpoint}/groups/{groupId}/suppressions/{email}")
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
 		}
