@@ -31,6 +31,21 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
+		/// Get all suppressions.
+		/// </summary>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="Suppression"/>.
+		/// </returns>
+		public Task<Suppression[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
+		{
+			return _client
+				.GetAsync($"{_endpoint}/suppressions")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<Suppression[]>();
+		}
+
+		/// <summary>
 		/// Get all unsubscribe groups that the given email address has been added to.
 		/// </summary>
 		/// <param name="email">Email address to search for across all groups</param>
