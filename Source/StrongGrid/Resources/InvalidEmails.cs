@@ -45,8 +45,8 @@ namespace StrongGrid.Resources
 		{
 			return _client
 				.GetAsync(_endpoint)
-				.WithArgument("start_time", startDate)
-				.WithArgument("end_time", endDate)
+				.WithArgument("start_time", startDate?.ToUnixTime())
+				.WithArgument("end_time", endDate?.ToUnixTime())
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
