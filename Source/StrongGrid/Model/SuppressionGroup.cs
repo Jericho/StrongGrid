@@ -43,5 +43,14 @@ namespace StrongGrid.Model
 		/// </value>
 		[JsonProperty("is_default", NullValueHandling = NullValueHandling.Ignore)]
 		public bool IsDefault { get; set; }
+
+		/// <summary>
+		/// Gets or sets a value indicating the number of email addresses in this suppression group.
+		/// </summary>
+		/// <value>
+		/// The number of email addresses in this suppression group.
+		/// </value>
+		[JsonProperty("unsubscribes", NullValueHandling = NullValueHandling.Ignore)]
+		public long UnsubscribesCount { get; set; }
 	}
 }

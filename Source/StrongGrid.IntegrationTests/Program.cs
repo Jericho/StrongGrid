@@ -253,6 +253,16 @@ namespace StrongGrid.IntegrationTests
 			var unsubscribedAddresses = client.Suppressions.GetUnsubscribedAddressesAsync(group.Id).Result;
 			Console.WriteLine("There are {0} unsubscribed addresses in group {1}", unsubscribedAddresses.Length, group.Id);
 
+			// CHECK IF AN ADDRESS IS IN THE SUPPRESSION GROUP (should be true)
+			var addressToCheck = "test1@example.com";
+			var isInGroup = client.Suppressions.IsSuppressedAsync(group.Id, addressToCheck).Result;
+			Console.WriteLine("{0} {1} in supression group {2}", addressToCheck, isInGroup ? "is" : "is not", group.Id);
+
+			// CHECK IF AN ADDRESS IS IN THE SUPPRESSION GROUP (should be false)
+			addressToCheck = "dummy@example.com";
+			isInGroup = client.Suppressions.IsSuppressedAsync(group.Id, addressToCheck).Result;
+			Console.WriteLine("{0} {1} in supression group {2}", addressToCheck, isInGroup ? "is" : "is not", group.Id);
+
 			// REMOVE ALL ADDRESSES FROM UNSUBSCRIBE GROUP
 			foreach (var address in unsubscribedAddresses)
 			{
