@@ -61,6 +61,14 @@ namespace StrongGrid
 		public Blocks Blocks { get; private set; }
 
 		/// <summary>
+		/// Gets the Bounces resource which allows you to manage bounces.
+		/// </summary>
+		/// <value>
+		/// The bounces.
+		/// </value>
+		public Bounces Bounces { get; private set; }
+
+		/// <summary>
 		/// Gets the Campaigns resource which allows you to manage your campaigns.
 		/// </summary>
 		/// <value>
@@ -165,6 +173,14 @@ namespace StrongGrid
 		public Statistics Statistics { get; private set; }
 
 		/// <summary>
+		/// Gets the Subusers resource.
+		/// </summary>
+		/// <value>
+		/// The subusers.
+		/// </value>
+		public Subusers Subusers { get; private set; }
+
+		/// <summary>
 		/// Gets the Suppressions resource.
 		/// </summary>
 		/// <value>
@@ -211,6 +227,14 @@ namespace StrongGrid
 		/// The whitelabel.
 		/// </value>
 		public Whitelabel Whitelabel { get; private set; }
+
+		/// <summary>
+		/// Gets the webhook settings resource.
+		/// </summary>
+		/// <value>
+		/// The webhook settings.
+		/// </value>
+		public WebhookSettings WebhookSettings { get; private set; }
 
 		#endregion
 
@@ -287,7 +311,8 @@ namespace StrongGrid
 			_mustDisposeHttpClient = httpClient == null;
 			_httpClient = httpClient;
 
-			Version = typeof(Client).GetTypeInfo().Assembly.GetName().Version.ToString();
+			var assemblyVersion = typeof(Client).GetTypeInfo().Assembly.GetName().Version;
+			Version = $"{assemblyVersion.Major}.{assemblyVersion.Minor}.{assemblyVersion.Build}";
 
 			_fluentClient = new FluentClient(new Uri($"{baseUri.TrimEnd('/')}/{apiVersion.TrimStart('/')}"), httpClient)
 				.SetUserAgent($"StrongGrid/{Version} (+https://github.com/Jericho/StrongGrid)")
@@ -303,6 +328,7 @@ namespace StrongGrid
 			ApiKeys = new ApiKeys(_fluentClient);
 			Batches = new Batches(_fluentClient);
 			Blocks = new Blocks(_fluentClient);
+			Bounces = new Bounces(_fluentClient);
 			Campaigns = new Campaigns(_fluentClient);
 			Categories = new Categories(_fluentClient);
 			Contacts = new Contacts(_fluentClient);
@@ -316,10 +342,12 @@ namespace StrongGrid
 			Settings = new Settings(_fluentClient);
 			SpamReports = new SpamReports(_fluentClient);
 			Statistics = new Statistics(_fluentClient);
+			Subusers = new Subusers(_fluentClient);
 			Suppressions = new Suppressions(_fluentClient);
 			Templates = new Templates(_fluentClient);
 			UnsubscribeGroups = new UnsubscribeGroups(_fluentClient);
 			User = new User(_fluentClient);
+			WebhookSettings = new WebhookSettings(_fluentClient);
 			Whitelabel = new Whitelabel(_fluentClient);
 		}
 

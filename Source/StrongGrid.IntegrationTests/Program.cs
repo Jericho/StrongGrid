@@ -41,6 +41,7 @@ namespace StrongGrid.IntegrationTests
 				Settings(client, pauseAfterTests);
 				Alerts(client, pauseAfterTests);
 				Blocks(client, pauseAfterTests);
+				Bounces(client, pauseAfterTests);
 				SpamReports(client, pauseAfterTests);
 				InvalidEmails(client, pauseAfterTests);
 				Batches(client, pauseAfterTests);
@@ -251,6 +252,21 @@ namespace StrongGrid.IntegrationTests
 			// GET THE ADDRESSES IN A GROUP
 			var unsubscribedAddresses = client.Suppressions.GetUnsubscribedAddressesAsync(group.Id).Result;
 			Console.WriteLine("There are {0} unsubscribed addresses in group {1}", unsubscribedAddresses.Length, group.Id);
+
+			// CHECK IF AN ADDRESS IS IN THE SUPPRESSION GROUP (should be true)
+			var addressToCheck = "test1@example.com";
+			var isInGroup = client.Suppressions.IsSuppressedAsync(group.Id, addressToCheck).Result;
+			Console.WriteLine("{0} {1} in supression group {2}", addressToCheck, isInGroup ? "is" : "is not", group.Id);
+
+			// CHECK IF AN ADDRESS IS IN THE SUPPRESSION GROUP (should be false)
+			addressToCheck = "dummy@example.com";
+			isInGroup = client.Suppressions.IsSuppressedAsync(group.Id, addressToCheck).Result;
+			Console.WriteLine("{0} {1} in supression group {2}", addressToCheck, isInGroup ? "is" : "is not", group.Id);
+
+			// CHECK WHICH GROUPS A GIVEN EMAIL ADDRESS IS SUPPRESSED FROM
+			addressToCheck = "test1@example.com";
+			var suppressedFrom = client.Suppressions.GetUnsubscribedGroupsAsync(addressToCheck).Result;
+			Console.WriteLine("{0} is in {1} supression groups", addressToCheck, suppressedFrom.Length);
 
 			// REMOVE ALL ADDRESSES FROM UNSUBSCRIBE GROUP
 			foreach (var address in unsubscribedAddresses)
@@ -687,8 +703,28 @@ namespace StrongGrid.IntegrationTests
 		{
 			Console.WriteLine("\n***** BLOCKS *****");
 
-			var blocks = client.Blocks.GetAllAsync().Result;
-			Console.WriteLine($"All blocks retrieved. There are {blocks.Length} blocks");
+			var thisYear = DateTime.UtcNow.Year;
+			var lastYear = thisYear - 1;
+			var startDate = new DateTime(lastYear, 1, 1, 0, 0, 0);
+			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
+
+			var blocks = client.Blocks.GetAllAsync(startDate, endDate).Result;
+			Console.WriteLine($"All blocks retrieved. There are {blocks.Length} blocks in {lastYear} and {thisYear}");
+
+			ConcludeTests(pauseAfterTests);
+		}
+
+		private static void Bounces(IClient client, bool pauseAfterTests)
+		{
+			Console.WriteLine("\n***** BOUNCES *****");
+
+			var thisYear = DateTime.UtcNow.Year;
+			var lastYear = thisYear - 1;
+			var startDate = new DateTime(lastYear, 1, 1, 0, 0, 0);
+			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
+
+			var bounces = client.Bounces.GetAllAsync(startDate, endDate).Result;
+			Console.WriteLine($"All bounces retrieved. There are {bounces.Length} bounces in {lastYear} and {thisYear}");
 
 			ConcludeTests(pauseAfterTests);
 		}
@@ -697,8 +733,13 @@ namespace StrongGrid.IntegrationTests
 		{
 			Console.WriteLine("\n***** SPAM REPORTS *****");
 
-			var spamReports = client.SpamReports.GetAllAsync().Result;
-			Console.WriteLine($"All spam reports retrieved. There are {spamReports.Length} reports");
+			var thisYear = DateTime.UtcNow.Year;
+			var lastYear = thisYear - 1;
+			var startDate = new DateTime(lastYear, 1, 1, 0, 0, 0);
+			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
+
+			var spamReports = client.SpamReports.GetAllAsync(startDate, endDate).Result;
+			Console.WriteLine($"All spam reports retrieved. There are {spamReports.Length} reports in {lastYear} and {thisYear}");
 
 			ConcludeTests(pauseAfterTests);
 		}
@@ -707,8 +748,13 @@ namespace StrongGrid.IntegrationTests
 		{
 			Console.WriteLine("\n***** INVALID EMAILS *****");
 
-			var invalidEmails = client.InvalidEmails.GetAllAsync().Result;
-			Console.WriteLine($"All invalid emails retrieved. There are {invalidEmails.Length} invalid email addresses");
+			var thisYear = DateTime.UtcNow.Year;
+			var lastYear = thisYear - 1;
+			var startDate = new DateTime(lastYear, 1, 1, 0, 0, 0);
+			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
+
+			var invalidEmails = client.InvalidEmails.GetAllAsync(startDate, endDate).Result;
+			Console.WriteLine($"All invalid emails retrieved. There are {invalidEmails.Length} invalid email addresses in {lastYear} and {thisYear}");
 
 			ConcludeTests(pauseAfterTests);
 		}

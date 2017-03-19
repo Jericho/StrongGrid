@@ -40,6 +40,14 @@ namespace StrongGrid
 		Blocks Blocks { get; }
 
 		/// <summary>
+		/// Gets the Bounces resource which allows you to manage bounces.
+		/// </summary>
+		/// <value>
+		/// The bounces.
+		/// </value>
+		Bounces Bounces { get; }
+
+		/// <summary>
 		/// Gets the Campaigns resource which allows you to manage your campaigns.
 		/// </summary>
 		/// <value>
@@ -144,6 +152,14 @@ namespace StrongGrid
 		Statistics Statistics { get; }
 
 		/// <summary>
+		/// Gets the Subusers resource which allows you to manage subusers.
+		/// </summary>
+		/// <value>
+		/// The subusers.
+		/// </value>
+		Subusers Subusers { get; }
+
+		/// <summary>
 		/// Gets the Suppressions resource.
 		/// </summary>
 		/// <value>
@@ -182,6 +198,14 @@ namespace StrongGrid
 		/// The version.
 		/// </value>
 		string Version { get; }
+
+		/// <summary>
+		/// Gets the WebhookSettings resource.
+		/// </summary>
+		/// <value>
+		/// The webhook settings.
+		/// </value>
+		WebhookSettings WebhookSettings { get; }
 
 		/// <summary>
 		/// Gets the Whitelabel resource.
