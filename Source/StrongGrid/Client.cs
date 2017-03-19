@@ -173,6 +173,14 @@ namespace StrongGrid
 		public Statistics Statistics { get; private set; }
 
 		/// <summary>
+		/// Gets the Subusers resource.
+		/// </summary>
+		/// <value>
+		/// The subusers.
+		/// </value>
+		public Subusers Subusers { get; private set; }
+
+		/// <summary>
 		/// Gets the Suppressions resource.
 		/// </summary>
 		/// <value>
@@ -219,6 +227,14 @@ namespace StrongGrid
 		/// The whitelabel.
 		/// </value>
 		public Whitelabel Whitelabel { get; private set; }
+
+		/// <summary>
+		/// Gets the webhook settings resource.
+		/// </summary>
+		/// <value>
+		/// The webhook settings.
+		/// </value>
+		public WebhookSettings WebhookSettings { get; private set; }
 
 		#endregion
 
@@ -325,10 +341,12 @@ namespace StrongGrid
 			Settings = new Settings(_fluentClient);
 			SpamReports = new SpamReports(_fluentClient);
 			Statistics = new Statistics(_fluentClient);
+			Subusers = new Subusers(_fluentClient);
 			Suppressions = new Suppressions(_fluentClient);
 			Templates = new Templates(_fluentClient);
 			UnsubscribeGroups = new UnsubscribeGroups(_fluentClient);
 			User = new User(_fluentClient);
+			WebhookSettings = new WebhookSettings(_fluentClient);
 			Whitelabel = new Whitelabel(_fluentClient);
 		}
 
