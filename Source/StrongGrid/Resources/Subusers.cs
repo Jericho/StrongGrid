@@ -113,7 +113,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The task
 		/// </returns>
-		public Task UpdateAsync(string username, Parameter<bool> disabled, Parameter<IEnumerable<string>> ips, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task UpdateAsync(string username, Parameter<bool> disabled, Parameter<IEnumerable<string>> ips, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			if (disabled.HasValue)
 			{
@@ -121,27 +121,25 @@ namespace StrongGrid.Resources
 				{
 					{ "disabled", disabled.Value }
 				};
-				var result = _client
+				await _client
 					.PatchAsync($"{_endpoint}/{username}")
 					.WithJsonBody(data)
 					.WithCancellationToken(cancellationToken)
-					.AsMessage();
-
-				if (ips.HasValue)
-				{
-					var ipdata = JArray.FromObject(ips.Value);
-
-					_client
-						.PutAsync($"{_endpoint}/{username}/ips")
-						.WithJsonBody(ipdata)
-						.WithCancellationToken(cancellationToken)
-						.AsMessage();
-				}
-
-				return result;
+					.AsMessage()
+					.ConfigureAwait(false);
 			}
 
-			return Task.FromResult<object>(null);
+			if (ips.HasValue)
+			{
+				var ipdata = JArray.FromObject(ips.Value);
+
+				await _client
+					.PutAsync($"{_endpoint}/{username}/ips")
+					.WithJsonBody(ipdata)
+					.WithCancellationToken(cancellationToken)
+					.AsMessage()
+					.ConfigureAwait(false);
+			}
 		}
 
 		/// <summary>
@@ -154,22 +152,18 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="MonitorSettings" />.
 		/// </returns>
-		public async Task<MonitorSettings> CreateMonitorSettingsAsync(string username, string email, int frequency, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<MonitorSettings> CreateMonitorSettingsAsync(string username, string email, int frequency, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject()
 			{
 				{ "email", email },
 				{ "frequency", frequency }
 			};
-
-			var settings = await _client
+			return _client
 				.GetAsync($"{_endpoint}/{username}/monitor")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<MonitorSettings>()
-				.ConfigureAwait(false);
-
-			return settings;
+				.AsSendGridObject<MonitorSettings>();
 		}
 
 		/// <summary>
@@ -182,20 +176,18 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="MonitorSettings" />.
 		/// </returns>
-		public async Task<MonitorSettings> UpdateMonitorSettingsAsync(string username, string email, int frequency, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<MonitorSettings> UpdateMonitorSettingsAsync(string username, string email, int frequency, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject()
 			{
 				{ "email", email },
 				{ "frequency", frequency }
 			};
-			var settings = await _client
+			return _client
 				.PutAsync($"{_endpoint}/{username}/monitor")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<MonitorSettings>()
-				.ConfigureAwait(false);
-			return settings;
+				.AsSendGridObject<MonitorSettings>();
 		}
 
 		/// <summary>
