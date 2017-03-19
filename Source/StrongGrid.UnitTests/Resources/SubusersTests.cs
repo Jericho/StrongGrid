@@ -47,6 +47,10 @@ namespace StrongGrid.Resources.UnitTests
 				'disabled': true
 			  }
 		]";
+		private const string MULTIPLE_IPS_JSON = @"[
+			  '1.1.1.1',
+			  '2.2.2.2'
+		]";
 
 		#endregion
 
@@ -119,7 +123,7 @@ namespace StrongGrid.Resources.UnitTests
 			var subusers = new Subusers(client);
 
 			// Act
-			var result = subusers.GetAllAsync(CancellationToken.None).Result;
+			var result = subusers.GetAllAsync(null, 10, 0, CancellationToken.None).Result;
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -154,20 +158,21 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var username = "someuser";
 			var disabled = true;
+			var ips = new[] { "1.1.1.1", "2.2.2.2" };
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod( "PATCH" ), Utils.GetSendGridApiUri(ENDPOINT, username)).Respond("application/json", SINGLE_SUBUSER_JSON);
+			mockHttp.Expect(new HttpMethod( "PATCH" ), Utils.GetSendGridApiUri(ENDPOINT, username)).Respond(HttpStatusCode.NoContent);
+			mockHttp.Expect(new HttpMethod( "PUT" ), Utils.GetSendGridApiUri(ENDPOINT, username, "ips")).Respond("application/json", MULTIPLE_IPS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var subusers = new Subusers(client);
 
 			// Act
-			var result = subusers.UpdateAsync(username, disabled, CancellationToken.None).Result;
+			subusers.UpdateAsync(username, disabled, ips, CancellationToken.None).Wait();
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			result.ShouldNotBeNull();
 		}
 	}
 }

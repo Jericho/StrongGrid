@@ -229,12 +229,12 @@ namespace StrongGrid
 		public Whitelabel Whitelabel { get; private set; }
 
 		/// <summary>
-		/// Gets the Webhooks resource.
+		/// Gets the webhook settings resource.
 		/// </summary>
 		/// <value>
-		/// The webhooks.
+		/// The webhook settings.
 		/// </value>
-		public Webhooks Webhooks { get; private set; }
+		public WebhookSettings WebhookSettings { get; private set; }
 
 		#endregion
 
@@ -346,7 +346,7 @@ namespace StrongGrid
 			Templates = new Templates(_fluentClient);
 			UnsubscribeGroups = new UnsubscribeGroups(_fluentClient);
 			User = new User(_fluentClient);
-			Webhooks = new Webhooks(_fluentClient);
+			WebhookSettings = new WebhookSettings(_fluentClient);
 			Whitelabel = new Whitelabel(_fluentClient);
 		}
 

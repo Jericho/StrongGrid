@@ -200,12 +200,12 @@ namespace StrongGrid
 		string Version { get; }
 
 		/// <summary>
-		/// Gets the Webhooks resource.
+		/// Gets the WebhookSettings resource.
 		/// </summary>
 		/// <value>
-		/// The webhooks.
+		/// The webhook settings.
 		/// </value>
-		Webhooks Webhooks { get; }
+		WebhookSettings WebhookSettings { get; }
 
 		/// <summary>
 		/// Gets the Whitelabel resource.

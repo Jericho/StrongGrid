@@ -3,13 +3,14 @@ using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Model;
 using StrongGrid.UnitTests;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
 {
-	public class EventWebhookSettingsTests
+	public class WebhookSettingsTests
 	{
 		#region FIELDS
 
@@ -59,7 +60,7 @@ namespace StrongGrid.Resources.UnitTests
 
 
 		[Fact]
-		public void GetEventWebhookSettings()
+		public void Get()
 		{
 			// Arrange
 
@@ -83,10 +84,10 @@ namespace StrongGrid.Resources.UnitTests
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("user/webhooks/event/settings")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var webhooks = new Webhooks(client);
+			var webhooks = new WebhookSettings(client);
 
 			// Act
-			var result = webhooks.GetEventWebhookSettingsAsync(CancellationToken.None).Result;
+			var result = webhooks.GetAsync(CancellationToken.None).Result;
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -108,7 +109,7 @@ namespace StrongGrid.Resources.UnitTests
 
 
 		[Fact]
-		public void UpdateEventWebhookSettings()
+		public void Update()
 		{
 			// Arrange
 			var enabled = true;
@@ -145,15 +146,35 @@ namespace StrongGrid.Resources.UnitTests
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("user/webhooks/event/settings")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var webhooks = new Webhooks(client);
+			var webhooks = new WebhookSettings(client);
 
 			// Act
-			var result = webhooks.UpdateEventWebhookSettingsAsync(enabled, url, bounce, click, deferred, delivered, dropped, groupResubscribe, groupUnsubscribe, open, processed, spamReport, unsubscribe, CancellationToken.None).Result;
+			var result = webhooks.UpdateAsync(enabled, url, bounce, click, deferred, delivered, dropped, groupResubscribe, groupUnsubscribe, open, processed, spamReport, unsubscribe, CancellationToken.None).Result;
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
+		}
+
+		[Fact]
+		public void SendTest()
+		{
+			// Arrange
+			var url = "url";
+			
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(new HttpMethod("POST"), Utils.GetSendGridApiUri("user/webhooks/event/test")).Respond(HttpStatusCode.NoContent);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var webhooks = new WebhookSettings(client);
+
+			// Act
+			webhooks.SendTestAsync(url, CancellationToken.None).Wait();
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 	}

@@ -48,14 +48,20 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// List all Subusers for a parent
 		/// </summary>
+		/// <param name="username">The username.</param>
+		/// <param name="limit">The limit.</param>
+		/// <param name="offset">The offset.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// An array of <see cref="Subuser" />.
 		/// </returns>
-		public Task<Subuser[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Subuser[]> GetAllAsync(string username = null, int limit = 10, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync(_endpoint)
+				.WithArgument("username", username)
+				.WithArgument("limit", limit)
+				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Subuser[]>();
 		}
@@ -102,21 +108,110 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="username">The template identifier.</param>
 		/// <param name="disabled">The name.</param>
+		/// <param name="ips">The ips.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The <see cref="Subuser" />.
+		/// The task
 		/// </returns>
-		public Task<Subuser> UpdateAsync(string username, bool disabled, CancellationToken cancellationToken = default(CancellationToken))
+		public Task UpdateAsync(string username, Parameter<bool> disabled, Parameter<IEnumerable<string>> ips, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = new JObject
+			if (disabled.HasValue)
 			{
-				{ "disabled", disabled }
+				var data = new JObject()
+				{
+					{ "disabled", disabled.Value }
+				};
+				var result = _client
+					.PatchAsync($"{_endpoint}/{username}")
+					.WithJsonBody(data)
+					.WithCancellationToken(cancellationToken)
+					.AsMessage();
+
+				if (ips.HasValue)
+				{
+					var ipdata = JArray.FromObject(ips.Value);
+
+					_client
+						.PutAsync($"{_endpoint}/{username}/ips")
+						.WithJsonBody(ipdata)
+						.WithCancellationToken(cancellationToken)
+						.AsMessage();
+				}
+
+				return result;
+			}
+
+			return Task.FromResult<object>(null);
+		}
+
+		/// <summary>
+		/// Create monitor settings
+		/// </summary>
+		/// <param name="username">The sub user.</param>
+		/// <param name="email">The email address to receive the monitor emails.</param>
+		/// <param name="frequency">The frequency.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="MonitorSettings" />.
+		/// </returns>
+		public async Task<MonitorSettings> CreateMonitorSettingsAsync(string username, string email, int frequency, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var data = new JObject()
+			{
+				{ "email", email },
+				{ "frequency", frequency }
 			};
-			return _client
-				.PatchAsync($"{_endpoint}/{username}")
+
+			var settings = await _client
+				.GetAsync($"{_endpoint}/{username}/monitor")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Subuser>();
+				.AsSendGridObject<MonitorSettings>()
+				.ConfigureAwait(false);
+
+			return settings;
+		}
+
+		/// <summary>
+		/// Update monitor settings
+		/// </summary>
+		/// <param name="username">The sub user.</param>
+		/// <param name="email">The email address to receive the monitor emails.</param>
+		/// <param name="frequency">The frequency.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="MonitorSettings" />.
+		/// </returns>
+		public async Task<MonitorSettings> UpdateMonitorSettingsAsync(string username, string email, int frequency, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var data = new JObject()
+			{
+				{ "email", email },
+				{ "frequency", frequency }
+			};
+			var settings = await _client
+				.PutAsync($"{_endpoint}/{username}/monitor")
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<MonitorSettings>()
+				.ConfigureAwait(false);
+			return settings;
+		}
+
+		/// <summary>
+		/// Delete monitor settings
+		/// </summary>
+		/// <param name="username">The username.</param>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// The async task.
+		/// </returns>
+		public Task DeleteMonitorSettingsAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			return _client
+				.DeleteAsync($"{_endpoint}/{username}/monitor")
+				.WithCancellationToken(cancellationToken)
+				.AsMessage();
 		}
 
 		private static JObject CreateJObject(

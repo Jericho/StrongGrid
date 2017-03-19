@@ -13,16 +13,16 @@ namespace StrongGrid.Resources
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Webhooks/event.html
 	/// </remarks>
-	public class Webhooks
+	public class WebhookSettings
 	{
-		private const string _endpoint = "user/webhooks";
+		private const string _endpoint = "user/webhooks/event/settings";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Webhooks" /> class.
+		/// Initializes a new instance of the <see cref="WebhookSettings" /> class.
 		/// </summary>
 		/// <param name="client">The HTTP client</param>
-		public Webhooks(Pathoschild.Http.Client.IClient client)
+		public WebhookSettings(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
 		}
@@ -34,10 +34,10 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="EventWebhookSettings" />.
 		/// </returns>
-		public Task<EventWebhookSettings> GetEventWebhookSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<EventWebhookSettings> GetAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
-				.GetAsync("user/webhooks/event/settings")
+				.GetAsync(_endpoint)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EventWebhookSettings>();
 		}
@@ -62,7 +62,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="EventWebhookSettings" />.
 		/// </returns>
-		public Task<EventWebhookSettings> UpdateEventWebhookSettingsAsync(
+		public Task<EventWebhookSettings> UpdateAsync(
 			bool enabled,
 			string url,
 			bool bounce = default(bool),
@@ -96,10 +96,32 @@ namespace StrongGrid.Resources
 			};
 			var data = JObject.FromObject(eventWebhookSettings);
 			return _client
-				.PatchAsync("user/webhooks/event/settings")
+				.PatchAsync(_endpoint)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EventWebhookSettings>();
+		}
+
+		/// <summary>
+		/// Sends a fake event notification post to the provided URL.
+		/// </summary>
+		/// <param name="url">the event notification endpoint url</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The async task.
+		/// </returns>
+		public Task SendTestAsync(string url, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var data = new JObject
+			{
+				{ "url", url }
+			};
+
+			return _client
+				.PostAsync("user/webhooks/event/test")
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsMessage();
 		}
 	}
 }
