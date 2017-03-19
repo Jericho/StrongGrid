@@ -111,6 +111,10 @@ namespace StrongGrid
 			var rawTo = parser.GetParameterValue("to", string.Empty);
 			var to = ParseEmailAddresses(rawTo);
 
+			// Convert the 'cc' from a string into a strongly typed object
+			var rawCc = parser.GetParameterValue("cc", string.Empty);
+			var cc = ParseEmailAddresses(rawCc);
+
 			// Arrange the InboundEmail
 			var inboundEmail = new InboundEmail
 			{
@@ -126,7 +130,8 @@ namespace StrongGrid
 				SpamScore = parser.GetParameterValue("spam_score", null),
 				Spf = parser.GetParameterValue("SPF", null),
 				Subject = parser.GetParameterValue("subject", null),
-				To = to
+				To = to,
+				Cc = cc
 			};
 
 			return inboundEmail;
