@@ -105,13 +105,15 @@ namespace StrongGrid
 
 			// Convert the 'from' from a string into a strongly typed object
 			var rawFrom = parser.GetParameterValue("from", string.Empty);
-			var piecesFrom = rawFrom.Split(new[] { '<', '>' }, StringSplitOptions.RemoveEmptyEntries);
-			var from = new MailAddress(piecesFrom[1], piecesFrom[0].Replace("\"", string.Empty).Trim());
+			var from = ParseEmailAddress(rawFrom);
 
 			// Convert the 'to' from a string into a strongly typed object
 			var rawTo = parser.GetParameterValue("to", string.Empty);
-			var piecesTo = rawTo.Split(new[] { '<', '>' }, StringSplitOptions.RemoveEmptyEntries);
-			var to = new MailAddress(piecesTo[1], piecesTo[0].Replace("\"", string.Empty).Trim());
+			var to = ParseEmailAddresses(rawTo);
+
+			// Convert the 'cc' from a string into a strongly typed object
+			var rawCc = parser.GetParameterValue("cc", string.Empty);
+			var cc = ParseEmailAddresses(rawCc);
 
 			// Arrange the InboundEmail
 			var inboundEmail = new InboundEmail
@@ -128,10 +130,30 @@ namespace StrongGrid
 				SpamScore = parser.GetParameterValue("spam_score", null),
 				Spf = parser.GetParameterValue("SPF", null),
 				Subject = parser.GetParameterValue("subject", null),
-				To = to
+				To = to,
+				Cc = cc
 			};
 
 			return inboundEmail;
+		}
+
+		#endregion
+
+		#region PRIVATE METHODS
+
+		private MailAddress[] ParseEmailAddresses(string rawEmailAddresses)
+		{
+			var rawEmails = rawEmailAddresses.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+			var addresses = rawEmails.Select(rawEmail => ParseEmailAddress(rawEmail)).ToArray();
+			return addresses;
+		}
+
+		private MailAddress ParseEmailAddress(string rawEmailAddress)
+		{
+			var pieces = rawEmailAddress.Split(new[] { '<', '>' }, StringSplitOptions.RemoveEmptyEntries);
+			var email = pieces.Length == 2 ? pieces[1].Trim() : pieces[0].Trim();
+			var name = pieces.Length == 2 ? pieces[0].Replace("\"", string.Empty).Trim() : string.Empty;
+			return new MailAddress(email, name);
 		}
 
 		#endregion
