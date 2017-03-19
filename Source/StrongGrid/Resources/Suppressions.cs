@@ -53,12 +53,23 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Suppression"/>.
 		/// </returns>
-		public Task<SuppressionGroup[]> GetUnsubscribedGroupsAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<SuppressionGroup[]> GetUnsubscribedGroupsAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			return _client
+			var result = await _client
 				.GetAsync($"{_endpoint}/suppressions/{email}")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SuppressionGroup[]>("suppressions");
+				.AsSendGridObject<JObject[]>("suppressions")
+				.ConfigureAwait(false);
+
+			// SendGrid returns all the groups with a boolean property called "suppressed" indicating
+			// if the specified email address is in the group or not. Therefore we need to filter the
+			// result of the call to only include the groups where this boolean property is 'true'
+			var unsubscribedFrom = result
+				.Where(item => (bool)item["suppressed"])
+				.Select(item => item.ToObject<SuppressionGroup>())
+				.ToArray();
+
+			return unsubscribedFrom;
 		}
 
 		/// <summary>
