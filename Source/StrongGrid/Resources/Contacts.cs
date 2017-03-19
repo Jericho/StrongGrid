@@ -49,7 +49,9 @@ namespace StrongGrid.Resources
 			Parameter<IEnumerable<Field>> customFields = default(Parameter<IEnumerable<Field>>),
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = ConvertToJObject(email, firstName, lastName, customFields);
+			// SendGrid expects an array despite the fact we are creating a single contact
+			var data = new[] { ConvertToJObject(email, firstName, lastName, customFields) };
+
 			var importResult = await _client
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
@@ -86,7 +88,9 @@ namespace StrongGrid.Resources
 			Parameter<IEnumerable<Field>> customFields = default(Parameter<IEnumerable<Field>>),
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = ConvertToJObject(email, firstName, lastName, customFields);
+			// SendGrid expects an array despite the fact we are updating a single contact
+			var data = new[] { ConvertToJObject(email, firstName, lastName, customFields) };
+
 			var responseContent = await _client
 				.PatchAsync(_endpoint)
 				.WithJsonBody(data)
