@@ -248,6 +248,24 @@ namespace StrongGrid.Resources
 				.AsSendGridObject<Contact[]>("recipients");
 		}
 
+		/// <summary>
+		/// Retrieve the lists that a recipient is on.
+		/// </summary>
+		/// <param name="contactId">The contact identifier.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="List" />.
+		/// </returns>
+		public async Task<List[]> GetListsAsync(string contactId, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var lists = await _client
+				.GetAsync($"{_endpoint}/{contactId}/lists")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<List[]>("lists")
+				.ConfigureAwait(false);
+			return lists;
+		}
+
 		private static JObject ConvertToJObject(
 			Parameter<string> email,
 			Parameter<string> firstName,
