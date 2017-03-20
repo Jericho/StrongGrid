@@ -9,10 +9,10 @@
 	"dependencies": {
 		"StrongGrid": { "target": "project" },
 		"dotnet-test-xunit": "2.2.0-preview2-build1029",
-		"Moq": "4.6.38-alpha",
 		"Shouldly": "2.8.2",
-		"RichardSzalay.MockHttp": "1.4.1",
-		"xunit": "2.2.0-rc1-build3507"
+		"Moq": "4.7.1",
+		"RichardSzalay.MockHttp": "1.5.0",
+		"xunit": "2.2.0"
 	},
 
 	"frameworks": {
@@ -26,7 +26,7 @@
 			"dependencies": {
 				"Microsoft.NETCore.App": {
 					"type": "platform",
-					"version": "1.0.1"
+					"version": "1.1.1"
 				}
 			}
 		},
