@@ -46,6 +46,7 @@ namespace StrongGrid.IntegrationTests
 				InvalidEmails(client, pauseAfterTests);
 				Batches(client, pauseAfterTests);
 				Whitelabel(client, pauseAfterTests);
+				WebhookStats(client, pauseAfterTests);
 			}
 			catch (Exception e)
 			{
@@ -823,6 +824,26 @@ namespace StrongGrid.IntegrationTests
 
 			client.Whitelabel.DeleteLinkAsync(link.Id).Wait();
 			Console.WriteLine($"Whitelabel link {link.Id} deleted.");
+
+			ConcludeTests(pauseAfterTests);
+		}
+
+		private static void WebhookStats(IClient client, bool pauseAfterTests)
+		{
+			Console.WriteLine("\n***** WEBHOOK STATS *****");
+
+			var thisYear = DateTime.UtcNow.Year;
+			var lastYear = thisYear - 1;
+			var startDate = new DateTime(lastYear, 1, 1, 0, 0, 0);
+			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
+
+			var inboundParseWebhookUsage = client.WebhookStats.GetInboundParseUsageAsync(startDate, endDate, AggregateBy.Month).Result;
+			foreach (var monthUsage in inboundParseWebhookUsage)
+			{
+				var name = monthUsage.Date.ToString("yyyy MMM");
+				var count = monthUsage.Stats.Sum(s => s.Metrics.Single(m => m.Key == "received").Value);
+				Console.WriteLine($"{name}: {count}");
+			}
 
 			ConcludeTests(pauseAfterTests);
 		}
