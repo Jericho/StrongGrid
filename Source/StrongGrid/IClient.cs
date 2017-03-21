@@ -216,6 +216,14 @@ namespace StrongGrid
 		WebhookSettings WebhookSettings { get; }
 
 		/// <summary>
+		/// Gets the WebhookStats resource.
+		/// </summary>
+		/// <value>
+		/// The webhook stats.
+		/// </value>
+		WebhookStats WebhookStats { get; }
+
+		/// <summary>
 		/// Gets the Whitelabel resource.
 		/// </summary>
 		/// <value>
