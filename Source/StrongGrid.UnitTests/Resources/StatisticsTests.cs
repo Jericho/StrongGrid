@@ -3,6 +3,7 @@ using Shouldly;
 using StrongGrid.Model;
 using StrongGrid.UnitTests;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using Xunit;
@@ -25,26 +26,26 @@ namespace StrongGrid.Resources.UnitTests
 			var endDate = new DateTime(2015, 1, 2);
 			var apiResponse = @"[
 				{
-					'date': '2015 - 01 - 01',
+					'date': '2015-01-01',
 					'stats': [
 						{
-						'metrics': {
-							'blocks': 1,
-							'bounce_drops': 0,
-							'bounces': 0,
-							'clicks': 0,
-							'deferred': 1,
-							'delivered': 1,
-							'invalid_emails': 1,
-							'opens': 1,
-							'processed': 2,
-							'requests': 3,
-							'spam_report_drops': 0,
-							'spam_reports': 0,
-							'unique_clicks': 0,
-							'unique_opens': 1,
-							'unsubscribe_drops': 0,
-							'unsubscribes': 0
+							'metrics': {
+								'blocks': 1,
+								'bounce_drops': 0,
+								'bounces': 0,
+								'clicks': 0,
+								'deferred': 1,
+								'delivered': 1,
+								'invalid_emails': 1,
+								'opens': 1,
+								'processed': 2,
+								'requests': 3,
+								'spam_report_drops': 0,
+								'spam_reports': 0,
+								'unique_clicks': 0,
+								'unique_opens': 1,
+								'unsubscribe_drops': 0,
+								'unsubscribes': 0
 							}
 						}
 					]
@@ -53,23 +54,23 @@ namespace StrongGrid.Resources.UnitTests
 					'date': '2015-01-02',
 					'stats': [
 						{
-						'metrics': {
-							'blocks': 0,
-							'bounce_drops': 0,
-							'bounces': 0,
-							'clicks': 0,
-							'deferred': 0,
-							'delivered': 0,
-							'invalid_emails': 0,
-							'opens': 0,
-							'processed': 0,
-							'requests': 0,
-							'spam_report_drops': 0,
-							'spam_reports': 0,
-							'unique_clicks': 0,
-							'unique_opens': 0,
-							'unsubscribe_drops': 0,
-							'unsubscribes': 0
+							'metrics': {
+								'blocks': 0,
+								'bounce_drops': 0,
+								'bounces': 0,
+								'clicks': 0,
+								'deferred': 0,
+								'delivered': 0,
+								'invalid_emails': 0,
+								'opens': 0,
+								'processed': 0,
+								'requests': 0,
+								'spam_report_drops': 0,
+								'spam_reports': 0,
+								'unique_clicks': 0,
+								'unique_opens': 0,
+								'unsubscribe_drops': 0,
+								'unsubscribes': 0
 							}
 						}
 					]
@@ -91,7 +92,7 @@ namespace StrongGrid.Resources.UnitTests
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(2);
 			result[0].Stats.Length.ShouldBe(1);
-			result[0].Stats[0].Metrics.Requests.ShouldBe(3);
+			result[0].Stats[0].Metrics.Single(m => m.Key == "requests").Value.ShouldBe(3);
 		}
 
 		[Fact]
@@ -458,7 +459,7 @@ namespace StrongGrid.Resources.UnitTests
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(2);
 			result[0].Stats.Length.ShouldBe(1);
-			result[0].Stats[0].Metrics.Opens.ShouldBe(1);
+			result[0].Stats[0].Metrics.Single(m => m.Key == "opens").Value.ShouldBe(1);
 			result[0].Stats[0].Name.ShouldBe("Webmail");
 			result[0].Stats[0].Type.ShouldBe("device");
 		}
@@ -513,7 +514,7 @@ namespace StrongGrid.Resources.UnitTests
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(2);
 			result[0].Stats.Length.ShouldBe(1);
-			result[0].Stats[0].Metrics.Opens.ShouldBe(1);
+			result[0].Stats[0].Metrics.Single(m => m.Key == "opens").Value.ShouldBe(1);
 			result[0].Stats[0].Name.ShouldBe("Gmail");
 			result[0].Stats[0].Type.ShouldBe("client");
 		}

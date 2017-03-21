@@ -244,6 +244,14 @@ namespace StrongGrid
 		/// </value>
 		public WebhookSettings WebhookSettings { get; private set; }
 
+		/// <summary>
+		/// Gets the WebhookStats resource.
+		/// </summary>
+		/// <value>
+		/// The webhook stats.
+		/// </value>
+		public WebhookStats WebhookStats { get; private set; }
+
 		#endregion
 
 		#region CTOR
@@ -357,6 +365,7 @@ namespace StrongGrid
 			UnsubscribeGroups = new UnsubscribeGroups(_fluentClient);
 			User = new User(_fluentClient);
 			WebhookSettings = new WebhookSettings(_fluentClient);
+			WebhookStats = new WebhookStats(_fluentClient);
 			Whitelabel = new Whitelabel(_fluentClient);
 		}
 
