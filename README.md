@@ -25,6 +25,11 @@ If you information about how to setup the SendGrid webhooks, please consult the 
 - [Setting up the inbound parse webhook](https://sendgrid.com/docs/Classroom/Basics/Inbound_Parse_Webhook/setting_up_the_inbound_parse_webhook.html)
 
 
+## Release Notes
+
+Detailed release notes are [available here](https://github.com/Jericho/StrongGrid/releases)
+
+
 ## Nuget
 
 StrongGrid is available as a Nuget package:
