@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using StrongGrid.Utilities;
+using System.Collections.Generic;
 
 namespace StrongGrid.Model
 {
@@ -14,7 +16,8 @@ namespace StrongGrid.Model
 		/// The metrics.
 		/// </value>
 		[JsonProperty("metrics", NullValueHandling = NullValueHandling.Ignore)]
-		public Metrics Metrics { get; set; }
+		[JsonConverter(typeof(MetricsConverter))]
+		public KeyValuePair<string, long>[] Metrics { get; set; }
 
 		/// <summary>
 		/// Gets or sets the name.

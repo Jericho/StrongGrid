@@ -3,6 +3,7 @@ using Shouldly;
 using StrongGrid.Model;
 using StrongGrid.UnitTests;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using Xunit;
@@ -91,7 +92,7 @@ namespace StrongGrid.Resources.UnitTests
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(2);
 			result[0].Stats.Length.ShouldBe(1);
-			result[0].Stats[0].Metrics.Requests.ShouldBe(3);
+			result[0].Stats[0].Metrics.Single(m => m.Key == "requests").Value.ShouldBe(3);
 		}
 
 		[Fact]
@@ -458,7 +459,7 @@ namespace StrongGrid.Resources.UnitTests
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(2);
 			result[0].Stats.Length.ShouldBe(1);
-			result[0].Stats[0].Metrics.Opens.ShouldBe(1);
+			result[0].Stats[0].Metrics.Single(m => m.Key == "opens").Value.ShouldBe(1);
 			result[0].Stats[0].Name.ShouldBe("Webmail");
 			result[0].Stats[0].Type.ShouldBe("device");
 		}
@@ -513,7 +514,7 @@ namespace StrongGrid.Resources.UnitTests
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(2);
 			result[0].Stats.Length.ShouldBe(1);
-			result[0].Stats[0].Metrics.Opens.ShouldBe(1);
+			result[0].Stats[0].Metrics.Single(m => m.Key == "opens").Value.ShouldBe(1);
 			result[0].Stats[0].Name.ShouldBe("Gmail");
 			result[0].Stats[0].Type.ShouldBe("client");
 		}
