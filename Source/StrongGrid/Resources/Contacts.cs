@@ -256,14 +256,12 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="List" />.
 		/// </returns>
-		public async Task<List[]> GetListsAsync(string contactId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<List[]> GetListsAsync(string contactId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var lists = await _client
+			return _client
 				.GetAsync($"{_endpoint}/{contactId}/lists")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<List[]>("lists")
-				.ConfigureAwait(false);
-			return lists;
+				.AsSendGridObject<List[]>("lists");
 		}
 
 		private static JObject ConvertToJObject(
