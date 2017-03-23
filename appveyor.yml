@@ -6,8 +6,8 @@ init:
 build_script:
   - ps: .\build.ps1 -Target "AppVeyor"
 
-# After Build
-after_build:
+# When there is an error
+on_failure:
   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 # Tests
