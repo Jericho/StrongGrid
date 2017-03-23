@@ -1,14 +1,13 @@
 # Before Build
 init:
   - git config --global core.autocrlf true
-  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 # Build script
 build_script:
   - ps: .\build.ps1 -Target "AppVeyor"
 
 # After Build
-  - ps: $blockRdp = $true;
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 # Tests
 test: off
