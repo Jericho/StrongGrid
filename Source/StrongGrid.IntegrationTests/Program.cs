@@ -47,6 +47,7 @@ namespace StrongGrid.IntegrationTests
 				Batches(client, pauseAfterTests);
 				Whitelabel(client, pauseAfterTests);
 				WebhookStats(client, pauseAfterTests);
+				AccessManagement(client, pauseAfterTests);
 			}
 			catch (Exception e)
 			{
@@ -843,6 +844,27 @@ namespace StrongGrid.IntegrationTests
 				var name = monthUsage.Date.ToString("yyyy MMM");
 				var count = monthUsage.Stats.Sum(s => s.Metrics.Single(m => m.Key == "received").Value);
 				Console.WriteLine($"{name}: {count}");
+			}
+
+			ConcludeTests(pauseAfterTests);
+		}
+
+		private static void AccessManagement(IClient client, bool pauseAfterTests)
+		{
+			Console.WriteLine("\n***** ACCESS MANAGEMENT *****");
+
+			var accessHistory = client.AccessManagement.GetAccessHistoryAsync().Result;
+			foreach (var access in accessHistory)
+			{
+				var accessDate = access.LatestAccessOn.ToString("yyyy-MM-dd hh:mm:ss");
+				var accessVerdict = access.Allowed ? "Access granted" : "Access DENIED";
+				Console.WriteLine($"{accessDate}\t{accessVerdict}\t{access.IpAddress}\t{access.Location}");
+			}
+
+			var whitelistedIpAddresses = client.AccessManagement.GetWhitelistedIpAddressesAsync().Result;
+			foreach (var address in whitelistedIpAddresses)
+			{
+				Console.WriteLine($"{address.Id}\t{address.IpAddress}\t{address.CreatedOn.ToString("yyyy-MM-dd hh:mm:ss")}");
 			}
 
 			ConcludeTests(pauseAfterTests);

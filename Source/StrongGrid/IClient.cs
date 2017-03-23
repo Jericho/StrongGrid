@@ -8,6 +8,14 @@ namespace StrongGrid
 	public interface IClient
 	{
 		/// <summary>
+		/// Gets the Access Management resource which allows you to control IP whitelisting
+		/// </summary>
+		/// <value>
+		/// The access management.
+		/// </value>
+		AccessManagement AccessManagement { get; }
+
+		/// <summary>
 		/// Gets the Alerts resource which allows you to receive notifications regarding your email usage or statistics.
 		/// </summary>
 		/// <value>
