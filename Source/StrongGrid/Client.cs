@@ -29,6 +29,14 @@ namespace StrongGrid
 		#region PROPERTIES
 
 		/// <summary>
+		/// Gets the Access Management resource which allows you to control IP whitelisting
+		/// </summary>
+		/// <value>
+		/// The access management.
+		/// </value>
+		public AccessManagement AccessManagement { get; private set; }
+
+		/// <summary>
 		/// Gets the Alerts resource which allows you to receive notifications regarding your email usage or statistics.
 		/// </summary>
 		/// <value>
@@ -340,6 +348,7 @@ namespace StrongGrid
 			if (!string.IsNullOrEmpty(apiKey)) _fluentClient.SetBearerAuthentication(apiKey);
 			if (!string.IsNullOrEmpty(username)) _fluentClient.SetBasicAuthentication(username, password);
 
+			AccessManagement = new AccessManagement(_fluentClient);
 			Alerts = new Alerts(_fluentClient);
 			ApiKeys = new ApiKeys(_fluentClient);
 			Batches = new Batches(_fluentClient);
