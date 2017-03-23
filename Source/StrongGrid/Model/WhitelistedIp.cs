@@ -24,7 +24,7 @@ namespace StrongGrid.Model
 		/// <value>
 		/// The ip address.
 		/// </value>
-		[JsonProperty("scope_group_name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("ip", NullValueHandling = NullValueHandling.Ignore)]
 		public string IpAddress { get; set; }
 
 		/// <summary>

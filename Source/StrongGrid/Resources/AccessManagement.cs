@@ -71,18 +71,22 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		public Task<WhitelistedIp> AddIpAddressToWhitelistAsync(string ip, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<WhitelistedIp> AddIpAddressToWhitelistAsync(string ip, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
 			{
 				{ "ips", new JArray(new JObject { { "ip", ip } }) }
 			};
 
-			return _client
+			var result = await _client
 				.PostAsync($"{_endpoint}/whitelist")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<WhitelistedIp>("result");
+				.AsSendGridObject<WhitelistedIp[]>("result")
+				.ConfigureAwait(false);
+
+			// SendGrid returns an array containing a single element.
+			return result[0];
 		}
 
 		/// <summary>
