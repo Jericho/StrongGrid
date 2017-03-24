@@ -29,6 +29,14 @@ namespace StrongGrid
 		#region PROPERTIES
 
 		/// <summary>
+		/// Gets the Access Management resource which allows you to control IP whitelisting
+		/// </summary>
+		/// <value>
+		/// The access management.
+		/// </value>
+		public AccessManagement AccessManagement { get; private set; }
+
+		/// <summary>
 		/// Gets the Alerts resource which allows you to receive notifications regarding your email usage or statistics.
 		/// </summary>
 		/// <value>
@@ -189,6 +197,14 @@ namespace StrongGrid
 		public Suppressions Suppressions { get; private set; }
 
 		/// <summary>
+		/// Gets the Teammates resource.
+		/// </summary>
+		/// <value>
+		/// The Teammates.
+		/// </value>
+		public Teammates Teammates { get; private set; }
+
+		/// <summary>
 		/// Gets the Templates resource.
 		/// </summary>
 		/// <value>
@@ -235,6 +251,14 @@ namespace StrongGrid
 		/// The webhook settings.
 		/// </value>
 		public WebhookSettings WebhookSettings { get; private set; }
+
+		/// <summary>
+		/// Gets the WebhookStats resource.
+		/// </summary>
+		/// <value>
+		/// The webhook stats.
+		/// </value>
+		public WebhookStats WebhookStats { get; private set; }
 
 		#endregion
 
@@ -324,6 +348,7 @@ namespace StrongGrid
 			if (!string.IsNullOrEmpty(apiKey)) _fluentClient.SetBearerAuthentication(apiKey);
 			if (!string.IsNullOrEmpty(username)) _fluentClient.SetBasicAuthentication(username, password);
 
+			AccessManagement = new AccessManagement(_fluentClient);
 			Alerts = new Alerts(_fluentClient);
 			ApiKeys = new ApiKeys(_fluentClient);
 			Batches = new Batches(_fluentClient);
@@ -344,10 +369,12 @@ namespace StrongGrid
 			Statistics = new Statistics(_fluentClient);
 			Subusers = new Subusers(_fluentClient);
 			Suppressions = new Suppressions(_fluentClient);
+			Teammates = new Teammates(_fluentClient);
 			Templates = new Templates(_fluentClient);
 			UnsubscribeGroups = new UnsubscribeGroups(_fluentClient);
 			User = new User(_fluentClient);
 			WebhookSettings = new WebhookSettings(_fluentClient);
+			WebhookStats = new WebhookStats(_fluentClient);
 			Whitelabel = new Whitelabel(_fluentClient);
 		}
 

@@ -1,4 +1,4 @@
-# Build script
+# Before Build
 init:
   - git config --global core.autocrlf true
 
