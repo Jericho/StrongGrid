@@ -66,7 +66,7 @@ namespace StrongGrid.Resources.UnitTests
 			result.ShouldNotBeNull();
 			result.Id.ShouldBe(1);
 			result.Username.ShouldBe("TestUser");
-			result.Email.ShouldBe("Test@example.com");
+			result.EmailAddress.ShouldBe("Test@example.com");
 			result.IsDisabled.ShouldBe(true);
 		}
 
@@ -82,7 +82,7 @@ namespace StrongGrid.Resources.UnitTests
 			result.ShouldNotBeNull();
 			result.Id.ShouldBe(1);
 			result.Username.ShouldBe("TestUser");
-			result.Email.ShouldBe("Test@example.com");
+			result.EmailAddress.ShouldBe("Test@example.com");
 			result.Password.ShouldBe("somepass");
 			result.IsDisabled.ShouldBe(false);
 			result.Ips.ShouldBe(new[] { "1.1.1.1", "2.2.2.2" });
