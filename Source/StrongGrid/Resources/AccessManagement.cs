@@ -168,7 +168,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync($"{_endpoint}/whitelist/{id}")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<WhitelistedIp>();
+				.AsSendGridObject<WhitelistedIp>("result");
 		}
 	}
 }
