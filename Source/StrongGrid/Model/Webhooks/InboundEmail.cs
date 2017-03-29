@@ -41,12 +41,20 @@ namespace StrongGrid.Model.Webhooks
 		public MailAddress[] Cc { get; set; }
 
 		/// <summary>
-		/// Gets or sets the HTML body of email.If not set, email did not have an HTML body.
+		/// Gets or sets the HTML body of email. If not set, email did not have a HTML body.
 		/// </summary>
 		/// <value>
 		/// The HTML.
 		/// </value>
 		public string Html { get; set; }
+
+		/// <summary>
+		/// Gets or sets the TEXT body of email .If not set, email did not have a TEXT body.
+		/// </summary>
+		/// <value>
+		/// The TEXT.
+		/// </value>
+		public string Text { get; set; }
 
 		/// <summary>
 		/// Gets or sets from the email sender, as taken from the message headers

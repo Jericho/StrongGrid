@@ -130,6 +130,7 @@ namespace StrongGrid
 				SpamScore = parser.GetParameterValue("spam_score", null),
 				Spf = parser.GetParameterValue("SPF", null),
 				Subject = parser.GetParameterValue("subject", null),
+				Text = parser.GetParameterValue("text", null),
 				To = to,
 				Cc = cc
 			};
