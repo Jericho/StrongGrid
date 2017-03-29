@@ -93,17 +93,19 @@ namespace StrongGrid.Utilities
 					{
 						case "date":
 							var unixTime = GetPropertyValue<long?>(item, "value");
-							if (unixTime.HasValue) field = new Field<DateTime?>(name, unixTime.Value.FromUnixTime());
+							if (unixTime.HasValue) field = new Field<DateTime>(name, unixTime.Value.FromUnixTime());
 							else field = new Field<DateTime?>(name, null);
 							break;
 						case "text":
 							field = new Field<string>(name, GetPropertyValue<string>(item, "value"));
 							break;
 						case "number":
-							field = new Field<long?>(name, GetPropertyValue<long?>(item, "value"));
+							var numericValue = GetPropertyValue<long?>(item, "value");
+							if (numericValue.HasValue) field = new Field<long>(name, numericValue.Value);
+							else field = new Field<long?>(name, null);
 							break;
 						default:
-							throw new Exception("Unable to determine the field type");
+							throw new Exception($"{type} is an unknown field type");
 					}
 
 					if (id.HasValue) field.Id = id.Value;
