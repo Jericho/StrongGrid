@@ -41,7 +41,7 @@ namespace StrongGrid.Model
 		/// The email address.
 		/// </value>
 		[JsonProperty("email", NullValueHandling = NullValueHandling.Ignore)]
-		public string Email { get; set; }
+		public string EmailAddress { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether the subuser is disabled.

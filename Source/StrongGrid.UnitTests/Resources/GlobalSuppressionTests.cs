@@ -13,8 +13,42 @@ namespace StrongGrid.Resources.UnitTests
 		#region FIELDS
 
 		private const string ENDPOINT = "asm/suppressions/global";
+		private const string GLOBALLY_UNSUBSCRIBED = @"[
+			{
+				'email': 'example@bogus.com',
+				'created': 1422313607
+			},
+			{
+				'email': 'bogus@example.com',
+				'created': 1422313607
+			},
+			{
+				'email': 'invalid@somewhere.com',
+				'created': 1422313607
+			}
+		]";
 
 		#endregion
+
+		[Fact]
+		public void GetAll()
+		{
+			// Arrange
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("suppression/unsubscribes")).Respond("application/json", GLOBALLY_UNSUBSCRIBED);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var globalSuppressions = new GlobalSuppressions(client);
+
+			// Act
+			var result = globalSuppressions.GetAllAsync(null, null, 50, 0, CancellationToken.None).Result;
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(3);
+		}
 
 		[Fact]
 		public void Add()
@@ -43,7 +77,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Delete()
+		public void Remove()
 		{
 			// Arrange
 			var email = "test1@example.com";

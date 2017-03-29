@@ -54,7 +54,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="SuppressionGroup" />.
 		/// </returns>
-		public Task<SuppressionGroup[]> GetMultipleAsync(IEnumerable<string> groupIds, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SuppressionGroup[]> GetMultipleAsync(IEnumerable<int> groupIds, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			if (groupIds == null || !groupIds.Any()) throw new ArgumentNullException(nameof(groupIds), "You must specify at least one group id");
 

@@ -274,5 +274,33 @@ namespace StrongGrid.Resources.UnitTests
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 		}
+
+		[Fact]
+		public void GetPermissions()
+		{
+			// Arrange
+			var apiResponse = @"{
+				'scopes': [
+					'aaa',
+					'bbb',
+					'ccc'
+				]
+			}";
+
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("scopes")).Respond("application/json", apiResponse);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var user = new User(client);
+
+			// Act
+			var result = user.GetPermissionsAsync(CancellationToken.None).Result;
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(3);
+		}
 	}
 }

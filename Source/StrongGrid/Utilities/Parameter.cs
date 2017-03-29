@@ -82,7 +82,16 @@ namespace StrongGrid.Utilities
 		}
 
 		/// <summary>
-		/// Comapares two parameters for equality.
+		/// Implements the operator !.
+		/// </summary>
+		/// <param name="optional">The instance.</param>
+		public static bool operator !(Parameter<T> optional)
+		{
+			return !optional.HasValue;
+		}
+
+		/// <summary>
+		/// Compares two parameters for equality.
 		/// </summary>
 		/// <param name="lhs">The parameter on the left hand side.</param>
 		/// <param name="rhs">The parameter on the right hand side.</param>

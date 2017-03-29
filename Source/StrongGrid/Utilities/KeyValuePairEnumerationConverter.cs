@@ -1,6 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+#if NETFULL
+using System.Linq;
+#endif
 
 namespace StrongGrid.Utilities
 {
@@ -19,7 +22,40 @@ namespace StrongGrid.Utilities
 		/// </returns>
 		public override bool CanConvert(Type objectType)
 		{
+#if NETFULL
+			/*
+				Currently only available in NETFULL
+				Will be available in NETSTANDARD 2.0
+			*/
+
+			return objectType.GetInterfaces().Any(x =>
+				x.IsGenericType &&
+				x.GetGenericTypeDefinition() == typeof(IEnumerable<KeyValuePair<string, string>>));
+#else
 			return true;
+#endif
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="T:Newtonsoft.Json.JsonConverter" /> can read JSON.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="T:Newtonsoft.Json.JsonConverter" /> can read JSON; otherwise, <c>false</c>.
+		/// </value>
+		public override bool CanRead
+		{
+			get { return false; }
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="T:Newtonsoft.Json.JsonConverter" /> can write JSON.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="T:Newtonsoft.Json.JsonConverter" /> can write JSON; otherwise, <c>false</c>.
+		/// </value>
+		public override bool CanWrite
+		{
+			get { return true; }
 		}
 
 		/// <summary>

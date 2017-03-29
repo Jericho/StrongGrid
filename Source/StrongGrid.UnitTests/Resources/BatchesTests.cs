@@ -1,6 +1,7 @@
 ﻿using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.UnitTests;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -104,6 +105,36 @@ namespace StrongGrid.Resources.UnitTests
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldBeFalse();
+		}
+
+		[Fact]
+		public void ValidateBatchId_problem()
+		{
+			// Arrange
+			var batchId = "ABC123";
+
+			var apiResponse = @"{
+				'errors': [
+					{
+						'field': null,
+						'message': 'an error has occured'
+					}
+				]
+			}";
+
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, batchId)).Respond(HttpStatusCode.BadRequest, "application/json", apiResponse);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var batches = new Batches(client);
+
+			// Act
+			Should.ThrowAsync<Exception>(() => batches.ValidateBatchIdAsync(batchId))
+				.Result.Message.ShouldBe("an error has occured");
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
