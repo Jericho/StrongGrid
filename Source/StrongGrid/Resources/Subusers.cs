@@ -143,6 +143,22 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
+		/// Get the monitor settings
+		/// </summary>
+		/// <param name="username">The sub user.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="MonitorSettings" />.
+		/// </returns>
+		public Task<MonitorSettings> GetMonitorSettingsAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			return _client
+				.GetAsync($"{_endpoint}/{username}/monitor")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<MonitorSettings>();
+		}
+
+		/// <summary>
 		/// Create monitor settings
 		/// </summary>
 		/// <param name="username">The sub user.</param>
