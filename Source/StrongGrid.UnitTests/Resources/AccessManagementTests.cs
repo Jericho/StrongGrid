@@ -241,8 +241,10 @@ namespace StrongGrid.Resources.UnitTests
 			// Arrange
 			var id = 1111;
 
+			var apiResponse = "{'result':" + SINGLE_WHITELISTED_IP_JSON + "}";
+
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "whitelist", id)).Respond("application/json", SINGLE_WHITELISTED_IP_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "whitelist", id)).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var accessManagement = new AccessManagement(client);
