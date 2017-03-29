@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 
 namespace StrongGrid.IntegrationTests
 {
@@ -854,33 +855,123 @@ namespace StrongGrid.IntegrationTests
 			Console.WriteLine("\n***** ACCESS MANAGEMENT *****");
 
 			var accessHistory = client.AccessManagement.GetAccessHistoryAsync().Result;
+			Console.WriteLine("Access history:");
 			foreach (var access in accessHistory)
 			{
 				var accessDate = access.LatestAccessOn.ToString("yyyy-MM-dd hh:mm:ss");
 				var accessVerdict = access.Allowed ? "Access granted" : "Access DENIED";
-				Console.WriteLine($"{accessDate}\t{accessVerdict}\t{access.IpAddress}\t{access.Location}");
+				Console.WriteLine($"\t{accessDate, -20} {accessVerdict, -16} {access.IpAddress, -20} {access.Location}");
 			}
 
 			var whitelistedIpAddresses = client.AccessManagement.GetWhitelistedIpAddressesAsync().Result;
+			Console.WriteLine("Currently whitelisted addresses:" + (whitelistedIpAddresses.Length == 0 ? " NONE" : ""));
 			foreach (var address in whitelistedIpAddresses)
 			{
-				Console.WriteLine($"{address.Id}\t{address.IpAddress}\t{address.CreatedOn.ToString("yyyy-MM-dd hh:mm:ss")}");
+				Console.WriteLine($"\t{address.Id, 6} {address.IpAddress, -20} {address.CreatedOn.ToString("yyyy-MM-dd hh:mm:ss")}");
+			}
+
+			// ========== VERY IMPORTANT ==========
+			// You must manually whitelist your IP address in your SendGrid account in the web interface before we
+			// attempt to whitelist an IP via the API. Otherwise, whitelisting an IP address would effectively lock
+			// you out of your own account. This is especially true since we use some bogus IP address for testing
+			// purposes. Trust me, it happened to me and it took a week of back and forth with SendGrid support
+			// before they agreed that I was the legitimate owner of my own account and they restored access to my
+			// account. That's the reason why the following code will only run if we find other whitelisted addresses
+			// on your account.
+			if (whitelistedIpAddresses.Length == 0)
+			{
+				Console.WriteLine("\n========================================================================");
+				Console.WriteLine("----------- VERY IMPORTANT ---------");
+				Console.WriteLine("There currently aren't any whitelisted IP addresses on your account.");
+				Console.WriteLine("Attempting to programmatically whitelist IP addresses would lock you out of your account.");
+				Console.WriteLine("Therefore we are skipping the tests where an IP address is added to and subsequently removed from your account.");
+				Console.WriteLine("You must manually configure whitelisting in the SendGrid web UI before we can run these tests.");
+				Console.WriteLine("");
+				Console.WriteLine("CAUTION: do not attempt to manually configure whitelisted IP addresses if you are unsure how to do it or if you");
+				Console.WriteLine("don't know how to get your public IP address or if you suspect your ISP may change your assigned IP address from");
+				Console.WriteLine("time to time because there is a strong posibility you could lock yourself out your account.");
+				Console.WriteLine("========================================================================\n");
+			}
+			else
+			{
+				var yourPublicIpAddress = GetExternalIPAddress();
+
+				Console.WriteLine("\n========================================================================");
+				Console.WriteLine("----------- VERY IMPORTANT ---------");
+				Console.WriteLine("We have detected that whitelisting has been configured on your account. Therefore it seems safe");
+				Console.WriteLine("to attempt to programmatically whitelist your public IP address which is: {yourPublicIpAddress}.");
+				var keyPressed = Prompt("\nPlease confirm that you agree to run this test by pressing 'Y' or press any other key to skip this test");
+				Console.WriteLine("\n========================================================================\n");
+
+				if (keyPressed == 'y' || keyPressed == 'Y')
+				{
+					var newWhitelistedIpAddress = client.AccessManagement.AddIpAddressToWhitelistAsync(yourPublicIpAddress).Result;
+					Console.WriteLine($"New whitelisted IP address: {yourPublicIpAddress}; Id: {newWhitelistedIpAddress.Id}");
+
+					var whitelistedIpAddress = client.AccessManagement.GetWhitelistedIpAddressAsync(newWhitelistedIpAddress.Id).Result;
+					Console.WriteLine($"{whitelistedIpAddress.Id}\t{whitelistedIpAddress.IpAddress}\t{whitelistedIpAddress.CreatedOn.ToString("yyyy-MM-dd hh:mm:ss")}");
+
+					client.AccessManagement.RemoveIpAddressFromWhitelistAsync(newWhitelistedIpAddress.Id).Wait();
+					Console.WriteLine($"IP address {whitelistedIpAddress.Id} removed from whitelist");
+				}
 			}
 
 			ConcludeTests(pauseAfterTests);
+		}
+
+		// to get your public IP address we loop through an array
+		// of well known sites until we get a meaningful response
+
+		private static string GetExternalIPAddress()
+		{
+			var webSites = new[]
+			{
+				"http://checkip.amazonaws.com/",
+				"https://ipinfo.io/ip",
+				"https://api.ipify.org",
+				"https://icanhazip.com",
+				"https://wtfismyip.com/text",
+				"http://bot.whatismyipaddress.com/",
+
+			};
+			var result = string.Empty;
+			using (var httpClient = new HttpClient())
+			{
+				foreach (var webSite in webSites)
+				{
+					try
+					{
+						result = httpClient.GetStringAsync(webSite).Result.Replace("\n", "");
+						if (!string.IsNullOrEmpty(result)) break;
+					}
+#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
+					catch
+#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
+					{
+					}
+				}
+			}
+
+			return result;
 		}
 
 		private static void ConcludeTests(bool pause)
 		{
 			if (pause)
 			{
-				while (Console.KeyAvailable)
-				{
-					Console.ReadKey(false);
-				}
-				Console.WriteLine("\n\nPress any key to continue");
-				Console.ReadKey();
+				Prompt("\n\nPress any key to continue");
 			}
+		}
+
+		private static char Prompt(string prompt)
+		{
+			while (Console.KeyAvailable)
+			{
+				Console.ReadKey(false);
+			}
+			Console.WriteLine(prompt);
+			var result = Console.ReadKey();
+			return result.KeyChar;
 		}
 	}
 }
