@@ -141,6 +141,7 @@ namespace StrongGrid.UnitTests
 			// Assert
 			result.ShouldBe(TimeSpan.FromSeconds(5));
 		}
+
 		[Fact]
 		public void Retry_success()
 		{

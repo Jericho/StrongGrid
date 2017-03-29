@@ -364,7 +364,7 @@ namespace StrongGrid.Resources.UnitTests
 			result[0].CustomFields[0].Name.ShouldBe("pet");
 			((Field<string>)result[0].CustomFields[0]).Value.ShouldBe("Indiana");
 			result[0].CustomFields[1].Name.ShouldBe("age");
-			((Field<long?>)result[0].CustomFields[1]).Value.ShouldBe(43);
+			((Field<long>)result[0].CustomFields[1]).Value.ShouldBe(43);
 		}
 
 		[Fact]
@@ -531,7 +531,7 @@ namespace StrongGrid.Resources.UnitTests
 			result[0].CustomFields[0].Name.ShouldBe("pet");
 			((Field<string>)result[0].CustomFields[0]).Value.ShouldBe("Indiana");
 			result[0].CustomFields[1].Name.ShouldBe("age");
-			((Field<long?>)result[0].CustomFields[1]).Value.ShouldBe(43);
+			((Field<long>)result[0].CustomFields[1]).Value.ShouldBe(43);
 		}
 
 		[Fact]
@@ -589,7 +589,43 @@ namespace StrongGrid.Resources.UnitTests
 			result[0].CustomFields[0].Name.ShouldBe("pet");
 			((Field<string>)result[0].CustomFields[0]).Value.ShouldBe("Indiana");
 			result[0].CustomFields[1].Name.ShouldBe("age");
-			((Field<long?>)result[0].CustomFields[1]).Value.ShouldBe(43);
+			((Field<long>)result[0].CustomFields[1]).Value.ShouldBe(43);
+		}
+
+		[Fact]
+		public void GetLists()
+		{
+			// Arrange
+			var contactId = "YUBh";
+			var listsJson = @"{
+				'lists': [
+					{
+						'id': 1,
+						'name': 'prospects',
+						'recipient_count': 1
+					},
+					{
+						'id': 2,
+						'name': 'customers',
+						'recipient_count': 1
+					}
+				]
+			}";
+
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, contactId, "lists")).Respond("application/json", listsJson);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var contacts = new Contacts(client);
+
+			// Act
+			var result = contacts.GetListsAsync(contactId, CancellationToken.None).Result;
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(2);
 		}
 	}
 }

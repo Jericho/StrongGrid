@@ -143,6 +143,22 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
+		/// Get the monitor settings
+		/// </summary>
+		/// <param name="username">The sub user.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="MonitorSettings" />.
+		/// </returns>
+		public Task<MonitorSettings> GetMonitorSettingsAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			return _client
+				.GetAsync($"{_endpoint}/{username}/monitor")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<MonitorSettings>();
+		}
+
+		/// <summary>
 		/// Create monitor settings
 		/// </summary>
 		/// <param name="username">The sub user.</param>
@@ -160,7 +176,7 @@ namespace StrongGrid.Resources
 				{ "frequency", frequency }
 			};
 			return _client
-				.GetAsync($"{_endpoint}/{username}/monitor")
+				.PostAsync($"{_endpoint}/{username}/monitor")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<MonitorSettings>();
@@ -176,13 +192,12 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="MonitorSettings" />.
 		/// </returns>
-		public Task<MonitorSettings> UpdateMonitorSettingsAsync(string username, string email, int frequency, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<MonitorSettings> UpdateMonitorSettingsAsync(string username, Parameter<string> email = default(Parameter<string>), Parameter<int> frequency = default(Parameter<int>), CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = new JObject()
-			{
-				{ "email", email },
-				{ "frequency", frequency }
-			};
+			var data = new JObject();
+			if (email.HasValue) data.Add("email", email.Value);
+			if (frequency.HasValue) data.Add("frequency", frequency.Value);
+
 			return _client
 				.PutAsync($"{_endpoint}/{username}/monitor")
 				.WithJsonBody(data)

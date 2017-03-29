@@ -135,6 +135,28 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
+		public void GetMultiple()
+		{
+			// Arrange
+			var groupIds = new[] { 100, 101 };
+
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", MULTIPLE_SUPPRESSION_GROUPS_JSON);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var groups = new UnsubscribeGroups(client);
+
+			// Act
+			var result = groups.GetMultipleAsync(groupIds, CancellationToken.None).Result;
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(2);
+		}
+
+		[Fact]
 		public void Delete()
 		{
 			// Arrange
