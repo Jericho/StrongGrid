@@ -125,7 +125,7 @@ namespace StrongGrid.Resources
 			if (type.HasValue) result.Add("type", type.Value.HasValue ? JToken.Parse(JsonConvert.SerializeObject(type.Value.Value)).ToString() : null);
 			if (emailTo.HasValue) result.Add("email_to", emailTo.Value);
 			if (frequency.HasValue) result.Add("frequency", frequency.Value.HasValue ? JToken.Parse(JsonConvert.SerializeObject(frequency.Value.Value)).ToString() : null);
-			if (percentage.HasValue) result.Add("percentage", percentage.Value.HasValue ? JToken.Parse(JsonConvert.SerializeObject(percentage.Value.Value)).ToString() : null);
+			if (percentage.HasValue) result.Add("percentage", percentage.Value);
 			return result;
 		}
 	}
