@@ -192,13 +192,12 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="MonitorSettings" />.
 		/// </returns>
-		public Task<MonitorSettings> UpdateMonitorSettingsAsync(string username, string email, int frequency, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<MonitorSettings> UpdateMonitorSettingsAsync(string username, Parameter<string> email = default(Parameter<string>), Parameter<int> frequency = default(Parameter<int>), CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = new JObject()
-			{
-				{ "email", email },
-				{ "frequency", frequency }
-			};
+			var data = new JObject();
+			if (email.HasValue) data.Add("email", email.Value);
+			if (frequency.HasValue) data.Add("frequency", frequency.Value);
+
 			return _client
 				.PutAsync($"{_endpoint}/{username}/monitor")
 				.WithJsonBody(data)
