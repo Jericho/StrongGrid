@@ -186,5 +186,55 @@ namespace StrongGrid.Resources.UnitTests
 			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
+
+		[Fact]
+		public void CreateWithBillingPermissions()
+		{
+			// Arrange
+			var name = "API Key with billing permissions";
+
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", SINGLE_API_KEY_JSON);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var apiKeys = new ApiKeys(client);
+
+			// Act
+			var result = apiKeys.CreateWithBillingPermissionsAsync(name, CancellationToken.None).Result;
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+		}
+
+		[Fact]
+		public void CreateWithAllPermissions()
+		{
+			// Arrange
+			var name = "My API Key with all permissions";
+			var userScopesJson = @"{
+				'scopes': [
+					'aaa',
+					'bbb',
+					'ccc'
+				]
+			}";
+
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("scopes")).Respond("application/json", userScopesJson);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", SINGLE_API_KEY_JSON);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var apiKeys = new ApiKeys(client);
+
+			// Act
+			var result = apiKeys.CreateWithAllPermissionsAsync(name, CancellationToken.None).Result;
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+		}
 	}
 }

@@ -12,9 +12,96 @@ namespace StrongGrid.Resources.UnitTests
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "asm/groups";
+		private const string ENDPOINT = "asm";
+		private const string ALL_GROUPS_JSON = @"{
+			'suppressions': [
+				{
+					'description': 'Optional description.',
+					'id': 1,
+					'is_default': true,
+					'name': 'Weekly News',
+					'suppressed': true
+				},
+				{
+					'description': 'Some daily news.',
+					'id': 2,
+					'is_default': true,
+					'name': 'Daily News',
+					'suppressed': true
+				},
+				{
+					'description': 'An old group.',
+					'id': 2,
+					'is_default': false,
+					'name': 'Old News',
+					'suppressed': false
+				}
+			]
+		}";
+		private const string ALL_SUPPRESSIONS_JSON = @"[
+			{
+				'email':'test @example.com',
+				'group_id': 1,
+				'group_name': 'Weekly News',
+				'created_at': 1410986704
+			},
+			{
+				'email':'test1@example.com',
+				'group_id': 2,
+				'group_name': 'Daily News',
+				'created_at': 1411493671
+			},
+			{
+				'email':'test2@example.com',
+				'group_id': 2,
+				'group_name': 'Daily News',
+				'created_at': 1411493671
+			}
+		]";
 
 		#endregion
+
+		[Fact]
+		public void GetAll()
+		{
+			// Arrange
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "suppressions")).Respond("application/json", ALL_SUPPRESSIONS_JSON);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var suppresions = new Suppressions(client);
+
+			// Act
+			var result = suppresions.GetAllAsync(CancellationToken.None).Result;
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(3);
+		}
+
+		[Fact]
+		public void GetUnsubscribedGroups()
+		{
+			// Arrange
+			var email = "test@exmaple.com";
+
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "suppressions", email)).Respond("application/json", ALL_GROUPS_JSON);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var suppresions = new Suppressions(client);
+
+			// Act
+			var result = suppresions.GetUnsubscribedGroupsAsync(email, CancellationToken.None).Result;
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(2);
+		}
 
 		[Fact]
 		public void GetUnsubscribedAddresses()
@@ -28,7 +115,7 @@ namespace StrongGrid.Resources.UnitTests
 			]";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, groupId, "suppressions")).Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "groups", groupId, "suppressions")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var suppresions = new Suppressions(client);
@@ -60,7 +147,7 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, groupId, "suppressions")).Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "groups", groupId, "suppressions")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var suppressions = new Suppressions(client);
@@ -88,7 +175,7 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, groupId, "suppressions")).Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "groups", groupId, "suppressions")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var suppressions = new Suppressions(client);
@@ -110,7 +197,7 @@ namespace StrongGrid.Resources.UnitTests
 
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, groupId, "suppressions", email)).Respond(HttpStatusCode.NoContent);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, "groups", groupId, "suppressions", email)).Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var suppressions = new Suppressions(client);
@@ -121,6 +208,59 @@ namespace StrongGrid.Resources.UnitTests
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
+		}
+
+		[Fact]
+		public void IsSuppressed_true()
+		{
+			// Arrange
+			var email = "test@example.com";
+			var groupId = 123;
+
+			var apiResponse = @"[
+				'a@a.com',
+				'b@b.com',
+				'test@example.com'
+			]";
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "groups", groupId, "suppressions/search")).Respond("application/json", apiResponse);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var suppresions = new Suppressions(client);
+
+			// Act
+			var result = suppresions.IsSuppressedAsync(groupId, email, CancellationToken.None).Result;
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldBeTrue();
+		}
+
+		[Fact]
+		public void IsSuppressed_()
+		{
+			// Arrange
+			var email = "test@example.com";
+			var groupId = 123;
+
+			var apiResponse = @"[
+				'a@a.com',
+				'b@b.com'
+			]";
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "groups", groupId, "suppressions/search")).Respond("application/json", apiResponse);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var suppresions = new Suppressions(client);
+
+			// Act
+			var result = suppresions.IsSuppressedAsync(groupId, email, CancellationToken.None).Result;
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldBeFalse();
 		}
 	}
 }
