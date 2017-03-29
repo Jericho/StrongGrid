@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-#if NETFULL
-using System.Linq;
-#endif
 
 namespace StrongGrid.Utilities
 {
@@ -22,18 +19,7 @@ namespace StrongGrid.Utilities
 		/// </returns>
 		public override bool CanConvert(Type objectType)
 		{
-#if NETFULL
-			/*
-				Currently only available in NETFULL
-				Will be available in NETSTANDARD 2.0
-			*/
-
-			return objectType.GetInterfaces().Any(x =>
-				x.IsGenericType &&
-				x.GetGenericTypeDefinition() == typeof(IEnumerable<KeyValuePair<string, string>>));
-#else
 			return true;
-#endif
 		}
 
 		/// <summary>

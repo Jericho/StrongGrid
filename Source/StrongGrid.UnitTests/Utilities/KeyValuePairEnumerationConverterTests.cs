@@ -34,22 +34,6 @@ namespace StrongGrid.UnitTests
 			converter.CanConvert(type).ShouldBeTrue();
 		}
 
-#if NETFULL
-		// Currently only available in NETFULL
-		// Will be available in NETSTANDARD 2.0
-
-		[Fact]
-		public void CanConvert_false()
-		{
-			// Act
-			var converter = new KeyValuePairEnumerationConverter();
-			var type = typeof(string);
-
-			// Assert
-			converter.CanConvert(type).ShouldBeFalse();
-		}
-#endif
-
 		[Fact]
 		public void Write_null()
 		{
