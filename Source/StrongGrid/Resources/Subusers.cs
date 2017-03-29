@@ -176,7 +176,7 @@ namespace StrongGrid.Resources
 				{ "frequency", frequency }
 			};
 			return _client
-				.GetAsync($"{_endpoint}/{username}/monitor")
+				.PostAsync($"{_endpoint}/{username}/monitor")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<MonitorSettings>();
