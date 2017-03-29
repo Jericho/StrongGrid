@@ -103,15 +103,15 @@ namespace StrongGrid
 			// Convert the 'envelope' from a JSON string into a strongly typed object
 			var envelope = JsonConvert.DeserializeObject<InboundEmailEnvelope>(parser.GetParameterValue("envelope", "{}"));
 
-			// Convert the 'from' from a string into a strongly typed object
+			// Convert the 'from' from a string into an email address
 			var rawFrom = parser.GetParameterValue("from", string.Empty);
 			var from = ParseEmailAddress(rawFrom);
 
-			// Convert the 'to' from a string into a strongly typed object
+			// Convert the 'to' from a string into an array of email addresses
 			var rawTo = parser.GetParameterValue("to", string.Empty);
 			var to = ParseEmailAddresses(rawTo);
 
-			// Convert the 'cc' from a string into a strongly typed object
+			// Convert the 'cc' from a string into an array of email addresses
 			var rawCc = parser.GetParameterValue("cc", string.Empty);
 			var cc = ParseEmailAddresses(rawCc);
 
