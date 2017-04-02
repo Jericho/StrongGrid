@@ -92,9 +92,16 @@ namespace StrongGrid.Utilities
 
 			if (encoding == null) encoding = content.GetEncoding(Encoding.UTF8);
 
-			using (var sr = new StreamReader(responseStream, encoding))
+			// This is important: we must make a copy of the response stream otherwise we would get an
+			// exception on subsequent attempts to read the content of the stream
+			using (var ms = new MemoryStream())
 			{
-				responseContent = await sr.ReadToEndAsync().ConfigureAwait(false);
+				await content.CopyToAsync(ms).ConfigureAwait(false);
+				ms.Position = 0;
+				using (var sr = new StreamReader(ms, encoding))
+				{
+					responseContent = await sr.ReadToEndAsync().ConfigureAwait(false);
+				}
 			}
 
 			return responseContent;
