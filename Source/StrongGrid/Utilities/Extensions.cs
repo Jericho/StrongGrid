@@ -222,6 +222,37 @@ namespace StrongGrid.Utilities
 			return await response.AsString(encoding).ConfigureAwait(false);
 		}
 
+		/// <summary>
+		///  Converts the value of the current System.TimeSpan object to its equivalent string
+		///  representation by using a human readable format.
+		/// </summary>
+		/// <param name="timeSpan">The time span.</param>
+		/// <returns>Returns the human readable representation of the TimeSpan</returns>
+		public static string ToDurationString(this TimeSpan timeSpan)
+		{
+			// In case the TimeSpan is extremely short
+			if (timeSpan.TotalMilliseconds <= 1) return "1 millisecond";
+
+			var result = new StringBuilder();
+
+			if (timeSpan.Days == 1) result.Append(" 1 day");
+			else if (timeSpan.Days > 1) result.AppendFormat(" {0} days", timeSpan.Days);
+
+			if (timeSpan.Hours == 1) result.Append(" 1 hour");
+			else if (timeSpan.Hours > 1) result.AppendFormat(" {0} hours", timeSpan.Hours);
+
+			if (timeSpan.Minutes == 1) result.Append(" 1 minute");
+			else if (timeSpan.Minutes > 1) result.AppendFormat(" {0} minutes", timeSpan.Minutes);
+
+			if (timeSpan.Seconds == 1) result.Append(" 1 second");
+			else if (timeSpan.Seconds > 1) result.AppendFormat(" {0} seconds", timeSpan.Seconds);
+
+			if (timeSpan.Milliseconds == 1) result.Append(" 1 millisecond");
+			else if (timeSpan.Milliseconds > 1) result.AppendFormat(" {0} milliseconds", timeSpan.Milliseconds);
+
+			return result.ToString().Trim();
+		}
+
 		/// <summary>Asynchronously converts the JSON encoded content and converts it to a 'SendGrid' object of the desired type.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="httpContent">The content</param>
