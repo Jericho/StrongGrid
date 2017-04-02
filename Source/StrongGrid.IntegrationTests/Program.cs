@@ -1,4 +1,5 @@
-﻿using StrongGrid.Model;
+﻿using StrongGrid.Logging;
+using StrongGrid.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +20,21 @@ namespace StrongGrid.IntegrationTests
 			// which gives you an opportunity to review the output in the console.
 			var pauseAfterTests = false;
 
+			// As an alternative to Fiddler, you can display debug information about
+			// every HTTP request/response in the console. This is useful for debugging
+			// purposes but the amount of information can be overwhelming.
+			var debugHttpMessagesToConsole = false;
 			// -----------------------------------------------------------------------------
 
 
 			var proxy = useFiddler ? new WebProxy("http://localhost:8888") : null;
 			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
 			var client = new StrongGrid.Client(apiKey, proxy);
+
+			if (debugHttpMessagesToConsole)
+			{
+				LogProvider.SetCurrentLogProvider(new ConsoleLogProvider());
+			}
 
 			try
 			{

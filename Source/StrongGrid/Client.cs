@@ -343,6 +343,7 @@ namespace StrongGrid
 				.SetRequestCoordinator(new SendGridRetryStrategy());
 
 			_fluentClient.Filters.Remove<DefaultErrorFilter>();
+			_fluentClient.Filters.Add(new DiagnosticHandler());
 			_fluentClient.Filters.Add(new SendGridErrorHandler());
 
 			if (!string.IsNullOrEmpty(apiKey)) _fluentClient.SetBearerAuthentication(apiKey);
