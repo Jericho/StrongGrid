@@ -8,5 +8,9 @@ branches:
     regex: hotfix(es)?[/-]
     mode: ContinuousDeployment
     tag: beta
+  release:
+    regex: releases?[/-]
+    mode: ContinuousDeployment
+    tag: rc
 ignore:
   sha: []
