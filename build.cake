@@ -25,7 +25,7 @@ var configuration = Argument<string>("configuration", "Release");
 var libraryName = "StrongGrid";
 var gitHubRepo = "StrongGrid";
 
-var testCoverageFilter = "+[StrongGrid]* -[StrongGrid]StrongGrid.Properties.* -[StrongGrid]StrongGrid.Model.*";
+var testCoverageFilter = "+[StrongGrid]* -[StrongGrid]StrongGrid.Properties.* -[StrongGrid]StrongGrid.Model.* -[StrongGrid]StrongGrid.Logging.*";
 var testCoverageExcludeByAttribute = "*.ExcludeFromCodeCoverage*";
 var testCoverageExcludeByFile = "*/*Designer.cs;*/*AssemblyInfo.cs";
 
@@ -211,18 +211,14 @@ Task("Run-Code-Coverage")
 	.IsDependentOn("Build")
 	.Does(() =>
 {
-	var testSettings = new DotNetCoreTestSettings {
-		Configuration = configuration
-	};
-
 	Action<ICakeContext> testAction = ctx => ctx.DotNetCoreTest(unitTestsPath, new DotNetCoreTestSettings {
 		NoBuild = true,
 		Configuration = configuration,
-		ArgumentCustomization = args => args.AppendSwitchQuoted("-xml", codeCoverageDir + "/coverage.xml")
+		ArgumentCustomization = args => args.AppendSwitchQuoted("-xml", codeCoverageDir + "coverage.xml")
 	});
 
 	OpenCover(testAction,
-		codeCoverageDir + "/coverage.xml",
+		codeCoverageDir + "coverage.xml",
 		new OpenCoverSettings {
 			ArgumentCustomization = args => args.Append("-mergeoutput")
 		}
