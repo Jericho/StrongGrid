@@ -22,7 +22,6 @@ namespace StrongGrid.Resources.UnitTests
 		public void Send()
 		{
 			// Arrange
-
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "send")).Respond(HttpStatusCode.Accepted);
 
@@ -42,7 +41,6 @@ namespace StrongGrid.Resources.UnitTests
 		public void Send_response_with_message_id()
 		{
 			// Arrange
-
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "send")).Respond((HttpRequestMessage request) =>
 			{
@@ -67,7 +65,6 @@ namespace StrongGrid.Resources.UnitTests
 		public void SendToSingleRecipient()
 		{
 			// Arrange
-
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "send")).Respond(HttpStatusCode.Accepted);
 
@@ -87,7 +84,6 @@ namespace StrongGrid.Resources.UnitTests
 		public void SendToMultipleRecipients()
 		{
 			// Arrange
-
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "send")).Respond(HttpStatusCode.Accepted);
 

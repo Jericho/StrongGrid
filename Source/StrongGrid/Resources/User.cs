@@ -13,7 +13,7 @@ namespace StrongGrid.Resources
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html
 	/// </remarks>
-	public class User
+	public class User : IUser
 	{
 		private const string _endpoint = "user/profile";
 		private readonly Pathoschild.Http.Client.IClient _client;

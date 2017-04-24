@@ -17,7 +17,7 @@ namespace StrongGrid.Resources
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/API_Keys/index.html
 	/// </remarks>
-	public class ApiKeys
+	public class ApiKeys : IApiKeys
 	{
 		private const string _endpoint = "api_keys";
 		private readonly Pathoschild.Http.Client.IClient _client;

@@ -16,7 +16,7 @@ namespace StrongGrid.Resources
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/spam_reports.html
 	/// </remarks>
-	public class SpamReports
+	public class SpamReports : ISpamReports
 	{
 		private const string _endpoint = "suppression/spam_reports";
 		private readonly Pathoschild.Http.Client.IClient _client;

@@ -14,7 +14,7 @@ namespace StrongGrid.Resources
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/contactdb.html
 	/// </remarks>
-	public class CustomFields
+	public class CustomFields : ICustomFields
 	{
 		private const string _endpoint = "contactdb/custom_fields";
 		private readonly Pathoschild.Http.Client.IClient _client;

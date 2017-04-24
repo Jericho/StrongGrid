@@ -43,10 +43,11 @@ TestResult.xml
 [Rr]eleasePS/
 dlldata.c
 
-# DNX
+# .NET Core
 project.lock.json
 project.fragment.lock.json
 artifacts/
+**/Properties/launchSettings.json
 
 *_i.c
 *_p.c
@@ -166,7 +167,7 @@ PublishScripts/
 !**/packages/build/
 # Uncomment if necessary however generally it will be regenerated when needed
 #!**/packages/repositories.config
-# NuGet v3's project.json files produces more ignoreable files
+# NuGet v3's project.json files produces more ignorable files
 *.nuget.props
 *.nuget.targets
 
@@ -199,7 +200,6 @@ ClientBin/
 *.jfm
 *.pfx
 *.publishsettings
-node_modules/
 orleans.codegen.cs
 
 # Since there are multiple workflows, uncomment next line to ignore bower_components
@@ -220,6 +220,7 @@ UpgradeLog*.htm
 # SQL Server files
 *.mdf
 *.ldf
+*.ndf
 
 # Business Intelligence projects
 *.rdl.data
@@ -234,12 +235,19 @@ FakesAssemblies/
 
 # Node.js Tools for Visual Studio
 .ntvs_analysis.dat
+node_modules/
+
+# Typescript v1 declaration files
+typings/
 
 # Visual Studio 6 build log
 *.plg
 
 # Visual Studio 6 workspace options file
 *.opt
+
+# Visual Studio 6 auto-generated workspace file (contains which files were open etc.)
+*.vbw
 
 # Visual Studio LightSwitch build output
 **/*.HTMLClient/GeneratedArtifacts
@@ -265,62 +273,21 @@ paket-files/
 
 # WinMerge
 *.bak
-
-# Supercharger: http://supercharger.tools/
-*.scgdat
-
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
 
-# Cake
-tools/
+# Cake - Uncomment if you are using it
+tools/**
+!tools/packages.config
 
-### VisualStudio Patch ###
-build/
+# Telerik's JustMock configuration file
+*.jmconfig
 
+# BizTalk build output
+*.btp.cs
+*.btm.cs
+*.odx.cs
+*.xsd.cs
 
-# =========================
-# Operating System Files
-# =========================
-
-# ---------- OSX ----------
-
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Thumbnails
-._*
-
-# Files that might appear on external disk
-.Spotlight-V100
-.Trashes
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-
-# -------- Windows --------
-
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
-
-# Folder config file
-Desktop.ini
-
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
-
-# Windows shortcuts
-*.lnk
+# End of https://www.gitignore.io/api/visualstudio

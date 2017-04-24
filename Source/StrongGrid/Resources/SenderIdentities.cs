@@ -13,7 +13,7 @@ namespace StrongGrid.Resources
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/sender_identities.html
 	/// </remarks>
-	public class SenderIdentities
+	public class SenderIdentities : ISenderIdentities
 	{
 		private const string _endpoint = "senders";
 		private readonly Pathoschild.Http.Client.IClient _client;

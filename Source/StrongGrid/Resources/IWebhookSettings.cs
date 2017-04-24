@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using Pathoschild.Http.Client;
-using StrongGrid.Model;
-using StrongGrid.Utilities;
+﻿using StrongGrid.Model;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,20 +10,8 @@ namespace StrongGrid.Resources
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Webhooks/event.html
 	/// </remarks>
-	public class WebhookSettings : IWebhookSettings
+	public interface IWebhookSettings
 	{
-		private const string _endpoint = "user/webhooks/event/settings";
-		private readonly Pathoschild.Http.Client.IClient _client;
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="WebhookSettings" /> class.
-		/// </summary>
-		/// <param name="client">The HTTP client</param>
-		public WebhookSettings(Pathoschild.Http.Client.IClient client)
-		{
-			_client = client;
-		}
-
 		/// <summary>
 		/// Get the current Event Webhook settings.
 		/// </summary>
@@ -34,13 +19,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="EventWebhookSettings" />.
 		/// </returns>
-		public Task<EventWebhookSettings> GetAsync(CancellationToken cancellationToken = default(CancellationToken))
-		{
-			return _client
-				.GetAsync(_endpoint)
-				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<EventWebhookSettings>();
-		}
+		Task<EventWebhookSettings> GetAsync(CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Change the Event Webhook settings
@@ -62,7 +41,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="EventWebhookSettings" />.
 		/// </returns>
-		public Task<EventWebhookSettings> UpdateAsync(
+		Task<EventWebhookSettings> UpdateAsync(
 			bool enabled,
 			string url,
 			bool bounce = default(bool),
@@ -76,31 +55,7 @@ namespace StrongGrid.Resources
 			bool processed = default(bool),
 			bool spamReport = default(bool),
 			bool unsubscribe = default(bool),
-			CancellationToken cancellationToken = default(CancellationToken))
-		{
-			var eventWebhookSettings = new EventWebhookSettings
-			{
-				Enabled = enabled,
-				Url = url,
-				Bounce = bounce,
-				Click = click,
-				Deferred = deferred,
-				Delivered = delivered,
-				Dropped = dropped,
-				GroupResubscribe = groupResubscribe,
-				GroupUnsubscribe = groupUnsubscribe,
-				Open = open,
-				Processed = processed,
-				SpamReport = spamReport,
-				Unsubscribe = unsubscribe
-			};
-			var data = JObject.FromObject(eventWebhookSettings);
-			return _client
-				.PatchAsync(_endpoint)
-				.WithJsonBody(data)
-				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<EventWebhookSettings>();
-		}
+			CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Sends a fake event notification post to the provided URL.
@@ -110,18 +65,6 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task SendTestAsync(string url, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			var data = new JObject
-			{
-				{ "url", url }
-			};
-
-			return _client
-				.PostAsync("user/webhooks/event/test")
-				.WithJsonBody(data)
-				.WithCancellationToken(cancellationToken)
-				.AsMessage();
-		}
+		Task SendTestAsync(string url, CancellationToken cancellationToken = default(CancellationToken));
 	}
 }
