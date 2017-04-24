@@ -17,7 +17,7 @@ namespace StrongGrid.Resources
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/ip_access_management.html
 	/// </remarks>
-	public class AccessManagement
+	public class AccessManagement : IAccessManagement
 	{
 		private const string _endpoint = "access_settings";
 		private readonly Pathoschild.Http.Client.IClient _client;

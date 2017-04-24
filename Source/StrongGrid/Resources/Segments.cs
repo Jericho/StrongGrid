@@ -15,7 +15,7 @@ namespace StrongGrid.Resources
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/campaigns.html
 	/// </remarks>
-	public class Segments
+	public class Segments : ISegments
 	{
 		private const string _endpoint = "contactdb/segments";
 		private readonly Pathoschild.Http.Client.IClient _client;
