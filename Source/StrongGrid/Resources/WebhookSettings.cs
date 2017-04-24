@@ -13,7 +13,7 @@ namespace StrongGrid.Resources
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Webhooks/event.html
 	/// </remarks>
-	public class WebhookSettings
+	public class WebhookSettings : IWebhookSettings
 	{
 		private const string _endpoint = "user/webhooks/event/settings";
 		private readonly Pathoschild.Http.Client.IClient _client;

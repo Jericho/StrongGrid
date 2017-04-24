@@ -16,7 +16,7 @@ namespace StrongGrid.Resources
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/contactdb.html
 	/// </remarks>
-	public class Contacts
+	public class Contacts : IContacts
 	{
 		private const string _endpoint = "contactdb/recipients";
 		private readonly Pathoschild.Http.Client.IClient _client;

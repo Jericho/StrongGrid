@@ -16,7 +16,7 @@ namespace StrongGrid.Resources
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/invalid_emails.html
 	/// </remarks>
-	public class InvalidEmails
+	public class InvalidEmails : IInvalidEmails
 	{
 		private const string _endpoint = "suppression/invalid_emails";
 		private readonly Pathoschild.Http.Client.IClient _client;

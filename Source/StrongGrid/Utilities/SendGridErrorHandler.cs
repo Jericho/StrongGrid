@@ -4,6 +4,7 @@ using Pathoschild.Http.Client.Extensibility;
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace StrongGrid.Utilities
 {
@@ -26,37 +27,31 @@ namespace StrongGrid.Utilities
 		{
 			if (response.Message.IsSuccessStatusCode) return;
 
-			var errorMessage = GetErrorMessage(response.Message);
+			var errorMessage = GetErrorMessage(response.Message).Result;
 			throw new Exception(errorMessage);
 		}
 
-		private static string GetErrorMessage(HttpResponseMessage message)
+		private static async Task<string> GetErrorMessage(HttpResponseMessage message)
 		{
 			// Default error message
 			var errorMessage = $"{(int)message.StatusCode}: {message.ReasonPhrase}";
 
 			if (message.Content != null)
 			{
-				// In case of an error, the SendGrid API returns a JSON string that looks like this:
-				// {
-				//   "errors": [
-				//     {
-				//       "message": "An error has occured",
-				//       "field": null,
-				//       "help": null
-				//     }
-				//  ]
-				// }
+				/*
+					In case of an error, the SendGrid API returns a JSON string that looks like this:
+					{
+						"errors": [
+							{
+								"message": "An error has occured",
+								"field": null,
+								"help": null
+							}
+						]
+					}
+				*/
 
-				// This is important: we must make a copy of the response stream otherwise we won't be able to read it outside of this error handler
-				var responseContent = string.Empty;
-				using (var ms = new MemoryStream())
-				{
-					message.Content.CopyToAsync(ms).Wait();
-					ms.Position = 0;
-					var sr = new StreamReader(ms);
-					responseContent = sr.ReadToEnd();
-				}
+				var responseContent = await message.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 
 				if (!string.IsNullOrEmpty(responseContent))
 				{

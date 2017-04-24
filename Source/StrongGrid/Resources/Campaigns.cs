@@ -16,7 +16,7 @@ namespace StrongGrid.Resources
 	/// <remarks>
 	/// See also: https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/campaigns.html
 	/// </remarks>
-	public class Campaigns
+	public class Campaigns : ICampaigns
 	{
 		private const string _endpoint = "campaigns";
 		private readonly Pathoschild.Http.Client.IClient _client;

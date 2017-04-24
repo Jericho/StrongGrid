@@ -11,7 +11,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows you to manages batches.
 	/// </summary>
-	public class Batches
+	public class Batches : IBatches
 	{
 		private const string _endpoint = "mail/batch";
 		private readonly Pathoschild.Http.Client.IClient _client;

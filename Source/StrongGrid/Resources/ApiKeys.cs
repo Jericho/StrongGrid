@@ -17,7 +17,7 @@ namespace StrongGrid.Resources
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/API_Keys/index.html
 	/// </remarks>
-	public class ApiKeys
+	public class ApiKeys : IApiKeys
 	{
 		private const string _endpoint = "api_keys";
 		private readonly Pathoschild.Http.Client.IClient _client;
@@ -163,9 +163,9 @@ namespace StrongGrid.Resources
 			//     Billing permissions are mutually exclusive from all others.
 			//     An API Key can either have Billing Permissions, or any other set of Permissions.
 			// Therefore it's important to exclude 'billing' permissions.
-			permissions = permissions.Where(p => !p.StartsWith("billing.", StringComparison.OrdinalIgnoreCase)).ToArray();
+			var permissionsExcludingBilling = permissions.Where(p => !p.StartsWith("billing.", StringComparison.OrdinalIgnoreCase)).ToArray();
 
-			var superApiKey = await this.CreateAsync(name, permissions, cancellationToken).ConfigureAwait(false);
+			var superApiKey = await this.CreateAsync(name, permissionsExcludingBilling, cancellationToken).ConfigureAwait(false);
 			return superApiKey;
 		}
 

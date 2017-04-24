@@ -16,7 +16,7 @@ namespace StrongGrid.Resources
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/suppressions.html
 	/// </remarks>
-	public class Suppressions
+	public class Suppressions : ISuppressions
 	{
 		private const string _endpoint = "asm";
 		private readonly Pathoschild.Http.Client.IClient _client;

@@ -15,7 +15,7 @@ namespace StrongGrid.Resources
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/index.html
 	/// </remarks>
-	public class Settings
+	public class Settings : ISettings
 	{
 		private const string _endpoint = "settings";
 		private readonly Pathoschild.Http.Client.IClient _client;

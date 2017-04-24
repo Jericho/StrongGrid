@@ -16,7 +16,7 @@ namespace StrongGrid.Resources
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Mail/index.html
 	/// </remarks>
-	public class Mail
+	public class Mail : IMail
 	{
 		private const string _endpoint = "mail";
 		private readonly Pathoschild.Http.Client.IClient _client;

@@ -16,7 +16,7 @@ namespace StrongGrid.Resources
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/teammates.html
 	/// </remarks>
-	public class Teammates
+	public class Teammates : ITeammates
 	{
 		private const string _endpoint = "teammates";
 		private readonly Pathoschild.Http.Client.IClient _client;

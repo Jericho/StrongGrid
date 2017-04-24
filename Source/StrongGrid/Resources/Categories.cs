@@ -13,7 +13,7 @@ namespace StrongGrid.Resources
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Categories/categories.html
 	/// </remarks>
-	public class Categories
+	public class Categories : ICategories
 	{
 		private const string _endpoint = "categories";
 		private readonly Pathoschild.Http.Client.IClient _client;

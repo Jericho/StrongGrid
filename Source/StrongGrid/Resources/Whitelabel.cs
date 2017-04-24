@@ -10,7 +10,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows you to manage whitelabeling settings
 	/// </summary>
-	public class Whitelabel
+	public class Whitelabel : IWhitelabel
 	{
 		private const string _endpoint = "whitelabel";
 		private readonly Pathoschild.Http.Client.IClient _client;

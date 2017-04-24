@@ -16,7 +16,7 @@ namespace StrongGrid.Resources
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/bounces.html
 	/// </remarks>
-	public class Bounces
+	public class Bounces : IBounces
 	{
 		private const string _endpoint = "suppression/bounces";
 		private readonly Pathoschild.Http.Client.IClient _client;
