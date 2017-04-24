@@ -127,9 +127,6 @@ namespace StrongGrid.Logging
 	}
 
 #if !LIBLOG_PROVIDERS_ONLY
-#if !LIBLOG_PORTABLE
-	[ExcludeFromCodeCoverage]
-#endif
 #if LIBLOG_PUBLIC
 	public
 #else
@@ -483,9 +480,6 @@ namespace StrongGrid.Logging
 	/// <summary>
 	/// Provides a mechanism to create instances of <see cref="ILog" /> objects.
 	/// </summary>
-#if !LIBLOG_PORTABLE
-	[ExcludeFromCodeCoverage]
-#endif
 #if LIBLOG_PROVIDERS_ONLY
 	internal
 #else
@@ -725,9 +719,6 @@ namespace StrongGrid.Logging
 		}
 
 #if !LIBLOG_PROVIDERS_ONLY
-#if !LIBLOG_PORTABLE
-		[ExcludeFromCodeCoverage]
-#endif
 		internal class NoOpLogger : ILog
 		{
 			internal static readonly NoOpLogger Instance = new NoOpLogger();
@@ -741,9 +732,6 @@ namespace StrongGrid.Logging
 	}
 
 #if !LIBLOG_PROVIDERS_ONLY
-#if !LIBLOG_PORTABLE
-	[ExcludeFromCodeCoverage]
-#endif
 	internal class LoggerExecutionWrapper : ILog
 	{
 		private readonly Logger _logger;
@@ -812,9 +800,6 @@ namespace StrongGrid.Logging.LogProviders
 #endif
 	using System.Text.RegularExpressions;
 
-#if !LIBLOG_PORTABLE
-	[ExcludeFromCodeCoverage]
-#endif
 	internal abstract class LogProviderBase : ILogProvider
 	{
 		protected delegate IDisposable OpenNdc(string message);
@@ -855,9 +840,6 @@ namespace StrongGrid.Logging.LogProviders
 		}
 	}
 
-#if !LIBLOG_PORTABLE
-	[ExcludeFromCodeCoverage]
-#endif
 	internal class NLogLogProvider : LogProviderBase
 	{
 		private readonly Func<string, object> _getLoggerByNameDelegate;
@@ -939,9 +921,6 @@ namespace StrongGrid.Logging.LogProviders
 			return Expression.Lambda<Func<string, object>>(methodCall, nameParam).Compile();
 		}
 
-#if !LIBLOG_PORTABLE
-		[ExcludeFromCodeCoverage]
-#endif
 		internal class NLogLogger
 		{
 			private readonly dynamic _logger;
@@ -1204,9 +1183,6 @@ namespace StrongGrid.Logging.LogProviders
 		}
 	}
 
-#if !LIBLOG_PORTABLE
-	[ExcludeFromCodeCoverage]
-#endif
 	internal class Log4NetLogProvider : LogProviderBase
 	{
 		private readonly Func<string, object> _getLoggerByNameDelegate;
@@ -1315,9 +1291,6 @@ namespace StrongGrid.Logging.LogProviders
 			return Expression.Lambda<Func<string, object>>(methodCall, nameParam).Compile();
 		}
 
-#if !LIBLOG_PORTABLE
-		[ExcludeFromCodeCoverage]
-#endif
 		internal class Log4NetLogger
 		{
 			private readonly dynamic _logger;
@@ -1585,9 +1558,6 @@ namespace StrongGrid.Logging.LogProviders
 		}
 	}
 
-#if !LIBLOG_PORTABLE
-	[ExcludeFromCodeCoverage]
-#endif
 	internal class EntLibLogProvider : LogProviderBase
 	{
 		private const string TypeTemplate = "Microsoft.Practices.EnterpriseLibrary.Logging.{0}, Microsoft.Practices.EnterpriseLibrary.Logging";
@@ -1704,9 +1674,6 @@ namespace StrongGrid.Logging.LogProviders
 			return memberInit;
 		}
 
-#if !LIBLOG_PORTABLE
-		[ExcludeFromCodeCoverage]
-#endif
 		internal class EntLibLogger
 		{
 			private readonly string _loggerName;
@@ -1765,9 +1732,6 @@ namespace StrongGrid.Logging.LogProviders
 		}
 	}
 
-#if !LIBLOG_PORTABLE
-	[ExcludeFromCodeCoverage]
-#endif
 	internal class SerilogLogProvider : LogProviderBase
 	{
 		private readonly Func<string, object> _getLoggerByNameDelegate;
@@ -1863,9 +1827,6 @@ namespace StrongGrid.Logging.LogProviders
 			return name => func("SourceContext", name, false);
 		}
 
-#if !LIBLOG_PORTABLE
-		[ExcludeFromCodeCoverage]
-#endif
 		internal class SerilogLogger
 		{
 			private readonly object _logger;
@@ -2016,9 +1977,6 @@ namespace StrongGrid.Logging.LogProviders
 		}
 	}
 
-#if !LIBLOG_PORTABLE
-	[ExcludeFromCodeCoverage]
-#endif
 	internal class LoupeLogProvider : LogProviderBase
 	{
 		/// <summary>
@@ -2093,9 +2051,6 @@ namespace StrongGrid.Logging.LogProviders
 			return callDelegate;
 		}
 
-#if !LIBLOG_PORTABLE
-		[ExcludeFromCodeCoverage]
-#endif
 		internal class LoupeLogger
 		{
 			private const string LogSystem = "LibLog";
@@ -2154,9 +2109,6 @@ namespace StrongGrid.Logging.LogProviders
 		}
 	}
 
-#if !LIBLOG_PORTABLE
-	[ExcludeFromCodeCoverage]
-#endif
 	internal static class TraceEventTypeValues
 	{
 		internal static readonly Type Type;
@@ -2184,9 +2136,6 @@ namespace StrongGrid.Logging.LogProviders
 		}
 	}
 
-#if !LIBLOG_PORTABLE
-	[ExcludeFromCodeCoverage]
-#endif
 	internal static class LogMessageFormatter
 	{
 		//private static readonly Regex Pattern = new Regex(@"\{@?\w{1,}\}");
@@ -2271,9 +2220,6 @@ namespace StrongGrid.Logging.LogProviders
 		}
 	}
 
-#if !LIBLOG_PORTABLE
-	[ExcludeFromCodeCoverage]
-#endif
 	internal static class TypeExtensions
 	{
 		internal static ConstructorInfo GetConstructorPortable(this Type type, params Type[] types)
@@ -2363,9 +2309,6 @@ namespace StrongGrid.Logging.LogProviders
 		}
 	}
 
-#if !LIBLOG_PORTABLE
-	[ExcludeFromCodeCoverage]
-#endif
 	internal class DisposableAction : IDisposable
 	{
 		private readonly Action _onDispose;
