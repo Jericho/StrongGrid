@@ -13,7 +13,7 @@ namespace StrongGrid.Utilities
 	/// <summary>
 	/// Extension methods
 	/// </summary>
-	public static class Extensions
+	internal static class Extensions
 	{
 		private static readonly DateTime EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
@@ -31,7 +31,7 @@ namespace StrongGrid.Utilities
 		}
 
 		/// <summary>
-		/// Converts a .Net <see cref="DateTime" /> into a 'unit time' (which is expressed as the number
+		/// Converts a .Net <see cref="DateTime" /> into a 'Unix time' (which is expressed as the number
 		/// of seconds since midnight on January 1st 1970).
 		/// </summary>
 		/// <param name="date">The date.</param>
