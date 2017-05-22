@@ -24,7 +24,7 @@ namespace StrongGrid.Resources
 		/// Initializes a new instance of the <see cref="Segments" /> class.
 		/// </summary>
 		/// <param name="client">The HTTP client</param>
-		public Segments(Pathoschild.Http.Client.IClient client)
+		internal Segments(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
 		}

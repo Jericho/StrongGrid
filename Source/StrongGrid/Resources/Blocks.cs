@@ -25,7 +25,7 @@ namespace StrongGrid.Resources
 		/// Initializes a new instance of the <see cref="Blocks" /> class.
 		/// </summary>
 		/// <param name="client">The HTTP client</param>
-		public Blocks(Pathoschild.Http.Client.IClient client)
+		internal Blocks(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
 		}

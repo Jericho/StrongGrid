@@ -25,7 +25,7 @@ namespace StrongGrid.Resources
 		/// Initializes a new instance of the <see cref="Suppressions" /> class.
 		/// </summary>
 		/// <param name="client">The HTTP client</param>
-		public Suppressions(Pathoschild.Http.Client.IClient client)
+		internal Suppressions(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
 		}

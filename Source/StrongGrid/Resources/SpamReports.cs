@@ -25,7 +25,7 @@ namespace StrongGrid.Resources
 		/// Initializes a new instance of the <see cref="SpamReports" /> class.
 		/// </summary>
 		/// <param name="client">The HTTP client</param>
-		public SpamReports(Pathoschild.Http.Client.IClient client)
+		internal SpamReports(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
 		}

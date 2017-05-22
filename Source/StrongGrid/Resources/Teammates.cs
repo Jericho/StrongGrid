@@ -25,7 +25,7 @@ namespace StrongGrid.Resources
 		/// Initializes a new instance of the <see cref="Teammates" /> class.
 		/// </summary>
 		/// <param name="client">The HTTP client</param>
-		public Teammates(Pathoschild.Http.Client.IClient client)
+		internal Teammates(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
 		}

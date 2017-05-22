@@ -25,7 +25,7 @@ namespace StrongGrid.Resources
 		/// Initializes a new instance of the <see cref="Contacts" /> class.
 		/// </summary>
 		/// <param name="client">The HTTP client</param>
-		public Contacts(Pathoschild.Http.Client.IClient client)
+		internal Contacts(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
 		}
