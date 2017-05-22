@@ -224,14 +224,19 @@ namespace StrongGrid.IntegrationTests
 			if (permissions.Any(p => p.StartsWith("billing.", StringComparison.OrdinalIgnoreCase)))
 			{
 				var billingKey = client.ApiKeys.CreateWithBillingPermissionsAsync("Integration testing billing Key").Result;
+				Console.WriteLine("Created a billing key");
+
 				client.ApiKeys.DeleteAsync(billingKey.KeyId).Wait();
-				Console.WriteLine("Created and deleted the billing key");
+				Console.WriteLine("Deleted the billing key");
 			}
 
-			// CREATE AND DELETE AN API KEY WITH ALL PERMISSIONS
+			// CREATE AN API KEY WITH ALL PERMISSIONS
 			var superKey = client.ApiKeys.CreateWithAllPermissionsAsync("Integration testing Super Key").Result;
+			Console.WriteLine("Created a key with all permissions");
+
+			// DELETE THE API KEY WITH ALL PERMISSIONS
 			client.ApiKeys.DeleteAsync(superKey.KeyId).Wait();
-			Console.WriteLine("Created and deleted a key with all permissions");
+			Console.WriteLine("Deleted the key with all permissions");
 
 			ConcludeTests(pauseAfterTests);
 		}
