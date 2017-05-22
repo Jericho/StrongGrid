@@ -12,7 +12,7 @@ namespace StrongGrid.Utilities
 	/// Error handler for requests dispatched to the SendGrid API
 	/// </summary>
 	/// <seealso cref="Pathoschild.Http.Client.Extensibility.IHttpFilter" />
-	public class SendGridErrorHandler : IHttpFilter
+	internal class SendGridErrorHandler : IHttpFilter
 	{
 		#region PUBLIC METHODS
 
