@@ -9,7 +9,7 @@ namespace StrongGrid.Utilities
 	/// Converts a JSON string into and array of <see cref="KeyValuePair{TKey, TValue}">metrics</see>.
 	/// </summary>
 	/// <seealso cref="Newtonsoft.Json.JsonConverter" />
-	public class MetricsConverter : JsonConverter
+	internal class MetricsConverter : JsonConverter
 	{
 		/// <summary>
 		/// Determines whether this instance can convert the specified object type.

@@ -9,7 +9,7 @@ namespace StrongGrid.Utilities
 	/// Converts a <see cref="DateTime" /> expressed in a format acceptable to SendGrid to and from JSON.
 	/// </summary>
 	/// <seealso cref="Newtonsoft.Json.Converters.DateTimeConverterBase" />
-	public class SendGridDateTimeConverter : DateTimeConverterBase
+	internal class SendGridDateTimeConverter : DateTimeConverterBase
 	{
 		private const string SENDGRID_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 

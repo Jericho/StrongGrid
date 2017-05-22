@@ -11,7 +11,7 @@ namespace StrongGrid.Utilities
 	/// Converts a <see cref="Field"/> to and from JSON.
 	/// </summary>
 	/// <seealso cref="Newtonsoft.Json.JsonConverter" />
-	public class CustomFieldsConverter : JsonConverter
+	internal class CustomFieldsConverter : JsonConverter
 	{
 		/// <summary>
 		/// Determines whether this instance can convert the specified object type.
