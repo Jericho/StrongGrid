@@ -19,7 +19,7 @@
 	},
 	"dependencies": {
 		"HttpMultipartParser": "2.2.1",
-		"MimeTypesMap": "1.0.0",
+		"MimeTypesMap": "1.0.1",
 		"Newtonsoft.Json": "9.0.1",
 		"Pathoschild.Http.FluentClient": "3.0.0",
 		"StyleCop.Analyzers": {
@@ -48,5 +48,5 @@
 			}
 		}
 	},
-	"version": "0.27.0-*"
+	"version": "0.28.0-*"
 }

@@ -25,21 +25,11 @@ If you information about how to setup the SendGrid webhooks, please consult the 
 - [Setting up the inbound parse webhook](https://sendgrid.com/docs/Classroom/Basics/Inbound_Parse_Webhook/setting_up_the_inbound_parse_webhook.html)
 
 
-## Release Notes
-
-Detailed release notes are [available here](https://github.com/Jericho/StrongGrid/releases)
-
-
-## Nuget
-
-StrongGrid is available as a Nuget package:
-
-[![NuGet Version](http://img.shields.io/nuget/v/StrongGrid.svg)](https://www.nuget.org/packages/StrongGrid/)
-
-
-Pre-release packages are available on my MyGet feed:
-
-[![MyGet Pre Release](https://img.shields.io/myget/jericho/vpre/StrongGrid.svg)](http://myget.org/gallery/jericho)
+| | |
+|---------------|----------|
+| Release Notes | [![GitHub release](https://img.shields.io/github/release/jericho/stronggrid.svg)](https://github.com/Jericho/StrongGrid/releases) |
+| Released package | [![NuGet Version](http://img.shields.io/nuget/v/StrongGrid.svg)](https://www.nuget.org/packages/StrongGrid/) |
+| Pre-release package | [![MyGet Pre Release](https://img.shields.io/myget/jericho/vpre/StrongGrid.svg)](http://myget.org/gallery/jericho) |
 
 
 ## Installation

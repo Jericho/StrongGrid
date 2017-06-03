@@ -26,7 +26,7 @@ namespace StrongGrid.Resources
 		/// See
 		/// </summary>
 		/// <param name="client">The HTTP client</param>
-		public UnsubscribeGroups(Pathoschild.Http.Client.IClient client)
+		internal UnsubscribeGroups(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
 		}

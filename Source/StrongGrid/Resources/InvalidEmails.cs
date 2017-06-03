@@ -25,7 +25,7 @@ namespace StrongGrid.Resources
 		/// Initializes a new instance of the <see cref="InvalidEmails" /> class.
 		/// </summary>
 		/// <param name="client">The HTTP client</param>
-		public InvalidEmails(Pathoschild.Http.Client.IClient client)
+		internal InvalidEmails(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
 		}

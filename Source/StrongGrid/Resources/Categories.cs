@@ -22,7 +22,7 @@ namespace StrongGrid.Resources
 		/// Initializes a new instance of the <see cref="Categories" /> class.
 		/// </summary>
 		/// <param name="client">The HTTP client</param>
-		public Categories(Pathoschild.Http.Client.IClient client)
+		internal Categories(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
 		}

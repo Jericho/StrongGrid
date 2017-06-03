@@ -24,7 +24,7 @@ namespace StrongGrid.Resources
 		/// Initializes a new instance of the <see cref="Lists" /> class.
 		/// </summary>
 		/// <param name="client">The HTTP client</param>
-		public Lists(Pathoschild.Http.Client.IClient client)
+		internal Lists(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
 		}

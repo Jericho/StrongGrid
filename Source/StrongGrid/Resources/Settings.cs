@@ -24,7 +24,7 @@ namespace StrongGrid.Resources
 		/// Initializes a new instance of the <see cref="Settings" /> class.
 		/// </summary>
 		/// <param name="client">The HTTP client</param>
-		public Settings(Pathoschild.Http.Client.IClient client)
+		internal Settings(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
 		}

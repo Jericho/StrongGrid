@@ -8,7 +8,7 @@ namespace StrongGrid.Utilities
 	/// Converts a 'Unix time' expressed as the number of seconds since midnight on January 1st 1970 to and from JSON.
 	/// </summary>
 	/// <seealso cref="Newtonsoft.Json.Converters.DateTimeConverterBase" />
-	public class EpochConverter : DateTimeConverterBase
+	internal class EpochConverter : DateTimeConverterBase
 	{
 		private static readonly DateTime _epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
