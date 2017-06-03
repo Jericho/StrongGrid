@@ -7,7 +7,7 @@ namespace StrongGrid.Utilities
 	/// Converts a category (represented either by a string or an array of strings) to and from JSON.
 	/// </summary>
 	/// <seealso cref="Newtonsoft.Json.JsonConverter" />
-	public class CategoryConverter : JsonConverter
+	internal class CategoryConverter : JsonConverter
 	{
 		/// <summary>
 		/// Determines whether this instance can convert the specified object type.

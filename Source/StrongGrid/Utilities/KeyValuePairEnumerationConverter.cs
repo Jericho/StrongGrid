@@ -8,7 +8,7 @@ namespace StrongGrid.Utilities
 	/// Converts an enumeration of KeyValuePair to and from JSON.
 	/// </summary>
 	/// <seealso cref="Newtonsoft.Json.JsonConverter" />
-	public class KeyValuePairEnumerationConverter : JsonConverter
+	internal class KeyValuePairEnumerationConverter : JsonConverter
 	{
 		/// <summary>
 		/// Determines whether this instance can convert the specified object type.

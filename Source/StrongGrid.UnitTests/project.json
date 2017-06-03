@@ -8,10 +8,10 @@
 
 	"dependencies": {
 		"dotnet-test-xunit": "2.2.0-preview2-build1029",
-		"Moq": "4.7.8",
-		"RichardSzalay.MockHttp": "1.5.0",
-		"Shouldly": "2.8.2",
-		"StrongGrid": { "target": "project" },
+        "Moq": "4.7.12",
+        "RichardSzalay.MockHttp": "1.5.0",
+        "Shouldly": "2.8.2",
+        "StrongGrid": { "target": "project" },
 		"xunit": "2.2.0"
 	},
 

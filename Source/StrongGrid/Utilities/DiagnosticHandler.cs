@@ -13,7 +13,7 @@ namespace StrongGrid.Utilities
 	/// Diagnostic handler for requests dispatched to the SendGrid API
 	/// </summary>
 	/// <seealso cref="Pathoschild.Http.Client.Extensibility.IHttpFilter" />
-	public class DiagnosticHandler : IHttpFilter
+	internal class DiagnosticHandler : IHttpFilter
 	{
 		#region FIELDS
 

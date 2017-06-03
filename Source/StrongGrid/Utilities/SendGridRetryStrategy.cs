@@ -13,7 +13,7 @@ namespace StrongGrid.Utilities
 	/// 1st 1970) when the next attempt can take place.
 	/// </summary>
 	/// <seealso cref="Pathoschild.Http.Client.Retry.IRetryConfig" />
-	public class SendGridRetryStrategy : IRetryConfig
+	internal class SendGridRetryStrategy : IRetryConfig
 	{
 		#region FIELDS
 

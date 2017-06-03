@@ -34,7 +34,7 @@ namespace StrongGrid
 		/// <value>
 		/// The access management.
 		/// </value>
-		public AccessManagement AccessManagement { get; private set; }
+		public IAccessManagement AccessManagement { get; private set; }
 
 		/// <summary>
 		/// Gets the Alerts resource which allows you to receive notifications regarding your email usage or statistics.
@@ -42,7 +42,7 @@ namespace StrongGrid
 		/// <value>
 		/// The alerts.
 		/// </value>
-		public Alerts Alerts { get; private set; }
+		public IAlerts Alerts { get; private set; }
 
 		/// <summary>
 		/// Gets the API Keys resource which allows you to manage your API Keys.
@@ -50,7 +50,7 @@ namespace StrongGrid
 		/// <value>
 		/// The API keys.
 		/// </value>
-		public ApiKeys ApiKeys { get; private set; }
+		public IApiKeys ApiKeys { get; private set; }
 
 		/// <summary>
 		/// Gets the Batches resource.
@@ -58,7 +58,7 @@ namespace StrongGrid
 		/// <value>
 		/// The batches.
 		/// </value>
-		public Batches Batches { get; private set; }
+		public IBatches Batches { get; private set; }
 
 		/// <summary>
 		/// Gets the Blocks resource which allows you to manage blacked email addresses.
@@ -66,7 +66,7 @@ namespace StrongGrid
 		/// <value>
 		/// The blocks.
 		/// </value>
-		public Blocks Blocks { get; private set; }
+		public IBlocks Blocks { get; private set; }
 
 		/// <summary>
 		/// Gets the Bounces resource which allows you to manage bounces.
@@ -74,7 +74,7 @@ namespace StrongGrid
 		/// <value>
 		/// The bounces.
 		/// </value>
-		public Bounces Bounces { get; private set; }
+		public IBounces Bounces { get; private set; }
 
 		/// <summary>
 		/// Gets the Campaigns resource which allows you to manage your campaigns.
@@ -82,7 +82,7 @@ namespace StrongGrid
 		/// <value>
 		/// The campaigns.
 		/// </value>
-		public Campaigns Campaigns { get; private set; }
+		public ICampaigns Campaigns { get; private set; }
 
 		/// <summary>
 		/// Gets the Categories resource which allows you to manages your categories.
@@ -90,7 +90,7 @@ namespace StrongGrid
 		/// <value>
 		/// The categories.
 		/// </value>
-		public Categories Categories { get; private set; }
+		public ICategories Categories { get; private set; }
 
 		/// <summary>
 		/// Gets the Contacts resource which allows you to manage your contacts (also sometimes refered to as 'recipients').
@@ -98,7 +98,7 @@ namespace StrongGrid
 		/// <value>
 		/// The contacts.
 		/// </value>
-		public Contacts Contacts { get; private set; }
+		public IContacts Contacts { get; private set; }
 
 		/// <summary>
 		/// Gets the CustomFields resource which allows you to manage your custom fields.
@@ -106,7 +106,7 @@ namespace StrongGrid
 		/// <value>
 		/// The custom fields.
 		/// </value>
-		public CustomFields CustomFields { get; private set; }
+		public ICustomFields CustomFields { get; private set; }
 
 		/// <summary>
 		/// Gets the GlobalSuppressions resource.
@@ -114,7 +114,7 @@ namespace StrongGrid
 		/// <value>
 		/// The global suppressions.
 		/// </value>
-		public GlobalSuppressions GlobalSuppressions { get; private set; }
+		public IGlobalSuppressions GlobalSuppressions { get; private set; }
 
 		/// <summary>
 		/// Gets the InvalidEmails resource.
@@ -122,7 +122,7 @@ namespace StrongGrid
 		/// <value>
 		/// The invalid emails.
 		/// </value>
-		public InvalidEmails InvalidEmails { get; private set; }
+		public IInvalidEmails InvalidEmails { get; private set; }
 
 		/// <summary>
 		/// Gets the Lists resource.
@@ -130,7 +130,7 @@ namespace StrongGrid
 		/// <value>
 		/// The lists.
 		/// </value>
-		public Lists Lists { get; private set; }
+		public ILists Lists { get; private set; }
 
 		/// <summary>
 		/// Gets the Mail resource.
@@ -138,7 +138,7 @@ namespace StrongGrid
 		/// <value>
 		/// The mail.
 		/// </value>
-		public Mail Mail { get; private set; }
+		public IMail Mail { get; private set; }
 
 		/// <summary>
 		/// Gets the Segments resource.
@@ -146,7 +146,7 @@ namespace StrongGrid
 		/// <value>
 		/// The segments.
 		/// </value>
-		public Segments Segments { get; private set; }
+		public ISegments Segments { get; private set; }
 
 		/// <summary>
 		/// Gets the SenderIdentities resource.
@@ -154,7 +154,7 @@ namespace StrongGrid
 		/// <value>
 		/// The sender identities.
 		/// </value>
-		public SenderIdentities SenderIdentities { get; private set; }
+		public ISenderIdentities SenderIdentities { get; private set; }
 
 		/// <summary>
 		/// Gets the Settings resource.
@@ -162,7 +162,7 @@ namespace StrongGrid
 		/// <value>
 		/// The settings.
 		/// </value>
-		public Settings Settings { get; private set; }
+		public ISettings Settings { get; private set; }
 
 		/// <summary>
 		/// Gets the SpamReports resource.
@@ -170,7 +170,7 @@ namespace StrongGrid
 		/// <value>
 		/// The spam reports.
 		/// </value>
-		public SpamReports SpamReports { get; private set; }
+		public ISpamReports SpamReports { get; private set; }
 
 		/// <summary>
 		/// Gets the Statistics resource.
@@ -178,7 +178,7 @@ namespace StrongGrid
 		/// <value>
 		/// The statistics.
 		/// </value>
-		public Statistics Statistics { get; private set; }
+		public IStatistics Statistics { get; private set; }
 
 		/// <summary>
 		/// Gets the Subusers resource.
@@ -186,7 +186,7 @@ namespace StrongGrid
 		/// <value>
 		/// The subusers.
 		/// </value>
-		public Subusers Subusers { get; private set; }
+		public ISubusers Subusers { get; private set; }
 
 		/// <summary>
 		/// Gets the Suppressions resource.
@@ -194,7 +194,7 @@ namespace StrongGrid
 		/// <value>
 		/// The suppressions.
 		/// </value>
-		public Suppressions Suppressions { get; private set; }
+		public ISuppressions Suppressions { get; private set; }
 
 		/// <summary>
 		/// Gets the Teammates resource.
@@ -202,7 +202,7 @@ namespace StrongGrid
 		/// <value>
 		/// The Teammates.
 		/// </value>
-		public Teammates Teammates { get; private set; }
+		public ITeammates Teammates { get; private set; }
 
 		/// <summary>
 		/// Gets the Templates resource.
@@ -210,7 +210,7 @@ namespace StrongGrid
 		/// <value>
 		/// The templates.
 		/// </value>
-		public Templates Templates { get; private set; }
+		public ITemplates Templates { get; private set; }
 
 		/// <summary>
 		/// Gets the UnsubscribeGroups resource.
@@ -218,7 +218,7 @@ namespace StrongGrid
 		/// <value>
 		/// The unsubscribe groups.
 		/// </value>
-		public UnsubscribeGroups UnsubscribeGroups { get; private set; }
+		public IUnsubscribeGroups UnsubscribeGroups { get; private set; }
 
 		/// <summary>
 		/// Gets the User resource.
@@ -226,7 +226,7 @@ namespace StrongGrid
 		/// <value>
 		/// The user.
 		/// </value>
-		public User User { get; private set; }
+		public IUser User { get; private set; }
 
 		/// <summary>
 		/// Gets the Version.
@@ -242,7 +242,7 @@ namespace StrongGrid
 		/// <value>
 		/// The whitelabel.
 		/// </value>
-		public Whitelabel Whitelabel { get; private set; }
+		public IWhitelabel Whitelabel { get; private set; }
 
 		/// <summary>
 		/// Gets the webhook settings resource.
@@ -250,7 +250,7 @@ namespace StrongGrid
 		/// <value>
 		/// The webhook settings.
 		/// </value>
-		public WebhookSettings WebhookSettings { get; private set; }
+		public IWebhookSettings WebhookSettings { get; private set; }
 
 		/// <summary>
 		/// Gets the WebhookStats resource.
@@ -258,7 +258,7 @@ namespace StrongGrid
 		/// <value>
 		/// The webhook stats.
 		/// </value>
-		public WebhookStats WebhookStats { get; private set; }
+		public IWebhookStats WebhookStats { get; private set; }
 
 		#endregion
 

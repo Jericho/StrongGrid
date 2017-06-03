@@ -22,7 +22,7 @@ namespace StrongGrid.Resources
 		/// Initializes a new instance of the <see cref="Templates" /> class.
 		/// </summary>
 		/// <param name="client">The HTTP client</param>
-		public Templates(Pathoschild.Http.Client.IClient client)
+		internal Templates(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
 		}

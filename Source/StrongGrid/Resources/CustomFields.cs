@@ -23,7 +23,7 @@ namespace StrongGrid.Resources
 		/// Initializes a new instance of the <see cref="CustomFields" /> class.
 		/// </summary>
 		/// <param name="client">The HTTP client</param>
-		public CustomFields(Pathoschild.Http.Client.IClient client)
+		internal CustomFields(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
 		}

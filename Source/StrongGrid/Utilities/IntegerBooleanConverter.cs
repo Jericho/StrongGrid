@@ -7,7 +7,7 @@ namespace StrongGrid.Utilities
 	/// Converts a boolean expressed as  1 for True or 0 for False to and from JSON.
 	/// </summary>
 	/// <seealso cref="Newtonsoft.Json.JsonConverter" />
-	public class IntegerBooleanConverter : JsonConverter
+	internal class IntegerBooleanConverter : JsonConverter
 	{
 		/// <summary>
 		/// Determines whether this instance can convert the specified object type.

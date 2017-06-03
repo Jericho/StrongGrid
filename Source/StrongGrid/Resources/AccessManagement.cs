@@ -26,7 +26,7 @@ namespace StrongGrid.Resources
 		/// Initializes a new instance of the <see cref="AccessManagement" /> class.
 		/// </summary>
 		/// <param name="client">The HTTP client</param>
-		public AccessManagement(Pathoschild.Http.Client.IClient client)
+		internal AccessManagement(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
 		}

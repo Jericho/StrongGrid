@@ -25,7 +25,7 @@ namespace StrongGrid.Resources
 		/// Initializes a new instance of the <see cref="Mail" /> class.
 		/// </summary>
 		/// <param name="client">The HTTP client</param>
-		public Mail(Pathoschild.Http.Client.IClient client)
+		internal Mail(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
 		}
