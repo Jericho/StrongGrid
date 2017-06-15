@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Shouldly;
-using StrongGrid.Model.Webhooks;
+using StrongGrid.Models.Webhooks;
 using StrongGrid.Utilities;
 using System.IO;
 using System.Text;

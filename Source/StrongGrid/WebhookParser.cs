@@ -1,8 +1,8 @@
 ﻿using HttpMultipartParser;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using StrongGrid.Model;
-using StrongGrid.Model.Webhooks;
+using StrongGrid.Models;
+using StrongGrid.Models.Webhooks;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
