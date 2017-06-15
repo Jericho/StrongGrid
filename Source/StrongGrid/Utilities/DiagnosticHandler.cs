@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 
 namespace StrongGrid.Utilities
 {
@@ -19,7 +20,7 @@ namespace StrongGrid.Utilities
 
 		private const string DIAGNOSTIC_ID_HEADER_NAME = "StrongGridDiagnosticId";
 		private static readonly ILog _logger = LogProvider.For<DiagnosticHandler>();
-		private readonly IDictionary<WeakReference<HttpRequestMessage>, Stopwatch> _timers = new Dictionary<WeakReference<HttpRequestMessage>, Stopwatch>();
+		private readonly IDictionary<WeakReference<HttpRequestMessage>, Tuple<StringBuilder, Stopwatch>> _diagnostics = new Dictionary<WeakReference<HttpRequestMessage>, Tuple<StringBuilder, Stopwatch>>();
 
 		#endregion
 
@@ -31,25 +32,15 @@ namespace StrongGrid.Utilities
 		{
 			request.WithHeader(DIAGNOSTIC_ID_HEADER_NAME, Guid.NewGuid().ToString("N"));
 
-			if (_logger != null && _logger.IsDebugEnabled())
-			{
-				var httpRequest = request.Message;
-				var msg = $"Request: {httpRequest}"
-					.Replace("{", "{{")
-					.Replace("}", "}}");
-				_logger.Debug(msg);
-				if (httpRequest.Content != null)
-				{
-					var content = httpRequest.Content.ReadAsStringAsync(null).Result
-						.Replace("{", "{{")
-						.Replace("}", "}}");
-					_logger.Debug($"Request Content: {content}");
-				}
-			}
+			var httpRequest = request.Message;
 
-			lock (_timers)
+			var diagnosticMessage = new StringBuilder();
+			diagnosticMessage.AppendLine($"Request: {httpRequest}");
+			diagnosticMessage.AppendLine($"Request Content: {httpRequest.Content?.ReadAsStringAsync().Result ?? "<NULL>"}");
+
+			lock (_diagnostics)
 			{
-				_timers.Add(new WeakReference<HttpRequestMessage>(request.Message), Stopwatch.StartNew());
+				_diagnostics.Add(new WeakReference<HttpRequestMessage>(request.Message), new Tuple<StringBuilder, Stopwatch>(diagnosticMessage, Stopwatch.StartNew()));
 			}
 		}
 
@@ -58,28 +49,28 @@ namespace StrongGrid.Utilities
 		/// <param name="httpErrorAsException">Whether HTTP error responses should be raised as exceptions.</param>
 		public void OnResponse(IResponse response, bool httpErrorAsException)
 		{
-			var elapsed = GetElapsedExecutionTime(response.Message.RequestMessage);
+			var diagnosticInfo = GetDiagnosticInfo(response.Message.RequestMessage);
+			var diagnosticMessage = diagnosticInfo.Item1;
+			var timer = diagnosticInfo.Item2;
+			if (timer != null) timer.Stop();
+
+			var httpResponse = response.Message;
+
+			diagnosticMessage.AppendLine($"Response: {httpResponse}");
+			diagnosticMessage.AppendLine($"Response Content: {httpResponse.Content?.ReadAsStringAsync().Result ?? "<NULL>"}");
+
+			if (timer != null)
+			{
+				diagnosticMessage.AppendLine($"The request took {timer.Elapsed.ToDurationString()}");
+			}
+
+			Debug.WriteLine("{0}\r\n{1}{0}", new string('=', 25), diagnosticMessage.ToString());
 
 			if (_logger != null && _logger.IsDebugEnabled())
 			{
-				var httpResponse = response.Message;
-				var msg = $"Response: {httpResponse}"
+				_logger.Debug(diagnosticMessage.ToString()
 					.Replace("{", "{{")
-					.Replace("}", "}}");
-				_logger.Debug(msg);
-				if (httpResponse.Content != null)
-				{
-					var content = httpResponse.Content.ReadAsStringAsync(null).Result
-						.Replace("{", "{{")
-						.Replace("}", "}}");
-					_logger.Debug($"Response Content: {content}");
-				}
-
-				if (elapsed > TimeSpan.MinValue)
-				{
-					var elapsedAsString = elapsed.ToDurationString();
-					_logger.Debug($"The request took {elapsedAsString}");
-				}
+					.Replace("}", "}}"));
 			}
 		}
 
@@ -87,11 +78,13 @@ namespace StrongGrid.Utilities
 
 		#region PRIVATE METHODS
 
-		private TimeSpan GetElapsedExecutionTime(HttpRequestMessage requestMessage)
+		private Tuple<StringBuilder, Stopwatch> GetDiagnosticInfo(HttpRequestMessage requestMessage)
 		{
-			lock (_timers)
+			lock (_diagnostics)
 			{
-				foreach (WeakReference<HttpRequestMessage> key in _timers.Keys.ToArray())
+				var diagnosticId = requestMessage.Headers.GetValues(DIAGNOSTIC_ID_HEADER_NAME).FirstOrDefault();
+
+				foreach (WeakReference<HttpRequestMessage> key in _diagnostics.Keys.ToArray())
 				{
 					// Get request
 					HttpRequestMessage request;
@@ -99,31 +92,28 @@ namespace StrongGrid.Utilities
 					// Check if garbage collected
 					if (!key.TryGetTarget(out request))
 					{
-						_timers.Remove(key);
+						_diagnostics.Remove(key);
 						continue;
 					}
 
 					// Check if different request
 					var requestDiagnosticId = request.Headers.GetValues(DIAGNOSTIC_ID_HEADER_NAME).FirstOrDefault();
-					var requestMessageDiagnosticId = requestMessage.Headers.GetValues(DIAGNOSTIC_ID_HEADER_NAME).FirstOrDefault();
-					if (requestDiagnosticId != requestMessageDiagnosticId)
+					if (requestDiagnosticId != diagnosticId)
 					{
 						continue;
 					}
 
-					// Measure elapsed time
-					var timer = _timers[key];
-					timer.Stop();
-					var elapsed = timer.Elapsed;
+					// Get the diagnostic info from dictionary
+					var diagnosticInfo = _diagnostics[key];
 
-					// Remove the time from dictionary
-					_timers.Remove(key);
+					// Remove the diagnostic info from dictionary
+					_diagnostics.Remove(key);
 
-					return elapsed;
+					return diagnosticInfo;
 				}
 			}
 
-			return TimeSpan.MinValue;
+			return new Tuple<StringBuilder, Stopwatch>(new StringBuilder(), null);
 		}
 
 		#endregion
