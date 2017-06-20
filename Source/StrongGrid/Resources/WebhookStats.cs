@@ -12,6 +12,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Provides statistics on your Webhook usage.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.IWebhookStats" />
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Stats/parse.html
 	/// </remarks>

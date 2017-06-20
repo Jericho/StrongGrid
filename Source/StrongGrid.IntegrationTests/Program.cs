@@ -64,7 +64,7 @@ namespace StrongGrid.IntegrationTests
 			{
 				Console.WriteLine("\n\n**************************************************");
 				Console.WriteLine("**************************************************");
-				Console.WriteLine($"AN EXCEPTION OCCURED: {e.Message}");
+				Console.WriteLine($"AN EXCEPTION OCCURED: {(e.InnerException ?? e).Message}");
 				Console.WriteLine("**************************************************");
 				Console.WriteLine("**************************************************");
 			}

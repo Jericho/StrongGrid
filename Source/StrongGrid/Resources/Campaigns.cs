@@ -13,6 +13,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows you to manage <see cref="Campaign">campaigns</see>.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.ICampaigns" />
 	/// <remarks>
 	/// See also: https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/campaigns.html
 	/// </remarks>

@@ -12,6 +12,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows you to manage Subusers.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.ISubusers" />
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/subusers.html
 	/// </remarks>

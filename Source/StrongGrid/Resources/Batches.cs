@@ -11,6 +11,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows you to manages batches.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.IBatches" />
 	public class Batches : IBatches
 	{
 		private const string _endpoint = "mail/batch";

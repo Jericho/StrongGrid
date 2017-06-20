@@ -10,6 +10,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows you to set and check webhook settings.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.IWebhookSettings" />
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Webhooks/event.html
 	/// </remarks>

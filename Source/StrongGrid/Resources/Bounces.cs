@@ -13,6 +13,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows you to manage email addresses that have bounced.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.IBounces" />
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/bounces.html
 	/// </remarks>

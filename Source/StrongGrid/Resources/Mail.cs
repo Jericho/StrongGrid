@@ -13,6 +13,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows you to send email over SendGrid’s Web API.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.IMail" />
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Mail/index.html
 	/// </remarks>

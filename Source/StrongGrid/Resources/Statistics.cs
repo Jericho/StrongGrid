@@ -14,6 +14,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// The stats APIs provide a read-only access to your SendGrid email statistics.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.IStatistics" />
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Stats/index.html
 	/// </remarks>

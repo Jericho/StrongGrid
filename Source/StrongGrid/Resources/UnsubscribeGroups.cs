@@ -13,6 +13,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows you to manage suppression groups.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.IUnsubscribeGroups" />
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/groups.html
 	/// </remarks>

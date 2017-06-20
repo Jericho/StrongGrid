@@ -12,6 +12,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows you to create an manage lists.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.ILists" />
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/contactdb.html
 	/// </remarks>

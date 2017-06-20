@@ -10,6 +10,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows you to manage whitelabeling settings
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.IWhitelabel" />
 	public class Whitelabel : IWhitelabel
 	{
 		private const string _endpoint = "whitelabel";

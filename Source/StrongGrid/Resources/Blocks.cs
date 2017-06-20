@@ -13,6 +13,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows you to manage blocked email addresses.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.IBlocks" />
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/blocks.html
 	/// </remarks>

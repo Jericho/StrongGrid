@@ -13,6 +13,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows you to manage contacts (which are sometimes refered to as 'recipients').
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.IContacts" />
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/contactdb.html
 	/// </remarks>

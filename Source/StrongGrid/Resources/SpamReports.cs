@@ -13,6 +13,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Gives you access to spam reports.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.ISpamReports" />
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/spam_reports.html
 	/// </remarks>
