@@ -36,7 +36,7 @@ namespace StrongGrid.Utilities
 
 			var diagnosticMessage = new StringBuilder();
 			diagnosticMessage.AppendLine($"Request: {httpRequest}");
-			diagnosticMessage.AppendLine($"Request Content: {httpRequest.Content?.ReadAsStringAsync().Result ?? "<NULL>"}");
+			diagnosticMessage.AppendLine($"Request Content: {httpRequest.Content?.ReadAsStringAsync(null).Result ?? "<NULL>"}");
 
 			lock (_diagnostics)
 			{
@@ -57,7 +57,7 @@ namespace StrongGrid.Utilities
 			var httpResponse = response.Message;
 
 			diagnosticMessage.AppendLine($"Response: {httpResponse}");
-			diagnosticMessage.AppendLine($"Response Content: {httpResponse.Content?.ReadAsStringAsync().Result ?? "<NULL>"}");
+			diagnosticMessage.AppendLine($"Response Content: {httpResponse.Content?.ReadAsStringAsync(null).Result ?? "<NULL>"}");
 
 			if (timer != null)
 			{
