@@ -72,7 +72,7 @@ namespace StrongGrid
 					return new KeyValuePair<string, string>(key, value);
 				}).ToArray();
 
-			// Conbine the 'attachment-info' and Files into a single array or Attachments
+			// Combine the 'attachment-info' and Files into an array of Attachments
 			var attachmentInfoAsJObject = JObject.Parse(parser.GetParameterValue("attachment-info", "{}"));
 			var attachments = attachmentInfoAsJObject
 				.Properties()
