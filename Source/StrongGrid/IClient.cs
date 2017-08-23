@@ -104,6 +104,14 @@ namespace StrongGrid
 		IInvalidEmails InvalidEmails { get; }
 
 		/// <summary>
+		/// Gets the IPPools resource.
+		/// </summary>
+		/// <value>
+		/// The IP pools
+		/// </value>
+		IIpPools IpPools { get; }
+
+		/// <summary>
 		/// Gets the Lists resource.
 		/// </summary>
 		/// <value>
