@@ -56,11 +56,10 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Subuser" />.
 		/// </returns>
-		public Task<Subuser[]> GetAllAsync(string username = null, int limit = 10, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Subuser[]> GetAllAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync(_endpoint)
-				.WithArgument("username", username)
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
