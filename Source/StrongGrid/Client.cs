@@ -125,6 +125,14 @@ namespace StrongGrid
 		public IInvalidEmails InvalidEmails { get; private set; }
 
 		/// <summary>
+		/// Gets the IpAddresses resource.
+		/// </summary>
+		/// <value>
+		/// The IP addresses
+		/// </value>
+		public IIpAddresses IpAddresses { get; private set; }
+
+		/// <summary>
 		/// Gets the IpPools resource.
 		/// </summary>
 		/// <value>
