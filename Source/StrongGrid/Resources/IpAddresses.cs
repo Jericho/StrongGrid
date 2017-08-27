@@ -57,12 +57,15 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>The information about <see cref="IpAddressesRemaining">remaining IP addresses</see>.</returns>
-		public Task<IpAddressesRemaining> GetRemainingCountAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<IpAddressesRemaining> GetRemainingCountAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			return _client
+			var remainingInfo = await _client
 				.GetAsync($"{_endpoint}/remaining")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<IpAddressesRemaining>();
+				.AsSendGridObject<JArray>("results")
+				.ConfigureAwait(false);
+
+			return remainingInfo.First().ToObject<IpAddressesRemaining>();
 		}
 
 		/// <summary>
@@ -90,7 +93,7 @@ namespace StrongGrid.Resources
 		/// <param name="offset">The offset for the number of IPs that you are requesting.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
-		/// An array of <see cref="IpAddress">Ip addresses</see>.
+		/// An array of <see cref="IpAddress">IP addresses</see>.
 		/// </returns>
 		public Task<IpAddress[]> GetAllAsync(bool excludeWhitelabels = false, string subuser = null, int limit = 10, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
 		{
