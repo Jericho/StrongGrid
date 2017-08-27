@@ -377,6 +377,7 @@ namespace StrongGrid
 			CustomFields = new CustomFields(_fluentClient);
 			GlobalSuppressions = new GlobalSuppressions(_fluentClient);
 			InvalidEmails = new InvalidEmails(_fluentClient);
+			IpAddresses = new IpAddresses(_fluentClient);
 			IpPools = new IpPools(_fluentClient);
 			Lists = new Lists(_fluentClient);
 			Mail = new Mail(_fluentClient);

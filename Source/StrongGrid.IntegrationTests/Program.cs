@@ -39,13 +39,13 @@ namespace StrongGrid.IntegrationTests
 			try
 			{
 				ApiKeys(client, pauseAfterTests);
-				Campaigns(client, pauseAfterTests);
+				CampaignsAndSenderIdentities(client, pauseAfterTests);
 				Categories(client, pauseAfterTests);
 				ContactsAndCustomFields(client, pauseAfterTests);
 				GlobalSuppressions(client, pauseAfterTests);
 				ListsAndSegments(client, pauseAfterTests);
 				Mail(client, pauseAfterTests);
-				UnsubscribeGroups(client, pauseAfterTests);
+				UnsubscribeGroupsAndSuppressions(client, pauseAfterTests);
 				User(client, pauseAfterTests);
 				Statistics(client, pauseAfterTests);
 				Templates(client, pauseAfterTests);
@@ -59,6 +59,8 @@ namespace StrongGrid.IntegrationTests
 				Whitelabel(client, pauseAfterTests);
 				WebhookStats(client, pauseAfterTests);
 				AccessManagement(client, pauseAfterTests);
+				IpAddresses(client, pauseAfterTests);
+				IpPools(client, pauseAfterTests);
 			}
 			catch (Exception e)
 			{
@@ -96,7 +98,7 @@ namespace StrongGrid.IntegrationTests
 				new MailPersonalization
 				{
 					To = new[] { to1 },
-					Substitutions = new KeyValuePair<string, string>[] 
+					Substitutions = new KeyValuePair<string, string>[]
 					{
 						new  KeyValuePair<string, string>("{{customer_type}}", "friend"),
 						new  KeyValuePair<string, string>("{{first_name}}", "Bob")
@@ -241,7 +243,7 @@ namespace StrongGrid.IntegrationTests
 			ConcludeTests(pauseAfterTests);
 		}
 
-		private static void UnsubscribeGroups(IClient client, bool pauseAfterTests)
+		private static void UnsubscribeGroupsAndSuppressions(IClient client, bool pauseAfterTests)
 		{
 			Console.WriteLine("\n***** UNSUBSCRIBE GROUPS *****");
 
@@ -621,7 +623,7 @@ namespace StrongGrid.IntegrationTests
 			ConcludeTests(pauseAfterTests);
 		}
 
-		private static void Campaigns(IClient client, bool pauseAfterTests)
+		private static void CampaignsAndSenderIdentities(IClient client, bool pauseAfterTests)
 		{
 			var YOUR_EMAIL = "youremail@hotmail.com";
 
@@ -875,14 +877,14 @@ namespace StrongGrid.IntegrationTests
 			{
 				var accessDate = access.LatestAccessOn.ToString("yyyy-MM-dd hh:mm:ss");
 				var accessVerdict = access.Allowed ? "Access granted" : "Access DENIED";
-				Console.WriteLine($"\t{accessDate, -20} {accessVerdict, -16} {access.IpAddress, -20} {access.Location}");
+				Console.WriteLine($"\t{accessDate,-20} {accessVerdict,-16} {access.IpAddress,-20} {access.Location}");
 			}
 
 			var whitelistedIpAddresses = client.AccessManagement.GetWhitelistedIpAddressesAsync().Result;
 			Console.WriteLine("Currently whitelisted addresses:" + (whitelistedIpAddresses.Length == 0 ? " NONE" : ""));
 			foreach (var address in whitelistedIpAddresses)
 			{
-				Console.WriteLine($"\t{address.Id, 6} {address.IpAddress, -20} {address.CreatedOn.ToString("yyyy-MM-dd hh:mm:ss")}");
+				Console.WriteLine($"\t{address.Id,6} {address.IpAddress,-20} {address.CreatedOn.ToString("yyyy-MM-dd hh:mm:ss")}");
 			}
 
 			// ========== VERY IMPORTANT ==========
@@ -898,7 +900,7 @@ namespace StrongGrid.IntegrationTests
 				Console.WriteLine("\n========================================================================");
 				Console.WriteLine("----------- VERY IMPORTANT ---------");
 				Console.WriteLine("There currently aren't any whitelisted IP addresses on your account.");
-				Console.WriteLine("Attempting to programmatically whitelist IP addresses would lock you out of your account.");
+				Console.WriteLine("Attempting to programmatically whitelist IP addresses could potentially lock you out of your account.");
 				Console.WriteLine("Therefore we are skipping the tests where an IP address is added to and subsequently removed from your account.");
 				Console.WriteLine("You must manually configure whitelisting in the SendGrid web UI before we can run these tests.");
 				Console.WriteLine("");
@@ -932,6 +934,70 @@ namespace StrongGrid.IntegrationTests
 			}
 
 			ConcludeTests(pauseAfterTests);
+		}
+
+		private static void IpAddresses(IClient client, bool pauseAfterTests)
+		{
+			Console.WriteLine("\n***** IP ADDRESSES *****");
+
+			// GET ALL THE IP ADDRESSES
+			var allIpAddresses = client.IpAddresses.GetAllAsync().Result;
+			Console.WriteLine($"There are {allIpAddresses.Length} IP addresses on your account");
+
+			/**************************************************
+				Commenting out the following tests because 
+				I do not have the necessary privileges
+			 **************************************************
+
+			// GET THE WARMING UP IP ADDRESSES
+			var warmingup = client.IpAddresses.GetWarmingUpAsync().Result;
+			Console.WriteLine($"There are {warmingup.Length} warming up IP addresses");
+
+			// GET THE ASSIGNED IP ADDRESSES
+			var assigned = client.IpAddresses.GetAssignedAsync().Result;
+			Console.WriteLine($"There are {assigned.Length} assigned IP addresses");
+
+			// GET THE REMAINING IP ADDRESSES
+			var remaining = client.IpAddresses.GetRemainingCountAsync().Result;
+			Console.WriteLine($"You have {remaining.Remaining} remaining IP addresses for the {remaining.Period} at a cost of {remaining.PricePerIp}");
+
+			**************************************************/
+
+			ConcludeTests(pauseAfterTests);
+		}
+
+		private static void IpPools(IClient client, bool pauseAfterTests)
+		{
+			/**************************************************
+				Commenting out the following tests because 
+				I do not have the necessary privileges
+			 **************************************************
+
+			Console.WriteLine("\n***** IP POOLS *****");
+
+			// GET ALL THE IP POOLS
+			var allIpPools = client.IpPools.GetAllAsync().Result;
+			Console.WriteLine($"There are {allIpPools.Length} IP pools on your account");
+
+			// CREATE A NEW POOL
+			var newPool = client.IpPools.CreateAsync("mktg").Result;
+			Console.WriteLine($"New pool created: {newPool.Name}");
+
+			// UPDATE THE IP POOL
+			client.IpPools.UpdateAsync("mktg", "marketing").Wait();
+			Console.WriteLine("New pool has been updated");
+
+			// GET THE IP POOL
+			var marketingPool = client.IpPools.GetAsync("marketing").Result;
+			Console.WriteLine($"Retrieved pool '{marketingPool.Name}'");
+
+			// DELETE THE IP POOL
+			client.IpPools.DeleteAsync(marketingPool.Name).Wait();
+			Console.WriteLine($"Deleted pool '{marketingPool.Name}'");
+
+			ConcludeTests(pauseAfterTests);
+
+			**************************************************/
 		}
 
 		// to get your public IP address we loop through an array
