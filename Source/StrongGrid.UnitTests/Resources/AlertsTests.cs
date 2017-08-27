@@ -7,6 +7,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
@@ -73,7 +74,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Create()
+		public async Task Create()
 		{
 			// Arrange
 			var type = AlertType.StatsNotification;
@@ -88,7 +89,7 @@ namespace StrongGrid.Resources.UnitTests
 			var alerts = new Alerts(client);
 
 			// Act
-			var result = alerts.CreateAsync(type, emailTo, frequency, percentage, CancellationToken.None).Result;
+			var result = await alerts.CreateAsync(type, emailTo, frequency, percentage, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -97,7 +98,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Get()
+		public async Task Get()
 		{
 			// Arrange
 			var alertId = 48;
@@ -109,7 +110,7 @@ namespace StrongGrid.Resources.UnitTests
 			var alerts = new Alerts(client);
 
 			// Act
-			var result = alerts.GetAsync(alertId, CancellationToken.None).Result;
+			var result = await alerts.GetAsync(alertId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -118,7 +119,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetAll()
+		public async Task GetAll()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -128,7 +129,7 @@ namespace StrongGrid.Resources.UnitTests
 			var alerts = new Alerts(client);
 
 			// Act
-			var result = alerts.GetAllAsync(CancellationToken.None).Result;
+			var result = await alerts.GetAllAsync(CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -138,7 +139,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Delete()
+		public async Task Delete()
 		{
 			// Arrange
 			var alertId = 48;
@@ -150,7 +151,7 @@ namespace StrongGrid.Resources.UnitTests
 			var alerts = new Alerts(client);
 
 			// Act
-			alerts.DeleteAsync(alertId, CancellationToken.None).Wait(CancellationToken.None);
+			await alerts.DeleteAsync(alertId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -158,7 +159,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Update()
+		public async Task Update()
 		{
 			// Arrange
 			var alertId = 48;
@@ -171,7 +172,7 @@ namespace StrongGrid.Resources.UnitTests
 			var alerts = new Alerts(client);
 
 			// Act
-			var result = alerts.UpdateAsync(alertId, null, emailTo, null, null, CancellationToken.None).Result;
+			var result = await alerts.UpdateAsync(alertId, null, emailTo, null, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

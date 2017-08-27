@@ -19,7 +19,7 @@ namespace StrongGrid.Resources.UnitTests
 		#endregion
 
 		[Fact]
-		public void Send()
+		public async Task SendAsync()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -29,7 +29,7 @@ namespace StrongGrid.Resources.UnitTests
 			var mail = new Mail(client);
 
 			// Act
-			var result = mail.SendAsync(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, CancellationToken.None).Result;
+			var result = await mail.SendAsync(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -38,7 +38,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Send_response_with_message_id()
+		public async Task SendAsync_response_with_message_id()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -53,7 +53,7 @@ namespace StrongGrid.Resources.UnitTests
 			var mail = new Mail(client);
 
 			// Act
-			var result = mail.SendAsync(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, CancellationToken.None).Result;
+			var result = await mail.SendAsync(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -62,7 +62,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void SendToSingleRecipient()
+		public async Task SendToSingleRecipientAsync()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -72,7 +72,7 @@ namespace StrongGrid.Resources.UnitTests
 			var mail = new Mail(client);
 
 			// Act
-			var result = mail.SendToSingleRecipientAsync(null, null, null, null, null).Result;
+			var result = await mail.SendToSingleRecipientAsync(null, null, null, null, null).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -81,7 +81,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void SendToMultipleRecipients()
+		public async Task SendToMultipleRecipientsAsync()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -98,7 +98,7 @@ namespace StrongGrid.Resources.UnitTests
 			var mail = new Mail(client);
 
 			// Act
-			var result = mail.SendToMultipleRecipientsAsync(recipients, null, null, null, null).Result;
+			var result = await mail.SendToMultipleRecipientsAsync(recipients, null, null, null, null).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
