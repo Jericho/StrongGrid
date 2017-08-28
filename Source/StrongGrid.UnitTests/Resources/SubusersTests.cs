@@ -165,7 +165,7 @@ namespace StrongGrid.Resources.UnitTests
 			var subusers = new Subusers(client);
 
 			// Act
-			var result = await subusers.GetAllAsync(null, 10, 0, CancellationToken.None).ConfigureAwait(false);
+			var result = await subusers.GetAllAsync(10, 0, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
