@@ -49,7 +49,6 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// List all Subusers for a parent
 		/// </summary>
-		/// <param name="username">The username.</param>
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
