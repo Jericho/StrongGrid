@@ -4,6 +4,7 @@ using StrongGrid.UnitTests;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
@@ -31,7 +32,7 @@ namespace StrongGrid.Resources.UnitTests
 		#endregion
 
 		[Fact]
-		public void GetAll()
+		public async Task GetAll()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -41,7 +42,7 @@ namespace StrongGrid.Resources.UnitTests
 			var globalSuppressions = new GlobalSuppressions(client);
 
 			// Act
-			var result = globalSuppressions.GetAllAsync(null, null, 50, 0, CancellationToken.None).Result;
+			var result = await globalSuppressions.GetAllAsync(null, null, 50, 0, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -51,7 +52,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Add()
+		public async Task AddAsync()
 		{
 			// Arrange
 			var emails = new[] { "test1@example.com", "test2@example.com" };
@@ -69,7 +70,7 @@ namespace StrongGrid.Resources.UnitTests
 			var globalSuppressions = new GlobalSuppressions(client);
 
 			// Act
-			globalSuppressions.AddAsync(emails, CancellationToken.None).Wait();
+			await globalSuppressions.AddAsync(emails, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -77,7 +78,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Remove()
+		public async Task RemoveAsync()
 		{
 			// Arrange
 			var email = "test1@example.com";
@@ -90,7 +91,7 @@ namespace StrongGrid.Resources.UnitTests
 			var globalSuppressions = new GlobalSuppressions(client);
 
 			// Act
-			globalSuppressions.RemoveAsync(email, CancellationToken.None).Wait();
+			await globalSuppressions.RemoveAsync(email, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -98,7 +99,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void IsUnsubscribed_true()
+		public async Task IsUnsubscribedAsync_true()
 		{
 			// Arrange
 			var email = "test1@example.com";
@@ -114,7 +115,7 @@ namespace StrongGrid.Resources.UnitTests
 			var globalSuppressions = new GlobalSuppressions(client);
 
 			// Act
-			var result = globalSuppressions.IsUnsubscribedAsync(email, CancellationToken.None).Result;
+			var result = await globalSuppressions.IsUnsubscribedAsync(email, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -123,7 +124,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void IsUnsubscribed_false()
+		public async Task IsUnsubscribedAsync_false()
 		{
 			// Arrange
 			var email = "test1@example.com";
@@ -138,7 +139,7 @@ namespace StrongGrid.Resources.UnitTests
 			var globalSuppressions = new GlobalSuppressions(client);
 
 			// Act
-			var result = globalSuppressions.IsUnsubscribedAsync(email, CancellationToken.None).Result;
+			var result = await globalSuppressions.IsUnsubscribedAsync(email, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

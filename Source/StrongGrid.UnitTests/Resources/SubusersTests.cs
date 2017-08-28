@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
@@ -109,7 +110,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Create()
+		public async Task CreateAsync()
 		{
 			// Arrange
 			var username = "TestUser";
@@ -124,7 +125,7 @@ namespace StrongGrid.Resources.UnitTests
 			var subusers = new Subusers(client);
 
 			// Act
-			var result = subusers.CreateAsync(username, email, password, ips, CancellationToken.None).Result;
+			var result = await subusers.CreateAsync(username, email, password, ips, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -133,7 +134,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Get()
+		public async Task GetAsync()
 		{
 			// Arrange
 			var username = "TestUser";
@@ -145,7 +146,7 @@ namespace StrongGrid.Resources.UnitTests
 			var subusers = new Subusers(client);
 
 			// Act
-			var result = subusers.GetAsync(username, CancellationToken.None).Result;
+			var result = await subusers.GetAsync(username, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -154,7 +155,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetAll()
+		public async Task GetAllAsync()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -164,7 +165,7 @@ namespace StrongGrid.Resources.UnitTests
 			var subusers = new Subusers(client);
 
 			// Act
-			var result = subusers.GetAllAsync(null, 10, 0, CancellationToken.None).Result;
+			var result = await subusers.GetAllAsync(10, 0, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -174,7 +175,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Delete()
+		public async Task DeleteAsync()
 		{
 			// Arrange
 			var keyId = "xxxxxxxx";
@@ -186,7 +187,7 @@ namespace StrongGrid.Resources.UnitTests
 			var subusers = new Subusers(client);
 
 			// Act
-			subusers.DeleteAsync(keyId, CancellationToken.None).Wait(CancellationToken.None);
+			await subusers.DeleteAsync(keyId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -194,7 +195,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Update_disabled()
+		public async Task UpdateAsync_disabled()
 		{
 			// Arrange
 			var username = "someuser";
@@ -208,7 +209,7 @@ namespace StrongGrid.Resources.UnitTests
 			var subusers = new Subusers(client);
 
 			// Act
-			subusers.UpdateAsync(username, disabled, ips, CancellationToken.None).Wait();
+			await subusers.UpdateAsync(username, disabled, ips, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -216,7 +217,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Update_ips()
+		public async Task UpdateAsync_ips()
 		{
 			// Arrange
 			var username = "someuser";
@@ -230,7 +231,7 @@ namespace StrongGrid.Resources.UnitTests
 			var subusers = new Subusers(client);
 
 			// Act
-			subusers.UpdateAsync(username, disabled, ips, CancellationToken.None).Wait();
+			await subusers.UpdateAsync(username, disabled, ips, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -238,7 +239,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetMonitorSettings()
+		public async Task GetMonitorSettingsAsync()
 		{
 			// Arrange
 			var username = "someuser";
@@ -250,7 +251,7 @@ namespace StrongGrid.Resources.UnitTests
 			var subusers = new Subusers(client);
 
 			// Act
-			var result = subusers.GetMonitorSettingsAsync(username, CancellationToken.None).Result;
+			var result = await subusers.GetMonitorSettingsAsync(username, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -259,7 +260,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void CreateMonitorSettings()
+		public async Task CreateMonitorSettingsAsync()
 		{
 			// Arrange
 			var username = "someuser";
@@ -273,7 +274,7 @@ namespace StrongGrid.Resources.UnitTests
 			var subusers = new Subusers(client);
 
 			// Act
-			var result = subusers.CreateMonitorSettingsAsync(username, email, frequency, CancellationToken.None).Result;
+			var result = await subusers.CreateMonitorSettingsAsync(username, email, frequency, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -282,7 +283,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void UpdateMonitorSettings_email()
+		public async Task UpdateMonitorSettingsAsync_email()
 		{
 			// Arrange
 			var username = "someuser";
@@ -296,7 +297,7 @@ namespace StrongGrid.Resources.UnitTests
 			var subusers = new Subusers(client);
 
 			// Act
-			var result = subusers.UpdateMonitorSettingsAsync(username, email, frequency, CancellationToken.None).Result;
+			var result = await subusers.UpdateMonitorSettingsAsync(username, email, frequency, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -305,7 +306,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void UpdateMonitorSettings_frequency()
+		public async Task UpdateMonitorSettingsAsync_frequency()
 		{
 			// Arrange
 			var username = "someuser";
@@ -319,7 +320,7 @@ namespace StrongGrid.Resources.UnitTests
 			var subusers = new Subusers(client);
 
 			// Act
-			var result = subusers.UpdateMonitorSettingsAsync(username, email, frequency, CancellationToken.None).Result;
+			var result = await subusers.UpdateMonitorSettingsAsync(username, email, frequency, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -328,7 +329,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void DeleteMonitorSettings()
+		public async Task DeleteMonitorSettingsAsync()
 		{
 			// Arrange
 			var username = "someuser";
@@ -340,7 +341,7 @@ namespace StrongGrid.Resources.UnitTests
 			var subusers = new Subusers(client);
 
 			// Act
-			subusers.DeleteMonitorSettingsAsync(username, CancellationToken.None).Wait(CancellationToken.None);
+			await subusers.DeleteMonitorSettingsAsync(username, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

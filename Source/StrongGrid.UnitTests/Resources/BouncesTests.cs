@@ -8,6 +8,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
@@ -58,7 +59,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetAll_between_startdate_and_enddate()
+		public async Task GetAllAsync_between_startdate_and_enddate()
 		{
 			// Arrange
 			var start = new DateTime(2015, 6, 8, 0, 0, 0, DateTimeKind.Utc);
@@ -71,7 +72,7 @@ namespace StrongGrid.Resources.UnitTests
 			var bounces = new Bounces(client);
 
 			// Act
-			var result = bounces.GetAllAsync(start, end, CancellationToken.None).Result;
+			var result = await bounces.GetAllAsync(start, end, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -81,7 +82,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Get_by_email()
+		public async Task GetAsync_by_email()
 		{
 			// Arrange
 			var email = "bounce1@test.com";
@@ -93,7 +94,7 @@ namespace StrongGrid.Resources.UnitTests
 			var bounces = new Bounces(client);
 
 			// Act
-			var result = bounces.GetAsync(email, CancellationToken.None).Result;
+			var result = await bounces.GetAsync(email, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -103,7 +104,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void DeleteAll()
+		public async Task DeleteAllAsync()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -113,7 +114,7 @@ namespace StrongGrid.Resources.UnitTests
 			var bounces = new Bounces(client);
 
 			// Act
-			bounces.DeleteAllAsync(CancellationToken.None).Wait();
+			await bounces.DeleteAllAsync(CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -121,7 +122,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Delete_by_single_email()
+		public async Task DeleteAsync_by_single_email()
 		{
 			// Arrange
 			var email = "email1@test.com";
@@ -133,7 +134,7 @@ namespace StrongGrid.Resources.UnitTests
 			var bounces = new Bounces(client);
 
 			// Act
-			bounces.DeleteAsync(email, CancellationToken.None).Wait();
+			await bounces.DeleteAsync(email, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -141,7 +142,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Delete_by_multiple_emails()
+		public async Task DeleteAsync_by_multiple_emails()
 		{
 			// Arrange
 			var emails = new[] { "email1@test.com", "email2@test.com" };
@@ -153,7 +154,7 @@ namespace StrongGrid.Resources.UnitTests
 			var bounces = new Bounces(client);
 
 			// Act
-			bounces.DeleteAsync(emails, CancellationToken.None).Wait();
+			await bounces.DeleteAsync(emails, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

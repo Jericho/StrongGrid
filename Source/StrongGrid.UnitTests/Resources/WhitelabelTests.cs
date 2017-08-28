@@ -6,6 +6,7 @@ using StrongGrid.UnitTests;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
@@ -337,7 +338,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetAllDomains_include_subusers()
+		public async Task GetAllDomainsAsync_include_subusers()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -347,7 +348,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			var result = whitelabel.GetAllDomainsAsync(excludeSubusers: false).Result;
+			var result = await whitelabel.GetAllDomainsAsync(excludeSubusers: false).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -357,7 +358,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetAllDomains_exclude_subusers()
+		public async Task GetAllDomainsAsync_exclude_subusers()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -367,7 +368,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			var result = whitelabel.GetAllDomainsAsync(excludeSubusers: true).Result;
+			var result = await whitelabel.GetAllDomainsAsync(excludeSubusers: true).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -377,7 +378,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetDomain()
+		public async Task GetDomainAsync()
 		{
 			// Arrange
 			var domainId = 123L;
@@ -389,7 +390,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			var result = whitelabel.GetDomainAsync(domainId).Result;
+			var result = await whitelabel.GetDomainAsync(domainId).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -398,7 +399,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void CreateDomain()
+		public async Task CreateDomainAsync()
 		{
 			// Arrange
 			var domain = "";
@@ -414,7 +415,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			var result = whitelabel.CreateDomainAsync(domain, subdomain, automaticSecurity, customSpf, isDefault, CancellationToken.None).Result;
+			var result = await whitelabel.CreateDomainAsync(domain, subdomain, automaticSecurity, customSpf, isDefault, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -423,7 +424,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void UpdateDomain()
+		public async Task UpdateDomainAsync()
 		{
 			// Arrange
 			var domainId = 123L;
@@ -437,7 +438,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			var result = whitelabel.UpdateDomainAsync(domainId, isDefault, customSpf, CancellationToken.None).Result;
+			var result = await whitelabel.UpdateDomainAsync(domainId, isDefault, customSpf, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -446,7 +447,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void DeleteDomain()
+		public async Task DeleteDomainAsync()
 		{
 			// Arrange
 			var domainId = 48L;
@@ -458,7 +459,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			whitelabel.DeleteDomainAsync(domainId, CancellationToken.None).Wait(CancellationToken.None);
+			await whitelabel.DeleteDomainAsync(domainId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -466,7 +467,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void AddIpAddressToDomain()
+		public async Task AddIpAddressToDomainAsync()
 		{
 			// Arrange
 			var domainId = 123L;
@@ -479,7 +480,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			var result = whitelabel.AddIpAddressToDomainAsync(domainId, ipAddress, CancellationToken.None).Result;
+			var result = await whitelabel.AddIpAddressToDomainAsync(domainId, ipAddress, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -488,7 +489,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void DeleteIpAddressFromDomain()
+		public async Task DeleteIpAddressFromDomainAsync()
 		{
 			// Arrange
 			var domainId = 48L;
@@ -501,7 +502,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			var result = whitelabel.DeleteIpAddressFromDomainAsync(domainId, ipAddress, CancellationToken.None).Result;
+			var result = await whitelabel.DeleteIpAddressFromDomainAsync(domainId, ipAddress, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -510,7 +511,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void ValidateDomain()
+		public async Task ValidateDomainAsync()
 		{
 			// Arrange
 			var domainId = 1L;
@@ -545,7 +546,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			var result = whitelabel.ValidateDomainAsync(domainId).Result;
+			var result = await whitelabel.ValidateDomainAsync(domainId).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -564,7 +565,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetAssociatedDomain()
+		public async Task GetAssociatedDomainAsync()
 		{
 			// Arrange
 			var username = "abc123";
@@ -576,7 +577,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			var result = whitelabel.GetAssociatedDomainAsync(username, CancellationToken.None).Result;
+			var result = await whitelabel.GetAssociatedDomainAsync(username, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -585,7 +586,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void DisassociateDomain()
+		public async Task DisassociateDomainAsync()
 		{
 			// Arrange
 			var username = "abc123";
@@ -597,7 +598,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			whitelabel.DisassociateDomainAsync(username, CancellationToken.None).Wait(CancellationToken.None);
+			await whitelabel.DisassociateDomainAsync(username, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -605,7 +606,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void AssociateDomain()
+		public async Task AssociateDomainAsync()
 		{
 			// Arrange
 			var domainId = 123L;
@@ -618,7 +619,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			var result = whitelabel.AssociateDomainAsync(domainId, ipAddress, CancellationToken.None).Result;
+			var result = await whitelabel.AssociateDomainAsync(domainId, ipAddress, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -627,7 +628,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetAllIpsAsync()
+		public async Task GetAllIpsAsync()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -637,7 +638,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			var result = whitelabel.GetAllIpsAsync().Result;
+			var result = await whitelabel.GetAllIpsAsync().ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -647,7 +648,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetIp()
+		public async Task GetIpAsync()
 		{
 			// Arrange
 			var id = 123L;
@@ -659,7 +660,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			var result = whitelabel.GetIpAsync(id).Result;
+			var result = await whitelabel.GetIpAsync(id).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -668,7 +669,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void CreateIp()
+		public async Task CreateIpAsync()
 		{
 			// Arrange
 			var ipAddress = "192.168.77.1";
@@ -682,7 +683,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			var result = whitelabel.CreateIpAsync(ipAddress, domain, subdomain, CancellationToken.None).Result;
+			var result = await whitelabel.CreateIpAsync(ipAddress, domain, subdomain, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -691,7 +692,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void DeleteIp()
+		public async Task DeleteIpAsync()
 		{
 			// Arrange
 			var domainId = 48L;
@@ -703,7 +704,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			whitelabel.DeleteIpAsync(domainId, CancellationToken.None).Wait(CancellationToken.None);
+			await whitelabel.DeleteIpAsync(domainId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -711,7 +712,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void ValidateIp()
+		public async Task ValidateIpAsync()
 		{
 			// Arrange
 			var id = 1L;
@@ -734,7 +735,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			var result = whitelabel.ValidateIpAsync(id).Result;
+			var result = await whitelabel.ValidateIpAsync(id).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -747,7 +748,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetLink()
+		public async Task GetLinkAsync()
 		{
 			// Arrange
 			var linkId = 123L;
@@ -759,7 +760,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			var result = whitelabel.GetLinkAsync(linkId).Result;
+			var result = await whitelabel.GetLinkAsync(linkId).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -768,7 +769,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void CreateLink()
+		public async Task CreateLinkAsync()
 		{
 			// Arrange
 			var domain = "example.com";
@@ -782,7 +783,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			var result = whitelabel.CreateLinkAsync(domain, subdomain, isDefault, CancellationToken.None).Result;
+			var result = await whitelabel.CreateLinkAsync(domain, subdomain, isDefault, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -791,7 +792,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void UpdateLink()
+		public async Task UpdateLinkAsync()
 		{
 			// Arrange
 			var linkId = 123L;
@@ -804,7 +805,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			var result = whitelabel.UpdateLinkAsync(linkId, isDefault).Result;
+			var result = await whitelabel.UpdateLinkAsync(linkId, isDefault).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -813,7 +814,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void DeleteLink()
+		public async Task DeleteLinkAsync()
 		{
 			// Arrange
 			var linkId = 48L;
@@ -825,7 +826,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			whitelabel.DeleteLinkAsync(linkId, CancellationToken.None).Wait(CancellationToken.None);
+			await whitelabel.DeleteLinkAsync(linkId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -833,7 +834,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetDefaultLink()
+		public async Task GetDefaultLinkAsync()
 		{
 			// Arrange
 			var domain = "example.com";
@@ -845,7 +846,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			var result = whitelabel.GetDefaultLinkAsync(domain).Result;
+			var result = await whitelabel.GetDefaultLinkAsync(domain).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -854,7 +855,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void ValidateLink()
+		public async Task ValidateLinkAsync()
 		{
 			// Arrange
 			var linkId = 1L;
@@ -881,7 +882,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			var result = whitelabel.ValidateLinkAsync(linkId).Result;
+			var result = await whitelabel.ValidateLinkAsync(linkId).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -896,7 +897,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetAssociatedLink()
+		public async Task GetAssociatedLinkAsync()
 		{
 			// Arrange
 			var username = "abc123";
@@ -908,7 +909,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			var result = whitelabel.GetAssociatedLinkAsync(username, CancellationToken.None).Result;
+			var result = await whitelabel.GetAssociatedLinkAsync(username, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -917,7 +918,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void DisassociateLink()
+		public async Task DisassociateLinkAsync()
 		{
 			// Arrange
 			var username = "abc123";
@@ -929,7 +930,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			whitelabel.DisassociateLinkAsync(username, CancellationToken.None).Wait(CancellationToken.None);
+			await whitelabel.DisassociateLinkAsync(username, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -937,7 +938,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void AssociateLink()
+		public async Task AssociateLinkAsync()
 		{
 			// Arrange
 			var linkId = 123L;
@@ -950,7 +951,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			var result = whitelabel.AssociateLinkAsync(linkId, username, CancellationToken.None).Result;
+			var result = await whitelabel.AssociateLinkAsync(linkId, username, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -959,7 +960,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetAllLinksAsync()
+		public async Task GetAllLinksAsync()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -969,7 +970,7 @@ namespace StrongGrid.Resources.UnitTests
 			var whitelabel = new Whitelabel(client);
 
 			// Act
-			var result = whitelabel.GetAllLinksAsync().Result;
+			var result = await whitelabel.GetAllLinksAsync().ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

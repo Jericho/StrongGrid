@@ -3,6 +3,7 @@ using Shouldly;
 using StrongGrid.UnitTests;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
@@ -24,7 +25,7 @@ namespace StrongGrid.Resources.UnitTests
 		#endregion
 
 		[Fact]
-		public void Get_multiple()
+		public async Task GetAsync_multiple()
 		{
 			// Arrange
 			var limit = 25;
@@ -37,7 +38,7 @@ namespace StrongGrid.Resources.UnitTests
 			var categories = new Categories(client);
 
 			// Act
-			var result = categories.GetAsync(null, limit, offset, CancellationToken.None).Result;
+			var result = await categories.GetAsync(null, limit, offset, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

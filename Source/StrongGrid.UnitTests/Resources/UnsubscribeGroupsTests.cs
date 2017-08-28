@@ -6,6 +6,7 @@ using StrongGrid.UnitTests;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
@@ -60,7 +61,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Create()
+		public async Task CreateAsync()
 		{
 			// Arrange
 			var name = "Product Suggestions";
@@ -80,7 +81,7 @@ namespace StrongGrid.Resources.UnitTests
 			var goups = new UnsubscribeGroups(client);
 
 			// Act
-			var result = goups.CreateAsync(name, description, isDefault, CancellationToken.None).Result;
+			var result = await goups.CreateAsync(name, description, isDefault, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -92,7 +93,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Get()
+		public async Task GetAsync()
 		{
 			// Arrange
 			var groupId = 100;
@@ -104,7 +105,7 @@ namespace StrongGrid.Resources.UnitTests
 			var groups = new UnsubscribeGroups(client);
 
 			// Act
-			var result = groups.GetAsync(groupId, CancellationToken.None).Result;
+			var result = await groups.GetAsync(groupId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -113,7 +114,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetAll()
+		public async Task GetAllAsync()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -123,7 +124,7 @@ namespace StrongGrid.Resources.UnitTests
 			var groups = new UnsubscribeGroups(client);
 
 			// Act
-			var result = groups.GetAllAsync(CancellationToken.None).Result;
+			var result = await groups.GetAllAsync(CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -135,7 +136,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetMultiple()
+		public async Task GetMultipleAsync()
 		{
 			// Arrange
 			var groupIds = new[] { 100, 101 };
@@ -147,7 +148,7 @@ namespace StrongGrid.Resources.UnitTests
 			var groups = new UnsubscribeGroups(client);
 
 			// Act
-			var result = groups.GetMultipleAsync(groupIds, CancellationToken.None).Result;
+			var result = await groups.GetMultipleAsync(groupIds, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -157,7 +158,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Delete()
+		public async Task DeleteAsync()
 		{
 			// Arrange
 			var groupId = 100;
@@ -169,7 +170,7 @@ namespace StrongGrid.Resources.UnitTests
 			var groups = new UnsubscribeGroups(client);
 
 			// Act
-			groups.DeleteAsync(groupId, CancellationToken.None).Wait(CancellationToken.None);
+			await groups.DeleteAsync(groupId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -177,7 +178,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Update()
+		public async Task UpdateAsync()
 		{
 			// Arrange
 			var groupId = 103;
@@ -191,7 +192,7 @@ namespace StrongGrid.Resources.UnitTests
 			var groups = new UnsubscribeGroups(client);
 
 			// Act
-			var result = groups.UpdateAsync(groupId, name, description, CancellationToken.None).Result;
+			var result = await groups.UpdateAsync(groupId, name, description, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

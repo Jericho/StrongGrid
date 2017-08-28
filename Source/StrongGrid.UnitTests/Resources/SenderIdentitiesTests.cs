@@ -7,6 +7,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
@@ -99,7 +100,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Create()
+		public async Task CreateAsync()
 		{
 			// Arrange
 			var nickname = "My Sender ID";
@@ -119,7 +120,7 @@ namespace StrongGrid.Resources.UnitTests
 			var senderIdentities = new SenderIdentities(client);
 
 			// Act
-			var result = senderIdentities.CreateAsync(nickname, from, replyTo, address, address2, city, state, zip, country, CancellationToken.None).Result;
+			var result = await senderIdentities.CreateAsync(nickname, from, replyTo, address, address2, city, state, zip, country, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -129,7 +130,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetAll()
+		public async Task GetAllAsync()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -139,7 +140,7 @@ namespace StrongGrid.Resources.UnitTests
 			var senderIdentities = new SenderIdentities(client);
 
 			// Act
-			var result = senderIdentities.GetAllAsync(CancellationToken.None).Result;
+			var result = await senderIdentities.GetAllAsync(CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -150,7 +151,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Update()
+		public async Task UpdateAsync()
 		{
 			// Arrange
 			var identityId = 1;
@@ -163,7 +164,7 @@ namespace StrongGrid.Resources.UnitTests
 			var senderIdentities = new SenderIdentities(client);
 
 			// Act
-			var result = senderIdentities.UpdateAsync(identityId, nickname, null, null, null, null, null, null, null, null, CancellationToken.None).Result;
+			var result = await senderIdentities.UpdateAsync(identityId, nickname, null, null, null, null, null, null, null, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -172,7 +173,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Delete()
+		public async Task DeleteAsync()
 		{
 			// Arrange
 			var identityId = 1;
@@ -184,7 +185,7 @@ namespace StrongGrid.Resources.UnitTests
 			var senderIdentities = new SenderIdentities(client);
 
 			// Act
-			senderIdentities.DeleteAsync(identityId, CancellationToken.None).Wait(CancellationToken.None);
+			await senderIdentities.DeleteAsync(identityId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -192,7 +193,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void ResendVerification()
+		public async Task ResendVerificationAsync()
 		{
 			// Arrange
 			var identityId = 1;
@@ -204,7 +205,7 @@ namespace StrongGrid.Resources.UnitTests
 			var senderIdentities = new SenderIdentities(client);
 
 			// Act
-			senderIdentities.ResendVerification(identityId, CancellationToken.None).Wait(CancellationToken.None);
+			await senderIdentities.ResendVerification(identityId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -212,7 +213,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Get()
+		public async Task GetAsync()
 		{
 			// Arrange
 			var identityId = 1;
@@ -224,7 +225,7 @@ namespace StrongGrid.Resources.UnitTests
 			var senderIdentities = new SenderIdentities(client);
 
 			// Act
-			var result = senderIdentities.GetAsync(identityId, CancellationToken.None).Result;
+			var result = await senderIdentities.GetAsync(identityId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

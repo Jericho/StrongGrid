@@ -6,6 +6,7 @@ using StrongGrid.UnitTests;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
@@ -60,7 +61,7 @@ namespace StrongGrid.Resources.UnitTests
 
 
 		[Fact]
-		public void Get()
+		public async Task GetAsync()
 		{
 			// Arrange
 
@@ -87,7 +88,7 @@ namespace StrongGrid.Resources.UnitTests
 			var webhooks = new WebhookSettings(client);
 
 			// Act
-			var result = webhooks.GetAsync(CancellationToken.None).Result;
+			var result = await webhooks.GetAsync(CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -109,7 +110,7 @@ namespace StrongGrid.Resources.UnitTests
 
 
 		[Fact]
-		public void Update()
+		public async Task UpdateAsync()
 		{
 			// Arrange
 			var enabled = true;
@@ -149,7 +150,7 @@ namespace StrongGrid.Resources.UnitTests
 			var webhooks = new WebhookSettings(client);
 
 			// Act
-			var result = webhooks.UpdateAsync(enabled, url, bounce, click, deferred, delivered, dropped, groupResubscribe, groupUnsubscribe, open, processed, spamReport, unsubscribe, CancellationToken.None).Result;
+			var result = await webhooks.UpdateAsync(enabled, url, bounce, click, deferred, delivered, dropped, groupResubscribe, groupUnsubscribe, open, processed, spamReport, unsubscribe, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -158,7 +159,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void SendTest()
+		public async Task SendTestAsync()
 		{
 			// Arrange
 			var url = "url";
@@ -170,7 +171,7 @@ namespace StrongGrid.Resources.UnitTests
 			var webhooks = new WebhookSettings(client);
 
 			// Act
-			webhooks.SendTestAsync(url, CancellationToken.None).Wait();
+			await webhooks.SendTestAsync(url, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

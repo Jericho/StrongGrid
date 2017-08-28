@@ -6,6 +6,7 @@ using StrongGrid.UnitTests;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
@@ -151,7 +152,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetAccessRequestsAsync()
+		public async Task GetAccessRequestsAsync()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -161,7 +162,7 @@ namespace StrongGrid.Resources.UnitTests
 			var teammates = new Teammates(client);
 
 			// Act
-			var result = teammates.GetAccessRequestsAsync(10, 0, CancellationToken.None).Result;
+			var result = await teammates.GetAccessRequestsAsync(10, 0, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -171,7 +172,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void DenyAccessRequestsAsync()
+		public async Task DenyAccessRequestsAsync()
 		{
 			// Arrange
 			var requestId = "abc123";
@@ -183,7 +184,7 @@ namespace StrongGrid.Resources.UnitTests
 			var teammates = new Teammates(client);
 
 			// Act
-			teammates.DenyAccessRequestAsync(requestId, CancellationToken.None).Wait();
+			await teammates.DenyAccessRequestAsync(requestId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -191,7 +192,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void AproveAccessRequestAsync()
+		public async Task AproveAccessRequestAsync()
 		{
 			// Arrange
 			var requestId = "abc123";
@@ -203,7 +204,7 @@ namespace StrongGrid.Resources.UnitTests
 			var teammates = new Teammates(client);
 
 			// Act
-			teammates.ApproveAccessRequestAsync(requestId, CancellationToken.None).Wait();
+			await teammates.ApproveAccessRequestAsync(requestId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -211,7 +212,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void ResendInvitationAsync()
+		public async Task ResendInvitationAsync()
 		{
 			// Arrange
 			var token = "abc123";
@@ -223,7 +224,7 @@ namespace StrongGrid.Resources.UnitTests
 			var teammates = new Teammates(client);
 
 			// Act
-			teammates.ResendInvitationAsync(token, CancellationToken.None).Wait();
+			await teammates.ResendInvitationAsync(token, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -231,7 +232,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetAllPendingInvitationsAsync()
+		public async Task GetAllPendingInvitationsAsync()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -241,7 +242,7 @@ namespace StrongGrid.Resources.UnitTests
 			var teammates = new Teammates(client);
 
 			// Act
-			var result = teammates.GetAllPendingInvitationsAsync(CancellationToken.None).Result;
+			var result = await teammates.GetAllPendingInvitationsAsync(CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -251,7 +252,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void DeleteInvitationAsync()
+		public async Task DeleteInvitationAsync()
 		{
 			// Arrange
 			var token = "xxxxxxxx";
@@ -263,7 +264,7 @@ namespace StrongGrid.Resources.UnitTests
 			var teammates = new Teammates(client);
 
 			// Act
-			teammates.DeleteInvitationAsync(token, CancellationToken.None).Wait(CancellationToken.None);
+			await teammates.DeleteInvitationAsync(token, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -271,7 +272,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void InviteTeammateAsync()
+		public async Task InviteTeammateAsync()
 		{
 			// Arrange
 			var email = "dummy@example.com";
@@ -284,7 +285,7 @@ namespace StrongGrid.Resources.UnitTests
 			var teammates = new Teammates(client);
 
 			// Act
-			var result = teammates.InviteTeammateAsync(email, scopes, CancellationToken.None).Result;
+			var result = await teammates.InviteTeammateAsync(email, scopes, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -293,7 +294,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void InviteTeammateAsAdminAsync()
+		public async Task InviteTeammateAsAdminAsync()
 		{
 			// Arrange
 			var email = "dummy@example.com";
@@ -305,7 +306,7 @@ namespace StrongGrid.Resources.UnitTests
 			var teammates = new Teammates(client);
 
 			// Act
-			var result = teammates.InviteTeammateAsAdminAsync(email, CancellationToken.None).Result;
+			var result = await teammates.InviteTeammateAsAdminAsync(email, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -314,7 +315,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetAllTeammatesAsync()
+		public async Task GetAllTeammatesAsync()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -324,7 +325,7 @@ namespace StrongGrid.Resources.UnitTests
 			var teammates = new Teammates(client);
 
 			// Act
-			var result = teammates.GetAllTeammatesAsync(10, 0, CancellationToken.None).Result;
+			var result = await teammates.GetAllTeammatesAsync(10, 0, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -334,7 +335,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetTeammateAsync()
+		public async Task GetTeammateAsync()
 		{
 			// Arrange
 			var username = "xxxxxxxx";
@@ -346,7 +347,7 @@ namespace StrongGrid.Resources.UnitTests
 			var teammates = new Teammates(client);
 
 			// Act
-			var result = teammates.GetTeammateAsync(username, CancellationToken.None).Result;
+			var result = await teammates.GetTeammateAsync(username, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -355,7 +356,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void UpdateTeammatePermissionsAsync()
+		public async Task UpdateTeammatePermissionsAsync()
 		{
 			// Arrange
 			var username = "xxxxxxxx";
@@ -368,7 +369,7 @@ namespace StrongGrid.Resources.UnitTests
 			var teammates = new Teammates(client);
 
 			// Act
-			var result = teammates.UpdateTeammatePermissionsAsync(username, scopes, CancellationToken.None).Result;
+			var result = await teammates.UpdateTeammatePermissionsAsync(username, scopes, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -377,7 +378,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void DeleteTeammateAsync()
+		public async Task DeleteTeammateAsync()
 		{
 			// Arrange
 			var username = "xxxxxxxx";
@@ -389,7 +390,7 @@ namespace StrongGrid.Resources.UnitTests
 			var teammates = new Teammates(client);
 
 			// Act
-			teammates.DeleteTeammateAsync(username, CancellationToken.None).Wait(CancellationToken.None);
+			await teammates.DeleteTeammateAsync(username, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
