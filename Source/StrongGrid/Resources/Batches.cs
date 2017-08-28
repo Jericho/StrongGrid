@@ -128,6 +128,22 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
+		/// Get the cancel/paused scheduled send information for a specific batch_id
+		/// </summary>
+		/// <param name="batchId">The batch identifier.</param>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// A <see cref="BatchInfo" />.
+		/// </returns>
+		public Task<BatchInfo> GetAsync(string batchId, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			return _client
+				.GetAsync($"user/scheduled_sends/{batchId}")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<BatchInfo>();
+		}
+
+		/// <summary>
 		/// Delete the cancellation/pause of a scheduled send.
 		/// </summary>
 		/// <param name="batchId">The batch identifier.</param>
