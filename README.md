@@ -12,13 +12,13 @@
 
 StrongGrid is a strongly typed library for SendGrid's v3 API.
 
-It started out in February 2016 as a fork of SendGrid's own library. At the time, the SendGrid C# client for their API extensively used the `dynamic` type which was very inconvenient and made it very difficult for developers. Furthemore, their C# client only covered the `mail` end point but did not allow access to other end points in their `email marketing` API such as creating lists and segments, importing contacts, etc. I submited a [pull request](https://github.com/sendgrid/sendgrid-csharp/pull/211) to SendGrid in March 2016 but it was not accepted and eventually closed in June 2016.
+It started out in February 2016 as a fork of SendGrid's own library. At the time, the SendGrid C# client for their API extensively used the `dynamic` type which was very inconvenient and made it very difficult for developers. Furthermore, their C# client only covered the `mail` end point but did not allow access to other end points in their `email marketing` API such as creating lists and segments, importing contacts, etc. I submited a [pull request](https://github.com/sendgrid/sendgrid-csharp/pull/211) to SendGrid in March 2016 but it was not accepted and eventually closed in June 2016.
 
-In October 2016 I decided to release this library as a nuget package since SendGrid's library was still using `dynamic` and lacking strong typing.
+In October 2016 I decided to release this library as a nuget package since SendGrid's library was still using `dynamic` and lacking strong typing. As of February 14, 2017 `dynamic` was removed from [SendGrid's official csharp library](https://github.com/sendgrid/sendgrid-csharp) and support for .Net Standard was added.
 
 StrongGrid includes a client that allows you to interact with all the "resources" in the SendGrid API (e.g.: send an email, manage lists, contacts and segments, search for contacts matching criteria, create API keys, etc.).
 
-StrongGrid also includes a parser for webhook sent from SendGrid to your own WebAPI. This parser supports the two types of webhooks that SendGrid can post to your API: the event webhook and the inbound parse webhook. 
+StrongGrid also includes a parser for webhook sent from SendGrid to your own WebAPI. This parser supports the two types of webhooks that SendGrid can post to your API: the Event Webhook and the Inbound Parse Webhook. 
 
 If you information about how to setup the SendGrid webhooks, please consult the following resources:
 - [Webhooks Overview](https://sendgrid.com/docs/API_Reference/Webhooks/debug.html)
