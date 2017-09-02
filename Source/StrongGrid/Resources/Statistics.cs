@@ -258,5 +258,28 @@ namespace StrongGrid.Resources
 
 			return request.AsSendGridObject<Statistic[]>();
 		}
+
+		/// <summary>
+		/// Gets inbound parse webhook statistics
+		/// </summary>
+		/// <param name="startDate">The starting date of the statistics to retrieve.</param>
+		/// <param name="endDate">The end date of the statistics to retrieve. Defaults to today.</param>
+		/// <param name="aggregatedBy">How to group the statistics, must be day|week|month</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="Statistic" />.
+		/// </returns>
+		public Task<Statistic[]> GetInboundParseWebhokStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var request = _client
+				.GetAsync($"user/webhooks/parse/{_endpoint}")
+				.WithArgument("start_date", startDate.ToString("yyyy-MM-dd"))
+				.WithCancellationToken(cancellationToken);
+
+			if (endDate.HasValue) request.WithArgument("end_date", endDate.Value.ToString("yyyy-MM-dd"));
+			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString());
+
+			return request.AsSendGridObject<Statistic[]>();
+		}
 	}
 }

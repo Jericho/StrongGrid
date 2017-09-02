@@ -57,6 +57,7 @@ namespace StrongGrid.IntegrationTests
 				InvalidEmails(client, pauseAfterTests);
 				Batches(client, pauseAfterTests);
 				Whitelabel(client, pauseAfterTests);
+				WebhookSettings(client, pauseAfterTests);
 				WebhookStats(client, pauseAfterTests);
 				AccessManagement(client, pauseAfterTests);
 				IpAddresses(client, pauseAfterTests);
@@ -998,6 +999,21 @@ namespace StrongGrid.IntegrationTests
 			ConcludeTests(pauseAfterTests);
 
 			**************************************************/
+		}
+
+		private static void WebhookSettings(IClient client, bool pauseAfterTests)
+		{
+			Console.WriteLine("\n***** WEBHOOK SETTINGS *****");
+
+			// GET THE EVENT SETTINGS
+			var eventWebhookSettings = client.WebhookSettings.GetEventWebhookSettingsAsync().Result;
+			Console.WriteLine("The event webhooks settings have been retrieved.");
+
+			// GET THE INBOUND PARSE SETTINGS
+			var inboundParseWebhookSettings = client.WebhookSettings.GetAllInboundParseWebhookSettings().Result;
+			Console.WriteLine("The inbound parse webhooks settings have been retrieved.");
+
+			ConcludeTests(pauseAfterTests);
 		}
 
 		// to get your public IP address we loop through an array
