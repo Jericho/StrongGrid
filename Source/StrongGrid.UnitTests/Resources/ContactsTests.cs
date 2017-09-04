@@ -169,12 +169,13 @@ namespace StrongGrid.Resources.UnitTests
 			var contacts = new Contacts(client);
 
 			// Act
-			Should.ThrowAsync<Exception>(() => contacts.CreateAsync(email, firstName, lastName, null, CancellationToken.None))
-				.Result.Message.ShouldBe("Invalid email.");
+			var result = await Should.ThrowAsync<Exception>(async () => await contacts.CreateAsync(email, firstName, lastName, null, CancellationToken.None).ConfigureAwait(false));
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
+
+			result.Message.ShouldBe("Invalid email.");
 		}
 
 		[Fact]
@@ -305,7 +306,7 @@ namespace StrongGrid.Resources.UnitTests
 			var contacts = new Contacts(client);
 
 			// Act
-			var result = await Should.ThrowAsync<Exception>(async () => await contacts.UpdateAsync(email, null, lastName, null, CancellationToken.None).ConfigureAwait(false));
+			var result = await Should.ThrowAsync<Exception>(async () => await contacts.UpdateAsync(email, null, lastName, null, CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

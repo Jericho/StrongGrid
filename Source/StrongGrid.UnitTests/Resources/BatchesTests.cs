@@ -4,7 +4,6 @@ using StrongGrid.UnitTests;
 using System;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -130,7 +129,7 @@ namespace StrongGrid.Resources.UnitTests
 			var batches = new Batches(client);
 
 			// Act
-			var result = await Should.ThrowAsync<Exception>(async () => await batches.ValidateBatchIdAsync(batchId).ConfigureAwait(false));
+			var result = await Should.ThrowAsync<Exception>(async () => await batches.ValidateBatchIdAsync(batchId).ConfigureAwait(false)).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

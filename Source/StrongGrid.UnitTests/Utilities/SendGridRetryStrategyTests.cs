@@ -5,6 +5,7 @@ using StrongGrid.Utilities;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.UnitTests
@@ -143,7 +144,7 @@ namespace StrongGrid.UnitTests
 		}
 
 		[Fact]
-		public void Retry_success()
+		public async Task Retry_success()
 		{
 			// Arrange
 			var mockUri = Utils.GetSendGridApiUri("testing");
@@ -154,7 +155,7 @@ namespace StrongGrid.UnitTests
 			var client = Utils.GetFluentClient(mockHttp);
 
 			// Act
-			var result = client.SendAsync(HttpMethod.Get, "testing").AsString().Result;
+			var result = await client.SendAsync(HttpMethod.Get, "testing").AsString().ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -163,7 +164,7 @@ namespace StrongGrid.UnitTests
 		}
 
 		[Fact]
-		public void Retry_failure()
+		public async Task Retry_failure()
 		{
 			// Arrange
 			var mockUri = Utils.GetSendGridApiUri("testing");
@@ -177,12 +178,13 @@ namespace StrongGrid.UnitTests
 			var client = Utils.GetFluentClient(mockHttp);
 
 			// Act
-			Should.ThrowAsync<Exception>(() => client.SendAsync(HttpMethod.Get, "testing").AsResponse())
-				.Result.Message.ShouldBe("The HTTP request failed, and the retry coordinator gave up after the maximum 5 retries");
+			var result = await Should.ThrowAsync<Exception>(async () => await client.SendAsync(HttpMethod.Get, "testing").AsResponse().ConfigureAwait(false)).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
+
+			result.Message.ShouldBe("The HTTP request failed, and the retry coordinator gave up after the maximum 5 retries");
 		}
 	}
 }

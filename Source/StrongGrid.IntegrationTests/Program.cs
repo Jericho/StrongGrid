@@ -38,35 +38,38 @@ namespace StrongGrid.IntegrationTests
 
 			try
 			{
+				AccessManagement(client, pauseAfterTests);
+				Alerts(client, pauseAfterTests);
 				ApiKeys(client, pauseAfterTests);
+				Batches(client, pauseAfterTests);
+				Blocks(client, pauseAfterTests);
+				Bounces(client, pauseAfterTests);
 				CampaignsAndSenderIdentities(client, pauseAfterTests);
 				Categories(client, pauseAfterTests);
 				ContactsAndCustomFields(client, pauseAfterTests);
 				GlobalSuppressions(client, pauseAfterTests);
-				ListsAndSegments(client, pauseAfterTests);
-				Mail(client, pauseAfterTests);
-				UnsubscribeGroupsAndSuppressions(client, pauseAfterTests);
-				User(client, pauseAfterTests);
-				Statistics(client, pauseAfterTests);
-				Templates(client, pauseAfterTests);
-				Settings(client, pauseAfterTests);
-				Alerts(client, pauseAfterTests);
-				Blocks(client, pauseAfterTests);
-				Bounces(client, pauseAfterTests);
-				SpamReports(client, pauseAfterTests);
 				InvalidEmails(client, pauseAfterTests);
-				Batches(client, pauseAfterTests);
-				Whitelabel(client, pauseAfterTests);
-				WebhookStats(client, pauseAfterTests);
-				AccessManagement(client, pauseAfterTests);
 				IpAddresses(client, pauseAfterTests);
 				IpPools(client, pauseAfterTests);
+				ListsAndSegments(client, pauseAfterTests);
+				Mail(client, pauseAfterTests);
+				Settings(client, pauseAfterTests);
+				SpamReports(client, pauseAfterTests);
+				Statistics(client, pauseAfterTests);
+				Subusers(client, pauseAfterTests);
+				UnsubscribeGroupsAndSuppressions(client, pauseAfterTests);
+				Teammates(client, pauseAfterTests);
+				Templates(client, pauseAfterTests);
+				User(client, pauseAfterTests);
+				WebhookSettings(client, pauseAfterTests);
+				WebhookStats(client, pauseAfterTests);
+				Whitelabel(client, pauseAfterTests);
 			}
 			catch (Exception e)
 			{
 				Console.WriteLine("\n\n**************************************************");
 				Console.WriteLine("**************************************************");
-				Console.WriteLine($"AN EXCEPTION OCCURED: {(e.InnerException ?? e).Message}");
+				Console.WriteLine($"AN EXCEPTION OCCURED: {e.GetBaseException().Message}");
 				Console.WriteLine("**************************************************");
 				Console.WriteLine("**************************************************");
 			}
@@ -194,29 +197,37 @@ namespace StrongGrid.IntegrationTests
 		{
 			Console.WriteLine("\n***** API KEYS *****");
 
-			// CREATE A NEW API KEY
-			var newApiKey = client.ApiKeys.CreateAsync("My new api key", new[] { "alerts.read", "api_keys.read" }).Result;
-			Console.WriteLine("Unique ID of the new Api Key: {0}", newApiKey.KeyId);
-
-			// UPDATE THE API KEY'S NAME
-			var updatedApiKey = client.ApiKeys.UpdateAsync(newApiKey.KeyId, "This is the updated name").Result;
-			Console.WriteLine("The name of Api Key {0} updated", updatedApiKey.KeyId);
-
-			// UPDATE THE API KEY'S SCOPES
-			updatedApiKey = client.ApiKeys.UpdateAsync(newApiKey.KeyId, updatedApiKey.Name, new[] { "alerts.read", "api_keys.read", "categories.read", "stats.read" }).Result;
-			Console.WriteLine("The scopes of Api Key {0} updated", updatedApiKey.KeyId);
-
 			// GET ALL THE API KEYS
 			var apiKeys = client.ApiKeys.GetAllAsync().Result;
 			Console.WriteLine("There are {0} Api Keys", apiKeys.Length);
 
+			// CREATE A NEW API KEY
+			var apiKey = apiKeys.FirstOrDefault(k => k.Name.StartsWith("Api Key for integration testing", StringComparison.OrdinalIgnoreCase));
+			if (apiKey == null)
+			{
+				apiKey = client.ApiKeys.CreateAsync("Api Key for integration testing", new[] { "alerts.read", "api_keys.read" }).Result;
+				Console.WriteLine("Unique ID of the new Api Key: {0}", apiKey.KeyId);
+			}
+			else
+			{
+				Console.WriteLine("Unique ID of the existing Api Key: {0}", apiKey.KeyId);
+			}
+
+			// UPDATE THE API KEY'S NAME
+			var updatedApiKey = client.ApiKeys.UpdateAsync(apiKey.KeyId, "Api Key for integration testing with updated name").Result;
+			Console.WriteLine("The name of Api Key {0} updated", updatedApiKey.KeyId);
+
+			// UPDATE THE API KEY'S SCOPES
+			updatedApiKey = client.ApiKeys.UpdateAsync(apiKey.KeyId, updatedApiKey.Name, new[] { "alerts.read", "api_keys.read", "categories.read", "stats.read" }).Result;
+			Console.WriteLine("The scopes of Api Key {0} updated", updatedApiKey.KeyId);
+
 			// GET ONE API KEY
-			var key = client.ApiKeys.GetAsync(newApiKey.KeyId).Result;
-			Console.WriteLine("The name of api key {0} is: {1}", newApiKey.KeyId, key.Name);
+			var key = client.ApiKeys.GetAsync(apiKey.KeyId).Result;
+			Console.WriteLine("The name of api key {0} is: {1}", apiKey.KeyId, key.Name);
 
 			// DELETE API KEY
-			client.ApiKeys.DeleteAsync(newApiKey.KeyId).Wait();
-			Console.WriteLine("Api Key {0} deleted", newApiKey.KeyId);
+			client.ApiKeys.DeleteAsync(apiKey.KeyId).Wait();
+			Console.WriteLine("Api Key {0} deleted", apiKey.KeyId);
 
 			// GET THE CURRENT USER'S PERMISSIONS
 			var permissions = client.User.GetPermissionsAsync().Result;
@@ -998,6 +1009,68 @@ namespace StrongGrid.IntegrationTests
 			ConcludeTests(pauseAfterTests);
 
 			**************************************************/
+		}
+
+		private static void Subusers(IClient client, bool pauseAfterTests)
+		{
+			/**************************************************
+				Commenting out the following tests because 
+				I do not have the necessary privileges
+			 **************************************************
+
+			Console.WriteLine("\n***** SUBUSERS *****");
+
+			// GET ALL THE SUBUSERS
+			var subusers = client.Subusers.GetAllAsync().Result;
+			Console.WriteLine($"There are {subusers.Length} subusers");
+
+			ConcludeTests(pauseAfterTests);
+
+			**************************************************/
+		}
+
+		private static void Teammates(IClient client, bool pauseAfterTests)
+		{
+			/**************************************************
+				Commenting out the following tests because 
+				I do not have the necessary privileges
+			 **************************************************
+
+			Console.WriteLine("\n***** TEAMMATES *****");
+
+			// GET ALL THE PENDING INVITATIONS
+			var pendingInvitation = client.Teammates.GetAllPendingInvitationsAsync().Result;
+			Console.WriteLine($"There are {pendingInvitation.Length} pending invitations");
+
+			// GET ALL THE TEAMMATES
+			var allTeammates = client.Teammates.GetAllTeammatesAsync().Result;
+			Console.WriteLine($"There are {allTeammates.Length} teammates");
+
+			if (allTeammates.Length > 0)
+			{
+				// RETRIEVE THE FIRST TEAMMATE
+				var teammate = client.Teammates.GetTeammateAsync(allTeammates[0].Username).Result;
+				Console.WriteLine($"Retrieved teammate '{teammate.Username}'");
+			}
+
+			ConcludeTests(pauseAfterTests);
+
+			**************************************************/
+		}
+
+		private static void WebhookSettings(IClient client, bool pauseAfterTests)
+		{
+			Console.WriteLine("\n***** WEBHOOK SETTINGS *****");
+
+			// GET THE EVENT SETTINGS
+			var eventWebhookSettings = client.WebhookSettings.GetEventWebhookSettingsAsync().Result;
+			Console.WriteLine("The event webhooks settings have been retrieved.");
+
+			// GET THE INBOUND PARSE SETTINGS
+			var inboundParseWebhookSettings = client.WebhookSettings.GetAllInboundParseWebhookSettings().Result;
+			Console.WriteLine("The inbound parse webhooks settings have been retrieved.");
+
+			ConcludeTests(pauseAfterTests);
 		}
 
 		// to get your public IP address we loop through an array
