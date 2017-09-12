@@ -43,32 +43,32 @@ namespace StrongGrid.IntegrationTests
 			try
 			{
 				var tasks = new List<Task>();
-				//tasks.Add(ExecuteAsync(client, source, AccessManagement));
-				//tasks.Add(ExecuteAsync(client, source, Alerts));
-				//tasks.Add(ExecuteAsync(client, source, ApiKeys));
-				//tasks.Add(ExecuteAsync(client, source, Batches));
-				//tasks.Add(ExecuteAsync(client, source, Blocks));
-				//tasks.Add(ExecuteAsync(client, source, Bounces));
-				//tasks.Add(ExecuteAsync(client, source, CampaignsAndSenderIdentities));
-				//tasks.Add(ExecuteAsync(client, source, Categories));
-				//tasks.Add(ExecuteAsync(client, source, ContactsAndCustomFields));
-				//tasks.Add(ExecuteAsync(client, source, GlobalSuppressions));
-				//tasks.Add(ExecuteAsync(client, source, InvalidEmails));
-				//tasks.Add(ExecuteAsync(client, source, IpAddresses));
-				//tasks.Add(ExecuteAsync(client, source, IpPools));
-				//tasks.Add(ExecuteAsync(client, source, ListsAndSegments));
-				//tasks.Add(ExecuteAsync(client, source, Mail));
-				//tasks.Add(ExecuteAsync(client, source, Settings));
-				//tasks.Add(ExecuteAsync(client, source, SpamReports));
-				//tasks.Add(ExecuteAsync(client, source, Statistics));
-				//tasks.Add(ExecuteAsync(client, source, Subusers));
-				//tasks.Add(ExecuteAsync(client, source, UnsubscribeGroupsAndSuppressions));
-				//tasks.Add(ExecuteAsync(client, source, Teammates));
+				tasks.Add(ExecuteAsync(client, source, AccessManagement));
+				tasks.Add(ExecuteAsync(client, source, Alerts));
+				tasks.Add(ExecuteAsync(client, source, ApiKeys));
+				tasks.Add(ExecuteAsync(client, source, Batches));
+				tasks.Add(ExecuteAsync(client, source, Blocks));
+				tasks.Add(ExecuteAsync(client, source, Bounces));
+				tasks.Add(ExecuteAsync(client, source, CampaignsAndSenderIdentities));
+				tasks.Add(ExecuteAsync(client, source, Categories));
+				tasks.Add(ExecuteAsync(client, source, ContactsAndCustomFields));
+				tasks.Add(ExecuteAsync(client, source, GlobalSuppressions));
+				tasks.Add(ExecuteAsync(client, source, InvalidEmails));
+				tasks.Add(ExecuteAsync(client, source, IpAddresses));
+				tasks.Add(ExecuteAsync(client, source, IpPools));
+				tasks.Add(ExecuteAsync(client, source, ListsAndSegments));
+				tasks.Add(ExecuteAsync(client, source, Mail));
+				tasks.Add(ExecuteAsync(client, source, Settings));
+				tasks.Add(ExecuteAsync(client, source, SpamReports));
+				tasks.Add(ExecuteAsync(client, source, Statistics));
+				tasks.Add(ExecuteAsync(client, source, Subusers));
+				tasks.Add(ExecuteAsync(client, source, UnsubscribeGroupsAndSuppressions));
+				tasks.Add(ExecuteAsync(client, source, Teammates));
 				tasks.Add(ExecuteAsync(client, source, Templates));
-				//tasks.Add(ExecuteAsync(client, source, User));
-				//tasks.Add(ExecuteAsync(client, source, WebhookSettings));
-				//tasks.Add(ExecuteAsync(client, source, WebhookStats));
-				//tasks.Add(ExecuteAsync(client, source, Whitelabel));
+				tasks.Add(ExecuteAsync(client, source, User));
+				tasks.Add(ExecuteAsync(client, source, WebhookSettings));
+				tasks.Add(ExecuteAsync(client, source, WebhookStats));
+				tasks.Add(ExecuteAsync(client, source, Whitelabel));
 				await Task.WhenAll(tasks.ToArray()).ConfigureAwait(false);
 				return await Task.FromResult(0); // Success.
 			}
@@ -676,7 +676,7 @@ namespace StrongGrid.IntegrationTests
 
 		private static async Task CampaignsAndSenderIdentities(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			var YOUR_EMAIL = "youremail@hotmail.com";
+			var YOUR_EMAIL = "your_email@example.com";
 
 			await log.WriteLineAsync("\n***** CAMPAIGNS *****\n").ConfigureAwait(false);
 
@@ -694,10 +694,10 @@ namespace StrongGrid.IntegrationTests
 			var senderIdentities = await client.SenderIdentities.GetAllAsync(cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All sender identities retrieved. There are {senderIdentities.Length} identities").ConfigureAwait(false);
 
-			var sender = senderIdentities.FirstOrDefault(s => s.NickName == "StrongGrid Integration Testing: sender identity");
+			var sender = senderIdentities.FirstOrDefault(s => s.NickName == "Integration Testing identity");
 			if (sender == null)
 			{
-				sender = await client.SenderIdentities.CreateAsync("StrongGrid Integration Testing: sender identity", new MailAddress(YOUR_EMAIL, "John Doe"), new MailAddress(YOUR_EMAIL, "John Doe"), "123 Main Street", null, "Small Town", "ZZ", "12345", "USA", cancellationToken).ConfigureAwait(false);
+				sender = await client.SenderIdentities.CreateAsync("Integration Testing identity", new MailAddress(YOUR_EMAIL, "John Doe"), new MailAddress(YOUR_EMAIL, "John Doe"), "123 Main Street", null, "Small Town", "ZZ", "12345", "USA", cancellationToken).ConfigureAwait(false);
 				throw new Exception($"A new sender identity was created and a verification email was sent to {sender.From.Email}. You must complete the verification process before proceeding.");
 			}
 			else if (!sender.Verification.IsCompleted)
