@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace StrongGrid
@@ -144,7 +145,10 @@ namespace StrongGrid
 
 		private MailAddress[] ParseEmailAddresses(string rawEmailAddresses)
 		{
-			var rawEmails = rawEmailAddresses.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+			// Split on commas that have an even number of double-quotes following them
+			const string SPLIT_EMAIL_ADDRESSES = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
+
+			var rawEmails = Regex.Split(rawEmailAddresses, SPLIT_EMAIL_ADDRESSES);
 			var addresses = rawEmails.Select(rawEmail => ParseEmailAddress(rawEmail)).ToArray();
 			return addresses;
 		}
