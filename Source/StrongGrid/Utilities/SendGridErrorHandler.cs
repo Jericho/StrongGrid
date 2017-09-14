@@ -2,7 +2,6 @@
 using Pathoschild.Http.Client;
 using Pathoschild.Http.Client.Extensibility;
 using System;
-using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -49,6 +48,11 @@ namespace StrongGrid.Utilities
 							}
 						]
 					}
+
+					I have also seen cases where the JSON string looks like this:
+					{
+						"error": "Name already exists"
+					}
 				*/
 
 				var responseContent = await message.Content.ReadAsStringAsync(null).ConfigureAwait(false);
@@ -57,13 +61,22 @@ namespace StrongGrid.Utilities
 				{
 					try
 					{
-						// Check for the presence of property called 'errors' to determine if an error occured
+						// Check for the presence of property called 'errors'
 						var jObject = JObject.Parse(responseContent);
 						var errorsArray = (JArray)jObject["errors"];
 						if (errorsArray != null && errorsArray.Count > 0)
 						{
 							// Get the first error message
-							errorMessage = errorsArray[0]["message"].ToString();
+							errorMessage = errorsArray[0]["message"].Value<string>();
+						}
+						else
+						{
+							// Check for the presence of property called 'error'
+							var errorProperty = jObject["error"];
+							if (errorProperty != null)
+							{
+								errorMessage = errorProperty.Value<string>();
+							}
 						}
 #pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
 					}
