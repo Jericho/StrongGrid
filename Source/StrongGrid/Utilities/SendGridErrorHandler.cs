@@ -61,7 +61,7 @@ namespace StrongGrid.Utilities
 				{
 					try
 					{
-						// Check for the presence of property called 'errors' to determine if an error occured
+						// Check for the presence of property called 'errors'
 						var jObject = JObject.Parse(responseContent);
 						var errorsArray = (JArray)jObject["errors"];
 						if (errorsArray != null && errorsArray.Count > 0)
@@ -71,6 +71,7 @@ namespace StrongGrid.Utilities
 						}
 						else
 						{
+							// Check for the presence of property called 'error'
 							var errorProperty = jObject["error"];
 							if (errorProperty != null)
 							{
