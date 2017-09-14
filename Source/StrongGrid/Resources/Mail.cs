@@ -208,6 +208,15 @@ namespace StrongGrid.Resources
 			TrackingSettings trackingSettings = null,
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
+			if (personalizations != null && personalizations.Any())
+			{
+				// - The to.name, cc.name, and bcc.name personalizations cannot include either the ; or , characters.
+				var numberOfInvalidNames = personalizations.Sum(p => p.To?.Count(recip => recip.Name.Contains(';') || recip.Name.Contains(',')) ?? 0);
+				numberOfInvalidNames += personalizations.Sum(p => p.Cc?.Count(recip => recip.Name.Contains(';') || recip.Name.Contains(',')) ?? 0);
+				numberOfInvalidNames += personalizations.Sum(p => p.Bcc?.Count(recip => recip.Name.Contains(';') || recip.Name.Contains(',')) ?? 0);
+				if (numberOfInvalidNames > 0) throw new ArgumentException("The to.name, cc.name, and bcc.name personalizations cannot include either the ; or , characters");
+			}
+
 			var data = new JObject();
 			if (personalizations != null && personalizations.Any()) data.Add("personalizations", JToken.FromObject(personalizations.ToArray()));
 			if (from != null) data.Add("from", JToken.FromObject(from));
