@@ -210,6 +210,12 @@ namespace StrongGrid.Resources
 		{
 			if (personalizations != null && personalizations.Any())
 			{
+				// - The total number of recipients must be less than 1000. This includes all recipients defined within the to, cc, and bcc parameters, across each object that you include in the personalizations array.
+				var numberOfRecipients = personalizations.Sum(p => p.To?.Length ?? 0);
+				numberOfRecipients += personalizations.Sum(p => p.Cc?.Length ?? 0);
+				numberOfRecipients += personalizations.Sum(p => p.Bcc?.Length ?? 0);
+				if (numberOfRecipients >= 1000) throw new ArgumentOutOfRangeException("The total number of recipients must be less than 1000");
+
 				// - The to.name, cc.name, and bcc.name personalizations cannot include either the ; or , characters.
 				var numberOfInvalidNames = personalizations.Sum(p => p.To?.Count(recip => recip.Name.Contains(';') || recip.Name.Contains(',')) ?? 0);
 				numberOfInvalidNames += personalizations.Sum(p => p.Cc?.Count(recip => recip.Name.Contains(';') || recip.Name.Contains(',')) ?? 0);
