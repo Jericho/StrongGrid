@@ -202,8 +202,6 @@ namespace StrongGrid.IntegrationTests
 				Here's the simplified way to send the same email to multiple recipients:
 				var messageId = await client.Mail.SendToMultipleRecipientsAsync(new[] { to1, to2, to3 }, from, subject, htmlContent, textContent, cancellationToken: cancellationToken).ConfigureAwait(false);
 			******/
-
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 		}
 
 		private static async Task ApiKeys(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -262,8 +260,6 @@ namespace StrongGrid.IntegrationTests
 			// DELETE THE API KEY WITH ALL PERMISSIONS
 			await client.ApiKeys.DeleteAsync(superKey.KeyId, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("Deleted the key with all permissions").ConfigureAwait(false);
-
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 		}
 
 		private static async Task UnsubscribeGroupsAndSuppressions(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -339,8 +335,6 @@ namespace StrongGrid.IntegrationTests
 			// DELETE UNSUBSCRIBE GROUP
 			await client.UnsubscribeGroups.DeleteAsync(newGroup.Id, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Suppression group {newGroup.Id} deleted").ConfigureAwait(false);
-
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 		}
 
 		private static async Task GlobalSuppressions(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -369,8 +363,6 @@ namespace StrongGrid.IntegrationTests
 
 			await log.WriteLineAsync($"Is {emails[0]} unsubscribed (should be false): {isUnsubscribed0}").ConfigureAwait(false);
 			await log.WriteLineAsync($"Is {emails[1]} unsubscribed (should be false): {isUnsubscribed1}").ConfigureAwait(false);
-
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 		}
 
 		private static async Task Statistics(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -425,8 +417,6 @@ namespace StrongGrid.IntegrationTests
 
 			browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Month, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of BROWSER stats in {now.Year} and aggregated by month: {browserStats.Length}").ConfigureAwait(false);
-
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 		}
 
 		private static async Task Templates(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -489,8 +479,6 @@ namespace StrongGrid.IntegrationTests
 			// VERIFY THAT YOUR PROFILE HAS BEEN UPDATED
 			var updatedProfile = await client.User.GetProfileAsync(cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Hello {updatedProfile.FirstName} from {(string.IsNullOrEmpty(updatedProfile.State) ? "unknown location" : updatedProfile.State)}").ConfigureAwait(false);
-
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 		}
 
 		private static async Task ContactsAndCustomFields(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -604,8 +592,6 @@ namespace StrongGrid.IntegrationTests
 
 			fields = await client.CustomFields.GetAllAsync(cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All custom fields retrieved. There are {fields.Length} fields").ConfigureAwait(false);
-
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 		}
 
 		private static async Task Categories(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -615,8 +601,6 @@ namespace StrongGrid.IntegrationTests
 			var categories = await client.Categories.GetAsync(null, 50, 0, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of categories: {categories.Length}").ConfigureAwait(false);
 			await log.WriteLineAsync($"Categories: {string.Join(", ", categories)}").ConfigureAwait(false);
-
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 		}
 
 		private static async Task ListsAndSegments(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -670,8 +654,6 @@ namespace StrongGrid.IntegrationTests
 
 			await client.Lists.DeleteAsync(secondList.Id, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"List {secondList.Id} deleted").ConfigureAwait(false);
-
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 		}
 
 		private static async Task CampaignsAndSenderIdentities(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -745,8 +727,6 @@ namespace StrongGrid.IntegrationTests
 
 			campaigns = await client.Campaigns.GetAllAsync(100, 0, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All campaigns retrieved. There are {campaigns.Length} campaigns").ConfigureAwait(false);
-
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 		}
 
 		private static async Task Settings(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -761,8 +741,6 @@ namespace StrongGrid.IntegrationTests
 
 			var mailSettings = await client.Settings.GetAllMailSettingsAsync(25, 0, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All mail tracking retrieved. There are {mailSettings.Length} settings").ConfigureAwait(false);
-
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 		}
 
 		private static async Task Alerts(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -777,8 +755,6 @@ namespace StrongGrid.IntegrationTests
 
 			await client.Alerts.DeleteAsync(newAlert.Id, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Alert {newAlert.Id} deleted").ConfigureAwait(false);
-
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 		}
 
 		private static async Task Blocks(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -792,8 +768,6 @@ namespace StrongGrid.IntegrationTests
 
 			var blocks = await client.Blocks.GetAllAsync(startDate, endDate, 25, 0, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All blocks retrieved. There are {blocks.Length} blocks in {lastYear} and {thisYear}").ConfigureAwait(false);
-
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 		}
 
 		private static async Task Bounces(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -807,8 +781,6 @@ namespace StrongGrid.IntegrationTests
 
 			var bounces = await client.Bounces.GetAllAsync(startDate, endDate, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All bounces retrieved. There are {bounces.Length} bounces in {lastYear} and {thisYear}").ConfigureAwait(false);
-
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 		}
 
 		private static async Task SpamReports(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -822,8 +794,6 @@ namespace StrongGrid.IntegrationTests
 
 			var spamReports = await client.SpamReports.GetAllAsync(startDate, endDate, 25, 0, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All spam reports retrieved. There are {spamReports.Length} reports in {lastYear} and {thisYear}").ConfigureAwait(false);
-
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 		}
 
 		private static async Task InvalidEmails(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -837,8 +807,6 @@ namespace StrongGrid.IntegrationTests
 
 			var invalidEmails = await client.InvalidEmails.GetAllAsync(startDate, endDate, 25, 0, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All invalid emails retrieved. There are {invalidEmails.Length} invalid email addresses in {lastYear} and {thisYear}").ConfigureAwait(false);
-
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 		}
 
 		private static async Task Batches(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -857,8 +825,6 @@ namespace StrongGrid.IntegrationTests
 
 			var batches = await client.Batches.GetAllAsync(cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All batches retrieved. There are {batches.Length} batches").ConfigureAwait(false);
-
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 		}
 
 		private static async Task Whitelabel(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -907,8 +873,6 @@ namespace StrongGrid.IntegrationTests
 
 			await client.Whitelabel.DeleteLinkAsync(link.Id, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Whitelabel link {link.Id} deleted.").ConfigureAwait(false);
-
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 		}
 
 		private static async Task WebhookStats(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -927,8 +891,6 @@ namespace StrongGrid.IntegrationTests
 				var count = monthUsage.Stats.Sum(s => s.Metrics.Single(m => m.Key == "received").Value);
 				await log.WriteLineAsync($"{name}: {count}").ConfigureAwait(false);
 			}
-
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 		}
 
 		private static async Task AccessManagement(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -995,8 +957,6 @@ namespace StrongGrid.IntegrationTests
 					await log.WriteLineAsync($"IP address {whitelistedIpAddress.Id} removed from whitelist").ConfigureAwait(false);
 				}
 			}
-
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 		}
 
 		private static async Task IpAddresses(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -1025,8 +985,6 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"You have {remaining.Remaining} remaining IP addresses for the {remaining.Period} at a cost of {remaining.PricePerIp}").ConfigureAwait(false);
 
 			**************************************************/
-
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 		}
 
 		private static Task IpPools(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -1058,7 +1016,6 @@ namespace StrongGrid.IntegrationTests
 			await client.IpPools.DeleteAsync(marketingPool.Name, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Deleted pool '{marketingPool.Name}'").ConfigureAwait(false);
 
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 			**************************************************/
 			return Task.FromResult(0); // Success.
 		}
@@ -1076,7 +1033,6 @@ namespace StrongGrid.IntegrationTests
 			var subusers = await client.Subusers.GetAllAsync(cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"There are {subusers.Length} subusers").ConfigureAwait(false);
 
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 			**************************************************/
 			return Task.FromResult(0); // Success.
 		}
@@ -1105,7 +1061,6 @@ namespace StrongGrid.IntegrationTests
 				await log.WriteLineAsync($"Retrieved teammate '{teammate.Username}'").ConfigureAwait(false);
 			}
 
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 			**************************************************/
 			return Task.FromResult(0); // Success.
 		}
@@ -1121,8 +1076,6 @@ namespace StrongGrid.IntegrationTests
 			// GET THE INBOUND PARSE SETTINGS
 			var inboundParseWebhookSettings = await client.WebhookSettings.GetAllInboundParseWebhookSettings(cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("The inbound parse webhooks settings have been retrieved.").ConfigureAwait(false);
-
-			await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
 		}
 
 		// to get your public IP address we loop through an array
