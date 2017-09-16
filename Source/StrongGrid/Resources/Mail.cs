@@ -215,16 +215,9 @@ namespace StrongGrid.Resources
 				numberOfRecipients += personalizations.Sum(p => p.Cc?.Length ?? 0);
 				numberOfRecipients += personalizations.Sum(p => p.Bcc?.Length ?? 0);
 				if (numberOfRecipients >= 1000) throw new ArgumentOutOfRangeException("The total number of recipients must be less than 1000");
-
-				// - The to.name, cc.name, and bcc.name personalizations cannot include either the ; or , characters.
-				var numberOfInvalidNames = personalizations.Sum(p => p.To?.Count(recip => recip.Name.Contains(';') || recip.Name.Contains(',')) ?? 0);
-				numberOfInvalidNames += personalizations.Sum(p => p.Cc?.Count(recip => recip.Name.Contains(';') || recip.Name.Contains(',')) ?? 0);
-				numberOfInvalidNames += personalizations.Sum(p => p.Bcc?.Count(recip => recip.Name.Contains(';') || recip.Name.Contains(',')) ?? 0);
-				if (numberOfInvalidNames > 0) throw new ArgumentException("The to.name, cc.name, and bcc.name personalizations cannot include either the ; or , characters");
 			}
 
 			var data = new JObject();
-			if (personalizations != null && personalizations.Any()) data.Add("personalizations", JToken.FromObject(personalizations.ToArray()));
 			if (from != null) data.Add("from", JToken.FromObject(from));
 			if (replyTo != null) data.Add("reply_to", JToken.FromObject(replyTo));
 			if (!string.IsNullOrEmpty(subject)) data.Add("subject", subject);
@@ -238,6 +231,20 @@ namespace StrongGrid.Resources
 			if (!string.IsNullOrEmpty(ipPoolName)) data.Add("ip_pool_name", ipPoolName);
 			if (mailSettings != null) data.Add("mail_settings", JToken.FromObject(mailSettings));
 			if (trackingSettings != null) data.Add("tracking_settings", JToken.FromObject(trackingSettings));
+
+			if (personalizations != null && personalizations.Any())
+			{
+				// It's important to make a copy of the personalizations to ensure we don't modify the original array
+				var personalizationsCopy = personalizations.ToArray();
+				foreach (var personalization in personalizationsCopy)
+				{
+					personalization.To = EnsureRecipientsNamesAreQuoted(personalization.To);
+					personalization.Cc = EnsureRecipientsNamesAreQuoted(personalization.Cc);
+					personalization.Bcc = EnsureRecipientsNamesAreQuoted(personalization.Bcc);
+				}
+
+				data.Add("personalizations", JToken.FromObject(personalizationsCopy));
+			}
 
 			if (sections != null && sections.Any())
 			{
@@ -286,6 +293,20 @@ namespace StrongGrid.Resources
 			}
 
 			return messageId;
+		}
+
+		/// <summary>
+		/// If a recipient name contains a comma or a semi-colon, SendGrid requires that it be surrounded by double-quotes.
+		/// </summary>
+		/// <param name="recipients">The array of recipients</param>
+		/// <returns>An aray of recipient where their names have been quoted, if necessary</returns>
+		private static MailAddress[] EnsureRecipientsNamesAreQuoted(MailAddress[] recipients)
+		{
+			return recipients?
+				.Where(recipient => recipient.Name.Contains(';') || recipient.Name.Contains(','))
+				.Select(recipient => new MailAddress(recipient.Email, $"\"{recipient.Name}\""))
+				.Union(recipients?.Where(recipient => !recipient.Name.Contains(';') && !recipient.Name.Contains(',')))
+				.ToArray();
 		}
 	}
 }
