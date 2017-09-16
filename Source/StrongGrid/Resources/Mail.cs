@@ -211,9 +211,9 @@ namespace StrongGrid.Resources
 			if (personalizations != null && personalizations.Any())
 			{
 				// - The total number of recipients must be less than 1000. This includes all recipients defined within the to, cc, and bcc parameters, across each object that you include in the personalizations array.
-				var numberOfRecipients = personalizations.Sum(p => p.To?.Length ?? 0);
-				numberOfRecipients += personalizations.Sum(p => p.Cc?.Length ?? 0);
-				numberOfRecipients += personalizations.Sum(p => p.Bcc?.Length ?? 0);
+				var numberOfRecipients = personalizations.Sum(p => p?.To?.Count(r => r != null) ?? 0);
+				numberOfRecipients += personalizations.Sum(p => p?.Cc?.Count(r => r != null) ?? 0);
+				numberOfRecipients += personalizations.Sum(p => p?.Bcc?.Count(r => r != null) ?? 0);
 				if (numberOfRecipients >= 1000) throw new ArgumentOutOfRangeException("The total number of recipients must be less than 1000");
 			}
 
@@ -302,10 +302,18 @@ namespace StrongGrid.Resources
 		/// <returns>An aray of recipient where their names have been quoted, if necessary</returns>
 		private static MailAddress[] EnsureRecipientsNamesAreQuoted(MailAddress[] recipients)
 		{
-			return recipients?
-				.Where(recipient => recipient.Name.Contains(';') || recipient.Name.Contains(','))
+			if (recipients == null) return Enumerable.Empty<MailAddress>().ToArray();
+
+			var recipientsWithName = recipients.Where(recipient => !string.IsNullOrEmpty(recipient?.Name));
+			var recipientsWithoutName = recipients.Except(recipientsWithName);
+
+			var recipientsNameContainsComma = recipientsWithName.Where(recipient => recipient.Name.Contains(';') || recipient.Name.Contains(','));
+			var recipientsNameDoesNotContainComma = recipientsWithName.Except(recipientsNameContainsComma);
+
+			return recipientsNameContainsComma
 				.Select(recipient => new MailAddress(recipient.Email, recipient.Name.EnsureStartsWith("\"").EnsureEndsWith("\"")))
-				.Union(recipients?.Where(recipient => !recipient.Name.Contains(';') && !recipient.Name.Contains(',')))
+				.Union(recipientsNameDoesNotContainComma)
+				.Union(recipientsWithoutName)
 				.ToArray();
 		}
 	}
