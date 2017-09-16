@@ -302,7 +302,7 @@ namespace StrongGrid.Resources
 		/// <returns>An aray of recipient where their names have been quoted, if necessary</returns>
 		private static MailAddress[] EnsureRecipientsNamesAreQuoted(MailAddress[] recipients)
 		{
-			if (recipients == null) return Enumerable.Empty<MailAddress>().ToArray();
+			if (recipients == null) return null;
 
 			var recipientsWithName = recipients.Where(recipient => !string.IsNullOrEmpty(recipient?.Name));
 			var recipientsWithoutName = recipients.Except(recipientsWithName);
