@@ -42,34 +42,36 @@ namespace StrongGrid.IntegrationTests
 
 			try
 			{
-				var tasks = new List<Task>();
-				tasks.Add(ExecuteAsync(client, source, AccessManagement));
-				tasks.Add(ExecuteAsync(client, source, Alerts));
-				tasks.Add(ExecuteAsync(client, source, ApiKeys));
-				tasks.Add(ExecuteAsync(client, source, Batches));
-				tasks.Add(ExecuteAsync(client, source, Blocks));
-				tasks.Add(ExecuteAsync(client, source, Bounces));
-				tasks.Add(ExecuteAsync(client, source, CampaignsAndSenderIdentities));
-				tasks.Add(ExecuteAsync(client, source, Categories));
-				tasks.Add(ExecuteAsync(client, source, ContactsAndCustomFields));
-				tasks.Add(ExecuteAsync(client, source, GlobalSuppressions));
-				tasks.Add(ExecuteAsync(client, source, InvalidEmails));
-				tasks.Add(ExecuteAsync(client, source, IpAddresses));
-				tasks.Add(ExecuteAsync(client, source, IpPools));
-				tasks.Add(ExecuteAsync(client, source, ListsAndSegments));
-				tasks.Add(ExecuteAsync(client, source, Mail));
-				tasks.Add(ExecuteAsync(client, source, Settings));
-				tasks.Add(ExecuteAsync(client, source, SpamReports));
-				tasks.Add(ExecuteAsync(client, source, Statistics));
-				tasks.Add(ExecuteAsync(client, source, Subusers));
-				tasks.Add(ExecuteAsync(client, source, UnsubscribeGroupsAndSuppressions));
-				tasks.Add(ExecuteAsync(client, source, Teammates));
-				tasks.Add(ExecuteAsync(client, source, Templates));
-				tasks.Add(ExecuteAsync(client, source, User));
-				tasks.Add(ExecuteAsync(client, source, WebhookSettings));
-				tasks.Add(ExecuteAsync(client, source, WebhookStats));
-				tasks.Add(ExecuteAsync(client, source, Whitelabel));
-				await Task.WhenAll(tasks.ToArray()).ConfigureAwait(false);
+				var tasks = new Task[]
+				{
+					ExecuteAsync(client, source, AccessManagement),
+					ExecuteAsync(client, source, Alerts),
+					ExecuteAsync(client, source, ApiKeys),
+					ExecuteAsync(client, source, Batches),
+					ExecuteAsync(client, source, Blocks),
+					ExecuteAsync(client, source, Bounces),
+					ExecuteAsync(client, source, CampaignsAndSenderIdentities),
+					ExecuteAsync(client, source, Categories),
+					ExecuteAsync(client, source, ContactsAndCustomFields),
+					ExecuteAsync(client, source, GlobalSuppressions),
+					ExecuteAsync(client, source, InvalidEmails),
+					ExecuteAsync(client, source, IpAddresses),
+					ExecuteAsync(client, source, IpPools),
+					ExecuteAsync(client, source, ListsAndSegments),
+					ExecuteAsync(client, source, Mail),
+					ExecuteAsync(client, source, Settings),
+					ExecuteAsync(client, source, SpamReports),
+					ExecuteAsync(client, source, Statistics),
+					ExecuteAsync(client, source, Subusers),
+					ExecuteAsync(client, source, UnsubscribeGroupsAndSuppressions),
+					ExecuteAsync(client, source, Teammates),
+					ExecuteAsync(client, source, Templates),
+					ExecuteAsync(client, source, User),
+					ExecuteAsync(client, source, WebhookSettings),
+					ExecuteAsync(client, source, WebhookStats),
+					ExecuteAsync(client, source, Whitelabel)
+				};
+				await Task.WhenAll(tasks).ConfigureAwait(false);
 				return await Task.FromResult(0); // Success.
 			}
 			catch (OperationCanceledException)
