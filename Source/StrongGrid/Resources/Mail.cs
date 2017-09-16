@@ -304,7 +304,7 @@ namespace StrongGrid.Resources
 		{
 			return recipients?
 				.Where(recipient => recipient.Name.Contains(';') || recipient.Name.Contains(','))
-				.Select(recipient => new MailAddress(recipient.Email, $"\"{recipient.Name}\""))
+				.Select(recipient => new MailAddress(recipient.Email, recipient.Name.EnsureStartsWith("\"").EnsureEndsWith("\"")))
 				.Union(recipients?.Where(recipient => !recipient.Name.Contains(';') && !recipient.Name.Contains(',')))
 				.ToArray();
 		}

@@ -260,6 +260,28 @@ namespace StrongGrid.Utilities
 			return result.ToString().Trim();
 		}
 
+		/// <summary>
+		/// Ensure that a string starts with a given prefix
+		/// </summary>
+		/// <param name="value">The value</param>
+		/// <param name="prefix">The prefix</param>
+		/// <returns>The value including the prefix</returns>
+		public static string EnsureStartsWith(this string value, string prefix)
+		{
+			return !string.IsNullOrEmpty(value) && value.StartsWith(prefix) ? value : string.Concat(prefix, value);
+		}
+
+		/// <summary>
+		/// Ensure that a string ends with a given suffix
+		/// </summary>
+		/// <param name="value">The value</param>
+		/// <param name="suffix">The sufix</param>
+		/// <returns>The value including the suffix</returns>
+		public static string EnsureEndsWith(this string value, string suffix)
+		{
+			return !string.IsNullOrEmpty(value) && value.EndsWith(suffix) ? value : string.Concat(value, suffix);
+		}
+
 		/// <summary>Asynchronously converts the JSON encoded content and converts it to a 'SendGrid' object of the desired type.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="httpContent">The content</param>
