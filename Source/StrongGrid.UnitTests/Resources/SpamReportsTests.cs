@@ -1,12 +1,13 @@
 ﻿using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
-using StrongGrid.Model;
+using StrongGrid.Models;
 using StrongGrid.UnitTests;
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
@@ -56,7 +57,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetAll()
+		public async Task GetAllAsync()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -66,7 +67,7 @@ namespace StrongGrid.Resources.UnitTests
 			var spamReports = new SpamReports(client);
 
 			// Act
-			var result = spamReports.GetAllAsync().Result;
+			var result = await spamReports.GetAllAsync().ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -76,7 +77,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void DeleteAll()
+		public async Task DeleteAllAsync()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -86,7 +87,7 @@ namespace StrongGrid.Resources.UnitTests
 			var spamReports = new SpamReports(client);
 
 			// Act
-			spamReports.DeleteAllAsync().Wait(CancellationToken.None);
+			await spamReports.DeleteAllAsync().ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -94,7 +95,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void DeleteMultiple()
+		public async Task DeleteMultipleAsync()
 		{
 			// Arrange
 			var emailAddresses = new[] { "email1@test.com", "email2@test.com" };
@@ -106,7 +107,7 @@ namespace StrongGrid.Resources.UnitTests
 			var spamReports = new SpamReports(client);
 
 			// Act
-			spamReports.DeleteMultipleAsync(emailAddresses).Wait(CancellationToken.None);
+			await spamReports.DeleteMultipleAsync(emailAddresses).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -114,7 +115,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Delete()
+		public async Task DeleteAsync()
 		{
 			// Arrange
 			var emailAddress = "spam1@test.com";
@@ -126,7 +127,7 @@ namespace StrongGrid.Resources.UnitTests
 			var spamReports = new SpamReports(client);
 
 			// Act
-			spamReports.DeleteAsync(emailAddress).Wait(CancellationToken.None);
+			await spamReports.DeleteAsync(emailAddress).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -134,7 +135,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Get()
+		public async Task GetAsync()
 		{
 			// Arrange
 			var emailAddress = "test1@example.com";
@@ -146,7 +147,7 @@ namespace StrongGrid.Resources.UnitTests
 			var spamReports = new SpamReports(client);
 
 			// Act
-			var result = spamReports.GetAsync(emailAddress, CancellationToken.None).Result;
+			var result = await spamReports.GetAsync(emailAddress, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

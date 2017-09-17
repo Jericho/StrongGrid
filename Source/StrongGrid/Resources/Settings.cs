@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
-using StrongGrid.Model;
+using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +12,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows you to set and check the status of user settings.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.ISettings" />
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/index.html
 	/// </remarks>

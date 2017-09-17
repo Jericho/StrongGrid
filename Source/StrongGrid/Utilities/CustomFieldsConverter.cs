@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using StrongGrid.Model;
+using StrongGrid.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

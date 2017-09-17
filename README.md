@@ -1,6 +1,7 @@
 # StrongGrid
 
 [![Join the chat at https://gitter.im/StrongGrid/Lobby](https://badges.gitter.im/StrongGrid/Lobby.svg)](https://gitter.im/StrongGrid/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FJericho%2FStrongGrid.svg?type=shield)](https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FJericho%2FStrongGrid?ref=badge_shield)
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://jericho.mit-license.org/)
 [![Build status](https://ci.appveyor.com/api/projects/status/4c0c37snfwkhgpos?svg=true)](https://ci.appveyor.com/project/Jericho/stronggrid)
@@ -11,13 +12,13 @@
 
 StrongGrid is a strongly typed library for SendGrid's v3 API.
 
-It started out in February 2016 as a fork of SendGrid's own library. At the time, the SendGrid C# client for their API extensively used the `dynamic` type which was very inconvenient and made it very difficult for developers. Furthemore, their C# client only covered the `mail` end point but did not allow access to other end points in their `email marketing` API such as creating lists and segments, importing contacts, etc. I submited a [pull request](https://github.com/sendgrid/sendgrid-csharp/pull/211) to SendGrid in March 2016 but it was not accepted and eventually closed in June 2016.
+It started out in February 2016 as a fork of SendGrid's own library. At the time, the SendGrid C# client for their API extensively used the `dynamic` type which was very inconvenient and made it very difficult for developers. Furthermore, their C# client only covered the `mail` end point but did not allow access to other end points in their `email marketing` API such as creating lists and segments, importing contacts, etc. I submited a [pull request](https://github.com/sendgrid/sendgrid-csharp/pull/211) to SendGrid in March 2016 but it was not accepted and eventually closed in June 2016.
 
-In October 2016 I decided to release this library as a nuget package since SendGrid's library was still using `dynamic` and lacking strong typing.
+In October 2016 I decided to release this library as a nuget package since SendGrid's library was still using `dynamic` and lacking strong typing. As of February 14, 2017 `dynamic` was removed from [SendGrid's official csharp library](https://github.com/sendgrid/sendgrid-csharp) and support for .Net Standard was added.
 
 StrongGrid includes a client that allows you to interact with all the "resources" in the SendGrid API (e.g.: send an email, manage lists, contacts and segments, search for contacts matching criteria, create API keys, etc.).
 
-StrongGrid also includes a parser for webhook sent from SendGrid to your own WebAPI. This parser supports the two types of webhooks that SendGrid can post to your API: the event webhook and the inbound parse webhook. 
+StrongGrid also includes a parser for webhook sent from SendGrid to your own WebAPI. This parser supports the two types of webhooks that SendGrid can post to your API: the Event Webhook and the Inbound Parse Webhook. 
 
 If you information about how to setup the SendGrid webhooks, please consult the following resources:
 - [Webhooks Overview](https://sendgrid.com/docs/API_Reference/Webhooks/debug.html)
@@ -137,3 +138,7 @@ namespace WebApplication1.Controllers
 	}
 }
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FJericho%2FStrongGrid.svg?type=large)](https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FJericho%2FStrongGrid?ref=badge_large)

@@ -1,12 +1,13 @@
 using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
-using StrongGrid.Model;
+using StrongGrid.Models;
 using StrongGrid.UnitTests;
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
@@ -97,7 +98,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Create_success()
+		public async Task CreateAsync_success()
 		{
 			// Arrange
 			var email = "Jane@example.com";
@@ -124,7 +125,7 @@ namespace StrongGrid.Resources.UnitTests
 			var contacts = new Contacts(client);
 
 			// Act
-			var result = contacts.CreateAsync(email, firstName, lastName, null, CancellationToken.None).Result;
+			var result = await contacts.CreateAsync(email, firstName, lastName, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -133,7 +134,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Create_failure()
+		public async Task CreateAsync_failure()
 		{
 			// Arrange
 			var email = "invalid_email";
@@ -168,16 +169,17 @@ namespace StrongGrid.Resources.UnitTests
 			var contacts = new Contacts(client);
 
 			// Act
-			Should.ThrowAsync<Exception>(() => contacts.CreateAsync(email, firstName, lastName, null, CancellationToken.None))
-				.Result.Message.ShouldBe("Invalid email.");
+			var result = await Should.ThrowAsync<Exception>(async () => await contacts.CreateAsync(email, firstName, lastName, null, CancellationToken.None).ConfigureAwait(false));
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
+
+			result.Message.ShouldBe("Invalid email.");
 		}
 
 		[Fact]
-		public void Import()
+		public async Task ImportAsync()
 		{
 			// Arrange
 			var records = new[]
@@ -218,7 +220,7 @@ namespace StrongGrid.Resources.UnitTests
 			var contacts = new Contacts(client);
 
 			// Act
-			var result = contacts.ImportAsync(records, CancellationToken.None).Result;
+			var result = await contacts.ImportAsync(records, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -235,7 +237,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Update_success()
+		public async Task UpdateAsync_success()
 		{
 			// Arrange
 			var email = "jones@example.com";
@@ -262,7 +264,7 @@ namespace StrongGrid.Resources.UnitTests
 			var contacts = new Contacts(client);
 
 			// Act
-			contacts.UpdateAsync(email, null, lastName, null, CancellationToken.None).Wait();
+			await contacts.UpdateAsync(email, null, lastName, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -270,7 +272,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Update_failure()
+		public async Task UpdateAsync_failure()
 		{
 			// Arrange
 			var email = "invalid_email";
@@ -304,16 +306,17 @@ namespace StrongGrid.Resources.UnitTests
 			var contacts = new Contacts(client);
 
 			// Act
-			Should.ThrowAsync<Exception>(() => contacts.UpdateAsync(email, null, lastName, null, CancellationToken.None))
-				.Result.Message.ShouldBe("Invalid email.");
+			var result = await Should.ThrowAsync<Exception>(async () => await contacts.UpdateAsync(email, null, lastName, null, CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
+
+			result.Message.ShouldBe("Invalid email.");
 		}
 
 		[Fact]
-		public void Get_single()
+		public async Task GetAsync_single()
 		{
 			// Arrange
 			var contactId = "YUBh";
@@ -325,7 +328,7 @@ namespace StrongGrid.Resources.UnitTests
 			var contacts = new Contacts(client);
 
 			// Act
-			var result = contacts.GetAsync(contactId, CancellationToken.None).Result;
+			var result = await contacts.GetAsync(contactId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -339,7 +342,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Get_multiple()
+		public async Task GetAsync_multiple()
 		{
 			// Arrange
 			var recordsPerPage = 25;
@@ -352,7 +355,7 @@ namespace StrongGrid.Resources.UnitTests
 			var contacts = new Contacts(client);
 
 			// Act
-			var result = contacts.GetAsync(recordsPerPage, page, CancellationToken.None).Result;
+			var result = await contacts.GetAsync(recordsPerPage, page, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -368,7 +371,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Delete_single()
+		public async Task DeleteAsync_single()
 		{
 			// Arrange
 			var contactId = "recipient_id1";
@@ -380,7 +383,7 @@ namespace StrongGrid.Resources.UnitTests
 			var contacts = new Contacts(client);
 
 			// Act
-			contacts.DeleteAsync(contactId, CancellationToken.None).Wait(CancellationToken.None);
+			await contacts.DeleteAsync(contactId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -388,7 +391,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Delete_multiple()
+		public async Task DeleteAsync_multiple()
 		{
 			// Arrange
 			var contactIds = new[] { "recipient_id1", "recipient_id2" };
@@ -400,7 +403,7 @@ namespace StrongGrid.Resources.UnitTests
 			var contacts = new Contacts(client);
 
 			// Act
-			contacts.DeleteAsync(contactIds, CancellationToken.None).Wait(CancellationToken.None);
+			await contacts.DeleteAsync(contactIds, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -408,7 +411,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetBillableCount()
+		public async Task GetBillableCountAsync()
 		{
 			// Arrange
 			var apiResponse = @"{
@@ -422,7 +425,7 @@ namespace StrongGrid.Resources.UnitTests
 			var contacts = new Contacts(client);
 
 			// Act
-			var result = contacts.GetBillableCountAsync(CancellationToken.None).Result;
+			var result = await contacts.GetBillableCountAsync(CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -431,7 +434,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetTotalCount()
+		public async Task GetTotalCountAsync()
 		{
 			// Arrange
 			var apiResponse = @"{
@@ -445,7 +448,7 @@ namespace StrongGrid.Resources.UnitTests
 			var contacts = new Contacts(client);
 
 			// Act
-			var result = contacts.GetTotalCountAsync(CancellationToken.None).Result;
+			var result = await contacts.GetTotalCountAsync(CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -454,7 +457,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Search()
+		public async Task SearchAsync()
 		{
 			// Arrange
 			var listId = 4;
@@ -519,7 +522,7 @@ namespace StrongGrid.Resources.UnitTests
 			var contacts = new Contacts(client);
 
 			// Act
-			var result = contacts.SearchAsync(conditions, listId, CancellationToken.None).Result;
+			var result = await contacts.SearchAsync(conditions, listId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -535,7 +538,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Search_without_conditions()
+		public async Task SearchAsync_without_conditions()
 		{
 			// Arrange
 			var listId = (int?)null;
@@ -577,7 +580,7 @@ namespace StrongGrid.Resources.UnitTests
 			var contacts = new Contacts(client);
 
 			// Act
-			var result = contacts.SearchAsync(conditions, listId, CancellationToken.None).Result;
+			var result = await contacts.SearchAsync(conditions, listId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -593,7 +596,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetLists()
+		public async Task GetListsAsync()
 		{
 			// Arrange
 			var contactId = "YUBh";
@@ -619,7 +622,7 @@ namespace StrongGrid.Resources.UnitTests
 			var contacts = new Contacts(client);
 
 			// Act
-			var result = contacts.GetListsAsync(contactId, CancellationToken.None).Result;
+			var result = await contacts.GetListsAsync(contactId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

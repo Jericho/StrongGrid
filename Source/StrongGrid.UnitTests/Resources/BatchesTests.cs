@@ -4,7 +4,7 @@ using StrongGrid.UnitTests;
 using System;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
@@ -34,7 +34,7 @@ namespace StrongGrid.Resources.UnitTests
 		#endregion
 
 		[Fact]
-		public void GenerateBatchId()
+		public async Task GenerateBatchIdAsync()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -44,7 +44,7 @@ namespace StrongGrid.Resources.UnitTests
 			var batches = new Batches(client);
 
 			// Act
-			var batchId = batches.GenerateBatchIdAsync().Result;
+			var batchId = await batches.GenerateBatchIdAsync().ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -53,7 +53,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void ValidateBatchId_true()
+		public async Task ValidateBatchIdAsync_true()
 		{
 			// Arrange
 			var batchId = "ABC123";
@@ -69,7 +69,7 @@ namespace StrongGrid.Resources.UnitTests
 			var batches = new Batches(client);
 
 			// Act
-			var result = batches.ValidateBatchIdAsync(batchId).Result;
+			var result = await batches.ValidateBatchIdAsync(batchId).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -78,7 +78,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void ValidateBatchId_false()
+		public async Task ValidateBatchIdAsync_false()
 		{
 			// Arrange
 			var batchId = "ABC123";
@@ -99,7 +99,7 @@ namespace StrongGrid.Resources.UnitTests
 			var batches = new Batches(client);
 
 			// Act
-			var result = batches.ValidateBatchIdAsync(batchId).Result;
+			var result = await batches.ValidateBatchIdAsync(batchId).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -108,7 +108,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void ValidateBatchId_problem()
+		public async Task ValidateBatchIdAsync_problem()
 		{
 			// Arrange
 			var batchId = "ABC123";
@@ -129,16 +129,18 @@ namespace StrongGrid.Resources.UnitTests
 			var batches = new Batches(client);
 
 			// Act
-			Should.ThrowAsync<Exception>(() => batches.ValidateBatchIdAsync(batchId))
-				.Result.Message.ShouldBe("an error has occured");
+			var result = await Should.ThrowAsync<Exception>(async () => await batches.ValidateBatchIdAsync(batchId).ConfigureAwait(false)).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
+
+			result.Message.ShouldBe("an error has occured");
+
 		}
 
 		[Fact]
-		public void Cancel()
+		public async Task CancelAsync()
 		{
 			// Arrange
 			var batchId = "YOUR_BATCH_ID";
@@ -150,7 +152,7 @@ namespace StrongGrid.Resources.UnitTests
 			var batches = new Batches(client);
 
 			// Act
-			batches.Cancel(batchId).Wait(CancellationToken.None);
+			await batches.Cancel(batchId).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -158,7 +160,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Pause()
+		public async Task PauseAsync()
 		{
 			// Arrange
 			var batchId = "YOUR_BATCH_ID";
@@ -170,7 +172,7 @@ namespace StrongGrid.Resources.UnitTests
 			var batches = new Batches(client);
 
 			// Act
-			batches.Pause(batchId).Wait(CancellationToken.None);
+			await batches.Pause(batchId).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -178,7 +180,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetAll()
+		public async Task GetAllAsync()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -188,7 +190,7 @@ namespace StrongGrid.Resources.UnitTests
 			var batches = new Batches(client);
 
 			// Act
-			var result = batches.GetAllAsync().Result;
+			var result = await batches.GetAllAsync().ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -198,7 +200,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Resume()
+		public async Task ResumeAsync()
 		{
 			// Arrange
 			var batchId = "YOUR_BATCH_ID";
@@ -210,7 +212,7 @@ namespace StrongGrid.Resources.UnitTests
 			var batches = new Batches(client);
 
 			// Act
-			batches.Resume(batchId).Wait(CancellationToken.None);
+			await batches.Resume(batchId).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

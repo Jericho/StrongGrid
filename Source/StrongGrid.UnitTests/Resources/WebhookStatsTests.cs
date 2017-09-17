@@ -1,11 +1,12 @@
 ﻿using RichardSzalay.MockHttp;
 using Shouldly;
-using StrongGrid.Model;
+using StrongGrid.Models;
 using StrongGrid.UnitTests;
 using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
@@ -13,7 +14,7 @@ namespace StrongGrid.Resources.UnitTests
 	public class WebhookStatsTests
 	{
 		[Fact]
-		public void GetGlobalStats()
+		public async Task GetGlobalStatsAsync()
 		{
 			// Arrange
 			var startDate = new DateTime(2015, 1, 1);
@@ -48,7 +49,7 @@ namespace StrongGrid.Resources.UnitTests
 			var webhookStats = new WebhookStats(client);
 
 			// Act
-			var result = webhookStats.GetInboundParseUsageAsync(startDate, endDate, AggregateBy.None, CancellationToken.None).Result;
+			var result = await webhookStats.GetInboundParseUsageAsync(startDate, endDate, AggregateBy.None, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

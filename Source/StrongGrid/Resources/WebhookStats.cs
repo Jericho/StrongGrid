@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
-using StrongGrid.Model;
+using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System;
 using System.Threading;
@@ -12,6 +12,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Provides statistics on your Webhook usage.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.IWebhookStats" />
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Stats/parse.html
 	/// </remarks>

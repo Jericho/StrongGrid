@@ -24,7 +24,7 @@
 			</group>
 			<group targetFramework=".NETStandard1.3">
 				<dependency id="HttpMultipartParser" version="2.2.0" />
-				<dependency id="NETStandard.Library" version="1.6.0" />
+				<dependency id="NETStandard.Library" version="1.6.1" />
 				<dependency id="Newtonsoft.Json" version="9.0.1" />
 				<dependency id="Pathoschild.Http.FluentClient" version="3.0.0" />
 			</group>

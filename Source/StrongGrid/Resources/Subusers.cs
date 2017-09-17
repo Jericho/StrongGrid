@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
-using StrongGrid.Model;
+using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +12,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows you to manage Subusers.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.ISubusers" />
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/subusers.html
 	/// </remarks>
@@ -48,18 +49,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// List all Subusers for a parent
 		/// </summary>
-		/// <param name="username">The username.</param>
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// An array of <see cref="Subuser" />.
 		/// </returns>
-		public Task<Subuser[]> GetAllAsync(string username = null, int limit = 10, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Subuser[]> GetAllAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync(_endpoint)
-				.WithArgument("username", username)
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)

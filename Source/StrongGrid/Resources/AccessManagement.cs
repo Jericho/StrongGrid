@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
-using StrongGrid.Model;
+using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +14,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows you to manage IP whitelisting
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.IAccessManagement" />
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/ip_access_management.html
 	/// </remarks>

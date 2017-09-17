@@ -1,4 +1,4 @@
-﻿using StrongGrid.Model;
+﻿using StrongGrid.Models;
 using System.Threading;
 using System.Threading.Tasks;
 

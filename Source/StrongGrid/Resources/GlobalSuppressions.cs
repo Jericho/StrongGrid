@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
-using StrongGrid.Model;
+using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
@@ -13,6 +13,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows you to manage email addresses that will not receive any emails.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.IGlobalSuppressions" />
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/global_suppressions.html
 	/// </remarks>

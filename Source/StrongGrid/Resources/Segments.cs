@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
-using StrongGrid.Model;
+using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +12,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows you to create and manage segments.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.ISegments" />
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/campaigns.html
 	/// </remarks>

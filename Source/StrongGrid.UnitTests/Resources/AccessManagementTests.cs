@@ -1,12 +1,13 @@
 ﻿using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
-using StrongGrid.Model;
+using StrongGrid.Models;
 using StrongGrid.UnitTests;
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
@@ -112,7 +113,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetAccessHistory()
+		public async Task GetAccessHistory()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -122,7 +123,7 @@ namespace StrongGrid.Resources.UnitTests
 			var accessManagement = new AccessManagement(client);
 
 			// Act
-			var result = accessManagement.GetAccessHistoryAsync(20, CancellationToken.None).Result;
+			var result = await accessManagement.GetAccessHistoryAsync(20, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -132,7 +133,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetWhitelistedIpAddresses()
+		public async Task GetWhitelistedIpAddresses()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -142,7 +143,7 @@ namespace StrongGrid.Resources.UnitTests
 			var accessManagement = new AccessManagement(client);
 
 			// Act
-			var result = accessManagement.GetWhitelistedIpAddressesAsync(CancellationToken.None).Result;
+			var result = await accessManagement.GetWhitelistedIpAddressesAsync(CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -152,7 +153,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void AddIpAddressToWhitelist()
+		public async Task AddIpAddressToWhitelist()
 		{
 			// Arrange
 			var ip = "1.1.1.1";
@@ -164,7 +165,7 @@ namespace StrongGrid.Resources.UnitTests
 			var accessManagement = new AccessManagement(client);
 
 			// Act
-			var result = accessManagement.AddIpAddressToWhitelistAsync(ip, CancellationToken.None).Result;
+			var result = await accessManagement.AddIpAddressToWhitelistAsync(ip, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -173,7 +174,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void AddIpAddressesToWhitelist()
+		public async Task AddIpAddressesToWhitelist()
 		{
 			// Arrange
 			var ips = new[] { "1.1.1.1", "1.2.3.4", "5.6.7.8" };
@@ -185,7 +186,7 @@ namespace StrongGrid.Resources.UnitTests
 			var accessManagement = new AccessManagement(client);
 
 			// Act
-			var result = accessManagement.AddIpAddressesToWhitelistAsync(ips, CancellationToken.None).Result;
+			var result = await accessManagement.AddIpAddressesToWhitelistAsync(ips, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -195,7 +196,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void RemoveIpAddressFromWhitelistAsync()
+		public async Task RemoveIpAddressFromWhitelistAsync()
 		{
 			// Arrange
 			var id = 1111;
@@ -207,7 +208,7 @@ namespace StrongGrid.Resources.UnitTests
 			var accessManagement = new AccessManagement(client);
 
 			// Act
-			accessManagement.RemoveIpAddressFromWhitelistAsync(id, CancellationToken.None).Wait(CancellationToken.None);
+			await accessManagement.RemoveIpAddressFromWhitelistAsync(id, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -215,7 +216,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void RemoveIpAddressesFromWhitelistAsync()
+		public async Task RemoveIpAddressesFromWhitelistAsync()
 		{
 			// Arrange
 			var ids = new long[] { 1111, 2222, 3333 };
@@ -227,7 +228,7 @@ namespace StrongGrid.Resources.UnitTests
 			var accessManagement = new AccessManagement(client);
 
 			// Act
-			accessManagement.RemoveIpAddressesFromWhitelistAsync(ids, CancellationToken.None).Wait(CancellationToken.None);
+			await accessManagement.RemoveIpAddressesFromWhitelistAsync(ids, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -236,7 +237,7 @@ namespace StrongGrid.Resources.UnitTests
 
 
 		[Fact]
-		public void GetWhitelistedIpAddressAsync()
+		public async Task GetWhitelistedIpAddressAsync()
 		{
 			// Arrange
 			var id = 1111;
@@ -250,7 +251,7 @@ namespace StrongGrid.Resources.UnitTests
 			var accessManagement = new AccessManagement(client);
 
 			// Act
-			var result = accessManagement.GetWhitelistedIpAddressAsync(id, CancellationToken.None).Result;
+			var result = await accessManagement.GetWhitelistedIpAddressAsync(id, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

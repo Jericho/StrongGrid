@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Rules for StrongGrid" Description="Code analysis rules for StrongGrid.csproj." ToolsVersion="14.0">
+<RuleSet Name="Rules for StrongGrid" Description="Code analysis rules for StrongGrid.csproj." ToolsVersion="15.0">
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CA1001" Action="Warning" />
     <Rule Id="CA1009" Action="Warning" />
+    <Rule Id="CA1014" Action="Warning" />
     <Rule Id="CA1016" Action="Warning" />
     <Rule Id="CA1033" Action="Warning" />
     <Rule Id="CA1049" Action="Warning" />
@@ -73,8 +74,8 @@
     <Rule Id="SA1310" Action="None" />
     <Rule Id="SA1402" Action="None" />
     <Rule Id="SA1413" Action="None" />
-    <Rule Id="SA1502" Action="None" />
     <Rule Id="SA1501" Action="None" />
+    <Rule Id="SA1502" Action="None" />
     <Rule Id="SA1503" Action="None" />
     <Rule Id="SA1633" Action="None" />
   </Rules>

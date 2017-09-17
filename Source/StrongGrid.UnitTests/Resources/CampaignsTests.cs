@@ -1,12 +1,13 @@
 ﻿using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
-using StrongGrid.Model;
+using StrongGrid.Models;
 using StrongGrid.UnitTests;
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
@@ -116,7 +117,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Create()
+		public async Task CreateAsync()
 		{
 			// Arrange
 			var title = "March Newsletter";
@@ -130,7 +131,7 @@ namespace StrongGrid.Resources.UnitTests
 			var campaigns = new Campaigns(client);
 
 			// Act
-			var result = campaigns.CreateAsync(title, senderId, null, null, null, null, null, null, suppressionGroupId, null, null, CancellationToken.None).Result;
+			var result = await campaigns.CreateAsync(title, senderId, null, null, null, null, null, null, suppressionGroupId, null, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -139,7 +140,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetAll()
+		public async Task GetAllAsync()
 		{
 			// Arrange
 			var limit = 2;
@@ -152,7 +153,7 @@ namespace StrongGrid.Resources.UnitTests
 			var campaigns = new Campaigns(client);
 
 			// Act
-			var result = campaigns.GetAllAsync(limit, offset, CancellationToken.None).Result;
+			var result = await campaigns.GetAllAsync(limit, offset, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -162,7 +163,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Get()
+		public async Task GetAsync()
 		{
 			// Arrange
 			var campaignId = 986724;
@@ -174,7 +175,7 @@ namespace StrongGrid.Resources.UnitTests
 			var campaigns = new Campaigns(client);
 
 			// Act
-			var result = campaigns.GetAsync(campaignId, CancellationToken.None).Result;
+			var result = await campaigns.GetAsync(campaignId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -183,7 +184,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Delete()
+		public async Task DeleteAsync()
 		{
 			// Arrange
 			var campaignId = 123;
@@ -195,7 +196,7 @@ namespace StrongGrid.Resources.UnitTests
 			var campaigns = new Campaigns(client);
 
 			// Act
-			campaigns.DeleteAsync(campaignId, CancellationToken.None).Wait(CancellationToken.None);
+			await campaigns.DeleteAsync(campaignId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -203,7 +204,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Update()
+		public async Task UpdateAsync()
 		{
 			// Arrange
 			var campaignId = 986724;
@@ -218,7 +219,7 @@ namespace StrongGrid.Resources.UnitTests
 			var campaigns = new Campaigns(client);
 
 			// Act
-			var result = campaigns.UpdateAsync(campaignId, title, suppressionGroupId, null, null, null, null, null, null, senderId, null, null, CancellationToken.None).Result;
+			var result = await campaigns.UpdateAsync(campaignId, title, suppressionGroupId, null, null, null, null, null, null, senderId, null, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -229,7 +230,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void SendNow()
+		public async Task SendNowAsync()
 		{
 			// Arrange
 			var campaignId = 986724;
@@ -246,7 +247,7 @@ namespace StrongGrid.Resources.UnitTests
 			var campaigns = new Campaigns(client);
 
 			// Act
-			campaigns.SendNowAsync(campaignId, CancellationToken.None).Wait();
+			await campaigns.SendNowAsync(campaignId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -254,7 +255,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Schedule()
+		public async Task ScheduleAsync()
 		{
 			// Arrange
 			var campaignId = 986724;
@@ -273,7 +274,7 @@ namespace StrongGrid.Resources.UnitTests
 			var campaigns = new Campaigns(client);
 
 			// Act
-			campaigns.ScheduleAsync(campaignId, sendOn, CancellationToken.None).Wait();
+			await campaigns.ScheduleAsync(campaignId, sendOn, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -281,7 +282,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Reschedule()
+		public async Task RescheduleAsync()
 		{
 			// Arrange
 			var campaignId = 986724;
@@ -300,7 +301,7 @@ namespace StrongGrid.Resources.UnitTests
 			var campaigns = new Campaigns(client);
 
 			// Act
-			campaigns.RescheduleAsync(campaignId, sendOn, CancellationToken.None).Wait();
+			await campaigns.RescheduleAsync(campaignId, sendOn, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -308,7 +309,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetScheduledDate()
+		public async Task GetScheduledDateAsync()
 		{
 			// Arrange
 			var campaignId = 986724;
@@ -323,7 +324,7 @@ namespace StrongGrid.Resources.UnitTests
 			var campaigns = new Campaigns(client);
 
 			// Act
-			var result = campaigns.GetScheduledDateAsync(campaignId, CancellationToken.None).Result;
+			var result = await campaigns.GetScheduledDateAsync(campaignId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -333,7 +334,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Unschedule()
+		public async Task UnscheduleAsync()
 		{
 			// Arrange
 			var campaignId = 986724;
@@ -345,7 +346,7 @@ namespace StrongGrid.Resources.UnitTests
 			var campaigns = new Campaigns(client);
 
 			// Act
-			campaigns.UnscheduleAsync(campaignId, CancellationToken.None).Wait();
+			await campaigns.UnscheduleAsync(campaignId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -353,7 +354,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void SendTest_single()
+		public async Task SendTestAsync_single()
 		{
 			// Arrange
 			var campaignId = 986724;
@@ -366,7 +367,7 @@ namespace StrongGrid.Resources.UnitTests
 			var campaigns = new Campaigns(client);
 
 			// Act
-			campaigns.SendTestAsync(campaignId, emailAddresses, CancellationToken.None).Wait();
+			await campaigns.SendTestAsync(campaignId, emailAddresses, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -374,7 +375,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void SendTest_multiple()
+		public async Task SendTestAsync_multiple()
 		{
 			// Arrange
 			var campaignId = 986724;
@@ -387,7 +388,7 @@ namespace StrongGrid.Resources.UnitTests
 			var campaigns = new Campaigns(client);
 
 			// Act
-			campaigns.SendTestAsync(campaignId, emailAddresses, CancellationToken.None).Wait();
+			await campaigns.SendTestAsync(campaignId, emailAddresses, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

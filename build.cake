@@ -1,11 +1,11 @@
 // Install addins.
-#addin "nuget:?package=Cake.Coveralls&version=0.4.0"
+#addin "nuget:?package=Cake.Coveralls&version=0.5.0"
 
 // Install tools.
-#tool "nuget:?package=GitVersion.CommandLine&version=4.0.0-beta0011"
+#tool "nuget:?package=GitVersion.CommandLine&version=4.0.0-beta0012"
 #tool "nuget:?package=GitReleaseManager&version=0.6.0"
 #tool "nuget:?package=OpenCover&version=4.6.519"
-#tool "nuget:?package=ReportGenerator&version=2.5.6"
+#tool "nuget:?package=ReportGenerator&version=2.5.10"
 #tool "nuget:?package=coveralls.io&version=1.3.4"
 #tool "nuget:?package=xunit.runner.console&version=2.2.0"
 
@@ -25,7 +25,7 @@ var configuration = Argument<string>("configuration", "Release");
 var libraryName = "StrongGrid";
 var gitHubRepo = "StrongGrid";
 
-var testCoverageFilter = "+[StrongGrid]* -[StrongGrid]StrongGrid.Properties.* -[StrongGrid]StrongGrid.Model.* -[StrongGrid]StrongGrid.Logging.*";
+var testCoverageFilter = "+[StrongGrid]* -[StrongGrid]StrongGrid.Properties.* -[StrongGrid]StrongGrid.Models.* -[StrongGrid]StrongGrid.Logging.*";
 var testCoverageExcludeByAttribute = "*.ExcludeFromCodeCoverage*";
 var testCoverageExcludeByFile = "*/*Designer.cs;*/*AssemblyInfo.cs";
 
@@ -39,11 +39,10 @@ var gitHubUserName = EnvironmentVariable("GITHUB_USERNAME");
 var gitHubPassword = EnvironmentVariable("GITHUB_PASSWORD");
 
 var sourceFolder = "./Source/";
-var unitTestsPath = sourceFolder + libraryName + ".UnitTests";
 
 var outputDir = "./artifacts/";
 var codeCoverageDir = outputDir + "CodeCoverage/";
-var unitTestingDir = outputDir + "UnitTesting/";
+var unitTestsProject = sourceFolder + libraryName + ".UnitTests/" + libraryName + ".UnitTests.csproj";
 
 var versionInfo = GitVersion(new GitVersionSettings() { OutputType = GitVersionOutput.Json });
 var milestone = string.Concat("v", versionInfo.MajorMinorPatch);
@@ -86,6 +85,11 @@ Setup(context =>
 		isTagged
 	);
 
+	Information("Myget Info:\r\n\tApi Url: {0}\r\n\tApi Key: {1}",
+		myGetApiUrl,
+		string.IsNullOrEmpty(myGetApiKey) ? "[NULL]" : new string('*', myGetApiKey.Length)
+	);
+
 	Information("Nuget Info:\r\n\tApi Url: {0}\r\n\tApi Key: {1}",
 		nuGetApiUrl,
 		string.IsNullOrEmpty(nuGetApiKey) ? "[NULL]" : new string('*', nuGetApiKey.Length)
@@ -109,7 +113,19 @@ Teardown(context =>
 // TASK DEFINITIONS
 ///////////////////////////////////////////////////////////////////////////////
 
+Task("AppVeyor-Build_Number")
+	.WithCriteria(() => AppVeyor.IsRunningOnAppVeyor)
+	.Does(() =>
+{
+	GitVersion(new GitVersionSettings()
+	{
+		UpdateAssemblyInfo = false,
+		OutputType = GitVersionOutput.BuildServer
+	});
+});
+
 Task("Clean")
+	.IsDependentOn("AppVeyor-Build_Number")
 	.Does(() =>
 {
 	// Clean solution directories.
@@ -130,10 +146,8 @@ Task("Restore-NuGet-Packages")
 	.IsDependentOn("Clean")
 	.Does(() =>
 {
-	DotNetCoreRestore("./", new DotNetCoreRestoreSettings
+	DotNetCoreRestore("./Source/", new DotNetCoreRestoreSettings
 	{
-		Verbose = false,
-		Verbosity = DotNetCoreRestoreVerbosity.Warning,
 		Sources = new [] {
 			"https://www.myget.org/F/xunit/api/v3/index.json",
 			"https://dotnet.myget.org/F/dotnet-core/api/v3/index.json",
@@ -143,88 +157,50 @@ Task("Restore-NuGet-Packages")
 	});
 });
 
-Task("Update-Assembly-Version")
-	.WithCriteria(() => !isLocalBuild)
-	.Does(() =>
-{
-	GitVersion(new GitVersionSettings()
-	{
-		UpdateAssemblyInfo = false,
-		OutputType = GitVersionOutput.BuildServer
-	});
-
-	var projects = GetFiles("./**/project.json");
-	foreach(var project in projects)
-	{
-		Information("Setting version: {0}", project);
-
-		var path = project.ToString();
-		var trg = new StringBuilder();
-		var regExVersion = new System.Text.RegularExpressions.Regex("\"version\":(\\s)?\"(.*).(.*).(.*)-\\*\"(,?)");
-		using (var src = System.IO.File.OpenRead(path))
-		{
-			using (var reader = new StreamReader(src))
-			{
-				while (!reader.EndOfStream)
-				{
-					var line = reader.ReadLine();
-					if (line == null) continue;
-
-					// $5 is important: it ensures the final comma is preserved in the original string if it was present
-					line = regExVersion.Replace(line, string.Format("\"version\": \"{0}\"$5", versionInfo.SemVer));
-
-					trg.AppendLine(line);
-				}
-			}
-		}
-
-		System.IO.File.WriteAllText(path, trg.ToString());
-	}
-});
-
 Task("Build")
 	.IsDependentOn("Restore-NuGet-Packages")
-	.IsDependentOn("Update-Assembly-Version")
 	.Does(() =>
 {
-	var projects = GetFiles("./**/*.xproj");
-	foreach(var project in projects)
+	DotNetCoreBuild(sourceFolder + libraryName + ".sln", new DotNetCoreBuildSettings
 	{
-		DotNetCoreBuild(project.GetDirectory().FullPath, new DotNetCoreBuildSettings {
-			Configuration = configuration
-		});
-	}
+		Configuration = configuration,
+		ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.NuGetVersionV2)
+	});
 });
 
 Task("Run-Unit-Tests")
 	.IsDependentOn("Build")
 	.Does(() =>
 {
-	var testSettings = new DotNetCoreTestSettings {
+	DotNetCoreTest(unitTestsProject, new DotNetCoreTestSettings
+	{
+		NoBuild = true,
 		Configuration = configuration
-	};
-
-	DotNetCoreTest(unitTestsPath, testSettings);
+	});
 });
 
 Task("Run-Code-Coverage")
 	.IsDependentOn("Build")
 	.Does(() =>
 {
-	Action<ICakeContext> testAction = ctx => ctx.DotNetCoreTest(unitTestsPath, new DotNetCoreTestSettings {
+	Action<ICakeContext> testAction = ctx => ctx.DotNetCoreTest(unitTestsProject, new DotNetCoreTestSettings
+	{
 		NoBuild = true,
-		Configuration = configuration,
-		ArgumentCustomization = args => args.AppendSwitchQuoted("-xml", codeCoverageDir + "coverage.xml")
+		Configuration = configuration
 	});
 
 	OpenCover(testAction,
 		codeCoverageDir + "coverage.xml",
-		new OpenCoverSettings {
-			ArgumentCustomization = args => args.Append("-mergeoutput")
+		new OpenCoverSettings
+		{
+			OldStyle = true,
+			MergeOutput = true,
+			ArgumentCustomization = args => args.Append("-returntargetcode")
 		}
 		.WithFilter(testCoverageFilter)
 		.ExcludeByAttribute(testCoverageExcludeByAttribute)
-		.ExcludeByFile(testCoverageExcludeByFile));
+		.ExcludeByFile(testCoverageExcludeByFile)
+	);
 });
 
 Task("Upload-Coverage-Result")

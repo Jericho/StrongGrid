@@ -1,4 +1,4 @@
-﻿using StrongGrid.Model;
+﻿using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Threading;
@@ -27,14 +27,13 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// List all Subusers for a parent
 		/// </summary>
-		/// <param name="username">The username.</param>
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// An array of <see cref="Subuser" />.
 		/// </returns>
-		Task<Subuser[]> GetAllAsync(string username = null, int limit = 10, int offset = 0, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Subuser[]> GetAllAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Create a new Subuser

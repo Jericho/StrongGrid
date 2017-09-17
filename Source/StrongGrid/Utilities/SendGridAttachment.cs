@@ -1,5 +1,5 @@
 ﻿using HeyRed.Mime;
-using StrongGrid.Model;
+using StrongGrid.Models;
 using System;
 using System.IO;
 

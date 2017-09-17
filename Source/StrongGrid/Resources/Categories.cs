@@ -10,6 +10,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows you to manage categories
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.ICategories" />
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Categories/categories.html
 	/// </remarks>

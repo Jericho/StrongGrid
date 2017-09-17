@@ -20,5 +20,7 @@ branches:
 
 # Build cache
 cache:
-  - '%USERPROFILE%\.nuget\packages -> Source\**\project.json'  # Note the use of single quotes around the entire line, when environment variables are used.
   - tools -> build.cake, tools\packages.config
+
+# Environment configuration
+image: Visual Studio 2017

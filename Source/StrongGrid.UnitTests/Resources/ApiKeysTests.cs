@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
-using StrongGrid.Model;
+using StrongGrid.Models;
 using StrongGrid.UnitTests;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
@@ -59,7 +60,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Create()
+		public async Task CreateAsync()
 		{
 			// Arrange
 			var name = "My API Key";
@@ -72,7 +73,7 @@ namespace StrongGrid.Resources.UnitTests
 			var apiKeys = new ApiKeys(client);
 
 			// Act
-			var result = apiKeys.CreateAsync(name, scopes, CancellationToken.None).Result;
+			var result = await apiKeys.CreateAsync(name, scopes, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -81,7 +82,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Get()
+		public async Task GetAsync()
 		{
 			// Arrange
 			var keyId = "xxxxxxxx";
@@ -93,7 +94,7 @@ namespace StrongGrid.Resources.UnitTests
 			var apiKeys = new ApiKeys(client);
 
 			// Act
-			var result = apiKeys.GetAsync(keyId, CancellationToken.None).Result;
+			var result = await apiKeys.GetAsync(keyId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -102,7 +103,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetAll()
+		public async Task GetAllAsync()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -112,7 +113,7 @@ namespace StrongGrid.Resources.UnitTests
 			var apiKeys = new ApiKeys(client);
 
 			// Act
-			var result = apiKeys.GetAllAsync(CancellationToken.None).Result;
+			var result = await apiKeys.GetAllAsync(CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -122,7 +123,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Delete()
+		public async Task DeleteAsync()
 		{
 			// Arrange
 			var keyId = "xxxxxxxx";
@@ -134,7 +135,7 @@ namespace StrongGrid.Resources.UnitTests
 			var apiKeys = new ApiKeys(client);
 
 			// Act
-			apiKeys.DeleteAsync(keyId, CancellationToken.None).Wait(CancellationToken.None);
+			await apiKeys.DeleteAsync(keyId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -142,7 +143,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Update_with_scopes()
+		public async Task UpdateAsync_with_scopes()
 		{
 			// Arrange
 			var keyId = "xxxxxxxx";
@@ -156,7 +157,7 @@ namespace StrongGrid.Resources.UnitTests
 			var apiKeys = new ApiKeys(client);
 
 			// Act
-			var result = apiKeys.UpdateAsync(keyId, name, scopes, CancellationToken.None).Result;
+			var result = await apiKeys.UpdateAsync(keyId, name, scopes, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -165,7 +166,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Update_without_scopes()
+		public async Task UpdateAsync_without_scopes()
 		{
 			// Arrange
 			var keyId = "xxxxxxxx";
@@ -179,7 +180,7 @@ namespace StrongGrid.Resources.UnitTests
 			var apiKeys = new ApiKeys(client);
 
 			// Act
-			var result = apiKeys.UpdateAsync(keyId, name, scopes, CancellationToken.None).Result;
+			var result = await apiKeys.UpdateAsync(keyId, name, scopes, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -188,7 +189,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void CreateWithBillingPermissions()
+		public async Task CreateWithBillingPermissionsAsync()
 		{
 			// Arrange
 			var name = "API Key with billing permissions";
@@ -200,7 +201,7 @@ namespace StrongGrid.Resources.UnitTests
 			var apiKeys = new ApiKeys(client);
 
 			// Act
-			var result = apiKeys.CreateWithBillingPermissionsAsync(name, CancellationToken.None).Result;
+			var result = await apiKeys.CreateWithBillingPermissionsAsync(name, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -209,7 +210,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void CreateWithAllPermissions()
+		public async Task CreateWithAllPermissionsAsync()
 		{
 			// Arrange
 			var name = "My API Key with all permissions";
@@ -229,7 +230,7 @@ namespace StrongGrid.Resources.UnitTests
 			var apiKeys = new ApiKeys(client);
 
 			// Act
-			var result = apiKeys.CreateWithAllPermissionsAsync(name, CancellationToken.None).Result;
+			var result = await apiKeys.CreateWithAllPermissionsAsync(name, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

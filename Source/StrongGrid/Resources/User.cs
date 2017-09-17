@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
-using StrongGrid.Model;
+using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,6 +10,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows access to information about the current user.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.IUser" />
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html
 	/// </remarks>

@@ -1,11 +1,12 @@
 ﻿using RichardSzalay.MockHttp;
 using Shouldly;
-using StrongGrid.Model;
+using StrongGrid.Models;
 using StrongGrid.UnitTests;
 using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
@@ -19,7 +20,7 @@ namespace StrongGrid.Resources.UnitTests
 		#endregion
 
 		[Fact]
-		public void GetGlobalStats()
+		public async Task GetGlobalStatsAsync()
 		{
 			// Arrange
 			var startDate = new DateTime(2015, 1, 1);
@@ -84,7 +85,7 @@ namespace StrongGrid.Resources.UnitTests
 			var statistics = new Statistics(client);
 
 			// Act
-			var result = statistics.GetGlobalStatisticsAsync(startDate, endDate, AggregateBy.None, CancellationToken.None).Result;
+			var result = await statistics.GetGlobalStatisticsAsync(startDate, endDate, AggregateBy.None, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -96,7 +97,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetCategoryStats()
+		public async Task GetCategoryStatsAsync()
 		{
 			// Arrange
 			var categories = new[] { "cat1", "cat2" };
@@ -211,7 +212,7 @@ namespace StrongGrid.Resources.UnitTests
 			var statistics = new Statistics(client);
 
 			// Act
-			var result = statistics.GetCategoriesStatisticsAsync(categories, startDate, endDate, AggregateBy.None, CancellationToken.None).Result;
+			var result = await statistics.GetCategoriesStatisticsAsync(categories, startDate, endDate, AggregateBy.None, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -224,7 +225,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetSubusersStats()
+		public async Task GetSubusersStatsAsync()
 		{
 			// Arrange
 			var subusers = new[] { "user1", "user2" };
@@ -338,7 +339,7 @@ namespace StrongGrid.Resources.UnitTests
 			var statistics = new Statistics(client);
 
 			// Act
-			var result = statistics.GetSubusersStatisticsAsync(subusers, startDate, endDate, AggregateBy.None, CancellationToken.None).Result;
+			var result = await statistics.GetSubusersStatisticsAsync(subusers, startDate, endDate, AggregateBy.None, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -351,7 +352,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetCountryStats()
+		public async Task GetCountryStatsAsync()
 		{
 			// Arrange
 			var country = "US";
@@ -397,7 +398,7 @@ namespace StrongGrid.Resources.UnitTests
 			var statistics = new Statistics(client);
 
 			// Act
-			var result = statistics.GetCountryStatisticsAsync(country, startDate, endDate, AggregateBy.None, CancellationToken.None).Result;
+			var result = await statistics.GetCountryStatisticsAsync(country, startDate, endDate, AggregateBy.None, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -410,7 +411,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetDeviceTypesStats()
+		public async Task GetDeviceTypesStatsAsync()
 		{
 			// Arrange
 			var startDate = new DateTime(2014, 10, 1);
@@ -451,7 +452,7 @@ namespace StrongGrid.Resources.UnitTests
 			var statistics = new Statistics(client);
 
 			// Act
-			var result = statistics.GetDeviceTypesStatisticsAsync(startDate, endDate, AggregateBy.None, CancellationToken.None).Result;
+			var result = await statistics.GetDeviceTypesStatisticsAsync(startDate, endDate, AggregateBy.None, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -465,7 +466,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetClientTypesStats()
+		public async Task GetClientTypesStatsAsync()
 		{
 			// Arrange
 			var startDate = new DateTime(2014, 10, 1);
@@ -506,7 +507,7 @@ namespace StrongGrid.Resources.UnitTests
 			var statistics = new Statistics(client);
 
 			// Act
-			var result = statistics.GetClientTypesStatisticsAsync(startDate, endDate, AggregateBy.None, CancellationToken.None).Result;
+			var result = await statistics.GetClientTypesStatisticsAsync(startDate, endDate, AggregateBy.None, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -520,7 +521,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetInboxProvidersStats()
+		public async Task GetInboxProvidersStatsAsync()
 		{
 			// Arrange
 			var providers = new[] { "Gmail", "Hotmail" };
@@ -578,7 +579,7 @@ namespace StrongGrid.Resources.UnitTests
 			var statistics = new Statistics(client);
 
 			// Act
-			var result = statistics.GetInboxProvidersStatisticsAsync(providers, startDate, endDate, AggregateBy.None, CancellationToken.None).Result;
+			var result = await statistics.GetInboxProvidersStatisticsAsync(providers, startDate, endDate, AggregateBy.None, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -591,7 +592,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetBrowsersStats()
+		public async Task GetBrowsersStatsAsync()
 		{
 			// Arrange
 			var browsers = new[] { "Chrome", "Firefox" };
@@ -649,7 +650,7 @@ namespace StrongGrid.Resources.UnitTests
 			var statistics = new Statistics(client);
 
 			// Act
-			var result = statistics.GetBrowsersStatisticsAsync(browsers, startDate, endDate, AggregateBy.None, CancellationToken.None).Result;
+			var result = await statistics.GetBrowsersStatisticsAsync(browsers, startDate, endDate, AggregateBy.None, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

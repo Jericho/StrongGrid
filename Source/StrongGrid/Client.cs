@@ -125,6 +125,22 @@ namespace StrongGrid
 		public IInvalidEmails InvalidEmails { get; private set; }
 
 		/// <summary>
+		/// Gets the IpAddresses resource.
+		/// </summary>
+		/// <value>
+		/// The IP addresses
+		/// </value>
+		public IIpAddresses IpAddresses { get; private set; }
+
+		/// <summary>
+		/// Gets the IpPools resource.
+		/// </summary>
+		/// <value>
+		/// The IP pools
+		/// </value>
+		public IIpPools IpPools { get; private set; }
+
+		/// <summary>
 		/// Gets the Lists resource.
 		/// </summary>
 		/// <value>
@@ -361,6 +377,8 @@ namespace StrongGrid
 			CustomFields = new CustomFields(_fluentClient);
 			GlobalSuppressions = new GlobalSuppressions(_fluentClient);
 			InvalidEmails = new InvalidEmails(_fluentClient);
+			IpAddresses = new IpAddresses(_fluentClient);
+			IpPools = new IpPools(_fluentClient);
 			Lists = new Lists(_fluentClient);
 			Mail = new Mail(_fluentClient);
 			Segments = new Segments(_fluentClient);

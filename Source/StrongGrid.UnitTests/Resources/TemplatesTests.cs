@@ -1,12 +1,13 @@
 ﻿using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
-using StrongGrid.Model;
+using StrongGrid.Models;
 using StrongGrid.UnitTests;
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
@@ -99,7 +100,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Create()
+		public async Task CreateAsync()
 		{
 			// Arrange
 			var name = "My template";
@@ -112,7 +113,7 @@ namespace StrongGrid.Resources.UnitTests
 			var templates = new Templates(client);
 
 			// Act
-			var result = templates.CreateAsync(name, CancellationToken.None).Result;
+			var result = await templates.CreateAsync(name, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -121,7 +122,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Get()
+		public async Task GetAsync()
 		{
 			// Arrange
 			var templateId = "e8ac01d5-a07a-4a71-b14c-4721136fe6aa";
@@ -133,7 +134,7 @@ namespace StrongGrid.Resources.UnitTests
 			var templates = new Templates(client);
 
 			// Act
-			var result = templates.GetAsync(templateId, CancellationToken.None).Result;
+			var result = await templates.GetAsync(templateId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -144,7 +145,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetAll()
+		public async Task GetAllAsync()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -154,7 +155,7 @@ namespace StrongGrid.Resources.UnitTests
 			var templates = new Templates(client);
 
 			// Act
-			var result = templates.GetAllAsync(CancellationToken.None).Result;
+			var result = await templates.GetAllAsync(CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -164,7 +165,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Delete()
+		public async Task DeleteAsync()
 		{
 			// Arrange
 			var templateId = "xxxxxxxx";
@@ -176,7 +177,7 @@ namespace StrongGrid.Resources.UnitTests
 			var templates = new Templates(client);
 
 			// Act
-			templates.DeleteAsync(templateId, CancellationToken.None).Wait(CancellationToken.None);
+			await templates.DeleteAsync(templateId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -184,7 +185,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void Update()
+		public async Task UpdateAsync()
 		{
 			// Arrange
 			var templateId = "733ba07f-ead1-41fc-933a-3976baa23716";
@@ -197,7 +198,7 @@ namespace StrongGrid.Resources.UnitTests
 			var templates = new Templates(client);
 
 			// Act
-			var result = templates.UpdateAsync(templateId, name, CancellationToken.None).Result;
+			var result = await templates.UpdateAsync(templateId, name, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -206,7 +207,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void CreateVersion()
+		public async Task CreateVersionAsync()
 		{
 			// Arrange
 			var templateId = "ddb96bbc-9b92-425e-8979-99464621b543";
@@ -223,7 +224,7 @@ namespace StrongGrid.Resources.UnitTests
 			var templates = new Templates(client);
 
 			// Act
-			var result = templates.CreateVersionAsync(templateId, name, subject, htmlContent, textContent, isActive, CancellationToken.None).Result;
+			var result = await templates.CreateVersionAsync(templateId, name, subject, htmlContent, textContent, isActive, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -232,7 +233,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void ActivateVersion()
+		public async Task ActivateVersionAsync()
 		{
 			// Arrange
 			var templateId = "e3a61852-1acb-4b32-a1bc-b44b3814ab78";
@@ -245,7 +246,7 @@ namespace StrongGrid.Resources.UnitTests
 			var templates = new Templates(client);
 
 			// Act
-			var result = templates.ActivateVersionAsync(templateId, versionId, CancellationToken.None).Result;
+			var result = await templates.ActivateVersionAsync(templateId, versionId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -254,7 +255,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetVersion()
+		public async Task GetVersionAsync()
 		{
 			// Arrange
 			var templateId = "d51480ca-ca3f-465c-bc3e-ceb71d73c38d";
@@ -267,7 +268,7 @@ namespace StrongGrid.Resources.UnitTests
 			var templates = new Templates(client);
 
 			// Act
-			var result = templates.GetVersionAsync(templateId, versionId, CancellationToken.None).Result;
+			var result = await templates.GetVersionAsync(templateId, versionId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -276,7 +277,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void UpdateVersion()
+		public async Task UpdateVersionAsync()
 		{
 			// Arrange
 			var templateId = "ddb96bbc-9b92-425e-8979-99464621b543";
@@ -290,7 +291,7 @@ namespace StrongGrid.Resources.UnitTests
 			var templates = new Templates(client);
 
 			// Act
-			var result = templates.UpdateVersionAsync(templateId, versionId, name, null, null, null, null, CancellationToken.None).Result;
+			var result = await templates.UpdateVersionAsync(templateId, versionId, name, null, null, null, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -299,7 +300,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void DeleteVersion()
+		public async Task DeleteVersionAsync()
 		{
 			// Arrange
 			var templateId = "ddb96bbc-9b92-425e-8979-99464621b543";
@@ -312,7 +313,7 @@ namespace StrongGrid.Resources.UnitTests
 			var templates = new Templates(client);
 
 			// Act
-			templates.DeleteVersionAsync(templateId, versionId, CancellationToken.None).Wait();
+			await templates.DeleteVersionAsync(templateId, versionId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
-using StrongGrid.Model;
+using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +13,7 @@ namespace StrongGrid.Resources
 	/// Suppressions are email addresses that can be added to groups to prevent certain types of emails
 	/// from being delivered to those addresses.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.ISuppressions" />
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/suppressions.html
 	/// </remarks>

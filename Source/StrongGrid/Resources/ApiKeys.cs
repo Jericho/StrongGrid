@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
-using StrongGrid.Model;
+using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
@@ -14,6 +14,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows you to manage API Keys.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.IApiKeys" />
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/API_Keys/index.html
 	/// </remarks>

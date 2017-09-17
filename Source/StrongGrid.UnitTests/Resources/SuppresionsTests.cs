@@ -4,6 +4,7 @@ using StrongGrid.UnitTests;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
@@ -62,7 +63,7 @@ namespace StrongGrid.Resources.UnitTests
 		#endregion
 
 		[Fact]
-		public void GetAll()
+		public async Task GetAllAsync()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -72,7 +73,7 @@ namespace StrongGrid.Resources.UnitTests
 			var suppresions = new Suppressions(client);
 
 			// Act
-			var result = suppresions.GetAllAsync(CancellationToken.None).Result;
+			var result = await suppresions.GetAllAsync(CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -82,7 +83,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetUnsubscribedGroups()
+		public async Task GetUnsubscribedGroupsAsync()
 		{
 			// Arrange
 			var email = "test@exmaple.com";
@@ -94,7 +95,7 @@ namespace StrongGrid.Resources.UnitTests
 			var suppresions = new Suppressions(client);
 
 			// Act
-			var result = suppresions.GetUnsubscribedGroupsAsync(email, CancellationToken.None).Result;
+			var result = await suppresions.GetUnsubscribedGroupsAsync(email, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -104,7 +105,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void GetUnsubscribedAddresses()
+		public async Task GetUnsubscribedAddressesAsync()
 		{
 			// Arrange
 			var groupId = 123;
@@ -121,7 +122,7 @@ namespace StrongGrid.Resources.UnitTests
 			var suppresions = new Suppressions(client);
 
 			// Act
-			var result = suppresions.GetUnsubscribedAddressesAsync(groupId, CancellationToken.None).Result;
+			var result = await suppresions.GetUnsubscribedAddressesAsync(groupId, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -133,7 +134,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void AddAddressToUnsubscribeGroup_single_email()
+		public async Task AddAddressToUnsubscribeGroupAsync_single_email()
 		{
 			// Arrange
 			var groupId = 103;
@@ -153,7 +154,7 @@ namespace StrongGrid.Resources.UnitTests
 			var suppressions = new Suppressions(client);
 
 			// Act
-			suppressions.AddAddressToUnsubscribeGroupAsync(groupId, email, CancellationToken.None).Wait();
+			await suppressions.AddAddressToUnsubscribeGroupAsync(groupId, email, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -161,7 +162,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void AddAddressToUnsubscribeGroup_multiple_emails()
+		public async Task AddAddressToUnsubscribeGroupAsync_multiple_emails()
 		{
 			// Arrange
 			var groupId = 103;
@@ -181,7 +182,7 @@ namespace StrongGrid.Resources.UnitTests
 			var suppressions = new Suppressions(client);
 
 			// Act
-			suppressions.AddAddressToUnsubscribeGroupAsync(groupId, emails, CancellationToken.None).Wait();
+			await suppressions.AddAddressToUnsubscribeGroupAsync(groupId, emails, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -189,7 +190,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void RemoveAddressFromSuppressionGroup()
+		public async Task RemoveAddressFromSuppressionGrouAsyncp()
 		{
 			// Arrange
 			var groupId = 103;
@@ -203,7 +204,7 @@ namespace StrongGrid.Resources.UnitTests
 			var suppressions = new Suppressions(client);
 
 			// Act
-			suppressions.RemoveAddressFromSuppressionGroupAsync(groupId, email, CancellationToken.None).Wait();
+			await suppressions.RemoveAddressFromSuppressionGroupAsync(groupId, email, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -211,7 +212,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void IsSuppressed_true()
+		public async Task IsSuppressedAsync_true()
 		{
 			// Arrange
 			var email = "test@example.com";
@@ -229,7 +230,7 @@ namespace StrongGrid.Resources.UnitTests
 			var suppresions = new Suppressions(client);
 
 			// Act
-			var result = suppresions.IsSuppressedAsync(groupId, email, CancellationToken.None).Result;
+			var result = await suppresions.IsSuppressedAsync(groupId, email, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -238,7 +239,7 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void IsSuppressed_()
+		public async Task IsSuppressedAsync_false()
 		{
 			// Arrange
 			var email = "test@example.com";
@@ -255,7 +256,7 @@ namespace StrongGrid.Resources.UnitTests
 			var suppresions = new Suppressions(client);
 
 			// Act
-			var result = suppresions.IsSuppressedAsync(groupId, email, CancellationToken.None).Result;
+			var result = await suppresions.IsSuppressedAsync(groupId, email, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

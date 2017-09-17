@@ -1,24 +1,22 @@
 ﻿using StrongGrid.Logging;
-using StrongGrid.Model;
+using StrongGrid.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace StrongGrid.IntegrationTests
 {
 	public class Program
 	{
-		public static void Main()
+		static async Task<int> Main()
 		{
 			// -----------------------------------------------------------------------------
-
 			// Do you want to proxy requests through Fiddler (useful for debugging)?
 			var useFiddler = false;
-
-			// Set this variable to true if you want to pause after each test 
-			// which gives you an opportunity to review the output in the console.
-			var pauseAfterTests = false;
 
 			// As an alternative to Fiddler, you can display debug information about
 			// every HTTP request/response in the console. This is useful for debugging
@@ -26,64 +24,85 @@ namespace StrongGrid.IntegrationTests
 			var debugHttpMessagesToConsole = false;
 			// -----------------------------------------------------------------------------
 
-
 			var proxy = useFiddler ? new WebProxy("http://localhost:8888") : null;
 			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
-			var client = new StrongGrid.Client(apiKey, proxy);
+			var client = new Client(apiKey, proxy);
 
 			if (debugHttpMessagesToConsole)
 			{
 				LogProvider.SetCurrentLogProvider(new ConsoleLogProvider());
 			}
 
+			var source = new CancellationTokenSource();
+			Console.CancelKeyPress += (s, e) =>
+			{
+				e.Cancel = true;
+				source.Cancel();
+			};
+
 			try
 			{
-				ApiKeys(client, pauseAfterTests);
-				Campaigns(client, pauseAfterTests);
-				Categories(client, pauseAfterTests);
-				ContactsAndCustomFields(client, pauseAfterTests);
-				GlobalSuppressions(client, pauseAfterTests);
-				ListsAndSegments(client, pauseAfterTests);
-				Mail(client, pauseAfterTests);
-				UnsubscribeGroups(client, pauseAfterTests);
-				User(client, pauseAfterTests);
-				Statistics(client, pauseAfterTests);
-				Templates(client, pauseAfterTests);
-				Settings(client, pauseAfterTests);
-				Alerts(client, pauseAfterTests);
-				Blocks(client, pauseAfterTests);
-				Bounces(client, pauseAfterTests);
-				SpamReports(client, pauseAfterTests);
-				InvalidEmails(client, pauseAfterTests);
-				Batches(client, pauseAfterTests);
-				Whitelabel(client, pauseAfterTests);
-				WebhookStats(client, pauseAfterTests);
-				AccessManagement(client, pauseAfterTests);
+				var tasks = new Task[]
+				{
+					ExecuteAsync(client, source, AccessManagement),
+					ExecuteAsync(client, source, Alerts),
+					ExecuteAsync(client, source, ApiKeys),
+					ExecuteAsync(client, source, Batches),
+					ExecuteAsync(client, source, Blocks),
+					ExecuteAsync(client, source, Bounces),
+					ExecuteAsync(client, source, CampaignsAndSenderIdentities),
+					ExecuteAsync(client, source, Categories),
+					ExecuteAsync(client, source, ContactsAndCustomFields),
+					ExecuteAsync(client, source, GlobalSuppressions),
+					ExecuteAsync(client, source, InvalidEmails),
+					ExecuteAsync(client, source, IpAddresses),
+					ExecuteAsync(client, source, IpPools),
+					ExecuteAsync(client, source, ListsAndSegments),
+					ExecuteAsync(client, source, Mail),
+					ExecuteAsync(client, source, Settings),
+					ExecuteAsync(client, source, SpamReports),
+					ExecuteAsync(client, source, Statistics),
+					ExecuteAsync(client, source, Subusers),
+					ExecuteAsync(client, source, UnsubscribeGroupsAndSuppressions),
+					ExecuteAsync(client, source, Teammates),
+					ExecuteAsync(client, source, Templates),
+					ExecuteAsync(client, source, User),
+					ExecuteAsync(client, source, WebhookSettings),
+					ExecuteAsync(client, source, WebhookStats),
+					ExecuteAsync(client, source, Whitelabel)
+				};
+				await Task.WhenAll(tasks).ConfigureAwait(false);
+				return await Task.FromResult(0); // Success.
+			}
+			catch (OperationCanceledException)
+			{
+				return 1223; // Cancelled.
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine("\n\n**************************************************");
-				Console.WriteLine("**************************************************");
-				Console.WriteLine($"AN EXCEPTION OCCURED: {e.Message}");
-				Console.WriteLine("**************************************************");
-				Console.WriteLine("**************************************************");
+				source.Cancel();
+				var log = new StringWriter();
+				await log.WriteLineAsync("\n\n**************************************************").ConfigureAwait(false);
+				await log.WriteLineAsync("**************************************************").ConfigureAwait(false);
+				await log.WriteLineAsync($"AN EXCEPTION OCCURED: {e.GetBaseException().Message}").ConfigureAwait(false);
+				await log.WriteLineAsync("**************************************************").ConfigureAwait(false);
+				await log.WriteLineAsync("**************************************************").ConfigureAwait(false);
+				await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
+				return 1; // Exception
 			}
 			finally
 			{
-				while (Console.KeyAvailable)
-				{
-					Console.ReadKey(false);
-				}
-				Console.WriteLine("\n\n*************************");
-				Console.WriteLine("All tests completed");
-				Console.WriteLine("Press any key to exit");
-				Console.ReadKey();
+				var log = new StringWriter();
+				await log.WriteLineAsync("\n\n**************************************************").ConfigureAwait(false);
+				await log.WriteLineAsync("All tests completed").ConfigureAwait(false);
+				await log.WriteLineAsync("Press any key to exit").ConfigureAwait(false);
+				Prompt(log.ToString());
 			}
 		}
 
-		private static void Mail(IClient client, bool pauseAfterTests)
+		private static async Task Mail(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			Console.WriteLine("\n***** MAIL *****");
+			await log.WriteLineAsync("\n***** MAIL *****\n").ConfigureAwait(false);
 
 			var from = new MailAddress("test@example.com", "John Smith");
 			var to1 = new MailAddress("recipient1@mailinator.com", "Recipient1");
@@ -96,7 +115,7 @@ namespace StrongGrid.IntegrationTests
 				new MailPersonalization
 				{
 					To = new[] { to1 },
-					Substitutions = new KeyValuePair<string, string>[] 
+					Substitutions = new KeyValuePair<string, string>[]
 					{
 						new  KeyValuePair<string, string>("{{customer_type}}", "friend"),
 						new  KeyValuePair<string, string>("{{first_name}}", "Bob")
@@ -169,174 +188,188 @@ namespace StrongGrid.IntegrationTests
 				new  KeyValuePair<string, string>("some_other_value", "QWERTY")
 			};
 
-			var messageId = client.Mail.SendAsync(personalizations, subject, new[] { textContent, htmlContent }, from,
+			var messageId = await client.Mail.SendAsync(personalizations, subject, new[] { textContent, htmlContent }, from,
 				headers: headers,
 				customArgs: customArgs,
 				mailSettings: mailSettings,
-				trackingSettings: trackingSettings
-			).Result;
-			Console.WriteLine("Email has been sent. Message Id: {0}", messageId);
+				trackingSettings: trackingSettings,
+				cancellationToken: cancellationToken
+			).ConfigureAwait(false);
+			await log.WriteLineAsync($"Email has been sent. Message Id: {messageId}").ConfigureAwait(false);
 
 			/******
 				Here's the simplified way to send a single email to a single recipient:
-				var messageId = await client.Mail.SendToSingleRecipientAsync(to, from, subject, htmlContent, textContent).ConfigureAwait(false);
+				var messageId = await client.Mail.SendToSingleRecipientAsync(to, from, subject, htmlContent, textContent, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 				Here's the simplified way to send the same email to multiple recipients:
-				var messageId = await client.Mail.SendToMultipleRecipientsAsync(new[] { to1, to2, to3 }, from, subject, htmlContent, textContent).ConfigureAwait(false);
+				var messageId = await client.Mail.SendToMultipleRecipientsAsync(new[] { to1, to2, to3 }, from, subject, htmlContent, textContent, cancellationToken: cancellationToken).ConfigureAwait(false);
 			******/
-
-			ConcludeTests(pauseAfterTests);
 		}
 
-		private static void ApiKeys(IClient client, bool pauseAfterTests)
+		private static async Task ApiKeys(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			Console.WriteLine("\n***** API KEYS *****");
-
-			// CREATE A NEW API KEY
-			var newApiKey = client.ApiKeys.CreateAsync("My new api key", new[] { "alerts.read", "api_keys.read" }).Result;
-			Console.WriteLine("Unique ID of the new Api Key: {0}", newApiKey.KeyId);
-
-			// UPDATE THE API KEY'S NAME
-			var updatedApiKey = client.ApiKeys.UpdateAsync(newApiKey.KeyId, "This is the updated name").Result;
-			Console.WriteLine("The name of Api Key {0} updated", updatedApiKey.KeyId);
-
-			// UPDATE THE API KEY'S SCOPES
-			updatedApiKey = client.ApiKeys.UpdateAsync(newApiKey.KeyId, updatedApiKey.Name, new[] { "alerts.read", "api_keys.read", "categories.read", "stats.read" }).Result;
-			Console.WriteLine("The scopes of Api Key {0} updated", updatedApiKey.KeyId);
+			await log.WriteLineAsync("\n***** API KEYS *****\n").ConfigureAwait(false);
 
 			// GET ALL THE API KEYS
-			var apiKeys = client.ApiKeys.GetAllAsync().Result;
-			Console.WriteLine("There are {0} Api Keys", apiKeys.Length);
+			var apiKeys = await client.ApiKeys.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {apiKeys.Length} Api Keys").ConfigureAwait(false);
+
+			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
+			foreach (var oldApiKey in apiKeys.Where(k => k.Name.StartsWith("StrongGrid Integration Testing:")))
+			{
+				await client.ApiKeys.DeleteAsync(oldApiKey.KeyId, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"Api Key {oldApiKey.KeyId} deleted").ConfigureAwait(false);
+			}
+
+			// CREATE A NEW API KEY
+			var apiKey = await client.ApiKeys.CreateAsync("StrongGrid Integration Testing: new Api Key", new[] { "alerts.read", "api_keys.read" }, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Unique ID of the new Api Key: {apiKey.KeyId}").ConfigureAwait(false);
+
+			// UPDATE THE API KEY'S NAME
+			var updatedApiKey = await client.ApiKeys.UpdateAsync(apiKey.KeyId, "StrongGrid Integration Testing: updated name", cancellationToken: cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"The name of Api Key {updatedApiKey.KeyId} updated").ConfigureAwait(false);
+
+			// UPDATE THE API KEY'S SCOPES
+			updatedApiKey = await client.ApiKeys.UpdateAsync(apiKey.KeyId, updatedApiKey.Name, new[] { "alerts.read", "api_keys.read", "categories.read", "stats.read" }, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"The scopes of Api Key {updatedApiKey.KeyId} updated").ConfigureAwait(false);
 
 			// GET ONE API KEY
-			var key = client.ApiKeys.GetAsync(newApiKey.KeyId).Result;
-			Console.WriteLine("The name of api key {0} is: {1}", newApiKey.KeyId, key.Name);
+			var key = await client.ApiKeys.GetAsync(apiKey.KeyId, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"The name of api key {apiKey.KeyId} is: {key.Name}").ConfigureAwait(false);
 
 			// DELETE API KEY
-			client.ApiKeys.DeleteAsync(newApiKey.KeyId).Wait();
-			Console.WriteLine("Api Key {0} deleted", newApiKey.KeyId);
+			await client.ApiKeys.DeleteAsync(apiKey.KeyId, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Api Key {apiKey.KeyId} deleted").ConfigureAwait(false);
 
 			// GET THE CURRENT USER'S PERMISSIONS
-			var permissions = client.User.GetPermissionsAsync().Result;
-			Console.WriteLine("Current user has been granted {0} permissions", permissions.Length);
+			var permissions = await client.User.GetPermissionsAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Current user has been granted {permissions.Length} permissions").ConfigureAwait(false);
 
 			// CREATE AND DELETE A BILLING API KEY (if authorized)
 			if (permissions.Any(p => p.StartsWith("billing.", StringComparison.OrdinalIgnoreCase)))
 			{
-				var billingKey = client.ApiKeys.CreateWithBillingPermissionsAsync("Integration testing billing Key").Result;
-				Console.WriteLine("Created a billing key");
+				var billingKey = await client.ApiKeys.CreateWithBillingPermissionsAsync("Integration testing billing Key", cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync("Created a billing key").ConfigureAwait(false);
 
-				client.ApiKeys.DeleteAsync(billingKey.KeyId).Wait();
-				Console.WriteLine("Deleted the billing key");
+				await client.ApiKeys.DeleteAsync(billingKey.KeyId, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync("Deleted the billing key").ConfigureAwait(false);
 			}
 
 			// CREATE AN API KEY WITH ALL PERMISSIONS
-			var superKey = client.ApiKeys.CreateWithAllPermissionsAsync("Integration testing Super Key").Result;
-			Console.WriteLine("Created a key with all permissions");
+			var superKey = await client.ApiKeys.CreateWithAllPermissionsAsync("Integration testing Super Key", cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("Created a key with all permissions").ConfigureAwait(false);
 
 			// DELETE THE API KEY WITH ALL PERMISSIONS
-			client.ApiKeys.DeleteAsync(superKey.KeyId).Wait();
-			Console.WriteLine("Deleted the key with all permissions");
-
-			ConcludeTests(pauseAfterTests);
+			await client.ApiKeys.DeleteAsync(superKey.KeyId, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("Deleted the key with all permissions").ConfigureAwait(false);
 		}
 
-		private static void UnsubscribeGroups(IClient client, bool pauseAfterTests)
+		private static async Task UnsubscribeGroupsAndSuppressions(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			Console.WriteLine("\n***** UNSUBSCRIBE GROUPS *****");
-
-			// CREATE A NEW SUPPRESSION GROUP
-			var newGroup = client.UnsubscribeGroups.CreateAsync(Guid.NewGuid().ToString("N"), "This is a new group for testing purposes", false).Result;
-			Console.WriteLine("Unique ID of the new unsubscribe group: {0}", newGroup.Id);
-
-			// UPDATE A SUPPRESSION GROUP
-			var updatedGroup = client.UnsubscribeGroups.UpdateAsync(newGroup.Id, "This is the updated name").Result;
-			Console.WriteLine("Unsubscribe group {0} updated", updatedGroup.Id);
+			await log.WriteLineAsync("\n***** UNSUBSCRIBE GROUPS *****\n").ConfigureAwait(false);
 
 			// GET UNSUBSCRIBE GROUPS
-			var groups = client.UnsubscribeGroups.GetAllAsync().Result;
-			Console.WriteLine("There are {0} unsubscribe groups", groups.Length);
+			var groups = await client.UnsubscribeGroups.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {groups.Length} unsubscribe groups").ConfigureAwait(false);
+
+			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
+			foreach (var oldGroup in groups.Where(g => g.Name.StartsWith("StrongGrid Integration Testing:")))
+			{
+				await client.UnsubscribeGroups.DeleteAsync(oldGroup.Id, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"Suppression group {oldGroup.Id} deleted").ConfigureAwait(false);
+			}
+
+			// CREATE A NEW SUPPRESSION GROUP
+			var newGroup = await client.UnsubscribeGroups.CreateAsync("StrongGrid Integration Testing: new group", "This is a new group for testing purposes", false, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Unique ID of the new unsubscribe group: {newGroup.Id}").ConfigureAwait(false);
+
+			// UPDATE A SUPPRESSION GROUP
+			var updatedGroup = await client.UnsubscribeGroups.UpdateAsync(newGroup.Id, "StrongGrid Integration Testing: updated name", cancellationToken: cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Unsubscribe group {updatedGroup.Id} updated").ConfigureAwait(false);
 
 			// GET A PARTICULAR UNSUBSCRIBE GROUP
-			var group = client.UnsubscribeGroups.GetAsync(newGroup.Id).Result;
-			Console.WriteLine("Retrieved unsubscribe group {0}: {1}", group.Id, group.Name);
+			var group = await client.UnsubscribeGroups.GetAsync(newGroup.Id, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Retrieved unsubscribe group {group.Id}: {group.Name}").ConfigureAwait(false);
 
 			// ADD A FEW ADDRESSES TO UNSUBSCRIBE GROUP
-			client.Suppressions.AddAddressToUnsubscribeGroupAsync(group.Id, "test1@example.com").Wait();
-			Console.WriteLine("Added test1@example.com to unsubscribe group {0}", group.Id);
-			client.Suppressions.AddAddressToUnsubscribeGroupAsync(group.Id, "test2@example.com").Wait();
-			Console.WriteLine("Added test2@example.com to unsubscribe group {0}", group.Id);
+			await client.Suppressions.AddAddressToUnsubscribeGroupAsync(group.Id, "test1@example.com", cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Added test1@example.com to unsubscribe group {group.Id}").ConfigureAwait(false);
+			await client.Suppressions.AddAddressToUnsubscribeGroupAsync(group.Id, "test2@example.com", cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Added test2@example.com to unsubscribe group {group.Id}").ConfigureAwait(false);
 
 			// GET THE ADDRESSES IN A GROUP
-			var unsubscribedAddresses = client.Suppressions.GetUnsubscribedAddressesAsync(group.Id).Result;
-			Console.WriteLine("There are {0} unsubscribed addresses in group {1}", unsubscribedAddresses.Length, group.Id);
+			var unsubscribedAddresses = await client.Suppressions.GetUnsubscribedAddressesAsync(group.Id, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {unsubscribedAddresses.Length} unsubscribed addresses in group {group.Id}").ConfigureAwait(false);
 
 			// CHECK IF AN ADDRESS IS IN THE SUPPRESSION GROUP (should be true)
 			var addressToCheck = "test1@example.com";
-			var isInGroup = client.Suppressions.IsSuppressedAsync(group.Id, addressToCheck).Result;
-			Console.WriteLine("{0} {1} in supression group {2}", addressToCheck, isInGroup ? "is" : "is not", group.Id);
+			var isInGroup = await client.Suppressions.IsSuppressedAsync(group.Id, addressToCheck, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"{addressToCheck} {(isInGroup ? "is" : " is not")} in supression group {group.Id}").ConfigureAwait(false);
 
 			// CHECK IF AN ADDRESS IS IN THE SUPPRESSION GROUP (should be false)
 			addressToCheck = "dummy@example.com";
-			isInGroup = client.Suppressions.IsSuppressedAsync(group.Id, addressToCheck).Result;
-			Console.WriteLine("{0} {1} in supression group {2}", addressToCheck, isInGroup ? "is" : "is not", group.Id);
+			isInGroup = await client.Suppressions.IsSuppressedAsync(group.Id, addressToCheck, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"{addressToCheck} {(isInGroup ? "is" : "is not")} in supression group {group.Id}").ConfigureAwait(false);
 
 			// CHECK WHICH GROUPS A GIVEN EMAIL ADDRESS IS SUPPRESSED FROM
 			addressToCheck = "test1@example.com";
-			var suppressedFrom = client.Suppressions.GetUnsubscribedGroupsAsync(addressToCheck).Result;
-			Console.WriteLine("{0} is in {1} supression groups", addressToCheck, suppressedFrom.Length);
+			var suppressedFrom = await client.Suppressions.GetUnsubscribedGroupsAsync(addressToCheck, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"{addressToCheck} is in {suppressedFrom.Length} supression groups").ConfigureAwait(false);
 
 			// REMOVE ALL ADDRESSES FROM UNSUBSCRIBE GROUP
 			foreach (var address in unsubscribedAddresses)
 			{
-				client.Suppressions.RemoveAddressFromSuppressionGroupAsync(group.Id, address).Wait();
-				Console.WriteLine("{0} removed from unsubscribe group {1}", address, group.Id);
+				await client.Suppressions.RemoveAddressFromSuppressionGroupAsync(group.Id, address, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"{address} removed from unsubscribe group {group.Id}").ConfigureAwait(false);
 			}
 
 			// MAKE SURE THERE ARE NO ADDRESSES IN THE GROUP
-			unsubscribedAddresses = client.Suppressions.GetUnsubscribedAddressesAsync(group.Id).Result;
+			unsubscribedAddresses = await client.Suppressions.GetUnsubscribedAddressesAsync(group.Id, cancellationToken).ConfigureAwait(false);
 			if (unsubscribedAddresses.Length == 0)
 			{
-				Console.WriteLine("As expected, there are no more addresses in group {0}", group.Id);
+				await log.WriteLineAsync($"As expected, there are no more addresses in group {group.Id}").ConfigureAwait(false);
 			}
 			else
 			{
-				Console.WriteLine("We expected the group {1} to be empty but instead we found {0} unsubscribed addresses.", unsubscribedAddresses.Length, group.Id);
+				await log.WriteLineAsync($"We expected the group {group.Id} to be empty but instead we found {unsubscribedAddresses.Length} unsubscribed addresses.").ConfigureAwait(false);
 			}
 
 			// DELETE UNSUBSCRIBE GROUP
-			client.UnsubscribeGroups.DeleteAsync(newGroup.Id).Wait();
-			Console.WriteLine("Suppression group {0} deleted", newGroup.Id);
-
-			ConcludeTests(pauseAfterTests);
+			await client.UnsubscribeGroups.DeleteAsync(newGroup.Id, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Suppression group {newGroup.Id} deleted").ConfigureAwait(false);
 		}
 
-		private static void GlobalSuppressions(IClient client, bool pauseAfterTests)
+		private static async Task GlobalSuppressions(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			Console.WriteLine("\n***** GLOBAL SUPPRESSION *****");
+			await log.WriteLineAsync("\n***** GLOBAL SUPPRESSION *****\n").ConfigureAwait(false);
 
 			// ADD EMAILS TO THE GLOBAL SUPPRESSION LIST
 			var emails = new[] { "example@example.com", "example2@example.com" };
-			client.GlobalSuppressions.AddAsync(emails).Wait();
-			Console.WriteLine("The following emails have been added to the global suppression list: {0}", string.Join(", ", emails));
-			Console.WriteLine("Is {0} unsubscribed (should be true): {1}", emails[0], client.GlobalSuppressions.IsUnsubscribedAsync(emails[0]).Result);
-			Console.WriteLine("Is {0} unsubscribed (should be true): {1}", emails[1], client.GlobalSuppressions.IsUnsubscribedAsync(emails[1]).Result);
+			await client.GlobalSuppressions.AddAsync(emails, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"The following emails have been added to the global suppression list: {string.Join(", ", emails)}").ConfigureAwait(false);
+
+			var isUnsubscribed0 = await client.GlobalSuppressions.IsUnsubscribedAsync(emails[0], cancellationToken).ConfigureAwait(false);
+			var isUnsubscribed1 = await client.GlobalSuppressions.IsUnsubscribedAsync(emails[1], cancellationToken).ConfigureAwait(false);
+
+			await log.WriteLineAsync($"Is {emails[0]} unsubscribed (should be true): {isUnsubscribed0}").ConfigureAwait(false);
+			await log.WriteLineAsync($"Is {emails[1]} unsubscribed (should be true): {isUnsubscribed1}").ConfigureAwait(false);
 
 			// DELETE EMAILS FROM THE GLOBAL SUPPRESSION GROUP
-			client.GlobalSuppressions.RemoveAsync(emails[0]).Wait();
-			Console.WriteLine("{0} has been removed from the global suppression list", emails[0]);
-			client.GlobalSuppressions.RemoveAsync(emails[1]).Wait();
-			Console.WriteLine("{0} has been removed from the global suppression list", emails[1]);
+			await client.GlobalSuppressions.RemoveAsync(emails[0], cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"{emails[0]} has been removed from the global suppression list").ConfigureAwait(false);
+			await client.GlobalSuppressions.RemoveAsync(emails[1], cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"{emails[1]} has been removed from the global suppression list").ConfigureAwait(false);
 
-			Console.WriteLine("Is {0} unsubscribed (should be false): {1}", emails[0], client.GlobalSuppressions.IsUnsubscribedAsync(emails[0]).Result);
-			Console.WriteLine("Is {0} unsubscribed (should be false): {1}", emails[1], client.GlobalSuppressions.IsUnsubscribedAsync(emails[1]).Result);
+			isUnsubscribed0 = await client.GlobalSuppressions.IsUnsubscribedAsync(emails[0], cancellationToken).ConfigureAwait(false);
+			isUnsubscribed1 = await client.GlobalSuppressions.IsUnsubscribedAsync(emails[1], cancellationToken).ConfigureAwait(false);
 
-			ConcludeTests(pauseAfterTests);
+			await log.WriteLineAsync($"Is {emails[0]} unsubscribed (should be false): {isUnsubscribed0}").ConfigureAwait(false);
+			await log.WriteLineAsync($"Is {emails[1]} unsubscribed (should be false): {isUnsubscribed1}").ConfigureAwait(false);
 		}
 
-		private static void Statistics(IClient client, bool pauseAfterTests)
+		private static async Task Statistics(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			Console.WriteLine("\n***** STATISTICS *****");
+			await log.WriteLineAsync("\n***** STATISTICS *****\n").ConfigureAwait(false);
 
 			var now = DateTime.UtcNow;
 
@@ -349,175 +382,179 @@ namespace StrongGrid.IntegrationTests
 			var startDate = new DateTime(now.Year, 1, 4);
 
 			//----- Global Stats -----
-			var globalStats = client.Statistics.GetGlobalStatisticsAsync(startDate, null).Result;
-			Console.WriteLine("Number of GLOBAL stats in {0}: {1}", now.Year, globalStats.Length);
+			var globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.None, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of GLOBAL stats in {now.Year}: {globalStats.Length}").ConfigureAwait(false);
 
-			globalStats = client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Day).Result;
-			Console.WriteLine("Number of GLOBAL stats in {0} and aggregated by day: {1}", now.Year, globalStats.Length);
+			globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Day, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of GLOBAL stats in {now.Year} and aggregated by day: {globalStats.Length}").ConfigureAwait(false);
 
-			globalStats = client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Week).Result;
-			Console.WriteLine("Number of GLOBAL stats in {0} and aggregated by week: {1}", now.Year, globalStats.Length);
+			globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Week, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of GLOBAL stats in {now.Year} and aggregated by week: {globalStats.Length}").ConfigureAwait(false);
 
-			globalStats = client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Month).Result;
-			Console.WriteLine("Number of GLOBAL stats in {0} and aggregated by month: {1}", now.Year, globalStats.Length);
+			globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Month, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of GLOBAL stats in {now.Year} and aggregated by month: {globalStats.Length}").ConfigureAwait(false);
 
 			//----- Global Stats -----
-			var countryStats = client.Statistics.GetCountryStatisticsAsync(null, startDate, null).Result;
-			Console.WriteLine("Number of COUNTRY stats in {0}: {1}", now.Year, countryStats.Length);
+			var countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.None, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of COUNTRY stats in {now.Year}: {countryStats.Length}").ConfigureAwait(false);
 
-			countryStats = client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Day).Result;
-			Console.WriteLine("Number of COUNTRY stats in {0} and aggregated by day: {1}", now.Year, countryStats.Length);
+			countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Day, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of COUNTRY stats in {now.Year} and aggregated by day: {countryStats.Length}").ConfigureAwait(false);
 
-			countryStats = client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Week).Result;
-			Console.WriteLine("Number of COUNTRY stats in {0} and aggregated by week: {1}", now.Year, countryStats.Length);
+			countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Week, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of COUNTRY stats in {now.Year} and aggregated by week: {countryStats.Length}").ConfigureAwait(false);
 
-			countryStats = client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Month).Result;
-			Console.WriteLine("Number of COUNTRY stats in {0} and aggregated by month: {1}", now.Year, countryStats.Length);
+			countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Month, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of COUNTRY stats in {now.Year} and aggregated by month: {countryStats.Length}").ConfigureAwait(false);
 
 			//----- Browser Stats -----
-			var browserStats = client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null).Result;
-			Console.WriteLine("Number of BROWSER stats in {0}: {1}", now.Year, browserStats.Length);
+			var browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.None, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of BROWSER stats in {now.Year}: {browserStats.Length}").ConfigureAwait(false);
 
-			browserStats = client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Day).Result;
-			Console.WriteLine("Number of BROWSER stats in {0} and aggregated by day: {1}", now.Year, browserStats.Length);
+			browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Day, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of BROWSER stats in {now.Year} and aggregated by day: {browserStats.Length}").ConfigureAwait(false);
 
-			browserStats = client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Week).Result;
-			Console.WriteLine("Number of BROWSER stats in {0} and aggregated by week: {1}", now.Year, browserStats.Length);
+			browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Week, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of BROWSER stats in {now.Year} and aggregated by week: {browserStats.Length}").ConfigureAwait(false);
 
-			browserStats = client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Month).Result;
-			Console.WriteLine("Number of BROWSER stats in {0} and aggregated by month: {1}", now.Year, browserStats.Length);
-
-			ConcludeTests(pauseAfterTests);
+			browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Month, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of BROWSER stats in {now.Year} and aggregated by month: {browserStats.Length}").ConfigureAwait(false);
 		}
 
-		private static void Templates(IClient client, bool pauseAfterTests)
+		private static async Task Templates(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			Console.WriteLine("\n***** TEMPLATES *****");
+			await log.WriteLineAsync("\n***** TEMPLATES *****\n").ConfigureAwait(false);
 
-			var template = client.Templates.CreateAsync("My template").Result;
-			Console.WriteLine("Template '{0}' created. Id: {1}", template.Name, template.Id);
+			// GET TEMPLATES
+			var templates = await client.Templates.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All templates retrieved. There are {templates.Length} templates").ConfigureAwait(false);
 
-			client.Templates.UpdateAsync(template.Id, "New name").Wait();
-			Console.WriteLine("Template '{0}' updated", template.Id);
+			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
+			foreach (var oldTemplate in templates.Where(t => t.Name.StartsWith("StrongGrid Integration Testing:")))
+			{
+				await client.Templates.DeleteAsync(oldTemplate.Id, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"Template {oldTemplate.Id} deleted").ConfigureAwait(false);
+			}
 
-			template = client.Templates.GetAsync(template.Id).Result;
-			Console.WriteLine("Template '{0}' retrieved.", template.Id);
+			var template = await client.Templates.CreateAsync("StrongGrid Integration Testing: My template", cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Template '{template.Name}' created. Id: {template.Id}");
 
-			var firstVersion = client.Templates.CreateVersionAsync(template.Id, "Version 1", "My first Subject <%subject%>", "<html<body>hello world<br/><%body%></body></html>", "Hello world <%body%>", true).Result;
-			Console.WriteLine("First version created. Id: {0}", firstVersion.Id);
+			await client.Templates.UpdateAsync(template.Id, "StrongGrid Integration Testing: updated name", cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Template '{template.Id}' updated").ConfigureAwait(false);
 
-			var secondVersion = client.Templates.CreateVersionAsync(template.Id, "Version 2", "My second Subject <%subject%>", "<html<body>Qwerty<br/><%body%></body></html>", "Qwerty <%body%>", true).Result;
-			Console.WriteLine("Second version created. Id: {0}", secondVersion.Id);
+			template = await client.Templates.GetAsync(template.Id, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Template '{template.Id}' retrieved.").ConfigureAwait(false);
 
-			var templates = client.Templates.GetAllAsync().Result;
-			Console.WriteLine("All templates retrieved. There are {0} templates", templates.Length);
+			var firstVersion = await client.Templates.CreateVersionAsync(template.Id, "StrongGrid Integration Testing: version 1", "My first Subject <%subject%>", "<html<body>hello world<br/><%body%></body></html>", "Hello world <%body%>", true, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"First version created. Id: {firstVersion.Id}").ConfigureAwait(false);
 
-			client.Templates.DeleteVersionAsync(template.Id, firstVersion.Id).Wait();
-			Console.WriteLine("Version {0} deleted", firstVersion.Id);
+			var secondVersion = await client.Templates.CreateVersionAsync(template.Id, "StrongGrid Integration Testing: version 2", "My second Subject <%subject%>", "<html<body>Qwerty<br/><%body%></body></html>", "Qwerty <%body%>", true, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Second version created. Id: {secondVersion.Id}").ConfigureAwait(false);
 
-			client.Templates.DeleteVersionAsync(template.Id, secondVersion.Id).Wait();
-			Console.WriteLine("Version {0} deleted", secondVersion.Id);
+			await client.Templates.DeleteVersionAsync(template.Id, firstVersion.Id, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Version {firstVersion.Id} deleted").ConfigureAwait(false);
 
-			client.Templates.DeleteAsync(template.Id).Wait();
-			Console.WriteLine("Template {0} deleted", template.Id);
+			await client.Templates.DeleteVersionAsync(template.Id, secondVersion.Id, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Version {secondVersion.Id} deleted").ConfigureAwait(false);
 
-			ConcludeTests(pauseAfterTests);
+			await client.Templates.DeleteAsync(template.Id, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Template {template.Id} deleted").ConfigureAwait(false);
 		}
 
-		private static void User(IClient client, bool pauseAfterTests)
+		private static async Task User(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			Console.WriteLine("\n***** USER *****");
+			await log.WriteLineAsync("\n***** USER *****\n").ConfigureAwait(false);
 
 			// RETRIEVE YOUR ACCOUNT INFORMATION
-			var account = client.User.GetAccountAsync().Result;
-			Console.WriteLine("Account type: {0}; Reputation: {1}", account.Type, account.Reputation);
+			var account = await client.User.GetAccountAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Account type: {account.Type}; Reputation: {account.Reputation}").ConfigureAwait(false);
 
 			// RETRIEVE YOUR USER PROFILE
-			var profile = client.User.GetProfileAsync().Result;
-			Console.WriteLine("Hello {0} from {1}", profile.FirstName, string.IsNullOrEmpty(profile.State) ? "unknown location" : profile.State);
+			var profile = await client.User.GetProfileAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Hello {profile.FirstName} from {(string.IsNullOrEmpty(profile.State) ? "unknown location" : profile.State)}").ConfigureAwait(false);
 
 			// UPDATE YOUR USER PROFILE
 			var state = (profile.State == "Florida" ? "California" : "Florida");
-			client.User.UpdateProfileAsync(state: state).Wait();
-			Console.WriteLine("The 'State' property on your profile has been updated");
+			await client.User.UpdateProfileAsync(state: state, cancellationToken: cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("The 'State' property on your profile has been updated").ConfigureAwait(false);
 
 			// VERIFY THAT YOUR PROFILE HAS BEEN UPDATED
-			var updatedProfile = client.User.GetProfileAsync().Result;
-			Console.WriteLine("Hello {0} from {1}", updatedProfile.FirstName, string.IsNullOrEmpty(updatedProfile.State) ? "unknown location" : updatedProfile.State);
-
-			ConcludeTests(pauseAfterTests);
+			var updatedProfile = await client.User.GetProfileAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Hello {updatedProfile.FirstName} from {(string.IsNullOrEmpty(updatedProfile.State) ? "unknown location" : updatedProfile.State)}").ConfigureAwait(false);
 		}
 
-		private static void ContactsAndCustomFields(IClient client, bool pauseAfterTests)
+		private static async Task ContactsAndCustomFields(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			Console.WriteLine("\n***** CONTACTS AND CUSTOM FIELDS *****");
+			await log.WriteLineAsync("\n***** CONTACTS AND CUSTOM FIELDS *****\n").ConfigureAwait(false);
 
-			var fields = client.CustomFields.GetAllAsync().Result;
-			Console.WriteLine("All custom fields retrieved. There are {0} fields", fields.Length);
+			// GET ALL FIELDS
+			var fields = await client.CustomFields.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All custom fields retrieved. There are {fields.Length} fields").ConfigureAwait(false);
 
-			CustomFieldMetadata nicknameField;
-			if (fields.Any(f => f.Name == "nickname")) nicknameField = fields.Single(f => f.Name == "nickname");
-			else nicknameField = client.CustomFields.CreateAsync("nickname", FieldType.Text).Result;
-			Console.WriteLine($"Field '{nicknameField.Name}' Id: {nicknameField.Id}");
+			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
+			foreach (var oldFields in fields.Where(f => f.Name.StartsWith("stronggrid_")))
+			{
+				await client.CustomFields.DeleteAsync(oldFields.Id, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"Field {oldFields.Id} deleted").ConfigureAwait(false);
+			}
 
-			CustomFieldMetadata ageField;
-			if (fields.Any(f => f.Name == "age")) ageField = fields.Single(f => f.Name == "age");
-			else ageField = client.CustomFields.CreateAsync("age", FieldType.Number).Result;
-			Console.WriteLine($"Field '{ageField.Name}' Id: {ageField.Id}");
+			var nicknameField = await client.CustomFields.CreateAsync("stronggrid_nickname", FieldType.Text, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Field '{nicknameField.Name}' Id: {nicknameField.Id}").ConfigureAwait(false);
 
-			CustomFieldMetadata customerSinceField;
-			if (fields.Any(f => f.Name == "customer_since")) customerSinceField = fields.Single(f => f.Name == "customer_since");
-			else customerSinceField = client.CustomFields.CreateAsync("customer_since", FieldType.Date).Result;
-			Console.WriteLine($"Field '{customerSinceField.Name}' Id: {customerSinceField.Id}");
+			var ageField = await client.CustomFields.CreateAsync("stronggrid_age", FieldType.Number, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Field '{ageField.Name}' Id: {ageField.Id}").ConfigureAwait(false);
 
-			fields = client.CustomFields.GetAllAsync().Result;
-			Console.WriteLine($"All custom fields retrieved. There are {fields.Length} fields");
+			var customerSinceField = await client.CustomFields.CreateAsync("stronggrid_customer_since", FieldType.Date, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Field '{customerSinceField.Name}' Id: {customerSinceField.Id}").ConfigureAwait(false);
+
+			fields = await client.CustomFields.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All custom fields retrieved. There are {fields.Length} fields").ConfigureAwait(false);
 
 			var email = "111@example.com";
 			var firstName = "Robert";
 			var lastName = "Unknown";
 			var customFields = new Field[]
 			{
-				new Field<string>("nickname", "Bob"),
-				new Field<long?>("age", 42),
-				new Field<DateTime>("customer_since", new DateTime(2000, 12, 1))
+				new Field<string>("stronggrid_nickname", "Bob"),
+				new Field<long?>("stronggrid_age", 42),
+				new Field<DateTime>("stronggrid_customer_since", new DateTime(2000, 12, 1))
 			};
-			var contactId = client.Contacts.CreateAsync(email, firstName, lastName, customFields).Result;
-			Console.WriteLine($"Contact {contactId} created: {firstName} {lastName}");
+			var contactId = await client.Contacts.CreateAsync(email, firstName, lastName, customFields, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Contact {contactId} created: {firstName} {lastName}").ConfigureAwait(false);
 
 			var newLastName = "Smith";
-			client.Contacts.UpdateAsync(email, null, newLastName).Wait();
-			Console.WriteLine($"Contact {contactId} updated: {firstName} {newLastName}");
+			await client.Contacts.UpdateAsync(email, null, newLastName, cancellationToken: cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Contact {contactId} updated: {firstName} {newLastName}").ConfigureAwait(false);
 
-			var contact = client.Contacts.GetAsync(contactId).Result;
-			Console.WriteLine($"Retrieved contact {contactId}");
-			Console.WriteLine($"\tEmail: {contact.Email}");
-			Console.WriteLine($"\tFirst Name: {contact.FirstName}");
-			Console.WriteLine($"\tLast Name: {contact.LastName}");
-			Console.WriteLine($"\tCreated On:{contact.CreatedOn}");
-			Console.WriteLine($"\tModified On: {contact.ModifiedOn}");
-			Console.WriteLine($"\tLast Clicked On: {contact.LastClickedOn}");
-			Console.WriteLine($"\tLast Emailed On: {contact.LastEmailedOn}");
-			Console.WriteLine($"\tLast Opened On: {contact.LastOpenedOn}");
+			var contact = await client.Contacts.GetAsync(contactId, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Retrieved contact {contactId}").ConfigureAwait(false);
+			await log.WriteLineAsync($"\tEmail: {contact.Email}").ConfigureAwait(false);
+			await log.WriteLineAsync($"\tFirst Name: {contact.FirstName}").ConfigureAwait(false);
+			await log.WriteLineAsync($"\tLast Name: {contact.LastName}").ConfigureAwait(false);
+			await log.WriteLineAsync($"\tCreated On:{contact.CreatedOn}").ConfigureAwait(false);
+			await log.WriteLineAsync($"\tModified On: {contact.ModifiedOn}").ConfigureAwait(false);
+			await log.WriteLineAsync($"\tLast Clicked On: {contact.LastClickedOn}").ConfigureAwait(false);
+			await log.WriteLineAsync($"\tLast Emailed On: {contact.LastEmailedOn}").ConfigureAwait(false);
+			await log.WriteLineAsync($"\tLast Opened On: {contact.LastOpenedOn}").ConfigureAwait(false);
 			foreach (var customField in contact.CustomFields.OfType<Field<string>>())
 			{
-				Console.WriteLine($"\t{customField.Name}: {customField.Value}");
+				await log.WriteLineAsync($"\t{customField.Name}: {customField.Value}").ConfigureAwait(false);
 			}
 			foreach (var customField in contact.CustomFields.OfType<Field<long?>>())
 			{
-				Console.WriteLine($"\t{customField.Name}: {customField.Value}");
+				await log.WriteLineAsync($"\t{customField.Name}: {customField.Value}").ConfigureAwait(false);
 			}
 			foreach (var customField in contact.CustomFields.OfType<Field<DateTime?>>())
 			{
-				Console.WriteLine($"\t{customField.Name}: {customField.Value}");
+				await log.WriteLineAsync($"\t{customField.Name}: {customField.Value}").ConfigureAwait(false);
 			}
 
 			var recordsPerPage = 5;
-			var contacts = client.Contacts.GetAsync(recordsPerPage, 1).Result;
-			Console.WriteLine(contacts.Length < recordsPerPage ? $"Found {contacts.Length} contacts" : $"Retrieved the first {recordsPerPage} contacts");
+			var contacts = await client.Contacts.GetAsync(recordsPerPage, 1, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync(contacts.Length < recordsPerPage ? $"Found {contacts.Length} contacts" : $"Retrieved the first {recordsPerPage} contacts").ConfigureAwait(false);
 			foreach (var record in contacts)
 			{
-				Console.WriteLine($"\t{record.FirstName} {record.LastName}");
+				await log.WriteLineAsync($"\t{record.FirstName} {record.LastName}").ConfigureAwait(false);
 			}
 
 			var firstNameCondition = new SearchCondition
@@ -534,106 +571,117 @@ namespace StrongGrid.IntegrationTests
 				Operator = ConditionOperator.Equal,
 				LogicalOperator = LogicalOperator.And
 			};
-			var searchResult = client.Contacts.SearchAsync(new[] { firstNameCondition, LastNameCondition }).Result;
-			Console.WriteLine($"Found {searchResult.Length} contacts named Robert Smith");
+			var searchResult = await client.Contacts.SearchAsync(new[] { firstNameCondition, LastNameCondition }, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Found {searchResult.Length} contacts named Robert Smith").ConfigureAwait(false);
 
-			var billableCount = client.Contacts.GetBillableCountAsync().Result;
-			var totalCount = client.Contacts.GetTotalCountAsync().Result;
-			Console.WriteLine("Record counts");
-			Console.WriteLine($"\tBillable: {billableCount}");
-			Console.WriteLine($"\tTotal: {totalCount}");
+			var billableCount = await client.Contacts.GetBillableCountAsync(cancellationToken).ConfigureAwait(false);
+			var totalCount = await client.Contacts.GetTotalCountAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("Record counts").ConfigureAwait(false);
+			await log.WriteLineAsync($"\tBillable: {billableCount}").ConfigureAwait(false);
+			await log.WriteLineAsync($"\tTotal: {totalCount}").ConfigureAwait(false);
 
-			client.Contacts.DeleteAsync(contactId).Wait();
-			Console.WriteLine($"Contact {contactId} deleted: {firstName} {newLastName}");
+			await client.Contacts.DeleteAsync(contactId, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Contact {contactId} deleted: {firstName} {newLastName}").ConfigureAwait(false);
 
-			client.CustomFields.DeleteAsync(nicknameField.Id).Wait();
-			Console.WriteLine($"Field {nicknameField.Id} deleted");
+			await client.CustomFields.DeleteAsync(nicknameField.Id, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Field {nicknameField.Id} deleted").ConfigureAwait(false);
 
-			client.CustomFields.DeleteAsync(ageField.Id).Wait();
-			Console.WriteLine($"Field {ageField.Id} deleted");
+			await client.CustomFields.DeleteAsync(ageField.Id, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Field {ageField.Id} deleted").ConfigureAwait(false);
 
-			client.CustomFields.DeleteAsync(customerSinceField.Id).Wait();
-			Console.WriteLine($"Field {customerSinceField.Id} deleted");
+			await client.CustomFields.DeleteAsync(customerSinceField.Id, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Field {customerSinceField.Id} deleted").ConfigureAwait(false);
 
-			fields = client.CustomFields.GetAllAsync().Result;
-			Console.WriteLine($"All custom fields retrieved. There are {fields.Length} fields");
-
-			ConcludeTests(pauseAfterTests);
+			fields = await client.CustomFields.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All custom fields retrieved. There are {fields.Length} fields").ConfigureAwait(false);
 		}
 
-		private static void Categories(IClient client, bool pauseAfterTests)
+		private static async Task Categories(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			Console.WriteLine("\n***** CATEGORIES *****");
+			await log.WriteLineAsync("\n***** CATEGORIES *****\n").ConfigureAwait(false);
 
-			var categories = client.Categories.GetAsync().Result;
-			Console.WriteLine("Number of categories: {0}", categories.Length);
-			Console.WriteLine("Categories: {0}", string.Join(", ", categories));
-
-			ConcludeTests(pauseAfterTests);
+			var categories = await client.Categories.GetAsync(null, 50, 0, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of categories: {categories.Length}").ConfigureAwait(false);
+			await log.WriteLineAsync($"Categories: {string.Join(", ", categories)}").ConfigureAwait(false);
 		}
 
-		private static void ListsAndSegments(IClient client, bool pauseAfterTests)
+		private static async Task ListsAndSegments(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			Console.WriteLine("\n***** LISTS AND SEGMENTS *****");
+			await log.WriteLineAsync("\n***** LISTS AND SEGMENTS *****\n").ConfigureAwait(false);
 
-			var lists = client.Lists.GetAllAsync().Result;
-			var firstList = lists.FirstOrDefault(l => l.Name == "My first list");
-			var secondList = lists.FirstOrDefault(l => l.Name == "My second list");
+			// GET LISTS
+			var lists = await client.Lists.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All lists retrieved. There are {lists.Length} lists").ConfigureAwait(false);
 
-			if (firstList == null)
+			// GET SEGMENTS
+			var segments = await client.Segments.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All segements retrieved. There are {segments.Length} segments").ConfigureAwait(false);
+
+			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
+			foreach (var oldList in lists.Where(l => l.Name.StartsWith("StrongGrid Integration Testing:")))
 			{
-				firstList = client.Lists.CreateAsync("My first list").Result;
-				Console.WriteLine("List '{0}' created. Id: {1}", firstList.Name, firstList.Id);
+				await client.Lists.DeleteAsync(oldList.Id, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"List {oldList.Id} deleted").ConfigureAwait(false);
 			}
-			if (secondList == null)
+
+			foreach (var oldSegment in segments.Where(s => s.Name.StartsWith("StrongGrid Integration Testing:")))
 			{
-				secondList = client.Lists.CreateAsync("My second list").Result;
-				Console.WriteLine("List '{0}' created. Id: {1}", secondList.Name, secondList.Id);
+				await client.Segments.DeleteAsync(oldSegment.Id, false, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"Segment {oldSegment.Id} deleted").ConfigureAwait(false);
 			}
 
-			client.Lists.UpdateAsync(firstList.Id, "New name").Wait();
-			Console.WriteLine("List '{0}' updated", firstList.Id);
+			var firstList = await client.Lists.CreateAsync("StrongGrid Integration Testing: list #1", cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"List '{firstList.Name}' created. Id: {firstList.Id}").ConfigureAwait(false);
 
-			lists = client.Lists.GetAllAsync().Result;
-			Console.WriteLine("All lists retrieved. There are {0} lists", lists.Length);
+			var secondList = await client.Lists.CreateAsync("StrongGrid Integration Testing: list #2", cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"List '{secondList.Name}' created. Id: {secondList.Id}").ConfigureAwait(false);
+
+			await client.Lists.UpdateAsync(firstList.Id, "StrongGrid Integration Testing: new name", cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"List '{firstList.Id}' updated").ConfigureAwait(false);
 
 			var hotmailCondition = new SearchCondition { Field = "email", Operator = ConditionOperator.Contains, Value = "hotmail.com", LogicalOperator = LogicalOperator.None };
-			var segment = client.Segments.CreateAsync("Recipients @ Hotmail", firstList.Id, new[] { hotmailCondition }).Result;
-			Console.WriteLine("Segment '{0}' created. Id: {1}", segment.Name, segment.Id);
+			var segment = await client.Segments.CreateAsync("StrongGrid Integration Testing: Recipients @ Hotmail", firstList.Id, new[] { hotmailCondition }, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Segment '{segment.Name}' created. Id: {segment.Id}").ConfigureAwait(false);
 
 			var millerLastNameCondition = new SearchCondition { Field = "last_name", Operator = ConditionOperator.Equal, Value = "Miller", LogicalOperator = LogicalOperator.None };
 			var clickedRecentlyCondition = new SearchCondition { Field = "last_clicked", Operator = ConditionOperator.GreatherThan, Value = DateTime.UtcNow.AddDays(-30).ToString("MM/dd/yyyy"), LogicalOperator = LogicalOperator.And };
-			segment = client.Segments.UpdateAsync(segment.Id, "Last Name is Miller and clicked recently", null, new[] { millerLastNameCondition, clickedRecentlyCondition }).Result;
-			Console.WriteLine("Segment {0} updated. The new name is: '{1}'", segment.Id, segment.Name);
+			segment = await client.Segments.UpdateAsync(segment.Id, "StrongGrid Integration Testing: Last Name is Miller and clicked recently", null, new[] { millerLastNameCondition, clickedRecentlyCondition }, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Segment {segment.Id} updated. The new name is: '{segment.Name}'").ConfigureAwait(false);
 
-			client.Segments.DeleteAsync(segment.Id).Wait();
-			Console.WriteLine("Segment {0} deleted", segment.Id);
+			await client.Segments.DeleteAsync(segment.Id, false, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Segment {segment.Id} deleted").ConfigureAwait(false);
 
-			client.Lists.DeleteAsync(firstList.Id).Wait();
-			Console.WriteLine("List {0} deleted", firstList.Id);
+			await client.Lists.DeleteAsync(firstList.Id, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"List {firstList.Id} deleted").ConfigureAwait(false);
 
-			client.Lists.DeleteAsync(secondList.Id).Wait();
-			Console.WriteLine("List {0} deleted", secondList.Id);
-
-			lists = client.Lists.GetAllAsync().Result;
-			Console.WriteLine("All lists retrieved. There are {0} lists", lists.Length);
-
-			ConcludeTests(pauseAfterTests);
+			await client.Lists.DeleteAsync(secondList.Id, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"List {secondList.Id} deleted").ConfigureAwait(false);
 		}
 
-		private static void Campaigns(IClient client, bool pauseAfterTests)
+		private static async Task CampaignsAndSenderIdentities(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			var YOUR_EMAIL = "youremail@hotmail.com";
+			var YOUR_EMAIL = "your_email@example.com";
 
-			Console.WriteLine("\n***** CAMPAIGNS *****");
+			await log.WriteLineAsync("\n***** CAMPAIGNS *****\n").ConfigureAwait(false);
 
-			var senderIdentities = client.SenderIdentities.GetAllAsync().Result;
-			Console.WriteLine($"All sender identities retrieved. There are {senderIdentities.Length} identities");
+			// GET CAMPAIGNS
+			var campaigns = await client.Campaigns.GetAllAsync(100, 0, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All campaigns retrieved. There are {campaigns.Length} campaigns").ConfigureAwait(false);
+
+			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
+			foreach (var oldCampaign in campaigns.Where(c => c.Title.StartsWith("StrongGrid Integration Testing:")))
+			{
+				await client.Campaigns.DeleteAsync(oldCampaign.Id, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"Campaign {oldCampaign.Id} deleted").ConfigureAwait(false);
+			}
+
+			var senderIdentities = await client.SenderIdentities.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All sender identities retrieved. There are {senderIdentities.Length} identities").ConfigureAwait(false);
 
 			var sender = senderIdentities.FirstOrDefault(s => s.NickName == "Integration Testing identity");
 			if (sender == null)
 			{
-				sender = client.SenderIdentities.CreateAsync("Integration Testing identity", new MailAddress(YOUR_EMAIL, "John Doe"), new MailAddress(YOUR_EMAIL, "John Doe"), "123 Main Street", null, "Small Town", "ZZ", "12345", "USA").Result;
+				sender = await client.SenderIdentities.CreateAsync("Integration Testing identity", new MailAddress(YOUR_EMAIL, "John Doe"), new MailAddress(YOUR_EMAIL, "John Doe"), "123 Main Street", null, "Small Town", "ZZ", "12345", "USA", cancellationToken).ConfigureAwait(false);
 				throw new Exception($"A new sender identity was created and a verification email was sent to {sender.From.Email}. You must complete the verification process before proceeding.");
 			}
 			else if (!sender.Verification.IsCompleted)
@@ -641,297 +689,395 @@ namespace StrongGrid.IntegrationTests
 				throw new Exception($"A verification email was previously sent to {sender.From.Email} but the process hasn't been completed yet (hint: there is a link in the email that you must click on).");
 			}
 
-			var lists = client.Lists.GetAllAsync().Result;
-			Console.WriteLine($"All lists retrieved. There are {lists.Length} lists");
+			var lists = await client.Lists.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All lists retrieved. There are {lists.Length} lists").ConfigureAwait(false);
 
 			var list = lists.FirstOrDefault(l => l.Name == "Integration testing list");
 			if (list == null)
 			{
-				list = client.Lists.CreateAsync("Integration testing list").Result;
-				Console.WriteLine("List created");
+				list = await client.Lists.CreateAsync("Integration testing list", cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync("List created").ConfigureAwait(false);
 			}
 
-			var unsubscribeGroups = client.UnsubscribeGroups.GetAllAsync().Result;
-			Console.WriteLine($"All unsubscribe groups retrieved. There are {unsubscribeGroups.Length} groups");
+			var unsubscribeGroups = await client.UnsubscribeGroups.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All unsubscribe groups retrieved. There are {unsubscribeGroups.Length} groups").ConfigureAwait(false);
 
 			var unsubscribeGroup = unsubscribeGroups.FirstOrDefault(l => l.Name == "Integration testing group");
 			if (unsubscribeGroup == null)
 			{
-				unsubscribeGroup = client.UnsubscribeGroups.CreateAsync("Integration testing group", "For testing purposes", false).Result;
-				Console.WriteLine("Unsubscribe group created");
+				unsubscribeGroup = await client.UnsubscribeGroups.CreateAsync("Integration testing group", "For testing purposes", false, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync("Unsubscribe group created").ConfigureAwait(false);
 			}
 
-			var campaign = client.Campaigns.CreateAsync("Integration testing campaign", sender.Id, "This is the subject", "<html><body>Hello <b>World</b><p><a href='[unsubscribe]'>Click Here to Unsubscribe</a></p></body></html", "Hello world. To unsubscribe, visit [unsubscribe]", new[] { list.Id }, null, null, unsubscribeGroup.Id, null, null).Result;
-			Console.WriteLine("Campaign '{0}' created. Id: {1}", campaign.Title, campaign.Id);
+			var campaign = await client.Campaigns.CreateAsync("StrongGrid Integration Testing: new campaign", sender.Id, "This is the subject", "<html><body>Hello <b>World</b><p><a href='[unsubscribe]'>Click Here to Unsubscribe</a></p></body></html", "Hello world. To unsubscribe, visit [unsubscribe]", new[] { list.Id }, null, null, unsubscribeGroup.Id, null, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Campaign '{campaign.Title}' created. Id: {campaign.Id}").ConfigureAwait(false);
 
-			client.Campaigns.UpdateAsync(campaign.Id, categories: new[] { "category1", "category2" }).Wait();
-			Console.WriteLine("Campaign '{0}' updated", campaign.Id);
+			await client.Campaigns.UpdateAsync(campaign.Id, categories: new[] { "category1", "category2" }, cancellationToken: cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Campaign '{campaign.Id}' updated").ConfigureAwait(false);
 
-			var campaigns = client.Campaigns.GetAllAsync(100, 0).Result;
-			Console.WriteLine("All campaigns retrieved. There are {0} campaigns", campaigns.Length);
+			campaigns = await client.Campaigns.GetAllAsync(100, 0, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All campaigns retrieved. There are {campaigns.Length} campaigns").ConfigureAwait(false);
 
-			client.Campaigns.SendTestAsync(campaign.Id, new[] { YOUR_EMAIL }).Wait();
-			Console.WriteLine("Test sent");
+			await client.Campaigns.SendTestAsync(campaign.Id, new[] { YOUR_EMAIL }, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("Test sent").ConfigureAwait(false);
 
-			client.Lists.DeleteAsync(list.Id).Wait();
-			Console.WriteLine("List deleted");
+			await client.Lists.DeleteAsync(list.Id, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("List deleted").ConfigureAwait(false);
 
-			client.Campaigns.DeleteAsync(campaign.Id).Wait();
-			Console.WriteLine("Campaign {0} deleted", campaign.Id);
+			await client.Campaigns.DeleteAsync(campaign.Id, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Campaign {campaign.Id} deleted").ConfigureAwait(false);
 
-			campaigns = client.Campaigns.GetAllAsync(100, 0).Result;
-			Console.WriteLine("All campaigns retrieved. There are {0} campaigns", campaigns.Length);
-
-			ConcludeTests(pauseAfterTests);
+			campaigns = await client.Campaigns.GetAllAsync(100, 0, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All campaigns retrieved. There are {campaigns.Length} campaigns").ConfigureAwait(false);
 		}
 
-		private static void Settings(IClient client, bool pauseAfterTests)
+		private static async Task Settings(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			Console.WriteLine("\n***** SETTINGS *****");
+			await log.WriteLineAsync("\n***** SETTINGS *****\n").ConfigureAwait(false);
 
-			var partnerSettings = client.Settings.GetAllPartnerSettingsAsync().Result;
-			Console.WriteLine($"All partner settings retrieved. There are {partnerSettings.Length} settings");
+			var partnerSettings = await client.Settings.GetAllPartnerSettingsAsync(25, 0, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All partner settings retrieved. There are {partnerSettings.Length} settings").ConfigureAwait(false);
 
-			var trackingSettings = client.Settings.GetAllTrackingSettingsAsync().Result;
-			Console.WriteLine($"All partner tracking retrieved. There are {trackingSettings.Length} settings");
+			var trackingSettings = await client.Settings.GetAllTrackingSettingsAsync(25, 0, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All partner tracking retrieved. There are {trackingSettings.Length} settings").ConfigureAwait(false);
 
-			var mailSettings = client.Settings.GetAllMailSettingsAsync().Result;
-			Console.WriteLine($"All mail tracking retrieved. There are {mailSettings.Length} settings");
-
-			ConcludeTests(pauseAfterTests);
+			var mailSettings = await client.Settings.GetAllMailSettingsAsync(25, 0, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All mail tracking retrieved. There are {mailSettings.Length} settings").ConfigureAwait(false);
 		}
 
-		private static void Alerts(IClient client, bool pauseAfterTests)
+		private static async Task Alerts(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			Console.WriteLine("\n***** ALERTS *****");
+			await log.WriteLineAsync("\n***** ALERTS *****\n").ConfigureAwait(false);
 
-			var newAlert = client.Alerts.CreateAsync(AlertType.UsageLimit, "test@example.com", Frequency.Weekly, 75).Result;
-			Console.WriteLine($"New alert created: {newAlert.Id}");
+			var newAlert = await client.Alerts.CreateAsync(AlertType.UsageLimit, "test@example.com", Frequency.Weekly, 75, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"New alert created: {newAlert.Id}").ConfigureAwait(false);
 
-			var allAlerts = client.Alerts.GetAllAsync().Result;
-			Console.WriteLine($"All alerts retrieved. There are {allAlerts.Length} alerts");
+			var allAlerts = await client.Alerts.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All alerts retrieved. There are {allAlerts.Length} alerts").ConfigureAwait(false);
 
-			client.Alerts.DeleteAsync(newAlert.Id).Wait();
-			Console.WriteLine($"Alert {newAlert.Id} deleted");
-
-			ConcludeTests(pauseAfterTests);
+			await client.Alerts.DeleteAsync(newAlert.Id, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Alert {newAlert.Id} deleted").ConfigureAwait(false);
 		}
 
-		private static void Blocks(IClient client, bool pauseAfterTests)
+		private static async Task Blocks(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			Console.WriteLine("\n***** BLOCKS *****");
+			await log.WriteLineAsync("\n***** BLOCKS *****\n").ConfigureAwait(false);
 
 			var thisYear = DateTime.UtcNow.Year;
 			var lastYear = thisYear - 1;
 			var startDate = new DateTime(lastYear, 1, 1, 0, 0, 0);
 			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
 
-			var blocks = client.Blocks.GetAllAsync(startDate, endDate).Result;
-			Console.WriteLine($"All blocks retrieved. There are {blocks.Length} blocks in {lastYear} and {thisYear}");
-
-			ConcludeTests(pauseAfterTests);
+			var blocks = await client.Blocks.GetAllAsync(startDate, endDate, 25, 0, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All blocks retrieved. There are {blocks.Length} blocks in {lastYear} and {thisYear}").ConfigureAwait(false);
 		}
 
-		private static void Bounces(IClient client, bool pauseAfterTests)
+		private static async Task Bounces(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			Console.WriteLine("\n***** BOUNCES *****");
+			await log.WriteLineAsync("\n***** BOUNCES *****\n").ConfigureAwait(false);
 
 			var thisYear = DateTime.UtcNow.Year;
 			var lastYear = thisYear - 1;
 			var startDate = new DateTime(lastYear, 1, 1, 0, 0, 0);
 			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
 
-			var bounces = client.Bounces.GetAllAsync(startDate, endDate).Result;
-			Console.WriteLine($"All bounces retrieved. There are {bounces.Length} bounces in {lastYear} and {thisYear}");
-
-			ConcludeTests(pauseAfterTests);
+			var bounces = await client.Bounces.GetAllAsync(startDate, endDate, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All bounces retrieved. There are {bounces.Length} bounces in {lastYear} and {thisYear}").ConfigureAwait(false);
 		}
 
-		private static void SpamReports(IClient client, bool pauseAfterTests)
+		private static async Task SpamReports(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			Console.WriteLine("\n***** SPAM REPORTS *****");
+			await log.WriteLineAsync("\n***** SPAM REPORTS *****\n").ConfigureAwait(false);
 
 			var thisYear = DateTime.UtcNow.Year;
 			var lastYear = thisYear - 1;
 			var startDate = new DateTime(lastYear, 1, 1, 0, 0, 0);
 			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
 
-			var spamReports = client.SpamReports.GetAllAsync(startDate, endDate).Result;
-			Console.WriteLine($"All spam reports retrieved. There are {spamReports.Length} reports in {lastYear} and {thisYear}");
-
-			ConcludeTests(pauseAfterTests);
+			var spamReports = await client.SpamReports.GetAllAsync(startDate, endDate, 25, 0, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All spam reports retrieved. There are {spamReports.Length} reports in {lastYear} and {thisYear}").ConfigureAwait(false);
 		}
 
-		private static void InvalidEmails(IClient client, bool pauseAfterTests)
+		private static async Task InvalidEmails(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			Console.WriteLine("\n***** INVALID EMAILS *****");
+			await log.WriteLineAsync("\n***** INVALID EMAILS *****\n").ConfigureAwait(false);
 
 			var thisYear = DateTime.UtcNow.Year;
 			var lastYear = thisYear - 1;
 			var startDate = new DateTime(lastYear, 1, 1, 0, 0, 0);
 			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
 
-			var invalidEmails = client.InvalidEmails.GetAllAsync(startDate, endDate).Result;
-			Console.WriteLine($"All invalid emails retrieved. There are {invalidEmails.Length} invalid email addresses in {lastYear} and {thisYear}");
-
-			ConcludeTests(pauseAfterTests);
+			var invalidEmails = await client.InvalidEmails.GetAllAsync(startDate, endDate, 25, 0, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All invalid emails retrieved. There are {invalidEmails.Length} invalid email addresses in {lastYear} and {thisYear}").ConfigureAwait(false);
 		}
 
-		private static void Batches(IClient client, bool pauseAfterTests)
+		private static async Task Batches(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			Console.WriteLine("\n***** BATCHES *****");
+			await log.WriteLineAsync("\n***** BATCHES *****\n").ConfigureAwait(false);
 
-			var batchId = client.Batches.GenerateBatchIdAsync().Result;
-			Console.WriteLine($"New batchId generated: {batchId}");
+			var batchId = await client.Batches.GenerateBatchIdAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"New batchId generated: {batchId}").ConfigureAwait(false);
 
-			var isValid = client.Batches.ValidateBatchIdAsync(batchId).Result;
-			Console.WriteLine($"{batchId} is valid: {isValid}");
+			var isValid = await client.Batches.ValidateBatchIdAsync(batchId, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"{batchId} is valid: {isValid}").ConfigureAwait(false);
 
 			batchId = "some_bogus_batch_id";
-			isValid = client.Batches.ValidateBatchIdAsync(batchId).Result;
-			Console.WriteLine($"{batchId} is valid: {isValid}");
+			isValid = await client.Batches.ValidateBatchIdAsync(batchId, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"{batchId} is valid: {isValid}").ConfigureAwait(false);
 
-			var batches = client.Batches.GetAllAsync().Result;
-			Console.WriteLine($"All batches retrieved. There are {batches.Length} batches");
-
-			ConcludeTests(pauseAfterTests);
+			var batches = await client.Batches.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All batches retrieved. There are {batches.Length} batches").ConfigureAwait(false);
 		}
 
-		private static void Whitelabel(IClient client, bool pauseAfterTests)
+		private static async Task Whitelabel(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			Console.WriteLine("\n***** WHITELABEL DOMAINS *****");
+			if (cancellationToken.IsCancellationRequested) return;
 
-			var domains = client.Whitelabel.GetAllDomainsAsync().Result;
-			Console.WriteLine($"All whitelabel domains retrieved. There are {domains.Length} domains");
+			await log.WriteLineAsync("\n***** WHITELABEL DOMAINS *****\n").ConfigureAwait(false);
+
+			var domains = await client.Whitelabel.GetAllDomainsAsync(50, 0, false, null, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All whitelabel domains retrieved. There are {domains.Length} domains").ConfigureAwait(false);
 
 			var domain = domains.FirstOrDefault(d => d.Domain == "example.com");
 			if (domain == null)
 			{
-				domain = client.Whitelabel.CreateDomainAsync("example.com", "email").Result;
-				Console.WriteLine($"Whitelabel domain created. Id: {domain.Id}");
+				domain = await client.Whitelabel.CreateDomainAsync("example.com", "email", false, false, false, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"Whitelabel domain created. Id: {domain.Id}").ConfigureAwait(false);
 			}
 
-			var domainValidation = client.Whitelabel.ValidateDomainAsync(domain.Id).Result;
-			Console.WriteLine($"Whitelabel domain validation: {domainValidation.IsValid}");
+			var domainValidation = await client.Whitelabel.ValidateDomainAsync(domain.Id, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Whitelabel domain validation: {domainValidation.IsValid}").ConfigureAwait(false);
 
-			client.Whitelabel.DeleteDomainAsync(domain.Id).Wait();
-			Console.WriteLine($"Whitelabel domain {domain.Id} deleted.");
-
-
-			Console.WriteLine("\n***** WHITELABEL IPS *****");
-
-			var ipAdresses = client.Whitelabel.GetAllDomainsAsync().Result;
-			Console.WriteLine($"All whitelabel IP addreses retrieved. There are {ipAdresses.Length} adresses");
+			await client.Whitelabel.DeleteDomainAsync(domain.Id, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Whitelabel domain {domain.Id} deleted.").ConfigureAwait(false);
 
 
-			Console.WriteLine("\n***** WHITELABEL LINKS *****");
+			await log.WriteLineAsync("\n***** WHITELABEL IPS *****").ConfigureAwait(false);
 
-			var links = client.Whitelabel.GetAllLinksAsync().Result;
-			Console.WriteLine($"All whitelabel links retrieved. There are {links.Length} links");
+			var ipAdresses = await client.Whitelabel.GetAllDomainsAsync(50, 0, false, null, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All whitelabel IP addreses retrieved. There are {ipAdresses.Length} adresses").ConfigureAwait(false);
+
+
+			await log.WriteLineAsync("\n***** WHITELABEL LINKS *****").ConfigureAwait(false);
+
+			var links = await client.Whitelabel.GetAllLinksAsync(null, 50, 0, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All whitelabel links retrieved. There are {links.Length} links").ConfigureAwait(false);
 
 			var link = links.FirstOrDefault(d => d.Domain == "example.com");
 			if (link == null)
 			{
-				link = client.Whitelabel.CreateLinkAsync("example.com", "email", true).Result;
-				Console.WriteLine($"Whitelabel link created. Id: {link.Id}");
+				link = await client.Whitelabel.CreateLinkAsync("example.com", "email", true, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"Whitelabel link created. Id: {link.Id}").ConfigureAwait(false);
 			}
 
-			var linkValidation = client.Whitelabel.ValidateLinkAsync(link.Id).Result;
-			Console.WriteLine($"Whitelabel validation: {linkValidation.IsValid}");
+			var linkValidation = await client.Whitelabel.ValidateLinkAsync(link.Id, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Whitelabel validation: {linkValidation.IsValid}").ConfigureAwait(false);
 
-			client.Whitelabel.DeleteLinkAsync(link.Id).Wait();
-			Console.WriteLine($"Whitelabel link {link.Id} deleted.");
-
-			ConcludeTests(pauseAfterTests);
+			await client.Whitelabel.DeleteLinkAsync(link.Id, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Whitelabel link {link.Id} deleted.").ConfigureAwait(false);
 		}
 
-		private static void WebhookStats(IClient client, bool pauseAfterTests)
+		private static async Task WebhookStats(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			Console.WriteLine("\n***** WEBHOOK STATS *****");
+			await log.WriteLineAsync("\n***** WEBHOOK STATS *****\n").ConfigureAwait(false);
 
 			var thisYear = DateTime.UtcNow.Year;
 			var lastYear = thisYear - 1;
 			var startDate = new DateTime(lastYear, 1, 1, 0, 0, 0);
 			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
 
-			var inboundParseWebhookUsage = client.WebhookStats.GetInboundParseUsageAsync(startDate, endDate, AggregateBy.Month).Result;
+			var inboundParseWebhookUsage = await client.WebhookStats.GetInboundParseUsageAsync(startDate, endDate, AggregateBy.Month, cancellationToken).ConfigureAwait(false);
 			foreach (var monthUsage in inboundParseWebhookUsage)
 			{
 				var name = monthUsage.Date.ToString("yyyy MMM");
 				var count = monthUsage.Stats.Sum(s => s.Metrics.Single(m => m.Key == "received").Value);
-				Console.WriteLine($"{name}: {count}");
+				await log.WriteLineAsync($"{name}: {count}").ConfigureAwait(false);
 			}
-
-			ConcludeTests(pauseAfterTests);
 		}
 
-		private static void AccessManagement(IClient client, bool pauseAfterTests)
+		private static async Task AccessManagement(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			Console.WriteLine("\n***** ACCESS MANAGEMENT *****");
+			await log.WriteLineAsync("\n***** ACCESS MANAGEMENT *****\n").ConfigureAwait(false);
 
-			var accessHistory = client.AccessManagement.GetAccessHistoryAsync().Result;
-			Console.WriteLine("Access history:");
+			var accessHistory = await client.AccessManagement.GetAccessHistoryAsync(20, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("Access history:").ConfigureAwait(false);
 			foreach (var access in accessHistory)
 			{
 				var accessDate = access.LatestAccessOn.ToString("yyyy-MM-dd hh:mm:ss");
 				var accessVerdict = access.Allowed ? "Access granted" : "Access DENIED";
-				Console.WriteLine($"\t{accessDate, -20} {accessVerdict, -16} {access.IpAddress, -20} {access.Location}");
+				await log.WriteLineAsync($"\t{accessDate,-20} {accessVerdict,-16} {access.IpAddress,-20} {access.Location}").ConfigureAwait(false);
 			}
 
-			var whitelistedIpAddresses = client.AccessManagement.GetWhitelistedIpAddressesAsync().Result;
-			Console.WriteLine("Currently whitelisted addresses:" + (whitelistedIpAddresses.Length == 0 ? " NONE" : ""));
+			var whitelistedIpAddresses = await client.AccessManagement.GetWhitelistedIpAddressesAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("Currently whitelisted addresses:" + (whitelistedIpAddresses.Length == 0 ? " NONE" : "")).ConfigureAwait(false);
 			foreach (var address in whitelistedIpAddresses)
 			{
-				Console.WriteLine($"\t{address.Id, 6} {address.IpAddress, -20} {address.CreatedOn.ToString("yyyy-MM-dd hh:mm:ss")}");
+				await log.WriteLineAsync($"\t{address.Id,6} {address.IpAddress,-20} {address.CreatedOn.ToString("yyyy-MM-dd hh:mm:ss")}").ConfigureAwait(false);
 			}
 
 			// ========== VERY IMPORTANT ==========
 			// You must manually whitelist your IP address in your SendGrid account in the web interface before we
-			// attempt to whitelist an IP via the API. Otherwise, whitelisting an IP address would effectively lock
-			// you out of your own account. This is especially true since we use some bogus IP address for testing
-			// purposes. Trust me, it happened to me and it took a week of back and forth with SendGrid support
-			// before they agreed that I was the legitimate owner of my own account and they restored access to my
-			// account. That's the reason why the following code will only run if we find other whitelisted addresses
-			// on your account.
+			// attempt to whitelist an IP via the API. Otherwise, whitelisting an IP address could effectively lock
+			// you out of your own account. Trust me, it happened to me and it took a week of back and forth with
+			// SendGrid support before they agreed that I was the legitimate owner of my own account and they restored
+			// access to my account. That's the reason why the following code will only run if we find other whitelisted
+			// addresses on your account.
 			if (whitelistedIpAddresses.Length == 0)
 			{
-				Console.WriteLine("\n========================================================================");
-				Console.WriteLine("----------- VERY IMPORTANT ---------");
-				Console.WriteLine("There currently aren't any whitelisted IP addresses on your account.");
-				Console.WriteLine("Attempting to programmatically whitelist IP addresses would lock you out of your account.");
-				Console.WriteLine("Therefore we are skipping the tests where an IP address is added to and subsequently removed from your account.");
-				Console.WriteLine("You must manually configure whitelisting in the SendGrid web UI before we can run these tests.");
-				Console.WriteLine("");
-				Console.WriteLine("CAUTION: do not attempt to manually configure whitelisted IP addresses if you are unsure how to do it or if you");
-				Console.WriteLine("don't know how to get your public IP address or if you suspect your ISP may change your assigned IP address from");
-				Console.WriteLine("time to time because there is a strong posibility you could lock yourself out your account.");
-				Console.WriteLine("========================================================================\n");
+				await log.WriteLineAsync("\n========================================================================").ConfigureAwait(false);
+				await log.WriteLineAsync("----------- VERY IMPORTANT ---------").ConfigureAwait(false);
+				await log.WriteLineAsync("There currently aren't any whitelisted IP addresses on your account.").ConfigureAwait(false);
+				await log.WriteLineAsync("Attempting to programmatically whitelist IP addresses could potentially lock you out of your account.").ConfigureAwait(false);
+				await log.WriteLineAsync("Therefore we are skipping the tests where an IP address is added to and subsequently removed from your account.").ConfigureAwait(false);
+				await log.WriteLineAsync("You must manually configure whitelisting in the SendGrid web UI before we can run these tests.").ConfigureAwait(false);
+				await log.WriteLineAsync("").ConfigureAwait(false);
+				await log.WriteLineAsync("CAUTION: do not attempt to manually configure whitelisted IP addresses if you are unsure how to do it or if you").ConfigureAwait(false);
+				await log.WriteLineAsync("don't know how to get your public IP address or if you suspect your ISP may change your assigned IP address from").ConfigureAwait(false);
+				await log.WriteLineAsync("time to time because there is a strong posibility you could lock yourself out your account.").ConfigureAwait(false);
+				await log.WriteLineAsync("========================================================================\n").ConfigureAwait(false);
 			}
 			else
 			{
 				var yourPublicIpAddress = GetExternalIPAddress();
 
-				Console.WriteLine("\n========================================================================");
-				Console.WriteLine("----------- VERY IMPORTANT ---------");
-				Console.WriteLine("We have detected that whitelisting has been configured on your account. Therefore it seems safe");
-				Console.WriteLine("to attempt to programmatically whitelist your public IP address which is: {yourPublicIpAddress}.");
+				await log.WriteLineAsync("\n========================================================================").ConfigureAwait(false);
+				await log.WriteLineAsync("----------- VERY IMPORTANT ---------").ConfigureAwait(false);
+				await log.WriteLineAsync("We have detected that whitelisting has been configured on your account. Therefore it seems safe").ConfigureAwait(false);
+				await log.WriteLineAsync("to attempt to programmatically whitelist your public IP address which is: {yourPublicIpAddress}.").ConfigureAwait(false);
 				var keyPressed = Prompt("\nPlease confirm that you agree to run this test by pressing 'Y' or press any other key to skip this test");
-				Console.WriteLine("\n========================================================================\n");
+				await log.WriteLineAsync("\n========================================================================\n").ConfigureAwait(false);
 
 				if (keyPressed == 'y' || keyPressed == 'Y')
 				{
-					var newWhitelistedIpAddress = client.AccessManagement.AddIpAddressToWhitelistAsync(yourPublicIpAddress).Result;
-					Console.WriteLine($"New whitelisted IP address: {yourPublicIpAddress}; Id: {newWhitelistedIpAddress.Id}");
+					var newWhitelistedIpAddress = await client.AccessManagement.AddIpAddressToWhitelistAsync(yourPublicIpAddress, cancellationToken).ConfigureAwait(false);
+					await log.WriteLineAsync($"New whitelisted IP address: {yourPublicIpAddress}; Id: {newWhitelistedIpAddress.Id}").ConfigureAwait(false);
 
-					var whitelistedIpAddress = client.AccessManagement.GetWhitelistedIpAddressAsync(newWhitelistedIpAddress.Id).Result;
-					Console.WriteLine($"{whitelistedIpAddress.Id}\t{whitelistedIpAddress.IpAddress}\t{whitelistedIpAddress.CreatedOn.ToString("yyyy-MM-dd hh:mm:ss")}");
+					var whitelistedIpAddress = await client.AccessManagement.GetWhitelistedIpAddressAsync(newWhitelistedIpAddress.Id, cancellationToken).ConfigureAwait(false);
+					await log.WriteLineAsync($"{whitelistedIpAddress.Id}\t{whitelistedIpAddress.IpAddress}\t{whitelistedIpAddress.CreatedOn.ToString("yyyy-MM-dd hh:mm:ss")}").ConfigureAwait(false);
 
-					client.AccessManagement.RemoveIpAddressFromWhitelistAsync(newWhitelistedIpAddress.Id).Wait();
-					Console.WriteLine($"IP address {whitelistedIpAddress.Id} removed from whitelist");
+					await client.AccessManagement.RemoveIpAddressFromWhitelistAsync(newWhitelistedIpAddress.Id, cancellationToken).ConfigureAwait(false);
+					await log.WriteLineAsync($"IP address {whitelistedIpAddress.Id} removed from whitelist").ConfigureAwait(false);
 				}
 			}
+		}
 
-			ConcludeTests(pauseAfterTests);
+		private static async Task IpAddresses(IClient client, TextWriter log, CancellationToken cancellationToken)
+		{
+			await log.WriteLineAsync("\n***** IP ADDRESSES *****\n").ConfigureAwait(false);
+
+			// GET ALL THE IP ADDRESSES
+			var allIpAddresses = await client.IpAddresses.GetAllAsync(false, null, 10, 0, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {allIpAddresses.Length} IP addresses on your account").ConfigureAwait(false);
+
+			/**************************************************
+				Commenting out the following tests because 
+				I do not have the necessary privileges
+			 **************************************************
+
+			// GET THE WARMING UP IP ADDRESSES
+			var warmingup = await client.IpAddresses.GetWarmingUpAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {warmingup.Length} warming up IP addresses").ConfigureAwait(false);
+
+			// GET THE ASSIGNED IP ADDRESSES
+			var assigned = await client.IpAddresses.GetAssignedAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {assigned.Length} assigned IP addresses").ConfigureAwait(false);
+
+			// GET THE REMAINING IP ADDRESSES
+			var remaining = await client.IpAddresses.GetRemainingCountAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"You have {remaining.Remaining} remaining IP addresses for the {remaining.Period} at a cost of {remaining.PricePerIp}").ConfigureAwait(false);
+
+			**************************************************/
+		}
+
+		private static Task IpPools(IClient client, TextWriter log, CancellationToken cancellationToken)
+		{
+			/**************************************************
+				Commenting out the following tests because 
+				I do not have the necessary privileges
+			 **************************************************
+
+			await log.WriteLineAsync("\n***** IP POOLS *****\n").ConfigureAwait(false);
+
+			// GET ALL THE IP POOLS
+			var allIpPools = await client.IpPools.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {allIpPools.Length} IP pools on your account").ConfigureAwait(false);
+
+			// CREATE A NEW POOL
+			var newPool = await client.IpPools.CreateAsync("mktg", cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"New pool created: {newPool.Name}").ConfigureAwait(false);
+
+			// UPDATE THE IP POOL
+			await client.IpPools.UpdateAsync("mktg", "marketing", cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("New pool has been updated").ConfigureAwait(false);
+
+			// GET THE IP POOL
+			var marketingPool = await client.IpPools.GetAsync("marketing", cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Retrieved pool '{marketingPool.Name}'").ConfigureAwait(false);
+
+			// DELETE THE IP POOL
+			await client.IpPools.DeleteAsync(marketingPool.Name, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Deleted pool '{marketingPool.Name}'").ConfigureAwait(false);
+
+			**************************************************/
+			return Task.FromResult(0); // Success.
+		}
+
+		private static Task Subusers(IClient client, TextWriter log, CancellationToken cancellationToken)
+		{
+			/**************************************************
+				Commenting out the following tests because 
+				I do not have the necessary privileges
+			 **************************************************
+
+			await log.WriteLineAsync("\n***** SUBUSERS *****\n").ConfigureAwait(false);
+
+			// GET ALL THE SUBUSERS
+			var subusers = await client.Subusers.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {subusers.Length} subusers").ConfigureAwait(false);
+
+			**************************************************/
+			return Task.FromResult(0); // Success.
+		}
+
+		private static Task Teammates(IClient client, TextWriter log, CancellationToken cancellationToken)
+		{
+			/**************************************************
+				Commenting out the following tests because 
+				I do not have the necessary privileges
+			 **************************************************
+
+			await log.WriteLineAsync("\n***** TEAMMATES *****\n").ConfigureAwait(false);
+
+			// GET ALL THE PENDING INVITATIONS
+			var pendingInvitation = await client.Teammates.GetAllPendingInvitationsAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {pendingInvitation.Length} pending invitations").ConfigureAwait(false);
+
+			// GET ALL THE TEAMMATES
+			var allTeammates = await client.Teammates.GetAllTeammatesAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {allTeammates.Length} teammates").ConfigureAwait(false);
+
+			if (allTeammates.Length > 0)
+			{
+				// RETRIEVE THE FIRST TEAMMATE
+				var teammate = await client.Teammates.GetTeammateAsync(allTeammates[0].Username, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"Retrieved teammate '{teammate.Username}'").ConfigureAwait(false);
+			}
+
+			**************************************************/
+			return Task.FromResult(0); // Success.
+		}
+
+		private static async Task WebhookSettings(IClient client, TextWriter log, CancellationToken cancellationToken)
+		{
+			await log.WriteLineAsync("\n***** WEBHOOK SETTINGS *****\n").ConfigureAwait(false);
+
+			// GET THE EVENT SETTINGS
+			var eventWebhookSettings = await client.WebhookSettings.GetEventWebhookSettingsAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("The event webhooks settings have been retrieved.").ConfigureAwait(false);
+
+			// GET THE INBOUND PARSE SETTINGS
+			var inboundParseWebhookSettings = await client.WebhookSettings.GetAllInboundParseWebhookSettings(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("The inbound parse webhooks settings have been retrieved.").ConfigureAwait(false);
 		}
 
 		// to get your public IP address we loop through an array
@@ -970,23 +1116,41 @@ namespace StrongGrid.IntegrationTests
 			return result;
 		}
 
-		private static void ConcludeTests(bool pause)
-		{
-			if (pause)
-			{
-				Prompt("\n\nPress any key to continue");
-			}
-		}
-
 		private static char Prompt(string prompt)
 		{
 			while (Console.KeyAvailable)
 			{
 				Console.ReadKey(false);
 			}
-			Console.WriteLine(prompt);
+			Console.Out.WriteLine(prompt);
 			var result = Console.ReadKey();
 			return result.KeyChar;
+		}
+
+		private static async Task<int> ExecuteAsync(IClient client, CancellationTokenSource cts, Func<IClient, TextWriter, CancellationToken, Task> asyncTask)
+		{
+			var log = new StringWriter();
+
+			try
+			{
+				await asyncTask(client, log, cts.Token).ConfigureAwait(false);
+			}
+			catch (OperationCanceledException)
+			{
+				await log.WriteLineAsync($"-----> TASK CANCELLED").ConfigureAwait(false);
+				return 1223; // Cancelled.
+			}
+			catch (Exception e)
+			{
+				await log.WriteLineAsync($"-----> AN EXCEPTION OCCURED: {e.GetBaseException().Message}").ConfigureAwait(false);
+				throw;
+			}
+			finally
+			{
+				await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
+			}
+
+			return 0;   // Success
 		}
 	}
 }

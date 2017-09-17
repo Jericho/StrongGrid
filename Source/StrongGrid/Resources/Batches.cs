@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
-using StrongGrid.Model;
+using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System;
 using System.Threading;
@@ -11,6 +11,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows you to manages batches.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.IBatches" />
 	public class Batches : IBatches
 	{
 		private const string _endpoint = "mail/batch";
@@ -124,6 +125,22 @@ namespace StrongGrid.Resources
 				.GetAsync("user/scheduled_sends")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<BatchInfo[]>();
+		}
+
+		/// <summary>
+		/// Get the cancel/paused scheduled send information for a specific batch_id
+		/// </summary>
+		/// <param name="batchId">The batch identifier.</param>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// A <see cref="BatchInfo" />.
+		/// </returns>
+		public Task<BatchInfo> GetAsync(string batchId, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			return _client
+				.GetAsync($"user/scheduled_sends/{batchId}")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<BatchInfo>();
 		}
 
 		/// <summary>

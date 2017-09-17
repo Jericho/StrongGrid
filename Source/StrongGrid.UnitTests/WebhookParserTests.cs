@@ -1,9 +1,10 @@
 ﻿using Newtonsoft.Json;
 using Shouldly;
-using StrongGrid.Model.Webhooks;
+using StrongGrid.Models.Webhooks;
 using StrongGrid.Utilities;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.UnitTests
@@ -535,7 +536,7 @@ namespace StrongGrid.UnitTests
 		}
 
 		[Fact]
-		public void Processed()
+		public async Task Processed()
 		{
 			// Arrange
 			var responseContent = $"[{PROCESSED_JSON}]";
@@ -543,7 +544,7 @@ namespace StrongGrid.UnitTests
 			var stream = GetStream(responseContent);
 				
 			// Act
-			var result = parser.ParseWebhookEventsAsync(stream).Result;
+			var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -552,7 +553,7 @@ namespace StrongGrid.UnitTests
 		}
 
 		[Fact]
-		public void Bounced()
+		public async Task Bounced()
 		{
 			// Arrange
 			var responseContent = $"[{BOUNCED_JSON}]";
@@ -560,7 +561,7 @@ namespace StrongGrid.UnitTests
 			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(stream).Result;
+			var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -569,7 +570,7 @@ namespace StrongGrid.UnitTests
 		}
 
 		[Fact]
-		public void Deferred()
+		public async Task Deferred()
 		{
 			// Arrange
 			var responseContent = $"[{DEFERRED_JSON}]";
@@ -577,7 +578,7 @@ namespace StrongGrid.UnitTests
 			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(stream).Result;
+			var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -586,7 +587,7 @@ namespace StrongGrid.UnitTests
 		}
 
 		[Fact]
-		public void Dropped()
+		public async Task Dropped()
 		{
 			// Arrange
 			var responseContent = $"[{DROPPED_JSON}]";
@@ -594,7 +595,7 @@ namespace StrongGrid.UnitTests
 			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(stream).Result;
+			var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -603,7 +604,7 @@ namespace StrongGrid.UnitTests
 		}
 
 		[Fact]
-		public void Click()
+		public async Task Click()
 		{
 			// Arrange
 			var responseContent = $"[{CLICK_JSON}]";
@@ -611,7 +612,7 @@ namespace StrongGrid.UnitTests
 			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(stream).Result;
+			var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -620,7 +621,7 @@ namespace StrongGrid.UnitTests
 		}
 
 		[Fact]
-		public void Open()
+		public async Task Open()
 		{
 			// Arrange
 			var responseContent = $"[{OPEN_JSON}]";
@@ -628,7 +629,7 @@ namespace StrongGrid.UnitTests
 			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(stream).Result;
+			var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -637,7 +638,7 @@ namespace StrongGrid.UnitTests
 		}
 
 		[Fact]
-		public void Unsubscribe()
+		public async Task Unsubscribe()
 		{
 			// Arrange
 			var responseContent = $"[{UNSUBSCRIBE_JSON}]";
@@ -645,7 +646,7 @@ namespace StrongGrid.UnitTests
 			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(stream).Result;
+			var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -654,7 +655,7 @@ namespace StrongGrid.UnitTests
 		}
 
 		[Fact]
-		public void GroupUnsubscribe()
+		public async Task GroupUnsubscribe()
 		{
 			// Arrange
 			var responseContent = $"[{GROUPUNSUBSCRIBE_JSON}]";
@@ -662,7 +663,7 @@ namespace StrongGrid.UnitTests
 			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(stream).Result;
+			var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -670,9 +671,8 @@ namespace StrongGrid.UnitTests
 			result[0].GetType().ShouldBe(typeof(GroupUnsubscribeEvent));
 		}
 
-
 		[Fact]
-		public void GroupResubscribe()
+		public async Task GroupResubscribe()
 		{
 			// Arrange
 			var responseContent = $"[{GROUPRESUBSCRIBE_JSON}]";
@@ -680,7 +680,7 @@ namespace StrongGrid.UnitTests
 			var stream = GetStream(responseContent);
 
 			// Act
-			var result = parser.ParseWebhookEventsAsync(stream).Result;
+			var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
 
 			// Assert
 			result.ShouldNotBeNull();

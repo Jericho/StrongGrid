@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
-using StrongGrid.Model;
+using StrongGrid.Models;
 using StrongGrid.UnitTests;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace StrongGrid.Resources.UnitTests
@@ -14,7 +15,8 @@ namespace StrongGrid.Resources.UnitTests
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "user/webhooks/event/settings";
+		private const string EVENT_ENDPOINT = "user/webhooks/event";
+		private const string INBOUNDPARSE_ENDPOINT = "user/webhooks/parse";
 
 		private const string SINGLE_EVENT_WEBHOOK_SETTING_JSON = @"{
 			'enabled': true,
@@ -32,10 +34,17 @@ namespace StrongGrid.Resources.UnitTests
 			'dropped': true
 		}";
 
+		private const string SINGLE_INBOUNDPARSE_WEBHOOK_SETTING_JSON = @"{
+			'hostname': 'myhostname.com',
+			'url': 'http://email.myhosthame.com',
+			'spam_check': true,
+			'send_raw': false
+		}";
+
 		#endregion
 
 		[Fact]
-		public void Parse_json()
+		public void Parse_event_json()
 		{
 			// Arrange
 
@@ -58,9 +67,24 @@ namespace StrongGrid.Resources.UnitTests
 			result.Dropped.ShouldBe(true);
 		}
 
+		[Fact]
+		public void Parse_inboundparse_json()
+		{
+			// Arrange
+
+			// Act
+			var result = JsonConvert.DeserializeObject<InboundParseWebhookSettings>(SINGLE_INBOUNDPARSE_WEBHOOK_SETTING_JSON);
+
+			// Assert
+			result.ShouldNotBeNull();
+			result.HostName.ShouldBe("myhostname.com");
+			result.Url.ShouldBe("http://email.myhosthame.com");
+			result.SpamCheck.ShouldBeTrue();
+			result.SendRaw.ShouldBeFalse();
+		}
 
 		[Fact]
-		public void Get()
+		public async Task GetEventWebhookSettingsAsync()
 		{
 			// Arrange
 
@@ -81,13 +105,13 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("user/webhooks/event/settings")).Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(EVENT_ENDPOINT, "settings")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var webhooks = new WebhookSettings(client);
 
 			// Act
-			var result = webhooks.GetAsync(CancellationToken.None).Result;
+			var result = await webhooks.GetEventWebhookSettingsAsync(CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -107,9 +131,8 @@ namespace StrongGrid.Resources.UnitTests
 			result.Dropped.ShouldBe(true);
 		}
 
-
 		[Fact]
-		public void Update()
+		public async Task UpdateEventWebhookSettingsAsync()
 		{
 			// Arrange
 			var enabled = true;
@@ -143,13 +166,13 @@ namespace StrongGrid.Resources.UnitTests
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("user/webhooks/event/settings")).Respond("application/json", apiResponse);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(EVENT_ENDPOINT, "settings")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var webhooks = new WebhookSettings(client);
 
 			// Act
-			var result = webhooks.UpdateAsync(enabled, url, bounce, click, deferred, delivered, dropped, groupResubscribe, groupUnsubscribe, open, processed, spamReport, unsubscribe, CancellationToken.None).Result;
+			var result = await webhooks.UpdateEventWebhookSettingsAsync(enabled, url, bounce, click, deferred, delivered, dropped, groupResubscribe, groupUnsubscribe, open, processed, spamReport, unsubscribe, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -158,24 +181,69 @@ namespace StrongGrid.Resources.UnitTests
 		}
 
 		[Fact]
-		public void SendTest()
+		public async Task SendEventTestAsync()
 		{
 			// Arrange
 			var url = "url";
-			
+
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("POST"), Utils.GetSendGridApiUri("user/webhooks/event/test")).Respond(HttpStatusCode.NoContent);
+			mockHttp.Expect(new HttpMethod("POST"), Utils.GetSendGridApiUri(EVENT_ENDPOINT, "test")).Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var webhooks = new WebhookSettings(client);
 
 			// Act
-			webhooks.SendTestAsync(url, CancellationToken.None).Wait();
+			await webhooks.SendEventTestAsync(url, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 		}
 
+		[Fact]
+		public async Task GetInboundParseWebhookSettings()
+		{
+			// Arrange
+			var hostname = "myhostname.com";
+
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(INBOUNDPARSE_ENDPOINT, "settings", hostname)).Respond("application/json", SINGLE_INBOUNDPARSE_WEBHOOK_SETTING_JSON);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var webhooks = new WebhookSettings(client);
+
+			// Act
+			var result = await webhooks.GetInboundParseWebhookSettings(hostname, CancellationToken.None).ConfigureAwait(false);
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+		}
+
+		[Fact]
+		public async Task GetAllInboundParseWebhookSettings()
+		{
+			// Arrange
+			var apiResponse = "{'result':[" +
+				SINGLE_INBOUNDPARSE_WEBHOOK_SETTING_JSON + "," +
+				SINGLE_INBOUNDPARSE_WEBHOOK_SETTING_JSON +
+			"]}";
+
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(INBOUNDPARSE_ENDPOINT, "settings")).Respond("application/json", apiResponse);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var webhooks = new WebhookSettings(client);
+
+			// Act
+			var result = await webhooks.GetAllInboundParseWebhookSettings(CancellationToken.None).ConfigureAwait(false);
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(2);
+		}
 	}
 }

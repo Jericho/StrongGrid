@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
-using StrongGrid.Model;
+using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +13,7 @@ namespace StrongGrid.Resources
 	/// You can invite teammates or they can request access to certain scopes and you can accept
 	/// or deny these requests
 	/// </summary>
+	/// <seealso cref="StrongGrid.Resources.ITeammates" />
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/teammates.html
 	/// </remarks>
