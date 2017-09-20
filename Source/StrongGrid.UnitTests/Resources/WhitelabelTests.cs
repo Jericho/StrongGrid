@@ -2,14 +2,14 @@
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
-using StrongGrid.UnitTests;
+using StrongGrid.Resources;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace StrongGrid.Resources.UnitTests
+namespace StrongGrid.UnitTests.Resources
 {
 	public class WhitelabelTests
 	{
@@ -342,7 +342,7 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get,Utils.GetSendGridApiUri(ENDPOINT, "domains?exclude_subusers=false&limit=50&offset=0&username=&domain=")).Respond("application/json", MULTIPLE_DOMAINS_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "domains?exclude_subusers=false&limit=50&offset=0&username=&domain=")).Respond("application/json", MULTIPLE_DOMAINS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var whitelabel = new Whitelabel(client);
@@ -362,7 +362,7 @@ namespace StrongGrid.Resources.UnitTests
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get,Utils.GetSendGridApiUri(ENDPOINT, "domains?exclude_subusers=true&limit=50&offset=0&username=&domain=")).Respond("application/json", MULTIPLE_DOMAINS_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "domains?exclude_subusers=true&limit=50&offset=0&username=&domain=")).Respond("application/json", MULTIPLE_DOMAINS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var whitelabel = new Whitelabel(client);
@@ -384,7 +384,7 @@ namespace StrongGrid.Resources.UnitTests
 			var domainId = 123L;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get,Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}")).Respond("application/json", SINGLE_DOMAIN_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var whitelabel = new Whitelabel(client);
@@ -409,7 +409,7 @@ namespace StrongGrid.Resources.UnitTests
 			var isDefault = true;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post,Utils.GetSendGridApiUri(ENDPOINT, "domains")).Respond("application/json", SINGLE_DOMAIN_JSON);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "domains")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var whitelabel = new Whitelabel(client);
@@ -432,7 +432,7 @@ namespace StrongGrid.Resources.UnitTests
 			var isDefault = false;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"),Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}")).Respond("application/json", SINGLE_DOMAIN_JSON);
+			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var whitelabel = new Whitelabel(client);
@@ -453,7 +453,7 @@ namespace StrongGrid.Resources.UnitTests
 			var domainId = 48L;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete,Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}")).Respond(HttpStatusCode.OK);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}")).Respond(HttpStatusCode.OK);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var whitelabel = new Whitelabel(client);
@@ -474,7 +474,7 @@ namespace StrongGrid.Resources.UnitTests
 			var ipAddress = "192.168.77.1";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post,Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}/ips")).Respond("application/json", SINGLE_DOMAIN_JSON);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}/ips")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var whitelabel = new Whitelabel(client);
@@ -496,7 +496,7 @@ namespace StrongGrid.Resources.UnitTests
 			var ipAddress = "192.168.77.1";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete,Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}/ips/{ipAddress}")).Respond("application/json", SINGLE_DOMAIN_JSON);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}/ips/{ipAddress}")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var whitelabel = new Whitelabel(client);
@@ -571,7 +571,7 @@ namespace StrongGrid.Resources.UnitTests
 			var username = "abc123";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get,Utils.GetSendGridApiUri(ENDPOINT, $"domains/subuser?username={username}")).Respond("application/json", SINGLE_DOMAIN_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, $"domains/subuser?username={username}")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var whitelabel = new Whitelabel(client);
@@ -592,7 +592,7 @@ namespace StrongGrid.Resources.UnitTests
 			var username = "abc123";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Delete,Utils.GetSendGridApiUri(ENDPOINT, $"domains/subuser?username={username}")).Respond(HttpStatusCode.OK);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, $"domains/subuser?username={username}")).Respond(HttpStatusCode.OK);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var whitelabel = new Whitelabel(client);
@@ -654,7 +654,7 @@ namespace StrongGrid.Resources.UnitTests
 			var id = 123L;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get,Utils.GetSendGridApiUri(ENDPOINT, $"ips/{id}")).Respond("application/json", SINGLE_IP_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, $"ips/{id}")).Respond("application/json", SINGLE_IP_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var whitelabel = new Whitelabel(client);

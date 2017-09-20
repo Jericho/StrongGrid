@@ -2,7 +2,7 @@
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
-using StrongGrid.UnitTests;
+using StrongGrid.Resources;
 using StrongGrid.Utilities;
 using System;
 using System.Net;
@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace StrongGrid.Resources.UnitTests
+namespace StrongGrid.UnitTests.Resources
 {
 	public class BouncesTests
 	{

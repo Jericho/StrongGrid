@@ -1,12 +1,12 @@
 using RichardSzalay.MockHttp;
 using Shouldly;
-using StrongGrid.UnitTests;
+using StrongGrid.Resources;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace StrongGrid.Resources.UnitTests
+namespace StrongGrid.UnitTests.Resources
 {
 	public class CategoriesTests
 	{

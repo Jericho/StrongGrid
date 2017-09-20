@@ -2,7 +2,7 @@
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
-using StrongGrid.UnitTests;
+using StrongGrid.Resources;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Net;
@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace StrongGrid.Resources.UnitTests
+namespace StrongGrid.UnitTests.Resources
 {
 	public class SubusersTests
 	{
@@ -225,7 +225,7 @@ namespace StrongGrid.Resources.UnitTests
 			var ips = new[] { "1.1.1.1", "2.2.2.2" };
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod( "PUT" ), Utils.GetSendGridApiUri(ENDPOINT, username, "ips")).Respond("application/json", MULTIPLE_IPS_JSON);
+			mockHttp.Expect(new HttpMethod("PUT"), Utils.GetSendGridApiUri(ENDPOINT, username, "ips")).Respond("application/json", MULTIPLE_IPS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var subusers = new Subusers(client);
