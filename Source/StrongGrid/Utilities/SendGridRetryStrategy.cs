@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Pathoschild.Http.Client.Retry;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using Pathoschild.Http.Client.Retry;
 
 namespace StrongGrid.Utilities
 {
