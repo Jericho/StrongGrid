@@ -1,8 +1,8 @@
-﻿using Pathoschild.Http.Client.Retry;
-using System;
+﻿using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using Pathoschild.Http.Client.Retry;
 
 namespace StrongGrid.Utilities
 {
@@ -17,7 +17,7 @@ namespace StrongGrid.Utilities
 	{
 		#region FIELDS
 
-		private const int DEFAULT_MAX_RETRIES = 5;
+		private const int DEFAULT_MAX_RETRIES = 4;
 		private const HttpStatusCode TOO_MANY_REQUESTS = (HttpStatusCode)429;
 		private static readonly TimeSpan DEFAULT_DELAY = TimeSpan.FromSeconds(1);
 

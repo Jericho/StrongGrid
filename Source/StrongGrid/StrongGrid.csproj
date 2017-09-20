@@ -21,7 +21,7 @@
     <PackageReference Include="HttpMultipartParser" Version="2.2.1" />
     <PackageReference Include="MimeTypesMap" Version="1.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-    <PackageReference Include="Pathoschild.Http.FluentClient" Version="3.0.0" />
+    <PackageReference Include="Pathoschild.Http.FluentClient" Version="3.1.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta004">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
