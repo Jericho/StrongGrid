@@ -30,6 +30,14 @@ namespace StrongGrid.UnitTests.Resources
 				'status': 'pause'
 			}
 		]";
+		private const string MULTIPLE_BATCHES_SINGLE_ITEM_JSON = @"[
+			{
+				'batch_id': 'BATCH_ID_1',
+				'status': 'cancel'
+			}
+		]";
+		private const string EMPTY_BATCHES_JSON = @"[
+		]";
 
 		#endregion
 
@@ -197,6 +205,48 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(2);
+		}
+
+		[Fact]
+		public async Task GetAsync()
+		{
+			// Arrange
+			var batchId = "YOUR_BATCH_ID";
+
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect( HttpMethod.Get, Utils.GetSendGridApiUri( "user/scheduled_sends" ) ).Respond( "application/json", MULTIPLE_BATCHES_SINGLE_ITEM_JSON );
+
+			var client = Utils.GetFluentClient( mockHttp );
+			var batches = new Batches( client );
+
+			// Act
+			var result = await batches.GetAsync(batchId).ConfigureAwait( false );
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+		}
+
+		[Fact]
+		public async Task GetAsync_doesnt_exist()
+		{
+			// Arrange
+			var batchId = "YOUR_BATCH_ID";
+
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect( HttpMethod.Get, Utils.GetSendGridApiUri( "user/scheduled_sends" ) ).Respond( "application/json", EMPTY_BATCHES_JSON );
+
+			var client = Utils.GetFluentClient( mockHttp );
+			var batches = new Batches( client );
+
+			// Act
+			var result = await batches.GetAsync( batchId ).ConfigureAwait( false );
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldBeNull();
 		}
 
 		[Fact]

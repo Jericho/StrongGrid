@@ -66,7 +66,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// A <see cref="BatchInfo" />.
 		/// </returns>
-		Task<BatchInfo> GetAsync(string batchId, CancellationToken cancellationToken = default(CancellationToken));
+		Task<BatchInfo[]> GetAsync(string batchId, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Delete the cancellation/pause of a scheduled send.

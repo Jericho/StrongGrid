@@ -135,12 +135,12 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// A <see cref="BatchInfo" />.
 		/// </returns>
-		public Task<BatchInfo> GetAsync(string batchId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<BatchInfo[]> GetAsync(string batchId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync($"user/scheduled_sends/{batchId}")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<BatchInfo>();
+				.AsSendGridObject<BatchInfo[]>();
 		}
 
 		/// <summary>

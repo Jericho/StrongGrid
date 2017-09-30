@@ -821,12 +821,19 @@ namespace StrongGrid.IntegrationTests
 			var isValid = await client.Batches.ValidateBatchIdAsync(batchId, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"{batchId} is valid: {isValid}").ConfigureAwait(false);
 
+			var batchStatus = await client.Batches.GetAsync( batchId, cancellationToken ).ConfigureAwait( false );
+			var firstBatchStatus = batchStatus?.FirstOrDefault();
+			await log.WriteLineAsync( $"There are {batchStatus?.Length} batches. " + (firstBatchStatus != null ? $" {firstBatchStatus.BatchId} found, status is {firstBatchStatus.Status}" : "") ).ConfigureAwait( false );
+
 			batchId = "some_bogus_batch_id";
 			isValid = await client.Batches.ValidateBatchIdAsync(batchId, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"{batchId} is valid: {isValid}").ConfigureAwait(false);
 
 			var batches = await client.Batches.GetAllAsync(cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All batches retrieved. There are {batches.Length} batches").ConfigureAwait(false);
+
+			batchStatus = await client.Batches.GetAsync( batchId, cancellationToken ).ConfigureAwait( false );
+			await log.WriteLineAsync( $"{batchId} " + (batchStatus == null || batchStatus.Length == 0 ?  "does not exist" : "exists") ).ConfigureAwait( false );
 		}
 
 		private static async Task Whitelabel(IClient client, TextWriter log, CancellationToken cancellationToken)
