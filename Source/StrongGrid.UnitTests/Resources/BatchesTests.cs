@@ -214,7 +214,7 @@ namespace StrongGrid.UnitTests.Resources
 			var batchId = "YOUR_BATCH_ID";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect( HttpMethod.Get, Utils.GetSendGridApiUri( "user/scheduled_sends" ) ).Respond( "application/json", MULTIPLE_BATCHES_SINGLE_ITEM_JSON );
+			mockHttp.Expect( HttpMethod.Get, Utils.GetSendGridApiUri( "user/scheduled_sends", batchId ) ).Respond( "application/json", MULTIPLE_BATCHES_SINGLE_ITEM_JSON );
 
 			var client = Utils.GetFluentClient( mockHttp );
 			var batches = new Batches( client );
@@ -226,6 +226,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
+			result.Length.ShouldBe(1);
 		}
 
 		[Fact]
@@ -235,7 +236,7 @@ namespace StrongGrid.UnitTests.Resources
 			var batchId = "YOUR_BATCH_ID";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect( HttpMethod.Get, Utils.GetSendGridApiUri( "user/scheduled_sends" ) ).Respond( "application/json", EMPTY_BATCHES_JSON );
+			mockHttp.Expect( HttpMethod.Get, Utils.GetSendGridApiUri( "user/scheduled_sends", batchId ) ).Respond( "application/json", EMPTY_BATCHES_JSON );
 
 			var client = Utils.GetFluentClient( mockHttp );
 			var batches = new Batches( client );
@@ -246,7 +247,8 @@ namespace StrongGrid.UnitTests.Resources
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			result.ShouldBeNull();
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(0);
 		}
 
 		[Fact]
