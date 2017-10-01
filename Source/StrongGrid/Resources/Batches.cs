@@ -144,6 +144,8 @@ namespace StrongGrid.Resources
 				.AsSendGridObject<BatchInfo[]>()
 				.ConfigureAwait(false);
 
+			// SendGrid returns an array containing a single item
+			// when we requested the status for a specific batch
 			return result.FirstOrDefault();
 		}
 
