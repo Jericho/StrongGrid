@@ -3,6 +3,7 @@ using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -135,12 +136,15 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// A <see cref="BatchInfo" />.
 		/// </returns>
-		public Task<BatchInfo> GetAsync(string batchId, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<BatchInfo> GetAsync(string batchId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			return _client
+			var result = await _client
 				.GetAsync($"user/scheduled_sends/{batchId}")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<BatchInfo>();
+				.AsSendGridObject<BatchInfo[]>()
+				.ConfigureAwait(false);
+
+			return result.FirstOrDefault();
 		}
 
 		/// <summary>
