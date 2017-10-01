@@ -226,7 +226,6 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
-			result.Length.ShouldBe(1);
 		}
 
 		[Fact]
@@ -247,8 +246,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			result.ShouldNotBeNull();
-			result.Length.ShouldBe(0);
+			result.ShouldBeNull();
 		}
 
 		[Fact]
