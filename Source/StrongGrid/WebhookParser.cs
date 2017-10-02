@@ -148,14 +148,26 @@ namespace StrongGrid
 			// Split on commas that have an even number of double-quotes following them
 			const string SPLIT_EMAIL_ADDRESSES = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
 
+			/*
+				When we stop spporting .NET 4.5.2 we will be able to use the following:
+				if (string.IsNullOrEmpty(rawEmailAddresses)) return Array.Empty<MailAddress>();
+			*/
+			if (string.IsNullOrEmpty(rawEmailAddresses)) return new MailAddress[0];
+
 			var rawEmails = Regex.Split(rawEmailAddresses, SPLIT_EMAIL_ADDRESSES);
-			var addresses = rawEmails.Select(rawEmail => ParseEmailAddress(rawEmail)).ToArray();
+			var addresses = rawEmails
+				.Select(rawEmail => ParseEmailAddress(rawEmail))
+				.Where(address => address != null)
+				.ToArray();
 			return addresses;
 		}
 
 		private MailAddress ParseEmailAddress(string rawEmailAddress)
 		{
+			if (string.IsNullOrEmpty(rawEmailAddress)) return null;
+
 			var pieces = rawEmailAddress.Split(new[] { '<', '>' }, StringSplitOptions.RemoveEmptyEntries);
+			if (pieces.Length == 0) return null;
 			var email = pieces.Length == 2 ? pieces[1].Trim() : pieces[0].Trim();
 			var name = pieces.Length == 2 ? pieces[0].Replace("\"", string.Empty).Trim() : string.Empty;
 			return new MailAddress(email, name);
