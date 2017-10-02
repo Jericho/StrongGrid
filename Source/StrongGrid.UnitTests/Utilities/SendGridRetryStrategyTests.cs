@@ -1,11 +1,11 @@
-﻿using Pathoschild.Http.Client;
-using RichardSzalay.MockHttp;
-using Shouldly;
-using StrongGrid.Utilities;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Pathoschild.Http.Client;
+using RichardSzalay.MockHttp;
+using Shouldly;
+using StrongGrid.Utilities;
 using Xunit;
 
 namespace StrongGrid.UnitTests
@@ -184,7 +184,7 @@ namespace StrongGrid.UnitTests
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 
-			result.Message.ShouldBe("The HTTP request failed, and the retry coordinator gave up after the maximum 5 retries");
+			result.Message.ShouldBe("The HTTP request failed, and the retry coordinator gave up after the maximum 4 retries");
 		}
 	}
 }

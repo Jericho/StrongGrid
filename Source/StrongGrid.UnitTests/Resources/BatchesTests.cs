@@ -1,13 +1,13 @@
 ﻿using RichardSzalay.MockHttp;
 using Shouldly;
-using StrongGrid.UnitTests;
+using StrongGrid.Resources;
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace StrongGrid.Resources.UnitTests
+namespace StrongGrid.UnitTests.Resources
 {
 	public class BatchesTests
 	{
@@ -29,6 +29,14 @@ namespace StrongGrid.Resources.UnitTests
 				'batch_id': 'BATCH_ID_2',
 				'status': 'pause'
 			}
+		]";
+		private const string MULTIPLE_BATCHES_SINGLE_ITEM_JSON = @"[
+			{
+				'batch_id': 'BATCH_ID_1',
+				'status': 'cancel'
+			}
+		]";
+		private const string EMPTY_BATCHES_JSON = @"[
 		]";
 
 		#endregion
@@ -197,6 +205,48 @@ namespace StrongGrid.Resources.UnitTests
 			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(2);
+		}
+
+		[Fact]
+		public async Task GetAsync()
+		{
+			// Arrange
+			var batchId = "YOUR_BATCH_ID";
+
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("user/scheduled_sends", batchId)).Respond("application/json", MULTIPLE_BATCHES_SINGLE_ITEM_JSON);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var batches = new Batches(client);
+
+			// Act
+			var result = await batches.GetAsync(batchId).ConfigureAwait(false);
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+		}
+
+		[Fact]
+		public async Task GetAsync_doesnt_exist()
+		{
+			// Arrange
+			var batchId = "YOUR_BATCH_ID";
+
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("user/scheduled_sends", batchId)).Respond("application/json", EMPTY_BATCHES_JSON);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var batches = new Batches(client);
+
+			// Act
+			var result = await batches.GetAsync(batchId).ConfigureAwait(false);
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldBeNull();
 		}
 
 		[Fact]

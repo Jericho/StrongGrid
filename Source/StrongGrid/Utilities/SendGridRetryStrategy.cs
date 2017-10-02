@@ -17,7 +17,7 @@ namespace StrongGrid.Utilities
 	{
 		#region FIELDS
 
-		private const int DEFAULT_MAX_RETRIES = 5;
+		private const int DEFAULT_MAX_RETRIES = 4;
 		private const HttpStatusCode TOO_MANY_REQUESTS = (HttpStatusCode)429;
 		private static readonly TimeSpan DEFAULT_DELAY = TimeSpan.FromSeconds(1);
 
