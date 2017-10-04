@@ -164,7 +164,7 @@ Task("Build")
 	DotNetCoreBuild(sourceFolder + libraryName + ".sln", new DotNetCoreBuildSettings
 	{
 		Configuration = configuration,
-		ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.NuGetVersionV2)
+		ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.LegacySemVerPadded)
 	});
 });
 
@@ -226,17 +226,24 @@ Task("Create-NuGet-Package")
 	.IsDependentOn("Build")
 	.Does(() =>
 {
-	var settings = new NuGetPackSettings
+	var settings = new DotNetCorePackSettings
 	{
-		Version                 = versionInfo.NuGetVersionV2,
-		Symbols                 = false,
-		NoPackageAnalysis       = true,
-		BasePath                = "./Source/",
-		OutputDirectory         = outputDir,
-		ArgumentCustomization   = args => args.Append("-Prop Configuration=" + configuration)
+		Configuration = configuration,
+		IncludeSource = false,
+		IncludeSymbols = false,
+		NoBuild = true,
+		OutputDirectory = outputDir,
+        ArgumentCustomization = (args) =>
+		{
+			return args
+				.Append("/p:Version={0}", versionInfo.LegacySemVerPadded)
+				.Append("/p:AssemblyVersion={0}", versionInfo.MajorMinorPatch)
+				.Append("/p:FileVersion={0}", versionInfo.MajorMinorPatch)
+				.Append("/p:AssemblyInformationalVersion={0}", versionInfo.InformationalVersion);
+		}
 	};
-			
-	NuGetPack("./nuspec/" + libraryName + ".nuspec", settings);
+
+	DotNetCorePack(sourceFolder + libraryName + "/" + libraryName + ".csproj", settings);
 });
 
 Task("Upload-AppVeyor-Artifacts")
@@ -324,10 +331,6 @@ Task("Publish-GitHub-Release")
 // TARGETS
 ///////////////////////////////////////////////////////////////////////////////
 
-Task("Package")
-	.IsDependentOn("Run-Unit-Tests")
-	.IsDependentOn("Create-NuGet-Package");
-
 Task("Coverage")
 	.IsDependentOn("Generate-Code-Coverage-Report")
 	.Does(() =>
@@ -348,7 +351,8 @@ Task("AppVeyor")
 	.IsDependentOn("Publish-GitHub-Release");
 
 Task("Default")
-	.IsDependentOn("Package");
+	.IsDependentOn("Run-Unit-Tests")
+	.IsDependentOn("Create-NuGet-Package");
 
 
 ///////////////////////////////////////////////////////////////////////////////

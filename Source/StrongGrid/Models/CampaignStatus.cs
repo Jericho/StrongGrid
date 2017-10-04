@@ -11,10 +11,22 @@ namespace StrongGrid.Models
 	public enum CampaignStatus
 	{
 		/// <summary>
+		/// The campaign has been canceled
+		/// </summary>
+		[EnumMember(Value = "canceled")]
+		Canceled,
+
+		/// <summary>
 		/// The campaign is in draft mode
 		/// </summary>
 		[EnumMember(Value = "draft")]
 		Draft,
+
+		/// <summary>
+		/// The campaign is beeing delivered
+		/// </summary>
+		[EnumMember(Value = "in progress")]
+		InProgress,
 
 		/// <summary>
 		/// The campaign has been scheduled
