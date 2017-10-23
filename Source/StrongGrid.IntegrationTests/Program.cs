@@ -255,13 +255,17 @@ namespace StrongGrid.IntegrationTests
 				await log.WriteLineAsync("Deleted the billing key").ConfigureAwait(false);
 			}
 
-			// CREATE AN API KEY WITH ALL PERMISSIONS
+			// CREATE AND DELETE AN API KEY WITH ALL PERMISSIONS
 			var superKey = await client.ApiKeys.CreateWithAllPermissionsAsync("Integration testing Super Key", cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("Created a key with all permissions").ConfigureAwait(false);
-
-			// DELETE THE API KEY WITH ALL PERMISSIONS
 			await client.ApiKeys.DeleteAsync(superKey.KeyId, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("Deleted the key with all permissions").ConfigureAwait(false);
+
+			// CREATE AND DELETE A READ-ONLY API KEY
+			var readOnlyKey = await client.ApiKeys.CreateWithReadOnlyPermissionsAsync("Integration testing Read-Only Key", cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("Created a read-only key").ConfigureAwait(false);
+			await client.ApiKeys.DeleteAsync(readOnlyKey.KeyId, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("Deleted the read-only key").ConfigureAwait(false);
 		}
 
 		private static async Task UnsubscribeGroupsAndSuppressions(IClient client, TextWriter log, CancellationToken cancellationToken)
