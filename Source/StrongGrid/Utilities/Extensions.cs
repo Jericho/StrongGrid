@@ -3,9 +3,11 @@ using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrongGrid.Utilities
@@ -280,6 +282,27 @@ namespace StrongGrid.Utilities
 		public static string EnsureEndsWith(this string value, string suffix)
 		{
 			return !string.IsNullOrEmpty(value) && value.EndsWith(suffix) ? value : string.Concat(value, suffix);
+		}
+
+		public static async Task<string[]> GetCurrentScopes(this Pathoschild.Http.Client.IClient client, bool excludeBillingScopes, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			// Get the current user's permissions
+			var scopes = await client
+				.GetAsync("scopes")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<string[]>("scopes")
+				.ConfigureAwait(false);
+
+			if (excludeBillingScopes)
+			{
+				// In most cases it's important to exclude billing scopes
+				// because they are mutually exclusive from all others.
+				scopes = scopes
+					.Where(p => !p.StartsWith("billing.", StringComparison.OrdinalIgnoreCase))
+					.ToArray();
+			}
+
+			return scopes;
 		}
 
 		/// <summary>Asynchronously converts the JSON encoded content and converts it to a 'SendGrid' object of the desired type.</summary>
