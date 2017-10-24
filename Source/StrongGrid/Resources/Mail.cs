@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -19,6 +20,9 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class Mail : IMail
 	{
+		// SendGrid doesn't alow emails that exceed 30MB
+		private const int MAX_EMAIL_SIZE = 30 * 1024 * 1024;
+
 		private const string _endpoint = "mail";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
@@ -62,6 +66,7 @@ namespace StrongGrid.Resources
 		/// This is a convenience method with simplified parameters.
 		/// If you need more options, use the <see cref="SendAsync" /> method.
 		/// </remarks>
+		/// <exception cref="Exception">Email exceeds the size limit</exception>
 		public Task<string> SendToSingleRecipientAsync(
 			MailAddress to,
 			MailAddress from,
@@ -120,6 +125,7 @@ namespace StrongGrid.Resources
 		/// This is a convenience method with simplified parameters.
 		/// If you need more options, use the <see cref="SendAsync" /> method.
 		/// </remarks>
+		/// <exception cref="Exception">Email exceeds the size limit</exception>
 		public Task<string> SendToMultipleRecipientsAsync(
 			IEnumerable<MailAddress> recipients,
 			MailAddress from,
@@ -188,6 +194,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The message id.
 		/// </returns>
+		/// <exception cref="Exception">Email exceeds the size limit</exception>
 		public async Task<string> SendAsync(
 			IEnumerable<MailPersonalization> personalizations,
 			string subject,
@@ -278,6 +285,10 @@ namespace StrongGrid.Resources
 
 				data.Add("custom_args", args);
 			}
+
+			// Sendgrid does not allow emails that exceed 30MB
+			var contentSize = JsonConvert.SerializeObject(data, Formatting.None).Length;
+			if (contentSize > MAX_EMAIL_SIZE) throw new Exception("Email exceeds the size limit");
 
 			var response = await _client
 				.PostAsync($"{_endpoint}/send")

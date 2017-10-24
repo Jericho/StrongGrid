@@ -2,6 +2,9 @@
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Resources;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -104,6 +107,32 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldBeNull();
+		}
+
+		[Fact]
+		public async Task EmailExceedsSizeLimit()
+		{
+			// Arrange
+			var from = new MailAddress("bob@exmaple.com", "Bob Smith");
+			var subject = new string('a', 10 * 1024 * 1024);
+			var recipients = new List<MailAddress>();
+			for (int i = 0; i < 999; i++)
+			{
+				recipients.Add(new MailAddress($"{i}@{i}.com", $"{i} {i}"));
+			};
+			var personalizations = recipients.Select(r => new MailPersonalization { To = new[] { r } });
+			var contents = new[]
+			{
+				new MailContent("text/plain", new string('b', 10 * 1024 * 1024)),
+				new MailContent("text/html", new string('v', 10 * 1024 * 1024))
+			};
+
+			var mail = new Mail(null);
+
+			// Act
+			var result = await Should.ThrowAsync<Exception>(async () => await mail.SendAsync(personalizations, subject, contents, from).ConfigureAwait(false));
+
+			// Assert
 		}
 	}
 }
