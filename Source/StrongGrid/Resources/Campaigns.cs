@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -45,7 +46,11 @@ namespace StrongGrid.Resources
 		/// <param name="suppressionGroupId">The suppression group identifier.</param>
 		/// <param name="customUnsubscribeUrl">The custom unsubscribe URL.</param>
 		/// <param name="ipPool">The ip pool.</param>
+		/// <param name="editor">The editor used in the UI. Allowed values: code, design.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
+		/// <remarks>
+		/// Note: In order to send or schedule the campaign, you will be required to provide a subject, sender ID, content (we suggest both html and plain text), and at least one list or segment ID. This information is not required when you create a campaign.
+		/// </remarks>
 		/// <returns>
 		/// The <see cref="Campaign" />.
 		/// </returns>
@@ -61,9 +66,10 @@ namespace StrongGrid.Resources
 			Parameter<long?> suppressionGroupId = default(Parameter<long?>),
 			Parameter<string> customUnsubscribeUrl = default(Parameter<string>),
 			Parameter<string> ipPool = default(Parameter<string>),
+			Parameter<EditorType?> editor = default(Parameter<EditorType?>),
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = CreateJObject(title, senderId, subject, htmlContent, textContent, listIds, segmentIds, categories, suppressionGroupId, customUnsubscribeUrl, ipPool);
+			var data = CreateJObject(title, senderId, subject, htmlContent, textContent, listIds, segmentIds, categories, suppressionGroupId, customUnsubscribeUrl, ipPool, editor);
 			return _client
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
@@ -137,6 +143,7 @@ namespace StrongGrid.Resources
 		/// <param name="suppressionGroupId">The suppression group identifier.</param>
 		/// <param name="customUnsubscribeUrl">The custom unsubscribe URL.</param>
 		/// <param name="ipPool">The ip pool.</param>
+		/// <param name="editor">The editor used in the UI. Allowed values: code, design.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The <see cref="Campaign" />.
@@ -154,9 +161,10 @@ namespace StrongGrid.Resources
 			Parameter<long?> suppressionGroupId = default(Parameter<long?>),
 			Parameter<string> customUnsubscribeUrl = default(Parameter<string>),
 			Parameter<string> ipPool = default(Parameter<string>),
+			Parameter<EditorType?> editor = default(Parameter<EditorType?>),
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var data = CreateJObject(title, senderId, subject, htmlContent, textContent, listIds, segmentIds, categories, suppressionGroupId, customUnsubscribeUrl, ipPool);
+			var data = CreateJObject(title, senderId, subject, htmlContent, textContent, listIds, segmentIds, categories, suppressionGroupId, customUnsubscribeUrl, ipPool, editor);
 			return _client
 				.PatchAsync($"{_endpoint}/{campaignId}")
 				.WithJsonBody(data)
@@ -289,7 +297,7 @@ namespace StrongGrid.Resources
 				.AsMessage();
 		}
 
-		private static JObject CreateJObject(Parameter<string> title, Parameter<long?> senderId, Parameter<string> subject, Parameter<string> htmlContent, Parameter<string> textContent, Parameter<IEnumerable<long>> listIds, Parameter<IEnumerable<long>> segmentIds, Parameter<IEnumerable<string>> categories, Parameter<long?> suppressionGroupId, Parameter<string> customUnsubscribeUrl, Parameter<string> ipPool)
+		private static JObject CreateJObject(Parameter<string> title, Parameter<long?> senderId, Parameter<string> subject, Parameter<string> htmlContent, Parameter<string> textContent, Parameter<IEnumerable<long>> listIds, Parameter<IEnumerable<long>> segmentIds, Parameter<IEnumerable<string>> categories, Parameter<long?> suppressionGroupId, Parameter<string> customUnsubscribeUrl, Parameter<string> ipPool, Parameter<EditorType?> editor)
 		{
 			var result = new JObject();
 			if (title.HasValue) result.Add("title", title.Value);
@@ -303,6 +311,7 @@ namespace StrongGrid.Resources
 			if (suppressionGroupId.HasValue) result.Add("suppression_group_id", suppressionGroupId.Value);
 			if (customUnsubscribeUrl.HasValue) result.Add("custom_unsubscribe_url", customUnsubscribeUrl.Value);
 			if (ipPool.HasValue) result.Add("ip_pool", ipPool.Value);
+			if (editor.HasValue) result.Add("editor", editor.Value.HasValue ? JToken.Parse(JsonConvert.SerializeObject(editor.Value.Value)).ToString() : null);
 			return result;
 		}
 	}

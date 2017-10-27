@@ -29,6 +29,7 @@ namespace StrongGrid.Resources
 		/// <param name="suppressionGroupId">The suppression group identifier.</param>
 		/// <param name="customUnsubscribeUrl">The custom unsubscribe URL.</param>
 		/// <param name="ipPool">The ip pool.</param>
+		/// <param name="editor">The editor used in the UI. Allowed values: code, design.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The <see cref="Campaign" />.
@@ -45,6 +46,7 @@ namespace StrongGrid.Resources
 			Parameter<long?> suppressionGroupId = default(Parameter<long?>),
 			Parameter<string> customUnsubscribeUrl = default(Parameter<string>),
 			Parameter<string> ipPool = default(Parameter<string>),
+			Parameter<EditorType?> editor = default(Parameter<EditorType?>),
 			CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
@@ -93,6 +95,7 @@ namespace StrongGrid.Resources
 		/// <param name="suppressionGroupId">The suppression group identifier.</param>
 		/// <param name="customUnsubscribeUrl">The custom unsubscribe URL.</param>
 		/// <param name="ipPool">The ip pool.</param>
+		/// <param name="editor">The editor used in the UI. Allowed values: code, design.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The <see cref="Campaign" />.
@@ -110,6 +113,7 @@ namespace StrongGrid.Resources
 			Parameter<long?> suppressionGroupId = default(Parameter<long?>),
 			Parameter<string> customUnsubscribeUrl = default(Parameter<string>),
 			Parameter<string> ipPool = default(Parameter<string>),
+			Parameter<EditorType?> editor = default(Parameter<EditorType?>),
 			CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>

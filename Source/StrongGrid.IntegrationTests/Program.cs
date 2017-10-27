@@ -714,7 +714,7 @@ namespace StrongGrid.IntegrationTests
 				await log.WriteLineAsync("Unsubscribe group created").ConfigureAwait(false);
 			}
 
-			var campaign = await client.Campaigns.CreateAsync("StrongGrid Integration Testing: new campaign", sender.Id, "This is the subject", "<html><body>Hello <b>World</b><p><a href='[unsubscribe]'>Click Here to Unsubscribe</a></p></body></html", "Hello world. To unsubscribe, visit [unsubscribe]", new[] { list.Id }, null, null, unsubscribeGroup.Id, null, null, cancellationToken).ConfigureAwait(false);
+			var campaign = await client.Campaigns.CreateAsync("StrongGrid Integration Testing: new campaign", sender.Id, "This is the subject", "<html><body>Hello <b>World</b><p><a href='[unsubscribe]'>Click Here to Unsubscribe</a></p></body></html", "Hello world. To unsubscribe, visit [unsubscribe]", new[] { list.Id }, null, null, unsubscribeGroup.Id, null, null, EditorType.Design, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Campaign '{campaign.Title}' created. Id: {campaign.Id}").ConfigureAwait(false);
 
 			await client.Campaigns.UpdateAsync(campaign.Id, categories: new[] { "category1", "category2" }, cancellationToken: cancellationToken).ConfigureAwait(false);
