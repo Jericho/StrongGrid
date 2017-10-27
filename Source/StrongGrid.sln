@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{7F08B680-E39D-4201-A60A-22814CA5ABF4}"
 EndProject
@@ -12,7 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\build.cake = ..\build.cake
 		..\LICENSE = ..\LICENSE
 		..\README.md = ..\README.md
-		..\nuspec\StrongGrid.nuspec = ..\nuspec\StrongGrid.nuspec
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrongGrid", "StrongGrid\StrongGrid.csproj", "{451E4044-7AE3-4982-8F53-6B86AB788557}"

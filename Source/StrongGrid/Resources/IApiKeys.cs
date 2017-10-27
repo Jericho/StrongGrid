@@ -91,5 +91,19 @@ namespace StrongGrid.Resources
 		/// If you specify a username and password when instanciating the <see cref="Client" />, the new API Key will inherit the permissions of that user.
 		/// </remarks>
 		Task<ApiKey> CreateWithAllPermissionsAsync(string name, CancellationToken cancellationToken = default(CancellationToken));
+
+		/// <summary>
+		/// Generate a new API Key with the same "read" permissions that have ben granted to you
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// The <see cref="ApiKey" />.
+		/// </returns>
+		/// <remarks>
+		/// If you specify an API Key when instanciating the <see cref="Client" />, the new API Key will inherit the "read" permissions of that API Key.
+		/// If you specify a username and password when instanciating the <see cref="Client" />, the new API Key will inherit the "read" permissions of that user.
+		/// </remarks>
+		Task<ApiKey> CreateWithReadOnlyPermissionsAsync(string name, CancellationToken cancellationToken = default(CancellationToken));
 	}
 }

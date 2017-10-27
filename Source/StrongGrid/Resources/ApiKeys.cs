@@ -2,7 +2,6 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -140,7 +139,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Generate a new API Key with all permissions
+		/// Generate a new API Key with the same permissions that have been granted to you
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
@@ -153,21 +152,30 @@ namespace StrongGrid.Resources
 		/// </remarks>
 		public async Task<ApiKey> CreateWithAllPermissionsAsync(string name, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			// Get the current user's permissions
-			var permissions = await _client
-				.GetAsync("scopes")
-				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<string[]>("scopes")
-				.ConfigureAwait(false);
-
-			// The SendGrid documentation clearly states:
-			//     Billing permissions are mutually exclusive from all others.
-			//     An API Key can either have Billing Permissions, or any other set of Permissions.
-			// Therefore it's important to exclude 'billing' permissions.
-			var permissionsExcludingBilling = permissions.Where(p => !p.StartsWith("billing.", StringComparison.OrdinalIgnoreCase)).ToArray();
-
-			var superApiKey = await this.CreateAsync(name, permissionsExcludingBilling, cancellationToken).ConfigureAwait(false);
+			var scopes = await _client.GetCurrentScopes(true, cancellationToken).ConfigureAwait(false);
+			var superApiKey = await this.CreateAsync(name, scopes, cancellationToken).ConfigureAwait(false);
 			return superApiKey;
+		}
+
+		/// <summary>
+		/// Generate a new API Key with the same "read" permissions that have ben granted to you
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// The <see cref="ApiKey" />.
+		/// </returns>
+		/// <remarks>
+		/// If you specify an API Key when instanciating the <see cref="Client" />, the new API Key will inherit the "read" permissions of that API Key.
+		/// If you specify a username and password when instanciating the <see cref="Client" />, the new API Key will inherit the "read" permissions of that user.
+		/// </remarks>
+		public async Task<ApiKey> CreateWithReadOnlyPermissionsAsync(string name, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var scopes = await _client.GetCurrentScopes(true, cancellationToken).ConfigureAwait(false);
+			scopes = scopes.Where(s => s.EndsWith(".read", System.StringComparison.OrdinalIgnoreCase)).ToArray();
+
+			var readOnlyApiKey = await this.CreateAsync(name, scopes, cancellationToken).ConfigureAwait(false);
+			return readOnlyApiKey;
 		}
 
 		private static JObject CreateJObject(string name, Parameter<IEnumerable<string>> scopes)

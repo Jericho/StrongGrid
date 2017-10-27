@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -255,13 +256,17 @@ namespace StrongGrid.IntegrationTests
 				await log.WriteLineAsync("Deleted the billing key").ConfigureAwait(false);
 			}
 
-			// CREATE AN API KEY WITH ALL PERMISSIONS
+			// CREATE AND DELETE AN API KEY WITH ALL PERMISSIONS
 			var superKey = await client.ApiKeys.CreateWithAllPermissionsAsync("Integration testing Super Key", cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("Created a key with all permissions").ConfigureAwait(false);
-
-			// DELETE THE API KEY WITH ALL PERMISSIONS
 			await client.ApiKeys.DeleteAsync(superKey.KeyId, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("Deleted the key with all permissions").ConfigureAwait(false);
+
+			// CREATE AND DELETE A READ-ONLY API KEY
+			var readOnlyKey = await client.ApiKeys.CreateWithReadOnlyPermissionsAsync("Integration testing Read-Only Key", cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("Created a read-only key").ConfigureAwait(false);
+			await client.ApiKeys.DeleteAsync(readOnlyKey.KeyId, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("Deleted the read-only key").ConfigureAwait(false);
 		}
 
 		private static async Task UnsubscribeGroupsAndSuppressions(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -709,7 +714,7 @@ namespace StrongGrid.IntegrationTests
 				await log.WriteLineAsync("Unsubscribe group created").ConfigureAwait(false);
 			}
 
-			var campaign = await client.Campaigns.CreateAsync("StrongGrid Integration Testing: new campaign", sender.Id, "This is the subject", "<html><body>Hello <b>World</b><p><a href='[unsubscribe]'>Click Here to Unsubscribe</a></p></body></html", "Hello world. To unsubscribe, visit [unsubscribe]", new[] { list.Id }, null, null, unsubscribeGroup.Id, null, null, cancellationToken).ConfigureAwait(false);
+			var campaign = await client.Campaigns.CreateAsync("StrongGrid Integration Testing: new campaign", sender.Id, "This is the subject", "<html><body>Hello <b>World</b><p><a href='[unsubscribe]'>Click Here to Unsubscribe</a></p></body></html", "Hello world. To unsubscribe, visit [unsubscribe]", new[] { list.Id }, null, null, unsubscribeGroup.Id, null, null, EditorType.Design, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Campaign '{campaign.Title}' created. Id: {campaign.Id}").ConfigureAwait(false);
 
 			await client.Campaigns.UpdateAsync(campaign.Id, categories: new[] { "category1", "category2" }, cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -821,8 +826,8 @@ namespace StrongGrid.IntegrationTests
 			var isValid = await client.Batches.ValidateBatchIdAsync(batchId, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"{batchId} is valid: {isValid}").ConfigureAwait(false);
 
-			var batchStatus = await client.Batches.GetAsync( batchId, cancellationToken ).ConfigureAwait( false );
-			await log.WriteLineAsync( $"{batchId} " + (batchStatus == null ? "not found" : $"found, status is {batchStatus.Status}") ).ConfigureAwait( false );
+			var batchStatus = await client.Batches.GetAsync(batchId, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"{batchId} " + (batchStatus == null ? "not found" : $"found, status is {batchStatus.Status}")).ConfigureAwait(false);
 
 			batchId = "some_bogus_batch_id";
 			isValid = await client.Batches.ValidateBatchIdAsync(batchId, cancellationToken).ConfigureAwait(false);
@@ -831,8 +836,8 @@ namespace StrongGrid.IntegrationTests
 			var batches = await client.Batches.GetAllAsync(cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All batches retrieved. There are {batches.Length} batches").ConfigureAwait(false);
 
-			batchStatus = await client.Batches.GetAsync( batchId, cancellationToken ).ConfigureAwait( false );
-			await log.WriteLineAsync( $"{batchId} " + (batchStatus == null ? "does not exist" : "exists") ).ConfigureAwait( false );
+			batchStatus = await client.Batches.GetAsync(batchId, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"{batchId} " + (batchStatus == null ? "does not exist" : "exists")).ConfigureAwait(false);
 		}
 
 		private static async Task Whitelabel(IClient client, TextWriter log, CancellationToken cancellationToken)
