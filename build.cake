@@ -7,7 +7,7 @@
 #tool "nuget:?package=OpenCover&version=4.6.519"
 #tool "nuget:?package=ReportGenerator&version=3.0.2"
 #tool "nuget:?package=coveralls.io&version=1.4.2"
-#tool "nuget:?package=xunit.runner.console&version=2.2.0"
+#tool "nuget:?package=xunit.runner.console&version=2.3.1"
 
 
 ///////////////////////////////////////////////////////////////////////////////
