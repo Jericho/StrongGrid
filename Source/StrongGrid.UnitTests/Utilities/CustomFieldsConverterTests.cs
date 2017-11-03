@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -7,7 +7,7 @@ using System.IO;
 using System.Text;
 using Xunit;
 
-namespace StrongGrid.UnitTests
+namespace StrongGrid.UnitTests.Utilities
 {
 	public class CustomFieldsConverterTests
 	{
