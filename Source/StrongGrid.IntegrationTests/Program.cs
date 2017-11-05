@@ -754,13 +754,13 @@ namespace StrongGrid.IntegrationTests
 		{
 			await log.WriteLineAsync("\n***** ALERTS *****\n").ConfigureAwait(false);
 
-			var newAlert = await client.Alerts.CreateAsync(AlertType.UsageLimit, "test@example.com", Frequency.Weekly, 75, cancellationToken).ConfigureAwait(false);
+			var newAlert = await client.Alerts.CreateAsync(AlertType.UsageLimit, "test@example.com", Frequency.Weekly, 75, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"New alert created: {newAlert.Id}").ConfigureAwait(false);
 
-			var allAlerts = await client.Alerts.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			var allAlerts = await client.Alerts.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All alerts retrieved. There are {allAlerts.Length} alerts").ConfigureAwait(false);
 
-			await client.Alerts.DeleteAsync(newAlert.Id, cancellationToken).ConfigureAwait(false);
+			await client.Alerts.DeleteAsync(newAlert.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Alert {newAlert.Id} deleted").ConfigureAwait(false);
 		}
 

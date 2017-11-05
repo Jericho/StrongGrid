@@ -204,6 +204,17 @@ namespace StrongGrid.Utilities
 			return request.WithBody(body, new MediaTypeHeaderValue("application/json"));
 		}
 
+		/// <summary>
+		/// Impersonate a user when making a call to the SendGrid API
+		/// </summary>
+		/// <param name="request">The request</param>
+		/// <param name="username">The user to impersonate</param>
+		/// <returns>Returns the request builder for chaining.</returns>
+		public static IRequest OnBehalfOf(this IRequest request, string username)
+		{
+			return string.IsNullOrEmpty(username) ? request : request.WithHeader("on-behalf-of", username);
+		}
+
 		/// <summary>Asynchronously retrieve the response body as a <see cref="string"/>.</summary>
 		/// <param name="response">The response</param>
 		/// <param name="encoding">The encoding. You can leave this parameter null and the encoding will be
@@ -284,6 +295,13 @@ namespace StrongGrid.Utilities
 			return !string.IsNullOrEmpty(value) && value.EndsWith(suffix) ? value : string.Concat(value, suffix);
 		}
 
+		/// <summary>
+		/// Retrieve the permissions (AKA "scopes") assigned to the current user
+		/// </summary>
+		/// <param name="client">The client</param>
+		/// <param name="excludeBillingScopes">Indicates if billing permissions should be excluded from the result</param>
+		/// <param name="cancellationToken">The cancellation token</param>
+		/// <returns>An array of permisisons assigned to the current user</returns>
 		public static async Task<string[]> GetCurrentScopes(this Pathoschild.Http.Client.IClient client, bool excludeBillingScopes, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			// Get the current user's permissions
