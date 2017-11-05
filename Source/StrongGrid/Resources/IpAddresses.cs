@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -123,6 +123,24 @@ namespace StrongGrid.Resources
 				.GetAsync($"{_endpoint}/assigned")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<IpAddress[]>();
+		}
+
+		/// <summary>
+		/// Retrieve unassigned IP addresses.
+		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// An array of <see cref="IpAddress">Ip addresses</see>.
+		/// </returns>
+		public async Task<IpAddress[]> GetUnassignedAsync(CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var allIpAddresses = await this.GetAllAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+
+			var unassignedIpAddresses = allIpAddresses
+				.Where(ip => ip.Subusers == null || !ip.Subusers.Any())
+				.ToArray();
+
+			return unassignedIpAddresses;
 		}
 
 		/// <summary>
