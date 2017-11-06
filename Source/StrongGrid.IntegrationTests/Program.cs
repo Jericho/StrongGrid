@@ -524,14 +524,14 @@ namespace StrongGrid.IntegrationTests
 				new Field<long?>("stronggrid_age", 42),
 				new Field<DateTime>("stronggrid_customer_since", new DateTime(2000, 12, 1))
 			};
-			var contactId = await client.Contacts.CreateAsync(email, firstName, lastName, customFields, cancellationToken).ConfigureAwait(false);
+			var contactId = await client.Contacts.CreateAsync(email, firstName, lastName, customFields, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Contact {contactId} created: {firstName} {lastName}").ConfigureAwait(false);
 
 			var newLastName = "Smith";
 			await client.Contacts.UpdateAsync(email, null, newLastName, cancellationToken: cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Contact {contactId} updated: {firstName} {newLastName}").ConfigureAwait(false);
 
-			var contact = await client.Contacts.GetAsync(contactId, cancellationToken).ConfigureAwait(false);
+			var contact = await client.Contacts.GetAsync(contactId, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Retrieved contact {contactId}").ConfigureAwait(false);
 			await log.WriteLineAsync($"\tEmail: {contact.Email}").ConfigureAwait(false);
 			await log.WriteLineAsync($"\tFirst Name: {contact.FirstName}").ConfigureAwait(false);
@@ -555,7 +555,7 @@ namespace StrongGrid.IntegrationTests
 			}
 
 			var recordsPerPage = 5;
-			var contacts = await client.Contacts.GetAsync(recordsPerPage, 1, cancellationToken).ConfigureAwait(false);
+			var contacts = await client.Contacts.GetAsync(recordsPerPage, 1, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync(contacts.Length < recordsPerPage ? $"Found {contacts.Length} contacts" : $"Retrieved the first {recordsPerPage} contacts").ConfigureAwait(false);
 			foreach (var record in contacts)
 			{
@@ -576,16 +576,16 @@ namespace StrongGrid.IntegrationTests
 				Operator = ConditionOperator.Equal,
 				LogicalOperator = LogicalOperator.And
 			};
-			var searchResult = await client.Contacts.SearchAsync(new[] { firstNameCondition, LastNameCondition }, null, cancellationToken).ConfigureAwait(false);
+			var searchResult = await client.Contacts.SearchAsync(new[] { firstNameCondition, LastNameCondition }, null, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Found {searchResult.Length} contacts named Robert Smith").ConfigureAwait(false);
 
-			var billableCount = await client.Contacts.GetBillableCountAsync(cancellationToken).ConfigureAwait(false);
-			var totalCount = await client.Contacts.GetTotalCountAsync(cancellationToken).ConfigureAwait(false);
+			var billableCount = await client.Contacts.GetBillableCountAsync(null, cancellationToken).ConfigureAwait(false);
+			var totalCount = await client.Contacts.GetTotalCountAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("Record counts").ConfigureAwait(false);
 			await log.WriteLineAsync($"\tBillable: {billableCount}").ConfigureAwait(false);
 			await log.WriteLineAsync($"\tTotal: {totalCount}").ConfigureAwait(false);
 
-			await client.Contacts.DeleteAsync(contactId, cancellationToken).ConfigureAwait(false);
+			await client.Contacts.DeleteAsync(contactId, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Contact {contactId} deleted: {firstName} {newLastName}").ConfigureAwait(false);
 
 			await client.CustomFields.DeleteAsync(nicknameField.Id, cancellationToken).ConfigureAwait(false);
