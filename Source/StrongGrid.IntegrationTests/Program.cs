@@ -786,7 +786,7 @@ namespace StrongGrid.IntegrationTests
 			var startDate = new DateTime(lastYear, 1, 1, 0, 0, 0);
 			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
 
-			var bounces = await client.Bounces.GetAllAsync(startDate, endDate, cancellationToken).ConfigureAwait(false);
+			var bounces = await client.Bounces.GetAllAsync(startDate, endDate, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All bounces retrieved. There are {bounces.Length} bounces in {lastYear} and {thisYear}").ConfigureAwait(false);
 		}
 
