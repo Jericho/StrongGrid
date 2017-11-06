@@ -910,7 +910,7 @@ namespace StrongGrid.IntegrationTests
 		{
 			await log.WriteLineAsync("\n***** ACCESS MANAGEMENT *****\n").ConfigureAwait(false);
 
-			var accessHistory = await client.AccessManagement.GetAccessHistoryAsync(20, cancellationToken).ConfigureAwait(false);
+			var accessHistory = await client.AccessManagement.GetAccessHistoryAsync(20, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("Access history:").ConfigureAwait(false);
 			foreach (var access in accessHistory)
 			{
@@ -919,7 +919,7 @@ namespace StrongGrid.IntegrationTests
 				await log.WriteLineAsync($"\t{accessDate,-20} {accessVerdict,-16} {access.IpAddress,-20} {access.Location}").ConfigureAwait(false);
 			}
 
-			var whitelistedIpAddresses = await client.AccessManagement.GetWhitelistedIpAddressesAsync(cancellationToken).ConfigureAwait(false);
+			var whitelistedIpAddresses = await client.AccessManagement.GetWhitelistedIpAddressesAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("Currently whitelisted addresses:" + (whitelistedIpAddresses.Length == 0 ? " NONE" : "")).ConfigureAwait(false);
 			foreach (var address in whitelistedIpAddresses)
 			{
@@ -960,13 +960,13 @@ namespace StrongGrid.IntegrationTests
 
 				if (keyPressed == 'y' || keyPressed == 'Y')
 				{
-					var newWhitelistedIpAddress = await client.AccessManagement.AddIpAddressToWhitelistAsync(yourPublicIpAddress, cancellationToken).ConfigureAwait(false);
+					var newWhitelistedIpAddress = await client.AccessManagement.AddIpAddressToWhitelistAsync(yourPublicIpAddress, null, cancellationToken).ConfigureAwait(false);
 					await log.WriteLineAsync($"New whitelisted IP address: {yourPublicIpAddress}; Id: {newWhitelistedIpAddress.Id}").ConfigureAwait(false);
 
-					var whitelistedIpAddress = await client.AccessManagement.GetWhitelistedIpAddressAsync(newWhitelistedIpAddress.Id, cancellationToken).ConfigureAwait(false);
+					var whitelistedIpAddress = await client.AccessManagement.GetWhitelistedIpAddressAsync(newWhitelistedIpAddress.Id, null, cancellationToken).ConfigureAwait(false);
 					await log.WriteLineAsync($"{whitelistedIpAddress.Id}\t{whitelistedIpAddress.IpAddress}\t{whitelistedIpAddress.CreatedOn.ToString("yyyy-MM-dd hh:mm:ss")}").ConfigureAwait(false);
 
-					await client.AccessManagement.RemoveIpAddressFromWhitelistAsync(newWhitelistedIpAddress.Id, cancellationToken).ConfigureAwait(false);
+					await client.AccessManagement.RemoveIpAddressFromWhitelistAsync(newWhitelistedIpAddress.Id, null, cancellationToken).ConfigureAwait(false);
 					await log.WriteLineAsync($"IP address {whitelistedIpAddress.Id} removed from whitelist").ConfigureAwait(false);
 				}
 			}

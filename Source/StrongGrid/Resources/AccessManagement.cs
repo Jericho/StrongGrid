@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -36,14 +35,16 @@ namespace StrongGrid.Resources
 		/// Returns a list of IPs that have accessed your account through the web or API.
 		/// </summary>
 		/// <param name="limit">Number of IP activity entries to return.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		public Task<AccessEntry[]> GetAccessHistoryAsync(int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<AccessEntry[]> GetAccessHistoryAsync(int limit = 20, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync($"{_endpoint}/activity")
+				.OnBehalfOf(onBehalfOf)
 				.WithArgument("limit", limit)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<AccessEntry[]>("result");
@@ -52,14 +53,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve the whitelisted IPs.
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// An array of <see cref="WhitelistedIp" />.
 		/// </returns>
-		public Task<WhitelistedIp[]> GetWhitelistedIpAddressesAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<WhitelistedIp[]> GetWhitelistedIpAddressesAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync($"{_endpoint}/whitelist")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelistedIp[]>("result");
 		}
@@ -68,11 +71,12 @@ namespace StrongGrid.Resources
 		/// Add an IP address to the list of whitelisted ip addresses
 		/// </summary>
 		/// <param name="ip">The ip address.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		public async Task<WhitelistedIp> AddIpAddressToWhitelistAsync(string ip, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<WhitelistedIp> AddIpAddressToWhitelistAsync(string ip, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
 			{
@@ -81,6 +85,7 @@ namespace StrongGrid.Resources
 
 			var result = await _client
 				.PostAsync($"{_endpoint}/whitelist")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelistedIp[]>("result")
@@ -94,11 +99,12 @@ namespace StrongGrid.Resources
 		/// Add multiple IP addresses to the list of whitelisted ip addresses
 		/// </summary>
 		/// <param name="ips">The ip addresses.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		public Task<WhitelistedIp[]> AddIpAddressesToWhitelistAsync(IEnumerable<string> ips, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<WhitelistedIp[]> AddIpAddressesToWhitelistAsync(IEnumerable<string> ips, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var ipsJsonArray = new JArray();
 			foreach (var ip in ips)
@@ -113,6 +119,7 @@ namespace StrongGrid.Resources
 
 			return _client
 				.PostAsync($"{_endpoint}/whitelist")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelistedIp[]>("result");
@@ -122,14 +129,16 @@ namespace StrongGrid.Resources
 		/// Delete an ip address from the whitelist.
 		/// </summary>
 		/// <param name="id">The ip address identifier.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task RemoveIpAddressFromWhitelistAsync(long id, CancellationToken cancellationToken = default(CancellationToken))
+		public Task RemoveIpAddressFromWhitelistAsync(long id, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/whitelist/{id}")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
 		}
@@ -138,11 +147,12 @@ namespace StrongGrid.Resources
 		/// Delete multiple ip addresses from the whitelist.
 		/// </summary>
 		/// <param name="ids">The ip address identifiers.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task RemoveIpAddressesFromWhitelistAsync(IEnumerable<long> ids, CancellationToken cancellationToken = default(CancellationToken))
+		public Task RemoveIpAddressesFromWhitelistAsync(IEnumerable<long> ids, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
 			{
@@ -151,6 +161,7 @@ namespace StrongGrid.Resources
 
 			return _client
 				.DeleteAsync($"{_endpoint}/whitelist")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
@@ -160,14 +171,16 @@ namespace StrongGrid.Resources
 		/// Returns information about a whitelisted ip address.
 		/// </summary>
 		/// <param name="id">The ip address identifier.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		public Task<WhitelistedIp> GetWhitelistedIpAddressAsync(long id, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<WhitelistedIp> GetWhitelistedIpAddressAsync(long id, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync($"{_endpoint}/whitelist/{id}")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<WhitelistedIp>("result");
 		}
