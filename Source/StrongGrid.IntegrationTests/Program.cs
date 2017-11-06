@@ -773,7 +773,7 @@ namespace StrongGrid.IntegrationTests
 			var startDate = new DateTime(lastYear, 1, 1, 0, 0, 0);
 			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
 
-			var blocks = await client.Blocks.GetAllAsync(startDate, endDate, 25, 0, cancellationToken).ConfigureAwait(false);
+			var blocks = await client.Blocks.GetAllAsync(startDate, endDate, 25, 0, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All blocks retrieved. There are {blocks.Length} blocks in {lastYear} and {thisYear}").ConfigureAwait(false);
 		}
 
