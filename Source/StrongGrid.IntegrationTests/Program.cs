@@ -493,26 +493,26 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync("\n***** CONTACTS AND CUSTOM FIELDS *****\n").ConfigureAwait(false);
 
 			// GET ALL FIELDS
-			var fields = await client.CustomFields.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			var fields = await client.CustomFields.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All custom fields retrieved. There are {fields.Length} fields").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
 			foreach (var oldFields in fields.Where(f => f.Name.StartsWith("stronggrid_")))
 			{
-				await client.CustomFields.DeleteAsync(oldFields.Id, cancellationToken).ConfigureAwait(false);
+				await client.CustomFields.DeleteAsync(oldFields.Id, null, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"Field {oldFields.Id} deleted").ConfigureAwait(false);
 			}
 
-			var nicknameField = await client.CustomFields.CreateAsync("stronggrid_nickname", FieldType.Text, cancellationToken).ConfigureAwait(false);
+			var nicknameField = await client.CustomFields.CreateAsync("stronggrid_nickname", FieldType.Text, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Field '{nicknameField.Name}' Id: {nicknameField.Id}").ConfigureAwait(false);
 
-			var ageField = await client.CustomFields.CreateAsync("stronggrid_age", FieldType.Number, cancellationToken).ConfigureAwait(false);
+			var ageField = await client.CustomFields.CreateAsync("stronggrid_age", FieldType.Number, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Field '{ageField.Name}' Id: {ageField.Id}").ConfigureAwait(false);
 
-			var customerSinceField = await client.CustomFields.CreateAsync("stronggrid_customer_since", FieldType.Date, cancellationToken).ConfigureAwait(false);
+			var customerSinceField = await client.CustomFields.CreateAsync("stronggrid_customer_since", FieldType.Date, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Field '{customerSinceField.Name}' Id: {customerSinceField.Id}").ConfigureAwait(false);
 
-			fields = await client.CustomFields.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			fields = await client.CustomFields.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All custom fields retrieved. There are {fields.Length} fields").ConfigureAwait(false);
 
 			var email = "111@example.com";
@@ -588,16 +588,16 @@ namespace StrongGrid.IntegrationTests
 			await client.Contacts.DeleteAsync(contactId, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Contact {contactId} deleted: {firstName} {newLastName}").ConfigureAwait(false);
 
-			await client.CustomFields.DeleteAsync(nicknameField.Id, cancellationToken).ConfigureAwait(false);
+			await client.CustomFields.DeleteAsync(nicknameField.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Field {nicknameField.Id} deleted").ConfigureAwait(false);
 
-			await client.CustomFields.DeleteAsync(ageField.Id, cancellationToken).ConfigureAwait(false);
+			await client.CustomFields.DeleteAsync(ageField.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Field {ageField.Id} deleted").ConfigureAwait(false);
 
-			await client.CustomFields.DeleteAsync(customerSinceField.Id, cancellationToken).ConfigureAwait(false);
+			await client.CustomFields.DeleteAsync(customerSinceField.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Field {customerSinceField.Id} deleted").ConfigureAwait(false);
 
-			fields = await client.CustomFields.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			fields = await client.CustomFields.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All custom fields retrieved. There are {fields.Length} fields").ConfigureAwait(false);
 		}
 
