@@ -357,44 +357,36 @@ Content-Disposition: form-data; name=""attachments""
 		public void InboundEmail()
 		{
 			// Arrange
-			using (var stream = new MemoryStream())
-			{
-				using (var writer = new StreamWriter(stream))
-				{
-					writer.Write(INBOUND_EMAIL_WEBHOOK);
-					writer.Flush();
-					stream.Position = 0;
+			var parser = new WebhookParser();
+			var stream = GetStream(INBOUND_EMAIL_WEBHOOK);
 
-					// Act
-					var parser = new WebhookParser();
-					var inboundEmail = parser.ParseInboundEmailWebhook(stream);
+			// Act
+			var inboundEmail = parser.ParseInboundEmailWebhook(stream);
 
-					// Assert
-					inboundEmail.Attachments.ShouldNotBeNull();
-					inboundEmail.Attachments.Length.ShouldBe(0);
-					inboundEmail.Cc.ShouldNotBeNull();
-					inboundEmail.Cc.Length.ShouldBe(0);
-					inboundEmail.Charsets.ShouldNotBeNull();
-					inboundEmail.Charsets.Length.ShouldBe(5);
-					inboundEmail.Dkim.ShouldBe("{@hotmail.com : pass}");
-					inboundEmail.From.ShouldNotBeNull();
-					inboundEmail.From.Email.ShouldBe("bob@example.com");
-					inboundEmail.From.Name.ShouldBe("Bob Smith");
-					inboundEmail.Headers.ShouldNotBeNull();
-					inboundEmail.Headers.Length.ShouldBe(40);
-					inboundEmail.Html.ShouldStartWith("<html", Case.Insensitive);
-					inboundEmail.SenderIp.ShouldBe("10.43.24.23");
-					inboundEmail.SpamReport.ShouldBeNull();
-					inboundEmail.SpamScore.ShouldBeNull();
-					inboundEmail.Spf.ShouldBe("softfail");
-					inboundEmail.Subject.ShouldBe("Test #1");
-					inboundEmail.Text.ShouldBe("Test #1\r\n");
-					inboundEmail.To.ShouldNotBeNull();
-					inboundEmail.To.Length.ShouldBe(1);
-					inboundEmail.To[0].Email.ShouldBe("test@api.yourdomain.com");
-					inboundEmail.To[0].Name.ShouldBe("Test Recipient");
-				}
-			}
+			// Assert
+			inboundEmail.Attachments.ShouldNotBeNull();
+			inboundEmail.Attachments.Length.ShouldBe(0);
+			inboundEmail.Cc.ShouldNotBeNull();
+			inboundEmail.Cc.Length.ShouldBe(0);
+			inboundEmail.Charsets.ShouldNotBeNull();
+			inboundEmail.Charsets.Length.ShouldBe(5);
+			inboundEmail.Dkim.ShouldBe("{@hotmail.com : pass}");
+			inboundEmail.From.ShouldNotBeNull();
+			inboundEmail.From.Email.ShouldBe("bob@example.com");
+			inboundEmail.From.Name.ShouldBe("Bob Smith");
+			inboundEmail.Headers.ShouldNotBeNull();
+			inboundEmail.Headers.Length.ShouldBe(40);
+			inboundEmail.Html.ShouldStartWith("<html", Case.Insensitive);
+			inboundEmail.SenderIp.ShouldBe("10.43.24.23");
+			inboundEmail.SpamReport.ShouldBeNull();
+			inboundEmail.SpamScore.ShouldBeNull();
+			inboundEmail.Spf.ShouldBe("softfail");
+			inboundEmail.Subject.ShouldBe("Test #1");
+			inboundEmail.Text.ShouldBe("Test #1\r\n");
+			inboundEmail.To.ShouldNotBeNull();
+			inboundEmail.To.Length.ShouldBe(1);
+			inboundEmail.To[0].Email.ShouldBe("test@api.yourdomain.com");
+			inboundEmail.To[0].Name.ShouldBe("Test Recipient");
 		}
 
 		[Fact]
