@@ -615,7 +615,7 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync("\n***** LISTS AND SEGMENTS *****\n").ConfigureAwait(false);
 
 			// GET LISTS
-			var lists = await client.Lists.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			var lists = await client.Lists.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All lists retrieved. There are {lists.Length} lists").ConfigureAwait(false);
 
 			// GET SEGMENTS
@@ -625,7 +625,7 @@ namespace StrongGrid.IntegrationTests
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
 			foreach (var oldList in lists.Where(l => l.Name.StartsWith("StrongGrid Integration Testing:")))
 			{
-				await client.Lists.DeleteAsync(oldList.Id, cancellationToken).ConfigureAwait(false);
+				await client.Lists.DeleteAsync(oldList.Id, null, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"List {oldList.Id} deleted").ConfigureAwait(false);
 			}
 
@@ -635,13 +635,13 @@ namespace StrongGrid.IntegrationTests
 				await log.WriteLineAsync($"Segment {oldSegment.Id} deleted").ConfigureAwait(false);
 			}
 
-			var firstList = await client.Lists.CreateAsync("StrongGrid Integration Testing: list #1", cancellationToken).ConfigureAwait(false);
+			var firstList = await client.Lists.CreateAsync("StrongGrid Integration Testing: list #1", null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"List '{firstList.Name}' created. Id: {firstList.Id}").ConfigureAwait(false);
 
-			var secondList = await client.Lists.CreateAsync("StrongGrid Integration Testing: list #2", cancellationToken).ConfigureAwait(false);
+			var secondList = await client.Lists.CreateAsync("StrongGrid Integration Testing: list #2", null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"List '{secondList.Name}' created. Id: {secondList.Id}").ConfigureAwait(false);
 
-			await client.Lists.UpdateAsync(firstList.Id, "StrongGrid Integration Testing: new name", cancellationToken).ConfigureAwait(false);
+			await client.Lists.UpdateAsync(firstList.Id, "StrongGrid Integration Testing: new name", null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"List '{firstList.Id}' updated").ConfigureAwait(false);
 
 			var hotmailCondition = new SearchCondition { Field = "email", Operator = ConditionOperator.Contains, Value = "hotmail.com", LogicalOperator = LogicalOperator.None };
@@ -656,10 +656,10 @@ namespace StrongGrid.IntegrationTests
 			await client.Segments.DeleteAsync(segment.Id, false, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Segment {segment.Id} deleted").ConfigureAwait(false);
 
-			await client.Lists.DeleteAsync(firstList.Id, cancellationToken).ConfigureAwait(false);
+			await client.Lists.DeleteAsync(firstList.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"List {firstList.Id} deleted").ConfigureAwait(false);
 
-			await client.Lists.DeleteAsync(secondList.Id, cancellationToken).ConfigureAwait(false);
+			await client.Lists.DeleteAsync(secondList.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"List {secondList.Id} deleted").ConfigureAwait(false);
 		}
 
@@ -694,13 +694,13 @@ namespace StrongGrid.IntegrationTests
 				throw new Exception($"A verification email was previously sent to {sender.From.Email} but the process hasn't been completed yet (hint: there is a link in the email that you must click on).");
 			}
 
-			var lists = await client.Lists.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			var lists = await client.Lists.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All lists retrieved. There are {lists.Length} lists").ConfigureAwait(false);
 
 			var list = lists.FirstOrDefault(l => l.Name == "Integration testing list");
 			if (list == null)
 			{
-				list = await client.Lists.CreateAsync("Integration testing list", cancellationToken).ConfigureAwait(false);
+				list = await client.Lists.CreateAsync("Integration testing list", null, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync("List created").ConfigureAwait(false);
 			}
 
@@ -726,7 +726,7 @@ namespace StrongGrid.IntegrationTests
 			await client.Campaigns.SendTestAsync(campaign.Id, new[] { YOUR_EMAIL }, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("Test sent").ConfigureAwait(false);
 
-			await client.Lists.DeleteAsync(list.Id, cancellationToken).ConfigureAwait(false);
+			await client.Lists.DeleteAsync(list.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("List deleted").ConfigureAwait(false);
 
 			await client.Campaigns.DeleteAsync(campaign.Id, cancellationToken).ConfigureAwait(false);
