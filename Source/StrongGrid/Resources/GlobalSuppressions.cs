@@ -38,14 +38,16 @@ namespace StrongGrid.Resources
 		/// <param name="endDate">The end date.</param>
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="GlobalSuppression"/>.
 		/// </returns>
-		public Task<GlobalSuppression[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 50, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<GlobalSuppression[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync("suppression/unsubscribes")
+				.OnBehalfOf(onBehalfOf)
 				.WithArgument("start_time", startDate?.ToUnixTime())
 				.WithArgument("end_time", endDate?.ToUnixTime())
 				.WithArgument("limit", limit)
@@ -58,14 +60,16 @@ namespace StrongGrid.Resources
 		/// Check if a recipient address is in the global suppressions group.
 		/// </summary>
 		/// <param name="email">email address to check</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		///   <c>true</c> if the email address is in the global suppression group; otherwise, <c>false</c>.
 		/// </returns>
-		public async Task<bool> IsUnsubscribedAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<bool> IsUnsubscribedAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var responseContent = await _client
 				.GetAsync($"{_endpoint}/{email}")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsString(null)
 				.ConfigureAwait(false);
@@ -87,15 +91,17 @@ namespace StrongGrid.Resources
 		/// Add recipient addresses to the global suppression group.
 		/// </summary>
 		/// <param name="emails">Array of email addresses to add to the suppression group</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task AddAsync(IEnumerable<string> emails, CancellationToken cancellationToken = default(CancellationToken))
+		public Task AddAsync(IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject(new JProperty("recipient_emails", JArray.FromObject(emails.ToArray())));
 			return _client
 				.PostAsync(_endpoint)
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
@@ -105,14 +111,16 @@ namespace StrongGrid.Resources
 		/// Delete a recipient email from the global suppressions group.
 		/// </summary>
 		/// <param name="email">email address to be removed from the global suppressions group</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task RemoveAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
+		public Task RemoveAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{email}")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
 		}
