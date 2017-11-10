@@ -34,14 +34,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get the current Event Webhook settings.
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="EventWebhookSettings" />.
 		/// </returns>
-		public Task<EventWebhookSettings> GetEventWebhookSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<EventWebhookSettings> GetEventWebhookSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync($"{_eventWebhookEndpoint}/settings")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EventWebhookSettings>();
 		}
@@ -62,6 +64,7 @@ namespace StrongGrid.Resources
 		/// <param name="processed">if set to <c>true</c> [processed].</param>
 		/// <param name="spamReport">if set to <c>true</c> [spamReport].</param>
 		/// <param name="unsubscribe">if set to <c>true</c> [unsubscribe].</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="EventWebhookSettings" />.
@@ -80,6 +83,7 @@ namespace StrongGrid.Resources
 			bool processed = default(bool),
 			bool spamReport = default(bool),
 			bool unsubscribe = default(bool),
+			string onBehalfOf = null,
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var eventWebhookSettings = new EventWebhookSettings
@@ -101,6 +105,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(eventWebhookSettings);
 			return _client
 				.PatchAsync($"{_eventWebhookEndpoint}/settings")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EventWebhookSettings>();
@@ -110,11 +115,12 @@ namespace StrongGrid.Resources
 		/// Sends a fake event notification post to the provided URL.
 		/// </summary>
 		/// <param name="url">the event notification endpoint url</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task SendEventTestAsync(string url, CancellationToken cancellationToken = default(CancellationToken))
+		public Task SendEventTestAsync(string url, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
 			{
@@ -123,6 +129,7 @@ namespace StrongGrid.Resources
 
 			return _client
 				.PostAsync($"{_eventWebhookEndpoint}/test")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
@@ -135,15 +142,17 @@ namespace StrongGrid.Resources
 		/// <param name="url">The public URL where you would like SendGrid to POST the data parsed from your email. Any emails sent with the given hostname provided (whose MX records have been updated to point to SendGrid) will be parsed and POSTed to this URL.</param>
 		/// <param name="spamCheck">Indicates if you would like SendGrid to check the content parsed from your emails for spam before POSTing them to your domain.</param>
 		/// <param name="sendRaw">Indicates if you would like SendGrid to post the original MIME-type content of your parsed email. When this parameter is set to "false", SendGrid will send a JSON payload of the content of your email.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="InboundParseWebhookSettings" />.
 		/// </returns>
-		public Task<InboundParseWebhookSettings> CreateInboundParseWebhookSettings(string hostname, string url, bool spamCheck = false, bool sendRaw = false, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<InboundParseWebhookSettings> CreateInboundParseWebhookSettings(string hostname, string url, bool spamCheck = false, bool sendRaw = false, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = CreateJObject(hostname, url, spamCheck, sendRaw);
 			return _client
 				.PatchAsync($"{_inboundParseWebhookEndpoint}/settings")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<InboundParseWebhookSettings>();
@@ -152,14 +161,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get all the inbound parse webhook settings.
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="InboundParseWebhookSettings" />.
 		/// </returns>
-		public Task<InboundParseWebhookSettings[]> GetAllInboundParseWebhookSettings(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<InboundParseWebhookSettings[]> GetAllInboundParseWebhookSettings(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync($"{_inboundParseWebhookEndpoint}/settings")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<InboundParseWebhookSettings[]>("result");
 		}
@@ -168,14 +179,16 @@ namespace StrongGrid.Resources
 		/// Get the inbound parse webhook settings for a specific hostname.
 		/// </summary>
 		/// <param name="hostname">The hostname associated with the inbound parse setting that you would like to retrieve.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="InboundParseWebhookSettings" />.
 		/// </returns>
-		public Task<InboundParseWebhookSettings> GetInboundParseWebhookSettings(string hostname, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<InboundParseWebhookSettings> GetInboundParseWebhookSettings(string hostname, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync($"{_inboundParseWebhookEndpoint}/settings/{hostname}")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<InboundParseWebhookSettings>();
 		}
@@ -187,15 +200,17 @@ namespace StrongGrid.Resources
 		/// <param name="url">The public URL where you would like SendGrid to POST the data parsed from your email. Any emails sent with the given hostname provided (whose MX records have been updated to point to SendGrid) will be parsed and POSTed to this URL.</param>
 		/// <param name="spamCheck">Indicates if you would like SendGrid to check the content parsed from your emails for spam before POSTing them to your domain.</param>
 		/// <param name="sendRaw">Indicates if you would like SendGrid to post the original MIME-type content of your parsed email. When this parameter is set to "false", SendGrid will send a JSON payload of the content of your email.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="InboundParseWebhookSettings" />.
 		/// </returns>
-		public Task UpdateInboundParseWebhookSettings(string hostname, Parameter<string> url = default(Parameter<string>), Parameter<bool> spamCheck = default(Parameter<bool>), Parameter<bool> sendRaw = default(Parameter<bool>), CancellationToken cancellationToken = default(CancellationToken))
+		public Task UpdateInboundParseWebhookSettings(string hostname, Parameter<string> url = default(Parameter<string>), Parameter<bool> spamCheck = default(Parameter<bool>), Parameter<bool> sendRaw = default(Parameter<bool>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = CreateJObject(hostname, url, spamCheck, sendRaw);
 			return _client
 				.PatchAsync($"{_inboundParseWebhookEndpoint}/settings/{hostname}")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<InboundParseWebhookSettings>();
@@ -205,14 +220,16 @@ namespace StrongGrid.Resources
 		/// Delete the inbound parse webhook settings for a specvific hostname.
 		/// </summary>
 		/// <param name="hostname">The hostname associated with the inbound parse setting that you want to delete.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteInboundParseWebhookSettings(string hostname, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteInboundParseWebhookSettings(string hostname, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.DeleteAsync($"{_inboundParseWebhookEndpoint}/settings/{hostname}")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
 		}
