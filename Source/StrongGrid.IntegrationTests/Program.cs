@@ -740,13 +740,13 @@ namespace StrongGrid.IntegrationTests
 		{
 			await log.WriteLineAsync("\n***** SETTINGS *****\n").ConfigureAwait(false);
 
-			var partnerSettings = await client.Settings.GetAllPartnerSettingsAsync(25, 0, cancellationToken).ConfigureAwait(false);
+			var partnerSettings = await client.Settings.GetAllPartnerSettingsAsync(25, 0, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All partner settings retrieved. There are {partnerSettings.Length} settings").ConfigureAwait(false);
 
-			var trackingSettings = await client.Settings.GetAllTrackingSettingsAsync(25, 0, cancellationToken).ConfigureAwait(false);
+			var trackingSettings = await client.Settings.GetAllTrackingSettingsAsync(25, 0, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All partner tracking retrieved. There are {trackingSettings.Length} settings").ConfigureAwait(false);
 
-			var mailSettings = await client.Settings.GetAllMailSettingsAsync(25, 0, cancellationToken).ConfigureAwait(false);
+			var mailSettings = await client.Settings.GetAllMailSettingsAsync(25, 0, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All mail tracking retrieved. There are {mailSettings.Length} settings").ConfigureAwait(false);
 		}
 
