@@ -846,45 +846,45 @@ namespace StrongGrid.IntegrationTests
 
 			await log.WriteLineAsync("\n***** WHITELABEL DOMAINS *****\n").ConfigureAwait(false);
 
-			var domains = await client.Whitelabel.GetAllDomainsAsync(50, 0, false, null, null, cancellationToken).ConfigureAwait(false);
+			var domains = await client.Whitelabel.GetAllDomainsAsync(50, 0, false, null, null, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All whitelabel domains retrieved. There are {domains.Length} domains").ConfigureAwait(false);
 
 			var domain = domains.FirstOrDefault(d => d.Domain == "example.com");
 			if (domain == null)
 			{
-				domain = await client.Whitelabel.CreateDomainAsync("example.com", "email", false, false, false, cancellationToken).ConfigureAwait(false);
+				domain = await client.Whitelabel.CreateDomainAsync("example.com", "email", false, false, false, null, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"Whitelabel domain created. Id: {domain.Id}").ConfigureAwait(false);
 			}
 
-			var domainValidation = await client.Whitelabel.ValidateDomainAsync(domain.Id, cancellationToken).ConfigureAwait(false);
+			var domainValidation = await client.Whitelabel.ValidateDomainAsync(domain.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Whitelabel domain validation: {domainValidation.IsValid}").ConfigureAwait(false);
 
-			await client.Whitelabel.DeleteDomainAsync(domain.Id, cancellationToken).ConfigureAwait(false);
+			await client.Whitelabel.DeleteDomainAsync(domain.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Whitelabel domain {domain.Id} deleted.").ConfigureAwait(false);
 
 
 			await log.WriteLineAsync("\n***** WHITELABEL IPS *****").ConfigureAwait(false);
 
-			var ipAdresses = await client.Whitelabel.GetAllDomainsAsync(50, 0, false, null, null, cancellationToken).ConfigureAwait(false);
+			var ipAdresses = await client.Whitelabel.GetAllDomainsAsync(50, 0, false, null, null, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All whitelabel IP addreses retrieved. There are {ipAdresses.Length} adresses").ConfigureAwait(false);
 
 
 			await log.WriteLineAsync("\n***** WHITELABEL LINKS *****").ConfigureAwait(false);
 
-			var links = await client.Whitelabel.GetAllLinksAsync(null, 50, 0, cancellationToken).ConfigureAwait(false);
+			var links = await client.Whitelabel.GetAllLinksAsync(null, 50, 0, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All whitelabel links retrieved. There are {links.Length} links").ConfigureAwait(false);
 
 			var link = links.FirstOrDefault(d => d.Domain == "example.com");
 			if (link == null)
 			{
-				link = await client.Whitelabel.CreateLinkAsync("example.com", "email", true, cancellationToken).ConfigureAwait(false);
+				link = await client.Whitelabel.CreateLinkAsync("example.com", "email", true, null, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"Whitelabel link created. Id: {link.Id}").ConfigureAwait(false);
 			}
 
-			var linkValidation = await client.Whitelabel.ValidateLinkAsync(link.Id, cancellationToken).ConfigureAwait(false);
+			var linkValidation = await client.Whitelabel.ValidateLinkAsync(link.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Whitelabel validation: {linkValidation.IsValid}").ConfigureAwait(false);
 
-			await client.Whitelabel.DeleteLinkAsync(link.Id, cancellationToken).ConfigureAwait(false);
+			await client.Whitelabel.DeleteLinkAsync(link.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Whitelabel link {link.Id} deleted.").ConfigureAwait(false);
 		}
 
