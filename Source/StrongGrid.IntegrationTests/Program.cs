@@ -431,38 +431,38 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync("\n***** TEMPLATES *****\n").ConfigureAwait(false);
 
 			// GET TEMPLATES
-			var templates = await client.Templates.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			var templates = await client.Templates.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All templates retrieved. There are {templates.Length} templates").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
 			foreach (var oldTemplate in templates.Where(t => t.Name.StartsWith("StrongGrid Integration Testing:")))
 			{
-				await client.Templates.DeleteAsync(oldTemplate.Id, cancellationToken).ConfigureAwait(false);
+				await client.Templates.DeleteAsync(oldTemplate.Id, null, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"Template {oldTemplate.Id} deleted").ConfigureAwait(false);
 			}
 
-			var template = await client.Templates.CreateAsync("StrongGrid Integration Testing: My template", cancellationToken).ConfigureAwait(false);
+			var template = await client.Templates.CreateAsync("StrongGrid Integration Testing: My template", null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Template '{template.Name}' created. Id: {template.Id}");
 
-			await client.Templates.UpdateAsync(template.Id, "StrongGrid Integration Testing: updated name", cancellationToken).ConfigureAwait(false);
+			await client.Templates.UpdateAsync(template.Id, "StrongGrid Integration Testing: updated name", null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Template '{template.Id}' updated").ConfigureAwait(false);
 
-			template = await client.Templates.GetAsync(template.Id, cancellationToken).ConfigureAwait(false);
+			template = await client.Templates.GetAsync(template.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Template '{template.Id}' retrieved.").ConfigureAwait(false);
 
-			var firstVersion = await client.Templates.CreateVersionAsync(template.Id, "StrongGrid Integration Testing: version 1", "My first Subject <%subject%>", "<html<body>hello world<br/><%body%></body></html>", "Hello world <%body%>", true, cancellationToken).ConfigureAwait(false);
+			var firstVersion = await client.Templates.CreateVersionAsync(template.Id, "StrongGrid Integration Testing: version 1", "My first Subject <%subject%>", "<html<body>hello world<br/><%body%></body></html>", "Hello world <%body%>", true, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"First version created. Id: {firstVersion.Id}").ConfigureAwait(false);
 
-			var secondVersion = await client.Templates.CreateVersionAsync(template.Id, "StrongGrid Integration Testing: version 2", "My second Subject <%subject%>", "<html<body>Qwerty<br/><%body%></body></html>", "Qwerty <%body%>", true, cancellationToken).ConfigureAwait(false);
+			var secondVersion = await client.Templates.CreateVersionAsync(template.Id, "StrongGrid Integration Testing: version 2", "My second Subject <%subject%>", "<html<body>Qwerty<br/><%body%></body></html>", "Qwerty <%body%>", true, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Second version created. Id: {secondVersion.Id}").ConfigureAwait(false);
 
-			await client.Templates.DeleteVersionAsync(template.Id, firstVersion.Id, cancellationToken).ConfigureAwait(false);
+			await client.Templates.DeleteVersionAsync(template.Id, firstVersion.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Version {firstVersion.Id} deleted").ConfigureAwait(false);
 
-			await client.Templates.DeleteVersionAsync(template.Id, secondVersion.Id, cancellationToken).ConfigureAwait(false);
+			await client.Templates.DeleteVersionAsync(template.Id, secondVersion.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Version {secondVersion.Id} deleted").ConfigureAwait(false);
 
-			await client.Templates.DeleteAsync(template.Id, cancellationToken).ConfigureAwait(false);
+			await client.Templates.DeleteAsync(template.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Template {template.Id} deleted").ConfigureAwait(false);
 		}
 
