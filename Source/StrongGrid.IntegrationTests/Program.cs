@@ -387,42 +387,42 @@ namespace StrongGrid.IntegrationTests
 			var startDate = new DateTime(now.Year, 1, 4);
 
 			//----- Global Stats -----
-			var globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.None, cancellationToken).ConfigureAwait(false);
+			var globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.None, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of GLOBAL stats in {now.Year}: {globalStats.Length}").ConfigureAwait(false);
 
-			globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Day, cancellationToken).ConfigureAwait(false);
+			globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Day, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of GLOBAL stats in {now.Year} and aggregated by day: {globalStats.Length}").ConfigureAwait(false);
 
-			globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Week, cancellationToken).ConfigureAwait(false);
+			globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Week, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of GLOBAL stats in {now.Year} and aggregated by week: {globalStats.Length}").ConfigureAwait(false);
 
-			globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Month, cancellationToken).ConfigureAwait(false);
+			globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Month, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of GLOBAL stats in {now.Year} and aggregated by month: {globalStats.Length}").ConfigureAwait(false);
 
 			//----- Global Stats -----
-			var countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.None, cancellationToken).ConfigureAwait(false);
+			var countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.None, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of COUNTRY stats in {now.Year}: {countryStats.Length}").ConfigureAwait(false);
 
-			countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Day, cancellationToken).ConfigureAwait(false);
+			countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Day, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of COUNTRY stats in {now.Year} and aggregated by day: {countryStats.Length}").ConfigureAwait(false);
 
-			countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Week, cancellationToken).ConfigureAwait(false);
+			countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Week, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of COUNTRY stats in {now.Year} and aggregated by week: {countryStats.Length}").ConfigureAwait(false);
 
-			countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Month, cancellationToken).ConfigureAwait(false);
+			countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Month, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of COUNTRY stats in {now.Year} and aggregated by month: {countryStats.Length}").ConfigureAwait(false);
 
 			//----- Browser Stats -----
-			var browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.None, cancellationToken).ConfigureAwait(false);
+			var browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.None, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of BROWSER stats in {now.Year}: {browserStats.Length}").ConfigureAwait(false);
 
-			browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Day, cancellationToken).ConfigureAwait(false);
+			browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Day, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of BROWSER stats in {now.Year} and aggregated by day: {browserStats.Length}").ConfigureAwait(false);
 
-			browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Week, cancellationToken).ConfigureAwait(false);
+			browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Week, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of BROWSER stats in {now.Year} and aggregated by week: {browserStats.Length}").ConfigureAwait(false);
 
-			browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Month, cancellationToken).ConfigureAwait(false);
+			browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Month, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of BROWSER stats in {now.Year} and aggregated by month: {browserStats.Length}").ConfigureAwait(false);
 		}
 
