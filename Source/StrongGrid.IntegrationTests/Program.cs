@@ -897,7 +897,7 @@ namespace StrongGrid.IntegrationTests
 			var startDate = new DateTime(lastYear, 1, 1, 0, 0, 0);
 			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
 
-			var inboundParseWebhookUsage = await client.WebhookStats.GetInboundParseUsageAsync(startDate, endDate, AggregateBy.Month, cancellationToken).ConfigureAwait(false);
+			var inboundParseWebhookUsage = await client.WebhookStats.GetInboundParseUsageAsync(startDate, endDate, AggregateBy.Month, null, cancellationToken).ConfigureAwait(false);
 			foreach (var monthUsage in inboundParseWebhookUsage)
 			{
 				var name = monthUsage.Date.ToString("yyyy MMM");
