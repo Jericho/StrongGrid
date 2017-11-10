@@ -619,7 +619,7 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"All lists retrieved. There are {lists.Length} lists").ConfigureAwait(false);
 
 			// GET SEGMENTS
-			var segments = await client.Segments.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			var segments = await client.Segments.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All segements retrieved. There are {segments.Length} segments").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
@@ -631,7 +631,7 @@ namespace StrongGrid.IntegrationTests
 
 			foreach (var oldSegment in segments.Where(s => s.Name.StartsWith("StrongGrid Integration Testing:")))
 			{
-				await client.Segments.DeleteAsync(oldSegment.Id, false, cancellationToken).ConfigureAwait(false);
+				await client.Segments.DeleteAsync(oldSegment.Id, false, null, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"Segment {oldSegment.Id} deleted").ConfigureAwait(false);
 			}
 
@@ -645,15 +645,15 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"List '{firstList.Id}' updated").ConfigureAwait(false);
 
 			var hotmailCondition = new SearchCondition { Field = "email", Operator = ConditionOperator.Contains, Value = "hotmail.com", LogicalOperator = LogicalOperator.None };
-			var segment = await client.Segments.CreateAsync("StrongGrid Integration Testing: Recipients @ Hotmail", firstList.Id, new[] { hotmailCondition }, cancellationToken).ConfigureAwait(false);
+			var segment = await client.Segments.CreateAsync("StrongGrid Integration Testing: Recipients @ Hotmail", firstList.Id, new[] { hotmailCondition }, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Segment '{segment.Name}' created. Id: {segment.Id}").ConfigureAwait(false);
 
 			var millerLastNameCondition = new SearchCondition { Field = "last_name", Operator = ConditionOperator.Equal, Value = "Miller", LogicalOperator = LogicalOperator.None };
 			var clickedRecentlyCondition = new SearchCondition { Field = "last_clicked", Operator = ConditionOperator.GreatherThan, Value = DateTime.UtcNow.AddDays(-30).ToString("MM/dd/yyyy"), LogicalOperator = LogicalOperator.And };
-			segment = await client.Segments.UpdateAsync(segment.Id, "StrongGrid Integration Testing: Last Name is Miller and clicked recently", null, new[] { millerLastNameCondition, clickedRecentlyCondition }, cancellationToken).ConfigureAwait(false);
+			segment = await client.Segments.UpdateAsync(segment.Id, "StrongGrid Integration Testing: Last Name is Miller and clicked recently", null, new[] { millerLastNameCondition, clickedRecentlyCondition }, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Segment {segment.Id} updated. The new name is: '{segment.Name}'").ConfigureAwait(false);
 
-			await client.Segments.DeleteAsync(segment.Id, false, cancellationToken).ConfigureAwait(false);
+			await client.Segments.DeleteAsync(segment.Id, false, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Segment {segment.Id} deleted").ConfigureAwait(false);
 
 			await client.Lists.DeleteAsync(firstList.Id, null, cancellationToken).ConfigureAwait(false);
