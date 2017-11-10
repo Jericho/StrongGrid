@@ -297,39 +297,39 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"Retrieved unsubscribe group {group.Id}: {group.Name}").ConfigureAwait(false);
 
 			// ADD A FEW ADDRESSES TO UNSUBSCRIBE GROUP
-			await client.Suppressions.AddAddressToUnsubscribeGroupAsync(group.Id, "test1@example.com", cancellationToken).ConfigureAwait(false);
+			await client.Suppressions.AddAddressToUnsubscribeGroupAsync(group.Id, "test1@example.com", null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Added test1@example.com to unsubscribe group {group.Id}").ConfigureAwait(false);
-			await client.Suppressions.AddAddressToUnsubscribeGroupAsync(group.Id, "test2@example.com", cancellationToken).ConfigureAwait(false);
+			await client.Suppressions.AddAddressToUnsubscribeGroupAsync(group.Id, "test2@example.com", null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Added test2@example.com to unsubscribe group {group.Id}").ConfigureAwait(false);
 
 			// GET THE ADDRESSES IN A GROUP
-			var unsubscribedAddresses = await client.Suppressions.GetUnsubscribedAddressesAsync(group.Id, cancellationToken).ConfigureAwait(false);
+			var unsubscribedAddresses = await client.Suppressions.GetUnsubscribedAddressesAsync(group.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"There are {unsubscribedAddresses.Length} unsubscribed addresses in group {group.Id}").ConfigureAwait(false);
 
 			// CHECK IF AN ADDRESS IS IN THE SUPPRESSION GROUP (should be true)
 			var addressToCheck = "test1@example.com";
-			var isInGroup = await client.Suppressions.IsSuppressedAsync(group.Id, addressToCheck, cancellationToken).ConfigureAwait(false);
+			var isInGroup = await client.Suppressions.IsSuppressedAsync(group.Id, addressToCheck, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"{addressToCheck} {(isInGroup ? "is" : " is not")} in supression group {group.Id}").ConfigureAwait(false);
 
 			// CHECK IF AN ADDRESS IS IN THE SUPPRESSION GROUP (should be false)
 			addressToCheck = "dummy@example.com";
-			isInGroup = await client.Suppressions.IsSuppressedAsync(group.Id, addressToCheck, cancellationToken).ConfigureAwait(false);
+			isInGroup = await client.Suppressions.IsSuppressedAsync(group.Id, addressToCheck, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"{addressToCheck} {(isInGroup ? "is" : "is not")} in supression group {group.Id}").ConfigureAwait(false);
 
 			// CHECK WHICH GROUPS A GIVEN EMAIL ADDRESS IS SUPPRESSED FROM
 			addressToCheck = "test1@example.com";
-			var suppressedFrom = await client.Suppressions.GetUnsubscribedGroupsAsync(addressToCheck, cancellationToken).ConfigureAwait(false);
+			var suppressedFrom = await client.Suppressions.GetUnsubscribedGroupsAsync(addressToCheck, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"{addressToCheck} is in {suppressedFrom.Length} supression groups").ConfigureAwait(false);
 
 			// REMOVE ALL ADDRESSES FROM UNSUBSCRIBE GROUP
 			foreach (var address in unsubscribedAddresses)
 			{
-				await client.Suppressions.RemoveAddressFromSuppressionGroupAsync(group.Id, address, cancellationToken).ConfigureAwait(false);
+				await client.Suppressions.RemoveAddressFromSuppressionGroupAsync(group.Id, address, null, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"{address} removed from unsubscribe group {group.Id}").ConfigureAwait(false);
 			}
 
 			// MAKE SURE THERE ARE NO ADDRESSES IN THE GROUP
-			unsubscribedAddresses = await client.Suppressions.GetUnsubscribedAddressesAsync(group.Id, cancellationToken).ConfigureAwait(false);
+			unsubscribedAddresses = await client.Suppressions.GetUnsubscribedAddressesAsync(group.Id, null, cancellationToken).ConfigureAwait(false);
 			if (unsubscribedAddresses.Length == 0)
 			{
 				await log.WriteLineAsync($"As expected, there are no more addresses in group {group.Id}").ConfigureAwait(false);

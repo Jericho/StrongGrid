@@ -73,7 +73,7 @@ namespace StrongGrid.UnitTests.Resources
 			var suppresions = new Suppressions(client);
 
 			// Act
-			var result = await suppresions.GetAllAsync(CancellationToken.None).ConfigureAwait(false);
+			var result = await suppresions.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -95,7 +95,7 @@ namespace StrongGrid.UnitTests.Resources
 			var suppresions = new Suppressions(client);
 
 			// Act
-			var result = await suppresions.GetUnsubscribedGroupsAsync(email, CancellationToken.None).ConfigureAwait(false);
+			var result = await suppresions.GetUnsubscribedGroupsAsync(email, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -122,7 +122,7 @@ namespace StrongGrid.UnitTests.Resources
 			var suppresions = new Suppressions(client);
 
 			// Act
-			var result = await suppresions.GetUnsubscribedAddressesAsync(groupId, CancellationToken.None).ConfigureAwait(false);
+			var result = await suppresions.GetUnsubscribedAddressesAsync(groupId, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -154,7 +154,7 @@ namespace StrongGrid.UnitTests.Resources
 			var suppressions = new Suppressions(client);
 
 			// Act
-			await suppressions.AddAddressToUnsubscribeGroupAsync(groupId, email, CancellationToken.None).ConfigureAwait(false);
+			await suppressions.AddAddressToUnsubscribeGroupAsync(groupId, email, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -182,7 +182,7 @@ namespace StrongGrid.UnitTests.Resources
 			var suppressions = new Suppressions(client);
 
 			// Act
-			await suppressions.AddAddressToUnsubscribeGroupAsync(groupId, emails, CancellationToken.None).ConfigureAwait(false);
+			await suppressions.AddAddressToUnsubscribeGroupAsync(groupId, emails, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -204,7 +204,7 @@ namespace StrongGrid.UnitTests.Resources
 			var suppressions = new Suppressions(client);
 
 			// Act
-			await suppressions.RemoveAddressFromSuppressionGroupAsync(groupId, email, CancellationToken.None).ConfigureAwait(false);
+			await suppressions.RemoveAddressFromSuppressionGroupAsync(groupId, email, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -230,7 +230,7 @@ namespace StrongGrid.UnitTests.Resources
 			var suppresions = new Suppressions(client);
 
 			// Act
-			var result = await suppresions.IsSuppressedAsync(groupId, email, CancellationToken.None).ConfigureAwait(false);
+			var result = await suppresions.IsSuppressedAsync(groupId, email, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -256,7 +256,7 @@ namespace StrongGrid.UnitTests.Resources
 			var suppresions = new Suppressions(client);
 
 			// Act
-			var result = await suppresions.IsSuppressedAsync(groupId, email, CancellationToken.None).ConfigureAwait(false);
+			var result = await suppresions.IsSuppressedAsync(groupId, email, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
