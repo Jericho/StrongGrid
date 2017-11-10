@@ -35,14 +35,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve all suppression groups associated with the user.
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="SuppressionGroup" />.
 		/// </returns>
-		public Task<SuppressionGroup[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SuppressionGroup[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync(_endpoint)
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<SuppressionGroup[]>();
 		}
@@ -51,16 +53,18 @@ namespace StrongGrid.Resources
 		/// Retrieve the suppression groups that match the specified ids.
 		/// </summary>
 		/// <param name="groupIds">The Ids of the desired groups.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="SuppressionGroup" />.
 		/// </returns>
-		public Task<SuppressionGroup[]> GetMultipleAsync(IEnumerable<int> groupIds, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SuppressionGroup[]> GetMultipleAsync(IEnumerable<int> groupIds, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			if (groupIds == null || !groupIds.Any()) throw new ArgumentNullException(nameof(groupIds), "You must specify at least one group id");
 
 			var request = _client
 				.GetAsync(_endpoint)
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken);
 
 			foreach (var id in groupIds)
@@ -75,14 +79,16 @@ namespace StrongGrid.Resources
 		/// Get information on a single suppression group.
 		/// </summary>
 		/// <param name="groupId">ID of the suppression group to delete</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="SuppressionGroup" />.
 		/// </returns>
-		public Task<SuppressionGroup> GetAsync(int groupId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SuppressionGroup> GetAsync(int groupId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{groupId}")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<SuppressionGroup>();
 		}
@@ -93,11 +99,12 @@ namespace StrongGrid.Resources
 		/// <param name="name">The name of the new suppression group</param>
 		/// <param name="description">A description of the suppression group</param>
 		/// <param name="isDefault">Default value is false</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="SuppressionGroup" />.
 		/// </returns>
-		public Task<SuppressionGroup> CreateAsync(string name, string description, bool isDefault, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SuppressionGroup> CreateAsync(string name, string description, bool isDefault, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
 			{
@@ -107,6 +114,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PostAsync(_endpoint)
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<SuppressionGroup>();
@@ -118,11 +126,12 @@ namespace StrongGrid.Resources
 		/// <param name="groupId">The group identifier.</param>
 		/// <param name="name">The name of the new suppression group</param>
 		/// <param name="description">A description of the suppression group</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The <see cref="SuppressionGroup" />.
 		/// </returns>
-		public Task<SuppressionGroup> UpdateAsync(int groupId, Parameter<string> name = default(Parameter<string>), Parameter<string> description = default(Parameter<string>), CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SuppressionGroup> UpdateAsync(int groupId, Parameter<string> name = default(Parameter<string>), Parameter<string> description = default(Parameter<string>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
 			if (name.HasValue) data.Add("name", name.Value);
@@ -130,6 +139,7 @@ namespace StrongGrid.Resources
 
 			return _client
 				.PatchAsync($"{_endpoint}/{groupId}")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<SuppressionGroup>();
@@ -139,14 +149,16 @@ namespace StrongGrid.Resources
 		/// Delete a suppression group.
 		/// </summary>
 		/// <param name="groupId">ID of the suppression group to delete</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(int groupId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(int groupId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{groupId}")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
 		}
