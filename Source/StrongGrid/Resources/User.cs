@@ -31,14 +31,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get your user profile
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="UserProfile" />.
 		/// </returns>
-		public Task<UserProfile> GetProfileAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<UserProfile> GetProfileAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync(_endpoint)
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<UserProfile>();
 		}
@@ -56,6 +58,7 @@ namespace StrongGrid.Resources
 		/// <param name="state">The state.</param>
 		/// <param name="website">The website.</param>
 		/// <param name="zip">The zip.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="UserProfile" />.
@@ -71,11 +74,13 @@ namespace StrongGrid.Resources
 			Parameter<string> state = default(Parameter<string>),
 			Parameter<string> website = default(Parameter<string>),
 			Parameter<string> zip = default(Parameter<string>),
+			string onBehalfOf = null,
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = CreateJObject(address, city, company, country, firstName, lastName, phone, state, website, zip);
 			return _client
 				.PatchAsync(_endpoint)
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<UserProfile>();
@@ -84,14 +89,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get your user account
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Account" />.
 		/// </returns>
-		public Task<Account> GetAccountAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Account> GetAccountAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync("user/account")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Account>();
 		}
@@ -99,14 +106,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve the email address on file for your account
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The email address from your user profile.
 		/// </returns>
-		public Task<string> GetEmailAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<string> GetEmailAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync("user/email")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<string>("email");
 		}
@@ -115,17 +124,19 @@ namespace StrongGrid.Resources
 		/// Update the email address on file for your account
 		/// </summary>
 		/// <param name="email">The email.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The email address from your user profile.
 		/// </returns>
-		public Task<string> UpdateEmailAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<string> UpdateEmailAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
 			data.Add("email", email);
 
 			return _client
 				.PutAsync("user/email")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<string>("email");
@@ -134,14 +145,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve your account username
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The username from your user profile.
 		/// </returns>
-		public Task<string> GetUsernameAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<string> GetUsernameAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync("user/username")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<string>("username");
 		}
@@ -150,17 +163,19 @@ namespace StrongGrid.Resources
 		/// Update your account username
 		/// </summary>
 		/// <param name="username">The username.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The username from your user profile.
 		/// </returns>
-		public Task<string> UpdateUsernameAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<string> UpdateUsernameAsync(string username, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
 			data.Add("username", username);
 
 			return _client
 				.PutAsync("user/username")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<string>("username");
@@ -169,14 +184,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve the current credit balance for your account
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="UserCredits"/>.
 		/// </returns>
-		public Task<UserCredits> GetCreditsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<UserCredits> GetCreditsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync("user/credits")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<UserCredits>();
 		}
@@ -186,11 +203,12 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="oldPassword">The old password.</param>
 		/// <param name="newPassword">The new password.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task UpdatePasswordAsync(string oldPassword, string newPassword, CancellationToken cancellationToken = default(CancellationToken))
+		public Task UpdatePasswordAsync(string oldPassword, string newPassword, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
 			data.Add("new_password", oldPassword);
@@ -198,6 +216,7 @@ namespace StrongGrid.Resources
 
 			return _client
 				.PutAsync("user/password")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
@@ -206,14 +225,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// List all available scopes for a user
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// An array of string representing the permissions (aka scopes).
 		/// </returns>
-		public Task<string[]> GetPermissionsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<string[]> GetPermissionsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync("scopes")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<string[]>("scopes");
 		}

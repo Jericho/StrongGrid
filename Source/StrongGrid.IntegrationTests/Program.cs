@@ -243,7 +243,7 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"Api Key {apiKey.KeyId} deleted").ConfigureAwait(false);
 
 			// GET THE CURRENT USER'S PERMISSIONS
-			var permissions = await client.User.GetPermissionsAsync(cancellationToken).ConfigureAwait(false);
+			var permissions = await client.User.GetPermissionsAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Current user has been granted {permissions.Length} permissions").ConfigureAwait(false);
 
 			// CREATE AND DELETE A BILLING API KEY (if authorized)
@@ -471,11 +471,11 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync("\n***** USER *****\n").ConfigureAwait(false);
 
 			// RETRIEVE YOUR ACCOUNT INFORMATION
-			var account = await client.User.GetAccountAsync(cancellationToken).ConfigureAwait(false);
+			var account = await client.User.GetAccountAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Account type: {account.Type}; Reputation: {account.Reputation}").ConfigureAwait(false);
 
 			// RETRIEVE YOUR USER PROFILE
-			var profile = await client.User.GetProfileAsync(cancellationToken).ConfigureAwait(false);
+			var profile = await client.User.GetProfileAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Hello {profile.FirstName} from {(string.IsNullOrEmpty(profile.State) ? "unknown location" : profile.State)}").ConfigureAwait(false);
 
 			// UPDATE YOUR USER PROFILE
@@ -484,7 +484,7 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync("The 'State' property on your profile has been updated").ConfigureAwait(false);
 
 			// VERIFY THAT YOUR PROFILE HAS BEEN UPDATED
-			var updatedProfile = await client.User.GetProfileAsync(cancellationToken).ConfigureAwait(false);
+			var updatedProfile = await client.User.GetProfileAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Hello {updatedProfile.FirstName} from {(string.IsNullOrEmpty(updatedProfile.State) ? "unknown location" : updatedProfile.State)}").ConfigureAwait(false);
 		}
 
