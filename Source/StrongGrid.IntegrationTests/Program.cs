@@ -799,7 +799,7 @@ namespace StrongGrid.IntegrationTests
 			var startDate = new DateTime(lastYear, 1, 1, 0, 0, 0);
 			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
 
-			var spamReports = await client.SpamReports.GetAllAsync(startDate, endDate, 25, 0, cancellationToken).ConfigureAwait(false);
+			var spamReports = await client.SpamReports.GetAllAsync(startDate, endDate, 25, 0, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All spam reports retrieved. There are {spamReports.Length} reports in {lastYear} and {thisYear}").ConfigureAwait(false);
 		}
 
