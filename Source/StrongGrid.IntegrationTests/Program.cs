@@ -212,18 +212,18 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync("\n***** API KEYS *****\n").ConfigureAwait(false);
 
 			// GET ALL THE API KEYS
-			var apiKeys = await client.ApiKeys.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			var apiKeys = await client.ApiKeys.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"There are {apiKeys.Length} Api Keys").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
 			foreach (var oldApiKey in apiKeys.Where(k => k.Name.StartsWith("StrongGrid Integration Testing:")))
 			{
-				await client.ApiKeys.DeleteAsync(oldApiKey.KeyId, cancellationToken).ConfigureAwait(false);
+				await client.ApiKeys.DeleteAsync(oldApiKey.KeyId, null, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"Api Key {oldApiKey.KeyId} deleted").ConfigureAwait(false);
 			}
 
 			// CREATE A NEW API KEY
-			var apiKey = await client.ApiKeys.CreateAsync("StrongGrid Integration Testing: new Api Key", new[] { "alerts.read", "api_keys.read" }, cancellationToken).ConfigureAwait(false);
+			var apiKey = await client.ApiKeys.CreateAsync("StrongGrid Integration Testing: new Api Key", new[] { "alerts.read", "api_keys.read" }, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Unique ID of the new Api Key: {apiKey.KeyId}").ConfigureAwait(false);
 
 			// UPDATE THE API KEY'S NAME
@@ -231,41 +231,41 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"The name of Api Key {updatedApiKey.KeyId} updated").ConfigureAwait(false);
 
 			// UPDATE THE API KEY'S SCOPES
-			updatedApiKey = await client.ApiKeys.UpdateAsync(apiKey.KeyId, updatedApiKey.Name, new[] { "alerts.read", "api_keys.read", "categories.read", "stats.read" }, cancellationToken).ConfigureAwait(false);
+			updatedApiKey = await client.ApiKeys.UpdateAsync(apiKey.KeyId, updatedApiKey.Name, new[] { "alerts.read", "api_keys.read", "categories.read", "stats.read" }, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"The scopes of Api Key {updatedApiKey.KeyId} updated").ConfigureAwait(false);
 
 			// GET ONE API KEY
-			var key = await client.ApiKeys.GetAsync(apiKey.KeyId, cancellationToken).ConfigureAwait(false);
+			var key = await client.ApiKeys.GetAsync(apiKey.KeyId, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"The name of api key {apiKey.KeyId} is: {key.Name}").ConfigureAwait(false);
 
 			// DELETE API KEY
-			await client.ApiKeys.DeleteAsync(apiKey.KeyId, cancellationToken).ConfigureAwait(false);
+			await client.ApiKeys.DeleteAsync(apiKey.KeyId, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Api Key {apiKey.KeyId} deleted").ConfigureAwait(false);
 
 			// GET THE CURRENT USER'S PERMISSIONS
-			var permissions = await client.User.GetPermissionsAsync(cancellationToken).ConfigureAwait(false);
+			var permissions = await client.User.GetPermissionsAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Current user has been granted {permissions.Length} permissions").ConfigureAwait(false);
 
 			// CREATE AND DELETE A BILLING API KEY (if authorized)
 			if (permissions.Any(p => p.StartsWith("billing.", StringComparison.OrdinalIgnoreCase)))
 			{
-				var billingKey = await client.ApiKeys.CreateWithBillingPermissionsAsync("Integration testing billing Key", cancellationToken).ConfigureAwait(false);
+				var billingKey = await client.ApiKeys.CreateWithBillingPermissionsAsync("Integration testing billing Key", null, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync("Created a billing key").ConfigureAwait(false);
 
-				await client.ApiKeys.DeleteAsync(billingKey.KeyId, cancellationToken).ConfigureAwait(false);
+				await client.ApiKeys.DeleteAsync(billingKey.KeyId, null, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync("Deleted the billing key").ConfigureAwait(false);
 			}
 
 			// CREATE AND DELETE AN API KEY WITH ALL PERMISSIONS
-			var superKey = await client.ApiKeys.CreateWithAllPermissionsAsync("Integration testing Super Key", cancellationToken).ConfigureAwait(false);
+			var superKey = await client.ApiKeys.CreateWithAllPermissionsAsync("Integration testing Super Key", null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("Created a key with all permissions").ConfigureAwait(false);
-			await client.ApiKeys.DeleteAsync(superKey.KeyId, cancellationToken).ConfigureAwait(false);
+			await client.ApiKeys.DeleteAsync(superKey.KeyId, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("Deleted the key with all permissions").ConfigureAwait(false);
 
 			// CREATE AND DELETE A READ-ONLY API KEY
-			var readOnlyKey = await client.ApiKeys.CreateWithReadOnlyPermissionsAsync("Integration testing Read-Only Key", cancellationToken).ConfigureAwait(false);
+			var readOnlyKey = await client.ApiKeys.CreateWithReadOnlyPermissionsAsync("Integration testing Read-Only Key", null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("Created a read-only key").ConfigureAwait(false);
-			await client.ApiKeys.DeleteAsync(readOnlyKey.KeyId, cancellationToken).ConfigureAwait(false);
+			await client.ApiKeys.DeleteAsync(readOnlyKey.KeyId, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("Deleted the read-only key").ConfigureAwait(false);
 		}
 
@@ -274,18 +274,18 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync("\n***** UNSUBSCRIBE GROUPS *****\n").ConfigureAwait(false);
 
 			// GET UNSUBSCRIBE GROUPS
-			var groups = await client.UnsubscribeGroups.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			var groups = await client.UnsubscribeGroups.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"There are {groups.Length} unsubscribe groups").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
 			foreach (var oldGroup in groups.Where(g => g.Name.StartsWith("StrongGrid Integration Testing:")))
 			{
-				await client.UnsubscribeGroups.DeleteAsync(oldGroup.Id, cancellationToken).ConfigureAwait(false);
+				await client.UnsubscribeGroups.DeleteAsync(oldGroup.Id, null, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"Suppression group {oldGroup.Id} deleted").ConfigureAwait(false);
 			}
 
 			// CREATE A NEW SUPPRESSION GROUP
-			var newGroup = await client.UnsubscribeGroups.CreateAsync("StrongGrid Integration Testing: new group", "This is a new group for testing purposes", false, cancellationToken).ConfigureAwait(false);
+			var newGroup = await client.UnsubscribeGroups.CreateAsync("StrongGrid Integration Testing: new group", "This is a new group for testing purposes", false, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Unique ID of the new unsubscribe group: {newGroup.Id}").ConfigureAwait(false);
 
 			// UPDATE A SUPPRESSION GROUP
@@ -293,43 +293,43 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"Unsubscribe group {updatedGroup.Id} updated").ConfigureAwait(false);
 
 			// GET A PARTICULAR UNSUBSCRIBE GROUP
-			var group = await client.UnsubscribeGroups.GetAsync(newGroup.Id, cancellationToken).ConfigureAwait(false);
+			var group = await client.UnsubscribeGroups.GetAsync(newGroup.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Retrieved unsubscribe group {group.Id}: {group.Name}").ConfigureAwait(false);
 
 			// ADD A FEW ADDRESSES TO UNSUBSCRIBE GROUP
-			await client.Suppressions.AddAddressToUnsubscribeGroupAsync(group.Id, "test1@example.com", cancellationToken).ConfigureAwait(false);
+			await client.Suppressions.AddAddressToUnsubscribeGroupAsync(group.Id, "test1@example.com", null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Added test1@example.com to unsubscribe group {group.Id}").ConfigureAwait(false);
-			await client.Suppressions.AddAddressToUnsubscribeGroupAsync(group.Id, "test2@example.com", cancellationToken).ConfigureAwait(false);
+			await client.Suppressions.AddAddressToUnsubscribeGroupAsync(group.Id, "test2@example.com", null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Added test2@example.com to unsubscribe group {group.Id}").ConfigureAwait(false);
 
 			// GET THE ADDRESSES IN A GROUP
-			var unsubscribedAddresses = await client.Suppressions.GetUnsubscribedAddressesAsync(group.Id, cancellationToken).ConfigureAwait(false);
+			var unsubscribedAddresses = await client.Suppressions.GetUnsubscribedAddressesAsync(group.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"There are {unsubscribedAddresses.Length} unsubscribed addresses in group {group.Id}").ConfigureAwait(false);
 
 			// CHECK IF AN ADDRESS IS IN THE SUPPRESSION GROUP (should be true)
 			var addressToCheck = "test1@example.com";
-			var isInGroup = await client.Suppressions.IsSuppressedAsync(group.Id, addressToCheck, cancellationToken).ConfigureAwait(false);
+			var isInGroup = await client.Suppressions.IsSuppressedAsync(group.Id, addressToCheck, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"{addressToCheck} {(isInGroup ? "is" : " is not")} in supression group {group.Id}").ConfigureAwait(false);
 
 			// CHECK IF AN ADDRESS IS IN THE SUPPRESSION GROUP (should be false)
 			addressToCheck = "dummy@example.com";
-			isInGroup = await client.Suppressions.IsSuppressedAsync(group.Id, addressToCheck, cancellationToken).ConfigureAwait(false);
+			isInGroup = await client.Suppressions.IsSuppressedAsync(group.Id, addressToCheck, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"{addressToCheck} {(isInGroup ? "is" : "is not")} in supression group {group.Id}").ConfigureAwait(false);
 
 			// CHECK WHICH GROUPS A GIVEN EMAIL ADDRESS IS SUPPRESSED FROM
 			addressToCheck = "test1@example.com";
-			var suppressedFrom = await client.Suppressions.GetUnsubscribedGroupsAsync(addressToCheck, cancellationToken).ConfigureAwait(false);
+			var suppressedFrom = await client.Suppressions.GetUnsubscribedGroupsAsync(addressToCheck, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"{addressToCheck} is in {suppressedFrom.Length} supression groups").ConfigureAwait(false);
 
 			// REMOVE ALL ADDRESSES FROM UNSUBSCRIBE GROUP
 			foreach (var address in unsubscribedAddresses)
 			{
-				await client.Suppressions.RemoveAddressFromSuppressionGroupAsync(group.Id, address, cancellationToken).ConfigureAwait(false);
+				await client.Suppressions.RemoveAddressFromSuppressionGroupAsync(group.Id, address, null, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"{address} removed from unsubscribe group {group.Id}").ConfigureAwait(false);
 			}
 
 			// MAKE SURE THERE ARE NO ADDRESSES IN THE GROUP
-			unsubscribedAddresses = await client.Suppressions.GetUnsubscribedAddressesAsync(group.Id, cancellationToken).ConfigureAwait(false);
+			unsubscribedAddresses = await client.Suppressions.GetUnsubscribedAddressesAsync(group.Id, null, cancellationToken).ConfigureAwait(false);
 			if (unsubscribedAddresses.Length == 0)
 			{
 				await log.WriteLineAsync($"As expected, there are no more addresses in group {group.Id}").ConfigureAwait(false);
@@ -340,7 +340,7 @@ namespace StrongGrid.IntegrationTests
 			}
 
 			// DELETE UNSUBSCRIBE GROUP
-			await client.UnsubscribeGroups.DeleteAsync(newGroup.Id, cancellationToken).ConfigureAwait(false);
+			await client.UnsubscribeGroups.DeleteAsync(newGroup.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Suppression group {newGroup.Id} deleted").ConfigureAwait(false);
 		}
 
@@ -350,23 +350,23 @@ namespace StrongGrid.IntegrationTests
 
 			// ADD EMAILS TO THE GLOBAL SUPPRESSION LIST
 			var emails = new[] { "example@example.com", "example2@example.com" };
-			await client.GlobalSuppressions.AddAsync(emails, cancellationToken).ConfigureAwait(false);
+			await client.GlobalSuppressions.AddAsync(emails, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"The following emails have been added to the global suppression list: {string.Join(", ", emails)}").ConfigureAwait(false);
 
-			var isUnsubscribed0 = await client.GlobalSuppressions.IsUnsubscribedAsync(emails[0], cancellationToken).ConfigureAwait(false);
-			var isUnsubscribed1 = await client.GlobalSuppressions.IsUnsubscribedAsync(emails[1], cancellationToken).ConfigureAwait(false);
+			var isUnsubscribed0 = await client.GlobalSuppressions.IsUnsubscribedAsync(emails[0], null, cancellationToken).ConfigureAwait(false);
+			var isUnsubscribed1 = await client.GlobalSuppressions.IsUnsubscribedAsync(emails[1], null, cancellationToken).ConfigureAwait(false);
 
 			await log.WriteLineAsync($"Is {emails[0]} unsubscribed (should be true): {isUnsubscribed0}").ConfigureAwait(false);
 			await log.WriteLineAsync($"Is {emails[1]} unsubscribed (should be true): {isUnsubscribed1}").ConfigureAwait(false);
 
 			// DELETE EMAILS FROM THE GLOBAL SUPPRESSION GROUP
-			await client.GlobalSuppressions.RemoveAsync(emails[0], cancellationToken).ConfigureAwait(false);
+			await client.GlobalSuppressions.RemoveAsync(emails[0], null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"{emails[0]} has been removed from the global suppression list").ConfigureAwait(false);
-			await client.GlobalSuppressions.RemoveAsync(emails[1], cancellationToken).ConfigureAwait(false);
+			await client.GlobalSuppressions.RemoveAsync(emails[1], null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"{emails[1]} has been removed from the global suppression list").ConfigureAwait(false);
 
-			isUnsubscribed0 = await client.GlobalSuppressions.IsUnsubscribedAsync(emails[0], cancellationToken).ConfigureAwait(false);
-			isUnsubscribed1 = await client.GlobalSuppressions.IsUnsubscribedAsync(emails[1], cancellationToken).ConfigureAwait(false);
+			isUnsubscribed0 = await client.GlobalSuppressions.IsUnsubscribedAsync(emails[0], null, cancellationToken).ConfigureAwait(false);
+			isUnsubscribed1 = await client.GlobalSuppressions.IsUnsubscribedAsync(emails[1], null, cancellationToken).ConfigureAwait(false);
 
 			await log.WriteLineAsync($"Is {emails[0]} unsubscribed (should be false): {isUnsubscribed0}").ConfigureAwait(false);
 			await log.WriteLineAsync($"Is {emails[1]} unsubscribed (should be false): {isUnsubscribed1}").ConfigureAwait(false);
@@ -387,42 +387,42 @@ namespace StrongGrid.IntegrationTests
 			var startDate = new DateTime(now.Year, 1, 4);
 
 			//----- Global Stats -----
-			var globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.None, cancellationToken).ConfigureAwait(false);
+			var globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.None, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of GLOBAL stats in {now.Year}: {globalStats.Length}").ConfigureAwait(false);
 
-			globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Day, cancellationToken).ConfigureAwait(false);
+			globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Day, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of GLOBAL stats in {now.Year} and aggregated by day: {globalStats.Length}").ConfigureAwait(false);
 
-			globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Week, cancellationToken).ConfigureAwait(false);
+			globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Week, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of GLOBAL stats in {now.Year} and aggregated by week: {globalStats.Length}").ConfigureAwait(false);
 
-			globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Month, cancellationToken).ConfigureAwait(false);
+			globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Month, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of GLOBAL stats in {now.Year} and aggregated by month: {globalStats.Length}").ConfigureAwait(false);
 
 			//----- Global Stats -----
-			var countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.None, cancellationToken).ConfigureAwait(false);
+			var countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.None, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of COUNTRY stats in {now.Year}: {countryStats.Length}").ConfigureAwait(false);
 
-			countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Day, cancellationToken).ConfigureAwait(false);
+			countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Day, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of COUNTRY stats in {now.Year} and aggregated by day: {countryStats.Length}").ConfigureAwait(false);
 
-			countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Week, cancellationToken).ConfigureAwait(false);
+			countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Week, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of COUNTRY stats in {now.Year} and aggregated by week: {countryStats.Length}").ConfigureAwait(false);
 
-			countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Month, cancellationToken).ConfigureAwait(false);
+			countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Month, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of COUNTRY stats in {now.Year} and aggregated by month: {countryStats.Length}").ConfigureAwait(false);
 
 			//----- Browser Stats -----
-			var browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.None, cancellationToken).ConfigureAwait(false);
+			var browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.None, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of BROWSER stats in {now.Year}: {browserStats.Length}").ConfigureAwait(false);
 
-			browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Day, cancellationToken).ConfigureAwait(false);
+			browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Day, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of BROWSER stats in {now.Year} and aggregated by day: {browserStats.Length}").ConfigureAwait(false);
 
-			browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Week, cancellationToken).ConfigureAwait(false);
+			browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Week, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of BROWSER stats in {now.Year} and aggregated by week: {browserStats.Length}").ConfigureAwait(false);
 
-			browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Month, cancellationToken).ConfigureAwait(false);
+			browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Month, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of BROWSER stats in {now.Year} and aggregated by month: {browserStats.Length}").ConfigureAwait(false);
 		}
 
@@ -431,38 +431,38 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync("\n***** TEMPLATES *****\n").ConfigureAwait(false);
 
 			// GET TEMPLATES
-			var templates = await client.Templates.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			var templates = await client.Templates.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All templates retrieved. There are {templates.Length} templates").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
 			foreach (var oldTemplate in templates.Where(t => t.Name.StartsWith("StrongGrid Integration Testing:")))
 			{
-				await client.Templates.DeleteAsync(oldTemplate.Id, cancellationToken).ConfigureAwait(false);
+				await client.Templates.DeleteAsync(oldTemplate.Id, null, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"Template {oldTemplate.Id} deleted").ConfigureAwait(false);
 			}
 
-			var template = await client.Templates.CreateAsync("StrongGrid Integration Testing: My template", cancellationToken).ConfigureAwait(false);
+			var template = await client.Templates.CreateAsync("StrongGrid Integration Testing: My template", null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Template '{template.Name}' created. Id: {template.Id}");
 
-			await client.Templates.UpdateAsync(template.Id, "StrongGrid Integration Testing: updated name", cancellationToken).ConfigureAwait(false);
+			await client.Templates.UpdateAsync(template.Id, "StrongGrid Integration Testing: updated name", null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Template '{template.Id}' updated").ConfigureAwait(false);
 
-			template = await client.Templates.GetAsync(template.Id, cancellationToken).ConfigureAwait(false);
+			template = await client.Templates.GetAsync(template.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Template '{template.Id}' retrieved.").ConfigureAwait(false);
 
-			var firstVersion = await client.Templates.CreateVersionAsync(template.Id, "StrongGrid Integration Testing: version 1", "My first Subject <%subject%>", "<html<body>hello world<br/><%body%></body></html>", "Hello world <%body%>", true, cancellationToken).ConfigureAwait(false);
+			var firstVersion = await client.Templates.CreateVersionAsync(template.Id, "StrongGrid Integration Testing: version 1", "My first Subject <%subject%>", "<html<body>hello world<br/><%body%></body></html>", "Hello world <%body%>", true, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"First version created. Id: {firstVersion.Id}").ConfigureAwait(false);
 
-			var secondVersion = await client.Templates.CreateVersionAsync(template.Id, "StrongGrid Integration Testing: version 2", "My second Subject <%subject%>", "<html<body>Qwerty<br/><%body%></body></html>", "Qwerty <%body%>", true, cancellationToken).ConfigureAwait(false);
+			var secondVersion = await client.Templates.CreateVersionAsync(template.Id, "StrongGrid Integration Testing: version 2", "My second Subject <%subject%>", "<html<body>Qwerty<br/><%body%></body></html>", "Qwerty <%body%>", true, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Second version created. Id: {secondVersion.Id}").ConfigureAwait(false);
 
-			await client.Templates.DeleteVersionAsync(template.Id, firstVersion.Id, cancellationToken).ConfigureAwait(false);
+			await client.Templates.DeleteVersionAsync(template.Id, firstVersion.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Version {firstVersion.Id} deleted").ConfigureAwait(false);
 
-			await client.Templates.DeleteVersionAsync(template.Id, secondVersion.Id, cancellationToken).ConfigureAwait(false);
+			await client.Templates.DeleteVersionAsync(template.Id, secondVersion.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Version {secondVersion.Id} deleted").ConfigureAwait(false);
 
-			await client.Templates.DeleteAsync(template.Id, cancellationToken).ConfigureAwait(false);
+			await client.Templates.DeleteAsync(template.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Template {template.Id} deleted").ConfigureAwait(false);
 		}
 
@@ -471,11 +471,11 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync("\n***** USER *****\n").ConfigureAwait(false);
 
 			// RETRIEVE YOUR ACCOUNT INFORMATION
-			var account = await client.User.GetAccountAsync(cancellationToken).ConfigureAwait(false);
+			var account = await client.User.GetAccountAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Account type: {account.Type}; Reputation: {account.Reputation}").ConfigureAwait(false);
 
 			// RETRIEVE YOUR USER PROFILE
-			var profile = await client.User.GetProfileAsync(cancellationToken).ConfigureAwait(false);
+			var profile = await client.User.GetProfileAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Hello {profile.FirstName} from {(string.IsNullOrEmpty(profile.State) ? "unknown location" : profile.State)}").ConfigureAwait(false);
 
 			// UPDATE YOUR USER PROFILE
@@ -484,7 +484,7 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync("The 'State' property on your profile has been updated").ConfigureAwait(false);
 
 			// VERIFY THAT YOUR PROFILE HAS BEEN UPDATED
-			var updatedProfile = await client.User.GetProfileAsync(cancellationToken).ConfigureAwait(false);
+			var updatedProfile = await client.User.GetProfileAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Hello {updatedProfile.FirstName} from {(string.IsNullOrEmpty(updatedProfile.State) ? "unknown location" : updatedProfile.State)}").ConfigureAwait(false);
 		}
 
@@ -493,26 +493,26 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync("\n***** CONTACTS AND CUSTOM FIELDS *****\n").ConfigureAwait(false);
 
 			// GET ALL FIELDS
-			var fields = await client.CustomFields.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			var fields = await client.CustomFields.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All custom fields retrieved. There are {fields.Length} fields").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
 			foreach (var oldFields in fields.Where(f => f.Name.StartsWith("stronggrid_")))
 			{
-				await client.CustomFields.DeleteAsync(oldFields.Id, cancellationToken).ConfigureAwait(false);
+				await client.CustomFields.DeleteAsync(oldFields.Id, null, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"Field {oldFields.Id} deleted").ConfigureAwait(false);
 			}
 
-			var nicknameField = await client.CustomFields.CreateAsync("stronggrid_nickname", FieldType.Text, cancellationToken).ConfigureAwait(false);
+			var nicknameField = await client.CustomFields.CreateAsync("stronggrid_nickname", FieldType.Text, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Field '{nicknameField.Name}' Id: {nicknameField.Id}").ConfigureAwait(false);
 
-			var ageField = await client.CustomFields.CreateAsync("stronggrid_age", FieldType.Number, cancellationToken).ConfigureAwait(false);
+			var ageField = await client.CustomFields.CreateAsync("stronggrid_age", FieldType.Number, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Field '{ageField.Name}' Id: {ageField.Id}").ConfigureAwait(false);
 
-			var customerSinceField = await client.CustomFields.CreateAsync("stronggrid_customer_since", FieldType.Date, cancellationToken).ConfigureAwait(false);
+			var customerSinceField = await client.CustomFields.CreateAsync("stronggrid_customer_since", FieldType.Date, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Field '{customerSinceField.Name}' Id: {customerSinceField.Id}").ConfigureAwait(false);
 
-			fields = await client.CustomFields.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			fields = await client.CustomFields.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All custom fields retrieved. There are {fields.Length} fields").ConfigureAwait(false);
 
 			var email = "111@example.com";
@@ -524,14 +524,14 @@ namespace StrongGrid.IntegrationTests
 				new Field<long?>("stronggrid_age", 42),
 				new Field<DateTime>("stronggrid_customer_since", new DateTime(2000, 12, 1))
 			};
-			var contactId = await client.Contacts.CreateAsync(email, firstName, lastName, customFields, cancellationToken).ConfigureAwait(false);
+			var contactId = await client.Contacts.CreateAsync(email, firstName, lastName, customFields, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Contact {contactId} created: {firstName} {lastName}").ConfigureAwait(false);
 
 			var newLastName = "Smith";
 			await client.Contacts.UpdateAsync(email, null, newLastName, cancellationToken: cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Contact {contactId} updated: {firstName} {newLastName}").ConfigureAwait(false);
 
-			var contact = await client.Contacts.GetAsync(contactId, cancellationToken).ConfigureAwait(false);
+			var contact = await client.Contacts.GetAsync(contactId, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Retrieved contact {contactId}").ConfigureAwait(false);
 			await log.WriteLineAsync($"\tEmail: {contact.Email}").ConfigureAwait(false);
 			await log.WriteLineAsync($"\tFirst Name: {contact.FirstName}").ConfigureAwait(false);
@@ -555,7 +555,7 @@ namespace StrongGrid.IntegrationTests
 			}
 
 			var recordsPerPage = 5;
-			var contacts = await client.Contacts.GetAsync(recordsPerPage, 1, cancellationToken).ConfigureAwait(false);
+			var contacts = await client.Contacts.GetAsync(recordsPerPage, 1, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync(contacts.Length < recordsPerPage ? $"Found {contacts.Length} contacts" : $"Retrieved the first {recordsPerPage} contacts").ConfigureAwait(false);
 			foreach (var record in contacts)
 			{
@@ -576,28 +576,28 @@ namespace StrongGrid.IntegrationTests
 				Operator = ConditionOperator.Equal,
 				LogicalOperator = LogicalOperator.And
 			};
-			var searchResult = await client.Contacts.SearchAsync(new[] { firstNameCondition, LastNameCondition }, null, cancellationToken).ConfigureAwait(false);
+			var searchResult = await client.Contacts.SearchAsync(new[] { firstNameCondition, LastNameCondition }, null, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Found {searchResult.Length} contacts named Robert Smith").ConfigureAwait(false);
 
-			var billableCount = await client.Contacts.GetBillableCountAsync(cancellationToken).ConfigureAwait(false);
-			var totalCount = await client.Contacts.GetTotalCountAsync(cancellationToken).ConfigureAwait(false);
+			var billableCount = await client.Contacts.GetBillableCountAsync(null, cancellationToken).ConfigureAwait(false);
+			var totalCount = await client.Contacts.GetTotalCountAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("Record counts").ConfigureAwait(false);
 			await log.WriteLineAsync($"\tBillable: {billableCount}").ConfigureAwait(false);
 			await log.WriteLineAsync($"\tTotal: {totalCount}").ConfigureAwait(false);
 
-			await client.Contacts.DeleteAsync(contactId, cancellationToken).ConfigureAwait(false);
+			await client.Contacts.DeleteAsync(contactId, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Contact {contactId} deleted: {firstName} {newLastName}").ConfigureAwait(false);
 
-			await client.CustomFields.DeleteAsync(nicknameField.Id, cancellationToken).ConfigureAwait(false);
+			await client.CustomFields.DeleteAsync(nicknameField.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Field {nicknameField.Id} deleted").ConfigureAwait(false);
 
-			await client.CustomFields.DeleteAsync(ageField.Id, cancellationToken).ConfigureAwait(false);
+			await client.CustomFields.DeleteAsync(ageField.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Field {ageField.Id} deleted").ConfigureAwait(false);
 
-			await client.CustomFields.DeleteAsync(customerSinceField.Id, cancellationToken).ConfigureAwait(false);
+			await client.CustomFields.DeleteAsync(customerSinceField.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Field {customerSinceField.Id} deleted").ConfigureAwait(false);
 
-			fields = await client.CustomFields.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			fields = await client.CustomFields.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All custom fields retrieved. There are {fields.Length} fields").ConfigureAwait(false);
 		}
 
@@ -605,7 +605,7 @@ namespace StrongGrid.IntegrationTests
 		{
 			await log.WriteLineAsync("\n***** CATEGORIES *****\n").ConfigureAwait(false);
 
-			var categories = await client.Categories.GetAsync(null, 50, 0, cancellationToken).ConfigureAwait(false);
+			var categories = await client.Categories.GetAsync(null, 50, 0, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of categories: {categories.Length}").ConfigureAwait(false);
 			await log.WriteLineAsync($"Categories: {string.Join(", ", categories)}").ConfigureAwait(false);
 		}
@@ -615,51 +615,51 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync("\n***** LISTS AND SEGMENTS *****\n").ConfigureAwait(false);
 
 			// GET LISTS
-			var lists = await client.Lists.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			var lists = await client.Lists.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All lists retrieved. There are {lists.Length} lists").ConfigureAwait(false);
 
 			// GET SEGMENTS
-			var segments = await client.Segments.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			var segments = await client.Segments.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All segements retrieved. There are {segments.Length} segments").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
 			foreach (var oldList in lists.Where(l => l.Name.StartsWith("StrongGrid Integration Testing:")))
 			{
-				await client.Lists.DeleteAsync(oldList.Id, cancellationToken).ConfigureAwait(false);
+				await client.Lists.DeleteAsync(oldList.Id, null, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"List {oldList.Id} deleted").ConfigureAwait(false);
 			}
 
 			foreach (var oldSegment in segments.Where(s => s.Name.StartsWith("StrongGrid Integration Testing:")))
 			{
-				await client.Segments.DeleteAsync(oldSegment.Id, false, cancellationToken).ConfigureAwait(false);
+				await client.Segments.DeleteAsync(oldSegment.Id, false, null, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"Segment {oldSegment.Id} deleted").ConfigureAwait(false);
 			}
 
-			var firstList = await client.Lists.CreateAsync("StrongGrid Integration Testing: list #1", cancellationToken).ConfigureAwait(false);
+			var firstList = await client.Lists.CreateAsync("StrongGrid Integration Testing: list #1", null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"List '{firstList.Name}' created. Id: {firstList.Id}").ConfigureAwait(false);
 
-			var secondList = await client.Lists.CreateAsync("StrongGrid Integration Testing: list #2", cancellationToken).ConfigureAwait(false);
+			var secondList = await client.Lists.CreateAsync("StrongGrid Integration Testing: list #2", null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"List '{secondList.Name}' created. Id: {secondList.Id}").ConfigureAwait(false);
 
-			await client.Lists.UpdateAsync(firstList.Id, "StrongGrid Integration Testing: new name", cancellationToken).ConfigureAwait(false);
+			await client.Lists.UpdateAsync(firstList.Id, "StrongGrid Integration Testing: new name", null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"List '{firstList.Id}' updated").ConfigureAwait(false);
 
 			var hotmailCondition = new SearchCondition { Field = "email", Operator = ConditionOperator.Contains, Value = "hotmail.com", LogicalOperator = LogicalOperator.None };
-			var segment = await client.Segments.CreateAsync("StrongGrid Integration Testing: Recipients @ Hotmail", firstList.Id, new[] { hotmailCondition }, cancellationToken).ConfigureAwait(false);
+			var segment = await client.Segments.CreateAsync("StrongGrid Integration Testing: Recipients @ Hotmail", firstList.Id, new[] { hotmailCondition }, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Segment '{segment.Name}' created. Id: {segment.Id}").ConfigureAwait(false);
 
 			var millerLastNameCondition = new SearchCondition { Field = "last_name", Operator = ConditionOperator.Equal, Value = "Miller", LogicalOperator = LogicalOperator.None };
 			var clickedRecentlyCondition = new SearchCondition { Field = "last_clicked", Operator = ConditionOperator.GreatherThan, Value = DateTime.UtcNow.AddDays(-30).ToString("MM/dd/yyyy"), LogicalOperator = LogicalOperator.And };
-			segment = await client.Segments.UpdateAsync(segment.Id, "StrongGrid Integration Testing: Last Name is Miller and clicked recently", null, new[] { millerLastNameCondition, clickedRecentlyCondition }, cancellationToken).ConfigureAwait(false);
+			segment = await client.Segments.UpdateAsync(segment.Id, "StrongGrid Integration Testing: Last Name is Miller and clicked recently", null, new[] { millerLastNameCondition, clickedRecentlyCondition }, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Segment {segment.Id} updated. The new name is: '{segment.Name}'").ConfigureAwait(false);
 
-			await client.Segments.DeleteAsync(segment.Id, false, cancellationToken).ConfigureAwait(false);
+			await client.Segments.DeleteAsync(segment.Id, false, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Segment {segment.Id} deleted").ConfigureAwait(false);
 
-			await client.Lists.DeleteAsync(firstList.Id, cancellationToken).ConfigureAwait(false);
+			await client.Lists.DeleteAsync(firstList.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"List {firstList.Id} deleted").ConfigureAwait(false);
 
-			await client.Lists.DeleteAsync(secondList.Id, cancellationToken).ConfigureAwait(false);
+			await client.Lists.DeleteAsync(secondList.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"List {secondList.Id} deleted").ConfigureAwait(false);
 		}
 
@@ -680,13 +680,13 @@ namespace StrongGrid.IntegrationTests
 				await log.WriteLineAsync($"Campaign {oldCampaign.Id} deleted").ConfigureAwait(false);
 			}
 
-			var senderIdentities = await client.SenderIdentities.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			var senderIdentities = await client.SenderIdentities.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All sender identities retrieved. There are {senderIdentities.Length} identities").ConfigureAwait(false);
 
 			var sender = senderIdentities.FirstOrDefault(s => s.NickName == "Integration Testing identity");
 			if (sender == null)
 			{
-				sender = await client.SenderIdentities.CreateAsync("Integration Testing identity", new MailAddress(YOUR_EMAIL, "John Doe"), new MailAddress(YOUR_EMAIL, "John Doe"), "123 Main Street", null, "Small Town", "ZZ", "12345", "USA", cancellationToken).ConfigureAwait(false);
+				sender = await client.SenderIdentities.CreateAsync("Integration Testing identity", new MailAddress(YOUR_EMAIL, "John Doe"), new MailAddress(YOUR_EMAIL, "John Doe"), "123 Main Street", null, "Small Town", "ZZ", "12345", "USA", null, cancellationToken).ConfigureAwait(false);
 				throw new Exception($"A new sender identity was created and a verification email was sent to {sender.From.Email}. You must complete the verification process before proceeding.");
 			}
 			else if (!sender.Verification.IsCompleted)
@@ -694,23 +694,23 @@ namespace StrongGrid.IntegrationTests
 				throw new Exception($"A verification email was previously sent to {sender.From.Email} but the process hasn't been completed yet (hint: there is a link in the email that you must click on).");
 			}
 
-			var lists = await client.Lists.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			var lists = await client.Lists.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All lists retrieved. There are {lists.Length} lists").ConfigureAwait(false);
 
 			var list = lists.FirstOrDefault(l => l.Name == "Integration testing list");
 			if (list == null)
 			{
-				list = await client.Lists.CreateAsync("Integration testing list", cancellationToken).ConfigureAwait(false);
+				list = await client.Lists.CreateAsync("Integration testing list", null, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync("List created").ConfigureAwait(false);
 			}
 
-			var unsubscribeGroups = await client.UnsubscribeGroups.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			var unsubscribeGroups = await client.UnsubscribeGroups.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All unsubscribe groups retrieved. There are {unsubscribeGroups.Length} groups").ConfigureAwait(false);
 
 			var unsubscribeGroup = unsubscribeGroups.FirstOrDefault(l => l.Name == "Integration testing group");
 			if (unsubscribeGroup == null)
 			{
-				unsubscribeGroup = await client.UnsubscribeGroups.CreateAsync("Integration testing group", "For testing purposes", false, cancellationToken).ConfigureAwait(false);
+				unsubscribeGroup = await client.UnsubscribeGroups.CreateAsync("Integration testing group", "For testing purposes", false, null, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync("Unsubscribe group created").ConfigureAwait(false);
 			}
 
@@ -726,7 +726,7 @@ namespace StrongGrid.IntegrationTests
 			await client.Campaigns.SendTestAsync(campaign.Id, new[] { YOUR_EMAIL }, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("Test sent").ConfigureAwait(false);
 
-			await client.Lists.DeleteAsync(list.Id, cancellationToken).ConfigureAwait(false);
+			await client.Lists.DeleteAsync(list.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("List deleted").ConfigureAwait(false);
 
 			await client.Campaigns.DeleteAsync(campaign.Id, cancellationToken).ConfigureAwait(false);
@@ -740,13 +740,13 @@ namespace StrongGrid.IntegrationTests
 		{
 			await log.WriteLineAsync("\n***** SETTINGS *****\n").ConfigureAwait(false);
 
-			var partnerSettings = await client.Settings.GetAllPartnerSettingsAsync(25, 0, cancellationToken).ConfigureAwait(false);
+			var partnerSettings = await client.Settings.GetAllPartnerSettingsAsync(25, 0, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All partner settings retrieved. There are {partnerSettings.Length} settings").ConfigureAwait(false);
 
-			var trackingSettings = await client.Settings.GetAllTrackingSettingsAsync(25, 0, cancellationToken).ConfigureAwait(false);
+			var trackingSettings = await client.Settings.GetAllTrackingSettingsAsync(25, 0, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All partner tracking retrieved. There are {trackingSettings.Length} settings").ConfigureAwait(false);
 
-			var mailSettings = await client.Settings.GetAllMailSettingsAsync(25, 0, cancellationToken).ConfigureAwait(false);
+			var mailSettings = await client.Settings.GetAllMailSettingsAsync(25, 0, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All mail tracking retrieved. There are {mailSettings.Length} settings").ConfigureAwait(false);
 		}
 
@@ -754,13 +754,13 @@ namespace StrongGrid.IntegrationTests
 		{
 			await log.WriteLineAsync("\n***** ALERTS *****\n").ConfigureAwait(false);
 
-			var newAlert = await client.Alerts.CreateAsync(AlertType.UsageLimit, "test@example.com", Frequency.Weekly, 75, cancellationToken).ConfigureAwait(false);
+			var newAlert = await client.Alerts.CreateAsync(AlertType.UsageLimit, "test@example.com", Frequency.Weekly, 75, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"New alert created: {newAlert.Id}").ConfigureAwait(false);
 
-			var allAlerts = await client.Alerts.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			var allAlerts = await client.Alerts.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All alerts retrieved. There are {allAlerts.Length} alerts").ConfigureAwait(false);
 
-			await client.Alerts.DeleteAsync(newAlert.Id, cancellationToken).ConfigureAwait(false);
+			await client.Alerts.DeleteAsync(newAlert.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Alert {newAlert.Id} deleted").ConfigureAwait(false);
 		}
 
@@ -773,7 +773,7 @@ namespace StrongGrid.IntegrationTests
 			var startDate = new DateTime(lastYear, 1, 1, 0, 0, 0);
 			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
 
-			var blocks = await client.Blocks.GetAllAsync(startDate, endDate, 25, 0, cancellationToken).ConfigureAwait(false);
+			var blocks = await client.Blocks.GetAllAsync(startDate, endDate, 25, 0, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All blocks retrieved. There are {blocks.Length} blocks in {lastYear} and {thisYear}").ConfigureAwait(false);
 		}
 
@@ -786,7 +786,7 @@ namespace StrongGrid.IntegrationTests
 			var startDate = new DateTime(lastYear, 1, 1, 0, 0, 0);
 			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
 
-			var bounces = await client.Bounces.GetAllAsync(startDate, endDate, cancellationToken).ConfigureAwait(false);
+			var bounces = await client.Bounces.GetAllAsync(startDate, endDate, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All bounces retrieved. There are {bounces.Length} bounces in {lastYear} and {thisYear}").ConfigureAwait(false);
 		}
 
@@ -799,7 +799,7 @@ namespace StrongGrid.IntegrationTests
 			var startDate = new DateTime(lastYear, 1, 1, 0, 0, 0);
 			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
 
-			var spamReports = await client.SpamReports.GetAllAsync(startDate, endDate, 25, 0, cancellationToken).ConfigureAwait(false);
+			var spamReports = await client.SpamReports.GetAllAsync(startDate, endDate, 25, 0, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All spam reports retrieved. There are {spamReports.Length} reports in {lastYear} and {thisYear}").ConfigureAwait(false);
 		}
 
@@ -812,7 +812,7 @@ namespace StrongGrid.IntegrationTests
 			var startDate = new DateTime(lastYear, 1, 1, 0, 0, 0);
 			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
 
-			var invalidEmails = await client.InvalidEmails.GetAllAsync(startDate, endDate, 25, 0, cancellationToken).ConfigureAwait(false);
+			var invalidEmails = await client.InvalidEmails.GetAllAsync(startDate, endDate, 25, 0, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All invalid emails retrieved. There are {invalidEmails.Length} invalid email addresses in {lastYear} and {thisYear}").ConfigureAwait(false);
 		}
 
@@ -846,45 +846,45 @@ namespace StrongGrid.IntegrationTests
 
 			await log.WriteLineAsync("\n***** WHITELABEL DOMAINS *****\n").ConfigureAwait(false);
 
-			var domains = await client.Whitelabel.GetAllDomainsAsync(50, 0, false, null, null, cancellationToken).ConfigureAwait(false);
+			var domains = await client.Whitelabel.GetAllDomainsAsync(50, 0, false, null, null, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All whitelabel domains retrieved. There are {domains.Length} domains").ConfigureAwait(false);
 
 			var domain = domains.FirstOrDefault(d => d.Domain == "example.com");
 			if (domain == null)
 			{
-				domain = await client.Whitelabel.CreateDomainAsync("example.com", "email", false, false, false, cancellationToken).ConfigureAwait(false);
+				domain = await client.Whitelabel.CreateDomainAsync("example.com", "email", false, false, false, null, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"Whitelabel domain created. Id: {domain.Id}").ConfigureAwait(false);
 			}
 
-			var domainValidation = await client.Whitelabel.ValidateDomainAsync(domain.Id, cancellationToken).ConfigureAwait(false);
+			var domainValidation = await client.Whitelabel.ValidateDomainAsync(domain.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Whitelabel domain validation: {domainValidation.IsValid}").ConfigureAwait(false);
 
-			await client.Whitelabel.DeleteDomainAsync(domain.Id, cancellationToken).ConfigureAwait(false);
+			await client.Whitelabel.DeleteDomainAsync(domain.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Whitelabel domain {domain.Id} deleted.").ConfigureAwait(false);
 
 
 			await log.WriteLineAsync("\n***** WHITELABEL IPS *****").ConfigureAwait(false);
 
-			var ipAdresses = await client.Whitelabel.GetAllDomainsAsync(50, 0, false, null, null, cancellationToken).ConfigureAwait(false);
+			var ipAdresses = await client.Whitelabel.GetAllDomainsAsync(50, 0, false, null, null, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All whitelabel IP addreses retrieved. There are {ipAdresses.Length} adresses").ConfigureAwait(false);
 
 
 			await log.WriteLineAsync("\n***** WHITELABEL LINKS *****").ConfigureAwait(false);
 
-			var links = await client.Whitelabel.GetAllLinksAsync(null, 50, 0, cancellationToken).ConfigureAwait(false);
+			var links = await client.Whitelabel.GetAllLinksAsync(null, 50, 0, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All whitelabel links retrieved. There are {links.Length} links").ConfigureAwait(false);
 
 			var link = links.FirstOrDefault(d => d.Domain == "example.com");
 			if (link == null)
 			{
-				link = await client.Whitelabel.CreateLinkAsync("example.com", "email", true, cancellationToken).ConfigureAwait(false);
+				link = await client.Whitelabel.CreateLinkAsync("example.com", "email", true, null, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"Whitelabel link created. Id: {link.Id}").ConfigureAwait(false);
 			}
 
-			var linkValidation = await client.Whitelabel.ValidateLinkAsync(link.Id, cancellationToken).ConfigureAwait(false);
+			var linkValidation = await client.Whitelabel.ValidateLinkAsync(link.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Whitelabel validation: {linkValidation.IsValid}").ConfigureAwait(false);
 
-			await client.Whitelabel.DeleteLinkAsync(link.Id, cancellationToken).ConfigureAwait(false);
+			await client.Whitelabel.DeleteLinkAsync(link.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Whitelabel link {link.Id} deleted.").ConfigureAwait(false);
 		}
 
@@ -897,7 +897,7 @@ namespace StrongGrid.IntegrationTests
 			var startDate = new DateTime(lastYear, 1, 1, 0, 0, 0);
 			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
 
-			var inboundParseWebhookUsage = await client.WebhookStats.GetInboundParseUsageAsync(startDate, endDate, AggregateBy.Month, cancellationToken).ConfigureAwait(false);
+			var inboundParseWebhookUsage = await client.WebhookStats.GetInboundParseUsageAsync(startDate, endDate, AggregateBy.Month, null, cancellationToken).ConfigureAwait(false);
 			foreach (var monthUsage in inboundParseWebhookUsage)
 			{
 				var name = monthUsage.Date.ToString("yyyy MMM");
@@ -910,7 +910,7 @@ namespace StrongGrid.IntegrationTests
 		{
 			await log.WriteLineAsync("\n***** ACCESS MANAGEMENT *****\n").ConfigureAwait(false);
 
-			var accessHistory = await client.AccessManagement.GetAccessHistoryAsync(20, cancellationToken).ConfigureAwait(false);
+			var accessHistory = await client.AccessManagement.GetAccessHistoryAsync(20, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("Access history:").ConfigureAwait(false);
 			foreach (var access in accessHistory)
 			{
@@ -919,7 +919,7 @@ namespace StrongGrid.IntegrationTests
 				await log.WriteLineAsync($"\t{accessDate,-20} {accessVerdict,-16} {access.IpAddress,-20} {access.Location}").ConfigureAwait(false);
 			}
 
-			var whitelistedIpAddresses = await client.AccessManagement.GetWhitelistedIpAddressesAsync(cancellationToken).ConfigureAwait(false);
+			var whitelistedIpAddresses = await client.AccessManagement.GetWhitelistedIpAddressesAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("Currently whitelisted addresses:" + (whitelistedIpAddresses.Length == 0 ? " NONE" : "")).ConfigureAwait(false);
 			foreach (var address in whitelistedIpAddresses)
 			{
@@ -960,13 +960,13 @@ namespace StrongGrid.IntegrationTests
 
 				if (keyPressed == 'y' || keyPressed == 'Y')
 				{
-					var newWhitelistedIpAddress = await client.AccessManagement.AddIpAddressToWhitelistAsync(yourPublicIpAddress, cancellationToken).ConfigureAwait(false);
+					var newWhitelistedIpAddress = await client.AccessManagement.AddIpAddressToWhitelistAsync(yourPublicIpAddress, null, cancellationToken).ConfigureAwait(false);
 					await log.WriteLineAsync($"New whitelisted IP address: {yourPublicIpAddress}; Id: {newWhitelistedIpAddress.Id}").ConfigureAwait(false);
 
-					var whitelistedIpAddress = await client.AccessManagement.GetWhitelistedIpAddressAsync(newWhitelistedIpAddress.Id, cancellationToken).ConfigureAwait(false);
+					var whitelistedIpAddress = await client.AccessManagement.GetWhitelistedIpAddressAsync(newWhitelistedIpAddress.Id, null, cancellationToken).ConfigureAwait(false);
 					await log.WriteLineAsync($"{whitelistedIpAddress.Id}\t{whitelistedIpAddress.IpAddress}\t{whitelistedIpAddress.CreatedOn.ToString("yyyy-MM-dd hh:mm:ss")}").ConfigureAwait(false);
 
-					await client.AccessManagement.RemoveIpAddressFromWhitelistAsync(newWhitelistedIpAddress.Id, cancellationToken).ConfigureAwait(false);
+					await client.AccessManagement.RemoveIpAddressFromWhitelistAsync(newWhitelistedIpAddress.Id, null, cancellationToken).ConfigureAwait(false);
 					await log.WriteLineAsync($"IP address {whitelistedIpAddress.Id} removed from whitelist").ConfigureAwait(false);
 				}
 			}
@@ -1083,11 +1083,11 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync("\n***** WEBHOOK SETTINGS *****\n").ConfigureAwait(false);
 
 			// GET THE EVENT SETTINGS
-			var eventWebhookSettings = await client.WebhookSettings.GetEventWebhookSettingsAsync(cancellationToken).ConfigureAwait(false);
+			var eventWebhookSettings = await client.WebhookSettings.GetEventWebhookSettingsAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("The event webhooks settings have been retrieved.").ConfigureAwait(false);
 
 			// GET THE INBOUND PARSE SETTINGS
-			var inboundParseWebhookSettings = await client.WebhookSettings.GetAllInboundParseWebhookSettings(cancellationToken).ConfigureAwait(false);
+			var inboundParseWebhookSettings = await client.WebhookSettings.GetAllInboundParseWebhookSettings(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("The inbound parse webhooks settings have been retrieved.").ConfigureAwait(false);
 		}
 

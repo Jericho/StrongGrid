@@ -120,7 +120,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderIdentities = new SenderIdentities(client);
 
 			// Act
-			var result = await senderIdentities.CreateAsync(nickname, from, replyTo, address, address2, city, state, zip, country, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderIdentities.CreateAsync(nickname, from, replyTo, address, address2, city, state, zip, country, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -140,7 +140,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderIdentities = new SenderIdentities(client);
 
 			// Act
-			var result = await senderIdentities.GetAllAsync(CancellationToken.None).ConfigureAwait(false);
+			var result = await senderIdentities.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -164,7 +164,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderIdentities = new SenderIdentities(client);
 
 			// Act
-			var result = await senderIdentities.UpdateAsync(identityId, nickname, null, null, null, null, null, null, null, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderIdentities.UpdateAsync(identityId, nickname, null, null, null, null, null, null, null, null, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -185,7 +185,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderIdentities = new SenderIdentities(client);
 
 			// Act
-			await senderIdentities.DeleteAsync(identityId, CancellationToken.None).ConfigureAwait(false);
+			await senderIdentities.DeleteAsync(identityId, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -205,7 +205,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderIdentities = new SenderIdentities(client);
 
 			// Act
-			await senderIdentities.ResendVerification(identityId, CancellationToken.None).ConfigureAwait(false);
+			await senderIdentities.ResendVerification(identityId, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -225,7 +225,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderIdentities = new SenderIdentities(client);
 
 			// Act
-			var result = await senderIdentities.GetAsync(identityId, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderIdentities.GetAsync(identityId, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

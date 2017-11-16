@@ -62,7 +62,7 @@ namespace StrongGrid.UnitTests.Resources
 			var lists = new Lists(client);
 
 			// Act
-			var result = await lists.CreateAsync(name, CancellationToken.None).ConfigureAwait(false);
+			var result = await lists.CreateAsync(name, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -81,7 +81,7 @@ namespace StrongGrid.UnitTests.Resources
 			var lists = new Lists(client);
 
 			// Act
-			var result = await lists.GetAllAsync(CancellationToken.None).ConfigureAwait(false);
+			var result = await lists.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -103,7 +103,7 @@ namespace StrongGrid.UnitTests.Resources
 			var lists = new Lists(client);
 
 			// Act
-			await lists.DeleteAsync(listId, CancellationToken.None).ConfigureAwait(false);
+			await lists.DeleteAsync(listId, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -123,7 +123,7 @@ namespace StrongGrid.UnitTests.Resources
 			var lists = new Lists(client);
 
 			// Act
-			await lists.DeleteAsync(listIds, CancellationToken.None).ConfigureAwait(false);
+			await lists.DeleteAsync(listIds, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -143,7 +143,7 @@ namespace StrongGrid.UnitTests.Resources
 			var lists = new Lists(client);
 
 			// Act
-			var result = await lists.GetAsync(listId, CancellationToken.None).ConfigureAwait(false);
+			var result = await lists.GetAsync(listId, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -165,7 +165,7 @@ namespace StrongGrid.UnitTests.Resources
 			var lists = new Lists(client);
 
 			// Act
-			await lists.UpdateAsync(listId, name, CancellationToken.None).ConfigureAwait(false);
+			await lists.UpdateAsync(listId, name, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -203,7 +203,7 @@ namespace StrongGrid.UnitTests.Resources
 			var lists = new Lists(client);
 
 			// Act
-			var result = await lists.GetRecipientsAsync(listId, recordsPerPage, page, CancellationToken.None).ConfigureAwait(false);
+			var result = await lists.GetRecipientsAsync(listId, recordsPerPage, page, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -227,7 +227,7 @@ namespace StrongGrid.UnitTests.Resources
 			var lists = new Lists(client);
 
 			// Act
-			await lists.AddRecipientAsync(listId, contactId, CancellationToken.None).ConfigureAwait(false);
+			await lists.AddRecipientAsync(listId, contactId, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -248,7 +248,7 @@ namespace StrongGrid.UnitTests.Resources
 			var lists = new Lists(client);
 
 			// Act
-			await lists.RemoveRecipientAsync(listId, contactId, CancellationToken.None).ConfigureAwait(false);
+			await lists.RemoveRecipientAsync(listId, contactId, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -269,7 +269,7 @@ namespace StrongGrid.UnitTests.Resources
 			var lists = new Lists(client);
 
 			// Act
-			await lists.AddRecipientsAsync(listId, contactIds, CancellationToken.None).ConfigureAwait(false);
+			await lists.AddRecipientsAsync(listId, contactIds, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

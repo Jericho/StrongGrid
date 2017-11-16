@@ -358,35 +358,36 @@ Content-Disposition: form-data; name=""attachments""
 		{
 			// Arrange
 			var parser = new WebhookParser();
-			var stream = GetStream(INBOUND_EMAIL_WEBHOOK);
+			using (var stream = GetStream(INBOUND_EMAIL_WEBHOOK))
+			{
+				// Act
+				var inboundEmail = parser.ParseInboundEmailWebhook(stream);
 
-			// Act
-			var inboundEmail = parser.ParseInboundEmailWebhook(stream);
-
-			// Assert
-			inboundEmail.Attachments.ShouldNotBeNull();
-			inboundEmail.Attachments.Length.ShouldBe(0);
-			inboundEmail.Cc.ShouldNotBeNull();
-			inboundEmail.Cc.Length.ShouldBe(0);
-			inboundEmail.Charsets.ShouldNotBeNull();
-			inboundEmail.Charsets.Length.ShouldBe(5);
-			inboundEmail.Dkim.ShouldBe("{@hotmail.com : pass}");
-			inboundEmail.From.ShouldNotBeNull();
-			inboundEmail.From.Email.ShouldBe("bob@example.com");
-			inboundEmail.From.Name.ShouldBe("Bob Smith");
-			inboundEmail.Headers.ShouldNotBeNull();
-			inboundEmail.Headers.Length.ShouldBe(40);
-			inboundEmail.Html.ShouldStartWith("<html", Case.Insensitive);
-			inboundEmail.SenderIp.ShouldBe("10.43.24.23");
-			inboundEmail.SpamReport.ShouldBeNull();
-			inboundEmail.SpamScore.ShouldBeNull();
-			inboundEmail.Spf.ShouldBe("softfail");
-			inboundEmail.Subject.ShouldBe("Test #1");
-			inboundEmail.Text.ShouldBe("Test #1\r\n");
-			inboundEmail.To.ShouldNotBeNull();
-			inboundEmail.To.Length.ShouldBe(1);
-			inboundEmail.To[0].Email.ShouldBe("test@api.yourdomain.com");
-			inboundEmail.To[0].Name.ShouldBe("Test Recipient");
+				// Assert
+				inboundEmail.Attachments.ShouldNotBeNull();
+				inboundEmail.Attachments.Length.ShouldBe(0);
+				inboundEmail.Cc.ShouldNotBeNull();
+				inboundEmail.Cc.Length.ShouldBe(0);
+				inboundEmail.Charsets.ShouldNotBeNull();
+				inboundEmail.Charsets.Length.ShouldBe(5);
+				inboundEmail.Dkim.ShouldBe("{@hotmail.com : pass}");
+				inboundEmail.From.ShouldNotBeNull();
+				inboundEmail.From.Email.ShouldBe("bob@example.com");
+				inboundEmail.From.Name.ShouldBe("Bob Smith");
+				inboundEmail.Headers.ShouldNotBeNull();
+				inboundEmail.Headers.Length.ShouldBe(40);
+				inboundEmail.Html.ShouldStartWith("<html", Case.Insensitive);
+				inboundEmail.SenderIp.ShouldBe("10.43.24.23");
+				inboundEmail.SpamReport.ShouldBeNull();
+				inboundEmail.SpamScore.ShouldBeNull();
+				inboundEmail.Spf.ShouldBe("softfail");
+				inboundEmail.Subject.ShouldBe("Test #1");
+				inboundEmail.Text.ShouldBe("Test #1\r\n");
+				inboundEmail.To.ShouldNotBeNull();
+				inboundEmail.To.Length.ShouldBe(1);
+				inboundEmail.To[0].Email.ShouldBe("test@api.yourdomain.com");
+				inboundEmail.To[0].Name.ShouldBe("Test Recipient");
+			}
 		}
 
 		[Fact]
@@ -721,15 +722,16 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 			var responseContent = $"[{PROCESSED_JSON}]";
 			var parser = new WebhookParser();
-			var stream = GetStream(responseContent);
+			using (var stream = GetStream(responseContent))
+			{
+				// Act
+				var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
 
-			// Act
-			var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
-
-			// Assert
-			result.ShouldNotBeNull();
-			result.Length.ShouldBe(1);
-			result[0].GetType().ShouldBe(typeof(ProcessedEvent));
+				// Assert
+				result.ShouldNotBeNull();
+				result.Length.ShouldBe(1);
+				result[0].GetType().ShouldBe(typeof(ProcessedEvent));
+			}
 		}
 
 		[Fact]
@@ -738,15 +740,16 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 			var responseContent = $"[{BOUNCED_JSON}]";
 			var parser = new WebhookParser();
-			var stream = GetStream(responseContent);
+			using (var stream = GetStream(responseContent))
+			{
+				// Act
+				var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
 
-			// Act
-			var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
-
-			// Assert
-			result.ShouldNotBeNull();
-			result.Length.ShouldBe(1);
-			result[0].GetType().ShouldBe(typeof(BouncedEvent));
+				// Assert
+				result.ShouldNotBeNull();
+				result.Length.ShouldBe(1);
+				result[0].GetType().ShouldBe(typeof(BouncedEvent));
+			}
 		}
 
 		[Fact]
@@ -755,15 +758,16 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 			var responseContent = $"[{DEFERRED_JSON}]";
 			var parser = new WebhookParser();
-			var stream = GetStream(responseContent);
+			using (var stream = GetStream(responseContent))
+			{
+				// Act
+				var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
 
-			// Act
-			var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
-
-			// Assert
-			result.ShouldNotBeNull();
-			result.Length.ShouldBe(1);
-			result[0].GetType().ShouldBe(typeof(DeferredEvent));
+				// Assert
+				result.ShouldNotBeNull();
+				result.Length.ShouldBe(1);
+				result[0].GetType().ShouldBe(typeof(DeferredEvent));
+			}
 		}
 
 		[Fact]
@@ -772,15 +776,16 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 			var responseContent = $"[{DROPPED_JSON}]";
 			var parser = new WebhookParser();
-			var stream = GetStream(responseContent);
+			using (var stream = GetStream(responseContent))
+			{
+				// Act
+				var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
 
-			// Act
-			var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
-
-			// Assert
-			result.ShouldNotBeNull();
-			result.Length.ShouldBe(1);
-			result[0].GetType().ShouldBe(typeof(DroppedEvent));
+				// Assert
+				result.ShouldNotBeNull();
+				result.Length.ShouldBe(1);
+				result[0].GetType().ShouldBe(typeof(DroppedEvent));
+			}
 		}
 
 		[Fact]
@@ -789,15 +794,16 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 			var responseContent = $"[{CLICK_JSON}]";
 			var parser = new WebhookParser();
-			var stream = GetStream(responseContent);
+			using (var stream = GetStream(responseContent))
+			{
+				// Act
+				var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
 
-			// Act
-			var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
-
-			// Assert
-			result.ShouldNotBeNull();
-			result.Length.ShouldBe(1);
-			result[0].GetType().ShouldBe(typeof(ClickEvent));
+				// Assert
+				result.ShouldNotBeNull();
+				result.Length.ShouldBe(1);
+				result[0].GetType().ShouldBe(typeof(ClickEvent));
+			}
 		}
 
 		[Fact]
@@ -806,15 +812,16 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 			var responseContent = $"[{OPEN_JSON}]";
 			var parser = new WebhookParser();
-			var stream = GetStream(responseContent);
+			using (var stream = GetStream(responseContent))
+			{
+				// Act
+				var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
 
-			// Act
-			var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
-
-			// Assert
-			result.ShouldNotBeNull();
-			result.Length.ShouldBe(1);
-			result[0].GetType().ShouldBe(typeof(OpenEvent));
+				// Assert
+				result.ShouldNotBeNull();
+				result.Length.ShouldBe(1);
+				result[0].GetType().ShouldBe(typeof(OpenEvent));
+			}
 		}
 
 		[Fact]
@@ -823,15 +830,16 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 			var responseContent = $"[{UNSUBSCRIBE_JSON}]";
 			var parser = new WebhookParser();
-			var stream = GetStream(responseContent);
+			using (var stream = GetStream(responseContent))
+			{
+				// Act
+				var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
 
-			// Act
-			var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
-
-			// Assert
-			result.ShouldNotBeNull();
-			result.Length.ShouldBe(1);
-			result[0].GetType().ShouldBe(typeof(UnsubscribeEvent));
+				// Assert
+				result.ShouldNotBeNull();
+				result.Length.ShouldBe(1);
+				result[0].GetType().ShouldBe(typeof(UnsubscribeEvent));
+			}
 		}
 
 		[Fact]
@@ -840,15 +848,16 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 			var responseContent = $"[{GROUPUNSUBSCRIBE_JSON}]";
 			var parser = new WebhookParser();
-			var stream = GetStream(responseContent);
+			using (var stream = GetStream(responseContent))
+			{
+				// Act
+				var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
 
-			// Act
-			var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
-
-			// Assert
-			result.ShouldNotBeNull();
-			result.Length.ShouldBe(1);
-			result[0].GetType().ShouldBe(typeof(GroupUnsubscribeEvent));
+				// Assert
+				result.ShouldNotBeNull();
+				result.Length.ShouldBe(1);
+				result[0].GetType().ShouldBe(typeof(GroupUnsubscribeEvent));
+			}
 		}
 
 		[Fact]
@@ -857,15 +866,16 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 			var responseContent = $"[{GROUPRESUBSCRIBE_JSON}]";
 			var parser = new WebhookParser();
-			var stream = GetStream(responseContent);
+			using (var stream = GetStream(responseContent))
+			{
+				// Act
+				var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
 
-			// Act
-			var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
-
-			// Assert
-			result.ShouldNotBeNull();
-			result.Length.ShouldBe(1);
-			result[0].GetType().ShouldBe(typeof(GroupResubscribeEvent));
+				// Assert
+				result.ShouldNotBeNull();
+				result.Length.ShouldBe(1);
+				result[0].GetType().ShouldBe(typeof(GroupResubscribeEvent));
+			}
 		}
 
 		private Stream GetStream(string responseContent)

@@ -34,14 +34,16 @@ namespace StrongGrid.Resources
 		/// <param name="searchPrefix">Performs a prefix search on this value.</param>
 		/// <param name="limit">Optional field to limit the number of results returned.</param>
 		/// <param name="offset">Optional beginning point in the list to retrieve from.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// An array of strings representing the catgories.
 		/// </returns>
-		public async Task<string[]> GetAsync(string searchPrefix = null, int limit = 50, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<string[]> GetAsync(string searchPrefix = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var responseContent = await _client
 				.GetAsync(_endpoint)
+				.OnBehalfOf(onBehalfOf)
 				.WithArgument("category", searchPrefix)
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)

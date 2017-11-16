@@ -33,14 +33,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get the current Enforced TLS settings.
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="EnforcedTlsSettings" />.
 		/// </returns>
-		public Task<EnforcedTlsSettings> GetEnforcedTlsSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<EnforcedTlsSettings> GetEnforcedTlsSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync("user/settings/enforced_tls")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EnforcedTlsSettings>();
 		}
@@ -50,11 +52,12 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="requireTls">if set to <c>true</c> [require TLS].</param>
 		/// <param name="requireValidCert">if set to <c>true</c> [require valid cert].</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="EnforcedTlsSettings" />.
 		/// </returns>
-		public Task<EnforcedTlsSettings> UpdateEnforcedTlsSettingsAsync(bool requireTls, bool requireValidCert, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<EnforcedTlsSettings> UpdateEnforcedTlsSettingsAsync(bool requireTls, bool requireValidCert, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var enforcedTlsSettings = new EnforcedTlsSettings
 			{
@@ -64,6 +67,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(enforcedTlsSettings);
 			return _client
 				.PatchAsync("user/settings/enforced_tls")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EnforcedTlsSettings>();
@@ -74,14 +78,16 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="GlobalSetting" />.
 		/// </returns>
-		public Task<GlobalSetting[]> GetAllPartnerSettingsAsync(int limit = 25, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<GlobalSetting[]> GetAllPartnerSettingsAsync(int limit = 25, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync("partner_settings")
+				.OnBehalfOf(onBehalfOf)
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
@@ -91,14 +97,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get New Relic Settings
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="NewRelicSettings" />.
 		/// </returns>
-		public Task<NewRelicSettings> GetNewRelicSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<NewRelicSettings> GetNewRelicSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync("partner_settings/new_relic")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<NewRelicSettings>();
 		}
@@ -108,11 +116,12 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
 		/// <param name="licenseKey">The license key.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="NewRelicSettings" />.
 		/// </returns>
-		public Task<NewRelicSettings> UpdateNewRelicSettingsAsync(bool enabled, string licenseKey, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<NewRelicSettings> UpdateNewRelicSettingsAsync(bool enabled, string licenseKey, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var newRelicSettings = new NewRelicSettings
 			{
@@ -122,6 +131,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(newRelicSettings);
 			return _client
 				.PatchAsync("partner_settings/new_relic")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<NewRelicSettings>();
@@ -132,14 +142,16 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="GlobalSetting" />.
 		/// </returns>
-		public Task<GlobalSetting[]> GetAllTrackingSettingsAsync(int limit = 25, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<GlobalSetting[]> GetAllTrackingSettingsAsync(int limit = 25, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync("tracking_settings")
+				.OnBehalfOf(onBehalfOf)
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
@@ -149,14 +161,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get Click Tracking Settings
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		///   <c>true</c> if the setting is set; otherwise, <c>false</c>.
 		/// </returns>
-		public async Task<bool> GetClickTrackingSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<bool> GetClickTrackingSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var responseContent = await _client
 				.GetAsync("tracking_settings/click")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsString(null).
 				ConfigureAwait(false);
@@ -180,11 +194,12 @@ namespace StrongGrid.Resources
 		/// Change the click tracking settings
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		///   <c>true</c> if the setting is set; otherwise, <c>false</c>.
 		/// </returns>
-		public Task<bool> UpdateClickTrackingSettingsAsync(bool enabled, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<bool> UpdateClickTrackingSettingsAsync(bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
 			{
@@ -192,6 +207,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PatchAsync("tracking_settings/click")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<bool>("enabled");
@@ -200,14 +216,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get Google Analytics Settings
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="GoogleAnalyticsGlobalSettings" />.
 		/// </returns>
-		public Task<GoogleAnalyticsGlobalSettings> GetGoogleAnalyticsGlobalSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<GoogleAnalyticsGlobalSettings> GetGoogleAnalyticsGlobalSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync("tracking_settings/google_analytics")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<GoogleAnalyticsGlobalSettings>();
 		}
@@ -221,11 +239,12 @@ namespace StrongGrid.Resources
 		/// <param name="utmTerm">The utm term.</param>
 		/// <param name="utmContent">Content of the utm.</param>
 		/// <param name="utmCampaign">The utm campaign.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="GoogleAnalyticsGlobalSettings" />.
 		/// </returns>
-		public Task<GoogleAnalyticsGlobalSettings> UpdateGoogleAnalyticsGlobalSettingsAsync(bool enabled, string utmSource, string utmMedium, string utmTerm, string utmContent, string utmCampaign, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<GoogleAnalyticsGlobalSettings> UpdateGoogleAnalyticsGlobalSettingsAsync(bool enabled, string utmSource, string utmMedium, string utmTerm, string utmContent, string utmCampaign, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var googleAnalyticsGlobalSettings = new GoogleAnalyticsGlobalSettings
 			{
@@ -239,6 +258,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(googleAnalyticsGlobalSettings);
 			return _client
 				.PatchAsync("tracking_settings/google_analytics")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<GoogleAnalyticsGlobalSettings>();
@@ -247,14 +267,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get Open Tracking Settings
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		///   <c>true</c> if the setting is set; otherwise, <c>false</c>.
 		/// </returns>
-		public Task<bool> GetOpenTrackingSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<bool> GetOpenTrackingSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync("tracking_settings/open")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<bool>("enabled");
 		}
@@ -263,11 +285,12 @@ namespace StrongGrid.Resources
 		/// Change the open tracking settings
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		///   <c>true</c> if the setting is set; otherwise, <c>false</c>.
 		/// </returns>
-		public Task<bool> UpdateOpenTrackingSettingsAsync(bool enabled, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<bool> UpdateOpenTrackingSettingsAsync(bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
 			{
@@ -275,6 +298,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PatchAsync("tracking_settings/open")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<bool>("enabled");
@@ -283,14 +307,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get Subscription Tracking Settings
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="SubscriptionSettings" />.
 		/// </returns>
-		public Task<SubscriptionSettings> GetSubscriptionTrackingSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SubscriptionSettings> GetSubscriptionTrackingSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync("tracking_settings/subscription")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<SubscriptionSettings>();
 		}
@@ -304,11 +330,12 @@ namespace StrongGrid.Resources
 		/// <param name="replacementTag">The replacement tag.</param>
 		/// <param name="htmlContent">Content of the HTML.</param>
 		/// <param name="textContent">Content of the text.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="SubscriptionSettings" />.
 		/// </returns>
-		public Task<SubscriptionSettings> UpdateSubscriptionTrackingSettingsAsync(bool enabled, string landingPageHtml, string url, string replacementTag, string htmlContent, string textContent, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SubscriptionSettings> UpdateSubscriptionTrackingSettingsAsync(bool enabled, string landingPageHtml, string url, string replacementTag, string htmlContent, string textContent, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var subscriptionTrackingSettings = new SubscriptionSettings
 			{
@@ -322,6 +349,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(subscriptionTrackingSettings);
 			return _client
 				.PatchAsync("tracking_settings/subscription")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<SubscriptionSettings>();
@@ -332,14 +360,16 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An aray of <see cref="GlobalSetting" />.
 		/// </returns>
-		public Task<GlobalSetting[]> GetAllMailSettingsAsync(int limit = 25, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<GlobalSetting[]> GetAllMailSettingsAsync(int limit = 25, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync("mail_settings")
+				.OnBehalfOf(onBehalfOf)
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
@@ -349,14 +379,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get BCC Settings
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="EmailAddressSetting" />.
 		/// </returns>
-		public Task<EmailAddressSetting> GetBccMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<EmailAddressSetting> GetBccMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync("mail_settings/bcc")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EmailAddressSetting>();
 		}
@@ -366,11 +398,12 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
 		/// <param name="email">The email.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="EmailAddressSetting" />.
 		/// </returns>
-		public Task<EmailAddressSetting> UpdateBccMailSettingsAsync(bool enabled, string email, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<EmailAddressSetting> UpdateBccMailSettingsAsync(bool enabled, string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var bccMailSettings = new EmailAddressSetting
 			{
@@ -380,6 +413,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(bccMailSettings);
 			return _client
 				.PatchAsync("mail_settings/bcc")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EmailAddressSetting>();
@@ -388,14 +422,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get Address Whitelist Settings
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="AddressWhitelistSettings" />.
 		/// </returns>
-		public Task<AddressWhitelistSettings> GetAddressWhitelistMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<AddressWhitelistSettings> GetAddressWhitelistMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync("mail_settings/address_whitelist")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<AddressWhitelistSettings>();
 		}
@@ -405,11 +441,12 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
 		/// <param name="emailAddresses">The email addresses.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="AddressWhitelistSettings" />.
 		/// </returns>
-		public Task<AddressWhitelistSettings> UpdateAddressWhitelistMailSettingsAsync(bool enabled, IEnumerable<string> emailAddresses, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<AddressWhitelistSettings> UpdateAddressWhitelistMailSettingsAsync(bool enabled, IEnumerable<string> emailAddresses, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var addressWhitelistSettings = new AddressWhitelistSettings
 			{
@@ -419,6 +456,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(addressWhitelistSettings);
 			return _client
 				.PatchAsync("mail_settings/address_whitelist")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<AddressWhitelistSettings>();
@@ -427,14 +465,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get Footer Settings
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="FooterGlobalSettings" />.
 		/// </returns>
-		public Task<FooterGlobalSettings> GetFooterMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<FooterGlobalSettings> GetFooterMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync("mail_settings/footer")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<FooterGlobalSettings>();
 		}
@@ -445,11 +485,12 @@ namespace StrongGrid.Resources
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
 		/// <param name="htmlContent">Content of the HTML.</param>
 		/// <param name="textContent">Content of the text.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="FooterGlobalSettings" />.
 		/// </returns>
-		public Task<FooterGlobalSettings> UpdateFooterMailSettingsAsync(bool enabled, string htmlContent, string textContent, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<FooterGlobalSettings> UpdateFooterMailSettingsAsync(bool enabled, string htmlContent, string textContent, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var footerGlobalSetting = new FooterGlobalSettings
 			{
@@ -460,6 +501,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(footerGlobalSetting);
 			return _client
 				.PatchAsync("mail_settings/footer")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<FooterGlobalSettings>();
@@ -468,14 +510,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get Forward Spam Settings
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="EmailAddressSetting" />.
 		/// </returns>
-		public Task<EmailAddressSetting> GetForwardSpamMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<EmailAddressSetting> GetForwardSpamMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync("mail_settings/forward_spam")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EmailAddressSetting>();
 		}
@@ -485,11 +529,12 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
 		/// <param name="email">The email.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="EmailAddressSetting" />.
 		/// </returns>
-		public Task<EmailAddressSetting> UpdateForwardSpamMailSettingsAsync(bool enabled, string email, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<EmailAddressSetting> UpdateForwardSpamMailSettingsAsync(bool enabled, string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var forwardSpamMailSettins = new EmailAddressSetting
 			{
@@ -499,6 +544,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(forwardSpamMailSettins);
 			return _client
 				.PatchAsync("mail_settings/forward_spam")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EmailAddressSetting>();
@@ -507,14 +553,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get Plain Content Settings
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		///   <c>true</c> if the setting is set; otherwise, <c>false</c>.
 		/// </returns>
-		public Task<bool> GetPlainContentMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<bool> GetPlainContentMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync("mail_settings/plain_content")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<bool>("enabled");
 		}
@@ -523,11 +571,12 @@ namespace StrongGrid.Resources
 		/// Change the Plain Content settings
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		///   <c>true</c> if the setting is set; otherwise, <c>false</c>.
 		/// </returns>
-		public Task<bool> UpdatePlainContentMailSettingsAsync(bool enabled, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<bool> UpdatePlainContentMailSettingsAsync(bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
 			{
@@ -535,6 +584,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PatchAsync("mail_settings/plain_content")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<bool>("enabled");
@@ -543,14 +593,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get Spam Check Settings
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="SpamCheckingSettings" />.
 		/// </returns>
-		public Task<SpamCheckSettings> GetSpamCheckMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SpamCheckSettings> GetSpamCheckMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync("mail_settings/spam_check")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<SpamCheckSettings>();
 		}
@@ -561,11 +613,12 @@ namespace StrongGrid.Resources
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
 		/// <param name="postToUrl">The post to URL.</param>
 		/// <param name="threshold">The threshold.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="SpamCheckingSettings" />.
 		/// </returns>
-		public Task<SpamCheckSettings> UpdateSpamCheckMailSettingsAsync(bool enabled, string postToUrl, int threshold, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SpamCheckSettings> UpdateSpamCheckMailSettingsAsync(bool enabled, string postToUrl, int threshold, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var spamCheckMailSettings = new SpamCheckSettings
 			{
@@ -576,6 +629,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(spamCheckMailSettings);
 			return _client
 				.PatchAsync("mail_settings/spam_check")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<SpamCheckSettings>();
@@ -584,14 +638,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get Template Settings
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="TemplateSettings" />.
 		/// </returns>
-		public Task<TemplateSettings> GetTemplateMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<TemplateSettings> GetTemplateMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync("mail_settings/template")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<TemplateSettings>();
 		}
@@ -601,11 +657,12 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
 		/// <param name="htmlContent">Content of the HTML.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="TemplateSettings" />.
 		/// </returns>
-		public Task<TemplateSettings> UpdateTemplateMailSettingsAsync(bool enabled, string htmlContent, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<TemplateSettings> UpdateTemplateMailSettingsAsync(bool enabled, string htmlContent, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var templateMailSettings = new TemplateSettings
 			{
@@ -615,6 +672,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(templateMailSettings);
 			return _client
 				.PatchAsync("mail_settings/template")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<TemplateSettings>();
@@ -623,14 +681,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get Bounce Purge Settings
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="BouncePurgeSettings" />.
 		/// </returns>
-		public Task<BouncePurgeSettings> GetBouncePurgeMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<BouncePurgeSettings> GetBouncePurgeMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync("mail_settings/bounce_purge")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<BouncePurgeSettings>();
 		}
@@ -641,11 +701,12 @@ namespace StrongGrid.Resources
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
 		/// <param name="hardBounces">The hard bounces.</param>
 		/// <param name="softBounces">The soft bounces.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="BouncePurgeSettings" />.
 		/// </returns>
-		public Task<BouncePurgeSettings> UpdatBouncePurgeMailSettingsAsync(bool enabled, int hardBounces, int softBounces, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<BouncePurgeSettings> UpdatBouncePurgeMailSettingsAsync(bool enabled, int hardBounces, int softBounces, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var bouncePurgeSettings = new BouncePurgeSettings
 			{
@@ -656,6 +717,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(bouncePurgeSettings);
 			return _client
 				.PatchAsync("mail_settings/bounce_purge")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<BouncePurgeSettings>();
@@ -664,14 +726,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get Forward Bounce Settings
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="EmailAddressSetting" />.
 		/// </returns>
-		public Task<EmailAddressSetting> GetForwardBounceMailSettingsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<EmailAddressSetting> GetForwardBounceMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync("mail_settings/forward_bounce")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EmailAddressSetting>();
 		}
@@ -681,11 +745,12 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
 		/// <param name="email">The email.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="EmailAddressSetting" />.
 		/// </returns>
-		public Task<EmailAddressSetting> UpdateForwardBounceMailSettingsAsync(bool enabled, string email, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<EmailAddressSetting> UpdateForwardBounceMailSettingsAsync(bool enabled, string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var forwardSpamMailSettings = new EmailAddressSetting
 			{
@@ -695,6 +760,7 @@ namespace StrongGrid.Resources
 			var data = JObject.FromObject(forwardSpamMailSettings);
 			return _client
 				.PatchAsync("mail_settings/forward_bounce")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EmailAddressSetting>();

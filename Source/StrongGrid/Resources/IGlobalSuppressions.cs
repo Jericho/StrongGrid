@@ -21,40 +21,44 @@ namespace StrongGrid.Resources
 		/// <param name="endDate">The end date.</param>
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="GlobalSuppression"/>.
 		/// </returns>
-		Task<GlobalSuppression[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 50, int offset = 0, CancellationToken cancellationToken = default(CancellationToken));
+		Task<GlobalSuppression[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Check if a recipient address is in the global suppressions group.
 		/// </summary>
 		/// <param name="email">email address to check</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		///   <c>true</c> if the email address is in the global suppression group; otherwise, <c>false</c>.
 		/// </returns>
-		Task<bool> IsUnsubscribedAsync(string email, CancellationToken cancellationToken = default(CancellationToken));
+		Task<bool> IsUnsubscribedAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Add recipient addresses to the global suppression group.
 		/// </summary>
 		/// <param name="emails">Array of email addresses to add to the suppression group</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task AddAsync(IEnumerable<string> emails, CancellationToken cancellationToken = default(CancellationToken));
+		Task AddAsync(IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Delete a recipient email from the global suppressions group.
 		/// </summary>
 		/// <param name="email">email address to be removed from the global suppressions group</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task RemoveAsync(string email, CancellationToken cancellationToken = default(CancellationToken));
+		Task RemoveAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 	}
 }

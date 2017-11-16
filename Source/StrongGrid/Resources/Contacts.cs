@@ -38,6 +38,7 @@ namespace StrongGrid.Resources
 		/// <param name="firstName">The first name.</param>
 		/// <param name="lastName">The last name.</param>
 		/// <param name="customFields">The custom fields.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The identifier of the new contact.
@@ -48,6 +49,7 @@ namespace StrongGrid.Resources
 			Parameter<string> firstName = default(Parameter<string>),
 			Parameter<string> lastName = default(Parameter<string>),
 			Parameter<IEnumerable<Field>> customFields = default(Parameter<IEnumerable<Field>>),
+			string onBehalfOf = null,
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
 			// SendGrid expects an array despite the fact we are creating a single contact
@@ -55,6 +57,7 @@ namespace StrongGrid.Resources
 
 			var importResult = await _client
 				.PostAsync(_endpoint)
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.As<ImportResult>()
@@ -77,6 +80,7 @@ namespace StrongGrid.Resources
 		/// <param name="firstName">The first name.</param>
 		/// <param name="lastName">The last name.</param>
 		/// <param name="customFields">The custom fields.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
@@ -87,6 +91,7 @@ namespace StrongGrid.Resources
 			Parameter<string> firstName = default(Parameter<string>),
 			Parameter<string> lastName = default(Parameter<string>),
 			Parameter<IEnumerable<Field>> customFields = default(Parameter<IEnumerable<Field>>),
+			string onBehalfOf = null,
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
 			// SendGrid expects an array despite the fact we are updating a single contact
@@ -94,6 +99,7 @@ namespace StrongGrid.Resources
 
 			var responseContent = await _client
 				.PatchAsync(_endpoint)
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsString(null)
@@ -112,11 +118,12 @@ namespace StrongGrid.Resources
 		/// Import contacts.
 		/// </summary>
 		/// <param name="contacts">The contacts.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="ImportResult">result</see> of the operation.
 		/// </returns>
-		public Task<ImportResult> ImportAsync(IEnumerable<Contact> contacts, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<ImportResult> ImportAsync(IEnumerable<Contact> contacts, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JArray();
 			foreach (var contact in contacts)
@@ -126,6 +133,7 @@ namespace StrongGrid.Resources
 
 			return _client
 				.PostAsync(_endpoint)
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.As<ImportResult>();
@@ -135,28 +143,31 @@ namespace StrongGrid.Resources
 		/// Delete a contact.
 		/// </summary>
 		/// <param name="contactId">The contact identifier.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(string contactId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			return DeleteAsync(new[] { contactId }, cancellationToken);
+			return DeleteAsync(new[] { contactId }, onBehalfOf, cancellationToken);
 		}
 
 		/// <summary>
 		/// Delete contacts.
 		/// </summary>
 		/// <param name="contactId">The contact identifier.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(IEnumerable<string> contactId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(IEnumerable<string> contactId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = JArray.FromObject(contactId.ToArray());
 			return _client
 				.DeleteAsync(_endpoint)
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
@@ -166,14 +177,16 @@ namespace StrongGrid.Resources
 		/// Retrieve a contact.
 		/// </summary>
 		/// <param name="contactId">The contact identifier.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Contact" />.
 		/// </returns>
-		public Task<Contact> GetAsync(string contactId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Contact> GetAsync(string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{contactId}")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Contact>();
 		}
@@ -183,14 +196,16 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="recordsPerPage">The records per page.</param>
 		/// <param name="page">The page.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Contact" />.
 		/// </returns>
-		public Task<Contact[]> GetAsync(int recordsPerPage = 100, int page = 1, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Contact[]> GetAsync(int recordsPerPage = 100, int page = 1, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync(_endpoint)
+				.OnBehalfOf(onBehalfOf)
 				.WithArgument("page_size", recordsPerPage)
 				.WithArgument("page", page)
 				.WithCancellationToken(cancellationToken)
@@ -200,14 +215,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Gets the billable count.
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The number of billable contacts.
 		/// </returns>
-		public Task<long> GetBillableCountAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<long> GetBillableCountAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync($"{_endpoint}/billable_count")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<long>("recipient_count");
 		}
@@ -215,14 +232,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Gets the total count.
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The total number of contacts.
 		/// </returns>
-		public Task<long> GetTotalCountAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<long> GetTotalCountAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync($"{_endpoint}/count")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<long>("recipient_count");
 		}
@@ -232,11 +251,12 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="conditions">The conditions.</param>
 		/// <param name="listId">The list identifier.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Contact" />.
 		/// </returns>
-		public Task<Contact[]> SearchAsync(IEnumerable<SearchCondition> conditions, int? listId = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Contact[]> SearchAsync(IEnumerable<SearchCondition> conditions, int? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
 			if (listId.HasValue) data.Add("list_id", listId.Value);
@@ -244,6 +264,7 @@ namespace StrongGrid.Resources
 
 			return _client
 				.PostAsync($"{_endpoint}/search")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Contact[]>("recipients");
@@ -253,14 +274,16 @@ namespace StrongGrid.Resources
 		/// Retrieve the lists that a recipient is on.
 		/// </summary>
 		/// <param name="contactId">The contact identifier.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="List" />.
 		/// </returns>
-		public Task<List[]> GetListsAsync(string contactId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<List[]> GetListsAsync(string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{contactId}/lists")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<List[]>("lists");
 		}

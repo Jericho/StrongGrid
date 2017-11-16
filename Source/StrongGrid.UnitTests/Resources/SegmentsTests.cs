@@ -134,7 +134,7 @@ namespace StrongGrid.UnitTests.Resources
 			var segments = new Segments(client);
 
 			// Act
-			var result = await segments.CreateAsync(name, listId, conditions, CancellationToken.None).ConfigureAwait(false);
+			var result = await segments.CreateAsync(name, listId, conditions, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -153,7 +153,7 @@ namespace StrongGrid.UnitTests.Resources
 			var segments = new Segments(client);
 
 			// Act
-			var result = await segments.GetAllAsync(CancellationToken.None).ConfigureAwait(false);
+			var result = await segments.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -175,7 +175,7 @@ namespace StrongGrid.UnitTests.Resources
 			var segments = new Segments(client);
 
 			// Act
-			var result = await segments.GetAsync(segmentId, CancellationToken.None).ConfigureAwait(false);
+			var result = await segments.GetAsync(segmentId, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -208,7 +208,7 @@ namespace StrongGrid.UnitTests.Resources
 			var segments = new Segments(client);
 
 			// Act
-			var result = await segments.UpdateAsync(segmentId, name, listId, conditions, CancellationToken.None).ConfigureAwait(false);
+			var result = await segments.UpdateAsync(segmentId, name, listId, conditions, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -230,7 +230,7 @@ namespace StrongGrid.UnitTests.Resources
 			var segments = new Segments(client);
 
 			// Act
-			await segments.DeleteAsync(segmentId, deleteContacts, CancellationToken.None).ConfigureAwait(false);
+			await segments.DeleteAsync(segmentId, deleteContacts, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -251,7 +251,7 @@ namespace StrongGrid.UnitTests.Resources
 			var segments = new Segments(client);
 
 			// Act
-			await segments.DeleteAsync(segmentId, deleteContacts, CancellationToken.None).ConfigureAwait(false);
+			await segments.DeleteAsync(segmentId, deleteContacts, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -297,7 +297,7 @@ namespace StrongGrid.UnitTests.Resources
 			var segments = new Segments(client);
 
 			// Act
-			var result = await segments.GetRecipientsAsync(segmentId, recordsPerPage, page, CancellationToken.None).ConfigureAwait(false);
+			var result = await segments.GetRecipientsAsync(segmentId, recordsPerPage, page, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
