@@ -113,7 +113,7 @@ namespace StrongGrid.UnitTests.Resources
 			var templates = new Templates(client);
 
 			// Act
-			var result = await templates.CreateAsync(name, CancellationToken.None).ConfigureAwait(false);
+			var result = await templates.CreateAsync(name, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -134,7 +134,7 @@ namespace StrongGrid.UnitTests.Resources
 			var templates = new Templates(client);
 
 			// Act
-			var result = await templates.GetAsync(templateId, CancellationToken.None).ConfigureAwait(false);
+			var result = await templates.GetAsync(templateId, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -155,7 +155,7 @@ namespace StrongGrid.UnitTests.Resources
 			var templates = new Templates(client);
 
 			// Act
-			var result = await templates.GetAllAsync(CancellationToken.None).ConfigureAwait(false);
+			var result = await templates.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -177,7 +177,7 @@ namespace StrongGrid.UnitTests.Resources
 			var templates = new Templates(client);
 
 			// Act
-			await templates.DeleteAsync(templateId, CancellationToken.None).ConfigureAwait(false);
+			await templates.DeleteAsync(templateId, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -198,7 +198,7 @@ namespace StrongGrid.UnitTests.Resources
 			var templates = new Templates(client);
 
 			// Act
-			var result = await templates.UpdateAsync(templateId, name, CancellationToken.None).ConfigureAwait(false);
+			var result = await templates.UpdateAsync(templateId, name, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -224,7 +224,7 @@ namespace StrongGrid.UnitTests.Resources
 			var templates = new Templates(client);
 
 			// Act
-			var result = await templates.CreateVersionAsync(templateId, name, subject, htmlContent, textContent, isActive, CancellationToken.None).ConfigureAwait(false);
+			var result = await templates.CreateVersionAsync(templateId, name, subject, htmlContent, textContent, isActive, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -246,7 +246,7 @@ namespace StrongGrid.UnitTests.Resources
 			var templates = new Templates(client);
 
 			// Act
-			var result = await templates.ActivateVersionAsync(templateId, versionId, CancellationToken.None).ConfigureAwait(false);
+			var result = await templates.ActivateVersionAsync(templateId, versionId, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -268,7 +268,7 @@ namespace StrongGrid.UnitTests.Resources
 			var templates = new Templates(client);
 
 			// Act
-			var result = await templates.GetVersionAsync(templateId, versionId, CancellationToken.None).ConfigureAwait(false);
+			var result = await templates.GetVersionAsync(templateId, versionId, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -291,7 +291,7 @@ namespace StrongGrid.UnitTests.Resources
 			var templates = new Templates(client);
 
 			// Act
-			var result = await templates.UpdateVersionAsync(templateId, versionId, name, null, null, null, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await templates.UpdateVersionAsync(templateId, versionId, name, null, null, null, null, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -313,7 +313,7 @@ namespace StrongGrid.UnitTests.Resources
 			var templates = new Templates(client);
 
 			// Act
-			await templates.DeleteVersionAsync(templateId, versionId, CancellationToken.None).ConfigureAwait(false);
+			await templates.DeleteVersionAsync(templateId, versionId, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

@@ -25,30 +25,33 @@ namespace StrongGrid.Resources
 		/// <param name="state">The state.</param>
 		/// <param name="zip">The zip.</param>
 		/// <param name="country">The country.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="SenderIdentity" />.
 		/// </returns>
-		Task<SenderIdentity> CreateAsync(string nickname, MailAddress from, MailAddress replyTo, string address1, string address2, string city, string state, string zip, string country, CancellationToken cancellationToken = default(CancellationToken));
+		Task<SenderIdentity> CreateAsync(string nickname, MailAddress from, MailAddress replyTo, string address1, string address2, string city, string state, string zip, string country, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Retrieve all sender identities.
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="SenderIdentity" />.
 		/// </returns>
-		Task<SenderIdentity[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken));
+		Task<SenderIdentity[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Retrieve a sender identity.
 		/// </summary>
 		/// <param name="senderId">The sender identifier.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="SenderIdentity" />.
 		/// </returns>
-		Task<SenderIdentity> GetAsync(long senderId, CancellationToken cancellationToken = default(CancellationToken));
+		Task<SenderIdentity> GetAsync(long senderId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Update a sender identity.
@@ -63,6 +66,7 @@ namespace StrongGrid.Resources
 		/// <param name="state">The state.</param>
 		/// <param name="zip">The zip.</param>
 		/// <param name="country">The country.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="SenderIdentity" />.
@@ -78,26 +82,29 @@ namespace StrongGrid.Resources
 			Parameter<string> state = default(Parameter<string>),
 			Parameter<string> zip = default(Parameter<string>),
 			Parameter<string> country = default(Parameter<string>),
+			string onBehalfOf = null,
 			CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Delete a sender identity.
 		/// </summary>
 		/// <param name="senderId">The sender identifier.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteAsync(long senderId, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteAsync(long senderId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Resend the verification to a sender.
 		/// </summary>
 		/// <param name="senderId">The sender identifier.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task ResendVerification(long senderId, CancellationToken cancellationToken = default(CancellationToken));
+		Task ResendVerification(long senderId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 	}
 }

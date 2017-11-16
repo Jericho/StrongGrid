@@ -1,9 +1,9 @@
-﻿using Shouldly;
+using Shouldly;
 using StrongGrid.Utilities;
 using System;
 using Xunit;
 
-namespace StrongGrid.UnitTests
+namespace StrongGrid.UnitTests.Utilities
 {
 	public class ExtensionsTests
 	{

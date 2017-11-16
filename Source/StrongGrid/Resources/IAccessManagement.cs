@@ -17,69 +17,76 @@ namespace StrongGrid.Resources
 		/// Returns a list of IPs that have accessed your account through the web or API.
 		/// </summary>
 		/// <param name="limit">Number of IP activity entries to return.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		Task<AccessEntry[]> GetAccessHistoryAsync(int limit = 20, CancellationToken cancellationToken = default(CancellationToken));
+		Task<AccessEntry[]> GetAccessHistoryAsync(int limit = 20, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Retrieve the whitelisted IPs.
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// An array of <see cref="WhitelistedIp" />.
 		/// </returns>
-		Task<WhitelistedIp[]> GetWhitelistedIpAddressesAsync(CancellationToken cancellationToken = default(CancellationToken));
+		Task<WhitelistedIp[]> GetWhitelistedIpAddressesAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Add an IP address to the list of whitelisted ip addresses
 		/// </summary>
 		/// <param name="ip">The ip address.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		Task<WhitelistedIp> AddIpAddressToWhitelistAsync(string ip, CancellationToken cancellationToken = default(CancellationToken));
+		Task<WhitelistedIp> AddIpAddressToWhitelistAsync(string ip, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Add multiple IP addresses to the list of whitelisted ip addresses
 		/// </summary>
 		/// <param name="ips">The ip addresses.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		Task<WhitelistedIp[]> AddIpAddressesToWhitelistAsync(IEnumerable<string> ips, CancellationToken cancellationToken = default(CancellationToken));
+		Task<WhitelistedIp[]> AddIpAddressesToWhitelistAsync(IEnumerable<string> ips, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Delete an ip address from the whitelist.
 		/// </summary>
 		/// <param name="id">The ip address identifier.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task RemoveIpAddressFromWhitelistAsync(long id, CancellationToken cancellationToken = default(CancellationToken));
+		Task RemoveIpAddressFromWhitelistAsync(long id, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Delete multiple ip addresses from the whitelist.
 		/// </summary>
 		/// <param name="ids">The ip address identifiers.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task RemoveIpAddressesFromWhitelistAsync(IEnumerable<long> ids, CancellationToken cancellationToken = default(CancellationToken));
+		Task RemoveIpAddressesFromWhitelistAsync(IEnumerable<long> ids, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Returns information about a whitelisted ip address.
 		/// </summary>
 		/// <param name="id">The ip address identifier.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		Task<WhitelistedIp> GetWhitelistedIpAddressAsync(long id, CancellationToken cancellationToken = default(CancellationToken));
+		Task<WhitelistedIp> GetWhitelistedIpAddressAsync(long id, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 	}
 }

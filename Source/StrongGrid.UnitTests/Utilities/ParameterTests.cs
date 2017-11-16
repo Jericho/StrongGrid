@@ -1,10 +1,10 @@
-﻿using Shouldly;
+using Shouldly;
 using StrongGrid.Utilities;
 using Xunit;
 
-namespace StrongGrid.UnitTests
+namespace StrongGrid.UnitTests.Utilities
 {
-	#pragma warning disable RECS0088 // Comparing equal expression for equality is usually useless
+#pragma warning disable RECS0088 // Comparing equal expression for equality is usually useless
 	public class ParameterTests
 	{
 		[Fact]
@@ -137,5 +137,5 @@ namespace StrongGrid.UnitTests
 			(new Parameter<string>("abc123")).GetHashCode().ShouldBe("abc123".GetHashCode());
 		}
 	}
-	#pragma warning restore RECS0088 // Comparing equal expression for equality is usually useless
+#pragma warning restore RECS0088 // Comparing equal expression for equality is usually useless
 }

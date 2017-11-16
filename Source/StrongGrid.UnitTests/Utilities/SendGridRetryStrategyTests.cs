@@ -1,14 +1,14 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Pathoschild.Http.Client;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Utilities;
+using System;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Xunit;
 
-namespace StrongGrid.UnitTests
+namespace StrongGrid.UnitTests.Utilities
 {
 	public class SendGridRetryStrategyTests
 	{

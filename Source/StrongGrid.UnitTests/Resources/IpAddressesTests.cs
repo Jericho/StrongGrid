@@ -198,6 +198,26 @@ namespace StrongGrid.UnitTests.Resources
 		}
 
 		[Fact]
+		public async Task GetUnassignedAsync()
+		{
+			// Arrange
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", MULTIPLE_IPADDRESSES_JSON);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var ipAddresses = new IpAddresses(client);
+
+			// Act
+			var result = await ipAddresses.GetUnassignedAsync(CancellationToken.None).ConfigureAwait(false);
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(1);
+		}
+
+		[Fact]
 		public async Task GetWarmingUpAsync()
 		{
 			// Arrange

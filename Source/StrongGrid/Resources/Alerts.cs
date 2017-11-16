@@ -34,14 +34,16 @@ namespace StrongGrid.Resources
 		/// Retrieve a specific alert.
 		/// </summary>
 		/// <param name="alertId">The alert identifier.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		public Task<Alert> GetAsync(long alertId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Alert> GetAsync(long alertId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{alertId}")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Alert>();
 		}
@@ -49,14 +51,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve all alerts.
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// An array of <see cref="Alert" />.
 		/// </returns>
-		public Task<Alert[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Alert[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync(_endpoint)
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Alert[]>();
 		}
@@ -68,15 +72,17 @@ namespace StrongGrid.Resources
 		/// <param name="emailTo">The email to.</param>
 		/// <param name="frequency">The frequency.</param>
 		/// <param name="percentage">The percentage.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		public Task<Alert> CreateAsync(AlertType type, Parameter<string> emailTo = default(Parameter<string>), Parameter<Frequency?> frequency = default(Parameter<Frequency?>), Parameter<int?> percentage = default(Parameter<int?>), CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Alert> CreateAsync(AlertType type, Parameter<string> emailTo = default(Parameter<string>), Parameter<Frequency?> frequency = default(Parameter<Frequency?>), Parameter<int?> percentage = default(Parameter<int?>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = CreateJObject(type, emailTo, frequency, percentage);
 			return _client
 				.PostAsync(_endpoint)
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Alert>();
@@ -86,11 +92,12 @@ namespace StrongGrid.Resources
 		/// Delete an alert.
 		/// </summary>
 		/// <param name="alertId">The alert identifier.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(long alertId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(long alertId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{alertId}")
@@ -106,15 +113,17 @@ namespace StrongGrid.Resources
 		/// <param name="emailTo">The email to.</param>
 		/// <param name="frequency">The frequency.</param>
 		/// <param name="percentage">The percentage.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		public Task<Alert> UpdateAsync(long alertId, Parameter<AlertType?> type = default(Parameter<AlertType?>), Parameter<string> emailTo = default(Parameter<string>), Parameter<Frequency?> frequency = default(Parameter<Frequency?>), Parameter<int?> percentage = default(Parameter<int?>), CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Alert> UpdateAsync(long alertId, Parameter<AlertType?> type = default(Parameter<AlertType?>), Parameter<string> emailTo = default(Parameter<string>), Parameter<Frequency?> frequency = default(Parameter<Frequency?>), Parameter<int?> percentage = default(Parameter<int?>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = CreateJObject(type, emailTo, frequency, percentage);
 			return _client
 				.PatchAsync($"{_endpoint}/{alertId}")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Alert>();

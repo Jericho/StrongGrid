@@ -37,14 +37,16 @@ namespace StrongGrid.Resources
 		/// <param name="endDate">The end date.</param>
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// An array of <see cref="InvalidEmail" />.
 		/// </returns>
-		public Task<InvalidEmail[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 25, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<InvalidEmail[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 25, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync(_endpoint)
+				.OnBehalfOf(onBehalfOf)
 				.WithArgument("start_time", startDate?.ToUnixTime())
 				.WithArgument("end_time", endDate?.ToUnixTime())
 				.WithArgument("limit", limit)
@@ -57,14 +59,16 @@ namespace StrongGrid.Resources
 		/// Retrieve invalid emails for a given email address.
 		/// </summary>
 		/// <param name="emailAddress">The email address.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// An array of <see cref="InvalidEmail" />.
 		/// </returns>
-		public Task<InvalidEmail[]> GetAsync(string emailAddress, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<InvalidEmail[]> GetAsync(string emailAddress, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{emailAddress}")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<InvalidEmail[]>();
 		}
@@ -72,11 +76,12 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Delete all invalid emails.
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAllAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
 			{
@@ -84,6 +89,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.DeleteAsync(_endpoint)
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
@@ -93,11 +99,12 @@ namespace StrongGrid.Resources
 		/// Delete multiple invalid emails.
 		/// </summary>
 		/// <param name="emailAddresses">The email addresses.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteMultipleAsync(IEnumerable<string> emailAddresses, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteMultipleAsync(IEnumerable<string> emailAddresses, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
 			{
@@ -105,6 +112,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.DeleteAsync(_endpoint)
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
@@ -114,14 +122,16 @@ namespace StrongGrid.Resources
 		/// Delete a specific invalid emails.
 		/// </summary>
 		/// <param name="emailAddress">The email address.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(string emailAddress, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(string emailAddress, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{emailAddress}")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
 		}

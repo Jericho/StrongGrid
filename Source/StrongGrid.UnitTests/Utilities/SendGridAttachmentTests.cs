@@ -1,10 +1,10 @@
-﻿using Shouldly;
+using Shouldly;
 using StrongGrid.Utilities;
 using System;
 using System.Text;
 using Xunit;
 
-namespace StrongGrid.UnitTests
+namespace StrongGrid.UnitTests.Utilities
 {
 	public class SendGridAttachmentTests
 	{

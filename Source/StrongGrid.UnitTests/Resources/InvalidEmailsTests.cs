@@ -144,7 +144,7 @@ namespace StrongGrid.UnitTests.Resources
 			var invalidEmails = new InvalidEmails(client);
 
 			// Act
-			var result = await invalidEmails.GetAsync(emailAddress, CancellationToken.None).ConfigureAwait(false);
+			var result = await invalidEmails.GetAsync(emailAddress, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

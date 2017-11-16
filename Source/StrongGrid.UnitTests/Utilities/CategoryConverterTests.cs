@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Shouldly;
 using StrongGrid.Utilities;
 using System;
 using System.IO;
 using Xunit;
 
-namespace StrongGrid.UnitTests
+namespace StrongGrid.UnitTests.Utilities
 {
 	public class CategoryConverterTests
 	{

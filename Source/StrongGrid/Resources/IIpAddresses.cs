@@ -52,6 +52,15 @@ namespace StrongGrid.Resources
 		Task<IpAddress[]> GetAssignedAsync(CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
+		/// Retrieve unassigned IP addresses.
+		/// </summary>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// An array of <see cref="IpAddress">Ip addresses</see>.
+		/// </returns>
+		Task<IpAddress[]> GetUnassignedAsync(CancellationToken cancellationToken = default(CancellationToken));
+
+		/// <summary>
 		/// Retrieve all IP addresses that are currently warming up.
 		/// </summary>
 		/// <param name="cancellationToken">Cancellation token</param>

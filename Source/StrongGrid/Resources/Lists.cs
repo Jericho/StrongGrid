@@ -34,11 +34,12 @@ namespace StrongGrid.Resources
 		/// Create a list.
 		/// </summary>
 		/// <param name="name">The name.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="List" />.
 		/// </returns>
-		public async Task<List> CreateAsync(string name, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<List> CreateAsync(string name, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
 			{
@@ -46,6 +47,7 @@ namespace StrongGrid.Resources
 			};
 			var list = await _client
 				.PostAsync(_endpoint)
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<List>()
@@ -56,14 +58,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve all lists.
 		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="List" />.
 		/// </returns>
-		public async Task<List[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<List[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var lists = await _client
 				.GetAsync(_endpoint)
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<List[]>("lists")
 				.ConfigureAwait(false);
@@ -74,14 +78,16 @@ namespace StrongGrid.Resources
 		/// Delete a list.
 		/// </summary>
 		/// <param name="listId">The list identifier.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(long listId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(long listId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{listId}")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
 		}
@@ -90,15 +96,17 @@ namespace StrongGrid.Resources
 		/// Delete multiple lists.
 		/// </summary>
 		/// <param name="listIds">The list ids.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(IEnumerable<long> listIds, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(IEnumerable<long> listIds, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = JArray.FromObject(listIds.ToArray());
 			return _client
 				.DeleteAsync(_endpoint)
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
@@ -108,14 +116,16 @@ namespace StrongGrid.Resources
 		/// Retrieve a list.
 		/// </summary>
 		/// <param name="listId">The list identifier.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="List" />.
 		/// </returns>
-		public async Task<List> GetAsync(long listId, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<List> GetAsync(long listId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var list = await _client
 				.GetAsync($"{_endpoint}/{listId}")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<List>()
 				.ConfigureAwait(false);
@@ -127,11 +137,12 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="name">The name.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task UpdateAsync(long listId, string name, CancellationToken cancellationToken = default(CancellationToken))
+		public Task UpdateAsync(long listId, string name, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
 			{
@@ -139,6 +150,7 @@ namespace StrongGrid.Resources
 			};
 			return _client
 				.PatchAsync($"{_endpoint}/{listId}")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
@@ -150,14 +162,16 @@ namespace StrongGrid.Resources
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="recordsPerPage">The records per page.</param>
 		/// <param name="page">The page.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Contact" />.
 		/// </returns>
-		public async Task<Contact[]> GetRecipientsAsync(long listId, int recordsPerPage = 100, int page = 1, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<Contact[]> GetRecipientsAsync(long listId, int recordsPerPage = 100, int page = 1, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var recipients = await _client
 				.GetAsync($"{_endpoint}/{listId}/recipients")
+				.OnBehalfOf(onBehalfOf)
 				.WithArgument("page_size", recordsPerPage)
 				.WithArgument("page", page)
 				.WithCancellationToken(cancellationToken)
@@ -171,14 +185,16 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="contactId">The contact identifier.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task AddRecipientAsync(long listId, string contactId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task AddRecipientAsync(long listId, string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.PostAsync($"{_endpoint}/{listId}/recipients/{contactId}")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
 		}
@@ -188,14 +204,16 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="contactId">The contact identifier.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task RemoveRecipientAsync(long listId, string contactId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task RemoveRecipientAsync(long listId, string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{listId}/recipients/{contactId}")
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
 		}
@@ -205,15 +223,17 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="contactIds">The contact ids.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task AddRecipientsAsync(long listId, IEnumerable<string> contactIds, CancellationToken cancellationToken = default(CancellationToken))
+		public Task AddRecipientsAsync(long listId, IEnumerable<string> contactIds, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = JArray.FromObject(contactIds.ToArray());
 			return _client
 				.PostAsync($"{_endpoint}/{listId}/recipients")
+				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
