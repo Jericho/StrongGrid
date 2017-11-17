@@ -30,6 +30,16 @@ namespace StrongGrid.Resources
 		Task<IpAddressesRemaining> GetRemainingCountAsync(CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
+		/// Retrieve an IP address.
+		/// </summary>
+		/// <param name="address">The IP address to get.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="IpAddress" />.
+		/// </returns>
+		Task<IpAddress> GetAsync(string address, CancellationToken cancellationToken = default(CancellationToken));
+
+		/// <summary>
 		/// Retrieve all assigned and unassigned IP addresses.
 		/// </summary>
 		/// <param name="excludeWhitelabels">Should we exclude whitelabels?</param>
