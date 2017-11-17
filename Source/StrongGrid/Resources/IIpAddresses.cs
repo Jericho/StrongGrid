@@ -22,7 +22,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="AddIpAddressResult">result</see>.
 		/// </returns>
-		Task<AddIpAddressResult> AddAsync(int count, string[] subusers, bool warmup, CancellationToken cancellationToken = default(CancellationToken));
+		Task<AddIpAddressResult> AddAsync(int count, string[] subusers, bool? warmup, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Get how many IP Addresses can still be created during a given period and the price of those IPs.
@@ -89,6 +89,6 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Block">Blocks</see>.
 		/// </returns>
-		Task<IpAddress> GetWarmUpStatusAsync(string address, CancellationToken cancellationToken = default(CancellationToken));
+		Task<IpAddress> GetWarmupStatusAsync(string address, CancellationToken cancellationToken = default(CancellationToken));
 	}
 }

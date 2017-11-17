@@ -168,7 +168,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Block">Blocks</see>.
 		/// </returns>
-		public async Task<IpAddress> GetWarmUpStatusAsync(string address, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<IpAddress> GetWarmupStatusAsync(string address, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var addresses = await _client
 				.GetAsync($"{_endpoint}/warmup/{address}")
