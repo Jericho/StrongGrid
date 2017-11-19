@@ -4,7 +4,7 @@ using System;
 
 namespace StrongGrid.UnitTests
 {
-	public class MockSystemClock : Mock<ISystemClock>
+	internal class MockSystemClock : Mock<ISystemClock>
 	{
 		public MockSystemClock(DateTime currentDateTime) :
 			this(currentDateTime.Year, currentDateTime.Month, currentDateTime.Day, currentDateTime.Hour, currentDateTime.Minute, currentDateTime.Second, currentDateTime.Millisecond)

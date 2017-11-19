@@ -6,7 +6,7 @@ namespace StrongGrid.Utilities
 	/// A replacement for .Net <see cref="DateTime.Now" /> and <see cref="DateTime.UtcNow" />.
 	/// </summary>
 	/// <seealso cref="StrongGrid.Utilities.ISystemClock" />
-	public class SystemClock : ISystemClock
+	internal class SystemClock : ISystemClock
 	{
 		#region FIELDS
 
