@@ -215,14 +215,16 @@ namespace StrongGrid.Resources
 			TrackingSettings trackingSettings = null,
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
-			if (personalizations != null && personalizations.Any())
+			if (personalizations == null || !personalizations.Any())
 			{
-				// - The total number of recipients must be less than 1000. This includes all recipients defined within the to, cc, and bcc parameters, across each object that you include in the personalizations array.
-				var numberOfRecipients = personalizations.Sum(p => p?.To?.Count(r => r != null) ?? 0);
-				numberOfRecipients += personalizations.Sum(p => p?.Cc?.Count(r => r != null) ?? 0);
-				numberOfRecipients += personalizations.Sum(p => p?.Bcc?.Count(r => r != null) ?? 0);
-				if (numberOfRecipients >= 1000) throw new ArgumentOutOfRangeException("The total number of recipients must be less than 1000");
+				throw new ArgumentNullException(nameof(personalizations));
 			}
+
+			// The total number of recipients must be less than 1000. This includes all recipients defined within the to, cc, and bcc parameters, across each object that you include in the personalizations array.
+			var numberOfRecipients = personalizations.Sum(p => p?.To?.Count(r => r != null) ?? 0);
+			numberOfRecipients += personalizations.Sum(p => p?.Cc?.Count(r => r != null) ?? 0);
+			numberOfRecipients += personalizations.Sum(p => p?.Bcc?.Count(r => r != null) ?? 0);
+			if (numberOfRecipients >= 1000) throw new ArgumentOutOfRangeException("The total number of recipients must be less than 1000");
 
 			var data = new JObject();
 			if (from != null) data.Add("from", JToken.FromObject(from));
@@ -239,19 +241,16 @@ namespace StrongGrid.Resources
 			if (mailSettings != null) data.Add("mail_settings", JToken.FromObject(mailSettings));
 			if (trackingSettings != null) data.Add("tracking_settings", JToken.FromObject(trackingSettings));
 
-			if (personalizations != null && personalizations.Any())
+			// It's important to make a copy of the personalizations to ensure we don't modify the original array
+			var personalizationsCopy = personalizations.ToArray();
+			foreach (var personalization in personalizationsCopy)
 			{
-				// It's important to make a copy of the personalizations to ensure we don't modify the original array
-				var personalizationsCopy = personalizations.ToArray();
-				foreach (var personalization in personalizationsCopy)
-				{
-					personalization.To = EnsureRecipientsNamesAreQuoted(personalization.To);
-					personalization.Cc = EnsureRecipientsNamesAreQuoted(personalization.Cc);
-					personalization.Bcc = EnsureRecipientsNamesAreQuoted(personalization.Bcc);
-				}
-
-				data.Add("personalizations", JToken.FromObject(personalizationsCopy));
+				personalization.To = EnsureRecipientsNamesAreQuoted(personalization.To);
+				personalization.Cc = EnsureRecipientsNamesAreQuoted(personalization.Cc);
+				personalization.Bcc = EnsureRecipientsNamesAreQuoted(personalization.Bcc);
 			}
+
+			data.Add("personalizations", JToken.FromObject(personalizationsCopy));
 
 			if (sections != null && sections.Any())
 			{

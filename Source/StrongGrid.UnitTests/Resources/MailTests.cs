@@ -31,8 +31,16 @@ namespace StrongGrid.UnitTests.Resources
 			var client = Utils.GetFluentClient(mockHttp);
 			var mail = new Mail(client);
 
+			var personalizations = new[]
+			{
+				new MailPersonalization()
+				{
+					To = new[] { new MailAddress("bob@example.com", "Bob Smith") }
+				}
+			};
+
 			// Act
-			var result = await mail.SendAsync(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await mail.SendAsync(personalizations, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -55,8 +63,16 @@ namespace StrongGrid.UnitTests.Resources
 			var client = Utils.GetFluentClient(mockHttp);
 			var mail = new Mail(client);
 
+			var personalizations = new[]
+			{
+				new MailPersonalization()
+				{
+					To = new[] { new MailAddress("bob@example.com", "Bob Smith") }
+				}
+			};
+
 			// Act
-			var result = await mail.SendAsync(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await mail.SendAsync(personalizations, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
