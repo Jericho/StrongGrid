@@ -1,4 +1,4 @@
-﻿namespace StrongGrid.Models
+﻿namespace StrongGrid.Warmup
 {
 	/// <summary>
 	/// Information about the status of the warmup process.

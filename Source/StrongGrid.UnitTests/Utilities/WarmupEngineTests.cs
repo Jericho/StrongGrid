@@ -3,6 +3,7 @@ using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Resources;
 using StrongGrid.Utilities;
+using StrongGrid.Warmup;
 using System;
 using System.Collections.Generic;
 using System.Threading;

@@ -1,4 +1,5 @@
 ﻿using StrongGrid.Models;
+using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -6,12 +7,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StrongGrid.Utilities
+namespace StrongGrid.Warmup
 {
 	/// <summary>
-	/// Engine that can warmup an IP address according to a custom schedule.
+	/// Engine that can warmup IP addresses according to a custom schedule.
 	/// </summary>
-	public class WarmupEngine
+	public class WarmupEngine : IWarmupEngine
 	{
 		private WarmupSettings _warmupSettings;
 		private IClient _client;
@@ -262,6 +263,12 @@ namespace StrongGrid.Utilities
 			TrackingSettings trackingSettings = null,
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
+			/*
+			var cacheDir = Path.Combine(
+				Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+				"MyApplicationName");
+			*/
+
 			// Validate parameters
 			if (personalizations == null || !personalizations.Any())
 			{

@@ -1,6 +1,4 @@
-﻿using StrongGrid.Utilities;
-
-namespace StrongGrid.Models
+﻿namespace StrongGrid.Warmup
 {
 	/// <summary>
 	/// Setting that are used by the <see cref="WarmupEngine"/>.
