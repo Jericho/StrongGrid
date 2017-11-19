@@ -980,57 +980,67 @@ namespace StrongGrid.IntegrationTests
 			var allIpAddresses = await client.IpAddresses.GetAllAsync(false, null, 10, 0, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"There are {allIpAddresses.Length} IP addresses on your account").ConfigureAwait(false);
 
-			/**************************************************
-				Commenting out the following tests because 
-				I do not have the necessary privileges
-			 **************************************************
+			// GET A SPECIFIC IP ADDRESS
+			if (allIpAddresses != null && allIpAddresses.Any())
+			{
+				var firstAddress = await client.IpAddresses.GetAsync(allIpAddresses.First().Address, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"IP address {firstAddress.Address} was retrieved").ConfigureAwait(false);
+			}
 
 			// GET THE WARMING UP IP ADDRESSES
 			var warmingup = await client.IpAddresses.GetWarmingUpAsync(cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"There are {warmingup.Length} warming up IP addresses").ConfigureAwait(false);
 
+			// GET A SPECIFIC IP ADDRESS
+			if (warmingup != null && warmingup.Any())
+			{
+				var firstWarmingupAddress = await client.IpAddresses.GetAsync(warmingup.First().Address, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"There warmup status of {firstWarmingupAddress.Address} is {firstWarmingupAddress.Warmup}").ConfigureAwait(false);
+			}
+
 			// GET THE ASSIGNED IP ADDRESSES
 			var assigned = await client.IpAddresses.GetAssignedAsync(cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"There are {assigned.Length} assigned IP addresses").ConfigureAwait(false);
 
+			// GET THE UNASSIGNED IP ADDRESSES
+			var unAssigned = await client.IpAddresses.GetUnassignedAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {unAssigned.Length} unassigned IP addresses").ConfigureAwait(false);
+
 			// GET THE REMAINING IP ADDRESSES
 			var remaining = await client.IpAddresses.GetRemainingCountAsync(cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"You have {remaining.Remaining} remaining IP addresses for the {remaining.Period} at a cost of {remaining.PricePerIp}").ConfigureAwait(false);
-
-			**************************************************/
 		}
 
-		private static Task IpPools(IClient client, TextWriter log, CancellationToken cancellationToken)
+		private static async Task IpPools(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			/**************************************************
-				Commenting out the following tests because 
-				I do not have the necessary privileges
-			 **************************************************
-
 			await log.WriteLineAsync("\n***** IP POOLS *****\n").ConfigureAwait(false);
 
 			// GET ALL THE IP POOLS
 			var allIpPools = await client.IpPools.GetAllAsync(cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"There are {allIpPools.Length} IP pools on your account").ConfigureAwait(false);
 
+			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
+			foreach (var oldPool in allIpPools.Where(p => p.Name.StartsWith("StrongGrid Integration Testing:")))
+			{
+				await client.IpPools.DeleteAsync(oldPool.Name, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"Ip Pool {oldPool.Name} deleted").ConfigureAwait(false);
+			}
+
 			// CREATE A NEW POOL
-			var newPool = await client.IpPools.CreateAsync("mktg", cancellationToken).ConfigureAwait(false);
+			var newPool = await client.IpPools.CreateAsync("StrongGrid Integration Testing: new pool", cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"New pool created: {newPool.Name}").ConfigureAwait(false);
 
 			// UPDATE THE IP POOL
-			await client.IpPools.UpdateAsync("mktg", "marketing", cancellationToken).ConfigureAwait(false);
+			await client.IpPools.UpdateAsync("StrongGrid Integration Testing: new pool", "StrongGrid Integration Testing: updated name", cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("New pool has been updated").ConfigureAwait(false);
 
 			// GET THE IP POOL
-			var marketingPool = await client.IpPools.GetAsync("marketing", cancellationToken).ConfigureAwait(false);
+			var marketingPool = await client.IpPools.GetAsync("StrongGrid Integration Testing: updated name", cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Retrieved pool '{marketingPool.Name}'").ConfigureAwait(false);
 
 			// DELETE THE IP POOL
 			await client.IpPools.DeleteAsync(marketingPool.Name, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Deleted pool '{marketingPool.Name}'").ConfigureAwait(false);
-
-			**************************************************/
-			return Task.FromResult(0); // Success.
 		}
 
 		private static Task Subusers(IClient client, TextWriter log, CancellationToken cancellationToken)
