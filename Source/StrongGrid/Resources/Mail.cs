@@ -66,6 +66,7 @@ namespace StrongGrid.Resources
 		/// This is a convenience method with simplified parameters.
 		/// If you need more options, use the <see cref="SendAsync" /> method.
 		/// </remarks>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients</exception>
 		/// <exception cref="Exception">Email exceeds the size limit</exception>
 		public Task<string> SendToSingleRecipientAsync(
 			MailAddress to,
@@ -125,6 +126,7 @@ namespace StrongGrid.Resources
 		/// This is a convenience method with simplified parameters.
 		/// If you need more options, use the <see cref="SendAsync" /> method.
 		/// </remarks>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients</exception>
 		/// <exception cref="Exception">Email exceeds the size limit</exception>
 		public Task<string> SendToMultipleRecipientsAsync(
 			IEnumerable<MailAddress> recipients,
@@ -194,6 +196,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The message id.
 		/// </returns>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients</exception>
 		/// <exception cref="Exception">Email exceeds the size limit</exception>
 		public async Task<string> SendAsync(
 			IEnumerable<MailPersonalization> personalizations,
