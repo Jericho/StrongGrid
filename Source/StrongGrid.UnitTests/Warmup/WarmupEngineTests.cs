@@ -393,8 +393,8 @@ namespace StrongGrid.UnitTests.Warmup
 			var tomorrow = new MockSystemClock(2017, 11, 20, 0, 0, 0, 0);
 
 			var warmupSettings = new WarmupSettings("warmup_test", new[] { 1, 2 }, 1);
-			var warmupRepository = new MemoryWarmupProgressRepository();
-			var warmupEngine = new WarmupEngine(warmupSettings, client, warmupRepository, today.Object);
+			var warmupStatusRepository = new MemoryWarmupProgressRepository();
+			var warmupEngine = new WarmupEngine(warmupSettings, client, warmupStatusRepository, today.Object);
 			await warmupEngine.PrepareWithExistingIpAddressesAsync(new[] { "168.245.123.132" }, CancellationToken.None).ConfigureAwait(false);
 
 			var result = await warmupEngine.SendToSingleRecipientAsync(new MailAddress("desautelsj@hotmail.com", "Jeremie Desautels"), new MailAddress("jeremie.desautels@gmail.com", "J. Desautels"), "Day 1 email 1", DateTime.UtcNow.ToString("F"), null).ConfigureAwait(false);
@@ -408,7 +408,7 @@ namespace StrongGrid.UnitTests.Warmup
 			result.MessageIdOnPool.ShouldBeNull();
 			result.MessageIdNotOnPool.ShouldNotBeNull();
 
-			warmupEngine = new WarmupEngine(warmupSettings, client, warmupRepository, tomorrow.Object);
+			warmupEngine = new WarmupEngine(warmupSettings, client, warmupStatusRepository, tomorrow.Object);
 
 			result = await warmupEngine.SendToSingleRecipientAsync(new MailAddress("desautelsj@hotmail.com", "Jeremie Desautels"), new MailAddress("jeremie.desautels@gmail.com", "J. Desautels"), "Day 2 email 1", DateTime.UtcNow.ToString("F"), null).ConfigureAwait(false);
 			result.Completed.ShouldBeFalse();
