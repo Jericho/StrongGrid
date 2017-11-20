@@ -104,10 +104,13 @@ namespace StrongGrid.Warmup
 			var fileName = GetStatusFilePath(poolName);
 			var warmupStatus = (WarmupStatus)null;
 
-			using (var streamReader = File.OpenText(fileName))
+			if (File.Exists(poolName))
 			{
-				var serializer = new JsonSerializer();
-				warmupStatus = (WarmupStatus)serializer.Deserialize(streamReader, typeof(WarmupStatus));
+				using (var streamReader = File.OpenText(fileName))
+				{
+					var serializer = new JsonSerializer();
+					warmupStatus = (WarmupStatus)serializer.Deserialize(streamReader, typeof(WarmupStatus));
+				}
 			}
 
 			return warmupStatus;
