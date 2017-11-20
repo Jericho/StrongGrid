@@ -2,7 +2,6 @@
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,15 +16,17 @@ namespace StrongGrid.Warmup
 		private WarmupSettings _warmupSettings;
 		private IClient _client;
 		private ISystemClock _systemClock;
+		private IWarmupProgressRepository _warmupProgressRepository;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="WarmupEngine" /> class.
 		/// </summary>
 		/// <param name="warmupSettings">The warmup settings.</param>
 		/// <param name="client">The StrongGrid client.</param>
+		/// <param name="warmupProgressRepository">The repository where progress information is stored</param>
 		[StrongGrid.Utilities.ExcludeFromCodeCoverage]
-		public WarmupEngine(WarmupSettings warmupSettings, IClient client)
-			: this(warmupSettings, client, null)
+		public WarmupEngine(WarmupSettings warmupSettings, IClient client, IWarmupProgressRepository warmupProgressRepository)
+			: this(warmupSettings, client, warmupProgressRepository, null)
 		{
 		}
 
@@ -34,11 +35,13 @@ namespace StrongGrid.Warmup
 		/// </summary>
 		/// <param name="warmupSettings">The warmup settings.</param>
 		/// <param name="client">The StrongGrid client.</param>
+		/// <param name="warmupProgressRepository">The repository where progress information is stored</param>
 		/// <param name="systemClock">The system clock. This is for unit testing only.</param>
-		internal WarmupEngine(WarmupSettings warmupSettings, IClient client, ISystemClock systemClock = null)
+		internal WarmupEngine(WarmupSettings warmupSettings, IClient client, IWarmupProgressRepository warmupProgressRepository, ISystemClock systemClock = null)
 		{
 			_warmupSettings = warmupSettings ?? throw new ArgumentNullException(nameof(warmupSettings));
 			_client = client ?? throw new ArgumentNullException(nameof(client));
+			_warmupProgressRepository = warmupProgressRepository ?? throw new ArgumentNullException(nameof(warmupProgressRepository));
 			_systemClock = systemClock ?? SystemClock.Instance;
 		}
 
@@ -61,29 +64,24 @@ namespace StrongGrid.Warmup
 		/// <summary>
 		/// Prepare a new IP pool to warmup the IP addresses.
 		/// </summary>
-		/// <param name="ipAddresses">IP addresses to warmup.</param>
+		/// <param name="ipAddresses">The IP addresses to warmup.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
 		public async Task PrepareWithExistingIpAddressesAsync(string[] ipAddresses, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			// Check if a pool already exist
-			var result = await _client.IpPools.GetAllAsync(cancellationToken).ConfigureAwait(false);
-			var matchingPools = result.Where(r => r.Name.StartsWith(_warmupSettings.PoolName, StringComparison.OrdinalIgnoreCase));
-			if (matchingPools.Any())
-			{
-				throw new Exception($"There is already a pool named {_warmupSettings.PoolName}");
-			}
-
 			// Create a new pool
-			var newIpPool = await _client.IpPools.CreateAsync(GetPoolName(_warmupSettings.PoolName, 0, DateTime.MinValue, 0), cancellationToken).ConfigureAwait(false);
+			var newIpPool = await _client.IpPools.CreateAsync(_warmupSettings.PoolName, cancellationToken).ConfigureAwait(false);
 
 			// Add each address to the new pool
 			foreach (var ipAddress in ipAddresses)
 			{
 				await _client.IpPools.AddAddressAsync(newIpPool.Name, ipAddress, cancellationToken).ConfigureAwait(false);
 			}
+
+			// Record the start of process
+			await _warmupProgressRepository.BeginWarmupProcessAsync(_warmupSettings.PoolName, ipAddresses, _warmupSettings.DailyVolumePerIpAddress, _warmupSettings.ResetDays, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -118,7 +116,7 @@ namespace StrongGrid.Warmup
 		/// </remarks>
 		/// <exception cref="ArgumentOutOfRangeException">Too many recipients</exception>
 		/// <exception cref="Exception">Email exceeds the size limit</exception>
-		public Task<WarmupStatus> SendToSingleRecipientAsync(
+		public Task<WarmupResult> SendToSingleRecipientAsync(
 			MailAddress to,
 			MailAddress from,
 			string subject,
@@ -176,7 +174,7 @@ namespace StrongGrid.Warmup
 		/// </remarks>
 		/// <exception cref="ArgumentOutOfRangeException">Too many recipients</exception>
 		/// <exception cref="Exception">Email exceeds the size limit</exception>
-		public Task<WarmupStatus> SendToMultipleRecipientsAsync(
+		public Task<WarmupResult> SendToMultipleRecipientsAsync(
 			IEnumerable<MailAddress> recipients,
 			MailAddress from,
 			string subject,
@@ -199,11 +197,11 @@ namespace StrongGrid.Warmup
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var personalizations = recipients.Select(r => new MailPersonalization { To = new[] { r } });
-			var contents = new[]
-			{
-				new MailContent("text/plain", textContent),
-				new MailContent("text/html", htmlContent)
-			};
+
+			var contents = new List<MailContent>();
+			if (!string.IsNullOrEmpty(textContent)) contents.Add(new MailContent("text/plain", textContent));
+			if (!string.IsNullOrEmpty(htmlContent)) contents.Add(new MailContent("text/html", htmlContent));
+
 			var trackingSettings = new TrackingSettings
 			{
 				ClickTracking = new ClickTrackingSettings
@@ -244,7 +242,7 @@ namespace StrongGrid.Warmup
 		/// </returns>
 		/// <exception cref="ArgumentOutOfRangeException">Too many recipients</exception>
 		/// <exception cref="Exception">Email exceeds the size limit</exception>
-		public async Task<WarmupStatus> SendAsync(
+		public async Task<WarmupResult> SendAsync(
 			IEnumerable<MailPersonalization> personalizations,
 			string subject,
 			IEnumerable<MailContent> contents,
@@ -275,61 +273,52 @@ namespace StrongGrid.Warmup
 				throw new ArgumentNullException(nameof(personalizations));
 			}
 
-			// Get the desired IP pool
-			var result = await _client.IpPools.GetAllAsync(cancellationToken).ConfigureAwait(false);
-			var matchingPools = result
-				.Where(r => r.Name.StartsWith(_warmupSettings.PoolName, StringComparison.OrdinalIgnoreCase))
-				.OrderByDescending(r => r.Name);
-			if (matchingPools.Any(p => p.Name == _warmupSettings.PoolName))
-			{
-				throw new Exception($"There is already a pool named \"{_warmupSettings.PoolName}\". Typically this means that this pool has already been warmed up.");
-			}
-			else if (!matchingPools.Any())
-			{
-				throw new Exception("Can't find the pool to warm up. Typically this means that this pool hasn't been prepared.");
-			}
-
-			// We could avoid the following call if SendGrid returned the ip addresses in each pool when we call "_client.IpPools.GetAllAsync"
-			var pool = await _client.IpPools.GetAsync(matchingPools.First().Name, cancellationToken).ConfigureAwait(false);
-			var warmupStatus = ParsePoolName(pool.Name);
-			var numberOfIpAddressesInThePool = pool.IpAddresses.Length;
+			// Get the current warmup status
+			var warmupStatus = await _warmupProgressRepository.GetWarmupStatusAsync(_warmupSettings.PoolName, cancellationToken).ConfigureAwait(false);
+			var numberOfIpAddressesInThePool = warmupStatus.IpAddresses.Length;
 
 			// Determine how many emails can be sent on the pool today
 			var warmupDay = 1;
-			var emailsSentToday = 0;
+			var emailsSentLastDay = 0;
 
 			if (warmupStatus.DateLastSent.Date != DateTime.MinValue.Date)
 			{
-				if (warmupStatus.DateLastSent.Date == _systemClock.UtcNow.Date)
+				if (warmupStatus.Completed)
+				{
+					// The warmup process has already been completed
+					warmupDay = 0;
+					emailsSentLastDay = 0;
+				}
+				else if (warmupStatus.DateLastSent.Date == _systemClock.UtcNow.Date)
 				{
 					// The lastSendDate is "Today".
 					warmupDay = warmupStatus.WarmupDay;
-					emailsSentToday = warmupStatus.EmailsSentLastDay;
+					emailsSentLastDay = warmupStatus.EmailsSentLastDay;
 				}
 				else if (warmupStatus.DateLastSent.Date.AddDays(_warmupSettings.ResetDays) >= _systemClock.UtcNow.Date)
 				{
-					// The lastSendDate is the calendar "Yesterday".
+					// The lastSendDate is "Yesterday".
 					// Move on to the next warmupDay's sending volume.
 					warmupDay = warmupStatus.WarmupDay + 1;
-					emailsSentToday = 0;
+					emailsSentLastDay = 0;
 				}
 				else
 				{
-					// The lastSendDate is not the calendar "Yesterday".
+					// The lastSendDate is not "Yesterday".
 					// The previous warmupDay's sending volume will be
 					// repeated to avoid over-sending (this is days of
 					// warmup, not calendar days, which matters to ISPs)
-					warmupDay = Math.Max(warmupStatus.WarmupDay - 1, 1);
-					emailsSentToday = 0;
+					warmupDay = warmupStatus.WarmupDay;
+					emailsSentLastDay = 0;
 				}
 			}
 
-			// The proces is completed if we have exceeded the number of days configured
-			var warmupCompleted = warmupDay > _warmupSettings.DailyVolumePerIpAddress.Length;
+			// Check if the process is completed
+			var warmupCompleted = warmupStatus.Completed || warmupDay > _warmupSettings.DailyVolumePerIpAddress.Length;
 
 			// Calculate the number of remaining emails for today
 			var maxDailyVolume = warmupCompleted ? 0 : numberOfIpAddressesInThePool * _warmupSettings.DailyVolumePerIpAddress[warmupDay - 1];
-			var remainingDailyEmails = Math.Max(maxDailyVolume - emailsSentToday, 0);
+			var remainingDailyEmails = Math.Max(maxDailyVolume - emailsSentLastDay, 0);
 
 			// Determine which emails will be sent from the pool and which ones will not
 			var total = 0;
@@ -358,7 +347,7 @@ namespace StrongGrid.Warmup
 					p.Cc?.Count(r => r != null) ?? 0 +
 					p.Bcc?.Count(r => r != null) ?? 0);
 
-			// The proces could also be completed if we are on the last day of the process and there won't any emails left to send after this batch
+			// The proces could also be completed if we are on the last day of the process and there won't be any emails left to send after this batch
 			warmupCompleted |= warmupDay == _warmupSettings.DailyVolumePerIpAddress.Length && remainingDailyEmails - emailsToSend <= 0;
 
 			// Send the emails
@@ -380,7 +369,7 @@ namespace StrongGrid.Warmup
 					sendAt,
 					batchId,
 					unsubscribeOptions,
-					pool.Name,
+					_warmupSettings.PoolName,
 					mailSettings,
 					trackingSettings,
 					cancellationToken),
@@ -408,33 +397,22 @@ namespace StrongGrid.Warmup
 			};
 			await Task.WhenAll(tasks).ConfigureAwait(false);
 
-			// Update the pool name to record progress
-			var updatedPoolName = warmupCompleted ? _warmupSettings.PoolName : GetPoolName(_warmupSettings.PoolName, warmupDay, _systemClock.UtcNow, emailsSentToday + emailsToSend);
-			if (updatedPoolName != pool.Name)
+			// Update status and clean up if necesary
+			if (!warmupStatus.Completed)
 			{
-				await _client.IpPools.UpdateAsync(pool.Name, updatedPoolName, cancellationToken).ConfigureAwait(false);
+				// Delete the pool if the process is completed
+				if (warmupCompleted)
+				{
+					await _client.IpPools.DeleteAsync(_warmupSettings.PoolName, cancellationToken).ConfigureAwait(false);
+				}
+
+				// Update the progress info
+				emailsSentLastDay += emailsToSend;
+				await _warmupProgressRepository.UpdateStatusAsync(_warmupSettings.PoolName, warmupDay, _systemClock.UtcNow, emailsSentLastDay, warmupCompleted, cancellationToken);
 			}
 
 			// Return status
-			return new WarmupStatus(warmupCompleted, tasks[0].Result, tasks[1].Result);
-		}
-
-		private static string GetPoolName(string name, int warmupDay, DateTime dateLastSent, int emailsSentLastDay)
-		{
-			var lastSent = dateLastSent == DateTime.MinValue ? "00000000" : dateLastSent.ToString("yyyyMMdd");
-			return $"{name}_{warmupDay:000}_{lastSent}_{emailsSentLastDay:000000000}";
-		}
-
-		private static (string Name, int WarmupDay, DateTime DateLastSent, int EmailsSentLastDay) ParsePoolName(string poolName)
-		{
-			var nameParts = poolName.Split(new[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
-
-			var name = nameParts[0];
-			var warmupDay = Convert.ToInt32(nameParts[1]);
-			var dateLastSent = nameParts[2] == "00000000" ? DateTime.MinValue : DateTime.ParseExact(nameParts[2], "yyyyMMdd", CultureInfo.InvariantCulture);
-			var emailsSentLastDay = Convert.ToInt32(nameParts[3]);
-
-			return (name, warmupDay, dateLastSent, emailsSentLastDay);
+			return new WarmupResult(warmupCompleted, tasks[0].Result, tasks[1].Result);
 		}
 
 		private Task<string> SendEmailAsync(

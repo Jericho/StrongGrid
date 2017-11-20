@@ -1,4 +1,7 @@
-﻿namespace StrongGrid.Warmup
+﻿using Newtonsoft.Json;
+using System;
+
+namespace StrongGrid.Warmup
 {
 	/// <summary>
 	/// Information about the status of the warmup process.
@@ -6,31 +9,40 @@
 	public class WarmupStatus
 	{
 		/// <summary>
-		/// Gets a value indicating whether the warmup process is completed or not.
+		/// Gets or sets the name of the IP Pool
 		/// </summary>
-		public bool Completed { get; internal set; }
+		[JsonProperty("pool_name", NullValueHandling = NullValueHandling.Ignore)]
+		public string PoolName { get; set; }
 
 		/// <summary>
-		/// Gets the MessageId of the email sent from an IP address in the pool being warmed up.
+		/// Gets or sets the IP addresses to warmup
 		/// </summary>
-		public string MessageIdOnPool { get; private set; }
+		[JsonProperty("ip_addresses", NullValueHandling = NullValueHandling.Ignore)]
+		public string[] IpAddresses { get; set; }
 
 		/// <summary>
-		/// Gets the MessageId of the email sent from an IP address NOT in the pool being warmed up.
+		/// Gets or sets the warmup day.
+		/// 1 represents the first day of the process, 2 represents the second day, and so forth.
+		/// Zero indicates that the process hasn't started yet.
 		/// </summary>
-		public string MessageIdNotOnPool { get; private set; }
+		[JsonProperty("warmup_day", NullValueHandling = NullValueHandling.Ignore)]
+		public int WarmupDay { get; set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="WarmupStatus" /> class.
+		/// Gets or sets the last day emails were sent through the IP pool
 		/// </summary>
-		/// <param name="completed">Indicator whether the warmup process is completed or not</param>
-		/// <param name="messageIdNotOnPool">The MessageId of the email sent from an IP address in the pool being warmed up</param>
-		/// <param name="messageIdOnPool">The MessageId of the email sent from an IP address NOT in the pool being warmed up</param>
-		public WarmupStatus(bool completed, string messageIdOnPool, string messageIdNotOnPool)
-		{
-			Completed = completed;
-			MessageIdOnPool = messageIdOnPool;
-			MessageIdNotOnPool = messageIdNotOnPool;
-		}
+		[JsonProperty("date_last_sent", NullValueHandling = NullValueHandling.Ignore)]
+		public DateTime DateLastSent { get; set; }
+
+		/// <summary>
+		/// Gets or sets the number of emails that have been sent during the last day
+		/// </summary>
+		[JsonProperty("emails_sent_last_day", NullValueHandling = NullValueHandling.Ignore)]
+		public int EmailsSentLastDay { get; set; }
+
+		/// <summary>
+		/// Gets or sets a value indicating whether the warmup process is completed or not.
+		/// </summary>
+		public bool Completed { get; set; }
 	}
 }

@@ -56,7 +56,7 @@ namespace StrongGrid.Warmup
 		/// <param name="mailSettings">The mail settings.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The message id.
+		/// The result
 		/// </returns>
 		/// <remarks>
 		/// This is a convenience method with simplified parameters.
@@ -64,7 +64,7 @@ namespace StrongGrid.Warmup
 		/// </remarks>
 		/// <exception cref="ArgumentOutOfRangeException">Too many recipients</exception>
 		/// <exception cref="Exception">Email exceeds the size limit</exception>
-		Task<WarmupStatus> SendToSingleRecipientAsync(MailAddress to, MailAddress from, string subject, string htmlContent, string textContent, bool trackOpens = true, bool trackClicks = true, SubscriptionTrackingSettings subscriptionTracking = null, MailAddress replyTo = null, IEnumerable<Attachment> attachments = null, string templateId = null, IEnumerable<KeyValuePair<string, string>> sections = null, IEnumerable<KeyValuePair<string, string>> headers = null, IEnumerable<string> categories = null, IEnumerable<KeyValuePair<string, string>> customArgs = null, DateTime? sendAt = null, string batchId = null, UnsubscribeOptions unsubscribeOptions = null, MailSettings mailSettings = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<WarmupResult> SendToSingleRecipientAsync(MailAddress to, MailAddress from, string subject, string htmlContent, string textContent, bool trackOpens = true, bool trackClicks = true, SubscriptionTrackingSettings subscriptionTracking = null, MailAddress replyTo = null, IEnumerable<Attachment> attachments = null, string templateId = null, IEnumerable<KeyValuePair<string, string>> sections = null, IEnumerable<KeyValuePair<string, string>> headers = null, IEnumerable<string> categories = null, IEnumerable<KeyValuePair<string, string>> customArgs = null, DateTime? sendAt = null, string batchId = null, UnsubscribeOptions unsubscribeOptions = null, MailSettings mailSettings = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Send the same email to multiple recipients
@@ -90,7 +90,7 @@ namespace StrongGrid.Warmup
 		/// <param name="mailSettings">The mail settings.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The message id.
+		/// The result
 		/// </returns>
 		/// <remarks>
 		/// This is a convenience method with simplified parameters.
@@ -98,7 +98,7 @@ namespace StrongGrid.Warmup
 		/// </remarks>
 		/// <exception cref="ArgumentOutOfRangeException">Too many recipients</exception>
 		/// <exception cref="Exception">Email exceeds the size limit</exception>
-		Task<WarmupStatus> SendToMultipleRecipientsAsync(IEnumerable<MailAddress> recipients, MailAddress from, string subject, string htmlContent, string textContent, bool trackOpens = true, bool trackClicks = true, SubscriptionTrackingSettings subscriptionTracking = null, MailAddress replyTo = null, IEnumerable<Attachment> attachments = null, string templateId = null, IEnumerable<KeyValuePair<string, string>> sections = null, IEnumerable<KeyValuePair<string, string>> headers = null, IEnumerable<string> categories = null, IEnumerable<KeyValuePair<string, string>> customArgs = null, DateTime? sendAt = null, string batchId = null, UnsubscribeOptions unsubscribeOptions = null, MailSettings mailSettings = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<WarmupResult> SendToMultipleRecipientsAsync(IEnumerable<MailAddress> recipients, MailAddress from, string subject, string htmlContent, string textContent, bool trackOpens = true, bool trackClicks = true, SubscriptionTrackingSettings subscriptionTracking = null, MailAddress replyTo = null, IEnumerable<Attachment> attachments = null, string templateId = null, IEnumerable<KeyValuePair<string, string>> sections = null, IEnumerable<KeyValuePair<string, string>> headers = null, IEnumerable<string> categories = null, IEnumerable<KeyValuePair<string, string>> customArgs = null, DateTime? sendAt = null, string batchId = null, UnsubscribeOptions unsubscribeOptions = null, MailSettings mailSettings = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Send email(s) over SendGrid’s v3 Web API
@@ -121,10 +121,10 @@ namespace StrongGrid.Warmup
 		/// <param name="trackingSettings">The tracking settings.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
-		/// The message id.
+		/// The result
 		/// </returns>
 		/// <exception cref="ArgumentOutOfRangeException">Too many recipients</exception>
 		/// <exception cref="Exception">Email exceeds the size limit</exception>
-		Task<WarmupStatus> SendAsync(IEnumerable<MailPersonalization> personalizations, string subject, IEnumerable<MailContent> contents, MailAddress from, MailAddress replyTo = null, IEnumerable<Attachment> attachments = null, string templateId = null, IEnumerable<KeyValuePair<string, string>> sections = null, IEnumerable<KeyValuePair<string, string>> headers = null, IEnumerable<string> categories = null, IEnumerable<KeyValuePair<string, string>> customArgs = null, DateTime? sendAt = null, string batchId = null, UnsubscribeOptions unsubscribeOptions = null, MailSettings mailSettings = null, TrackingSettings trackingSettings = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<WarmupResult> SendAsync(IEnumerable<MailPersonalization> personalizations, string subject, IEnumerable<MailContent> contents, MailAddress from, MailAddress replyTo = null, IEnumerable<Attachment> attachments = null, string templateId = null, IEnumerable<KeyValuePair<string, string>> sections = null, IEnumerable<KeyValuePair<string, string>> headers = null, IEnumerable<string> categories = null, IEnumerable<KeyValuePair<string, string>> customArgs = null, DateTime? sendAt = null, string batchId = null, UnsubscribeOptions unsubscribeOptions = null, MailSettings mailSettings = null, TrackingSettings trackingSettings = null, CancellationToken cancellationToken = default(CancellationToken));
 	}
 }
