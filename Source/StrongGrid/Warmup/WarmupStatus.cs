@@ -43,6 +43,7 @@ namespace StrongGrid.Warmup
 		/// <summary>
 		/// Gets or sets a value indicating whether the warmup process is completed or not.
 		/// </summary>
+		[JsonProperty("completed", NullValueHandling = NullValueHandling.Ignore)]
 		public bool Completed { get; set; }
 	}
 }

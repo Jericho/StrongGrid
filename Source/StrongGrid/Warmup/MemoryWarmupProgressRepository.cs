@@ -67,8 +67,6 @@ namespace StrongGrid.Warmup
 			warmupStatus.EmailsSentLastDay = emailsSentLastDay;
 			warmupStatus.Completed = completed;
 
-			_progressInfo[poolName] = warmupStatus;
-
 			return Task.FromResult(true);
 		}
 	}
