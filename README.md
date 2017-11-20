@@ -20,7 +20,7 @@ StrongGrid includes a client that allows you to interact with all the "resources
 
 StrongGrid also includes a parser for webhook sent from SendGrid to your own WebAPI. This parser supports the two types of webhooks that SendGrid can post to your API: the Event Webhook and the Inbound Parse Webhook. 
 
-Since November 2017, StrongGrid also includes a "warmup engine" that allows you to warmup IP addresses using a cusotm schedule.
+Since November 2017, StrongGrid also includes a "warmup engine" that allows you to warmup IP addresses using a custom schedule.
 
 If you information about how to setup the SendGrid webhooks, please consult the following resources:
 - [Webhooks Overview](https://sendgrid.com/docs/API_Reference/Webhooks/debug.html)
