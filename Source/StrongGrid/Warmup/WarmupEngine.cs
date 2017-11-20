@@ -54,11 +54,15 @@ namespace StrongGrid.Warmup
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public async Task PrepareWithNewIpAddressesAsync(int count, string[] subusers, CancellationToken cancellationToken = default(CancellationToken))
+		public Task PrepareWithNewIpAddressesAsync(int count, string[] subusers, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var result = await _client.IpAddresses.AddAsync(count, subusers, false, cancellationToken).ConfigureAwait(false);
-			var newIpAddresses = result.IpAddresses.Select(r => r.Address).ToArray();
-			await PrepareWithExistingIpAddressesAsync(newIpAddresses).ConfigureAwait(false);
+			return PrepareEngineAsync(
+				() =>
+				{
+					var result = _client.IpAddresses.AddAsync(count, subusers, false, cancellationToken).Result;
+					var ipAddresses = result.IpAddresses.Select(r => r.Address).ToArray();
+					return ipAddresses;
+				}, cancellationToken);
 		}
 
 		/// <summary>
@@ -69,19 +73,9 @@ namespace StrongGrid.Warmup
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public async Task PrepareWithExistingIpAddressesAsync(string[] ipAddresses, CancellationToken cancellationToken = default(CancellationToken))
+		public Task PrepareWithExistingIpAddressesAsync(string[] ipAddresses, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			// Create a new pool
-			var newIpPool = await _client.IpPools.CreateAsync(_warmupSettings.PoolName, cancellationToken).ConfigureAwait(false);
-
-			// Add each address to the new pool
-			foreach (var ipAddress in ipAddresses)
-			{
-				await _client.IpPools.AddAddressAsync(newIpPool.Name, ipAddress, cancellationToken).ConfigureAwait(false);
-			}
-
-			// Record the start of process
-			await _warmupProgressRepository.BeginWarmupProcessAsync(_warmupSettings.PoolName, ipAddresses, _warmupSettings.DailyVolumePerIpAddress, _warmupSettings.ResetDays, cancellationToken).ConfigureAwait(false);
+			return PrepareEngineAsync(() => ipAddresses, cancellationToken);
 		}
 
 		/// <summary>
@@ -261,12 +255,6 @@ namespace StrongGrid.Warmup
 			TrackingSettings trackingSettings = null,
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
-			/*
-			var cacheDir = Path.Combine(
-				Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-				"MyApplicationName");
-			*/
-
 			// Validate parameters
 			if (personalizations == null || !personalizations.Any())
 			{
@@ -407,8 +395,12 @@ namespace StrongGrid.Warmup
 				}
 
 				// Update the progress info
-				emailsSentLastDay += emailsToSend;
-				await _warmupProgressRepository.UpdateStatusAsync(_warmupSettings.PoolName, warmupDay, _systemClock.UtcNow, emailsSentLastDay, warmupCompleted, cancellationToken);
+				warmupStatus.Completed = warmupCompleted;
+				warmupStatus.DateLastSent = _systemClock.UtcNow;
+				warmupStatus.EmailsSentLastDay = emailsSentLastDay + emailsToSend;
+				warmupStatus.WarmupDay = warmupDay;
+
+				await _warmupProgressRepository.UpdateStatusAsync(warmupStatus, cancellationToken);
 			}
 
 			// Return status
@@ -460,6 +452,33 @@ namespace StrongGrid.Warmup
 					mailSettings,
 					trackingSettings,
 					cancellationToken);
+		}
+
+		private async Task PrepareEngineAsync(Func<IEnumerable<string>> getIpAddresses, CancellationToken cancellationToken)
+		{
+			// Create a new pool
+			var newIpPool = await _client.IpPools.CreateAsync(_warmupSettings.PoolName, cancellationToken).ConfigureAwait(false);
+
+			// Get the ip addresses
+			var ipAddresses = getIpAddresses().ToArray();
+
+			// Add each address to the new pool
+			foreach (var ipAddress in ipAddresses)
+			{
+				await _client.IpPools.AddAddressAsync(newIpPool.Name, ipAddress, cancellationToken).ConfigureAwait(false);
+			}
+
+			// Record the start of process
+			var warmupStatus = new WarmupStatus()
+			{
+				Completed = false,
+				DateLastSent = DateTime.MinValue,
+				EmailsSentLastDay = 0,
+				IpAddresses = ipAddresses,
+				PoolName = _warmupSettings.PoolName,
+				WarmupDay = 0
+			};
+			await _warmupProgressRepository.UpdateStatusAsync(warmupStatus, cancellationToken).ConfigureAwait(false);
 		}
 	}
 }
