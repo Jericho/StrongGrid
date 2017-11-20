@@ -152,11 +152,11 @@ namespace StrongGrid.Resources
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var personalizations = recipients.Select(r => new MailPersonalization { To = new[] { r } });
-			var contents = new[]
-			{
-				new MailContent("text/plain", textContent),
-				new MailContent("text/html", htmlContent)
-			};
+
+			var contents = new List<MailContent>();
+			if (!string.IsNullOrEmpty(textContent)) contents.Add(new MailContent("text/plain", textContent));
+			if (!string.IsNullOrEmpty(htmlContent)) contents.Add(new MailContent("text/html", htmlContent));
+
 			var trackingSettings = new TrackingSettings
 			{
 				ClickTracking = new ClickTrackingSettings
