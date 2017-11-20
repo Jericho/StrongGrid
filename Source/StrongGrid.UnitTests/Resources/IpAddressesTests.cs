@@ -111,18 +111,35 @@ namespace StrongGrid.UnitTests.Resources
 		public async Task AddAsync()
 		{
 			// Arrange
+			var apiResponse = @"{
+				'ips': [
+					{
+						'ip': '1.2.3.4',
+						'subusers': [ 'jdesautels' ]
+					}
+				],
+				'remaining_ips':2,
+				'warmup': false
+			}";
+
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond(HttpStatusCode.OK);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var ipAddresses = new IpAddresses(client);
 
 			// Act
-			await ipAddresses.AddAsync(2, new[] { "user", "subuser1" }, true, CancellationToken.None).ConfigureAwait(false);
+			var result = await ipAddresses.AddAsync(2, new[] { "user", "subuser1" }, true, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+			result.IpAddresses.ShouldNotBeNull();
+			result.IpAddresses.Length.ShouldBe(1);
+			result.IpAddresses[0].Address.ShouldBe("1.2.3.4");
+			result.RemainingIpAddresses.ShouldBe(2);
+			result.WarmingUp.ShouldBeFalse();
 		}
 
 		[Fact]
@@ -250,7 +267,7 @@ namespace StrongGrid.UnitTests.Resources
 			var ipAddresses = new IpAddresses(client);
 
 			// Act
-			var result = await ipAddresses.GetWarmUpStatusAsync(address, CancellationToken.None).ConfigureAwait(false);
+			var result = await ipAddresses.GetWarmupStatusAsync(address, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

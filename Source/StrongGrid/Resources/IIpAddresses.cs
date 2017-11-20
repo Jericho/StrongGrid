@@ -15,12 +15,14 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Add IP addresses to your account.
 		/// </summary>
-		/// <param name="count">The amount of IPs to add to the account.</param>
+		/// <param name="count">The number of IPs to add to the account.</param>
 		/// <param name="subusers">Array of usernames to be assigned a send IP.</param>
 		/// <param name="warmup">Whether or not to warmup the IPs being added.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>The async task.</returns>
-		Task AddAsync(int count, string[] subusers, bool? warmup, CancellationToken cancellationToken = default(CancellationToken));
+		/// <returns>
+		/// The <see cref="AddIpAddressResult">result</see>.
+		/// </returns>
+		Task<AddIpAddressResult> AddAsync(int count, string[] subusers, bool? warmup, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Get how many IP Addresses can still be created during a given period and the price of those IPs.
@@ -28,6 +30,16 @@ namespace StrongGrid.Resources
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>The information about <see cref="IpAddressesRemaining">remaining IP addresses</see>.</returns>
 		Task<IpAddressesRemaining> GetRemainingCountAsync(CancellationToken cancellationToken = default(CancellationToken));
+
+		/// <summary>
+		/// Retrieve an IP address.
+		/// </summary>
+		/// <param name="address">The IP address to get.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="IpAddress" />.
+		/// </returns>
+		Task<IpAddress> GetAsync(string address, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Retrieve all assigned and unassigned IP addresses.
@@ -77,6 +89,6 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Block">Blocks</see>.
 		/// </returns>
-		Task<IpAddress> GetWarmUpStatusAsync(string address, CancellationToken cancellationToken = default(CancellationToken));
+		Task<IpAddress> GetWarmupStatusAsync(string address, CancellationToken cancellationToken = default(CancellationToken));
 	}
 }
