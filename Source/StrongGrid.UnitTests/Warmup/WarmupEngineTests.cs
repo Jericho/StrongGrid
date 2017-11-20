@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace StrongGrid.UnitTests.Utilities
+namespace StrongGrid.UnitTests.Warmup
 {
 	public class WarmupEngineTests
 	{
@@ -375,6 +375,55 @@ namespace StrongGrid.UnitTests.Utilities
 			result.Completed.ShouldBeTrue();
 			result.MessageIdOnPool.ShouldBe("message_id_on_pool");
 			result.MessageIdNotOnPool.ShouldBe("message_id_not_on_pool");
+		}
+
+		[Fact]
+		public async Task aaa()
+		{
+			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
+			var client = new Client(apiKey);
+
+			var allIpPools = await client.IpPools.GetAllAsync(CancellationToken.None).ConfigureAwait(false);
+			foreach (var oldPool in allIpPools)
+			{
+				await client.IpPools.DeleteAsync(oldPool.Name, CancellationToken.None).ConfigureAwait(false);
+			}
+
+			var today = new MockSystemClock(2017, 11, 19, 23, 59, 59, 999);
+			var tomorrow = new MockSystemClock(2017, 11, 20, 0, 0, 0, 0);
+
+			var warmupSettings = new WarmupSettings("warmup_test", new[] { 1, 2 }, 1);
+			var warmupRepository = new MemoryWarmupProgressRepository();
+			var warmupEngine = new WarmupEngine(warmupSettings, client, warmupRepository, today.Object);
+			await warmupEngine.PrepareWithExistingIpAddressesAsync(new[] { "168.245.123.132" }, CancellationToken.None).ConfigureAwait(false);
+
+			var result = await warmupEngine.SendToSingleRecipientAsync(new MailAddress("desautelsj@hotmail.com", "Jeremie Desautels"), new MailAddress("jeremie.desautels@gmail.com", "J. Desautels"), "Day 1 email 1", DateTime.UtcNow.ToString("F"), null).ConfigureAwait(false);
+
+			result.Completed.ShouldBeFalse();
+			result.MessageIdOnPool.ShouldNotBeNull();
+			result.MessageIdNotOnPool.ShouldBeNull();
+
+			result = await warmupEngine.SendToSingleRecipientAsync(new MailAddress("desautelsj@hotmail.com", "Jeremie Desautels"), new MailAddress("jeremie.desautels@gmail.com", "J. Desautels"), "Day 1 email 2", DateTime.UtcNow.ToString("F"), null).ConfigureAwait(false);
+			result.Completed.ShouldBeFalse();
+			result.MessageIdOnPool.ShouldBeNull();
+			result.MessageIdNotOnPool.ShouldNotBeNull();
+
+			warmupEngine = new WarmupEngine(warmupSettings, client, warmupRepository, tomorrow.Object);
+
+			result = await warmupEngine.SendToSingleRecipientAsync(new MailAddress("desautelsj@hotmail.com", "Jeremie Desautels"), new MailAddress("jeremie.desautels@gmail.com", "J. Desautels"), "Day 2 email 1", DateTime.UtcNow.ToString("F"), null).ConfigureAwait(false);
+			result.Completed.ShouldBeFalse();
+			result.MessageIdOnPool.ShouldNotBeNull();
+			result.MessageIdNotOnPool.ShouldBeNull();
+
+			result = await warmupEngine.SendToSingleRecipientAsync(new MailAddress("desautelsj@hotmail.com", "Jeremie Desautels"), new MailAddress("jeremie.desautels@gmail.com", "J. Desautels"), "Day 2 email 2", DateTime.UtcNow.ToString("F"), null).ConfigureAwait(false);
+			result.Completed.ShouldBeTrue();
+			result.MessageIdOnPool.ShouldNotBeNull();
+			result.MessageIdNotOnPool.ShouldBeNull();
+
+			result = await warmupEngine.SendToSingleRecipientAsync(new MailAddress("desautelsj@hotmail.com", "Jeremie Desautels"), new MailAddress("jeremie.desautels@gmail.com", "J. Desautels"), "Day 2 email 3", DateTime.UtcNow.ToString("F"), null).ConfigureAwait(false);
+			result.Completed.ShouldBeTrue();
+			result.MessageIdOnPool.ShouldBeNull();
+			result.MessageIdNotOnPool.ShouldNotBeNull();
 		}
 	}
 }
