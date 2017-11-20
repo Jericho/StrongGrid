@@ -5,7 +5,7 @@ namespace StrongGrid.Utilities
 	/// <summary>
 	/// Interface for the SystemClock
 	/// </summary>
-	public interface ISystemClock
+	internal interface ISystemClock
 	{
 		/// <summary>
 		/// Gets a <see cref="DateTime" /> object that is set to the current date and time on this

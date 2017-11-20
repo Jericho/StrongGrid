@@ -31,12 +31,14 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Add IP addresses to your account.
 		/// </summary>
-		/// <param name="count">The amount of IPs to add to the account.</param>
+		/// <param name="count">The number of IPs to add to the account.</param>
 		/// <param name="subusers">Array of usernames to be assigned a send IP.</param>
 		/// <param name="warmup">Whether or not to warmup the IPs being added.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>The async task.</returns>
-		public Task AddAsync(int count, string[] subusers = null, bool? warmup = null, CancellationToken cancellationToken = default(CancellationToken))
+		/// <returns>
+		/// An array of <see cref="IpAddress">IP addresses</see>.
+		/// </returns>
+		public Task<AddIpAddressResult> AddAsync(int count, string[] subusers = null, bool? warmup = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject()
 			{
@@ -49,7 +51,7 @@ namespace StrongGrid.Resources
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsMessage();
+				.AsSendGridObject<AddIpAddressResult>();
 		}
 
 		/// <summary>
@@ -166,7 +168,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Block">Blocks</see>.
 		/// </returns>
-		public async Task<IpAddress> GetWarmUpStatusAsync(string address, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<IpAddress> GetWarmupStatusAsync(string address, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var addresses = await _client
 				.GetAsync($"{_endpoint}/warmup/{address}")

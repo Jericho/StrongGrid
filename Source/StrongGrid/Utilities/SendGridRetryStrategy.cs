@@ -38,9 +38,26 @@ namespace StrongGrid.Utilities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SendGridRetryStrategy" /> class.
 		/// </summary>
+		public SendGridRetryStrategy()
+			: this(DEFAULT_MAX_RETRIES, null)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SendGridRetryStrategy" /> class.
+		/// </summary>
 		/// <param name="maxAttempts">The maximum attempts.</param>
-		/// <param name="systemClock">The system clock.</param>
-		public SendGridRetryStrategy(int maxAttempts = DEFAULT_MAX_RETRIES, ISystemClock systemClock = null)
+		public SendGridRetryStrategy(int maxAttempts)
+			: this(maxAttempts, null)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SendGridRetryStrategy" /> class.
+		/// </summary>
+		/// <param name="maxAttempts">The maximum attempts.</param>
+		/// <param name="systemClock">The system clock. This is for unit testing only.</param>
+		internal SendGridRetryStrategy(int maxAttempts, ISystemClock systemClock = null)
 		{
 			_maxAttempts = maxAttempts;
 			_systemClock = systemClock ?? SystemClock.Instance;
