@@ -9,7 +9,7 @@ branches:
     mode: ContinuousDeployment
     tag: beta
   release:
-    regex: releases?[/-]
+    regex: release(s)?[/-]
     mode: ContinuousDeployment
     tag: rc
 ignore:

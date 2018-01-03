@@ -7,14 +7,24 @@
     <AssemblyName>StrongGrid</AssemblyName>
     <OutputType>Library</OutputType>
     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">1.6.1</NetStandardImplicitPackageVersion>
-    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
-    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <Version>$(SemVer)</Version>
     <DebugType>full</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup>
+      <PackageId>StrongGrid</PackageId>
+      <AssemblyName>StrongGrid</AssemblyName>
+      <AssemblyTitle>StrongGrid</AssemblyTitle>
+      <Authors>Jeremie Desautels</Authors>
+      <Company></Company>
+      <Description>StrongGrid is a strongly typed .NET client for SendGrid's v3 API.</Description>
+      <Copyright>Copyright © Jeremie Desautels and contributors 2016 - Present</Copyright>
+      <PackageLicenseUrl>http://jericho.mit-license.org</PackageLicenseUrl>
+      <PackageProjectUrl>https://github.com/Jericho/StrongGrid</PackageProjectUrl>
+      <PackageIconUrl>https://github.com/identicons/jericho.png</PackageIconUrl>
+      <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+      <PackageTags>Picton Azure</PackageTags>
+      <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
