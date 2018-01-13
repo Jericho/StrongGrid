@@ -250,26 +250,21 @@ namespace StrongGrid.Utilities
 		/// <returns>Returns the human readable representation of the TimeSpan</returns>
 		public static string ToDurationString(this TimeSpan timeSpan)
 		{
+			void AppendFormatIfNecessary(StringBuilder stringBuilder, string timePart, int value)
+			{
+				if (value <= 0) return;
+				stringBuilder.AppendFormat($" {value} {timePart}{(value > 1 ? "s" : string.Empty)}");
+			}
+
 			// In case the TimeSpan is extremely short
 			if (timeSpan.TotalMilliseconds <= 1) return "1 millisecond";
 
 			var result = new StringBuilder();
-
-			if (timeSpan.Days == 1) result.Append(" 1 day");
-			else if (timeSpan.Days > 1) result.AppendFormat(" {0} days", timeSpan.Days);
-
-			if (timeSpan.Hours == 1) result.Append(" 1 hour");
-			else if (timeSpan.Hours > 1) result.AppendFormat(" {0} hours", timeSpan.Hours);
-
-			if (timeSpan.Minutes == 1) result.Append(" 1 minute");
-			else if (timeSpan.Minutes > 1) result.AppendFormat(" {0} minutes", timeSpan.Minutes);
-
-			if (timeSpan.Seconds == 1) result.Append(" 1 second");
-			else if (timeSpan.Seconds > 1) result.AppendFormat(" {0} seconds", timeSpan.Seconds);
-
-			if (timeSpan.Milliseconds == 1) result.Append(" 1 millisecond");
-			else if (timeSpan.Milliseconds > 1) result.AppendFormat(" {0} milliseconds", timeSpan.Milliseconds);
-
+			AppendFormatIfNecessary(result, "day", timeSpan.Days);
+			AppendFormatIfNecessary(result, "hour", timeSpan.Hours);
+			AppendFormatIfNecessary(result, "minute", timeSpan.Days);
+			AppendFormatIfNecessary(result, "second", timeSpan.Days);
+			AppendFormatIfNecessary(result, "millisecond", timeSpan.Days);
 			return result.ToString().Trim();
 		}
 
