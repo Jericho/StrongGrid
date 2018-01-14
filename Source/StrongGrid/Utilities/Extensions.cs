@@ -1,7 +1,9 @@
 ﻿using HttpMultipartParser;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -316,6 +318,54 @@ namespace StrongGrid.Utilities
 			}
 
 			return scopes;
+		}
+
+		public static void AddPropertyIfValue(this JObject jsonObject, string propertyName, string value)
+		{
+			if (string.IsNullOrEmpty(value)) return;
+			jsonObject.Add(propertyName, value);
+		}
+
+		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, T value)
+		{
+			if (EqualityComparer<T>.Default.Equals(value, default(T))) return;
+			jsonObject.Add(propertyName, JToken.FromObject(value));
+		}
+
+		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, IEnumerable<T> value)
+		{
+			if (value == null || !value.Any()) return;
+			jsonObject.Add(propertyName, JArray.FromObject(value.ToArray()));
+		}
+
+		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, Parameter<T> parameter)
+		{
+			AddPropertyIfValue(jsonObject, propertyName, parameter, value => JToken.FromObject(parameter.Value));
+		}
+
+		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, Parameter<IEnumerable<T>> parameter)
+		{
+			AddPropertyIfValue(jsonObject, propertyName, parameter, value => JArray.FromObject(value.ToArray()));
+		}
+
+		public static void AddPropertyIfEnumValue<T>(this JObject jsonObject, string propertyName, Parameter<T> parameter)
+		{
+			AddPropertyIfValue(jsonObject, propertyName, parameter, value => JToken.Parse(JsonConvert.SerializeObject(value)).ToString());
+		}
+
+		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, Parameter<T> parameter, Func<T, JToken> convertValueToJsonToken)
+		{
+			if (convertValueToJsonToken == null) throw new ArgumentNullException(nameof(convertValueToJsonToken));
+			if (!parameter.HasValue) return;
+
+			if (parameter.Value == null)
+			{
+				jsonObject.Add(propertyName, null);
+			}
+			else
+			{
+				jsonObject.Add(propertyName, convertValueToJsonToken(parameter.Value));
+			}
 		}
 
 		/// <summary>Asynchronously converts the JSON encoded content and converts it to a 'SendGrid' object of the desired type.</summary>

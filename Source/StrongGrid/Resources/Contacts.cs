@@ -259,8 +259,8 @@ namespace StrongGrid.Resources
 		public Task<Contact[]> SearchAsync(IEnumerable<SearchCondition> conditions, long? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
-			if (listId.HasValue) data.Add("list_id", listId.Value);
-			if (conditions != null) data.Add("conditions", JArray.FromObject(conditions));
+			data.AddPropertyIfValue("list_id", listId);
+			data.AddPropertyIfValue("conditions", conditions);
 
 			return _client
 				.PostAsync($"{_endpoint}/search")
@@ -295,37 +295,35 @@ namespace StrongGrid.Resources
 			Parameter<IEnumerable<Field>> customFields)
 		{
 			var result = new JObject();
-			if (email.HasValue) result.Add("email", email.Value);
-			if (firstName.HasValue) result.Add("first_name", firstName.Value);
-			if (lastName.HasValue) result.Add("last_name", lastName.Value);
+			result.AddPropertyIfValue("email", email);
+			result.AddPropertyIfValue("first_name", firstName);
+			result.AddPropertyIfValue("last_name", lastName);
 
 			if (customFields.HasValue && customFields.Value != null)
 			{
 				foreach (var customField in customFields.Value.OfType<Field<string>>())
 				{
-					result.Add(customField.Name, customField.Value);
+					result.AddPropertyIfValue(customField.Name, customField.Value);
 				}
 
 				foreach (var customField in customFields.Value.OfType<Field<long>>())
 				{
-					result.Add(customField.Name, customField.Value);
+					result.AddPropertyIfValue(customField.Name, customField.Value);
 				}
 
 				foreach (var customField in customFields.Value.OfType<Field<long?>>())
 				{
-					if (customField.Value.HasValue) result.Add(customField.Name, customField.Value.Value);
-					else result.Add(customField.Name, null);
+					result.AddPropertyIfValue(customField.Name, customField.Value);
 				}
 
 				foreach (var customField in customFields.Value.OfType<Field<DateTime>>())
 				{
-					result.Add(customField.Name, customField.Value.ToUnixTime());
+					result.AddPropertyIfValue(customField.Name, customField.Value.ToUnixTime());
 				}
 
 				foreach (var customField in customFields.Value.OfType<Field<DateTime?>>())
 				{
-					if (customField.Value.HasValue) result.Add(customField.Name, customField.Value.Value.ToUnixTime());
-					else result.Add(customField.Name, null);
+					result.AddPropertyIfValue(customField.Name, customField.Value?.ToUnixTime());
 				}
 			}
 
@@ -335,7 +333,7 @@ namespace StrongGrid.Resources
 		private static JObject ConvertToJObject(Contact contact)
 		{
 			var result = ConvertToJObject(contact.Email, contact.FirstName, contact.LastName, contact.CustomFields);
-			if (!string.IsNullOrEmpty(contact.Id)) result.Add("id", contact.Id);
+			result.AddPropertyIfValue("id", contact.Id);
 			return result;
 		}
 	}

@@ -112,9 +112,9 @@ namespace StrongGrid.Resources
 			conditions = conditions ?? Enumerable.Empty<SearchCondition>();
 
 			var data = new JObject();
-			if (!string.IsNullOrEmpty(name)) data.Add("name", name);
-			if (listId.HasValue) data.Add("list_id", listId.Value);
-			if (conditions.Any()) data.Add("conditions", JArray.FromObject(conditions.ToArray()));
+			data.AddPropertyIfValue("name", name);
+			data.AddPropertyIfValue("list_id", listId);
+			data.AddPropertyIfValue("conditions", conditions);
 
 			return _client
 				.PatchAsync($"{_endpoint}/{segmentId}")

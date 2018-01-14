@@ -238,9 +238,9 @@ namespace StrongGrid.Resources
 		{
 			var result = new JObject();
 			result.Add("hostname", hostname);
-			if (url.HasValue) result.Add("url", url.Value);
-			if (spamCheck.HasValue) result.Add("spam_check", spamCheck.Value);
-			if (sendRaw.HasValue) result.Add("send_raw", sendRaw.Value);
+			result.AddPropertyIfValue("url", url);
+			result.AddPropertyIfValue("spam_check", spamCheck);
+			result.AddPropertyIfValue("send_raw", sendRaw);
 			return result;
 		}
 	}

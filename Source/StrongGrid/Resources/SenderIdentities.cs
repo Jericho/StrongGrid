@@ -181,15 +181,15 @@ namespace StrongGrid.Resources
 			Parameter<string> country)
 		{
 			var result = new JObject();
-			if (nickname.HasValue) result.Add("nickname", nickname.Value);
-			if (from.HasValue) result.Add("from", from.Value == null ? null : JToken.FromObject(from.Value));
-			if (replyTo.HasValue) result.Add("reply_to", from.Value == null ? null : JToken.FromObject(replyTo.Value));
-			if (address1.HasValue) result.Add("address", address1.Value);
-			if (address2.HasValue) result.Add("address2", address2.Value);
-			if (city.HasValue) result.Add("city", city.Value);
-			if (state.HasValue) result.Add("state", state.Value);
-			if (zip.HasValue) result.Add("zip", zip.Value);
-			if (country.HasValue) result.Add("country", country.Value);
+			result.AddPropertyIfValue("nickname", nickname);
+			result.AddPropertyIfValue("from", from);
+			result.AddPropertyIfValue("reply_to", from);
+			result.AddPropertyIfValue("address", address1);
+			result.AddPropertyIfValue("address2", address2);
+			result.AddPropertyIfValue("city", city);
+			result.AddPropertyIfValue("state", state);
+			result.AddPropertyIfValue("zip", zip);
+			result.AddPropertyIfValue("country", country);
 			return result;
 		}
 	}
