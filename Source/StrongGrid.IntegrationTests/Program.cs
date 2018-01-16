@@ -645,7 +645,7 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"List '{firstList.Id}' updated").ConfigureAwait(false);
 
 			var hotmailCondition = new SearchCondition { Field = "email", Operator = ConditionOperator.Contains, Value = "hotmail.com", LogicalOperator = LogicalOperator.None };
-			var segment = await client.Segments.CreateAsync("StrongGrid Integration Testing: Recipients @ Hotmail", firstList.Id, new[] { hotmailCondition }, null, cancellationToken).ConfigureAwait(false);
+			var segment = await client.Segments.CreateAsync("StrongGrid Integration Testing: Recipients @ Hotmail", new[] { hotmailCondition }, firstList.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Segment '{segment.Name}' created. Id: {segment.Id}").ConfigureAwait(false);
 
 			var millerLastNameCondition = new SearchCondition { Field = "last_name", Operator = ConditionOperator.Equal, Value = "Miller", LogicalOperator = LogicalOperator.None };
