@@ -256,7 +256,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Contact" />.
 		/// </returns>
-		public Task<Contact[]> SearchAsync(IEnumerable<SearchCondition> conditions, int? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Contact[]> SearchAsync(IEnumerable<SearchCondition> conditions, long? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
 			if (listId.HasValue) data.Add("list_id", listId.Value);

@@ -44,7 +44,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SuppressionGroup" />.
 		/// </returns>
-		Task<SuppressionGroup> GetAsync(int groupId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<SuppressionGroup> GetAsync(long groupId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Create a new suppression group.
@@ -70,7 +70,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SuppressionGroup" />.
 		/// </returns>
-		Task<SuppressionGroup> UpdateAsync(int groupId, Parameter<string> name = default(Parameter<string>), Parameter<string> description = default(Parameter<string>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<SuppressionGroup> UpdateAsync(long groupId, Parameter<string> name = default(Parameter<string>), Parameter<string> description = default(Parameter<string>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Delete a suppression group.
@@ -81,6 +81,6 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteAsync(int groupId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteAsync(long groupId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 	}
 }
