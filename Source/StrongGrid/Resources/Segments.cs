@@ -50,7 +50,7 @@ namespace StrongGrid.Resources
 				{ "name", name },
 				{ "conditions", JArray.FromObject(conditions.ToArray()) }
 			};
-			if (listId.HasValue) data.Add("list_id", listId.Value);
+			data.AddPropertyIfValue("list_id", listId);
 
 			return _client
 				.PostAsync(_endpoint)
