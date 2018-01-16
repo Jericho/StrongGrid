@@ -14,7 +14,7 @@ namespace StrongGrid.Models
 		/// The id.
 		/// </value>
 		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-		public int Id { get; set; }
+		public long Id { get; set; }
 
 		/// <summary>
 		/// Gets or sets the username.
