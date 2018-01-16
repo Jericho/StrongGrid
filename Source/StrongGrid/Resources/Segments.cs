@@ -34,23 +34,24 @@ namespace StrongGrid.Resources
 		/// Create a segment.
 		/// </summary>
 		/// <param name="name">The name.</param>
-		/// <param name="listId">The list identifier.</param>
 		/// <param name="conditions">The conditions.</param>
+		/// <param name="listId">The list identifier.</param>
 		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Segment" />.
 		/// </returns>
-		public Task<Segment> CreateAsync(string name, long listId, IEnumerable<SearchCondition> conditions, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Segment> CreateAsync(string name, IEnumerable<SearchCondition> conditions, long? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			conditions = conditions ?? Enumerable.Empty<SearchCondition>();
 
 			var data = new JObject
 			{
 				{ "name", name },
-				{ "list_id", listId },
 				{ "conditions", JArray.FromObject(conditions.ToArray()) }
 			};
+			if (listId.HasValue) data.Add("list_id", listId.Value);
+
 			return _client
 				.PostAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
