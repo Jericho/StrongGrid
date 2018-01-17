@@ -115,7 +115,7 @@ namespace StrongGrid.Models.Webhooks
 		/// Gets or sets the user identifier.
 		/// </summary>
 		/// <value>
-		/// Theuser identifier.
+		/// The user identifier.
 		/// </value>
 		[JsonProperty("sg_user_id", NullValueHandling = NullValueHandling.Ignore)]
 		public long? UserId { get; set; }

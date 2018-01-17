@@ -14,7 +14,7 @@ namespace StrongGrid.Models
 		/// The group identifier.
 		/// </value>
 		[JsonProperty("group_id", NullValueHandling = NullValueHandling.Ignore)]
-		public int GroupId { get; set; }
+		public long GroupId { get; set; }
 
 		/// <summary>
 		/// Gets or sets the groups to display.

@@ -16,7 +16,7 @@ namespace StrongGrid.Models.Webhooks
 		/// The asm group identifier.
 		/// </value>
 		[JsonProperty("asm_group_id", NullValueHandling = NullValueHandling.Ignore)]
-		public int AsmGroupId { get; set; }
+		public long AsmGroupId { get; set; }
 
 		/// <summary>
 		/// Gets or sets the newsletter.
