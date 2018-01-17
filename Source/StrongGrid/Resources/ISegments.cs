@@ -17,14 +17,14 @@ namespace StrongGrid.Resources
 		/// Create a segment.
 		/// </summary>
 		/// <param name="name">The name.</param>
-		/// <param name="listId">The list identifier.</param>
 		/// <param name="conditions">The conditions.</param>
+		/// <param name="listId">The list identifier.</param>
 		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Segment" />.
 		/// </returns>
-		Task<Segment> CreateAsync(string name, long listId, IEnumerable<SearchCondition> conditions, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Segment> CreateAsync(string name, IEnumerable<SearchCondition> conditions, long? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Retrieve all segments.

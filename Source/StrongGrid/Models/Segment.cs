@@ -32,7 +32,7 @@ namespace StrongGrid.Models
 		/// The list identifier.
 		/// </value>
 		[JsonProperty("list_id", NullValueHandling = NullValueHandling.Ignore)]
-		public long ListId { get; set; }
+		public long? ListId { get; set; }
 
 		/// <summary>
 		/// Gets or sets the conditions.

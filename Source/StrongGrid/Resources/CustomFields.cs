@@ -78,7 +78,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="CustomFieldMetadata">metadata</see> about the field.
 		/// </returns>
-		public Task<CustomFieldMetadata> GetAsync(int fieldId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<CustomFieldMetadata> GetAsync(long fieldId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{fieldId}")
@@ -96,7 +96,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(int fieldId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(long fieldId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{fieldId}")

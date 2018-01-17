@@ -134,7 +134,7 @@ namespace StrongGrid.UnitTests.Resources
 			var segments = new Segments(client);
 
 			// Act
-			var result = await segments.CreateAsync(name, listId, conditions, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await segments.CreateAsync(name, conditions, listId, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

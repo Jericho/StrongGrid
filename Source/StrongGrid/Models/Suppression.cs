@@ -25,7 +25,7 @@ namespace StrongGrid.Models
 		/// The group id.
 		/// </value>
 		[JsonProperty("group_id", NullValueHandling = NullValueHandling.Ignore)]
-		public int GroupId { get; set; }
+		public long GroupId { get; set; }
 
 		/// <summary>
 		/// Gets or sets the name of the suppression group.

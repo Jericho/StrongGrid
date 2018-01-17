@@ -331,6 +331,7 @@ namespace StrongGrid
 		public Client(string username, string password, IWebProxy proxy = null)
 			: this(null, username, password, DEFAULT_BASE_URI, DEFAULT_API_VERSION, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }))
 		{
+			_mustDisposeHttpClient = true;
 		}
 
 		/// <summary>

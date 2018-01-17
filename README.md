@@ -167,7 +167,7 @@ var result = warmupEngine.SendAsync(...);
 
 The `Send...` methods return a `WarmupResult` object that will tell you whether the process is completed or not, and will also give you the messageId of the email sent using the IP pool (if applicable) and the messageId of the email sent using the default IP address (which is not being warmed up).
 The WarmupEngine will send emails using the IP pool until the daily volume limit is achieved and any remaining email will be sent using the default IP address.
-As you get closer and closer to your daily limit, it's possible that the Warmup engine may have to split a given "send" into two messages: one of which is sent using the ip pool and the other one sent using the default ip address.
+As you get close to your daily limit, it's possible that the Warmup engine may have to split a given "send" into two messages: one of which is sent using the ip pool and the other one sent using the default ip address.
 Let's use an example to illustrate: let's say that you have 15 emails left before you reach your daily warmup limit and you try to send an email to 20 recipients. In this scenario the first 15 emails will be sent using the warmup ip pool and the remaining 5 emails will be sent using the default ip address.
 
 #### More advanced usage
@@ -184,8 +184,10 @@ var warmupSettings = WarmupSettings.FromSendGridRecomendedSettings(poolName, est
 ```
 
 **Progress repository:** By default StrongGrid's WarmupEngine will write progress information in a file on your computer's `temp` folder but you can override this settings. 
-First of all, you can change the folder where this file is saved. You can also decide to use a completely different repository. Out of the box, StringGrid provides `FileSystemWarmupProgressRepository` and `MemoryWarmupProgressRepository`.
-It also provide an interface called `IWarmupProgressRepository` which allows you to write your own implementation to save the progress data to a location more suitable to you.
+You can change the folder where this file is saved but you can also decide to use a completely different repository. Out of the box, StrongGrid provides `FileSystemWarmupProgressRepository` and `MemoryWarmupProgressRepository`.
+It also provide an interface called `IWarmupProgressRepository` which allows you to write your own implementation to save the progress data to a location more suitable to you such as, a database, Azure, AWS, etc.
+Please note that `MemoryWarmupProgressRepository` in intended to be used for testing and we don't recommend using it in production. The main reason for this recommendation is that the data is stored in memory and it's lost when your computer is restarted.
+This means that your warmup process would start all over from day 1 each time you computer is rebooted.
 
 ```csharp
 // You select one of the following repositories available out of the box:
@@ -197,7 +199,7 @@ var warmupEngine = new WarmupEngine(warmupSettings, client, warmupProgressReposi
 
 **Purchase new IP Addresses:** You can purchase new IP addresses using SendGrid' UI, but StrongGrid's WarmupEngine makes it even easier.
 Rather than invoking `PrepareWithExistingIpAddressesAsync` (as demonstrated previously), you can invoke `PrepareWithNewIpAddressesAsync` and StrongGrid will take care of adding new ip addresses to your account and add them to a new IP pool ready for warmup.
-As a reminder, please note that the `PrepareWithExistingIpAddressesAsync` and `PrepareWithNewIpAddressesAsync` can only be invoked once.
+As a reminder, please note that the `PrepareWithExistingIpAddressesAsync` and `PrepareWithNewIpAddressesAsync` should only be invoked once.
 Invoking either method a second time would result in an exception due to the fact that the IP pool has already been created.
 
 ```csharp
@@ -206,7 +208,7 @@ var subusers = new[] { "your_subuser" }; // The subusers you authorize to send e
 await warmupEngine.PrepareWithNewIpAddressesAsync(howManyAddresses, subusers, CancellationToken.None).ConfigureAwait(false);
 ```
 
-**End of warmup process:** when the process is completed, the IP pool is deleted and the warmed up IP address(es) are returned to the default pool. You can subsequently invoke the `client.Mail.SendAsync(...)` method to send your emails.
+**End of warmup process:** When the process is completed, the IP pool is deleted and the warmed up IP address(es) are returned to the default pool. You can subsequently invoke the `client.Mail.SendAsync(...)` method to send your emails.
 
 ## License
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FJericho%2FStrongGrid.svg?type=large)](https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FJericho%2FStrongGrid?ref=badge_large)
