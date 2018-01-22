@@ -164,6 +164,7 @@ Task("Build")
 	DotNetCoreBuild(sourceFolder + libraryName + ".sln", new DotNetCoreBuildSettings
 	{
 		Configuration = configuration,
+		NoRestore = true,
 		ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.LegacySemVerPadded)
 	});
 });
@@ -233,7 +234,7 @@ Task("Create-NuGet-Package")
 		IncludeSymbols = false,
 		NoBuild = true,
 		OutputDirectory = outputDir,
-        ArgumentCustomization = (args) =>
+		ArgumentCustomization = (args) =>
 		{
 			return args
 				.Append("/p:Version={0}", versionInfo.LegacySemVerPadded)
