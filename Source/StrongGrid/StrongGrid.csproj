@@ -23,7 +23,7 @@
       <PackageProjectUrl>https://github.com/Jericho/StrongGrid</PackageProjectUrl>
       <PackageIconUrl>https://github.com/identicons/jericho.png</PackageIconUrl>
       <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-      <PackageTags>Picton Azure</PackageTags>
+      <PackageTags>StrongGrid SendGrid email</PackageTags>
       <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 
