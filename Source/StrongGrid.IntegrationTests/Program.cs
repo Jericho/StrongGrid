@@ -1047,30 +1047,24 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"Deleted pool '{marketingPool.Name}'").ConfigureAwait(false);
 		}
 
-		private static Task Subusers(IClient client, TextWriter log, CancellationToken cancellationToken)
+		private static async Task Subusers(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			/**************************************************
-				Commenting out the following tests because 
-				I do not have the necessary privileges
-			 **************************************************
-
 			await log.WriteLineAsync("\n***** SUBUSERS *****\n").ConfigureAwait(false);
 
 			// GET ALL THE SUBUSERS
-			var subusers = await client.Subusers.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			var subusers = await client.Subusers.GetAllAsync(50, 0, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"There are {subusers.Length} subusers").ConfigureAwait(false);
 
-			**************************************************/
-			return Task.FromResult(0); // Success.
+			if (subusers.Length > 0)
+			{
+				// RETRIEVE THE FIRST SUBUSER
+				var user = await client.Subusers.GetAsync(subusers[0].Username, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"Retrieved user '{user.Username}'").ConfigureAwait(false);
+			}
 		}
 
-		private static Task Teammates(IClient client, TextWriter log, CancellationToken cancellationToken)
+		private static async Task Teammates(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			/**************************************************
-				Commenting out the following tests because 
-				I do not have the necessary privileges
-			 **************************************************
-
 			await log.WriteLineAsync("\n***** TEAMMATES *****\n").ConfigureAwait(false);
 
 			// GET ALL THE PENDING INVITATIONS
@@ -1078,7 +1072,7 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"There are {pendingInvitation.Length} pending invitations").ConfigureAwait(false);
 
 			// GET ALL THE TEAMMATES
-			var allTeammates = await client.Teammates.GetAllTeammatesAsync(cancellationToken).ConfigureAwait(false);
+			var allTeammates = await client.Teammates.GetAllTeammatesAsync(50, 0, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"There are {allTeammates.Length} teammates").ConfigureAwait(false);
 
 			if (allTeammates.Length > 0)
@@ -1087,9 +1081,6 @@ namespace StrongGrid.IntegrationTests
 				var teammate = await client.Teammates.GetTeammateAsync(allTeammates[0].Username, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"Retrieved teammate '{teammate.Username}'").ConfigureAwait(false);
 			}
-
-			**************************************************/
-			return Task.FromResult(0); // Success.
 		}
 
 		private static async Task WebhookSettings(IClient client, TextWriter log, CancellationToken cancellationToken)
