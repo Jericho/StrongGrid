@@ -478,6 +478,10 @@ namespace StrongGrid.IntegrationTests
 			var profile = await client.User.GetProfileAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Hello {profile.FirstName} from {(string.IsNullOrEmpty(profile.State) ? "unknown location" : profile.State)}").ConfigureAwait(false);
 
+			// RETRIEVE CREDIT INFORMATION
+			var userCredits = await client.User.GetCreditsAsync(null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Usage: {userCredits.Used}/{userCredits.Total}. Next reset: {userCredits.NextReset}").ConfigureAwait(false);
+
 			// UPDATE YOUR USER PROFILE
 			var state = (profile.State == "Florida" ? "California" : "Florida");
 			await client.User.UpdateProfileAsync(state: state, cancellationToken: cancellationToken).ConfigureAwait(false);
