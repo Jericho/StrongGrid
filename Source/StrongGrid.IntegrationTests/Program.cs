@@ -17,7 +17,7 @@ namespace StrongGrid.IntegrationTests
 		{
 			// -----------------------------------------------------------------------------
 			// Do you want to proxy requests through Fiddler (useful for debugging)?
-			var useFiddler = true;
+			var useFiddler = false;
 
 			// As an alternative to Fiddler, you can display debug information about
 			// every HTTP request/response in the console. This is useful for debugging
