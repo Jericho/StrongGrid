@@ -1,32 +1,27 @@
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Shouldly;
 using StrongGrid.Models;
-using System.IO;
 using Xunit;
 
 namespace StrongGrid.UnitTests.Utilities
 {
 	public class StringEnumConverterTests
 	{
-		[Fact]
-		public void Read_single()
+		[Theory]
+		[InlineData("in progress", CampaignStatus.InProgress)]
+		[InlineData("IN PROGRESS", CampaignStatus.InProgress)]
+		[InlineData("In Progress", CampaignStatus.InProgress)]
+		[InlineData("In progress", CampaignStatus.InProgress)]
+		public void Case_insensitive(string json, CampaignStatus expectedStatus)
 		{
 			// Arrange
-			var json = "'in progress'";
-			var textReader = new StringReader(json);
-			var jsonReader = new JsonTextReader(textReader);
-			var objectType = typeof(CampaignStatus);
-			var converter = new StringEnumConverter();
+			var value = $"'{json}'";
 
 			// Act
-			jsonReader.Read();
-			var result = converter.ReadJson(jsonReader, objectType, (object)null, new JsonSerializer());
+			var result = JsonConvert.DeserializeObject<CampaignStatus>(value);
 
 			// Assert
-			result.ShouldNotBeNull();
-			result.ShouldBeOfType<CampaignStatus>();
-			((CampaignStatus)result).ShouldBe(CampaignStatus.InProgress);
+			result.ShouldBe(expectedStatus);
 		}
 	}
 }
