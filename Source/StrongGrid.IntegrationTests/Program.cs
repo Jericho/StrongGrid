@@ -216,11 +216,14 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"There are {apiKeys.Length} Api Keys").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			foreach (var oldApiKey in apiKeys.Where(k => k.Name.StartsWith("StrongGrid Integration Testing:")))
-			{
-				await client.ApiKeys.DeleteAsync(oldApiKey.KeyId, null, cancellationToken).ConfigureAwait(false);
-				await log.WriteLineAsync($"Api Key {oldApiKey.KeyId} deleted").ConfigureAwait(false);
-			}
+			var cleanUpTasks = apiKeys.Where(k => k.Name.StartsWith("StrongGrid Integration Testing:"))
+				.Select(async oldApiKey =>
+				{
+					await client.ApiKeys.DeleteAsync(oldApiKey.KeyId, null, cancellationToken).ConfigureAwait(false);
+					await log.WriteLineAsync($"Api Key {oldApiKey.KeyId} deleted").ConfigureAwait(false);
+					await Task.Delay(250).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
+				});
+			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
 			// CREATE A NEW API KEY
 			var apiKey = await client.ApiKeys.CreateAsync("StrongGrid Integration Testing: new Api Key", new[] { "alerts.read", "api_keys.read" }, null, cancellationToken).ConfigureAwait(false);
@@ -278,11 +281,14 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"There are {groups.Length} unsubscribe groups").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			foreach (var oldGroup in groups.Where(g => g.Name.StartsWith("StrongGrid Integration Testing:")))
-			{
-				await client.UnsubscribeGroups.DeleteAsync(oldGroup.Id, null, cancellationToken).ConfigureAwait(false);
-				await log.WriteLineAsync($"Suppression group {oldGroup.Id} deleted").ConfigureAwait(false);
-			}
+			var cleanUpTasks = groups.Where(g => g.Name.StartsWith("StrongGrid Integration Testing:"))
+				.Select(async oldGroup =>
+				{
+					await client.UnsubscribeGroups.DeleteAsync(oldGroup.Id, null, cancellationToken).ConfigureAwait(false);
+					await log.WriteLineAsync($"Suppression group {oldGroup.Id} deleted").ConfigureAwait(false);
+					await Task.Delay(250).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
+				});
+			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
 			// CREATE A NEW SUPPRESSION GROUP
 			var newGroup = await client.UnsubscribeGroups.CreateAsync("StrongGrid Integration Testing: new group", "This is a new group for testing purposes", false, null, cancellationToken).ConfigureAwait(false);
@@ -435,11 +441,14 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"All templates retrieved. There are {templates.Length} templates").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			foreach (var oldTemplate in templates.Where(t => t.Name.StartsWith("StrongGrid Integration Testing:")))
-			{
-				await client.Templates.DeleteAsync(oldTemplate.Id, null, cancellationToken).ConfigureAwait(false);
-				await log.WriteLineAsync($"Template {oldTemplate.Id} deleted").ConfigureAwait(false);
-			}
+			var cleanUpTasks = templates.Where(t => t.Name.StartsWith("StrongGrid Integration Testing:"))
+				.Select(async oldTemplate =>
+				{
+					await client.Templates.DeleteAsync(oldTemplate.Id, null, cancellationToken).ConfigureAwait(false);
+					await log.WriteLineAsync($"Template {oldTemplate.Id} deleted").ConfigureAwait(false);
+					await Task.Delay(250).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
+				});
+			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
 			var template = await client.Templates.CreateAsync("StrongGrid Integration Testing: My template", null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Template '{template.Name}' created. Id: {template.Id}");
@@ -478,6 +487,10 @@ namespace StrongGrid.IntegrationTests
 			var profile = await client.User.GetProfileAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Hello {profile.FirstName} from {(string.IsNullOrEmpty(profile.State) ? "unknown location" : profile.State)}").ConfigureAwait(false);
 
+			// RETRIEVE CREDIT INFORMATION
+			var userCredits = await client.User.GetCreditsAsync(null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Usage: {userCredits.Used}/{userCredits.Total}. Next reset: {userCredits.NextReset}").ConfigureAwait(false);
+
 			// UPDATE YOUR USER PROFILE
 			var state = (profile.State == "Florida" ? "California" : "Florida");
 			await client.User.UpdateProfileAsync(state: state, cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -497,11 +510,14 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"All custom fields retrieved. There are {fields.Length} fields").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			foreach (var oldFields in fields.Where(f => f.Name.StartsWith("stronggrid_")))
-			{
-				await client.CustomFields.DeleteAsync(oldFields.Id, null, cancellationToken).ConfigureAwait(false);
-				await log.WriteLineAsync($"Field {oldFields.Id} deleted").ConfigureAwait(false);
-			}
+			var cleanUpTasks = fields.Where(f => f.Name.StartsWith("stronggrid_"))
+				.Select(async oldField =>
+				{
+					await client.CustomFields.DeleteAsync(oldField.Id, null, cancellationToken).ConfigureAwait(false);
+					await log.WriteLineAsync($"Field {oldField.Id} deleted").ConfigureAwait(false);
+					await Task.Delay(250).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
+				});
+			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
 			var nicknameField = await client.CustomFields.CreateAsync("stronggrid_nickname", FieldType.Text, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Field '{nicknameField.Name}' Id: {nicknameField.Id}").ConfigureAwait(false);
@@ -623,11 +639,21 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"All segements retrieved. There are {segments.Length} segments").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			foreach (var oldList in lists.Where(l => l.Name.StartsWith("StrongGrid Integration Testing:")))
-			{
-				await client.Lists.DeleteAsync(oldList.Id, null, cancellationToken).ConfigureAwait(false);
-				await log.WriteLineAsync($"List {oldList.Id} deleted").ConfigureAwait(false);
-			}
+			var cleanUpTasks = lists.Where(l => l.Name.StartsWith("StrongGrid Integration Testing:"))
+				.Select(async oldList =>
+				{
+					await client.Lists.DeleteAsync(oldList.Id, null, cancellationToken).ConfigureAwait(false);
+					await log.WriteLineAsync($"List {oldList.Id} deleted").ConfigureAwait(false);
+					await Task.Delay(250).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
+				})
+				.Union(segments.Where(s => s.Name.StartsWith("StrongGrid Integration Testing:"))
+					.Select(async oldSegment =>
+					{
+						await client.Segments.DeleteAsync(oldSegment.Id, false, null, cancellationToken).ConfigureAwait(false);
+						await log.WriteLineAsync($"Segment {oldSegment.Id} deleted").ConfigureAwait(false);
+						await Task.Delay(250).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
+					}));
+			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
 			foreach (var oldSegment in segments.Where(s => s.Name.StartsWith("StrongGrid Integration Testing:")))
 			{
@@ -674,11 +700,14 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"All campaigns retrieved. There are {campaigns.Length} campaigns").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			foreach (var oldCampaign in campaigns.Where(c => c.Title.StartsWith("StrongGrid Integration Testing:")))
-			{
-				await client.Campaigns.DeleteAsync(oldCampaign.Id, cancellationToken).ConfigureAwait(false);
-				await log.WriteLineAsync($"Campaign {oldCampaign.Id} deleted").ConfigureAwait(false);
-			}
+			var cleanUpTasks = campaigns.Where(c => c.Title.StartsWith("StrongGrid Integration Testing:"))
+				.Select(async oldCampaign =>
+				{
+					await client.Campaigns.DeleteAsync(oldCampaign.Id, cancellationToken).ConfigureAwait(false);
+					await log.WriteLineAsync($"Campaign {oldCampaign.Id} deleted").ConfigureAwait(false);
+					await Task.Delay(250).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
+				});
+			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
 			var senderIdentities = await client.SenderIdentities.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All sender identities retrieved. There are {senderIdentities.Length} identities").ConfigureAwait(false);
@@ -849,12 +878,18 @@ namespace StrongGrid.IntegrationTests
 			var domains = await client.Whitelabel.GetAllDomainsAsync(50, 0, false, null, null, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All whitelabel domains retrieved. There are {domains.Length} domains").ConfigureAwait(false);
 
-			var domain = domains.FirstOrDefault(d => d.Domain == "example.com");
-			if (domain == null)
-			{
-				domain = await client.Whitelabel.CreateDomainAsync("example.com", "email", false, false, false, null, cancellationToken).ConfigureAwait(false);
-				await log.WriteLineAsync($"Whitelabel domain created. Id: {domain.Id}").ConfigureAwait(false);
-			}
+			var cleanUpTasks = domains.Where(d => d.Domain == "example.com")
+				.Select(async oldDomain =>
+				{
+					await client.Whitelabel.DeleteDomainAsync(oldDomain.Id, null, cancellationToken).ConfigureAwait(false);
+					await log.WriteLineAsync($"Domain {oldDomain.Id} deleted").ConfigureAwait(false);
+					await Task.Delay(250).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
+				});
+			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
+
+
+			var domain = await client.Whitelabel.CreateDomainAsync("example.com", "email", false, false, false, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Whitelabel domain created. Id: {domain.Id}").ConfigureAwait(false);
 
 			var domainValidation = await client.Whitelabel.ValidateDomainAsync(domain.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Whitelabel domain validation: {domainValidation.IsValid}").ConfigureAwait(false);
@@ -874,12 +909,17 @@ namespace StrongGrid.IntegrationTests
 			var links = await client.Whitelabel.GetAllLinksAsync(null, 50, 0, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All whitelabel links retrieved. There are {links.Length} links").ConfigureAwait(false);
 
-			var link = links.FirstOrDefault(d => d.Domain == "example.com");
-			if (link == null)
-			{
-				link = await client.Whitelabel.CreateLinkAsync("example.com", "email", true, null, cancellationToken).ConfigureAwait(false);
-				await log.WriteLineAsync($"Whitelabel link created. Id: {link.Id}").ConfigureAwait(false);
-			}
+			cleanUpTasks = links.Where(d => d.Domain == "example.com")
+				.Select(async oldDomain =>
+				{
+					await client.Whitelabel.DeleteDomainAsync(oldDomain.Id, null, cancellationToken).ConfigureAwait(false);
+					await log.WriteLineAsync($"Domain {oldDomain.Id} deleted").ConfigureAwait(false);
+					await Task.Delay(250).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
+				});
+			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
+
+			var link = await client.Whitelabel.CreateLinkAsync("example.com", "email", true, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Whitelabel link created. Id: {link.Id}").ConfigureAwait(false);
 
 			var linkValidation = await client.Whitelabel.ValidateLinkAsync(link.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Whitelabel validation: {linkValidation.IsValid}").ConfigureAwait(false);
@@ -1020,11 +1060,14 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"There are {allIpPools.Length} IP pools on your account").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			foreach (var oldPool in allIpPools.Where(p => p.Name.StartsWith("StrongGrid Integration Testing:")))
-			{
-				await client.IpPools.DeleteAsync(oldPool.Name, cancellationToken).ConfigureAwait(false);
-				await log.WriteLineAsync($"Ip Pool {oldPool.Name} deleted").ConfigureAwait(false);
-			}
+			var cleanUpTasks = allIpPools.Where(p => p.Name.StartsWith("StrongGrid Integration Testing:"))
+				.Select(async oldPool =>
+				{
+					await client.IpPools.DeleteAsync(oldPool.Name, cancellationToken).ConfigureAwait(false);
+					await log.WriteLineAsync($"Ip Pool {oldPool.Name} deleted").ConfigureAwait(false);
+					await Task.Delay(250).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
+				});
+			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
 			// CREATE A NEW POOL
 			var newPool = await client.IpPools.CreateAsync("StrongGrid Integration Testing: new pool", cancellationToken).ConfigureAwait(false);
@@ -1043,30 +1086,24 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"Deleted pool '{marketingPool.Name}'").ConfigureAwait(false);
 		}
 
-		private static Task Subusers(IClient client, TextWriter log, CancellationToken cancellationToken)
+		private static async Task Subusers(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			/**************************************************
-				Commenting out the following tests because 
-				I do not have the necessary privileges
-			 **************************************************
-
 			await log.WriteLineAsync("\n***** SUBUSERS *****\n").ConfigureAwait(false);
 
 			// GET ALL THE SUBUSERS
-			var subusers = await client.Subusers.GetAllAsync(cancellationToken).ConfigureAwait(false);
+			var subusers = await client.Subusers.GetAllAsync(50, 0, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"There are {subusers.Length} subusers").ConfigureAwait(false);
 
-			**************************************************/
-			return Task.FromResult(0); // Success.
+			if (subusers.Length > 0)
+			{
+				// RETRIEVE THE FIRST SUBUSER
+				var user = await client.Subusers.GetAsync(subusers[0].Username, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"Retrieved user '{user.Username}'").ConfigureAwait(false);
+			}
 		}
 
-		private static Task Teammates(IClient client, TextWriter log, CancellationToken cancellationToken)
+		private static async Task Teammates(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			/**************************************************
-				Commenting out the following tests because 
-				I do not have the necessary privileges
-			 **************************************************
-
 			await log.WriteLineAsync("\n***** TEAMMATES *****\n").ConfigureAwait(false);
 
 			// GET ALL THE PENDING INVITATIONS
@@ -1074,7 +1111,7 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"There are {pendingInvitation.Length} pending invitations").ConfigureAwait(false);
 
 			// GET ALL THE TEAMMATES
-			var allTeammates = await client.Teammates.GetAllTeammatesAsync(cancellationToken).ConfigureAwait(false);
+			var allTeammates = await client.Teammates.GetAllTeammatesAsync(50, 0, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"There are {allTeammates.Length} teammates").ConfigureAwait(false);
 
 			if (allTeammates.Length > 0)
@@ -1083,9 +1120,6 @@ namespace StrongGrid.IntegrationTests
 				var teammate = await client.Teammates.GetTeammateAsync(allTeammates[0].Username, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"Retrieved teammate '{teammate.Username}'").ConfigureAwait(false);
 			}
-
-			**************************************************/
-			return Task.FromResult(0); // Success.
 		}
 
 		private static async Task WebhookSettings(IClient client, TextWriter log, CancellationToken cancellationToken)

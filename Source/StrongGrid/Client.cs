@@ -352,8 +352,12 @@ namespace StrongGrid
 			_mustDisposeHttpClient = httpClient == null;
 			_httpClient = httpClient;
 
+#if DEBUG
+			Version = "DEBUG";
+#else
 			var assemblyVersion = typeof(Client).GetTypeInfo().Assembly.GetName().Version;
 			Version = $"{assemblyVersion.Major}.{assemblyVersion.Minor}.{assemblyVersion.Build}";
+#endif
 
 			_fluentClient = new FluentClient(new Uri($"{baseUri.TrimEnd('/')}/{apiVersion.TrimStart('/')}"), httpClient)
 				.SetUserAgent($"StrongGrid/{Version} (+https://github.com/Jericho/StrongGrid)")
