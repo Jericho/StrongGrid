@@ -3,7 +3,6 @@ using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -194,8 +193,8 @@ namespace StrongGrid.Resources
 		public Task<MonitorSettings> UpdateMonitorSettingsAsync(string username, Parameter<string> email = default(Parameter<string>), Parameter<int> frequency = default(Parameter<int>), CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
-			if (email.HasValue) data.Add("email", email.Value);
-			if (frequency.HasValue) data.Add("frequency", frequency.Value);
+			data.AddPropertyIfValue("email", email);
+			data.AddPropertyIfValue("frequency", frequency);
 
 			return _client
 				.PutAsync($"{_endpoint}/{username}/monitor")
@@ -228,11 +227,11 @@ namespace StrongGrid.Resources
 			Parameter<IEnumerable<string>> ips = default(Parameter<IEnumerable<string>>))
 		{
 			var result = new JObject();
-			if (id.HasValue) result.Add("id", id.Value);
-			if (username.HasValue) result.Add("username", username.Value);
-			if (email.HasValue) result.Add("email", email.Value);
-			if (password.HasValue) result.Add("password", password.Value);
-			if (ips.HasValue) result.Add("ips", ips.Value == null ? null : JArray.FromObject(ips.Value.ToArray()));
+			result.AddPropertyIfValue("id", id);
+			result.AddPropertyIfValue("username", username);
+			result.AddPropertyIfValue("email", email);
+			result.AddPropertyIfValue("password", password);
+			result.AddPropertyIfValue("ips", ips);
 			return result;
 		}
 	}

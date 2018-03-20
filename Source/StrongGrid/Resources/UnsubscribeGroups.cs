@@ -134,8 +134,8 @@ namespace StrongGrid.Resources
 		public Task<SuppressionGroup> UpdateAsync(long groupId, Parameter<string> name = default(Parameter<string>), Parameter<string> description = default(Parameter<string>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
-			if (name.HasValue) data.Add("name", name.Value);
-			if (description.HasValue) data.Add("description", description.Value);
+			data.AddPropertyIfValue("name", name.Value);
+			data.AddPropertyIfValue("description", description);
 
 			return _client
 				.PatchAsync($"{_endpoint}/{groupId}")

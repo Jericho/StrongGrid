@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -287,8 +286,8 @@ namespace StrongGrid.Resources
 			if (!emailAddresses.Any()) throw new ArgumentException("You must specify at least one email address");
 
 			var data = new JObject();
-			if (emailAddresses.Count() == 1) data.Add("to", emailAddresses.First());
-			else data.Add("to", JArray.FromObject(emailAddresses.ToArray()));
+			if (emailAddresses.Count() == 1) data.AddPropertyIfValue("to", emailAddresses.First());
+			else data.AddPropertyIfValue("to", emailAddresses);
 
 			return _client
 				.PostAsync($"{_endpoint}/{campaignId}/schedules/test")
@@ -300,18 +299,18 @@ namespace StrongGrid.Resources
 		private static JObject CreateJObject(Parameter<string> title, Parameter<long?> senderId, Parameter<string> subject, Parameter<string> htmlContent, Parameter<string> textContent, Parameter<IEnumerable<long>> listIds, Parameter<IEnumerable<long>> segmentIds, Parameter<IEnumerable<string>> categories, Parameter<long?> suppressionGroupId, Parameter<string> customUnsubscribeUrl, Parameter<string> ipPool, Parameter<EditorType?> editor)
 		{
 			var result = new JObject();
-			if (title.HasValue) result.Add("title", title.Value);
-			if (subject.HasValue) result.Add("subject", subject.Value);
-			if (senderId.HasValue) result.Add("sender_id", senderId.Value);
-			if (htmlContent.HasValue) result.Add("html_content", htmlContent.Value);
-			if (textContent.HasValue) result.Add("plain_content", textContent.Value);
-			if (listIds.HasValue) result.Add("list_ids", listIds.Value == null ? null : JArray.FromObject(listIds.Value.ToArray()));
-			if (segmentIds.HasValue) result.Add("segment_ids", segmentIds.Value == null ? null : JArray.FromObject(segmentIds.Value.ToArray()));
-			if (categories.HasValue) result.Add("categories", categories.Value == null ? null : JArray.FromObject(categories.Value.ToArray()));
-			if (suppressionGroupId.HasValue) result.Add("suppression_group_id", suppressionGroupId.Value);
-			if (customUnsubscribeUrl.HasValue) result.Add("custom_unsubscribe_url", customUnsubscribeUrl.Value);
-			if (ipPool.HasValue) result.Add("ip_pool", ipPool.Value);
-			if (editor.HasValue) result.Add("editor", editor.Value.HasValue ? JToken.Parse(JsonConvert.SerializeObject(editor.Value.Value)).ToString() : null);
+			result.AddPropertyIfValue("title", title);
+			result.AddPropertyIfValue("subject", subject);
+			result.AddPropertyIfValue("sender_id", senderId);
+			result.AddPropertyIfValue("html_content", htmlContent);
+			result.AddPropertyIfValue("plain_content", textContent);
+			result.AddPropertyIfValue("list_ids", listIds);
+			result.AddPropertyIfValue("segment_ids", segmentIds);
+			result.AddPropertyIfValue("categories", categories);
+			result.AddPropertyIfValue("suppression_group_id", suppressionGroupId);
+			result.AddPropertyIfValue("custom_unsubscribe_url", customUnsubscribeUrl);
+			result.AddPropertyIfValue("ip_pool", ipPool);
+			result.AddPropertyIfEnumValue("editor", editor);
 			return result;
 		}
 	}

@@ -230,19 +230,19 @@ namespace StrongGrid.Resources
 			if (numberOfRecipients >= 1000) throw new ArgumentOutOfRangeException("The total number of recipients must be less than 1000");
 
 			var data = new JObject();
-			if (from != null) data.Add("from", JToken.FromObject(from));
-			if (replyTo != null) data.Add("reply_to", JToken.FromObject(replyTo));
-			if (!string.IsNullOrEmpty(subject)) data.Add("subject", subject);
-			if (contents != null && contents.Any()) data.Add("content", JToken.FromObject(contents.ToArray()));
-			if (attachments != null && attachments.Any()) data.Add("attachments", JToken.FromObject(attachments.ToArray()));
-			if (!string.IsNullOrEmpty(templateId)) data.Add("template_id", templateId);
-			if (categories != null && categories.Any()) data.Add("categories", JToken.FromObject(categories.ToArray()));
-			if (sendAt.HasValue) data.Add("send_at", sendAt.Value.ToUnixTime());
-			if (!string.IsNullOrEmpty(batchId)) data.Add("batch_id", batchId);
-			if (unsubscribeOptions != null) data.Add("asm", JToken.FromObject(unsubscribeOptions));
-			if (!string.IsNullOrEmpty(ipPoolName)) data.Add("ip_pool_name", ipPoolName);
-			if (mailSettings != null) data.Add("mail_settings", JToken.FromObject(mailSettings));
-			if (trackingSettings != null) data.Add("tracking_settings", JToken.FromObject(trackingSettings));
+			data.AddPropertyIfValue("from", from);
+			data.AddPropertyIfValue("reply_to", replyTo);
+			data.AddPropertyIfValue("subject", subject);
+			data.AddPropertyIfValue("content", contents);
+			data.AddPropertyIfValue("attachments", attachments);
+			data.AddPropertyIfValue("template_id", templateId);
+			data.AddPropertyIfValue("categories", categories);
+			data.AddPropertyIfValue("send_at", sendAt?.ToUnixTime());
+			data.AddPropertyIfValue("batch_id", batchId);
+			data.AddPropertyIfValue("asm", unsubscribeOptions);
+			data.AddPropertyIfValue("ip_pool_name", ipPoolName);
+			data.AddPropertyIfValue("mail_settings", mailSettings);
+			data.AddPropertyIfValue("tracking_settings", trackingSettings);
 
 			// It's important to make a copy of the personalizations to ensure we don't modify the original array
 			var personalizationsCopy = personalizations.ToArray();
@@ -253,7 +253,7 @@ namespace StrongGrid.Resources
 				personalization.Bcc = EnsureRecipientsNamesAreQuoted(personalization.Bcc);
 			}
 
-			data.Add("personalizations", JToken.FromObject(personalizationsCopy));
+			data.AddPropertyIfValue("personalizations", personalizationsCopy);
 
 			if (sections != null && sections.Any())
 			{

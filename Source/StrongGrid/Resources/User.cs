@@ -252,16 +252,16 @@ namespace StrongGrid.Resources
 			Parameter<string> zip = default(Parameter<string>))
 		{
 			var result = new JObject();
-			if (address.HasValue) result.Add("address", address.Value);
-			if (city.HasValue) result.Add("city", city.Value);
-			if (company.HasValue) result.Add("company", company.Value);
-			if (country.HasValue) result.Add("country", country.Value);
-			if (firstName.HasValue) result.Add("first_name", firstName.Value);
-			if (lastName.HasValue) result.Add("last_name", lastName.Value);
-			if (phone.HasValue) result.Add("phone", phone.Value);
-			if (state.HasValue) result.Add("state", state.Value);
-			if (website) result.Add("website", website.Value);
-			if (zip.HasValue) result.Add("zip", zip.Value);
+			result.AddPropertyIfValue("address", address);
+			result.AddPropertyIfValue("city", city);
+			result.AddPropertyIfValue("company", company);
+			result.AddPropertyIfValue("country", country);
+			result.AddPropertyIfValue("first_name", firstName);
+			result.AddPropertyIfValue("last_name", lastName);
+			result.AddPropertyIfValue("phone", phone);
+			result.AddPropertyIfValue("state", state);
+			result.AddPropertyIfValue("website", website);
+			result.AddPropertyIfValue("zip", zip);
 			return result;
 		}
 	}
