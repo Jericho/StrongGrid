@@ -149,7 +149,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(1);
-			result[0].Email.ShouldBe("user1@example.com");
+			result[0].Email.ShouldBe(emailAddress);
 		}
 	}
 }
