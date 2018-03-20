@@ -214,7 +214,7 @@ namespace StrongGrid.Utilities
 		/// <returns>Returns the request builder for chaining.</returns>
 		public static IRequest OnBehalfOf(this IRequest request, string username)
 		{
-			return string.IsNullOrEmpty(username) ? request : request.WithHeader("on-behalf-of", $"subuser_{username}");
+			return string.IsNullOrEmpty(username) ? request : request.WithHeader("on-behalf-of", username);
 		}
 
 		/// <summary>Asynchronously retrieve the response body as a <see cref="string"/>.</summary>
