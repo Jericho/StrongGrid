@@ -17,7 +17,7 @@ namespace StrongGrid.IntegrationTests
 		{
 			// -----------------------------------------------------------------------------
 			// Do you want to proxy requests through Fiddler (useful for debugging)?
-			var useFiddler = false;
+			var useFiddler = true;
 
 			// As an alternative to Fiddler, you can display debug information about
 			// every HTTP request/response in the console. This is useful for debugging
@@ -444,6 +444,11 @@ namespace StrongGrid.IntegrationTests
 			var cleanUpTasks = templates.Where(t => t.Name.StartsWith("StrongGrid Integration Testing:"))
 				.Select(async oldTemplate =>
 				{
+					foreach (var oldTemplateVersion in oldTemplate.Versions)
+					{
+						await client.Templates.DeleteVersionAsync(oldTemplateVersion.TemplateId, oldTemplateVersion.Id, null, cancellationToken).ConfigureAwait(false);
+						await log.WriteLineAsync($"Template version {oldTemplateVersion.TemplateId}.{oldTemplateVersion.Id} deleted").ConfigureAwait(false);
+					}
 					await client.Templates.DeleteAsync(oldTemplate.Id, null, cancellationToken).ConfigureAwait(false);
 					await log.WriteLineAsync($"Template {oldTemplate.Id} deleted").ConfigureAwait(false);
 					await Task.Delay(250).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up

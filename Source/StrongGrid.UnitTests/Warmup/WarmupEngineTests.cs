@@ -43,10 +43,10 @@ namespace StrongGrid.UnitTests.Warmup
 				.ReturnsAsync(new IpPool() { Name = poolName });
 			mockIpPoolsResource
 				.Setup(r => r.AddAddressAsync(poolName, ipAddresses[0], It.IsAny<CancellationToken>()))
-				.Returns(Task.CompletedTask);
+				.Returns(Task.FromResult(true));
 			mockIpPoolsResource
 				.Setup(r => r.AddAddressAsync(poolName, ipAddresses[1], It.IsAny<CancellationToken>()))
-				.Returns(Task.CompletedTask);
+				.Returns(Task.FromResult(true));
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
 			mockClient.SetupGet(c => c.IpAddresses).Returns(mockIpAddressesResource.Object);
@@ -55,7 +55,7 @@ namespace StrongGrid.UnitTests.Warmup
 			var mockRepository = new Mock<IWarmupProgressRepository>(MockBehavior.Strict);
 			mockRepository
 				.Setup(repo => repo.UpdateStatusAsync(It.Is<WarmupStatus>(s => s.WarmupDay == 0), It.IsAny<CancellationToken>()))
-				.Returns(Task.CompletedTask);
+				.Returns(Task.FromResult(true));
 
 			var warmupEngine = new WarmupEngine(warmupSettings, mockClient.Object, mockRepository.Object, mockSystemClock.Object);
 
@@ -111,7 +111,7 @@ namespace StrongGrid.UnitTests.Warmup
 						s.EmailsSentLastDay == 1 &&
 						s.WarmupDay == 1
 					), It.IsAny<CancellationToken>()))
-				.Returns(Task.CompletedTask);
+				.Returns(Task.FromResult(true));
 
 			var warmupEngine = new WarmupEngine(warmupSettings, mockClient.Object, mockRepository.Object, mockSystemClock.Object);
 
@@ -181,7 +181,7 @@ namespace StrongGrid.UnitTests.Warmup
 						s.EmailsSentLastDay == 6 &&
 						s.WarmupDay == 1
 					), It.IsAny<CancellationToken>()))
-				.Returns(Task.CompletedTask);
+				.Returns(Task.FromResult(true));
 
 			var warmupEngine = new WarmupEngine(warmupSettings, mockClient.Object, mockRepository.Object, mockSystemClock.Object);
 
@@ -248,7 +248,7 @@ namespace StrongGrid.UnitTests.Warmup
 						s.EmailsSentLastDay == 2 &&
 						s.WarmupDay == 2
 					), It.IsAny<CancellationToken>()))
-				.Returns(Task.CompletedTask);
+				.Returns(Task.FromResult(true));
 
 			var warmupEngine = new WarmupEngine(warmupSettings, mockClient.Object, mockRepository.Object, mockSystemClock.Object);
 
@@ -315,7 +315,7 @@ namespace StrongGrid.UnitTests.Warmup
 						s.EmailsSentLastDay == 2 &&
 						s.WarmupDay == 2
 					), It.IsAny<CancellationToken>()))
-				.Returns(Task.CompletedTask);
+				.Returns(Task.FromResult(true));
 
 			var warmupEngine = new WarmupEngine(warmupSettings, mockClient.Object, mockRepository.Object, mockSystemClock.Object);
 
@@ -357,7 +357,7 @@ namespace StrongGrid.UnitTests.Warmup
 			var mockIpPoolsResource = new Mock<IIpPools>(MockBehavior.Strict);
 			mockIpPoolsResource
 				.Setup(r => r.DeleteAsync(poolName, It.IsAny<CancellationToken>()))
-				.Returns(Task.CompletedTask);
+				.Returns(Task.FromResult(true));
 
 			var mockMailResource = new Mock<IMail>(MockBehavior.Strict);
 			mockMailResource
@@ -391,7 +391,7 @@ namespace StrongGrid.UnitTests.Warmup
 						s.EmailsSentLastDay == 24 &&
 						s.WarmupDay == 4
 					), It.IsAny<CancellationToken>()))
-				.Returns(Task.CompletedTask);
+				.Returns(Task.FromResult(true));
 
 			var warmupEngine = new WarmupEngine(warmupSettings, mockClient.Object, mockRepository.Object, mockSystemClock.Object);
 

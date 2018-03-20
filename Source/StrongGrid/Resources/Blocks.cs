@@ -57,7 +57,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Retrieve a specific block.
+		/// Retrieve the blocks for a specific email address.
 		/// </summary>
 		/// <param name="emailAddress">The email address.</param>
 		/// <param name="onBehalfOf">The user to impersonate</param>
@@ -65,13 +65,13 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Block" />.
 		/// </returns>
-		public Task<Block> GetAsync(string emailAddress, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Block[]> GetAsync(string emailAddress, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{emailAddress}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Block>();
+				.AsSendGridObject<Block[]>();
 		}
 
 		/// <summary>

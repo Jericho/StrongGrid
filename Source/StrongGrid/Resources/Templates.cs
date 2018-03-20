@@ -216,11 +216,11 @@ namespace StrongGrid.Resources
 		public Task<TemplateVersion> UpdateVersionAsync(string templateId, string versionId, string name = null, string subject = null, string htmlContent = null, string textContent = null, bool? isActive = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
-			if (!string.IsNullOrEmpty(name)) data.Add("name", name);
-			if (!string.IsNullOrEmpty(subject)) data.Add("subject", subject);
-			if (!string.IsNullOrEmpty(htmlContent)) data.Add("html_content", htmlContent);
-			if (!string.IsNullOrEmpty(textContent)) data.Add("plain_content", textContent);
-			if (isActive.HasValue) data.Add("active", isActive.Value ? 1 : 0);
+			data.AddPropertyIfValue("name", name);
+			data.AddPropertyIfValue("subject", subject);
+			data.AddPropertyIfValue("html_content", htmlContent);
+			data.AddPropertyIfValue("plain_content", textContent);
+			data.AddPropertyIfValue("active", isActive.HasValue ? (isActive.Value ? 1 : 0) : (int?)null);
 
 			return _client
 				.PatchAsync($"{_endpoint}/{templateId}/versions/{versionId}")

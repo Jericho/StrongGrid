@@ -3,9 +3,9 @@
 
 // Install tools.
 #tool "nuget:?package=GitVersion.CommandLine&version=4.0.0-beta0012"
-#tool "nuget:?package=GitReleaseManager&version=0.6.0"
+#tool "nuget:?package=GitReleaseManager&version=0.7.0"
 #tool "nuget:?package=OpenCover&version=4.6.519"
-#tool "nuget:?package=ReportGenerator&version=3.1.1"
+#tool "nuget:?package=ReportGenerator&version=3.1.2"
 #tool "nuget:?package=coveralls.io&version=1.4.2"
 #tool "nuget:?package=xunit.runner.console&version=2.3.1"
 

@@ -29,7 +29,7 @@ namespace StrongGrid.Resources
 		Task<Block[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 25, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Retrieve a specific block.
+		/// Retrieve the blocks for a specific email address.
 		/// </summary>
 		/// <param name="emailAddress">The email address.</param>
 		/// <param name="onBehalfOf">The user to impersonate</param>
@@ -37,7 +37,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Block" />.
 		/// </returns>
-		Task<Block> GetAsync(string emailAddress, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Block[]> GetAsync(string emailAddress, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Delete all blocks.

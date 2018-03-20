@@ -194,8 +194,8 @@ namespace StrongGrid.Resources
 		private static JObject CreateJObject(string name, Parameter<IEnumerable<string>> scopes)
 		{
 			var result = new JObject();
-			if (!string.IsNullOrEmpty(name)) result.Add("name", name);
-			if (scopes.HasValue) result.Add("scopes", scopes.Value == null ? null : JArray.FromObject(scopes.Value.ToArray()));
+			result.AddPropertyIfValue("name", name);
+			result.AddPropertyIfValue("scopes", scopes);
 			return result;
 		}
 	}

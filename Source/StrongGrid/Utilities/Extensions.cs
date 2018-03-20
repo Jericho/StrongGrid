@@ -1,7 +1,9 @@
 ﻿using HttpMultipartParser;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -212,7 +214,7 @@ namespace StrongGrid.Utilities
 		/// <returns>Returns the request builder for chaining.</returns>
 		public static IRequest OnBehalfOf(this IRequest request, string username)
 		{
-			return string.IsNullOrEmpty(username) ? request : request.WithHeader("on-behalf-of", $"subuser_{username}");
+			return string.IsNullOrEmpty(username) ? request : request.WithHeader("on-behalf-of", username);
 		}
 
 		/// <summary>Asynchronously retrieve the response body as a <see cref="string"/>.</summary>
@@ -250,26 +252,21 @@ namespace StrongGrid.Utilities
 		/// <returns>Returns the human readable representation of the TimeSpan</returns>
 		public static string ToDurationString(this TimeSpan timeSpan)
 		{
+			void AppendFormatIfNecessary(StringBuilder stringBuilder, string timePart, int value)
+			{
+				if (value <= 0) return;
+				stringBuilder.AppendFormat($" {value} {timePart}{(value > 1 ? "s" : string.Empty)}");
+			}
+
 			// In case the TimeSpan is extremely short
 			if (timeSpan.TotalMilliseconds <= 1) return "1 millisecond";
 
 			var result = new StringBuilder();
-
-			if (timeSpan.Days == 1) result.Append(" 1 day");
-			else if (timeSpan.Days > 1) result.AppendFormat(" {0} days", timeSpan.Days);
-
-			if (timeSpan.Hours == 1) result.Append(" 1 hour");
-			else if (timeSpan.Hours > 1) result.AppendFormat(" {0} hours", timeSpan.Hours);
-
-			if (timeSpan.Minutes == 1) result.Append(" 1 minute");
-			else if (timeSpan.Minutes > 1) result.AppendFormat(" {0} minutes", timeSpan.Minutes);
-
-			if (timeSpan.Seconds == 1) result.Append(" 1 second");
-			else if (timeSpan.Seconds > 1) result.AppendFormat(" {0} seconds", timeSpan.Seconds);
-
-			if (timeSpan.Milliseconds == 1) result.Append(" 1 millisecond");
-			else if (timeSpan.Milliseconds > 1) result.AppendFormat(" {0} milliseconds", timeSpan.Milliseconds);
-
+			AppendFormatIfNecessary(result, "day", timeSpan.Days);
+			AppendFormatIfNecessary(result, "hour", timeSpan.Hours);
+			AppendFormatIfNecessary(result, "minute", timeSpan.Days);
+			AppendFormatIfNecessary(result, "second", timeSpan.Days);
+			AppendFormatIfNecessary(result, "millisecond", timeSpan.Days);
 			return result.ToString().Trim();
 		}
 
@@ -321,6 +318,54 @@ namespace StrongGrid.Utilities
 			}
 
 			return scopes;
+		}
+
+		public static void AddPropertyIfValue(this JObject jsonObject, string propertyName, string value)
+		{
+			if (string.IsNullOrEmpty(value)) return;
+			jsonObject.Add(propertyName, value);
+		}
+
+		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, T value)
+		{
+			if (EqualityComparer<T>.Default.Equals(value, default(T))) return;
+			jsonObject.Add(propertyName, JToken.FromObject(value));
+		}
+
+		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, IEnumerable<T> value)
+		{
+			if (value == null || !value.Any()) return;
+			jsonObject.Add(propertyName, JArray.FromObject(value.ToArray()));
+		}
+
+		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, Parameter<T> parameter)
+		{
+			AddPropertyIfValue(jsonObject, propertyName, parameter, value => JToken.FromObject(parameter.Value));
+		}
+
+		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, Parameter<IEnumerable<T>> parameter)
+		{
+			AddPropertyIfValue(jsonObject, propertyName, parameter, value => JArray.FromObject(value.ToArray()));
+		}
+
+		public static void AddPropertyIfEnumValue<T>(this JObject jsonObject, string propertyName, Parameter<T> parameter)
+		{
+			AddPropertyIfValue(jsonObject, propertyName, parameter, value => JToken.Parse(JsonConvert.SerializeObject(value)).ToString());
+		}
+
+		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, Parameter<T> parameter, Func<T, JToken> convertValueToJsonToken)
+		{
+			if (convertValueToJsonToken == null) throw new ArgumentNullException(nameof(convertValueToJsonToken));
+			if (!parameter.HasValue) return;
+
+			if (parameter.Value == null)
+			{
+				jsonObject.Add(propertyName, null);
+			}
+			else
+			{
+				jsonObject.Add(propertyName, convertValueToJsonToken(parameter.Value));
+			}
 		}
 
 		/// <summary>Asynchronously converts the JSON encoded content and converts it to a 'SendGrid' object of the desired type.</summary>

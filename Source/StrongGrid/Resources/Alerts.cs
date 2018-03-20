@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -132,10 +131,10 @@ namespace StrongGrid.Resources
 		private static JObject CreateJObject(Parameter<AlertType?> type, Parameter<string> emailTo, Parameter<Frequency?> frequency, Parameter<int?> percentage)
 		{
 			var result = new JObject();
-			if (type.HasValue) result.Add("type", type.Value.HasValue ? JToken.Parse(JsonConvert.SerializeObject(type.Value.Value)).ToString() : null);
-			if (emailTo.HasValue) result.Add("email_to", emailTo.Value);
-			if (frequency.HasValue) result.Add("frequency", frequency.Value.HasValue ? JToken.Parse(JsonConvert.SerializeObject(frequency.Value.Value)).ToString() : null);
-			if (percentage.HasValue) result.Add("percentage", percentage.Value);
+			result.AddPropertyIfEnumValue("type", type);
+			result.AddPropertyIfValue("email_to", emailTo);
+			result.AddPropertyIfEnumValue("frequency", frequency);
+			result.AddPropertyIfValue("percentage", percentage);
 			return result;
 		}
 	}
