@@ -136,7 +136,7 @@ namespace StrongGrid.UnitTests.Resources
 			var emailAddress = "user1@example.com";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, emailAddress)).Respond("application/json", SINGLE_BLOCK_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, emailAddress)).Respond("application/json", MULTIPLE_BLOCKS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var blocks = new Blocks(client);
@@ -148,7 +148,8 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
-			result.Email.ShouldBe(emailAddress);
+			result.Length.ShouldBe(1);
+			result[0].Email.ShouldBe("user1@example.com");
 		}
 	}
 }
