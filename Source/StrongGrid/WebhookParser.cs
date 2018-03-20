@@ -81,12 +81,14 @@ namespace StrongGrid
 				{
 					var attachment = prop.Value.ToObject<InboundEmailAttachment>();
 					attachment.Id = prop.Name;
+
 					var file = parser.Files.FirstOrDefault(f => f.Name == prop.Name);
 					if (file != null)
 					{
 						attachment.ContentType = file.ContentType;
 						attachment.Data = file.Data;
 					}
+
 					return attachment;
 				}).ToArray();
 
