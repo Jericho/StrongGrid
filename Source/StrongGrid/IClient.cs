@@ -88,6 +88,14 @@ namespace StrongGrid
 		ICustomFields CustomFields { get; }
 
 		/// <summary>
+		/// Gets the EmailActivities resource which allows you to search and download a CSV of your recent email event activity.
+		/// </summary>
+		/// <value>
+		/// The email activities.
+		/// </value>
+		IEmailActivities EmailActivities { get; }
+
+		/// <summary>
 		/// Gets the GlobalSuppressions resource.
 		/// </summary>
 		/// <value>
