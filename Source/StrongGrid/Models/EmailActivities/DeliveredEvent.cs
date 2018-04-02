@@ -1,11 +1,11 @@
 ﻿using Newtonsoft.Json;
-using StrongGrid.Models.Webhooks;
 
 namespace StrongGrid.Models.EmailActivities
 {
 	/// <summary>
 	/// Message has been successfully delivered to the receiving server.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Models.EmailActivities.Event" />
 	public class DeliveredEvent : Event
 	{
 		/// <summary>

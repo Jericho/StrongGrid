@@ -1,11 +1,11 @@
 ﻿using Newtonsoft.Json;
-using StrongGrid.Models.Webhooks;
 
 namespace StrongGrid.Models.EmailActivities
 {
 	/// <summary>
 	/// Recipient has opened the HTML message.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Models.EmailActivities.Event" />
 	public class OpenEvent : Event
 	{
 		/// <summary>
