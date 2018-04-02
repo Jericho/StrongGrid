@@ -381,7 +381,13 @@ namespace StrongGrid.Utilities
 			if (!string.IsNullOrEmpty(propertyName))
 			{
 				var jObject = JObject.Parse(responseContent);
-				return jObject[propertyName].ToObject<T>();
+				var jProperty = jObject.Property(propertyName);
+				if (jProperty == null)
+				{
+					throw new ArgumentException($"The response does not contain a field called '{propertyName}'", nameof(propertyName));
+				}
+
+				return jProperty.Value.ToObject<T>();
 			}
 			else if (typeof(T).IsArray)
 			{
