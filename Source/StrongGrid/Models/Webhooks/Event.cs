@@ -8,7 +8,7 @@ namespace StrongGrid.Models.Webhooks
 	/// <summary>
 	/// A webhook event
 	/// </summary>
-	public class Event
+	public abstract class Event
 	{
 		/// <summary>
 		/// Gets or sets the type.

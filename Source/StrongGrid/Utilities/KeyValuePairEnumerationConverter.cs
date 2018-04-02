@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace StrongGrid.Utilities
 {
@@ -19,7 +21,7 @@ namespace StrongGrid.Utilities
 		/// </returns>
 		public override bool CanConvert(Type objectType)
 		{
-			return true;
+			return objectType == typeof(KeyValuePair<string, string>[]);
 		}
 
 		/// <summary>
@@ -30,7 +32,7 @@ namespace StrongGrid.Utilities
 		/// </value>
 		public override bool CanRead
 		{
-			get { return false; }
+			get { return true; }
 		}
 
 		/// <summary>
@@ -77,7 +79,26 @@ namespace StrongGrid.Utilities
 		/// </returns>
 		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 		{
-			throw new NotImplementedException();
+			if (reader.TokenType == JsonToken.StartObject)
+			{
+				var pairs = new List<KeyValuePair<string, string>>();
+				var jObject = JObject.Load(reader);
+
+				foreach (var property in jObject.Properties())
+				{
+					var key = property.Name;
+					var value = property.Value.ToString();
+					pairs.Add(new KeyValuePair<string, string>(key, value));
+				}
+
+				return pairs.ToArray();
+			}
+
+			/*
+				When we stop supporting .NET 4.5.2 we will be able to use the following:
+				return Array.Empty<KeyValuePair<string, string>>();
+			*/
+			return Enumerable.Empty<KeyValuePair<string, string>>().ToArray();
 		}
 	}
 }

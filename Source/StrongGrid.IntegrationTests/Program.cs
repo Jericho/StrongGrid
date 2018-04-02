@@ -54,6 +54,7 @@ namespace StrongGrid.IntegrationTests
 					ExecuteAsync(client, source, CampaignsAndSenderIdentities),
 					ExecuteAsync(client, source, Categories),
 					ExecuteAsync(client, source, ContactsAndCustomFields),
+					ExecuteAsync(client, source, EmailActivities),
 					ExecuteAsync(client, source, GlobalSuppressions),
 					ExecuteAsync(client, source, InvalidEmails),
 					ExecuteAsync(client, source, IpAddresses),
@@ -216,7 +217,8 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"There are {apiKeys.Length} Api Keys").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			var cleanUpTasks = apiKeys.Where(k => k.Name.StartsWith("StrongGrid Integration Testing:"))
+			var cleanUpTasks = apiKeys
+				.Where(k => k.Name.StartsWith("StrongGrid Integration Testing:"))
 				.Select(async oldApiKey =>
 				{
 					await client.ApiKeys.DeleteAsync(oldApiKey.KeyId, null, cancellationToken).ConfigureAwait(false);
@@ -281,7 +283,8 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"There are {groups.Length} unsubscribe groups").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			var cleanUpTasks = groups.Where(g => g.Name.StartsWith("StrongGrid Integration Testing:"))
+			var cleanUpTasks = groups
+				.Where(g => g.Name.StartsWith("StrongGrid Integration Testing:"))
 				.Select(async oldGroup =>
 				{
 					await client.UnsubscribeGroups.DeleteAsync(oldGroup.Id, null, cancellationToken).ConfigureAwait(false);
@@ -441,7 +444,8 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"All templates retrieved. There are {templates.Length} templates").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			var cleanUpTasks = templates.Where(t => t.Name.StartsWith("StrongGrid Integration Testing:"))
+			var cleanUpTasks = templates
+				.Where(t => t.Name.StartsWith("StrongGrid Integration Testing:"))
 				.Select(async oldTemplate =>
 				{
 					foreach (var oldTemplateVersion in oldTemplate.Versions)
@@ -515,7 +519,8 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"All custom fields retrieved. There are {fields.Length} fields").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			var cleanUpTasks = fields.Where(f => f.Name.StartsWith("stronggrid_"))
+			var cleanUpTasks = fields
+				.Where(f => f.Name.StartsWith("stronggrid_"))
 				.Select(async oldField =>
 				{
 					await client.CustomFields.DeleteAsync(oldField.Id, null, cancellationToken).ConfigureAwait(false);
@@ -644,7 +649,8 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"All segements retrieved. There are {segments.Length} segments").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			var cleanUpTasks = lists.Where(l => l.Name.StartsWith("StrongGrid Integration Testing:"))
+			var cleanUpTasks = lists
+				.Where(l => l.Name.StartsWith("StrongGrid Integration Testing:"))
 				.Select(async oldList =>
 				{
 					await client.Lists.DeleteAsync(oldList.Id, null, cancellationToken).ConfigureAwait(false);
@@ -705,7 +711,8 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"All campaigns retrieved. There are {campaigns.Length} campaigns").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			var cleanUpTasks = campaigns.Where(c => c.Title.StartsWith("StrongGrid Integration Testing:"))
+			var cleanUpTasks = campaigns
+				.Where(c => c.Title.StartsWith("StrongGrid Integration Testing:"))
 				.Select(async oldCampaign =>
 				{
 					await client.Campaigns.DeleteAsync(oldCampaign.Id, cancellationToken).ConfigureAwait(false);
@@ -883,7 +890,8 @@ namespace StrongGrid.IntegrationTests
 			var domains = await client.Whitelabel.GetAllDomainsAsync(50, 0, false, null, null, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All whitelabel domains retrieved. There are {domains.Length} domains").ConfigureAwait(false);
 
-			var cleanUpTasks = domains.Where(d => d.Domain == "example.com")
+			var cleanUpTasks = domains
+				.Where(d => d.Domain == "example.com")
 				.Select(async oldDomain =>
 				{
 					await client.Whitelabel.DeleteDomainAsync(oldDomain.Id, null, cancellationToken).ConfigureAwait(false);
@@ -1065,7 +1073,8 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"There are {allIpPools.Length} IP pools on your account").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			var cleanUpTasks = allIpPools.Where(p => p.Name.StartsWith("StrongGrid Integration Testing:"))
+			var cleanUpTasks = allIpPools
+				.Where(p => p.Name.StartsWith("StrongGrid Integration Testing:"))
 				.Select(async oldPool =>
 				{
 					await client.IpPools.DeleteAsync(oldPool.Name, cancellationToken).ConfigureAwait(false);
@@ -1138,6 +1147,23 @@ namespace StrongGrid.IntegrationTests
 			// GET THE INBOUND PARSE SETTINGS
 			var inboundParseWebhookSettings = await client.WebhookSettings.GetAllInboundParseWebhookSettings(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("The inbound parse webhooks settings have been retrieved.").ConfigureAwait(false);
+		}
+
+		private static async Task EmailActivities(IClient client, TextWriter log, CancellationToken cancellationToken)
+		{
+			await log.WriteLineAsync("\n***** EMAIL ACTIVITIES *****\n").ConfigureAwait(false);
+
+			// REQUEST THE ACTIVITIES
+			var allActivities = await client.EmailActivities.SearchMessagesAsync(20, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Activities requested. Found {allActivities.Count()} activities.").ConfigureAwait(false);
+
+			// REQUEST THE ACTIVITIES FOR A SPECIFIC MESSAGE
+			if (allActivities.Any())
+			{
+				var messageId = allActivities.First().MessageId;
+				var summary = await client.EmailActivities.GetMessageSummaryAsync(messageId, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"There are {summary.Events.Count()} events associated with message {summary.MessageId}.").ConfigureAwait(false);
+			}
 		}
 
 		// to get your public IP address we loop through an array

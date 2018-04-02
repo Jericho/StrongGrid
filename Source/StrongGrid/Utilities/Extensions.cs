@@ -368,6 +368,12 @@ namespace StrongGrid.Utilities
 			}
 		}
 
+		public static T GetPropertyValue<T>(this JToken item, string name)
+		{
+			if (item[name] == null) return default(T);
+			return item[name].Value<T>();
+		}
+
 		/// <summary>Asynchronously converts the JSON encoded content and converts it to a 'SendGrid' object of the desired type.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="httpContent">The content</param>
@@ -381,7 +387,13 @@ namespace StrongGrid.Utilities
 			if (!string.IsNullOrEmpty(propertyName))
 			{
 				var jObject = JObject.Parse(responseContent);
-				return jObject[propertyName].ToObject<T>();
+				var jProperty = jObject.Property(propertyName);
+				if (jProperty == null)
+				{
+					throw new ArgumentException($"The response does not contain a field called '{propertyName}'", nameof(propertyName));
+				}
+
+				return jProperty.Value.ToObject<T>();
 			}
 			else if (typeof(T).IsArray)
 			{
