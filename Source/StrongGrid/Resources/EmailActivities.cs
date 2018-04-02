@@ -33,15 +33,31 @@ namespace StrongGrid.Resources
 		/// <param name="limit">Number of IP activity entries to return.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
-		/// The <see cref="Alert" />.
+		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
-		public Task<EmailActivitySummary[]> SearchMessages(int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<EmailMessageActivity[]> SearchMessages(int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync(_endpoint)
 				.WithArgument("limit", limit)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<EmailActivitySummary[]>("messages");
+				.AsSendGridObject<EmailMessageActivity[]>("messages");
+		}
+
+		/// <summary>
+		/// Get all of the details about the specified message.
+		/// </summary>
+		/// <param name="messageId">The ID of the message that you want to see details.</param>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// An array of <see cref="EmailMessageSummary" />.
+		/// </returns>
+		public Task<EmailMessageSummary> GetMessageSummary(string messageId, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			return _client
+				.GetAsync($"{_endpoint}/{messageId}")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<EmailMessageSummary>();
 		}
 	}
 }

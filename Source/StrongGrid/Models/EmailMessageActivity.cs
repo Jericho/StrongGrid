@@ -6,7 +6,7 @@ namespace StrongGrid.Models
 	/// <summary>
 	/// The details about a specific message.
 	/// </summary>
-	public class EmailActivitySummary
+	public class EmailMessageActivity
 	{
 		/// <summary>
 		/// Gets or sets the 'from' address.
@@ -72,7 +72,7 @@ namespace StrongGrid.Models
 		public long ClicksCount { get; set; }
 
 		/// <summary>
-		/// Gets or sets the tdate or the last event.
+		/// Gets or sets the date or the last event.
 		/// </summary>
 		/// <value>
 		/// The date of the last event.

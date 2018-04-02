@@ -16,22 +16,21 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get all of the details about the messages matching the criteria.
 		/// </summary>
-		/// <param name="criteria">Filtering criteria.</param>
 		/// <param name="limit">Number of IP activity entries to return.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
-		/// The <see cref="Alert" />.
+		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
-		Task<EmailActivitySummary[]> SearchMessages(/*SearchCriteria criteria,*/ int limit = 20, CancellationToken cancellationToken = default(CancellationToken));
+		Task<EmailMessageActivity[]> SearchMessages(int limit = 20, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Get all of the details about the specified message.
 		/// </summary>
-		/// <param name="limit">Number of IP activity entries to return.</param>
+		/// <param name="messageId">The ID of the message that you want to see details.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
-		/// The <see cref="Alert" />.
+		/// The <see cref="EmailMessageSummary" />.
 		/// </returns>
-		//EmailActivity GetMessage(int limit = 20, CancellationToken cancellationToken = default(CancellationToken));
+		Task<EmailMessageSummary> GetMessageSummary(string messageId, CancellationToken cancellationToken = default(CancellationToken));
 	}
 }
