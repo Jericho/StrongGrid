@@ -176,7 +176,7 @@ namespace StrongGrid
 				When we stop supporting .NET 4.5.2 we will be able to use the following:
 				if (string.IsNullOrEmpty(rawEmailAddresses)) return Array.Empty<MailAddress>();
 			*/
-			if (string.IsNullOrEmpty(rawEmailAddresses)) return new MailAddress[0];
+			if (string.IsNullOrEmpty(rawEmailAddresses)) return Enumerable.Empty<MailAddress>().ToArray();
 
 			var rawEmails = Regex.Split(rawEmailAddresses, SPLIT_EMAIL_ADDRESSES);
 			var addresses = rawEmails

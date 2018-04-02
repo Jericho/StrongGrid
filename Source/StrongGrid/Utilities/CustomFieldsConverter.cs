@@ -115,6 +115,10 @@ namespace StrongGrid.Utilities
 				return fields.ToArray();
 			}
 
+			/*
+				When we stop supporting .NET 4.5.2 we will be able to use the following:
+				return Array.Empty<Field>();
+			*/
 			return Enumerable.Empty<Field>().ToArray();
 		}
 
