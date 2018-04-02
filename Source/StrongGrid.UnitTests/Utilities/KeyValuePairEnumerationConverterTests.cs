@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
 using Shouldly;
 using StrongGrid.Utilities;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -18,7 +17,7 @@ namespace StrongGrid.UnitTests.Utilities
 			var converter = new KeyValuePairEnumerationConverter();
 
 			// Assert
-			converter.CanRead.ShouldBeFalse();
+			converter.CanRead.ShouldBeTrue();
 			converter.CanWrite.ShouldBeTrue();
 		}
 
@@ -27,10 +26,10 @@ namespace StrongGrid.UnitTests.Utilities
 		{
 			// Act
 			var converter = new KeyValuePairEnumerationConverter();
-			var type = typeof(KeyValuePair<string, string>[]);
+			var objectType = typeof(KeyValuePair<string, string>[]);
 
 			// Assert
-			converter.CanConvert(type).ShouldBeTrue();
+			converter.CanConvert(objectType).ShouldBeTrue();
 		}
 
 		[Fact]
@@ -83,11 +82,11 @@ namespace StrongGrid.UnitTests.Utilities
 		public void Read()
 		{
 			// Arrange
-			var json = "";
+			var json = "{ \"some_value\": \"QWERTY\", \"another_value\": \"ABC_123\" }";
 
 			var textReader = new StringReader(json);
 			var jsonReader = new JsonTextReader(textReader);
-			var objectType = (Type)null;
+			var objectType = typeof(KeyValuePair<string, string>[]);
 			var existingValue = (object)null;
 			var serializer = new JsonSerializer();
 
@@ -95,7 +94,18 @@ namespace StrongGrid.UnitTests.Utilities
 
 			// Act
 			jsonReader.Read();
-			Should.Throw<NotImplementedException>(() => converter.ReadJson(jsonReader, objectType, existingValue, serializer));
+			var result = converter.ReadJson(jsonReader, objectType, existingValue, serializer);
+
+			// Assert
+			result.ShouldNotBeNull();
+			result.ShouldBeOfType<KeyValuePair<string, string>[]>();
+
+			var resultAsArray = (KeyValuePair<string, string>[])result;
+			resultAsArray.Length.ShouldBe(2);
+			resultAsArray[0].Key.ShouldBe("some_value");
+			resultAsArray[0].Value.ShouldBe("QWERTY");
+			resultAsArray[1].Key.ShouldBe("another_value");
+			resultAsArray[1].Value.ShouldBe("ABC_123");
 		}
 	}
 }
