@@ -97,9 +97,9 @@ namespace StrongGrid.Utilities
 						case EventType.Delivered:
 							emailActivityEvent = jsonObject.ToObject<DeliveredEvent>(serializer);
 							break;
-						//case EventType.Dropped:
-						//	emailActivityEvent = jsonObject.ToObject<DroppedEvent>(serializer);
-						//	break;
+						case EventType.Dropped:
+							emailActivityEvent = jsonObject.ToObject<DroppedEvent>(serializer);
+							break;
 						//case EventType.GroupResubscribe:
 						//	emailActivityEvent = jsonObject.ToObject<GroupResubscribeEvent>(serializer);
 						//	break;
