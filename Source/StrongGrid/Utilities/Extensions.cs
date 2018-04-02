@@ -368,6 +368,12 @@ namespace StrongGrid.Utilities
 			}
 		}
 
+		public static T GetPropertyValue<T>(this JToken item, string name)
+		{
+			if (item[name] == null) return default(T);
+			return item[name].Value<T>();
+		}
+
 		/// <summary>Asynchronously converts the JSON encoded content and converts it to a 'SendGrid' object of the desired type.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="httpContent">The content</param>

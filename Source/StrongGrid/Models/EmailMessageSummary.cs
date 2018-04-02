@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using StrongGrid.Models.EmailActivities;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
 
@@ -161,6 +162,16 @@ namespace StrongGrid.Models
 		/// </value>
 		[JsonProperty("categories", NullValueHandling = NullValueHandling.Ignore)]
 		public string[] Categories { get; set; }
+
+		/// <summary>
+		/// Gets or sets the events.
+		/// </summary>
+		/// <value>
+		/// The events
+		/// </value>
+		[JsonProperty("events", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonConverter(typeof(EmailActivityEventConverter))]
+		public Event[] Events { get; set; }
 
 		/// <summary>
 		/// Gets or sets the custom arguments.

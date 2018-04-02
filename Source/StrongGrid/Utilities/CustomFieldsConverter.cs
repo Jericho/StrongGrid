@@ -84,23 +84,23 @@ namespace StrongGrid.Utilities
 
 				foreach (var item in jArray)
 				{
-					var id = GetPropertyValue<int?>(item, "id");
-					var name = GetPropertyValue<string>(item, "name");
-					var type = GetPropertyValue<string>(item, "type");
+					var id = item.GetPropertyValue<int?>("id");
+					var name = item.GetPropertyValue<string>("name");
+					var type = item.GetPropertyValue<string>("type");
 					var field = (Field)null;
 
 					switch (type)
 					{
 						case "date":
-							var unixTime = GetPropertyValue<long?>(item, "value");
+							var unixTime = item.GetPropertyValue<long?>("value");
 							if (unixTime.HasValue) field = new Field<DateTime>(name, unixTime.Value.FromUnixTime());
 							else field = new Field<DateTime?>(name, null);
 							break;
 						case "text":
-							field = new Field<string>(name, GetPropertyValue<string>(item, "value"));
+							field = new Field<string>(name, item.GetPropertyValue<string>("value"));
 							break;
 						case "number":
-							var numericValue = GetPropertyValue<long?>(item, "value");
+							var numericValue = item.GetPropertyValue<long?>("value");
 							if (numericValue.HasValue) field = new Field<long>(name, numericValue.Value);
 							else field = new Field<long?>(name, null);
 							break;
@@ -120,12 +120,6 @@ namespace StrongGrid.Utilities
 				return Array.Empty<Field>();
 			*/
 			return Enumerable.Empty<Field>().ToArray();
-		}
-
-		private static T GetPropertyValue<T>(JToken item, string name)
-		{
-			if (item[name] == null) return default(T);
-			return item[name].Value<T>();
 		}
 	}
 }
