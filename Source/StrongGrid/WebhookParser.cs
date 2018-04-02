@@ -173,7 +173,7 @@ namespace StrongGrid
 			const string SPLIT_EMAIL_ADDRESSES = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
 
 			/*
-				When we stop spporting .NET 4.5.2 we will be able to use the following:
+				When we stop supporting .NET 4.5.2 we will be able to use the following:
 				if (string.IsNullOrEmpty(rawEmailAddresses)) return Array.Empty<MailAddress>();
 			*/
 			if (string.IsNullOrEmpty(rawEmailAddresses)) return new MailAddress[0];
