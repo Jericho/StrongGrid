@@ -54,6 +54,7 @@ namespace StrongGrid.IntegrationTests
 					ExecuteAsync(client, source, CampaignsAndSenderIdentities),
 					ExecuteAsync(client, source, Categories),
 					ExecuteAsync(client, source, ContactsAndCustomFields),
+					ExecuteAsync(client, source, EmailActivities),
 					ExecuteAsync(client, source, GlobalSuppressions),
 					ExecuteAsync(client, source, InvalidEmails),
 					ExecuteAsync(client, source, IpAddresses),
@@ -1138,6 +1139,23 @@ namespace StrongGrid.IntegrationTests
 			// GET THE INBOUND PARSE SETTINGS
 			var inboundParseWebhookSettings = await client.WebhookSettings.GetAllInboundParseWebhookSettings(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("The inbound parse webhooks settings have been retrieved.").ConfigureAwait(false);
+		}
+
+		private static async Task EmailActivities(IClient client, TextWriter log, CancellationToken cancellationToken)
+		{
+			await log.WriteLineAsync("\n***** EMAIL ACTIVITIES *****\n").ConfigureAwait(false);
+
+			// REQUEST THE ACTIVITIES
+			var allActivities = await client.EmailActivities.SearchMessagesAsync(20, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Activities requested. Found {allActivities.Count()} activities.").ConfigureAwait(false);
+
+			// REQUEST THE ACTIVITIES FOR A SPECIFIC MESSAGE
+			if (allActivities.Any())
+			{
+				var messageId = allActivities.First().MessageId;
+				var summary = await client.EmailActivities.GetMessageSummaryAsync(messageId, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"There are {summary.Events.Count()} events associated with message {summary.MessageId}.").ConfigureAwait(false);
+			}
 		}
 
 		// to get your public IP address we loop through an array
