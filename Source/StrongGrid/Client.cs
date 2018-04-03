@@ -109,6 +109,14 @@ namespace StrongGrid
 		public ICustomFields CustomFields { get; private set; }
 
 		/// <summary>
+		/// Gets the EmailActivities resource which allows you to search and download a CSV of your recent email event activity.
+		/// </summary>
+		/// <value>
+		/// The email activities.
+		/// </value>
+		public IEmailActivities EmailActivities { get; private set; }
+
+		/// <summary>
 		/// Gets the GlobalSuppressions resource.
 		/// </summary>
 		/// <value>
@@ -380,6 +388,7 @@ namespace StrongGrid
 			Categories = new Categories(_fluentClient);
 			Contacts = new Contacts(_fluentClient);
 			CustomFields = new CustomFields(_fluentClient);
+			EmailActivities = new EmailActivities(_fluentClient);
 			GlobalSuppressions = new GlobalSuppressions(_fluentClient);
 			InvalidEmails = new InvalidEmails(_fluentClient);
 			IpAddresses = new IpAddresses(_fluentClient);

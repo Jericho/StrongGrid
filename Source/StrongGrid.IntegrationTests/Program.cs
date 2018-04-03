@@ -1,5 +1,6 @@
 ﻿using StrongGrid.Logging;
 using StrongGrid.Models;
+using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +14,15 @@ namespace StrongGrid.IntegrationTests
 {
 	public class Program
 	{
+		private const int MAX_SENDGRID_API_CONCURRENCY = 5;
+
+		private enum ResultCodes
+		{
+			Success = 0,
+			Exception = 1,
+			Cancelled = 1223
+		}
+
 		static async Task<int> Main()
 		{
 			// -----------------------------------------------------------------------------
@@ -41,64 +51,104 @@ namespace StrongGrid.IntegrationTests
 				source.Cancel();
 			};
 
-			try
+			// Ensure the Console is tall enough and centered on the screen
+			Console.WindowHeight = Math.Min(60, Console.LargestWindowHeight);
+			ConsoleUtils.CenterConsole();
+
+			// These are the integration tests that we will execute
+			var integrationTests = new Func<IClient, TextWriter, CancellationToken, Task>[]
 			{
-				var tasks = new Task[]
+				AccessManagement,
+				Alerts,
+				ApiKeys,
+				Batches,
+				Blocks,
+				Bounces,
+				CampaignsAndSenderIdentities,
+				Categories,
+				ContactsAndCustomFields,
+				EmailActivities,
+				GlobalSuppressions,
+				InvalidEmails,
+				IpAddresses,
+				IpPools,
+				ListsAndSegments,
+				Mail,
+				Settings,
+				SpamReports,
+				Statistics,
+				Subusers,
+				UnsubscribeGroupsAndSuppressions,
+				Teammates,
+				Templates,
+				User,
+				WebhookSettings,
+				WebhookStats,
+				Whitelabel
+			};
+
+			// Execute the async tests in parallel (with max degree of parallelism)
+			var results = await integrationTests.ForEachAsync(
+				async integrationTest =>
 				{
-					ExecuteAsync(client, source, AccessManagement),
-					ExecuteAsync(client, source, Alerts),
-					ExecuteAsync(client, source, ApiKeys),
-					ExecuteAsync(client, source, Batches),
-					ExecuteAsync(client, source, Blocks),
-					ExecuteAsync(client, source, Bounces),
-					ExecuteAsync(client, source, CampaignsAndSenderIdentities),
-					ExecuteAsync(client, source, Categories),
-					ExecuteAsync(client, source, ContactsAndCustomFields),
-					ExecuteAsync(client, source, GlobalSuppressions),
-					ExecuteAsync(client, source, InvalidEmails),
-					ExecuteAsync(client, source, IpAddresses),
-					ExecuteAsync(client, source, IpPools),
-					ExecuteAsync(client, source, ListsAndSegments),
-					ExecuteAsync(client, source, Mail),
-					ExecuteAsync(client, source, Settings),
-					ExecuteAsync(client, source, SpamReports),
-					ExecuteAsync(client, source, Statistics),
-					ExecuteAsync(client, source, Subusers),
-					ExecuteAsync(client, source, UnsubscribeGroupsAndSuppressions),
-					ExecuteAsync(client, source, Teammates),
-					ExecuteAsync(client, source, Templates),
-					ExecuteAsync(client, source, User),
-					ExecuteAsync(client, source, WebhookSettings),
-					ExecuteAsync(client, source, WebhookStats),
-					ExecuteAsync(client, source, Whitelabel)
-				};
-				await Task.WhenAll(tasks).ConfigureAwait(false);
-				return await Task.FromResult(0); // Success.
-			}
-			catch (OperationCanceledException)
+					var log = new StringWriter();
+
+					try
+					{
+						await integrationTest(client, log, source.Token).ConfigureAwait(false);
+						return (TestName: integrationTest.Method.Name, ResultCode: ResultCodes.Success, Message: string.Empty);
+					}
+					catch (OperationCanceledException)
+					{
+						await log.WriteLineAsync($"-----> TASK CANCELLED").ConfigureAwait(false);
+						return (TestName: integrationTest.Method.Name, ResultCode: ResultCodes.Cancelled, Message: "Task cancelled");
+					}
+					catch (Exception e)
+					{
+						var exceptionMessage = e.GetBaseException().Message;
+						await log.WriteLineAsync($"-----> AN EXCEPTION OCCURED: {exceptionMessage}").ConfigureAwait(false);
+						return (TestName: integrationTest.Method.Name, ResultCode: ResultCodes.Exception, Message: exceptionMessage);
+					}
+					finally
+					{
+						await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
+					}
+				}, MAX_SENDGRID_API_CONCURRENCY)
+			.ConfigureAwait(false);
+
+			var resultsWithMessage = results
+				.Where(r => !string.IsNullOrEmpty(r.Message))
+				.ToArray();
+
+			if (resultsWithMessage.Any())
 			{
-				return 1223; // Cancelled.
+				var alog = new StringWriter();
+				await alog.WriteLineAsync("\n\n**************************************************").ConfigureAwait(false);
+				await alog.WriteLineAsync("******************** SUMMARY *********************").ConfigureAwait(false);
+				await alog.WriteLineAsync("**************************************************").ConfigureAwait(false);
+				foreach (var (TestName, ResultCode, Message) in resultsWithMessage)
+				{
+					const int TEST_NAME_MAX_LENGTH = 25;
+					var name = TestName.Length <= TEST_NAME_MAX_LENGTH ? TestName : TestName.Substring(0, TEST_NAME_MAX_LENGTH - 3) + "...";
+					await alog.WriteLineAsync($"{name.PadRight(TEST_NAME_MAX_LENGTH, ' ')} : {Message}").ConfigureAwait(false);
+				}
+				await alog.WriteLineAsync("**************************************************").ConfigureAwait(false);
+				await Console.Out.WriteLineAsync(alog.ToString()).ConfigureAwait(false);
 			}
-			catch (Exception e)
-			{
-				source.Cancel();
-				var log = new StringWriter();
-				await log.WriteLineAsync("\n\n**************************************************").ConfigureAwait(false);
-				await log.WriteLineAsync("**************************************************").ConfigureAwait(false);
-				await log.WriteLineAsync($"AN EXCEPTION OCCURED: {e.GetBaseException().Message}").ConfigureAwait(false);
-				await log.WriteLineAsync("**************************************************").ConfigureAwait(false);
-				await log.WriteLineAsync("**************************************************").ConfigureAwait(false);
-				await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
-				return 1; // Exception
-			}
-			finally
-			{
-				var log = new StringWriter();
-				await log.WriteLineAsync("\n\n**************************************************").ConfigureAwait(false);
-				await log.WriteLineAsync("All tests completed").ConfigureAwait(false);
-				await log.WriteLineAsync("Press any key to exit").ConfigureAwait(false);
-				Prompt(log.ToString());
-			}
+
+			// Prompt user to press a key in order to allow reading the log in the console
+			var promptLog = new StringWriter();
+			await promptLog.WriteLineAsync("\n\n**************************************************").ConfigureAwait(false);
+			await promptLog.WriteLineAsync("Press any key to exit").ConfigureAwait(false);
+			Prompt(promptLog.ToString());
+
+			// Return code indicating success/failure
+			var resultCode = (int)ResultCodes.Success;
+			if (results.Any(result => result.ResultCode == ResultCodes.Exception)) resultCode = (int)ResultCodes.Exception;
+			else if (results.Any(result => result.ResultCode == ResultCodes.Cancelled)) resultCode = (int)ResultCodes.Cancelled;
+			else resultCode = (int)results.First(result => result.ResultCode != ResultCodes.Success).ResultCode;
+
+			return await Task.FromResult(resultCode);
 		}
 
 		private static async Task Mail(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -216,7 +266,8 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"There are {apiKeys.Length} Api Keys").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			var cleanUpTasks = apiKeys.Where(k => k.Name.StartsWith("StrongGrid Integration Testing:"))
+			var cleanUpTasks = apiKeys
+				.Where(k => k.Name.StartsWith("StrongGrid Integration Testing:"))
 				.Select(async oldApiKey =>
 				{
 					await client.ApiKeys.DeleteAsync(oldApiKey.KeyId, null, cancellationToken).ConfigureAwait(false);
@@ -281,7 +332,8 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"There are {groups.Length} unsubscribe groups").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			var cleanUpTasks = groups.Where(g => g.Name.StartsWith("StrongGrid Integration Testing:"))
+			var cleanUpTasks = groups
+				.Where(g => g.Name.StartsWith("StrongGrid Integration Testing:"))
 				.Select(async oldGroup =>
 				{
 					await client.UnsubscribeGroups.DeleteAsync(oldGroup.Id, null, cancellationToken).ConfigureAwait(false);
@@ -441,7 +493,8 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"All templates retrieved. There are {templates.Length} templates").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			var cleanUpTasks = templates.Where(t => t.Name.StartsWith("StrongGrid Integration Testing:"))
+			var cleanUpTasks = templates
+				.Where(t => t.Name.StartsWith("StrongGrid Integration Testing:"))
 				.Select(async oldTemplate =>
 				{
 					foreach (var oldTemplateVersion in oldTemplate.Versions)
@@ -515,7 +568,8 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"All custom fields retrieved. There are {fields.Length} fields").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			var cleanUpTasks = fields.Where(f => f.Name.StartsWith("stronggrid_"))
+			var cleanUpTasks = fields
+				.Where(f => f.Name.StartsWith("stronggrid_"))
 				.Select(async oldField =>
 				{
 					await client.CustomFields.DeleteAsync(oldField.Id, null, cancellationToken).ConfigureAwait(false);
@@ -644,7 +698,8 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"All segements retrieved. There are {segments.Length} segments").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			var cleanUpTasks = lists.Where(l => l.Name.StartsWith("StrongGrid Integration Testing:"))
+			var cleanUpTasks = lists
+				.Where(l => l.Name.StartsWith("StrongGrid Integration Testing:"))
 				.Select(async oldList =>
 				{
 					await client.Lists.DeleteAsync(oldList.Id, null, cancellationToken).ConfigureAwait(false);
@@ -705,7 +760,8 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"All campaigns retrieved. There are {campaigns.Length} campaigns").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			var cleanUpTasks = campaigns.Where(c => c.Title.StartsWith("StrongGrid Integration Testing:"))
+			var cleanUpTasks = campaigns
+				.Where(c => c.Title.StartsWith("StrongGrid Integration Testing:"))
 				.Select(async oldCampaign =>
 				{
 					await client.Campaigns.DeleteAsync(oldCampaign.Id, cancellationToken).ConfigureAwait(false);
@@ -883,7 +939,8 @@ namespace StrongGrid.IntegrationTests
 			var domains = await client.Whitelabel.GetAllDomainsAsync(50, 0, false, null, null, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All whitelabel domains retrieved. There are {domains.Length} domains").ConfigureAwait(false);
 
-			var cleanUpTasks = domains.Where(d => d.Domain == "example.com")
+			var cleanUpTasks = domains
+				.Where(d => d.Domain == "example.com")
 				.Select(async oldDomain =>
 				{
 					await client.Whitelabel.DeleteDomainAsync(oldDomain.Id, null, cancellationToken).ConfigureAwait(false);
@@ -1065,7 +1122,8 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"There are {allIpPools.Length} IP pools on your account").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			var cleanUpTasks = allIpPools.Where(p => p.Name.StartsWith("StrongGrid Integration Testing:"))
+			var cleanUpTasks = allIpPools
+				.Where(p => p.Name.StartsWith("StrongGrid Integration Testing:"))
 				.Select(async oldPool =>
 				{
 					await client.IpPools.DeleteAsync(oldPool.Name, cancellationToken).ConfigureAwait(false);
@@ -1140,6 +1198,23 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync("The inbound parse webhooks settings have been retrieved.").ConfigureAwait(false);
 		}
 
+		private static async Task EmailActivities(IClient client, TextWriter log, CancellationToken cancellationToken)
+		{
+			await log.WriteLineAsync("\n***** EMAIL ACTIVITIES *****\n").ConfigureAwait(false);
+
+			// REQUEST THE ACTIVITIES
+			var allActivities = await client.EmailActivities.SearchMessagesAsync(20, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Activities requested. Found {allActivities.Count()} activities.").ConfigureAwait(false);
+
+			// REQUEST THE ACTIVITIES FOR A SPECIFIC MESSAGE
+			if (allActivities.Any())
+			{
+				var messageId = allActivities.First().MessageId;
+				var summary = await client.EmailActivities.GetMessageSummaryAsync(messageId, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"There are {summary.Events.Count()} events associated with message {summary.MessageId}.").ConfigureAwait(false);
+			}
+		}
+
 		// to get your public IP address we loop through an array
 		// of well known sites until we get a meaningful response
 
@@ -1185,32 +1260,6 @@ namespace StrongGrid.IntegrationTests
 			Console.Out.WriteLine(prompt);
 			var result = Console.ReadKey();
 			return result.KeyChar;
-		}
-
-		private static async Task<int> ExecuteAsync(IClient client, CancellationTokenSource cts, Func<IClient, TextWriter, CancellationToken, Task> asyncTask)
-		{
-			var log = new StringWriter();
-
-			try
-			{
-				await asyncTask(client, log, cts.Token).ConfigureAwait(false);
-			}
-			catch (OperationCanceledException)
-			{
-				await log.WriteLineAsync($"-----> TASK CANCELLED").ConfigureAwait(false);
-				return 1223; // Cancelled.
-			}
-			catch (Exception e)
-			{
-				await log.WriteLineAsync($"-----> AN EXCEPTION OCCURED: {e.GetBaseException().Message}").ConfigureAwait(false);
-				throw;
-			}
-			finally
-			{
-				await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
-			}
-
-			return 0;   // Success
 		}
 	}
 }

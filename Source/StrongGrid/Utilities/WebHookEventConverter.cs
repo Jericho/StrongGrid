@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using StrongGrid.Models;
 using StrongGrid.Models.Webhooks;
 using System;
 using System.Collections.Generic;
@@ -105,8 +106,7 @@ namespace StrongGrid.Utilities
 		{
 			var jsonObject = JObject.Load(reader);
 
-			JToken eventTypeJsonProperty = null;
-			jsonObject.TryGetValue("event", StringComparison.OrdinalIgnoreCase, out eventTypeJsonProperty);
+			jsonObject.TryGetValue("event", StringComparison.OrdinalIgnoreCase, out JToken eventTypeJsonProperty);
 
 			var eventType = (EventType)eventTypeJsonProperty.ToObject(typeof(EventType));
 
@@ -156,7 +156,7 @@ namespace StrongGrid.Utilities
 
 			foreach (var prop in properties)
 			{
-				webHookEvent.UniqueArguments.Add(prop.Key, prop.Value == null ? null : prop.Value.ToString());
+				webHookEvent.UniqueArguments.Add(prop.Key, prop.Value?.ToString());
 			}
 
 			return webHookEvent;

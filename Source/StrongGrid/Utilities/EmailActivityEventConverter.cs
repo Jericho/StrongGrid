@@ -1,6 +1,7 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StrongGrid.Models;
+using StrongGrid.Models.EmailActivities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,10 @@ using System.Linq;
 namespace StrongGrid.Utilities
 {
 	/// <summary>
-	/// Converts a <see cref="Field"/> to and from JSON.
+	/// Converts a JSON string into and array of <see cref="Event">events</see>.
 	/// </summary>
 	/// <seealso cref="Newtonsoft.Json.JsonConverter" />
-	internal class CustomFieldsConverter : JsonConverter
+	internal class EmailActivityEventConverter : JsonConverter
 	{
 		/// <summary>
 		/// Determines whether this instance can convert the specified object type.
@@ -22,7 +23,29 @@ namespace StrongGrid.Utilities
 		/// </returns>
 		public override bool CanConvert(Type objectType)
 		{
-			return true;
+			return objectType == typeof(Event);
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="T:Newtonsoft.Json.JsonConverter" /> can read JSON.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="T:Newtonsoft.Json.JsonConverter" /> can read JSON; otherwise, <c>false</c>.
+		/// </value>
+		public override bool CanRead
+		{
+			get { return true; }
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="T:Newtonsoft.Json.JsonConverter" /> can write JSON.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="T:Newtonsoft.Json.JsonConverter" /> can write JSON; otherwise, <c>false</c>.
+		/// </value>
+		public override bool CanWrite
+		{
+			get { return false; }
 		}
 
 		/// <summary>
@@ -33,35 +56,7 @@ namespace StrongGrid.Utilities
 		/// <param name="serializer">The calling serializer.</param>
 		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
 		{
-			if (value == null) return;
-
-			writer.WriteStartArray();
-			foreach (var customField in ((Field[])value).OfType<Field<string>>())
-			{
-				serializer.Serialize(writer, customField);
-			}
-
-			foreach (var customField in ((Field[])value).OfType<Field<long>>())
-			{
-				serializer.Serialize(writer, customField);
-			}
-
-			foreach (var customField in ((Field[])value).OfType<Field<long?>>())
-			{
-				serializer.Serialize(writer, customField);
-			}
-
-			foreach (var customField in ((Field[])value).OfType<Field<DateTime>>())
-			{
-				serializer.Serialize(writer, customField);
-			}
-
-			foreach (var customField in ((Field[])value).OfType<Field<DateTime?>>())
-			{
-				serializer.Serialize(writer, customField);
-			}
-
-			writer.WriteEndArray();
+			throw new NotImplementedException();
 		}
 
 		/// <summary>
@@ -79,45 +74,42 @@ namespace StrongGrid.Utilities
 		{
 			if (reader.TokenType == JsonToken.StartArray)
 			{
-				var fields = new List<Field>();
+				var events = new List<Event>();
 				var jArray = JArray.Load(reader);
 
-				foreach (var item in jArray)
+				foreach (JObject jsonObject in jArray)
 				{
-					var id = item.GetPropertyValue<int?>("id");
-					var name = item.GetPropertyValue<string>("name");
-					var type = item.GetPropertyValue<string>("type");
-					var field = (Field)null;
+					jsonObject.TryGetValue("event_name", StringComparison.OrdinalIgnoreCase, out JToken eventTypeJsonProperty);
+					var eventType = (EventType)eventTypeJsonProperty.ToObject(typeof(EventType));
 
-					switch (type)
+					var emailActivityEvent = (Event)null;
+					switch (eventType)
 					{
-						case "date":
-							var unixTime = item.GetPropertyValue<long?>("value");
-							if (unixTime.HasValue) field = new Field<DateTime>(name, unixTime.Value.FromUnixTime());
-							else field = new Field<DateTime?>(name, null);
+						case EventType.Delivered:
+							emailActivityEvent = jsonObject.ToObject<DeliveredEvent>(serializer);
 							break;
-						case "text":
-							field = new Field<string>(name, item.GetPropertyValue<string>("value"));
+						case EventType.Dropped:
+							emailActivityEvent = jsonObject.ToObject<DroppedEvent>(serializer);
 							break;
-						case "number":
-							var numericValue = item.GetPropertyValue<long?>("value");
-							if (numericValue.HasValue) field = new Field<long>(name, numericValue.Value);
-							else field = new Field<long?>(name, null);
+						case EventType.Open:
+							emailActivityEvent = jsonObject.ToObject<OpenEvent>(serializer);
+							break;
+						case EventType.Processed:
+							emailActivityEvent = jsonObject.ToObject<ProcessedEvent>(serializer);
 							break;
 						default:
-							throw new Exception($"{type} is an unknown field type");
+							throw new Exception($"{eventTypeJsonProperty.ToString()} is an unknown event type");
 					}
 
-					if (id.HasValue) field.Id = id.Value;
-					fields.Add(field);
+					if (emailActivityEvent != null) events.Add(emailActivityEvent);
 				}
 
-				return fields.ToArray();
+				return events.ToArray();
 			}
 
 			/*
 				When we stop supporting .NET 4.5.2 we will be able to use the following:
-				return Array.Empty<Field>();
+				return Array.Empty<Event>();
 			*/
 			return Enumerable.Empty<Field>().ToArray();
 		}

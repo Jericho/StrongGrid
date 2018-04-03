@@ -2,10 +2,10 @@
 using Newtonsoft.Json.Converters;
 using System.Runtime.Serialization;
 
-namespace StrongGrid.Models.Webhooks
+namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Enumeration to indicate the type of webhook event
+	/// Enumeration to indicate the type of webhook event and email activity
 	/// </summary>
 	[JsonConverter(typeof(StringEnumConverter))]
 	public enum EventType

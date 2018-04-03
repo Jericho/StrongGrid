@@ -58,7 +58,7 @@ namespace StrongGrid
 		public InboundEmail ParseInboundEmailWebhook(Stream stream)
 		{
 			// Parse the multipart content received from SendGrid
-			var parser = new MultipartFormDataParser(stream);
+			var parser = new MultipartFormDataParser(stream, Encoding.UTF8);
 
 			// Convert the 'headers' from a string into array of KeyValuePair
 			var rawHeaders = parser
@@ -92,6 +92,9 @@ namespace StrongGrid
 					return attachment;
 				}).ToArray();
 
+			// Convert the 'envelope' from a JSON string into a strongly typed object
+			var envelope = JsonConvert.DeserializeObject<InboundEmailEnvelope>(parser.GetParameterValue("envelope", "{}"));
+
 			// Convert the 'charset' from a string into array of KeyValuePair
 			var charsetsAsJObject = JObject.Parse(parser.GetParameterValue("charsets", "{}"));
 			var charsets = charsetsAsJObject
@@ -103,19 +106,39 @@ namespace StrongGrid
 					return new KeyValuePair<string, Encoding>(key, value);
 				}).ToArray();
 
-			// Convert the 'envelope' from a JSON string into a strongly typed object
-			var envelope = JsonConvert.DeserializeObject<InboundEmailEnvelope>(parser.GetParameterValue("envelope", "{}"));
+			// Create a dictionary of parsers, one parser for each desired encoding.
+			// This is necessary because MultipartFormDataParser can only handle one
+			// encoding and SendGrid can use different encodings for parameters such
+			// as "from", "to", "text" and "html".
+			var encodedParsers = charsets
+				.Where(c => c.Value != Encoding.UTF8)
+				.Select(c => c.Value)
+				.Distinct()
+				.Select(encoding =>
+				{
+					stream.Position = 0;
+					return new
+					{
+						Encoding = encoding,
+						Parser = new MultipartFormDataParser(stream, encoding)
+					};
+				})
+				.Union(new[]
+				{
+					new { Encoding = Encoding.UTF8, Parser = parser }
+				})
+				.ToDictionary(ep => ep.Encoding, ep => ep.Parser);
 
 			// Convert the 'from' from a string into an email address
-			var rawFrom = parser.GetParameterValue("from", string.Empty);
+			var rawFrom = GetEncodedValue("from", charsets, encodedParsers, string.Empty);
 			var from = ParseEmailAddress(rawFrom);
 
 			// Convert the 'to' from a string into an array of email addresses
-			var rawTo = parser.GetParameterValue("to", string.Empty);
+			var rawTo = GetEncodedValue("to", charsets, encodedParsers, string.Empty);
 			var to = ParseEmailAddresses(rawTo);
 
 			// Convert the 'cc' from a string into an array of email addresses
-			var rawCc = parser.GetParameterValue("cc", string.Empty);
+			var rawCc = GetEncodedValue("cc", charsets, encodedParsers, string.Empty);
 			var cc = ParseEmailAddresses(rawCc);
 
 			// Arrange the InboundEmail
@@ -123,17 +146,17 @@ namespace StrongGrid
 			{
 				Attachments = attachments,
 				Charsets = charsets,
-				Dkim = parser.GetParameterValue("dkim", null),
+				Dkim = GetEncodedValue("dkim", charsets, encodedParsers, null),
 				Envelope = envelope,
 				From = from,
 				Headers = headers,
-				Html = parser.GetParameterValue("html", null),
-				SenderIp = parser.GetParameterValue("sender_ip", null),
-				SpamReport = parser.GetParameterValue("spam_report", null),
-				SpamScore = parser.GetParameterValue("spam_score", null),
-				Spf = parser.GetParameterValue("SPF", null),
-				Subject = parser.GetParameterValue("subject", null),
-				Text = parser.GetParameterValue("text", null),
+				Html = GetEncodedValue("html", charsets, encodedParsers, null),
+				SenderIp = GetEncodedValue("sender_ip", charsets, encodedParsers, null),
+				SpamReport = GetEncodedValue("spam_report", charsets, encodedParsers, null),
+				SpamScore = GetEncodedValue("spam_score", charsets, encodedParsers, null),
+				Spf = GetEncodedValue("SPF", charsets, encodedParsers, null),
+				Subject = GetEncodedValue("subject", charsets, encodedParsers, null),
+				Text = GetEncodedValue("text", charsets, encodedParsers, null),
 				To = to,
 				Cc = cc
 			};
@@ -145,16 +168,16 @@ namespace StrongGrid
 
 		#region PRIVATE METHODS
 
-		private MailAddress[] ParseEmailAddresses(string rawEmailAddresses)
+		private static MailAddress[] ParseEmailAddresses(string rawEmailAddresses)
 		{
 			// Split on commas that have an even number of double-quotes following them
 			const string SPLIT_EMAIL_ADDRESSES = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
 
 			/*
-				When we stop spporting .NET 4.5.2 we will be able to use the following:
+				When we stop supporting .NET 4.5.2 we will be able to use the following:
 				if (string.IsNullOrEmpty(rawEmailAddresses)) return Array.Empty<MailAddress>();
 			*/
-			if (string.IsNullOrEmpty(rawEmailAddresses)) return new MailAddress[0];
+			if (string.IsNullOrEmpty(rawEmailAddresses)) return Enumerable.Empty<MailAddress>().ToArray();
 
 			var rawEmails = Regex.Split(rawEmailAddresses, SPLIT_EMAIL_ADDRESSES);
 			var addresses = rawEmails
@@ -164,7 +187,7 @@ namespace StrongGrid
 			return addresses;
 		}
 
-		private MailAddress ParseEmailAddress(string rawEmailAddress)
+		private static MailAddress ParseEmailAddress(string rawEmailAddress)
 		{
 			if (string.IsNullOrEmpty(rawEmailAddress)) return null;
 
@@ -173,6 +196,27 @@ namespace StrongGrid
 			var email = pieces.Length == 2 ? pieces[1].Trim() : pieces[0].Trim();
 			var name = pieces.Length == 2 ? pieces[0].Replace("\"", string.Empty).Trim() : string.Empty;
 			return new MailAddress(email, name);
+		}
+
+		private static Encoding GetEncoding(string parameterName, IEnumerable<KeyValuePair<string, Encoding>> charsets)
+		{
+			var encoding = charsets.Where(c => c.Key == parameterName);
+			if (encoding.Any()) return encoding.First().Value;
+			else return Encoding.UTF8;
+		}
+
+		private static MultipartFormDataParser GetEncodedParser(string parameterName, IEnumerable<KeyValuePair<string, Encoding>> charsets, IDictionary<Encoding, MultipartFormDataParser> encodedParsers)
+		{
+			var encoding = GetEncoding(parameterName, charsets);
+			var parser = encodedParsers[encoding];
+			return parser;
+		}
+
+		private static string GetEncodedValue(string parameterName, IEnumerable<KeyValuePair<string, Encoding>> charsets, IDictionary<Encoding, MultipartFormDataParser> encodedParsers, string defaultValue = null)
+		{
+			var parser = GetEncodedParser(parameterName, charsets, encodedParsers);
+			var value = parser.GetParameterValue(parameterName, defaultValue);
+			return value;
 		}
 
 		#endregion
