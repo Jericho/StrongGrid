@@ -5,6 +5,7 @@ using StrongGrid.Utilities;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 
 namespace StrongGrid
 {
