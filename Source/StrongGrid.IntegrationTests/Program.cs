@@ -51,6 +51,10 @@ namespace StrongGrid.IntegrationTests
 				source.Cancel();
 			};
 
+			// Ensure the Console is tall enough and centered on the screen
+			Console.WindowHeight = Math.Min(60, Console.LargestWindowHeight);
+			ConsoleUtils.CenterConsole();
+
 			// These are the integration tests that we will execute
 			var integrationTests = new Func<IClient, TextWriter, CancellationToken, Task>[]
 			{
