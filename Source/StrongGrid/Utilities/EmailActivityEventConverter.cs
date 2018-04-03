@@ -85,45 +85,21 @@ namespace StrongGrid.Utilities
 					var emailActivityEvent = (Event)null;
 					switch (eventType)
 					{
-						//case EventType.Bounce:
-						//	emailActivityEvent = jsonObject.ToObject<BouncedEvent>(serializer);
-						//	break;
-						//case EventType.Click:
-						//	emailActivityEvent = jsonObject.ToObject<ClickEvent>(serializer);
-						//	break;
-						//case EventType.Deferred:
-						//	emailActivityEvent = jsonObject.ToObject<DeferredEvent>(serializer);
-						//	break;
 						case EventType.Delivered:
 							emailActivityEvent = jsonObject.ToObject<DeliveredEvent>(serializer);
 							break;
 						case EventType.Dropped:
 							emailActivityEvent = jsonObject.ToObject<DroppedEvent>(serializer);
 							break;
-						//case EventType.GroupResubscribe:
-						//	emailActivityEvent = jsonObject.ToObject<GroupResubscribeEvent>(serializer);
-						//	break;
-						//case EventType.GroupUnsubscribe:
-						//	emailActivityEvent = jsonObject.ToObject<GroupUnsubscribeEvent>(serializer);
-						//	break;
 						case EventType.Open:
 							emailActivityEvent = jsonObject.ToObject<OpenEvent>(serializer);
 							break;
 						case EventType.Processed:
 							emailActivityEvent = jsonObject.ToObject<ProcessedEvent>(serializer);
 							break;
-						//case EventType.SpamReport:
-						//	emailActivityEvent = jsonObject.ToObject<SpamReportEvent>(serializer);
-						//	break;
-						//case EventType.Unsubscribe:
-						//	emailActivityEvent = jsonObject.ToObject<UnsubscribeEvent>(serializer);
-						//	break;
 						default:
 							throw new Exception($"{eventTypeJsonProperty.ToString()} is an unknown event type");
 					}
-
-					//return emailActivityEvent;
-
 
 					if (emailActivityEvent != null) events.Add(emailActivityEvent);
 				}
