@@ -1,5 +1,6 @@
 ﻿using StrongGrid.Logging;
 using StrongGrid.Models;
+using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +14,15 @@ namespace StrongGrid.IntegrationTests
 {
 	public class Program
 	{
+		private const int MAX_SENDGRID_API_CONCURRENCY = 5;
+
+		private enum ResultCodes
+		{
+			Success = 0,
+			Exception = 1,
+			Cancelled = 1223
+		}
+
 		static async Task<int> Main()
 		{
 			// -----------------------------------------------------------------------------
@@ -41,65 +51,100 @@ namespace StrongGrid.IntegrationTests
 				source.Cancel();
 			};
 
-			try
+			// These are the integration tests that we will execute
+			var integrationTests = new Func<IClient, TextWriter, CancellationToken, Task>[]
 			{
-				var tasks = new Task[]
+				AccessManagement,
+				Alerts,
+				ApiKeys,
+				Batches,
+				Blocks,
+				Bounces,
+				CampaignsAndSenderIdentities,
+				Categories,
+				ContactsAndCustomFields,
+				EmailActivities,
+				GlobalSuppressions,
+				InvalidEmails,
+				IpAddresses,
+				IpPools,
+				ListsAndSegments,
+				Mail,
+				Settings,
+				SpamReports,
+				Statistics,
+				Subusers,
+				UnsubscribeGroupsAndSuppressions,
+				Teammates,
+				Templates,
+				User,
+				WebhookSettings,
+				WebhookStats,
+				Whitelabel
+			};
+
+			// Execute the async tests in parallel (with max degree of parallelism)
+			var results = await integrationTests.ForEachAsync(
+				async integrationTest =>
 				{
-					ExecuteAsync(client, source, AccessManagement),
-					ExecuteAsync(client, source, Alerts),
-					ExecuteAsync(client, source, ApiKeys),
-					ExecuteAsync(client, source, Batches),
-					ExecuteAsync(client, source, Blocks),
-					ExecuteAsync(client, source, Bounces),
-					ExecuteAsync(client, source, CampaignsAndSenderIdentities),
-					ExecuteAsync(client, source, Categories),
-					ExecuteAsync(client, source, ContactsAndCustomFields),
-					ExecuteAsync(client, source, EmailActivities),
-					ExecuteAsync(client, source, GlobalSuppressions),
-					ExecuteAsync(client, source, InvalidEmails),
-					ExecuteAsync(client, source, IpAddresses),
-					ExecuteAsync(client, source, IpPools),
-					ExecuteAsync(client, source, ListsAndSegments),
-					ExecuteAsync(client, source, Mail),
-					ExecuteAsync(client, source, Settings),
-					ExecuteAsync(client, source, SpamReports),
-					ExecuteAsync(client, source, Statistics),
-					ExecuteAsync(client, source, Subusers),
-					ExecuteAsync(client, source, UnsubscribeGroupsAndSuppressions),
-					ExecuteAsync(client, source, Teammates),
-					ExecuteAsync(client, source, Templates),
-					ExecuteAsync(client, source, User),
-					ExecuteAsync(client, source, WebhookSettings),
-					ExecuteAsync(client, source, WebhookStats),
-					ExecuteAsync(client, source, Whitelabel)
-				};
-				await Task.WhenAll(tasks).ConfigureAwait(false);
-				return await Task.FromResult(0); // Success.
-			}
-			catch (OperationCanceledException)
+					var log = new StringWriter();
+
+					try
+					{
+						await integrationTest(client, log, source.Token).ConfigureAwait(false);
+						return (TestName: integrationTest.Method.Name, ResultCode: ResultCodes.Success, Message: string.Empty);
+					}
+					catch (OperationCanceledException)
+					{
+						await log.WriteLineAsync($"-----> TASK CANCELLED").ConfigureAwait(false);
+						return (TestName: integrationTest.Method.Name, ResultCode: ResultCodes.Cancelled, Message: "Task cancelled");
+					}
+					catch (Exception e)
+					{
+						var exceptionMessage = e.GetBaseException().Message;
+						await log.WriteLineAsync($"-----> AN EXCEPTION OCCURED: {exceptionMessage}").ConfigureAwait(false);
+						return (TestName: integrationTest.Method.Name, ResultCode: ResultCodes.Exception, Message: exceptionMessage);
+					}
+					finally
+					{
+						await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
+					}
+				}, MAX_SENDGRID_API_CONCURRENCY)
+			.ConfigureAwait(false);
+
+			var resultsWithMessage = results
+				.Where(r => !string.IsNullOrEmpty(r.Message))
+				.ToArray();
+
+			if (resultsWithMessage.Any())
 			{
-				return 1223; // Cancelled.
+				var alog = new StringWriter();
+				await alog.WriteLineAsync("\n\n**************************************************").ConfigureAwait(false);
+				await alog.WriteLineAsync("******************** SUMMARY *********************").ConfigureAwait(false);
+				await alog.WriteLineAsync("**************************************************").ConfigureAwait(false);
+				foreach (var (TestName, ResultCode, Message) in resultsWithMessage)
+				{
+					const int TEST_NAME_MAX_LENGTH = 25;
+					var name = TestName.Length <= TEST_NAME_MAX_LENGTH ? TestName : TestName.Substring(0, TEST_NAME_MAX_LENGTH - 3) + "...";
+					await alog.WriteLineAsync($"{name.PadRight(TEST_NAME_MAX_LENGTH, ' ')} : {Message}").ConfigureAwait(false);
+				}
+				await alog.WriteLineAsync("**************************************************").ConfigureAwait(false);
+				await Console.Out.WriteLineAsync(alog.ToString()).ConfigureAwait(false);
 			}
-			catch (Exception e)
-			{
-				source.Cancel();
-				var log = new StringWriter();
-				await log.WriteLineAsync("\n\n**************************************************").ConfigureAwait(false);
-				await log.WriteLineAsync("**************************************************").ConfigureAwait(false);
-				await log.WriteLineAsync($"AN EXCEPTION OCCURED: {e.GetBaseException().Message}").ConfigureAwait(false);
-				await log.WriteLineAsync("**************************************************").ConfigureAwait(false);
-				await log.WriteLineAsync("**************************************************").ConfigureAwait(false);
-				await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
-				return 1; // Exception
-			}
-			finally
-			{
-				var log = new StringWriter();
-				await log.WriteLineAsync("\n\n**************************************************").ConfigureAwait(false);
-				await log.WriteLineAsync("All tests completed").ConfigureAwait(false);
-				await log.WriteLineAsync("Press any key to exit").ConfigureAwait(false);
-				Prompt(log.ToString());
-			}
+
+			// Prompt user to press a key in order to allow reading the log in the console
+			var promptLog = new StringWriter();
+			await promptLog.WriteLineAsync("\n\n**************************************************").ConfigureAwait(false);
+			await promptLog.WriteLineAsync("Press any key to exit").ConfigureAwait(false);
+			Prompt(promptLog.ToString());
+
+			// Return code indicating success/failure
+			var resultCode = (int)ResultCodes.Success;
+			if (results.Any(result => result.ResultCode == ResultCodes.Exception)) resultCode = (int)ResultCodes.Exception;
+			else if (results.Any(result => result.ResultCode == ResultCodes.Cancelled)) resultCode = (int)ResultCodes.Cancelled;
+			else resultCode = (int)results.First(result => result.ResultCode != ResultCodes.Success).ResultCode;
+
+			return await Task.FromResult(resultCode);
 		}
 
 		private static async Task Mail(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -1211,32 +1256,6 @@ namespace StrongGrid.IntegrationTests
 			Console.Out.WriteLine(prompt);
 			var result = Console.ReadKey();
 			return result.KeyChar;
-		}
-
-		private static async Task<int> ExecuteAsync(IClient client, CancellationTokenSource cts, Func<IClient, TextWriter, CancellationToken, Task> asyncTask)
-		{
-			var log = new StringWriter();
-
-			try
-			{
-				await asyncTask(client, log, cts.Token).ConfigureAwait(false);
-			}
-			catch (OperationCanceledException)
-			{
-				await log.WriteLineAsync($"-----> TASK CANCELLED").ConfigureAwait(false);
-				return 1223; // Cancelled.
-			}
-			catch (Exception e)
-			{
-				await log.WriteLineAsync($"-----> AN EXCEPTION OCCURED: {e.GetBaseException().Message}").ConfigureAwait(false);
-				throw;
-			}
-			finally
-			{
-				await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
-			}
-
-			return 0;   // Success
 		}
 	}
 }

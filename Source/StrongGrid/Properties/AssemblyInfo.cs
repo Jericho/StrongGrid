@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 
 [assembly: CLSCompliant(true)]
 [assembly: InternalsVisibleTo("StrongGrid.UnitTests")]
+[assembly: InternalsVisibleTo("StrongGrid.IntegrationTests")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
