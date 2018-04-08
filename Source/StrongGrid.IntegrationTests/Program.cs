@@ -145,9 +145,12 @@ namespace StrongGrid.IntegrationTests
 
 			// Return code indicating success/failure
 			var resultCode = (int)ResultCodes.Success;
-			if (results.Any(result => result.ResultCode == ResultCodes.Exception)) resultCode = (int)ResultCodes.Exception;
-			else if (results.Any(result => result.ResultCode == ResultCodes.Cancelled)) resultCode = (int)ResultCodes.Cancelled;
-			else resultCode = (int)results.First(result => result.ResultCode != ResultCodes.Success).ResultCode;
+			if (results.Any(result => result.ResultCode != ResultCodes.Success))
+			{
+				if (results.Any(result => result.ResultCode == ResultCodes.Exception)) resultCode = (int)ResultCodes.Exception;
+				else if (results.Any(result => result.ResultCode == ResultCodes.Cancelled)) resultCode = (int)ResultCodes.Cancelled;
+				else resultCode = (int)results.First(result => result.ResultCode != ResultCodes.Success).ResultCode;
+			}
 
 			return await Task.FromResult(resultCode);
 		}
