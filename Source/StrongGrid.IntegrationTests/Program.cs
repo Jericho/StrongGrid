@@ -1,5 +1,6 @@
 ﻿using StrongGrid.Logging;
 using StrongGrid.Models;
+using StrongGrid.Models.Search;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
@@ -1203,16 +1204,20 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync("\n***** EMAIL ACTIVITIES *****\n").ConfigureAwait(false);
 
 			// REQUEST THE ACTIVITIES
-			var allActivities = await client.EmailActivities.SearchMessagesAsync(20, cancellationToken).ConfigureAwait(false);
+			var allActivities = await client.EmailActivities.SearchAsync(null, 20, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Activities requested. Found {allActivities.Count()} activities.").ConfigureAwait(false);
 
+			if (!allActivities.Any()) return;
+
 			// REQUEST THE ACTIVITIES FOR A SPECIFIC MESSAGE
-			if (allActivities.Any())
-			{
-				var messageId = allActivities.First().MessageId;
-				var summary = await client.EmailActivities.GetMessageSummaryAsync(messageId, cancellationToken).ConfigureAwait(false);
-				await log.WriteLineAsync($"There are {summary.Events.Count()} events associated with message {summary.MessageId}.").ConfigureAwait(false);
-			}
+			var messageId = allActivities.First().MessageId;
+			var summary = await client.EmailActivities.GetMessageSummaryAsync(messageId, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {summary.Events.Count()} events associated with message {summary.MessageId}.").ConfigureAwait(false);
+
+			// REQUEST THE ACTIVITIES OF A GIVEN TYPE
+			var activityType = allActivities.First().Status;
+			var activities = await client.EmailActivities.SearchAsync(new SearchCriteriaEqual(FilterField.Status, activityType), 20, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {activities.Count()} '{activityType}' events.").ConfigureAwait(false);
 		}
 
 		// to get your public IP address we loop through an array
