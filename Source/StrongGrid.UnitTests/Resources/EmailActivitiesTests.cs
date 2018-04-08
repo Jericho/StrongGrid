@@ -144,7 +144,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&query=campaign_name%3D%22value1%22+OR+msg_id%3D%22value2%22+AND+subject%3D%22value3%22+AND+teammate%3D%22value4%22").Respond("application/json", ONE_MESSAGE_FOUND);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var emailActivities = (IEmailActivities)new EmailActivities(client);
+			var emailActivities = new EmailActivities(client);
 
 			var filterConditions = new KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria>>[]
 			{
