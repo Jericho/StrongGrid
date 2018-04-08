@@ -51,7 +51,7 @@ namespace StrongGrid.Models
 		/// The status.
 		/// </value>
 		[JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
-		public string Status { get; set; }
+		public EventType EventType { get; set; }
 
 		/// <summary>
 		/// Gets or sets the number of time the message was opened by the recipient.
