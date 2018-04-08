@@ -14,7 +14,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The 'from' address.
 		/// </value>
-		[JsonProperty("from_message", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("from_email", NullValueHandling = NullValueHandling.Ignore)]
 		public string From { get; set; }
 
 		/// <summary>

@@ -2,12 +2,16 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
+using StrongGrid.Models;
+using StrongGrid.Models.Search;
+using StrongGrid.Resources;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -421,6 +425,55 @@ namespace StrongGrid.Utilities
 			}
 
 			await Task.WhenAll(allTasks).ConfigureAwait(false);
+		}
+
+		/// <summary>
+		/// Get all of the details about the messages matching the criteria.
+		/// </summary>
+		/// <param name="emailActivities">The email activities resource</param>
+		/// <param name="criteria">Filtering criteria.</param>
+		/// <param name="limit">Number of IP activity entries to return.</param>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// An array of <see cref="EmailMessageActivity" />.
+		/// </returns>
+		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, SearchCriteria criteria, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var filterCriteria = criteria == null ? Enumerable.Empty<SearchCriteria>() : new[] { criteria };
+			return emailActivities.SearchAsync(filterCriteria, limit, cancellationToken);
+		}
+
+		/// <summary>
+		/// Get all of the details about the messages matching the criteria.
+		/// </summary>
+		/// <param name="emailActivities">The email activities resource</param>
+		/// <param name="filterConditions">Filtering conditions.</param>
+		/// <param name="limit">Number of IP activity entries to return.</param>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>
+		/// An array of <see cref="EmailMessageActivity" />.
+		/// </returns>
+		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, IEnumerable<SearchCriteria> filterConditions, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var filters = new List<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria>>>();
+			if (filterConditions != null && filterConditions.Any()) filters.Add(new KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria>>(SearchLogicalOperator.And, filterConditions));
+			return emailActivities.SearchAsync(filters, limit, cancellationToken);
+		}
+
+		/// <summary>
+		/// Gets the attribute of the specified type.
+		/// </summary>
+		/// <typeparam name="T">The type of the desired attribute</typeparam>
+		/// <param name="enumVal">The enum value.</param>
+		/// <returns>The attribute</returns>
+		public static T GetAttributeOfType<T>(this Enum enumVal)
+			where T : Attribute
+		{
+			return enumVal.GetType()
+				.GetTypeInfo()
+				.DeclaredMembers
+				.SingleOrDefault(x => x.Name == enumVal.ToString())
+				?.GetCustomAttribute<T>(false);
 		}
 
 		/// <summary>Asynchronously converts the JSON encoded content and converts it to a 'SendGrid' object of the desired type.</summary>
