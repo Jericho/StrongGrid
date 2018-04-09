@@ -1,5 +1,8 @@
 ﻿namespace StrongGrid.Models.Search
 {
+	/// <summary>
+	/// Filter the result of a search for the value of a field to be between a lower value and an upper value
+	/// </summary>
 	public class SearchCriteriaBetween : SearchCriteria
 	{
 		/// <summary>

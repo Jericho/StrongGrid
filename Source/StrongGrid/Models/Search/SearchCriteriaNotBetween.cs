@@ -1,7 +1,13 @@
 ﻿namespace StrongGrid.Models.Search
 {
+	/// <summary>
+	/// Filter the result of a search for the value of a field to be less than a lower value or greater than an upper value
+	/// </summary>
 	public class SearchCriteriaNotBetween : SearchCriteria
 	{
+		/// <summary>
+		/// Gets the upper value
+		/// </summary>
 		public object UpperValue { get; private set; }
 
 		/// <summary>

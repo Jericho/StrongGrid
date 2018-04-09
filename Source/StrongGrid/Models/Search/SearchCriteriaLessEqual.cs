@@ -1,5 +1,8 @@
 ﻿namespace StrongGrid.Models.Search
 {
+	/// <summary>
+	/// Filter the result of a search for the value of a field to be less than or equal to a value
+	/// </summary>
 	public class SearchCriteriaLessEqual : SearchCriteria
 	{
 		/// <summary>
@@ -9,9 +12,9 @@
 		/// <param name="filterValue">The filter value</param>
 		public SearchCriteriaLessEqual(FilterField filterField, object filterValue)
 		{
-			base.FilterField = filterField;
-			base.FilterOperator = SearchConditionOperator.LessEqual;
-			base.FilterValue = filterValue;
+			FilterField = filterField;
+			FilterOperator = SearchConditionOperator.LessEqual;
+			FilterValue = filterValue;
 		}
 	}
 }

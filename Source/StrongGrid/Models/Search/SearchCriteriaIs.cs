@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Models.Search
 {
+	/// <summary>
+	/// Filter the result of a search for the value of a field to be a value
+	/// </summary>
 	public class SearchCriteriaIs : SearchCriteria
 	{
 		/// <summary>

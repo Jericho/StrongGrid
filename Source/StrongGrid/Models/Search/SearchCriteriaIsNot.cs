@@ -1,5 +1,8 @@
 ﻿namespace StrongGrid.Models.Search
 {
+	/// <summary>
+	/// Filter the result of a search for the value of a field to not be a value
+	/// </summary>
 	public class SearchCriteriaIsNot : SearchCriteria
 	{
 		/// <summary>

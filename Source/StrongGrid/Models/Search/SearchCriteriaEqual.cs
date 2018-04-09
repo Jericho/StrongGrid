@@ -1,5 +1,8 @@
 ﻿namespace StrongGrid.Models.Search
 {
+	/// <summary>
+	/// Filter the result of a search for the value of a field to be equal to a value
+	/// </summary>
 	public class SearchCriteriaEqual : SearchCriteria
 	{
 		/// <summary>

@@ -1,5 +1,8 @@
 ﻿namespace StrongGrid.Models.Search
 {
+	/// <summary>
+	/// Filter the result of a search for the value of a field to be different than a value
+	/// </summary>
 	public class SearchCriteriaNotEqual : SearchCriteria
 	{
 		/// <summary>
