@@ -1219,7 +1219,7 @@ namespace StrongGrid.IntegrationTests
 
 			// REQUEST THE ACTIVITIES OF A GIVEN TYPE
 			var activityType = allActivities.First().ActivityType;
-			var activities = await client.EmailActivities.SearchAsync(new SearchCriteriaEqual(FilterField.Status, activityType), 20, cancellationToken).ConfigureAwait(false);
+			var activities = await client.EmailActivities.SearchAsync(new SearchCriteriaEqual(FilterField.ActivityType, activityType), 20, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"There are {activities.Count()} '{activityType}' events.").ConfigureAwait(false);
 		}
 
