@@ -150,8 +150,6 @@ Task("Restore-NuGet-Packages")
 	{
 		Sources = new [] {
 			"https://www.myget.org/F/xunit/api/v3/index.json",
-			"https://dotnet.myget.org/F/dotnet-core/api/v3/index.json",
-			"https://dotnet.myget.org/F/cli-deps/api/v3/index.json",
 			"https://api.nuget.org/v3/index.json",
 		}
 	});
@@ -161,7 +159,7 @@ Task("Build")
 	.IsDependentOn("Restore-NuGet-Packages")
 	.Does(() =>
 {
-	DotNetCoreBuild(sourceFolder + libraryName + ".sln", new DotNetCoreBuildSettings
+	DotNetCoreBuild($"{sourceFolder}{appName}.sln", new DotNetCoreBuildSettings
 	{
 		Configuration = configuration,
 		NoRestore = true,

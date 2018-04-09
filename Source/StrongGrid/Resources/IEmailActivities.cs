@@ -1,4 +1,6 @@
 ﻿using StrongGrid.Models;
+using StrongGrid.Models.Search;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,14 +17,15 @@ namespace StrongGrid.Resources
 	public interface IEmailActivities
 	{
 		/// <summary>
-		/// Get all of the details about the messages matching the criteria.
+		/// Get all of the details about the messages matching the filtering conditions.
 		/// </summary>
-		/// <param name="limit">Number of IP activity entries to return.</param>
+		/// <param name="filterConditions">Filtering conditions.</param>
+		/// <param name="limit">Maximum number of activity entries to return.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
-		Task<EmailMessageActivity[]> SearchMessagesAsync(int limit = 20, CancellationToken cancellationToken = default(CancellationToken));
+		Task<EmailMessageActivity[]> SearchAsync(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria>>> filterConditions, int limit = 20, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Get all of the details about the specified message.
