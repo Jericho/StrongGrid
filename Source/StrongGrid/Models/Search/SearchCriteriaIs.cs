@@ -4,15 +4,16 @@ namespace StrongGrid.Models.Search
 {
 	public class SearchCriteriaIs : SearchCriteria
 	{
-		public SearchCriteriaIs()
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SearchCriteriaIs"/> class.
+		/// </summary>
+		/// <param name="filterField">The filter field</param>
+		/// <param name="filterValues">The filter values</param>
+		public SearchCriteriaIs(FilterField filterField, IEnumerable<object> filterValues)
 		{
-		}
-
-		public SearchCriteriaIs(FilterField filterField, IEnumerable<object> values)
-		{
-			base.FilterField = filterField;
-			base.FilterOperator = SearchConditionOperator.Is;
-			base.FilterValue = values;
+			FilterField = filterField;
+			FilterOperator = SearchConditionOperator.Is;
+			FilterValue = filterValues;
 		}
 	}
 }

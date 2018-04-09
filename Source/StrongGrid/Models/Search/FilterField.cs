@@ -2,6 +2,9 @@
 
 namespace StrongGrid.Models.Search
 {
+	/// <summary>
+	/// Enumeration to indicate the filter field when searching for email activities
+	/// </summary>
 	public enum FilterField
 	{
 		/// <summary>

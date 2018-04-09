@@ -38,6 +38,24 @@ namespace StrongGrid.Models.Search
 		}
 
 		/// <summary>
+		/// Initializes a new instance of the <see cref="SearchCriteria"/> class.
+		/// </summary>
+		protected SearchCriteria()
+		{
+		}
+
+		/// <summary>
+		/// Returns the string representation of a given value as expected by the SendGrid Email Activities API.
+		/// </summary>
+		/// <param name="value">The value</param>
+		/// <returns>The <see cref="string"/> representation of the value</returns>
+		public static string ValueAsString(object value)
+		{
+			var valueAsString = value is DateTime dateValue ? $"TIMESTAMP \"{dateValue.ToUniversalTime():u}\"" : $"\"{value}\"";
+			return valueAsString;
+		}
+
+		/// <summary>
 		/// Returns a string representation of the search criteria
 		/// </summary>
 		/// <returns>A <see cref="string"/> representation of the search criteria</returns>
@@ -47,12 +65,6 @@ namespace StrongGrid.Models.Search
 			var filterOperator = FilterOperator.GetAttributeOfType<EnumMemberAttribute>().Value;
 			var filterValue = ValueAsString(FilterValue);
 			return $"{fieldName}{filterOperator}{filterValue}";
-		}
-
-		public static string ValueAsString(object value)
-		{
-			var valueAsString = value is DateTime dateValue ? $"TIMESTAMP \"{dateValue.ToUniversalTime():u}\"" : $"\"{value}\"";
-			return valueAsString;
 		}
 	}
 }
