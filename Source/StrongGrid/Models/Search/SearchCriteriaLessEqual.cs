@@ -2,10 +2,11 @@
 {
 	public class SearchCriteriaLessEqual : SearchCriteria
 	{
-		public SearchCriteriaLessEqual()
-		{
-		}
-
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SearchCriteriaLessEqual"/> class.
+		/// </summary>
+		/// <param name="filterField">The filter field</param>
+		/// <param name="filterValue">The filter value</param>
 		public SearchCriteriaLessEqual(FilterField filterField, object filterValue)
 		{
 			base.FilterField = filterField;

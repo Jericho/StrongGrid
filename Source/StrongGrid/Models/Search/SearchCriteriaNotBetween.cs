@@ -4,16 +4,18 @@
 	{
 		public object UpperValue { get; private set; }
 
-		public SearchCriteriaNotBetween()
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SearchCriteriaNotBetween"/> class.
+		/// </summary>
+		/// <param name="filterField">The filter field</param>
+		/// <param name="lowerValue">The lower value</param>
+		/// <param name="upperValue">The upper value</param>
+		public SearchCriteriaNotBetween(FilterField filterField, object lowerValue, object upperValue)
 		{
-		}
-
-		public SearchCriteriaNotBetween(FilterField filterField, object LowerValue, object UpperValue)
-		{
-			base.FilterField = filterField;
-			base.FilterOperator = SearchConditionOperator.Beetween;
-			base.FilterValue = LowerValue;
-			this.UpperValue = UpperValue;
+			FilterField = filterField;
+			FilterOperator = SearchConditionOperator.Beetween;
+			FilterValue = lowerValue;
+			UpperValue = upperValue;
 		}
 
 		/// <summary>

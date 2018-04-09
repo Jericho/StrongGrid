@@ -1,18 +1,17 @@
-﻿using System.Collections.Generic;
-
-namespace StrongGrid.Models.Search
+﻿namespace StrongGrid.Models.Search
 {
 	public class SearchCriteriaIsNot : SearchCriteria
 	{
-		public SearchCriteriaIsNot()
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SearchCriteriaIsNot"/> class.
+		/// </summary>
+		/// <param name="filterField">The filter field</param>
+		/// <param name="filterValue">The filter value</param>
+		public SearchCriteriaIsNot(FilterField filterField, object filterValue)
 		{
-		}
-
-		public SearchCriteriaIsNot(FilterField filterField, IEnumerable<object> values)
-		{
-			base.FilterField = filterField;
-			base.FilterOperator = SearchConditionOperator.IsNot;
-			base.FilterValue = values;
+			FilterField = filterField;
+			FilterOperator = SearchConditionOperator.IsNot;
+			FilterValue = filterValue;
 		}
 	}
 }

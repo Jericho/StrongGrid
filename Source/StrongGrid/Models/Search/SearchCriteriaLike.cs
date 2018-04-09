@@ -1,18 +1,17 @@
-﻿using System.Collections.Generic;
-
-namespace StrongGrid.Models.Search
+﻿namespace StrongGrid.Models.Search
 {
 	public class SearchCriteriaLike : SearchCriteria
 	{
-		public SearchCriteriaLike()
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SearchCriteriaLike"/> class.
+		/// </summary>
+		/// <param name="filterField">The filter field</param>
+		/// <param name="filterValue">The filter value</param>
+		public SearchCriteriaLike(FilterField filterField, object filterValue)
 		{
-		}
-
-		public SearchCriteriaLike(FilterField filterField, IEnumerable<object> values)
-		{
-			base.FilterField = filterField;
-			base.FilterOperator = SearchConditionOperator.Like;
-			base.FilterValue = values;
+			FilterField = filterField;
+			FilterOperator = SearchConditionOperator.Like;
+			FilterValue = filterValue;
 		}
 	}
 }
