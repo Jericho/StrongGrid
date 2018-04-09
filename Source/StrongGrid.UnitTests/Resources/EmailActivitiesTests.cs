@@ -55,7 +55,7 @@ namespace StrongGrid.UnitTests.Resources
 			result.MessageId.ShouldBe("thtIPCIcR_iFZDws2JCrwA.filter0004p3las1-2776-5ACA5525-31.1");
 			result.Subject.ShouldBe("Dear customer");
 			result.To.ShouldBe("bob@example.com");
-			result.Status.ShouldBe("delivered");
+			result.ActivityType.ShouldBe(EventType.Delivered);
 			result.OpensCount.ShouldBe(2);
 			result.ClicksCount.ShouldBe(1);
 			result.LastEventOn.ShouldBe(new DateTime(2018, 04, 08, 17, 47, 18, DateTimeKind.Utc));

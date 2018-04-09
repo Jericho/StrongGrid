@@ -1,19 +1,27 @@
 ﻿namespace StrongGrid.Models.Search
 {
+	/// <summary>
+	/// Filter the result of a search for the value of a field to be between a lower value and an upper value
+	/// </summary>
 	public class SearchCriteriaBetween : SearchCriteria
 	{
+		/// <summary>
+		/// Gets the upper value
+		/// </summary>
 		public object UpperValue { get; private set; }
 
-		public SearchCriteriaBetween()
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SearchCriteriaBetween"/> class.
+		/// </summary>
+		/// <param name="filterField">The filter field</param>
+		/// <param name="lowerValue">The lower value</param>
+		/// <param name="upperValue">The upper value</param>
+		public SearchCriteriaBetween(FilterField filterField, object lowerValue, object upperValue)
 		{
-		}
-
-		public SearchCriteriaBetween(FilterField filterField, object LowerValue, object UpperValue)
-		{
-			base.FilterField = filterField;
-			base.FilterOperator = SearchConditionOperator.Beetween;
-			base.FilterValue = LowerValue;
-			this.UpperValue = UpperValue;
+			FilterField = filterField;
+			FilterOperator = SearchConditionOperator.Beetween;
+			FilterValue = lowerValue;
+			UpperValue = upperValue;
 		}
 
 		/// <summary>

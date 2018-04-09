@@ -2,17 +2,21 @@
 
 namespace StrongGrid.Models.Search
 {
+	/// <summary>
+	/// Filter the result of a search for the value of a field to be absent from an enumeration of values
+	/// </summary>
 	public class SearchCriteriaNotIn : SearchCriteria
 	{
-		public SearchCriteriaNotIn()
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SearchCriteriaNotIn"/> class.
+		/// </summary>
+		/// <param name="filterField">The filter field</param>
+		/// <param name="filterValues">The filter values</param>
+		public SearchCriteriaNotIn(FilterField filterField, IEnumerable<object> filterValues)
 		{
-		}
-
-		public SearchCriteriaNotIn(FilterField filterField, IEnumerable<object> values)
-		{
-			base.FilterField = filterField;
-			base.FilterOperator = SearchConditionOperator.NotIn;
-			base.FilterValue = values;
+			FilterField = filterField;
+			FilterOperator = SearchConditionOperator.NotIn;
+			FilterValue = filterValues;
 		}
 	}
 }
