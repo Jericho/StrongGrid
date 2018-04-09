@@ -1,8 +1,12 @@
 ﻿using Pathoschild.Http.Client;
 using StrongGrid.Models;
+using StrongGrid.Models.Search;
 using StrongGrid.Utilities;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,18 +34,32 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get all of the details about the messages matching the criteria.
+		/// Get all of the details about the messages matching the filtering conditions.
 		/// </summary>
+		/// <param name="filterConditions">Filtering conditions.</param>
 		/// <param name="limit">Number of IP activity entries to return.</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
-		public Task<EmailMessageActivity[]> SearchMessagesAsync(int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<EmailMessageActivity[]> SearchAsync(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria>>> filterConditions, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
 		{
+			var conditions = new List<string>(filterConditions?.Count() ?? 0);
+			if (filterConditions != null)
+			{
+				foreach (var criteria in filterConditions)
+				{
+					var enumMemberValue = criteria.Key.GetAttributeOfType<EnumMemberAttribute>().Value;
+					conditions.Add(string.Join($" {enumMemberValue} ", criteria.Value.Select(criteriaValue => criteriaValue.ToString())));
+				}
+			}
+
+			var query = string.Join(" AND ", conditions);
+
 			return _client
 				.GetAsync(_endpoint)
 				.WithArgument("limit", limit)
+				.WithArgument("query", query.ToString())
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EmailMessageActivity[]>("messages");
 		}
