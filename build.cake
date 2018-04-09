@@ -159,7 +159,7 @@ Task("Build")
 	.IsDependentOn("Restore-NuGet-Packages")
 	.Does(() =>
 {
-	DotNetCoreBuild($"{sourceFolder}{appName}.sln", new DotNetCoreBuildSettings
+	DotNetCoreBuild($"{sourceFolder}{libraryName}.sln", new DotNetCoreBuildSettings
 	{
 		Configuration = configuration,
 		NoRestore = true,
