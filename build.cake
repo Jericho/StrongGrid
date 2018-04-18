@@ -1,5 +1,5 @@
 // Install addins.
-#addin "nuget:?package=Cake.Coveralls&version=0.7.0"
+#addin "nuget:?package=Cake.Coveralls&version=0.8.0"
 
 // Install tools.
 #tool "nuget:?package=GitVersion.CommandLine&version=4.0.0-beta0012"
