@@ -210,7 +210,7 @@ namespace StrongGrid.Resources
 		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
-		/// The <see cref="IpValidation" />.
+		/// The <see cref="ReverseDnsValidation" />.
 		/// </returns>
 		Task<ReverseDnsValidation> ValidateReverseDnsAsync(long ipId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
