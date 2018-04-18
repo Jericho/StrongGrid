@@ -153,7 +153,7 @@ namespace StrongGrid.Resources
 		Task<AuthenticatedDomain> AssociateDomainAsync(long domainId, string username = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get all IP whitelabels
+		/// Get all all the reverse DNS records created by this account
 		/// </summary>
 		/// <param name="segmentPrefix">The segment prefix.</param>
 		/// <param name="limit">The limit.</param>
@@ -161,42 +161,39 @@ namespace StrongGrid.Resources
 		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
-		/// An array of <see cref="WhitelabelIp" />.
+		/// An array of <see cref="ReverseDns" />.
 		/// </returns>
-		/// <remarks>
-		/// A IP whitelabel consists of a subdomain and domain that will be used to generate a reverse
-		/// DNS record for a given IP. Once SendGrid has verified that the customer has created the
-		/// appropriate A record for their IP, SendGrid will create the appropriate reverse DNS record for
-		/// the IP.
-		/// </remarks>
-		Task<WhitelabelIp[]> GetAllIpsAsync(string segmentPrefix = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ReverseDns[]> GetAllReverseDnsAsync(string segmentPrefix = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get a specific IP whitelabel
+		/// Get a specific reverse DNS
 		/// </summary>
 		/// <param name="ipId">The identifier.</param>
 		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
-		/// The <see cref="WhitelabelIp" />.
+		/// The <see cref="ReverseDns" />.
 		/// </returns>
-		Task<WhitelabelIp> GetIpAsync(long ipId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ReverseDns> GetReverseDnsAsync(long ipId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Create an IP
+		/// Setup a reverse DNS
 		/// </summary>
-		/// <param name="ipAddress">The ip address.</param>
-		/// <param name="domain">The domain.</param>
-		/// <param name="subdomain">The subdomain.</param>
+		/// <param name="ipAddress">The IP address that you want to set up reverse DNS.</param>
+		/// <param name="domain">The root, or sending, domain that will be used to send message from the IP.</param>
+		/// <param name="subdomain">The subdomain that will be used to send emails from the IP. Should be the same as the subdomain used to set up an authenticated domain.</param>
 		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
-		/// The <see cref="WhitelabelIp" />.
+		/// The <see cref="ReverseDns" />.
 		/// </returns>
-		Task<WhitelabelIp> CreateIpAsync(string ipAddress, string domain, string subdomain, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		/// <remarks>
+		/// When setting up reverse DNS, use the same subdomain that you used when you authenticated your domain.
+		/// </remarks>
+		Task<ReverseDns> SetupReverseDnsAsync(string ipAddress, string domain, string subdomain, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Delete an IP
+		/// Delete a reverse DNS record
 		/// </summary>
 		/// <param name="ipId">The ip identifier.</param>
 		/// <param name="onBehalfOf">The user to impersonate</param>
@@ -204,10 +201,10 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteIpAsync(long ipId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteReverseDnsAsync(long ipId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Validate an IP
+		/// Validate a reverse DNS record
 		/// </summary>
 		/// <param name="ipId">The ip identifier.</param>
 		/// <param name="onBehalfOf">The user to impersonate</param>
@@ -215,7 +212,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="IpValidation" />.
 		/// </returns>
-		Task<IpValidation> ValidateIpAsync(long ipId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ReverseDnsValidation> ValidateReverseDnsAsync(long ipId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Get all branded links
@@ -228,6 +225,11 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="BrandedLink" />.
 		/// </returns>
+		/// <remarks>
+		/// A link whitelabel consists of a subdomain and domain that will be used to rewrite links in mail
+		/// messages. Our customer will be asked to create a couple CNAME records for the links to be
+		/// rewritten to and for us to verify that they are the domain owners.
+		/// </remarks>
 		Task<BrandedLink[]> GetAllLinksAsync(string segmentPrefix = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>

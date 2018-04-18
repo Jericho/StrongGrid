@@ -971,10 +971,10 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"AuthenticatedSender domain {domain.Id} deleted.").ConfigureAwait(false);
 
 
-			await log.WriteLineAsync("\n***** SENDER AUTHENTICATION: IPs *****").ConfigureAwait(false);
+			await log.WriteLineAsync("\n***** SENDER AUTHENTICATION: Reverse DNS *****").ConfigureAwait(false);
 
-			var ipAdresses = await client.SenderAuthentication.GetAllIpsAsync(null, 50, 0, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"All AuthenticatedSender IP addreses retrieved. There are {ipAdresses.Length} adresses").ConfigureAwait(false);
+			var reverseDnsRecords = await client.SenderAuthentication.GetAllReverseDnsAsync(null, 50, 0, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All AuthenticatedSender reverse DNS retrieved. There are {reverseDnsRecords.Length} records").ConfigureAwait(false);
 
 
 			await log.WriteLineAsync("\n***** SENDER AUTHENTICATION: LINKS *****").ConfigureAwait(false);

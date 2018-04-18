@@ -3,9 +3,9 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// IP validation
+	/// Reverse DNS validation
 	/// </summary>
-	public class IpValidation
+	public class ReverseDnsValidation
 	{
 		/// <summary>
 		/// Gets or sets the ip identifier.
@@ -32,6 +32,6 @@ namespace StrongGrid.Models
 		/// The validation results.
 		/// </value>
 		[JsonProperty("validation_results", NullValueHandling = NullValueHandling.Ignore)]
-		public IpValidationResults ValidationResults { get; set; }
+		public ReverseDnsValidationResults ValidationResults { get; set; }
 	}
 }

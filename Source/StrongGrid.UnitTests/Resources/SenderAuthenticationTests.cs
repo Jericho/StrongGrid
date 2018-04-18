@@ -628,7 +628,7 @@ namespace StrongGrid.UnitTests.Resources
 		}
 
 		[Fact]
-		public async Task GetAllIpsAsync()
+		public async Task GetAllReverseDnsAsync()
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
@@ -638,7 +638,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.GetAllIpsAsync().ConfigureAwait(false);
+			var result = await senderAuthentication.GetAllReverseDnsAsync().ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -648,7 +648,7 @@ namespace StrongGrid.UnitTests.Resources
 		}
 
 		[Fact]
-		public async Task GetIpAsync()
+		public async Task GetReverseDnsAsync()
 		{
 			// Arrange
 			var id = 123L;
@@ -660,7 +660,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.GetIpAsync(id).ConfigureAwait(false);
+			var result = await senderAuthentication.GetReverseDnsAsync(id).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -669,7 +669,7 @@ namespace StrongGrid.UnitTests.Resources
 		}
 
 		[Fact]
-		public async Task CreateIpAsync()
+		public async Task SetupReverseDnsAsync()
 		{
 			// Arrange
 			var ipAddress = "192.168.77.1";
@@ -683,7 +683,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.CreateIpAsync(ipAddress, domain, subdomain, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderAuthentication.SetupReverseDnsAsync(ipAddress, domain, subdomain, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -692,7 +692,7 @@ namespace StrongGrid.UnitTests.Resources
 		}
 
 		[Fact]
-		public async Task DeleteIpAsync()
+		public async Task DeleteReverseDnsAsync()
 		{
 			// Arrange
 			var domainId = 48L;
@@ -704,7 +704,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			await senderAuthentication.DeleteIpAsync(domainId, null, CancellationToken.None).ConfigureAwait(false);
+			await senderAuthentication.DeleteReverseDnsAsync(domainId, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -712,7 +712,7 @@ namespace StrongGrid.UnitTests.Resources
 		}
 
 		[Fact]
-		public async Task ValidateIpAsync()
+		public async Task ValidateReverseDnsAsync()
 		{
 			// Arrange
 			var id = 1L;
@@ -735,7 +735,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.ValidateIpAsync(id).ConfigureAwait(false);
+			var result = await senderAuthentication.ValidateReverseDnsAsync(id).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
