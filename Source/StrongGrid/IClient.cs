@@ -256,11 +256,11 @@ namespace StrongGrid
 		IWebhookStats WebhookStats { get; }
 
 		/// <summary>
-		/// Gets the Whitelabel resource.
+		/// Gets the SenderAuthentication resource.
 		/// </summary>
 		/// <value>
-		/// The whitelabel.
+		/// The <see cref="ISenderAuthentication"/>.
 		/// </value>
-		IWhitelabel Whitelabel { get; }
+		ISenderAuthentication SenderAuthentication { get; }
 	}
 }

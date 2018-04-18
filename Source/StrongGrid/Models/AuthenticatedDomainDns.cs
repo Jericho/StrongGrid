@@ -3,9 +3,9 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Whitelabel domain DNS
+	/// Authenticated domain DNS
 	/// </summary>
-	public class WhitelabelDomainDns
+	public class AuthenticatedDomainDns
 	{
 		/// <summary>
 		/// Gets or sets the name of the mail c.

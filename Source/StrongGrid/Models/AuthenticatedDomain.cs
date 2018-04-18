@@ -3,18 +3,17 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// A domain whitelabel consists of a subdomain and domain that will be used to set the
-	/// appropriate DKIM, SPF, and Return-Path. There is an option to allow SendGrid to manage
-	/// security or the customers may manage their own DNS records. For customers using the
-	/// manual security option, they will need to create the appropriate MX, DKIM, and SPF
-	/// records with their hosting provider. With automatic security, the customer will just
-	/// need to create a few CNAMEs to SendGrid, and SendGrid will manage the MX, DKIM and SPF
-	/// records.
+	/// An authenticated domain allows you to remove the "via" or "sent on behalf of" message
+	/// that your recipients see when they read your emails. Authenticating a domain allows you
+	/// to replace sendgrid.net with your personal sending domain. You will be required to create
+	/// a subdomain so that SendGrid can generate the DNS records which you must give to your host
+	/// provider. If you choose to use Automated Security, SendGrid will provide you with 3 CNAME
+	/// records. If you turn Automated Security off, you will be given 2 TXT records and 1 MX record.
 	/// </summary>
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/domains.html
 	/// </remarks>
-	public class WhitelabelDomain
+	public class AuthenticatedDomain
 	{
 		/// <summary>
 		/// Gets or sets the identifier.
@@ -122,6 +121,6 @@ namespace StrongGrid.Models
 		/// The DNS.
 		/// </value>
 		[JsonProperty("dns", NullValueHandling = NullValueHandling.Ignore)]
-		public WhitelabelDomainDns DNS { get; set; }
+		public AuthenticatedDomainDns DNS { get; set; }
 	}
 }

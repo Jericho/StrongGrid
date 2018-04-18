@@ -11,7 +11,7 @@ using Xunit;
 
 namespace StrongGrid.UnitTests.Resources
 {
-	public class WhitelabelTests
+	public class SenderAuthenticationTests
 	{
 		#region FIELDS
 
@@ -298,12 +298,12 @@ namespace StrongGrid.UnitTests.Resources
 		#endregion
 
 		[Fact]
-		public void Parse_WhitelabelDomain_json()
+		public void Parse_AuthenticatedDomain_json()
 		{
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<WhitelabelDomain>(SINGLE_DOMAIN_JSON);
+			var result = JsonConvert.DeserializeObject<AuthenticatedDomain>(SINGLE_DOMAIN_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -345,10 +345,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "domains?exclude_subusers=false&limit=50&offset=0&username=&domain=")).Respond("application/json", MULTIPLE_DOMAINS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await whitelabel.GetAllDomainsAsync(excludeSubusers: false).ConfigureAwait(false);
+			var result = await senderAuthentication.GetAllDomainsAsync(excludeSubusers: false).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -365,10 +365,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "domains?exclude_subusers=true&limit=50&offset=0&username=&domain=")).Respond("application/json", MULTIPLE_DOMAINS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await whitelabel.GetAllDomainsAsync(excludeSubusers: true).ConfigureAwait(false);
+			var result = await senderAuthentication.GetAllDomainsAsync(excludeSubusers: true).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -387,10 +387,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await whitelabel.GetDomainAsync(domainId).ConfigureAwait(false);
+			var result = await senderAuthentication.GetDomainAsync(domainId).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -412,10 +412,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "domains")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await whitelabel.CreateDomainAsync(domain, subdomain, automaticSecurity, customSpf, isDefault, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderAuthentication.CreateDomainAsync(domain, subdomain, automaticSecurity, customSpf, isDefault, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -435,10 +435,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await whitelabel.UpdateDomainAsync(domainId, isDefault, customSpf, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderAuthentication.UpdateDomainAsync(domainId, isDefault, customSpf, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -456,10 +456,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}")).Respond(HttpStatusCode.OK);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			await whitelabel.DeleteDomainAsync(domainId, null, CancellationToken.None).ConfigureAwait(false);
+			await senderAuthentication.DeleteDomainAsync(domainId, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -477,10 +477,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}/ips")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await whitelabel.AddIpAddressToDomainAsync(domainId, ipAddress, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderAuthentication.AddIpAddressToDomainAsync(domainId, ipAddress, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -499,10 +499,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}/ips/{ipAddress}")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await whitelabel.DeleteIpAddressFromDomainAsync(domainId, ipAddress, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderAuthentication.DeleteIpAddressFromDomainAsync(domainId, ipAddress, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -543,10 +543,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}/validate")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await whitelabel.ValidateDomainAsync(domainId).ConfigureAwait(false);
+			var result = await senderAuthentication.ValidateDomainAsync(domainId).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -574,10 +574,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, $"domains/subuser?username={username}")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await whitelabel.GetAssociatedDomainAsync(username, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderAuthentication.GetAssociatedDomainAsync(username, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -595,10 +595,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, $"domains/subuser?username={username}")).Respond(HttpStatusCode.OK);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			await whitelabel.DisassociateDomainAsync(username, null, CancellationToken.None).ConfigureAwait(false);
+			await senderAuthentication.DisassociateDomainAsync(username, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -616,10 +616,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}/subuser")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await whitelabel.AssociateDomainAsync(domainId, ipAddress, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderAuthentication.AssociateDomainAsync(domainId, ipAddress, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -635,10 +635,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "ips?limit=50&offset=0&ip=")).Respond("application/json", MULTIPLE_IPS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await whitelabel.GetAllIpsAsync().ConfigureAwait(false);
+			var result = await senderAuthentication.GetAllIpsAsync().ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -657,10 +657,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, $"ips/{id}")).Respond("application/json", SINGLE_IP_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await whitelabel.GetIpAsync(id).ConfigureAwait(false);
+			var result = await senderAuthentication.GetIpAsync(id).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -680,10 +680,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "ips")).Respond("application/json", SINGLE_IP_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await whitelabel.CreateIpAsync(ipAddress, domain, subdomain, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderAuthentication.CreateIpAsync(ipAddress, domain, subdomain, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -701,10 +701,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, "ips", domainId)).Respond(HttpStatusCode.OK);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			await whitelabel.DeleteIpAsync(domainId, null, CancellationToken.None).ConfigureAwait(false);
+			await senderAuthentication.DeleteIpAsync(domainId, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -732,10 +732,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "ips", id, "validate")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await whitelabel.ValidateIpAsync(id).ConfigureAwait(false);
+			var result = await senderAuthentication.ValidateIpAsync(id).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -757,10 +757,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "links", linkId)).Respond("application/json", SINGLE_LINK_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await whitelabel.GetLinkAsync(linkId).ConfigureAwait(false);
+			var result = await senderAuthentication.GetLinkAsync(linkId).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -780,10 +780,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "links")).Respond("application/json", SINGLE_LINK_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await whitelabel.CreateLinkAsync(domain, subdomain, isDefault, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderAuthentication.CreateLinkAsync(domain, subdomain, isDefault, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -802,10 +802,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(ENDPOINT, "links", linkId)).Respond("application/json", SINGLE_LINK_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await whitelabel.UpdateLinkAsync(linkId, isDefault).ConfigureAwait(false);
+			var result = await senderAuthentication.UpdateLinkAsync(linkId, isDefault).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -823,10 +823,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, "links", linkId)).Respond(HttpStatusCode.OK);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			await whitelabel.DeleteLinkAsync(linkId, null, CancellationToken.None).ConfigureAwait(false);
+			await senderAuthentication.DeleteLinkAsync(linkId, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -843,10 +843,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, $"links/default?domain={domain}")).Respond("application/json", SINGLE_LINK_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await whitelabel.GetDefaultLinkAsync(domain).ConfigureAwait(false);
+			var result = await senderAuthentication.GetDefaultLinkAsync(domain).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -879,10 +879,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "links", linkId, "validate")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await whitelabel.ValidateLinkAsync(linkId).ConfigureAwait(false);
+			var result = await senderAuthentication.ValidateLinkAsync(linkId).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -906,10 +906,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, $"links/subuser?username={username}")).Respond("application/json", SINGLE_LINK_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await whitelabel.GetAssociatedLinkAsync(username, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderAuthentication.GetAssociatedLinkAsync(username, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -927,10 +927,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, $"links/subuser?username={username}")).Respond(HttpStatusCode.OK);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			await whitelabel.DisassociateLinkAsync(username, null, CancellationToken.None).ConfigureAwait(false);
+			await senderAuthentication.DisassociateLinkAsync(username, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -948,10 +948,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, $"links/{linkId}/subuser")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await whitelabel.AssociateLinkAsync(linkId, username, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderAuthentication.AssociateLinkAsync(linkId, username, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -967,10 +967,10 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "links?limit=50&offset=0&ip=")).Respond("application/json", MULTIPLE_LINKS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var whitelabel = new Whitelabel(client);
+			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await whitelabel.GetAllLinksAsync().ConfigureAwait(false);
+			var result = await senderAuthentication.GetAllLinksAsync().ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
