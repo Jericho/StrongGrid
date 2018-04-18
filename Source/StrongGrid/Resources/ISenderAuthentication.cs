@@ -218,7 +218,7 @@ namespace StrongGrid.Resources
 		Task<IpValidation> ValidateIpAsync(long ipId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get all Link whitelabels
+		/// Get all branded links
 		/// </summary>
 		/// <param name="segmentPrefix">The segment prefix.</param>
 		/// <param name="limit">The limit.</param>
@@ -226,28 +226,23 @@ namespace StrongGrid.Resources
 		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
-		/// An array of <see cref="WhitelabelLink" />.
+		/// An array of <see cref="BrandedLink" />.
 		/// </returns>
-		/// <remarks>
-		/// A link whitelabel consists of a subdomain and domain that will be used to rewrite links in mail
-		/// messages. Our customer will be asked to create a couple CNAME records for the links to be
-		/// rewritten to and for us to verify that they are the domain owners.
-		/// </remarks>
-		Task<WhitelabelLink[]> GetAllLinksAsync(string segmentPrefix = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<BrandedLink[]> GetAllLinksAsync(string segmentPrefix = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get a specific Link whitelabel
+		/// Get a specific branded link
 		/// </summary>
 		/// <param name="linkId">The identifier.</param>
 		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
-		/// The <see cref="WhitelabelLink" />.
+		/// The <see cref="BrandedLink" />.
 		/// </returns>
-		Task<WhitelabelLink> GetLinkAsync(long linkId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<BrandedLink> GetLinkAsync(long linkId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Create a Link
+		/// Create a branded link
 		/// </summary>
 		/// <param name="domain">The domain.</param>
 		/// <param name="subdomain">The subdomain.</param>
@@ -255,24 +250,24 @@ namespace StrongGrid.Resources
 		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
-		/// The <see cref="WhitelabelLink" />.
+		/// The <see cref="BrandedLink" />.
 		/// </returns>
-		Task<WhitelabelLink> CreateLinkAsync(string domain, string subdomain, bool isDefault, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<BrandedLink> CreateLinkAsync(string domain, string subdomain, bool isDefault, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Update a Link
+		/// Update a branded link
 		/// </summary>
 		/// <param name="linkId">The link identifier.</param>
 		/// <param name="isDefault">if set to <c>true</c> [is default].</param>
 		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
-		/// The <see cref="WhitelabelLink" />.
+		/// The <see cref="BrandedLink" />.
 		/// </returns>
-		Task<WhitelabelLink> UpdateLinkAsync(long linkId, bool isDefault, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<BrandedLink> UpdateLinkAsync(long linkId, bool isDefault, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Delete a link
+		/// Delete a branded link
 		/// </summary>
 		/// <param name="linkId">The link identifier.</param>
 		/// <param name="onBehalfOf">The user to impersonate</param>
@@ -283,18 +278,18 @@ namespace StrongGrid.Resources
 		Task DeleteLinkAsync(long linkId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get the default link for a domain
+		/// Get the default branded link for a domain
 		/// </summary>
 		/// <param name="domain">The domain.</param>
 		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
-		/// The <see cref="WhitelabelLink" />.
+		/// The <see cref="BrandedLink" />.
 		/// </returns>
-		Task<WhitelabelLink> GetDefaultLinkAsync(string domain, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<BrandedLink> GetDefaultLinkAsync(string domain, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Validate a link
+		/// Validate a branded link
 		/// </summary>
 		/// <param name="linkId">The link identifier.</param>
 		/// <param name="onBehalfOf">The user to impersonate</param>
@@ -305,24 +300,25 @@ namespace StrongGrid.Resources
 		Task<LinkValidation> ValidateLinkAsync(long linkId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get Associated Link
+		/// Get the associated branded link for a subuser
 		/// </summary>
 		/// <param name="username">The username.</param>
 		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
-		/// The <see cref="WhitelabelLink" />.
+		/// The <see cref="BrandedLink" />.
 		/// </returns>
 		/// <remarks>
-		/// Link Whitelabels can be associated with subusers via parent accounts. This functionality allows
-		/// subusers to send mail off their parent's Whitelabels. To associate a Whitelabel, the parent
-		/// account must first create a Whitelabel and validate it. Then the parent may associate the
-		/// Whitelabel in subuser management.
+		/// Link branding can be associated with subusers from the parent account. This functionality
+		/// allows subusers to send mail using their parent's link branding. To associate link branding,
+		/// the parent account must first create a branded link and validate it. The parent may then
+		/// associate that branded link with a subuser via the API or the Subuser Management page in the
+		/// user interface.
 		/// </remarks>
-		Task<WhitelabelLink> GetAssociatedLinkAsync(string username = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<BrandedLink> GetAssociatedLinkAsync(string username = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Disassociate Link
+		/// Disassociate a branded link from a subuser
 		/// </summary>
 		/// <param name="username">The username.</param>
 		/// <param name="onBehalfOf">The user to impersonate</param>
@@ -333,15 +329,15 @@ namespace StrongGrid.Resources
 		Task DisassociateLinkAsync(string username = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Associate Link
+		/// Associate a branded link with a subuser
 		/// </summary>
 		/// <param name="linkId">The link identifier.</param>
 		/// <param name="username">The username.</param>
 		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>
-		/// The <see cref="WhitelabelLink" />.
+		/// The <see cref="BrandedLink" />.
 		/// </returns>
-		Task<WhitelabelLink> AssociateLinkAsync(long linkId, string username = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<BrandedLink> AssociateLinkAsync(long linkId, string username = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 	}
 }
