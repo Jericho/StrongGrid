@@ -85,7 +85,7 @@ namespace StrongGrid.IntegrationTests
 				User,
 				WebhookSettings,
 				WebhookStats,
-				Whitelabel
+				SenderAuthentication
 			};
 
 			// Execute the async tests in parallel (with max degree of parallelism)
@@ -117,25 +117,32 @@ namespace StrongGrid.IntegrationTests
 				}, MAX_SENDGRID_API_CONCURRENCY)
 			.ConfigureAwait(false);
 
+			// Display summary
+			var alog = new StringWriter();
+			await alog.WriteLineAsync("\n\n**************************************************").ConfigureAwait(false);
+			await alog.WriteLineAsync("******************** SUMMARY *********************").ConfigureAwait(false);
+			await alog.WriteLineAsync("**************************************************").ConfigureAwait(false);
+
 			var resultsWithMessage = results
 				.Where(r => !string.IsNullOrEmpty(r.Message))
 				.ToArray();
 
 			if (resultsWithMessage.Any())
 			{
-				var alog = new StringWriter();
-				await alog.WriteLineAsync("\n\n**************************************************").ConfigureAwait(false);
-				await alog.WriteLineAsync("******************** SUMMARY *********************").ConfigureAwait(false);
-				await alog.WriteLineAsync("**************************************************").ConfigureAwait(false);
 				foreach (var (TestName, ResultCode, Message) in resultsWithMessage)
 				{
 					const int TEST_NAME_MAX_LENGTH = 25;
 					var name = TestName.Length <= TEST_NAME_MAX_LENGTH ? TestName : TestName.Substring(0, TEST_NAME_MAX_LENGTH - 3) + "...";
 					await alog.WriteLineAsync($"{name.PadRight(TEST_NAME_MAX_LENGTH, ' ')} : {Message}").ConfigureAwait(false);
 				}
-				await alog.WriteLineAsync("**************************************************").ConfigureAwait(false);
-				await Console.Out.WriteLineAsync(alog.ToString()).ConfigureAwait(false);
 			}
+			else
+			{
+				await alog.WriteLineAsync("All tests completed succesfully").ConfigureAwait(false);
+			}
+
+			await alog.WriteLineAsync("**************************************************").ConfigureAwait(false);
+			await Console.Out.WriteLineAsync(alog.ToString()).ConfigureAwait(false);
 
 			// Prompt user to press a key in order to allow reading the log in the console
 			var promptLog = new StringWriter();
@@ -934,64 +941,64 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"{batchId} " + (batchStatus == null ? "does not exist" : "exists")).ConfigureAwait(false);
 		}
 
-		private static async Task Whitelabel(IClient client, TextWriter log, CancellationToken cancellationToken)
+		private static async Task SenderAuthentication(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
 			if (cancellationToken.IsCancellationRequested) return;
 
-			await log.WriteLineAsync("\n***** WHITELABEL DOMAINS *****\n").ConfigureAwait(false);
+			await log.WriteLineAsync("\n***** SENDER AUTHENTICATION: DOMAINS *****\n").ConfigureAwait(false);
 
-			var domains = await client.Whitelabel.GetAllDomainsAsync(50, 0, false, null, null, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"All whitelabel domains retrieved. There are {domains.Length} domains").ConfigureAwait(false);
+			var domains = await client.SenderAuthentication.GetAllDomainsAsync(50, 0, false, null, null, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All AuthenticatedSender domains retrieved. There are {domains.Length} domains").ConfigureAwait(false);
 
 			var cleanUpTasks = domains
 				.Where(d => d.Domain == "example.com")
 				.Select(async oldDomain =>
 				{
-					await client.Whitelabel.DeleteDomainAsync(oldDomain.Id, null, cancellationToken).ConfigureAwait(false);
+					await client.SenderAuthentication.DeleteDomainAsync(oldDomain.Id, null, cancellationToken).ConfigureAwait(false);
 					await log.WriteLineAsync($"Domain {oldDomain.Id} deleted").ConfigureAwait(false);
 					await Task.Delay(250).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
 				});
 			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
 
-			var domain = await client.Whitelabel.CreateDomainAsync("example.com", "email", false, false, false, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Whitelabel domain created. Id: {domain.Id}").ConfigureAwait(false);
+			var domain = await client.SenderAuthentication.CreateDomainAsync("example.com", "email", false, false, false, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"AuthenticatedSender domain created. Id: {domain.Id}").ConfigureAwait(false);
 
-			var domainValidation = await client.Whitelabel.ValidateDomainAsync(domain.Id, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Whitelabel domain validation: {domainValidation.IsValid}").ConfigureAwait(false);
+			var domainValidation = await client.SenderAuthentication.ValidateDomainAsync(domain.Id, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"AuthenticatedSender domain validation: {domainValidation.IsValid}").ConfigureAwait(false);
 
-			await client.Whitelabel.DeleteDomainAsync(domain.Id, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Whitelabel domain {domain.Id} deleted.").ConfigureAwait(false);
-
-
-			await log.WriteLineAsync("\n***** WHITELABEL IPS *****").ConfigureAwait(false);
-
-			var ipAdresses = await client.Whitelabel.GetAllDomainsAsync(50, 0, false, null, null, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"All whitelabel IP addreses retrieved. There are {ipAdresses.Length} adresses").ConfigureAwait(false);
+			await client.SenderAuthentication.DeleteDomainAsync(domain.Id, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"AuthenticatedSender domain {domain.Id} deleted.").ConfigureAwait(false);
 
 
-			await log.WriteLineAsync("\n***** WHITELABEL LINKS *****").ConfigureAwait(false);
+			await log.WriteLineAsync("\n***** SENDER AUTHENTICATION: Reverse DNS *****").ConfigureAwait(false);
 
-			var links = await client.Whitelabel.GetAllLinksAsync(null, 50, 0, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"All whitelabel links retrieved. There are {links.Length} links").ConfigureAwait(false);
+			var reverseDnsRecords = await client.SenderAuthentication.GetAllReverseDnsAsync(null, 50, 0, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All AuthenticatedSender reverse DNS retrieved. There are {reverseDnsRecords.Length} records").ConfigureAwait(false);
+
+
+			await log.WriteLineAsync("\n***** SENDER AUTHENTICATION: LINKS *****").ConfigureAwait(false);
+
+			var links = await client.SenderAuthentication.GetAllLinksAsync(null, 50, 0, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All AuthenticatedSender links retrieved. There are {links.Length} links").ConfigureAwait(false);
 
 			cleanUpTasks = links.Where(d => d.Domain == "example.com")
 				.Select(async oldDomain =>
 				{
-					await client.Whitelabel.DeleteDomainAsync(oldDomain.Id, null, cancellationToken).ConfigureAwait(false);
+					await client.SenderAuthentication.DeleteDomainAsync(oldDomain.Id, null, cancellationToken).ConfigureAwait(false);
 					await log.WriteLineAsync($"Domain {oldDomain.Id} deleted").ConfigureAwait(false);
 					await Task.Delay(250).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
 				});
 			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
-			var link = await client.Whitelabel.CreateLinkAsync("example.com", "email", true, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Whitelabel link created. Id: {link.Id}").ConfigureAwait(false);
+			var link = await client.SenderAuthentication.CreateLinkAsync("example.com", "email", true, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"AuthenticatedSender link created. Id: {link.Id}").ConfigureAwait(false);
 
-			var linkValidation = await client.Whitelabel.ValidateLinkAsync(link.Id, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Whitelabel validation: {linkValidation.IsValid}").ConfigureAwait(false);
+			var linkValidation = await client.SenderAuthentication.ValidateLinkAsync(link.Id, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"AuthenticatedSender link validation: {linkValidation.IsValid}").ConfigureAwait(false);
 
-			await client.Whitelabel.DeleteLinkAsync(link.Id, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Whitelabel link {link.Id} deleted.").ConfigureAwait(false);
+			await client.SenderAuthentication.DeleteLinkAsync(link.Id, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"AuthenticatedSender: link {link.Id} deleted.").ConfigureAwait(false);
 		}
 
 		private static async Task WebhookStats(IClient client, TextWriter log, CancellationToken cancellationToken)

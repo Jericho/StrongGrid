@@ -71,7 +71,7 @@ var proxy = new WebProxy("http://myproxy:1234");
 var client = new Client(apiKey, proxy);
 ```
 
-You have access to numerous 'resources' (such as Contacts, Lists, Segments, Settings, Whitelabel, etc) off of the Client and each resource offers several methods to such as retrieve, create, update, delete, etc. 
+You have access to numerous 'resources' (such as Contacts, Lists, Segments, Settings, SenderAuthentication, etc) off of the Client and each resource offers several methods to such as retrieve, create, update, delete, etc. 
 
 Here are a few example:
 ```csharp

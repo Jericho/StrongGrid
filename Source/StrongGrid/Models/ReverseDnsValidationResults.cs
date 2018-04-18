@@ -3,9 +3,9 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// IP validation results
+	/// Reverse DNS validation results
 	/// </summary>
-	public class IpValidationResults
+	public class ReverseDnsValidationResults
 	{
 		/// <summary>
 		/// Gets or sets a record.

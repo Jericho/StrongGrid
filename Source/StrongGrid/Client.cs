@@ -261,12 +261,12 @@ namespace StrongGrid
 		public string Version { get; private set; }
 
 		/// <summary>
-		/// Gets the Whitelabel resource.
+		/// Gets the SenderAuthentication resource.
 		/// </summary>
 		/// <value>
-		/// The whitelabel.
+		/// The <see cref="ISenderAuthentication"/>.
 		/// </value>
-		public IWhitelabel Whitelabel { get; private set; }
+		public ISenderAuthentication SenderAuthentication { get; private set; }
 
 		/// <summary>
 		/// Gets the webhook settings resource.
@@ -408,7 +408,7 @@ namespace StrongGrid
 			User = new User(_fluentClient);
 			WebhookSettings = new WebhookSettings(_fluentClient);
 			WebhookStats = new WebhookStats(_fluentClient);
-			Whitelabel = new Whitelabel(_fluentClient);
+			SenderAuthentication = new SenderAuthentication(_fluentClient);
 		}
 
 		/// <summary>

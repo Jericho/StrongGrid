@@ -3,14 +3,17 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// A link whitelabel consists of a subdomain and domain that will be used to rewrite links
-	/// in mail messages. Our customer will be asked to create a couple CNAME records for the
-	/// links to be rewritten to and for us to verify that they are the domain owners.
+	/// Email link branding allows all of the click-tracked links and opens tracked images in your
+	/// emails to be from your domain instead of from sendgrid.net. Spam filters and recipient
+	/// servers look at the links within emails to determine whether the email looks trustworthy
+	/// enough to deliver - they use the reputation of the root domain to determine whether the
+	/// links can be trusted. Implementing link labeling helps in email deliverability because you
+	/// are no longer relying on click tracking going through a domain that you do not control.
 	/// </summary>
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/links.html
 	/// </remarks>
-	public class WhitelabelLink
+	public class BrandedLink
 	{
 		/// <summary>
 		/// Gets or sets the identifier.
@@ -91,6 +94,6 @@ namespace StrongGrid.Models
 		/// The DNS.
 		/// </value>
 		[JsonProperty("dns", NullValueHandling = NullValueHandling.Ignore)]
-		public WhitelabelLinkDns DNS { get; set; }
+		public BrandedLinkDns DNS { get; set; }
 	}
 }
