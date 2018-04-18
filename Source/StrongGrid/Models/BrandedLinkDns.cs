@@ -3,9 +3,9 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Whitelabel link DNS
+	/// Branded link DNS
 	/// </summary>
-	public class WhitelabelLinkDns
+	public class BrandedLinkDns
 	{
 		/// <summary>
 		/// Gets or sets the domain.

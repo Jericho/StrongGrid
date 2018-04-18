@@ -3,15 +3,14 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// A IP whitelabel consists of a subdomain and domain that will be used to generate a
-	/// reverse DNS record for a given IP. Once SendGrid has verified that the customer has
-	/// created the appropriate A record for their IP, SendGrid will create the appropriate
-	/// reverse DNS record for the IP.
+	/// A reverse DNS consists of a subdomain and domain used to generate a reverse DNS record
+	/// for a given IP. Once SendGrid has verified that the appropriate A record for the IP has
+	/// been created, the appropriate reverse DNS record for the IP is generated.
 	/// </summary>
 	/// <remarks>
 	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/ips.html
 	/// </remarks>
-	public class WhitelabelIp
+	public class ReverseDns
 	{
 		/// <summary>
 		/// Gets or sets the identifier.
