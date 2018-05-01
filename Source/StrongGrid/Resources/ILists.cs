@@ -127,5 +127,17 @@ namespace StrongGrid.Resources
 		/// The async task.
 		/// </returns>
 		Task AddRecipientsAsync(long listId, IEnumerable<string> contactIds, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+
+		/// <summary>
+		/// Remove a recipient from a list.
+		/// </summary>
+		/// <param name="listId">The list identifier.</param>
+		/// <param name="contactIds">The contact identifier.</param>
+		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The async task.
+		/// </returns>
+		Task RemoveRecipientsAsync(long listId, IEnumerable<string> contactIds, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 	}
 }
