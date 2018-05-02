@@ -53,7 +53,7 @@ namespace StrongGrid.Models
 		/// The status.
 		/// </value>
 		[JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
-		public string Status { get; set; }
+		public EmailActivityStatus Status { get; set; }
 
 		/// <summary>
 		/// Gets or sets the template Id.
@@ -92,7 +92,7 @@ namespace StrongGrid.Models
 		public string ApiKeyId { get; set; }
 
 		/// <summary>
-		/// Gets or sets the originating ip address.
+		/// Gets or sets the IP of the user who sent the message.
 		/// </summary>
 		/// <value>
 		/// The IP address.
@@ -101,7 +101,7 @@ namespace StrongGrid.Models
 		public string OriginatingIpAddress { get; set; }
 
 		/// <summary>
-		/// Gets or sets the outbound ip address.
+		/// Gets or sets the IP used to send to the remote MTA.
 		/// </summary>
 		/// <value>
 		/// The IP address.
@@ -110,13 +110,13 @@ namespace StrongGrid.Models
 		public string OutboundIpAddress { get; set; }
 
 		/// <summary>
-		/// Gets or sets the type of the outbound ip address.
+		/// Gets or sets whether or not the outbound IP is dedicated vs shared.
 		/// </summary>
 		/// <value>
 		/// The type of IP address.
 		/// </value>
 		[JsonProperty("outbound_ip_type", NullValueHandling = NullValueHandling.Ignore)]
-		public string OutboundIpAddressType { get; set; }
+		public IpAddressType OutboundIpAddressType { get; set; }
 
 		/// <summary>
 		/// Gets or sets the marketing campaign id.
@@ -155,7 +155,7 @@ namespace StrongGrid.Models
 		public string MarketingCampaignVersion { get; set; }
 
 		/// <summary>
-		/// Gets or sets the categories.
+		/// Gets or sets the categories associated to the message.
 		/// </summary>
 		/// <value>
 		/// The categories
