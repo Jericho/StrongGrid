@@ -30,16 +30,6 @@ namespace StrongGrid.Models
 		Dropped,
 
 		/// <summary>
-		/// Message has not been delivered
-		/// </summary>
-		/// <remarks>
-		/// I believe this is equivalent to 'Dropped'. I have only seen this EventType in the data
-		/// returned by the 'SearchAsync' method.
-		/// </remarks>
-		[EnumMember(Value = "not_delivered")]
-		NotDelivered,
-
-		/// <summary>
 		/// Message has been successfully delivered to the receiving server.
 		/// </summary>
 		[EnumMember(Value = "delivered")]

@@ -45,13 +45,13 @@ namespace StrongGrid.Models
 		public string To { get; set; }
 
 		/// <summary>
-		/// Gets or sets the type of activity.
+		/// Gets or sets the status of the email activity.
 		/// </summary>
 		/// <value>
 		/// The status.
 		/// </value>
 		[JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
-		public EventType ActivityType { get; set; }
+		public EmailActivityStatus Status { get; set; }
 
 		/// <summary>
 		/// Gets or sets the number of time the message was opened by the recipient.

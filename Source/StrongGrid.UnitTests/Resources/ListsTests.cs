@@ -275,5 +275,26 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 		}
+
+		[Fact]
+		public async Task RemoveRecipientsAsync()
+		{
+			// Arrange
+			var listId = 1;
+			var contactIds = new[] { "abc123", "def456" };
+
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, listId, "recipients")).Respond(HttpStatusCode.NoContent);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var lists = new Lists(client);
+
+			// Act
+			await lists.RemoveRecipientsAsync(listId, contactIds, null, CancellationToken.None).ConfigureAwait(false);
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+		}
 	}
 }

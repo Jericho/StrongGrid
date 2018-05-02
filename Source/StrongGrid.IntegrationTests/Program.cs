@@ -726,38 +726,49 @@ namespace StrongGrid.IntegrationTests
 					}));
 			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
-			foreach (var oldSegment in segments.Where(s => s.Name.StartsWith("StrongGrid Integration Testing:")))
-			{
-				await client.Segments.DeleteAsync(oldSegment.Id, false, null, cancellationToken).ConfigureAwait(false);
-				await log.WriteLineAsync($"Segment {oldSegment.Id} deleted").ConfigureAwait(false);
-			}
+			// CREATE A LIST
+			var list = await client.Lists.CreateAsync("StrongGrid Integration Testing: list #1", null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"List '{list.Name}' created. Id: {list.Id}").ConfigureAwait(false);
 
-			var firstList = await client.Lists.CreateAsync("StrongGrid Integration Testing: list #1", null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"List '{firstList.Name}' created. Id: {firstList.Id}").ConfigureAwait(false);
+			// UPDATE THE LIST
+			await client.Lists.UpdateAsync(list.Id, "StrongGrid Integration Testing: new name", null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"List '{list.Id}' updated").ConfigureAwait(false);
 
-			var secondList = await client.Lists.CreateAsync("StrongGrid Integration Testing: list #2", null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"List '{secondList.Name}' created. Id: {secondList.Id}").ConfigureAwait(false);
-
-			await client.Lists.UpdateAsync(firstList.Id, "StrongGrid Integration Testing: new name", null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"List '{firstList.Id}' updated").ConfigureAwait(false);
-
-			var hotmailCondition = new SearchCondition { Field = "email", Operator = ConditionOperator.Contains, Value = "hotmail.com", LogicalOperator = LogicalOperator.None };
-			var segment = await client.Segments.CreateAsync("StrongGrid Integration Testing: Recipients @ Hotmail", new[] { hotmailCondition }, firstList.Id, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Segment '{segment.Name}' created. Id: {segment.Id}").ConfigureAwait(false);
-
+			// CREATE A SEGMENT
 			var millerLastNameCondition = new SearchCondition { Field = "last_name", Operator = ConditionOperator.Equal, Value = "Miller", LogicalOperator = LogicalOperator.None };
 			var clickedRecentlyCondition = new SearchCondition { Field = "last_clicked", Operator = ConditionOperator.GreatherThan, Value = DateTime.UtcNow.AddDays(-30).ToString("MM/dd/yyyy"), LogicalOperator = LogicalOperator.And };
-			segment = await client.Segments.UpdateAsync(segment.Id, "StrongGrid Integration Testing: Last Name is Miller and clicked recently", null, new[] { millerLastNameCondition, clickedRecentlyCondition }, null, cancellationToken).ConfigureAwait(false);
+			var segment = await client.Segments.CreateAsync("StrongGrid Integration Testing: Last Name is Miller and clicked recently", new[] { millerLastNameCondition, clickedRecentlyCondition }, list.Id, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Segment '{segment.Name}' created. Id: {segment.Id}").ConfigureAwait(false);
+
+			// UPDATE THE SEGMENT
+			var hotmailCondition = new SearchCondition { Field = "email", Operator = ConditionOperator.Contains, Value = "hotmail.com", LogicalOperator = LogicalOperator.None };
+			segment = await client.Segments.UpdateAsync(segment.Id, "StrongGrid Integration Testing: Recipients @ Hotmail", null, new[] { hotmailCondition }, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Segment {segment.Id} updated. The new name is: '{segment.Name}'").ConfigureAwait(false);
 
+			// CREATE 3 CONTACTS
+			var contactId1 = await client.Contacts.CreateAsync("dummy1@hotmail.com", "Bob", "Dummy1", null, null, cancellationToken).ConfigureAwait(false);
+			var contactId2 = await client.Contacts.CreateAsync("dummy2@hotmail.com", "Bob", "Dummy2", null, null, cancellationToken).ConfigureAwait(false);
+			var contactId3 = await client.Contacts.CreateAsync("dummy3@hotmail.com", "Bob", "Dummy3", null, null, cancellationToken).ConfigureAwait(false);
+
+			// ADD THE CONTACTS TO THE LIST (THEY WILL AUTOMATICALLY BE INCLUDED IN THE HOTMAIL SEGMENT)
+			await client.Lists.AddRecipientAsync(list.Id, contactId1, null, CancellationToken.None).ConfigureAwait(false);
+			await client.Lists.AddRecipientsAsync(list.Id, new[] { contactId2, contactId3 }, null, CancellationToken.None).ConfigureAwait(false);
+
+			// REMOVE THE CONTACTS FROM THE LIST (THEY WILL AUTOMATICALLY BE REMOVED FROM THE HOTMAIL SEGMENT)
+			await client.Lists.RemoveRecipientAsync(list.Id, contactId3, null, CancellationToken.None).ConfigureAwait(false);
+			await client.Lists.RemoveRecipientsAsync(list.Id, new[] { contactId1, contactId2 }, null, CancellationToken.None).ConfigureAwait(false);
+
+			// DELETE THE CONTACTS
+			await client.Contacts.DeleteAsync(contactId2, null, cancellationToken).ConfigureAwait(false);
+			await client.Contacts.DeleteAsync(new[] { contactId1, contactId3 }, null, cancellationToken).ConfigureAwait(false);
+
+			// DELETE THE SEGMENT
 			await client.Segments.DeleteAsync(segment.Id, false, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Segment {segment.Id} deleted").ConfigureAwait(false);
 
-			await client.Lists.DeleteAsync(firstList.Id, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"List {firstList.Id} deleted").ConfigureAwait(false);
-
-			await client.Lists.DeleteAsync(secondList.Id, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"List {secondList.Id} deleted").ConfigureAwait(false);
+			// DELETE THE LIST
+			await client.Lists.DeleteAsync(list.Id, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"List {list.Id} deleted").ConfigureAwait(false);
 		}
 
 		private static async Task CampaignsAndSenderIdentities(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -1213,21 +1224,21 @@ namespace StrongGrid.IntegrationTests
 		{
 			await log.WriteLineAsync("\n***** EMAIL ACTIVITIES *****\n").ConfigureAwait(false);
 
-			// REQUEST THE ACTIVITIES
-			var allActivities = await client.EmailActivities.SearchAsync(null, 20, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Activities requested. Found {allActivities.Count()} activities.").ConfigureAwait(false);
+			// REQUEST THE MOST RECENT ACTIVITIES
+			var recentActivities = await client.EmailActivities.SearchAsync(null, 20, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Activities requested. Found {recentActivities.Count()} activities.").ConfigureAwait(false);
 
-			if (!allActivities.Any()) return;
+			if (!recentActivities.Any()) return;
 
-			// REQUEST THE ACTIVITIES FOR A SPECIFIC MESSAGE
-			var messageId = allActivities.First().MessageId;
+			// REQUEST THE EVENTS FOR A SPECIFIC MESSAGE
+			var messageId = recentActivities.First().MessageId;
 			var summary = await client.EmailActivities.GetMessageSummaryAsync(messageId, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"There are {summary.Events.Count()} events associated with message {summary.MessageId}.").ConfigureAwait(false);
 
-			// REQUEST THE ACTIVITIES OF A GIVEN TYPE
-			var activityType = allActivities.First().ActivityType;
-			var activities = await client.EmailActivities.SearchAsync(new SearchCriteriaEqual(FilterField.ActivityType, activityType), 20, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"There are {activities.Count()} '{activityType}' events.").ConfigureAwait(false);
+			// REQUEST THE ACTIVITIES OF A GIVEN STATUS
+			var activityStatus = recentActivities.First().Status;
+			var activities = await client.EmailActivities.SearchAsync(new SearchCriteriaEqual(FilterField.ActivityType, activityStatus), 20, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {activities.Count()} '{activityStatus}' email activities.").ConfigureAwait(false);
 		}
 
 		// to get your public IP address we loop through an array

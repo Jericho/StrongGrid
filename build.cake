@@ -231,6 +231,7 @@ Task("Create-NuGet-Package")
 		IncludeSource = false,
 		IncludeSymbols = false,
 		NoBuild = true,
+		NoDependencies = true,
 		OutputDirectory = outputDir,
 		ArgumentCustomization = (args) =>
 		{
@@ -242,7 +243,7 @@ Task("Create-NuGet-Package")
 		}
 	};
 
-	DotNetCorePack(sourceFolder + libraryName + "/" + libraryName + ".csproj", settings);
+	DotNetCorePack($"{sourceFolder}{libraryName}/{libraryName}.csproj", settings);
 });
 
 Task("Upload-AppVeyor-Artifacts")
