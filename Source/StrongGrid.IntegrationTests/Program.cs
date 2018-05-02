@@ -1224,21 +1224,21 @@ namespace StrongGrid.IntegrationTests
 		{
 			await log.WriteLineAsync("\n***** EMAIL ACTIVITIES *****\n").ConfigureAwait(false);
 
-			// REQUEST THE ACTIVITIES
-			var allActivities = await client.EmailActivities.SearchAsync(null, 20, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Activities requested. Found {allActivities.Count()} activities.").ConfigureAwait(false);
+			// REQUEST THE MOST RECENT ACTIVITIES
+			var recentActivities = await client.EmailActivities.SearchAsync(null, 20, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Activities requested. Found {recentActivities.Count()} activities.").ConfigureAwait(false);
 
-			if (!allActivities.Any()) return;
+			if (!recentActivities.Any()) return;
 
-			// REQUEST THE ACTIVITIES FOR A SPECIFIC MESSAGE
-			var messageId = allActivities.First().MessageId;
+			// REQUEST THE EVENTS FOR A SPECIFIC MESSAGE
+			var messageId = recentActivities.First().MessageId;
 			var summary = await client.EmailActivities.GetMessageSummaryAsync(messageId, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"There are {summary.Events.Count()} events associated with message {summary.MessageId}.").ConfigureAwait(false);
 
-			// REQUEST THE ACTIVITIES OF A GIVEN TYPE
-			var activityType = allActivities.First().ActivityType;
-			var activities = await client.EmailActivities.SearchAsync(new SearchCriteriaEqual(FilterField.ActivityType, activityType), 20, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"There are {activities.Count()} '{activityType}' events.").ConfigureAwait(false);
+			// REQUEST THE ACTIVITIES OF A GIVEN STATUS
+			var activityStatus = recentActivities.First().Status;
+			var activities = await client.EmailActivities.SearchAsync(new SearchCriteriaEqual(FilterField.ActivityType, activityStatus), 20, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {activities.Count()} '{activityStatus}' email activities.").ConfigureAwait(false);
 		}
 
 		// to get your public IP address we loop through an array
