@@ -726,11 +726,6 @@ namespace StrongGrid.IntegrationTests
 					}));
 			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
-			foreach (var oldSegment in segments.Where(s => s.Name.StartsWith("StrongGrid Integration Testing:")))
-			{
-				await client.Segments.DeleteAsync(oldSegment.Id, false, null, cancellationToken).ConfigureAwait(false);
-				await log.WriteLineAsync($"Segment {oldSegment.Id} deleted").ConfigureAwait(false);
-			}
 
 			var firstList = await client.Lists.CreateAsync("StrongGrid Integration Testing: list #1", null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"List '{firstList.Name}' created. Id: {firstList.Id}").ConfigureAwait(false);
