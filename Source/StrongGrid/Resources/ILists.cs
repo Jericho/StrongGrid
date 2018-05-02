@@ -129,7 +129,7 @@ namespace StrongGrid.Resources
 		Task AddRecipientsAsync(long listId, IEnumerable<string> contactIds, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Remove a recipient from a list.
+		/// Remove multiple recipients from a list.
 		/// </summary>
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="contactIds">The contact identifier.</param>

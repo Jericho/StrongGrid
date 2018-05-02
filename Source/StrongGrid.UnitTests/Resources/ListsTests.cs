@@ -284,7 +284,7 @@ namespace StrongGrid.UnitTests.Resources
 			var contactIds = new[] { "abc123", "def456" };
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, listId, "recipients")).Respond(HttpStatusCode.NoContent);
+			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, listId, "recipients")).Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var lists = new Lists(client);

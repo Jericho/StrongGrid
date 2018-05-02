@@ -240,7 +240,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Remove a recipient from a list.
+		/// Remove multiple recipients from a list.
 		/// </summary>
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="contactIds">The contact identifier.</param>
@@ -251,9 +251,11 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task RemoveRecipientsAsync(long listId, IEnumerable<string> contactIds, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
+			var data = JArray.FromObject(contactIds.ToArray());
 			return _client
 				.DeleteAsync($"{_endpoint}/{listId}/recipients")
 				.OnBehalfOf(onBehalfOf)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
 		}
