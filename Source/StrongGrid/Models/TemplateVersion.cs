@@ -65,6 +65,15 @@ namespace StrongGrid.Models
 		public string TextContent { get; set; }
 
 		/// <summary>
+		/// Gets or sets the subject.
+		/// </summary>
+		/// <value>
+		/// The content of the subject.
+		/// </value>
+		[JsonProperty("subject", NullValueHandling = NullValueHandling.Ignore)]
+		public string Subject { get; set; }
+
+		/// <summary>
 		/// Gets or sets the updated on.
 		/// </summary>
 		/// <value>

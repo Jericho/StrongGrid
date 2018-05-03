@@ -96,6 +96,7 @@ namespace StrongGrid.UnitTests.Resources
 			result.Name.ShouldBe("example_version_name");
 			result.TemplateId.ShouldBe("ddb96bbc-9b92-425e-8979-99464621b543");
 			result.TextContent.ShouldBe("<%body%>");
+			result.Subject.ShouldBe("<%subject%>");
 			result.UpdatedOn.ShouldBe(new DateTime(2014, 3, 19, 18, 56, 33, DateTimeKind.Utc));
 		}
 
