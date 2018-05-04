@@ -137,12 +137,13 @@ namespace StrongGrid.Resources
 		/// <param name="htmlContent">Content of the HTML.</param>
 		/// <param name="textContent">Content of the text.</param>
 		/// <param name="isActive">if set to <c>true</c> [is active].</param>
+		/// <param name="editorType">The type of editor.</param>
 		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="TemplateVersion" />.
 		/// </returns>
-		public Task<TemplateVersion> CreateVersionAsync(string templateId, string name, string subject, string htmlContent, string textContent, bool isActive, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<TemplateVersion> CreateVersionAsync(string templateId, string name, string subject, string htmlContent, string textContent, bool isActive, Parameter<EditorType?> editorType = default(Parameter<EditorType?>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
 			{
@@ -152,6 +153,8 @@ namespace StrongGrid.Resources
 				{ "plain_content", textContent },
 				{ "active", isActive ? 1 : 0 }
 			};
+			data.AddPropertyIfEnumValue("editor", editorType);
+
 			return _client
 				.PostAsync($"{_endpoint}/{templateId}/versions")
 				.OnBehalfOf(onBehalfOf)
@@ -208,19 +211,21 @@ namespace StrongGrid.Resources
 		/// <param name="htmlContent">Content of the HTML.</param>
 		/// <param name="textContent">Content of the text.</param>
 		/// <param name="isActive">The is active.</param>
+		/// <param name="editorType">The type of editor.</param>
 		/// <param name="onBehalfOf">The user to impersonate</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="TemplateVersion" />.
 		/// </returns>
-		public Task<TemplateVersion> UpdateVersionAsync(string templateId, string versionId, string name = null, string subject = null, string htmlContent = null, string textContent = null, bool? isActive = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<TemplateVersion> UpdateVersionAsync(string templateId, string versionId, Parameter<string> name = default(Parameter<string>), Parameter<string> subject = default(Parameter<string>), Parameter<string> htmlContent = default(Parameter<string>), Parameter<string> textContent = default(Parameter<string>), Parameter<bool> isActive = default(Parameter<bool>), Parameter<EditorType?> editorType = default(Parameter<EditorType?>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject();
 			data.AddPropertyIfValue("name", name);
 			data.AddPropertyIfValue("subject", subject);
 			data.AddPropertyIfValue("html_content", htmlContent);
 			data.AddPropertyIfValue("plain_content", textContent);
-			data.AddPropertyIfValue("active", isActive.HasValue ? (isActive.Value ? 1 : 0) : (int?)null);
+			data.AddPropertyIfValue("active", isActive, value => JToken.FromObject(isActive.Value ? 1 : 0));
+			data.AddPropertyIfEnumValue("editor", editorType);
 
 			return _client
 				.PatchAsync($"{_endpoint}/{templateId}/versions/{versionId}")
