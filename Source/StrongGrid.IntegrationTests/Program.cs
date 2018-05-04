@@ -528,10 +528,10 @@ namespace StrongGrid.IntegrationTests
 			template = await client.Templates.GetAsync(template.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Template '{template.Id}' retrieved.").ConfigureAwait(false);
 
-			var firstVersion = await client.Templates.CreateVersionAsync(template.Id, "StrongGrid Integration Testing: version 1", "My first Subject <%subject%>", "<html<body>hello world<br/><%body%></body></html>", "Hello world <%body%>", true, null, cancellationToken).ConfigureAwait(false);
+			var firstVersion = await client.Templates.CreateVersionAsync(template.Id, "StrongGrid Integration Testing: version 1", "My first Subject <%subject%>", "<html<body>hello world<br/><%body%></body></html>", "Hello world <%body%>", true, cancellationToken: cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"First version created. Id: {firstVersion.Id}").ConfigureAwait(false);
 
-			var secondVersion = await client.Templates.CreateVersionAsync(template.Id, "StrongGrid Integration Testing: version 2", "My second Subject <%subject%>", "<html<body>Qwerty<br/><%body%></body></html>", "Qwerty <%body%>", true, null, cancellationToken).ConfigureAwait(false);
+			var secondVersion = await client.Templates.CreateVersionAsync(template.Id, "StrongGrid Integration Testing: version 2", "My second Subject <%subject%>", "<html<body>Qwerty<br/><%body%></body></html>", "Qwerty <%body%>", true, cancellationToken: cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Second version created. Id: {secondVersion.Id}").ConfigureAwait(false);
 
 			await client.Templates.DeleteVersionAsync(template.Id, firstVersion.Id, null, cancellationToken).ConfigureAwait(false);
