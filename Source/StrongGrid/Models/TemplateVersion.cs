@@ -74,6 +74,15 @@ namespace StrongGrid.Models
 		public string Subject { get; set; }
 
 		/// <summary>
+		/// Gets or sets the type of editor used in the UI.
+		/// </summary>
+		/// <value>
+		/// The type of editor.
+		/// </value>
+		[JsonProperty("editor", NullValueHandling = NullValueHandling.Ignore)]
+		public EditorType EditorType { get; set; }
+
+		/// <summary>
 		/// Gets or sets the updated on.
 		/// </summary>
 		/// <value>
