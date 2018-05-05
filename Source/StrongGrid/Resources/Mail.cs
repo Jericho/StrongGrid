@@ -151,7 +151,10 @@ namespace StrongGrid.Resources
 			MailSettings mailSettings = null,
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var personalizations = recipients.Select(r => new MailPersonalization { To = new[] { r } });
+			var personalizations = new[]
+			{
+				new MailPersonalization { To = recipients.ToArray() }
+			};
 
 			var contents = new List<MailContent>();
 			if (!string.IsNullOrEmpty(textContent)) contents.Add(new MailContent("text/plain", textContent));
@@ -223,33 +226,6 @@ namespace StrongGrid.Resources
 				throw new ArgumentNullException(nameof(personalizations));
 			}
 
-			// The total number of recipients must be less than 1000. This includes all recipients defined within the to, cc, and bcc parameters, across each object that you include in the personalizations array.
-			var numberOfRecipients = personalizations.Sum(p => p?.To?.Count(r => r != null) ?? 0);
-			numberOfRecipients += personalizations.Sum(p => p?.Cc?.Count(r => r != null) ?? 0);
-			numberOfRecipients += personalizations.Sum(p => p?.Bcc?.Count(r => r != null) ?? 0);
-			if (numberOfRecipients >= 1000) throw new ArgumentOutOfRangeException("The total number of recipients must be less than 1000");
-
-			// SendGrid throws an unhelpful error when the Bcc email address is an empty string
-			if (string.IsNullOrWhiteSpace(mailSettings.Bcc.EmailAddress))
-			{
-				mailSettings.Bcc.EmailAddress = null;
-			}
-
-			var data = new JObject();
-			data.AddPropertyIfValue("from", from);
-			data.AddPropertyIfValue("reply_to", replyTo);
-			data.AddPropertyIfValue("subject", subject);
-			data.AddPropertyIfValue("content", contents);
-			data.AddPropertyIfValue("attachments", attachments);
-			data.AddPropertyIfValue("template_id", templateId);
-			data.AddPropertyIfValue("categories", categories);
-			data.AddPropertyIfValue("send_at", sendAt?.ToUnixTime());
-			data.AddPropertyIfValue("batch_id", batchId);
-			data.AddPropertyIfValue("asm", unsubscribeOptions);
-			data.AddPropertyIfValue("ip_pool_name", ipPoolName);
-			data.AddPropertyIfValue("mail_settings", mailSettings);
-			data.AddPropertyIfValue("tracking_settings", trackingSettings);
-
 			// This comparer is used to perform case-insensitive comparisons of email addresses
 			var emailAddressComparer = new LambdaComparer<MailAddress>((address1, address2) => address1.Email.Equals(address2.Email, StringComparison.OrdinalIgnoreCase));
 
@@ -284,6 +260,32 @@ namespace StrongGrid.Resources
 				personalization.Bcc = EnsureRecipientsNamesAreQuoted(personalization.Bcc);
 			}
 
+			// The total number of recipients must be less than 1000. This includes all recipients defined within the to, cc, and bcc parameters, across each object that you include in the personalizations array.
+			var numberOfRecipients = personalizationsCopy.Sum(p => p?.To?.Count(r => r != null) ?? 0);
+			numberOfRecipients += personalizationsCopy.Sum(p => p?.Cc?.Count(r => r != null) ?? 0);
+			numberOfRecipients += personalizationsCopy.Sum(p => p?.Bcc?.Count(r => r != null) ?? 0);
+			if (numberOfRecipients >= 1000) throw new ArgumentOutOfRangeException("The total number of recipients must be less than 1000");
+
+			// SendGrid throws an unhelpful error when the Bcc email address is an empty string
+			if (mailSettings?.Bcc != null && mailSettings.Bcc.EmailAddress?.Trim() == string.Empty)
+			{
+				mailSettings.Bcc.EmailAddress = null;
+			}
+
+			var data = new JObject();
+			data.AddPropertyIfValue("from", from);
+			data.AddPropertyIfValue("reply_to", replyTo);
+			data.AddPropertyIfValue("subject", subject);
+			data.AddPropertyIfValue("content", contents);
+			data.AddPropertyIfValue("attachments", attachments);
+			data.AddPropertyIfValue("template_id", templateId);
+			data.AddPropertyIfValue("categories", categories);
+			data.AddPropertyIfValue("send_at", sendAt?.ToUnixTime());
+			data.AddPropertyIfValue("batch_id", batchId);
+			data.AddPropertyIfValue("asm", unsubscribeOptions);
+			data.AddPropertyIfValue("ip_pool_name", ipPoolName);
+			data.AddPropertyIfValue("mail_settings", mailSettings);
+			data.AddPropertyIfValue("tracking_settings", trackingSettings);
 			data.AddPropertyIfValue("personalizations", personalizationsCopy);
 
 			if (sections != null && sections.Any())
