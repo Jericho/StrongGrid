@@ -170,13 +170,17 @@ namespace StrongGrid.IntegrationTests
 			var to1 = new MailAddress("recipient1@mailinator.com", "Recipient1");
 			var to2 = new MailAddress("recipient2@mailinator.com", "Recipient2");
 			var subject = "Dear {{customer_type}}";
-			var textContent = new MailContent("text/plain", "Hello world!");
-			var htmlContent = new MailContent("text/html", "<html><body>Hello <b><i>{{first_name}}!</i></b><br/></body></html>");
+			var text = "Hello world!";
+			var html = "<html><body>Hello <b><i>{{first_name}}!</i></b><br/></body></html>";
+			var textContent = new MailContent("text/plain", text);
+			var htmlContent = new MailContent("text/html", html);
 			var personalizations = new[]
 			{
 				new MailPersonalization
 				{
-					To = new[] { to1 },
+					To = new[] { to1, to1 },
+					Cc = new[] { to1 },
+					Bcc = new[] { to1 },
 					Substitutions = new KeyValuePair<string, string>[]
 					{
 						new  KeyValuePair<string, string>("{{customer_type}}", "friend"),
@@ -190,6 +194,8 @@ namespace StrongGrid.IntegrationTests
 				new MailPersonalization
 				{
 					To = new[] { to2 },
+					Cc = new[] { to2, to2 },
+					Bcc = new[] { to2 },
 					Substitutions = new KeyValuePair<string, string>[]
 					{
 						new  KeyValuePair<string, string>("{{customer_type}}", "customer"),
@@ -261,10 +267,10 @@ namespace StrongGrid.IntegrationTests
 
 			/******
 				Here's the simplified way to send a single email to a single recipient:
-				var messageId = await client.Mail.SendToSingleRecipientAsync(to, from, subject, htmlContent, textContent, cancellationToken: cancellationToken).ConfigureAwait(false);
+				var messageId = await client.Mail.SendToSingleRecipientAsync(to, from, subject, html, text, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 				Here's the simplified way to send the same email to multiple recipients:
-				var messageId = await client.Mail.SendToMultipleRecipientsAsync(new[] { to1, to2, to3 }, from, subject, htmlContent, textContent, cancellationToken: cancellationToken).ConfigureAwait(false);
+				var messageId = await client.Mail.SendToMultipleRecipientsAsync(new[] { to1, to2, to3 }, from, subject, html, text, cancellationToken: cancellationToken).ConfigureAwait(false);
 			******/
 		}
 
