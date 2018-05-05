@@ -170,8 +170,10 @@ namespace StrongGrid.IntegrationTests
 			var to1 = new MailAddress("recipient1@mailinator.com", "Recipient1");
 			var to2 = new MailAddress("recipient2@mailinator.com", "Recipient2");
 			var subject = "Dear {{customer_type}}";
-			var textContent = new MailContent("text/plain", "Hello world!");
-			var htmlContent = new MailContent("text/html", "<html><body>Hello <b><i>{{first_name}}!</i></b><br/></body></html>");
+			var text = "Hello world!";
+			var html = "<html><body>Hello <b><i>{{first_name}}!</i></b><br/></body></html>";
+			var textContent = new MailContent("text/plain", text);
+			var htmlContent = new MailContent("text/html", html);
 			var personalizations = new[]
 			{
 				new MailPersonalization
@@ -265,10 +267,10 @@ namespace StrongGrid.IntegrationTests
 
 			/******
 				Here's the simplified way to send a single email to a single recipient:
-				var messageId = await client.Mail.SendToSingleRecipientAsync(to, from, subject, htmlContent, textContent, cancellationToken: cancellationToken).ConfigureAwait(false);
+				var messageId = await client.Mail.SendToSingleRecipientAsync(to, from, subject, html, text, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 				Here's the simplified way to send the same email to multiple recipients:
-				var messageId = await client.Mail.SendToMultipleRecipientsAsync(new[] { to1, to2, to3 }, from, subject, htmlContent, textContent, cancellationToken: cancellationToken).ConfigureAwait(false);
+				var messageId = await client.Mail.SendToMultipleRecipientsAsync(new[] { to1, to2, to3 }, from, subject, html, text, cancellationToken: cancellationToken).ConfigureAwait(false);
 			******/
 		}
 
