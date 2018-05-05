@@ -229,6 +229,12 @@ namespace StrongGrid.Resources
 			numberOfRecipients += personalizations.Sum(p => p?.Bcc?.Count(r => r != null) ?? 0);
 			if (numberOfRecipients >= 1000) throw new ArgumentOutOfRangeException("The total number of recipients must be less than 1000");
 
+			// SendGrid throws an unhelpful error when the Bcc email address is an empty string
+			if (string.IsNullOrWhiteSpace(mailSettings.Bcc.EmailAddress))
+			{
+				mailSettings.Bcc.EmailAddress = null;
+			}
+
 			var data = new JObject();
 			data.AddPropertyIfValue("from", from);
 			data.AddPropertyIfValue("reply_to", replyTo);
@@ -244,10 +250,35 @@ namespace StrongGrid.Resources
 			data.AddPropertyIfValue("mail_settings", mailSettings);
 			data.AddPropertyIfValue("tracking_settings", trackingSettings);
 
+			// This comparer is used to perform case-insensitive comparisons of email addresses
+			var emailAddressComparer = new LambdaComparer<MailAddress>((address1, address2) => address1.Email.Equals(address2.Email, StringComparison.OrdinalIgnoreCase));
+
 			// It's important to make a copy of the personalizations to ensure we don't modify the original array
 			var personalizationsCopy = personalizations.ToArray();
 			foreach (var personalization in personalizationsCopy)
 			{
+				// Avoid duplicate addresses. This is important because SendGrid does not throw any
+				// exception when a recipient is duplicated (which gives you the impression the email
+				// was sent) but it does not actually send the email
+				personalization.To = personalization.To?
+					.Distinct(emailAddressComparer)
+					.ToArray();
+				personalization.Cc = personalization.Cc?
+					.Distinct(emailAddressComparer)
+					.Except(personalization.To, emailAddressComparer)
+					.ToArray();
+				personalization.Bcc = personalization.Bcc?
+					.Distinct(emailAddressComparer)
+					.Except(personalization.To, emailAddressComparer)
+					.Except(personalization.Cc, emailAddressComparer)
+					.ToArray();
+
+				// SendGrid doesn't like empty arrays
+				if (!(personalization.To?.Any() ?? true)) personalization.To = null;
+				if (!(personalization.Cc?.Any() ?? true)) personalization.Cc = null;
+				if (!(personalization.Bcc?.Any() ?? true)) personalization.Bcc = null;
+
+				// Surround recipient names with double-quotes if necessary
 				personalization.To = EnsureRecipientsNamesAreQuoted(personalization.To);
 				personalization.Cc = EnsureRecipientsNamesAreQuoted(personalization.Cc);
 				personalization.Bcc = EnsureRecipientsNamesAreQuoted(personalization.Bcc);

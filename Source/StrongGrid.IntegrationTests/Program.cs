@@ -176,7 +176,9 @@ namespace StrongGrid.IntegrationTests
 			{
 				new MailPersonalization
 				{
-					To = new[] { to1 },
+					To = new[] { to1, to1 },
+					Cc = new[] { to1 },
+					Bcc = new[] { to1 },
 					Substitutions = new KeyValuePair<string, string>[]
 					{
 						new  KeyValuePair<string, string>("{{customer_type}}", "friend"),
@@ -190,6 +192,8 @@ namespace StrongGrid.IntegrationTests
 				new MailPersonalization
 				{
 					To = new[] { to2 },
+					Cc = new[] { to2, to2 },
+					Bcc = new[] { to2 },
 					Substitutions = new KeyValuePair<string, string>[]
 					{
 						new  KeyValuePair<string, string>("{{customer_type}}", "customer"),
