@@ -1228,10 +1228,12 @@ namespace StrongGrid.IntegrationTests
 
 		private static async Task EmailActivities(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
+			const int maxNumberOfActivities = 100;
+
 			await log.WriteLineAsync("\n***** EMAIL ACTIVITIES *****\n").ConfigureAwait(false);
 
 			// REQUEST THE MOST RECENT ACTIVITIES
-			var recentActivities = await client.EmailActivities.SearchAsync(null, 20, cancellationToken).ConfigureAwait(false);
+			var recentActivities = await client.EmailActivities.SearchAsync(null, maxNumberOfActivities, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Activities requested. Found {recentActivities.Count()} activities.").ConfigureAwait(false);
 
 			if (!recentActivities.Any()) return;
@@ -1243,7 +1245,7 @@ namespace StrongGrid.IntegrationTests
 
 			// REQUEST THE ACTIVITIES OF A GIVEN STATUS
 			var activityStatus = recentActivities.First().Status;
-			var activities = await client.EmailActivities.SearchAsync(new SearchCriteriaEqual(FilterField.ActivityType, activityStatus), 20, cancellationToken).ConfigureAwait(false);
+			var activities = await client.EmailActivities.SearchAsync(new SearchCriteriaEqual(FilterField.ActivityType, activityStatus), maxNumberOfActivities, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"There are {activities.Count()} '{activityStatus}' email activities.").ConfigureAwait(false);
 		}
 
