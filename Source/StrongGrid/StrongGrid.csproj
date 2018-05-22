@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <PackageReference Include="HttpMultipartParser" Version="2.2.1" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.4.1" />
     <PackageReference Include="MimeTypesMap" Version="1.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
     <PackageReference Include="Pathoschild.Http.FluentClient" Version="3.2.0" />
@@ -40,7 +41,6 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' != 'net452'">
