@@ -263,8 +263,17 @@ namespace StrongGrid.UnitTests.Resources
 			var client = Utils.GetFluentClient(mockHttp);
 			var contacts = new Contacts(client);
 
+			var customFields = new Field[]
+			{
+				new Field<string>("nickname", "Bob"),
+				new Field<long>("age", 55),
+				new Field<long?>("net_worth", 1000000),
+				new Field<DateTime>("anniversary", new DateTime(2000, 1, 1)),
+				new Field<DateTime?>("customer_since", new DateTime(2000, 1, 1))
+			};
+
 			// Act
-			await contacts.UpdateAsync(email, null, lastName, null, null, CancellationToken.None).ConfigureAwait(false);
+			await contacts.UpdateAsync(email, null, lastName, customFields, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
