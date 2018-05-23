@@ -3,6 +3,7 @@
 	/// <summary>
 	/// Information about the result of the email send.
 	/// </summary>
+	[StrongGrid.Utilities.ExcludeFromCodeCoverage]
 	public class WarmupResult
 	{
 		/// <summary>

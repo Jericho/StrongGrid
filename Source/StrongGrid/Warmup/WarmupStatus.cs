@@ -6,6 +6,7 @@ namespace StrongGrid.Warmup
 	/// <summary>
 	/// Information about the status of the warmup process.
 	/// </summary>
+	[StrongGrid.Utilities.ExcludeFromCodeCoverage]
 	public class WarmupStatus
 	{
 		/// <summary>

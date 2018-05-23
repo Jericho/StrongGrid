@@ -230,7 +230,7 @@ namespace StrongGrid.Resources
 			var emailAddressComparer = new LambdaComparer<MailAddress>((address1, address2) => address1.Email.Equals(address2.Email, StringComparison.OrdinalIgnoreCase));
 
 			// It's important to make a copy of the personalizations to ensure we don't modify the original array
-			var personalizationsCopy = personalizations.ToArray();
+			var personalizationsCopy = personalizations.Where(p => p != null).ToArray();
 			foreach (var personalization in personalizationsCopy)
 			{
 				// Avoid duplicate addresses. This is important because SendGrid does not throw any
@@ -261,13 +261,13 @@ namespace StrongGrid.Resources
 			}
 
 			// The total number of recipients must be less than 1000. This includes all recipients defined within the to, cc, and bcc parameters, across each object that you include in the personalizations array.
-			var numberOfRecipients = personalizationsCopy.Sum(p => p?.To?.Count(r => r != null) ?? 0);
-			numberOfRecipients += personalizationsCopy.Sum(p => p?.Cc?.Count(r => r != null) ?? 0);
-			numberOfRecipients += personalizationsCopy.Sum(p => p?.Bcc?.Count(r => r != null) ?? 0);
+			var numberOfRecipients = personalizationsCopy.Sum(p => p.To?.Count(r => r != null) ?? 0);
+			numberOfRecipients += personalizationsCopy.Sum(p => p.Cc?.Count(r => r != null) ?? 0);
+			numberOfRecipients += personalizationsCopy.Sum(p => p.Bcc?.Count(r => r != null) ?? 0);
 			if (numberOfRecipients >= 1000) throw new ArgumentOutOfRangeException("The total number of recipients must be less than 1000");
 
 			// SendGrid throws an unhelpful error when the Bcc email address is an empty string
-			if (mailSettings?.Bcc != null && mailSettings.Bcc.EmailAddress?.Trim() == string.Empty)
+			if (mailSettings?.Bcc != null && string.IsNullOrWhiteSpace(mailSettings.Bcc.EmailAddress))
 			{
 				mailSettings.Bcc.EmailAddress = null;
 			}

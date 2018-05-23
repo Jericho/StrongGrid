@@ -237,5 +237,34 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
+
+		[Fact]
+		public async Task CreateWithReadOnlyPermissionsAsync()
+		{
+			// Arrange
+			var name = "My API Key with read-only permissions";
+			var userScopesJson = @"{
+				'scopes': [
+					'aaa',
+					'bbb',
+					'ccc'
+				]
+			}";
+
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("scopes")).Respond("application/json", userScopesJson);
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", SINGLE_API_KEY_JSON);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var apiKeys = new ApiKeys(client);
+
+			// Act
+			var result = await apiKeys.CreateWithReadOnlyPermissionsAsync(name, null, CancellationToken.None).ConfigureAwait(false);
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+		}
 	}
 }

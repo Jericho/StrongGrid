@@ -9,7 +9,7 @@ namespace StrongGrid.Warmup
 	/// </summary>
 	public class MemoryWarmupProgressRepository : IWarmupProgressRepository
 	{
-		private static IDictionary<string, WarmupStatus> _progressInfo = new Dictionary<string, WarmupStatus>();
+		private static readonly IDictionary<string, WarmupStatus> _progressInfo = new Dictionary<string, WarmupStatus>();
 
 		/// <summary>
 		/// Retrieve the current progress of the warmup proces for a given pool.
