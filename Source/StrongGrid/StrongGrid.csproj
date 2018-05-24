@@ -4,7 +4,6 @@
     <TargetFrameworks>net452;netstandard1.3;netstandard2.0</TargetFrameworks>
     <PlatformTarget>anycpu</PlatformTarget>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>StrongGrid</AssemblyName>
     <OutputType>Library</OutputType>
     <Version>$(SemVer)</Version>
     <DebugType>full</DebugType>
@@ -28,7 +27,6 @@
 
   <ItemGroup>
     <PackageReference Include="HttpMultipartParser" Version="2.2.1" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.4.1" />
     <PackageReference Include="MimeTypesMap" Version="1.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
     <PackageReference Include="Pathoschild.Http.FluentClient" Version="3.2.0" />
@@ -41,17 +39,22 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' != 'net452'">
-    <DefineConstants>$(DefineConstants);NETSTANDARD;LIBLOG_PORTABLE</DefineConstants>
-  </PropertyGroup>
+  <ItemGroup Condition="'$(TargetFramework)' != 'net452'">
+    <PackageReference Include="Microsoft.CSharp" Version="4.4.1" />
+  </ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net452' ">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net452' ">
     <DefineConstants>$(DefineConstants);NETFULL;LIBLOG_PORTABLE</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+  <PropertyGroup Condition="'$(TargetFramework)' != 'net452'">
+    <DefineConstants>$(DefineConstants);NETSTANDARD;LIBLOG_PORTABLE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release' ">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
