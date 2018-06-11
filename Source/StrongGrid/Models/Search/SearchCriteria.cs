@@ -7,7 +7,7 @@ namespace StrongGrid.Models.Search
 	/// <summary>
 	/// Base class for search criteria classes
 	/// </summary>
-	public abstract class SearchCriteria
+	public abstract class SearchCriteria : ISearchCriteria
 	{
 		/// <summary>
 		/// Gets or sets the filter used to filter the result

@@ -437,9 +437,9 @@ namespace StrongGrid.Utilities
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
-		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, SearchCriteria criteria, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, ISearchCriteria criteria, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var filterCriteria = criteria == null ? Enumerable.Empty<SearchCriteria>() : new[] { criteria };
+			var filterCriteria = criteria == null ? Enumerable.Empty<ISearchCriteria>() : new[] { criteria };
 			return emailActivities.SearchAsync(filterCriteria, limit, cancellationToken);
 		}
 
@@ -453,10 +453,10 @@ namespace StrongGrid.Utilities
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
-		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, IEnumerable<SearchCriteria> filterConditions, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, IEnumerable<ISearchCriteria> filterConditions, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var filters = new List<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria>>>();
-			if (filterConditions != null && filterConditions.Any()) filters.Add(new KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria>>(SearchLogicalOperator.And, filterConditions));
+			var filters = new List<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>>();
+			if (filterConditions != null && filterConditions.Any()) filters.Add(new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.And, filterConditions));
 			return emailActivities.SearchAsync(filters, limit, cancellationToken);
 		}
 

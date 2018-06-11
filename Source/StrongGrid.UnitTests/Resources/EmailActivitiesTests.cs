@@ -146,10 +146,10 @@ namespace StrongGrid.UnitTests.Resources
 			var client = Utils.GetFluentClient(mockHttp);
 			var emailActivities = new EmailActivities(client);
 
-			var filterConditions = new KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria>>[]
+			var filterConditions = new[]
 			{
-				new KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria>>(SearchLogicalOperator.Or, new[] { new SearchCriteriaEqual(FilterField.CampaignName, "value1"), new SearchCriteriaEqual(FilterField.MessageId, "value2") }),
-				new KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria>>(SearchLogicalOperator.And, new[] { new SearchCriteriaEqual(FilterField.Subject, "value3"), new SearchCriteriaEqual(FilterField.Teammate, "value4") }),
+				new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.Or, new[] { new SearchCriteriaEqual(FilterField.CampaignName, "value1"), new SearchCriteriaEqual(FilterField.MessageId, "value2") }),
+				new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.And, new[] { new SearchCriteriaEqual(FilterField.Subject, "value3"), new SearchCriteriaEqual(FilterField.Teammate, "value4") }),
 			};
 
 			// Act
