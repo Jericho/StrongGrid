@@ -19,7 +19,7 @@
 		public SearchCriteriaNotBetween(FilterField filterField, object lowerValue, object upperValue)
 		{
 			FilterField = filterField;
-			FilterOperator = SearchConditionOperator.Beetween;
+			FilterOperator = SearchConditionOperator.NotBetween;
 			FilterValue = lowerValue;
 			UpperValue = upperValue;
 		}

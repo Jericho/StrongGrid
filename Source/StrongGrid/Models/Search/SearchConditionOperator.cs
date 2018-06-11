@@ -47,7 +47,7 @@ namespace StrongGrid.Models.Search
 		/// Between
 		/// </summary>
 		[EnumMember(Value = "BETWEEN")]
-		Beetween,
+		Between,
 
 		/// <summary>
 		/// Not between
