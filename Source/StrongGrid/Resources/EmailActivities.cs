@@ -49,8 +49,9 @@ namespace StrongGrid.Resources
 			{
 				foreach (var criteria in filterConditions)
 				{
-					var enumMemberValue = criteria.Key.GetAttributeOfType<EnumMemberAttribute>().Value;
-					conditions.Add(string.Join($" {enumMemberValue} ", criteria.Value.Select(criteriaValue => criteriaValue.ToString())));
+					var logicalOperator = criteria.Key.GetAttributeOfType<EnumMemberAttribute>().Value;
+					var values = criteria.Value.Select(criteriaValue => criteriaValue.ToString());
+					conditions.Add(string.Join($" {logicalOperator} ", values));
 				}
 			}
 
@@ -59,7 +60,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync(_endpoint)
 				.WithArgument("limit", limit)
-				.WithArgument("query", query.ToString())
+				.WithArgument("query", query)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EmailMessageActivity[]>("messages");
 		}
