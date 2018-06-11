@@ -1,4 +1,7 @@
-﻿namespace StrongGrid.Models.Search
+﻿using StrongGrid.Utilities;
+using System.Runtime.Serialization;
+
+namespace StrongGrid.Models.Search
 {
 	/// <summary>
 	/// Filter the result of a search for the value of a field to be NULL
@@ -10,8 +13,8 @@
 		/// </summary>
 		/// <param name="filterField">The filter field</param>
 		public SearchCriteriaNull(FilterField filterField)
+			: base(filterField, SearchConditionOperator.Null, null)
 		{
-			FilterField = filterField;
 		}
 
 		/// <summary>

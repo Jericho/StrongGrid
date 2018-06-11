@@ -11,10 +11,8 @@
 		/// <param name="filterField">The filter field</param>
 		/// <param name="filterValue">The filter value</param>
 		public SearchCriteriaLike(FilterField filterField, object filterValue)
+			: base(filterField, SearchConditionOperator.Like, filterValue)
 		{
-			FilterField = filterField;
-			FilterOperator = SearchConditionOperator.Like;
-			FilterValue = filterValue;
 		}
 	}
 }

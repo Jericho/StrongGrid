@@ -17,10 +17,8 @@
 		/// <param name="lowerValue">The lower value</param>
 		/// <param name="upperValue">The upper value</param>
 		public SearchCriteriaNotBetween(FilterField filterField, object lowerValue, object upperValue)
+			: base(filterField, SearchConditionOperator.NotBetween, lowerValue)
 		{
-			FilterField = filterField;
-			FilterOperator = SearchConditionOperator.NotBetween;
-			FilterValue = lowerValue;
 			UpperValue = upperValue;
 		}
 

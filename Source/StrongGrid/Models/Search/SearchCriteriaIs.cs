@@ -13,10 +13,8 @@ namespace StrongGrid.Models.Search
 		/// <param name="filterField">The filter field</param>
 		/// <param name="filterValues">The filter values</param>
 		public SearchCriteriaIs(FilterField filterField, IEnumerable<object> filterValues)
+			: base(filterField, SearchConditionOperator.Is, filterValues)
 		{
-			FilterField = filterField;
-			FilterOperator = SearchConditionOperator.Is;
-			FilterValue = filterValues;
 		}
 	}
 }

@@ -11,10 +11,8 @@
 		/// <param name="filterField">The filter field</param>
 		/// <param name="filterValue">The filter value</param>
 		public SearchCriteriaGreaterThan(FilterField filterField, object filterValue)
+			: base(filterField, SearchConditionOperator.GreaterThan, filterValue)
 		{
-			FilterField = filterField;
-			FilterOperator = SearchConditionOperator.GreaterThan;
-			FilterValue = filterValue;
 		}
 	}
 }

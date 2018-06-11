@@ -13,10 +13,8 @@ namespace StrongGrid.Models.Search
 		/// <param name="filterField">The filter field</param>
 		/// <param name="filterValues">The filter values</param>
 		public SearchCriteriaNotIn(FilterField filterField, IEnumerable<object> filterValues)
+			: base(filterField, SearchConditionOperator.NotIn, filterValues)
 		{
-			FilterField = filterField;
-			FilterOperator = SearchConditionOperator.NotIn;
-			FilterValue = filterValues;
 		}
 	}
 }

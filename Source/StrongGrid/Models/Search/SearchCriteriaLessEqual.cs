@@ -11,10 +11,8 @@
 		/// <param name="filterField">The filter field</param>
 		/// <param name="filterValue">The filter value</param>
 		public SearchCriteriaLessEqual(FilterField filterField, object filterValue)
+			: base(filterField, SearchConditionOperator.LessEqual, filterValue)
 		{
-			FilterField = filterField;
-			FilterOperator = SearchConditionOperator.LessEqual;
-			FilterValue = filterValue;
 		}
 	}
 }

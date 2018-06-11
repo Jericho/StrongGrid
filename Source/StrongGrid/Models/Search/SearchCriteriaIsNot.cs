@@ -11,10 +11,8 @@
 		/// <param name="filterField">The filter field</param>
 		/// <param name="filterValue">The filter value</param>
 		public SearchCriteriaIsNot(FilterField filterField, object filterValue)
+			: base(filterField, SearchConditionOperator.IsNot, filterValue)
 		{
-			FilterField = filterField;
-			FilterOperator = SearchConditionOperator.IsNot;
-			FilterValue = filterValue;
 		}
 	}
 }

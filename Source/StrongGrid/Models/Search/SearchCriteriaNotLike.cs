@@ -11,10 +11,8 @@
 		/// <param name="filterField">The filter field</param>
 		/// <param name="filterValue">The filter value</param>
 		public SearchCriteriaNotLike(FilterField filterField, object filterValue)
+			: base(filterField, SearchConditionOperator.NotLike, filterValue)
 		{
-			FilterField = filterField;
-			FilterOperator = SearchConditionOperator.NotLike;
-			FilterValue = filterValue;
 		}
 	}
 }
