@@ -89,6 +89,18 @@ namespace StrongGrid.Models.Search
 		/// Not like
 		/// </summary>
 		[EnumMember(Value = "NOT LIKE")]
-		NotLike
+		NotLike,
+
+		/// <summary>
+		/// Null
+		/// </summary>
+		[EnumMember(Value = "NULL")]
+		Null,
+
+		/// <summary>
+		/// Not Null
+		/// </summary>
+		[EnumMember(Value = "NOT NULL")]
+		NotNull
 	}
 }
