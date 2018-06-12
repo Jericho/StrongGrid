@@ -437,9 +437,9 @@ namespace StrongGrid.Utilities
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
-		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, SearchCriteria criteria, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, ISearchCriteria criteria, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var filterCriteria = criteria == null ? Enumerable.Empty<SearchCriteria>() : new[] { criteria };
+			var filterCriteria = criteria == null ? Enumerable.Empty<ISearchCriteria>() : new[] { criteria };
 			return emailActivities.SearchAsync(filterCriteria, limit, cancellationToken);
 		}
 
@@ -453,10 +453,10 @@ namespace StrongGrid.Utilities
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
-		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, IEnumerable<SearchCriteria> filterConditions, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, IEnumerable<ISearchCriteria> filterConditions, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var filters = new List<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria>>>();
-			if (filterConditions != null && filterConditions.Any()) filters.Add(new KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria>>(SearchLogicalOperator.And, filterConditions));
+			var filters = new List<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>>();
+			if (filterConditions != null && filterConditions.Any()) filters.Add(new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.And, filterConditions));
 			return emailActivities.SearchAsync(filters, limit, cancellationToken);
 		}
 
@@ -474,6 +474,26 @@ namespace StrongGrid.Utilities
 				.DeclaredMembers
 				.SingleOrDefault(x => x.Name == enumVal.ToString())
 				?.GetCustomAttribute<T>(false);
+		}
+
+		/// <summary>
+		/// Indicates if an object contain a numerical value
+		/// </summary>
+		/// <param name="value">The object</param>
+		/// <returns>A boolean indicating if the object contains a numerical value</returns>
+		public static bool IsNumber(this object value)
+		{
+			return value is sbyte
+					|| value is byte
+					|| value is short
+					|| value is ushort
+					|| value is int
+					|| value is uint
+					|| value is long
+					|| value is ulong
+					|| value is float
+					|| value is double
+					|| value is decimal;
 		}
 
 		/// <summary>Asynchronously converts the JSON encoded content and converts it to a 'SendGrid' object of the desired type.</summary>

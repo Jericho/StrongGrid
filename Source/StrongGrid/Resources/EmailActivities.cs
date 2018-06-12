@@ -42,15 +42,16 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
-		public Task<EmailMessageActivity[]> SearchAsync(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria>>> filterConditions, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<EmailMessageActivity[]> SearchAsync(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var conditions = new List<string>(filterConditions?.Count() ?? 0);
 			if (filterConditions != null)
 			{
 				foreach (var criteria in filterConditions)
 				{
-					var enumMemberValue = criteria.Key.GetAttributeOfType<EnumMemberAttribute>().Value;
-					conditions.Add(string.Join($" {enumMemberValue} ", criteria.Value.Select(criteriaValue => criteriaValue.ToString())));
+					var logicalOperator = criteria.Key.GetAttributeOfType<EnumMemberAttribute>().Value;
+					var values = criteria.Value.Select(criteriaValue => criteriaValue.ToString());
+					conditions.Add(string.Join($" {logicalOperator} ", values));
 				}
 			}
 
@@ -59,7 +60,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync(_endpoint)
 				.WithArgument("limit", limit)
-				.WithArgument("query", query.ToString())
+				.WithArgument("query", query)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<EmailMessageActivity[]>("messages");
 		}

@@ -13,10 +13,17 @@ namespace StrongGrid.Models.Search
 		/// <param name="filterField">The filter field</param>
 		/// <param name="filterValues">The filter values</param>
 		public SearchCriteriaIn(FilterField filterField, IEnumerable<object> filterValues)
+			: base(filterField, SearchConditionOperator.In, filterValues)
 		{
-			FilterField = filterField;
-			FilterOperator = SearchConditionOperator.In;
-			FilterValue = filterValues;
+		}
+
+		/// <summary>
+		/// Converts the filter operator into a string as expected by the SendGrid Email Activities API.
+		/// </summary>
+		/// <returns>The string representation of the operator</returns>
+		public override string ConvertOperatorToString()
+		{
+			return $" {base.ConvertOperatorToString()} ";
 		}
 	}
 }

@@ -1,9 +1,9 @@
 ﻿namespace StrongGrid.Models.Search
 {
 	/// <summary>
-	/// Filter the result of a search for the value of a field to be less than a lower value or greater than an upper value
+	/// Filter the result of a search on the value of a custom tracking argument to be less than a lower value or greater than an upper value
 	/// </summary>
-	public class SearchCriteriaNotBetween : SearchCriteria
+	public class SearchCriteriaUniqueArgNotBetween : SearchCriteriaUniqueArg
 	{
 		/// <summary>
 		/// Gets the upper value
@@ -11,13 +11,13 @@
 		public object UpperValue { get; private set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaNotBetween"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteriaUniqueArgNotBetween"/> class.
 		/// </summary>
-		/// <param name="filterField">The filter field</param>
+		/// <param name="uniqueArgName">The name of the unique arg</param>
 		/// <param name="lowerValue">The lower value</param>
 		/// <param name="upperValue">The upper value</param>
-		public SearchCriteriaNotBetween(FilterField filterField, object lowerValue, object upperValue)
-			: base(filterField, SearchConditionOperator.NotBetween, lowerValue)
+		public SearchCriteriaUniqueArgNotBetween(string uniqueArgName, object lowerValue, object upperValue)
+			: base(uniqueArgName, SearchConditionOperator.NotBetween, lowerValue)
 		{
 			UpperValue = upperValue;
 		}
@@ -28,7 +28,7 @@
 		/// <returns>The string representation of the value</returns>
 		public override string ConvertValueToString()
 		{
-			return $"{ConvertToString(FilterValue)} AND {ConvertToString(UpperValue)}";
+			return $"{SearchCriteria.ConvertToString(FilterValue)} AND {SearchCriteria.ConvertToString(UpperValue)}";
 		}
 
 		/// <summary>

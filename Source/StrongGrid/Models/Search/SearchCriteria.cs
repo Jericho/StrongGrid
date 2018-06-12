@@ -1,5 +1,7 @@
 ﻿using StrongGrid.Utilities;
 using System;
+using System.Collections;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace StrongGrid.Models.Search
@@ -7,7 +9,7 @@ namespace StrongGrid.Models.Search
 	/// <summary>
 	/// Base class for search criteria classes
 	/// </summary>
-	public abstract class SearchCriteria
+	public abstract class SearchCriteria : ISearchCriteria
 	{
 		/// <summary>
 		/// Gets or sets the filter used to filter the result
@@ -49,10 +51,50 @@ namespace StrongGrid.Models.Search
 		/// </summary>
 		/// <param name="value">The value</param>
 		/// <returns>The <see cref="string"/> representation of the value</returns>
-		public static string ValueAsString(object value)
+		public static string ConvertToString(object value)
 		{
-			var valueAsString = value is DateTime dateValue ? $"TIMESTAMP \"{dateValue.ToUniversalTime():u}\"" : $"\"{value}\"";
-			return valueAsString;
+			if (value is DateTime dateValue)
+			{
+				return $"TIMESTAMP \"{dateValue.ToUniversalTime():u}\"";
+			}
+			else if (value is string stringValue)
+			{
+				return $"\"{stringValue ?? string.Empty}\"";
+			}
+			else if (value is Enum enumValue)
+			{
+				return $"\"{enumValue.GetAttributeOfType<EnumMemberAttribute>()?.Value ?? value.ToString()}\"";
+			}
+			else if (value is IEnumerable values)
+			{
+				return $"({string.Join(",", values.Cast<object>().Select(e => ConvertToString(e)))})";
+			}
+			else if (value.IsNumber())
+			{
+				return value.ToString();
+			}
+
+			return $"\"{value}\"";
+		}
+
+		/// <summary>
+		/// Converts the filter value into a string as expected by the SendGrid Email Activities API.
+		/// Can be overridden in subclasses if the value needs special formatting.
+		/// </summary>
+		/// <returns>The string representation of the value</returns>
+		public virtual string ConvertValueToString()
+		{
+			return ConvertToString(FilterValue);
+		}
+
+		/// <summary>
+		/// Converts the filter operator into a string as expected by the SendGrid Email Activities API.
+		/// Can be overridden in subclasses if the operator needs special formatting.
+		/// </summary>
+		/// <returns>The string representation of the operator</returns>
+		public virtual string ConvertOperatorToString()
+		{
+			return FilterOperator.GetAttributeOfType<EnumMemberAttribute>()?.Value ?? FilterOperator.ToString();
 		}
 
 		/// <summary>
@@ -62,8 +104,8 @@ namespace StrongGrid.Models.Search
 		public override string ToString()
 		{
 			var fieldName = FilterField.GetAttributeOfType<EnumMemberAttribute>().Value;
-			var filterOperator = FilterOperator.GetAttributeOfType<EnumMemberAttribute>().Value;
-			var filterValue = ValueAsString(FilterValue);
+			var filterOperator = ConvertOperatorToString();
+			var filterValue = ConvertValueToString();
 			return $"{fieldName}{filterOperator}{filterValue}";
 		}
 	}

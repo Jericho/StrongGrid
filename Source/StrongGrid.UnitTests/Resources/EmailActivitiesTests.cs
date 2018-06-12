@@ -114,7 +114,7 @@ namespace StrongGrid.UnitTests.Resources
 			var limit = 25;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&query=campaign_name%3D%22value1%22+AND+unique_args%3D%22value2%22").Respond("application/json", ONE_MESSAGE_FOUND);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&query=campaign_name%3D%22value1%22+AND+status%3D%22processed%22").Respond("application/json", ONE_MESSAGE_FOUND);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var emailActivities = (IEmailActivities)new EmailActivities(client);
@@ -122,7 +122,7 @@ namespace StrongGrid.UnitTests.Resources
 			var filterConditions = new[]
 			{
 				new SearchCriteriaEqual(FilterField.CampaignName, "value1"),
-				new SearchCriteriaEqual(FilterField.CustomArguments, "value2"),
+				new SearchCriteriaEqual(FilterField.ActivityType, EmailActivityStatus.Processed),
 			};
 			// Act
 			var result = await emailActivities.SearchAsync(filterConditions, limit, CancellationToken.None).ConfigureAwait(false);
@@ -146,14 +146,38 @@ namespace StrongGrid.UnitTests.Resources
 			var client = Utils.GetFluentClient(mockHttp);
 			var emailActivities = new EmailActivities(client);
 
-			var filterConditions = new KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria>>[]
+			var filterConditions = new[]
 			{
-				new KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria>>(SearchLogicalOperator.Or, new[] { new SearchCriteriaEqual(FilterField.CampaignName, "value1"), new SearchCriteriaEqual(FilterField.MessageId, "value2") }),
-				new KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria>>(SearchLogicalOperator.And, new[] { new SearchCriteriaEqual(FilterField.Subject, "value3"), new SearchCriteriaEqual(FilterField.Teammate, "value4") }),
+				new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.Or, new[] { new SearchCriteriaEqual(FilterField.CampaignName, "value1"), new SearchCriteriaEqual(FilterField.MessageId, "value2") }),
+				new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.And, new[] { new SearchCriteriaEqual(FilterField.Subject, "value3"), new SearchCriteriaEqual(FilterField.Teammate, "value4") }),
 			};
 
 			// Act
 			var result = await emailActivities.SearchAsync(filterConditions, limit, CancellationToken.None).ConfigureAwait(false);
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(1);
+		}
+
+		[Fact]
+		public async Task SearchMessages_single_custom_argument_criteria()
+		{
+			// Arrange
+			var limit = 25;
+
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&query=(unique_args%5B%27name%27%5D%3D%22Joe%22)").Respond("application/json", ONE_MESSAGE_FOUND);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var emailActivities = (IEmailActivities)new EmailActivities(client);
+
+			var criteria = new SearchCriteriaUniqueArgEqual("name", "Joe");
+
+			// Act
+			var result = await emailActivities.SearchAsync(criteria, limit, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

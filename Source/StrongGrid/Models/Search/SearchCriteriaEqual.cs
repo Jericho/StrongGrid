@@ -11,10 +11,8 @@
 		/// <param name="filterField">The filter field</param>
 		/// <param name="filterValue">The filter value</param>
 		public SearchCriteriaEqual(FilterField filterField, object filterValue)
+			: base(filterField, SearchConditionOperator.Equal, filterValue)
 		{
-			FilterField = filterField;
-			FilterOperator = SearchConditionOperator.Equal;
-			FilterValue = filterValue;
 		}
 	}
 }

@@ -451,54 +451,54 @@ namespace StrongGrid.IntegrationTests
 		{
 			await log.WriteLineAsync("\n***** STATISTICS *****\n").ConfigureAwait(false);
 
-			var now = DateTime.UtcNow;
-
 			// There is a bug in the SendGrid API when grouping by week and start date is January 1st.
 			// You get a cryptic error: "unable to get stats"
 			// I contacted SendGrid support on October 19 2016 (http://support.sendgrid.com/hc/requests/780001)
 			// and I was told: 
 			//		"the issue here is that we expect there to be 52 weeks per year, but that isn't always
 			//		 the case and is 'borking' on those first few days as a result of that"
-			var startDate = new DateTime(now.Year, 1, 4);
+			// The workaround is to start on January 4th.
+			var startDate = new DateTime(DateTime.UtcNow.Year, 1, 4);
+			var endDate = new DateTime(startDate.Year, 12, 31);
 
 			//----- Global Stats -----
-			var globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.None, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Number of GLOBAL stats in {now.Year}: {globalStats.Length}").ConfigureAwait(false);
+			var globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, endDate, AggregateBy.None, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of GLOBAL stats in {startDate.Year}: {globalStats.Length}").ConfigureAwait(false);
 
-			globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Day, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Number of GLOBAL stats in {now.Year} and aggregated by day: {globalStats.Length}").ConfigureAwait(false);
+			globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, endDate, AggregateBy.Day, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of GLOBAL stats in {startDate.Year} and aggregated by day: {globalStats.Length}").ConfigureAwait(false);
 
-			globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Week, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Number of GLOBAL stats in {now.Year} and aggregated by week: {globalStats.Length}").ConfigureAwait(false);
+			globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, endDate, AggregateBy.Week, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of GLOBAL stats in {startDate.Year} and aggregated by week: {globalStats.Length}").ConfigureAwait(false);
 
-			globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, null, AggregateBy.Month, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Number of GLOBAL stats in {now.Year} and aggregated by month: {globalStats.Length}").ConfigureAwait(false);
+			globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, endDate, AggregateBy.Month, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of GLOBAL stats in {startDate.Year} and aggregated by month: {globalStats.Length}").ConfigureAwait(false);
 
 			//----- Global Stats -----
-			var countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.None, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Number of COUNTRY stats in {now.Year}: {countryStats.Length}").ConfigureAwait(false);
+			var countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, endDate, AggregateBy.None, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of COUNTRY stats in {startDate.Year}: {countryStats.Length}").ConfigureAwait(false);
 
-			countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Day, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Number of COUNTRY stats in {now.Year} and aggregated by day: {countryStats.Length}").ConfigureAwait(false);
+			countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, endDate, AggregateBy.Day, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of COUNTRY stats in {startDate.Year} and aggregated by day: {countryStats.Length}").ConfigureAwait(false);
 
-			countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Week, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Number of COUNTRY stats in {now.Year} and aggregated by week: {countryStats.Length}").ConfigureAwait(false);
+			countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, endDate, AggregateBy.Week, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of COUNTRY stats in {startDate.Year} and aggregated by week: {countryStats.Length}").ConfigureAwait(false);
 
-			countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, null, AggregateBy.Month, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Number of COUNTRY stats in {now.Year} and aggregated by month: {countryStats.Length}").ConfigureAwait(false);
+			countryStats = await client.Statistics.GetCountryStatisticsAsync(null, startDate, endDate, AggregateBy.Month, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of COUNTRY stats in {startDate.Year} and aggregated by month: {countryStats.Length}").ConfigureAwait(false);
 
 			//----- Browser Stats -----
-			var browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.None, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Number of BROWSER stats in {now.Year}: {browserStats.Length}").ConfigureAwait(false);
+			var browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, endDate, AggregateBy.None, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of BROWSER stats in {startDate.Year}: {browserStats.Length}").ConfigureAwait(false);
 
-			browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Day, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Number of BROWSER stats in {now.Year} and aggregated by day: {browserStats.Length}").ConfigureAwait(false);
+			browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, endDate, AggregateBy.Day, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of BROWSER stats in {startDate.Year} and aggregated by day: {browserStats.Length}").ConfigureAwait(false);
 
-			browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Week, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Number of BROWSER stats in {now.Year} and aggregated by week: {browserStats.Length}").ConfigureAwait(false);
+			browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, endDate, AggregateBy.Week, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of BROWSER stats in {startDate.Year} and aggregated by week: {browserStats.Length}").ConfigureAwait(false);
 
-			browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, null, AggregateBy.Month, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Number of BROWSER stats in {now.Year} and aggregated by month: {browserStats.Length}").ConfigureAwait(false);
+			browserStats = await client.Statistics.GetBrowsersStatisticsAsync(null, startDate, endDate, AggregateBy.Month, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Number of BROWSER stats in {startDate.Year} and aggregated by month: {browserStats.Length}").ConfigureAwait(false);
 		}
 
 		private static async Task Templates(IClient client, TextWriter log, CancellationToken cancellationToken)
@@ -1247,6 +1247,10 @@ namespace StrongGrid.IntegrationTests
 			var activityStatus = recentActivities.First().Status;
 			var activities = await client.EmailActivities.SearchAsync(new SearchCriteriaEqual(FilterField.ActivityType, activityStatus), maxNumberOfActivities, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"There are {activities.Count()} '{activityStatus}' email activities.").ConfigureAwait(false);
+
+			// REQUEST THE ACTIVITIES WITH A GIVEN 'UNIQUE ARG'
+			activities = await client.EmailActivities.SearchAsync(new SearchCriteriaUniqueArgEqual("some_value_specific_to_this_person", "ABC_123"), maxNumberOfActivities, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {activities.Count()} email activities with the 'some_value_specific_to_this_person' unique arg.").ConfigureAwait(false);
 		}
 
 		// to get your public IP address we loop through an array
