@@ -114,7 +114,7 @@ namespace StrongGrid.UnitTests.Resources
 			var limit = 25;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&query=campaign_name%3D%22value1%22+AND+unique_args%3D%22value2%22").Respond("application/json", ONE_MESSAGE_FOUND);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&query=campaign_name%3D%22value1%22+AND+status%3D%processed%22").Respond("application/json", ONE_MESSAGE_FOUND);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var emailActivities = (IEmailActivities)new EmailActivities(client);
@@ -122,7 +122,7 @@ namespace StrongGrid.UnitTests.Resources
 			var filterConditions = new[]
 			{
 				new SearchCriteriaEqual(FilterField.CampaignName, "value1"),
-				new SearchCriteriaEqual(FilterField.CustomArguments, "value2"),
+				new SearchCriteriaEqual(FilterField.ActivityType, EmailActivityStatus.Processed),
 			};
 			// Act
 			var result = await emailActivities.SearchAsync(filterConditions, limit, CancellationToken.None).ConfigureAwait(false);
@@ -154,6 +154,30 @@ namespace StrongGrid.UnitTests.Resources
 
 			// Act
 			var result = await emailActivities.SearchAsync(filterConditions, limit, CancellationToken.None).ConfigureAwait(false);
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(1);
+		}
+
+		[Fact]
+		public async Task SearchMessages_single_custom_argument_criteria()
+		{
+			// Arrange
+			var limit = 25;
+
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&query=(unique_args['name']%3D%22Joe%22)").Respond("application/json", ONE_MESSAGE_FOUND);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var emailActivities = (IEmailActivities)new EmailActivities(client);
+
+			var criteria = new SearchCriteriaUniqueArgEqual("name", "Joe");
+
+			// Act
+			var result = await emailActivities.SearchAsync(criteria, limit, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

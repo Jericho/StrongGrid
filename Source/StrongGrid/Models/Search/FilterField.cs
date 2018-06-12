@@ -92,12 +92,6 @@ namespace StrongGrid.Models.Search
 		Categories,
 
 		/// <summary>
-		/// Custom tracking arguments that you can attach to messages
-		/// </summary>
-		[EnumMember(Value = "unique_args")]
-		CustomArguments,
-
-		/// <summary>
 		/// The SendGrid dedicated IP address used to send the email
 		/// </summary>
 		[EnumMember(Value = "outbound_ip")]

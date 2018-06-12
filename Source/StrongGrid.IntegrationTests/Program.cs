@@ -1247,6 +1247,10 @@ namespace StrongGrid.IntegrationTests
 			var activityStatus = recentActivities.First().Status;
 			var activities = await client.EmailActivities.SearchAsync(new SearchCriteriaEqual(FilterField.ActivityType, activityStatus), maxNumberOfActivities, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"There are {activities.Count()} '{activityStatus}' email activities.").ConfigureAwait(false);
+
+			// REQUEST THE ACTIVITIES WITH A GIVEN 'UNIQUE ARG'
+			activities = await client.EmailActivities.SearchAsync(new SearchCriteriaUniqueArgEqual("some_value_specific_to_this_person", "ABC_123"), maxNumberOfActivities, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {activities.Count()} email activities with the 'some_value_specific_to_this_person' unique arg.").ConfigureAwait(false);
 		}
 
 		// to get your public IP address we loop through an array
