@@ -42,7 +42,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
-		public Task<EmailMessageActivity[]> SearchAsync(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria>>> filterConditions, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<EmailMessageActivity[]> SearchAsync(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var conditions = new List<string>(filterConditions?.Count() ?? 0);
 			if (filterConditions != null)

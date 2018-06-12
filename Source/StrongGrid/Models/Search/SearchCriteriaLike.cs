@@ -11,10 +11,17 @@
 		/// <param name="filterField">The filter field</param>
 		/// <param name="filterValue">The filter value</param>
 		public SearchCriteriaLike(FilterField filterField, object filterValue)
+			: base(filterField, SearchConditionOperator.Like, filterValue)
 		{
-			FilterField = filterField;
-			FilterOperator = SearchConditionOperator.Like;
-			FilterValue = filterValue;
+		}
+
+		/// <summary>
+		/// Converts the filter operator into a string as expected by the SendGrid Email Activities API.
+		/// </summary>
+		/// <returns>The string representation of the operator</returns>
+		public override string ConvertOperatorToString()
+		{
+			return $" {base.ConvertOperatorToString()} ";
 		}
 	}
 }

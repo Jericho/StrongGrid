@@ -1,17 +1,17 @@
 ﻿namespace StrongGrid.Models.Search
 {
 	/// <summary>
-	/// Filter the result of a search for the value of a field to not be like a value
+	/// Filter the result of a search on the value of a custom tracking argument to be like a value
 	/// </summary>
-	public class SearchCriteriaNotLike : SearchCriteria
+	public class SearchCriteriaUniqueArgLike : SearchCriteriaUniqueArg
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaNotLike"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteriaUniqueArgLike"/> class.
 		/// </summary>
-		/// <param name="filterField">The filter field</param>
+		/// <param name="uniqueArgName">The name of the unique arg</param>
 		/// <param name="filterValue">The filter value</param>
-		public SearchCriteriaNotLike(FilterField filterField, object filterValue)
-			: base(filterField, SearchConditionOperator.NotLike, filterValue)
+		public SearchCriteriaUniqueArgLike(string uniqueArgName, object filterValue)
+			: base(uniqueArgName, SearchConditionOperator.Like, filterValue)
 		{
 		}
 

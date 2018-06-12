@@ -3,17 +3,17 @@
 namespace StrongGrid.Models.Search
 {
 	/// <summary>
-	/// Filter the result of a search for the value of a field to be a value
+	/// Filter the result of a search on the value of a custom tracking argument to be a value
 	/// </summary>
-	public class SearchCriteriaIs : SearchCriteria
+	public class SearchCriteriaUniqueArgIs : SearchCriteriaUniqueArg
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaIs"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteriaUniqueArgIs"/> class.
 		/// </summary>
-		/// <param name="filterField">The filter field</param>
+		/// <param name="uniqueArgName">The name of the unique arg</param>
 		/// <param name="filterValues">The filter values</param>
-		public SearchCriteriaIs(FilterField filterField, IEnumerable<object> filterValues)
-			: base(filterField, SearchConditionOperator.Is, filterValues)
+		public SearchCriteriaUniqueArgIs(string uniqueArgName, IEnumerable<object> filterValues)
+			: base(uniqueArgName, SearchConditionOperator.Is, filterValues)
 		{
 		}
 

@@ -1,16 +1,16 @@
 ﻿namespace StrongGrid.Models.Search
 {
 	/// <summary>
-	/// Filter the result of a search for the value of a field to be NULL
+	/// Filter the result of a search for the value of a field to be not NULL
 	/// </summary>
-	public class SearchCriteriaNull : SearchCriteria
+	public class SearchCriteriaNotNull : SearchCriteria
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaNull"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteriaNotNull"/> class.
 		/// </summary>
 		/// <param name="filterField">The filter field</param>
-		public SearchCriteriaNull(FilterField filterField)
-			: base(filterField, SearchConditionOperator.Null, null)
+		public SearchCriteriaNotNull(FilterField filterField)
+			: base(filterField, SearchConditionOperator.NotNull, null)
 		{
 		}
 
@@ -20,7 +20,7 @@
 		/// <returns>The string representation of the operator</returns>
 		public override string ConvertOperatorToString()
 		{
-			return $" {base.ConvertOperatorToString()} ";
+			return $" {base.ConvertOperatorToString()}";
 		}
 	}
 }

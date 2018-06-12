@@ -11,10 +11,8 @@
 		/// <param name="filterField">The filter field</param>
 		/// <param name="filterValue">The filter value</param>
 		public SearchCriteriaLessThan(FilterField filterField, object filterValue)
+			: base(filterField, SearchConditionOperator.LessThan, filterValue)
 		{
-			FilterField = filterField;
-			FilterOperator = SearchConditionOperator.LessThan;
-			FilterValue = filterValue;
 		}
 	}
 }
