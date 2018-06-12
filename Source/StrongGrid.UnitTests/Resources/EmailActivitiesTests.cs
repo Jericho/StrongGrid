@@ -114,7 +114,7 @@ namespace StrongGrid.UnitTests.Resources
 			var limit = 25;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&query=campaign_name%3D%22value1%22+AND+status%3D%processed%22").Respond("application/json", ONE_MESSAGE_FOUND);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&query=campaign_name%3D%22value1%22+AND+status%3D%22processed%22").Respond("application/json", ONE_MESSAGE_FOUND);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var emailActivities = (IEmailActivities)new EmailActivities(client);
@@ -169,7 +169,7 @@ namespace StrongGrid.UnitTests.Resources
 			var limit = 25;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&query=(unique_args['name']%3D%22Joe%22)").Respond("application/json", ONE_MESSAGE_FOUND);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&query=(unique_args%5B%27name%27%5D%3D%22Joe%22)").Respond("application/json", ONE_MESSAGE_FOUND);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var emailActivities = (IEmailActivities)new EmailActivities(client);

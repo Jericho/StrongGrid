@@ -44,14 +44,34 @@ namespace StrongGrid.Models.Search
 		}
 
 		/// <summary>
+		/// Converts the filter value into a string as expected by the SendGrid Email Activities API.
+		/// Can be overridden in subclasses if the value needs special formatting.
+		/// </summary>
+		/// <returns>The string representation of the value</returns>
+		public virtual string ConvertValueToString()
+		{
+			return SearchCriteria.ConvertToString(FilterValue);
+		}
+
+		/// <summary>
+		/// Converts the filter operator into a string as expected by the SendGrid Email Activities API.
+		/// Can be overridden in subclasses if the operator needs special formatting.
+		/// </summary>
+		/// <returns>The string representation of the operator</returns>
+		public virtual string ConvertOperatorToString()
+		{
+			return FilterOperator.GetAttributeOfType<EnumMemberAttribute>()?.Value ?? FilterOperator.ToString();
+		}
+
+		/// <summary>
 		/// Returns a string representation of the search criteria
 		/// </summary>
 		/// <returns>A <see cref="string"/> representation of the search criteria</returns>
 		public override string ToString()
 		{
-			var filterOperator = FilterOperator.GetAttributeOfType<EnumMemberAttribute>().Value;
-			var filterValue = SearchCriteria.ValueAsString(FilterValue);
-			return $"(unique_args['{UniqueArgName}'] {FilterOperator} {FilterValue})";
+			var filterOperator = ConvertOperatorToString();
+			var filterValue = ConvertValueToString();
+			return $"(unique_args['{UniqueArgName}']{filterOperator}{filterValue})";
 		}
 	}
 }

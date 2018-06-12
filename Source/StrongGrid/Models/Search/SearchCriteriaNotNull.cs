@@ -1,7 +1,4 @@
-﻿using StrongGrid.Utilities;
-using System.Runtime.Serialization;
-
-namespace StrongGrid.Models.Search
+﻿namespace StrongGrid.Models.Search
 {
 	/// <summary>
 	/// Filter the result of a search for the value of a field to be not NULL
@@ -18,13 +15,12 @@ namespace StrongGrid.Models.Search
 		}
 
 		/// <summary>
-		/// Returns a string representation of the search criteria
+		/// Converts the filter operator into a string as expected by the SendGrid Email Activities API.
 		/// </summary>
-		/// <returns>A <see cref="string"/> representation of the search criteria</returns>
-		public override string ToString()
+		/// <returns>The string representation of the operator</returns>
+		public override string ConvertOperatorToString()
 		{
-			var filterOperator = FilterOperator.GetAttributeOfType<EnumMemberAttribute>().Value;
-			return $"{FilterField} {filterOperator}";
+			return $" {base.ConvertOperatorToString()}";
 		}
 	}
 }

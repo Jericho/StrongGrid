@@ -23,12 +23,21 @@
 		}
 
 		/// <summary>
-		/// Returns a string representation of the search criteria
+		/// Converts the filter value into a string as expected by the SendGrid Email Activities API.
 		/// </summary>
-		/// <returns>A <see cref="string"/> representation of the search criteria</returns>
-		public override string ToString()
+		/// <returns>The string representation of the value</returns>
+		public override string ConvertValueToString()
 		{
-			return $"(unique_args['{UniqueArgName}'] BETWEEN {SearchCriteria.ValueAsString(FilterValue)} AND {SearchCriteria.ValueAsString(UpperValue)})";
+			return $"{SearchCriteria.ConvertToString(FilterValue)} AND {SearchCriteria.ConvertToString(UpperValue)}";
+		}
+
+		/// <summary>
+		/// Converts the filter operator into a string as expected by the SendGrid Email Activities API.
+		/// </summary>
+		/// <returns>The string representation of the operator</returns>
+		public override string ConvertOperatorToString()
+		{
+			return $" {base.ConvertOperatorToString()} ";
 		}
 	}
 }

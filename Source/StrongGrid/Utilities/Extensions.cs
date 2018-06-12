@@ -476,6 +476,26 @@ namespace StrongGrid.Utilities
 				?.GetCustomAttribute<T>(false);
 		}
 
+		/// <summary>
+		/// Indicates if an object contain a numerical value
+		/// </summary>
+		/// <param name="value">The object</param>
+		/// <returns>A boolean indicating if the object contains a numerical value</returns>
+		public static bool IsNumber(this object value)
+		{
+			return value is sbyte
+					|| value is byte
+					|| value is short
+					|| value is ushort
+					|| value is int
+					|| value is uint
+					|| value is long
+					|| value is ulong
+					|| value is float
+					|| value is double
+					|| value is decimal;
+		}
+
 		/// <summary>Asynchronously converts the JSON encoded content and converts it to a 'SendGrid' object of the desired type.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="httpContent">The content</param>

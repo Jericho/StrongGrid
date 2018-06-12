@@ -14,5 +14,14 @@
 			: base(uniqueArgName, SearchConditionOperator.Like, filterValue)
 		{
 		}
+
+		/// <summary>
+		/// Converts the filter operator into a string as expected by the SendGrid Email Activities API.
+		/// </summary>
+		/// <returns>The string representation of the operator</returns>
+		public override string ConvertOperatorToString()
+		{
+			return $" {base.ConvertOperatorToString()} ";
+		}
 	}
 }
