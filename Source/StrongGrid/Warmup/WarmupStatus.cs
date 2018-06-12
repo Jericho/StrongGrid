@@ -10,13 +10,13 @@ namespace StrongGrid.Warmup
 	public class WarmupStatus
 	{
 		/// <summary>
-		/// Gets or sets the name of the IP Pool
+		/// Gets or sets the name of the IP Pool.
 		/// </summary>
 		[JsonProperty("pool_name", NullValueHandling = NullValueHandling.Ignore)]
 		public string PoolName { get; set; }
 
 		/// <summary>
-		/// Gets or sets the IP addresses to warmup
+		/// Gets or sets the IP addresses to warmup.
 		/// </summary>
 		[JsonProperty("ip_addresses", NullValueHandling = NullValueHandling.Ignore)]
 		public string[] IpAddresses { get; set; }
@@ -30,13 +30,13 @@ namespace StrongGrid.Warmup
 		public int WarmupDay { get; set; }
 
 		/// <summary>
-		/// Gets or sets the last day emails were sent through the IP pool
+		/// Gets or sets the last day emails were sent through the IP pool.
 		/// </summary>
 		[JsonProperty("date_last_sent", NullValueHandling = NullValueHandling.Ignore)]
 		public DateTime DateLastSent { get; set; }
 
 		/// <summary>
-		/// Gets or sets the number of emails that have been sent during the last day
+		/// Gets or sets the number of emails that have been sent during the last day.
 		/// </summary>
 		[JsonProperty("emails_sent_last_day", NullValueHandling = NullValueHandling.Ignore)]
 		public int EmailsSentLastDay { get; set; }

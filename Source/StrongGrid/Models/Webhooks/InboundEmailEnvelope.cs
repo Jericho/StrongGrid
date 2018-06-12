@@ -3,12 +3,12 @@
 namespace StrongGrid.Models.Webhooks
 {
 	/// <summary>
-	/// The SMTP envelope
+	/// The SMTP envelope.
 	/// </summary>
 	public class InboundEmailEnvelope
 	{
 		/// <summary>
-		/// Gets or sets to, which is a single-element array containing the address that we received the email to,
+		/// Gets or sets to, which is a single-element array containing the address that we received the email to.
 		/// </summary>
 		/// <value>
 		/// To.

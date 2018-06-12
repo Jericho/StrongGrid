@@ -14,7 +14,7 @@ namespace StrongGrid.Resources
 	/// </summary>
 	/// <seealso cref="StrongGrid.Resources.IWebhookSettings" />
 	/// <remarks>
-	/// See https://sendgrid.api-docs.io/v3.0/webhooks
+	/// See <a href="https://sendgrid.api-docs.io/v3.0/webhooks">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public class WebhookSettings : IWebhookSettings
 	{
@@ -25,7 +25,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Initializes a new instance of the <see cref="WebhookSettings" /> class.
 		/// </summary>
-		/// <param name="client">The HTTP client</param>
+		/// <param name="client">The HTTP client.</param>
 		internal WebhookSettings(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
@@ -34,7 +34,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get the current Event Webhook settings.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="EventWebhookSettings" />.
@@ -49,10 +49,10 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Change the Event Webhook settings
+		/// Change the Event Webhook settings.
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
-		/// <param name="url">the webhook endpoint url</param>
+		/// <param name="url">the webhook endpoint url.</param>
 		/// <param name="bounce">if set to <c>true</c> [bounce].</param>
 		/// <param name="click">if set to <c>true</c> [click].</param>
 		/// <param name="deferred">if set to <c>true</c> [deferred].</param>
@@ -64,7 +64,7 @@ namespace StrongGrid.Resources
 		/// <param name="processed">if set to <c>true</c> [processed].</param>
 		/// <param name="spamReport">if set to <c>true</c> [spamReport].</param>
 		/// <param name="unsubscribe">if set to <c>true</c> [unsubscribe].</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="EventWebhookSettings" />.
@@ -114,8 +114,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Sends a fake event notification post to the provided URL.
 		/// </summary>
-		/// <param name="url">the event notification endpoint url</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="url">the event notification endpoint url.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
@@ -136,13 +136,13 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Create inbound parse settings for a hostname
+		/// Create inbound parse settings for a hostname.
 		/// </summary>
 		/// <param name="hostname">A specific and unique domain or subdomain that you have created to use exclusively to parse your incoming email. For example, parse.yourdomain.com.</param>
 		/// <param name="url">The public URL where you would like SendGrid to POST the data parsed from your email. Any emails sent with the given hostname provided (whose MX records have been updated to point to SendGrid) will be parsed and POSTed to this URL.</param>
 		/// <param name="spamCheck">Indicates if you would like SendGrid to check the content parsed from your emails for spam before POSTing them to your domain.</param>
 		/// <param name="sendRaw">Indicates if you would like SendGrid to post the original MIME-type content of your parsed email. When this parameter is set to "false", SendGrid will send a JSON payload of the content of your email.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="InboundParseWebhookSettings" />.
@@ -161,7 +161,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get all the inbound parse webhook settings.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="InboundParseWebhookSettings" />.
@@ -179,7 +179,7 @@ namespace StrongGrid.Resources
 		/// Get the inbound parse webhook settings for a specific hostname.
 		/// </summary>
 		/// <param name="hostname">The hostname associated with the inbound parse setting that you would like to retrieve.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="InboundParseWebhookSettings" />.
@@ -200,7 +200,7 @@ namespace StrongGrid.Resources
 		/// <param name="url">The public URL where you would like SendGrid to POST the data parsed from your email. Any emails sent with the given hostname provided (whose MX records have been updated to point to SendGrid) will be parsed and POSTed to this URL.</param>
 		/// <param name="spamCheck">Indicates if you would like SendGrid to check the content parsed from your emails for spam before POSTing them to your domain.</param>
 		/// <param name="sendRaw">Indicates if you would like SendGrid to post the original MIME-type content of your parsed email. When this parameter is set to "false", SendGrid will send a JSON payload of the content of your email.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="InboundParseWebhookSettings" />.
@@ -220,7 +220,7 @@ namespace StrongGrid.Resources
 		/// Delete the inbound parse webhook settings for a specvific hostname.
 		/// </summary>
 		/// <param name="hostname">The hostname associated with the inbound parse setting that you want to delete.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.

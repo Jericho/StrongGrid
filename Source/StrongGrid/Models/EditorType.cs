@@ -11,13 +11,13 @@ namespace StrongGrid.Models
 	public enum EditorType
 	{
 		/// <summary>
-		/// This editor allows you to edit the HTML source
+		/// This editor allows you to edit the HTML source.
 		/// </summary>
 		[EnumMember(Value = "code")]
 		Code,
 
 		/// <summary>
-		/// This editor allows you to drag and drop snippets
+		/// This editor allows you to drag and drop snippets.
 		/// </summary>
 		[EnumMember(Value = "design")]
 		Design

@@ -5,7 +5,7 @@ using System;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Information about a blocked email address
+	/// Information about a blocked email address.
 	/// </summary>
 	public class Block
 	{

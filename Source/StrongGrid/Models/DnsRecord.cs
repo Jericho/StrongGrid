@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// DNS record
+	/// DNS record.
 	/// </summary>
 	public class DnsRecord
 	{

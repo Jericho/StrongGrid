@@ -10,16 +10,16 @@ namespace StrongGrid.Resources
 	/// Allows you to manage email addresses that have bounced.
 	/// </summary>
 	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/bounces.html
+	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/bounces.html">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public interface IBounces
 	{
 		/// <summary>
-		/// Get all bounces
+		/// Get all bounces.
 		/// </summary>
 		/// <param name="start">The start.</param>
 		/// <param name="end">The end.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Bounce" />.
@@ -27,10 +27,10 @@ namespace StrongGrid.Resources
 		Task<Bounce[]> GetAllAsync(DateTime? start = null, DateTime? end = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get a list of bounces for a given email address
+		/// Get a list of bounces for a given email address.
 		/// </summary>
 		/// <param name="email">The email.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Bounce" />.
@@ -38,9 +38,9 @@ namespace StrongGrid.Resources
 		Task<Bounce[]> GetAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Delete all bounces
+		/// Delete all bounces.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
@@ -48,10 +48,10 @@ namespace StrongGrid.Resources
 		Task DeleteAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Delete bounces for a specified group of email addresses
+		/// Delete bounces for a specified group of email addresses.
 		/// </summary>
 		/// <param name="emails">The emails.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
@@ -59,10 +59,10 @@ namespace StrongGrid.Resources
 		Task DeleteAsync(IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Delete bounces for a specified email address
+		/// Delete bounces for a specified email address.
 		/// </summary>
 		/// <param name="email">The email.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.

@@ -11,7 +11,7 @@ using System.Text;
 namespace StrongGrid.Utilities
 {
 	/// <summary>
-	/// Diagnostic handler for requests dispatched to the SendGrid API
+	/// Diagnostic handler for requests dispatched to the SendGrid API.
 	/// </summary>
 	/// <seealso cref="Pathoschild.Http.Client.Extensibility.IHttpFilter" />
 	internal class DiagnosticHandler : IHttpFilter
@@ -86,11 +86,8 @@ namespace StrongGrid.Utilities
 
 				foreach (WeakReference<HttpRequestMessage> key in _diagnostics.Keys.ToArray())
 				{
-					// Get request
-					HttpRequestMessage request;
-
 					// Check if garbage collected
-					if (!key.TryGetTarget(out request))
+					if (!key.TryGetTarget(out HttpRequestMessage request))
 					{
 						_diagnostics.Remove(key);
 						continue;

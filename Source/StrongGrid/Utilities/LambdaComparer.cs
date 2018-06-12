@@ -4,15 +4,20 @@ using System.Collections.Generic;
 namespace StrongGrid.Utilities
 {
 	/// <summary>
-	/// LambdaComparer - avoids the need for writing custom IEqualityComparers
-	/// Usage:
+	/// LambdaComparer - avoids the need for writing custom IEqualityComparers.
+	/// </summary>
+	/// <example>
+	/// <code>
 	/// List&lt;MyObject&gt; x = myCollection.Except(otherCollection, new LambdaComparer&lt;MyObject&gt;((x, y) => x.Id == y.Id)).ToList();
 	/// or
 	/// IEqualityComparer comparer = new LambdaComparer&lt;MyObject&gt;((x, y) => x.Id == y.Id);
 	/// List&lt;MyObject&gt; x = myCollection.Except(otherCollection, comparer).ToList();
-	/// </summary>
-	/// <typeparam name="T">The type to compare</typeparam>
-	/// <remarks>From: http://toreaurstad.blogspot.ca/2014/06/a-generic-iequalitycomparer-of-t.html</remarks>
+	/// </code>
+	/// </example>
+	/// <typeparam name="T">The type to compare.</typeparam>
+	/// <remarks>
+	/// See <a href="http://toreaurstad.blogspot.ca/2014/06/a-generic-iequalitycomparer-of-t.html">this web site</a> for more information.
+	/// </remarks>
 	internal class LambdaComparer<T> : IEqualityComparer<T>
 	{
 		private readonly Func<T, T, bool> _lambdaComparer;

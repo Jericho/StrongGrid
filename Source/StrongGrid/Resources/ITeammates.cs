@@ -10,7 +10,7 @@ namespace StrongGrid.Resources
 	/// or deny these requests
 	/// </summary>
 	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/teammates.html
+	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/teammates.html">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public interface ITeammates
 	{
@@ -21,7 +21,7 @@ namespace StrongGrid.Resources
 		/// <param name="offset">The offset.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// An array of access requests
+		/// An array of access requests.
 		/// </returns>
 		Task<AccessRequest[]> GetAccessRequestsAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default(CancellationToken));
 
@@ -46,7 +46,7 @@ namespace StrongGrid.Resources
 		Task ApproveAccessRequestAsync(string requestId, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Resend a teammate invite
+		/// Resend a teammate invite.
 		/// </summary>
 		/// <param name="token">The token for the invite that you want to resend.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
@@ -60,7 +60,7 @@ namespace StrongGrid.Resources
 		Task ResendInvitationAsync(string token, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Retrieve a list of all pending teammate invitations
+		/// Retrieve a list of all pending teammate invitations.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>An array of <see cref="TeammateInvitation" />.</returns>
@@ -71,7 +71,7 @@ namespace StrongGrid.Resources
 		Task<TeammateInvitation[]> GetAllPendingInvitationsAsync(CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Delete a pending teammate invite
+		/// Delete a pending teammate invite.
 		/// </summary>
 		/// <param name="token">The token for the invite that you want to delete.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
@@ -89,8 +89,8 @@ namespace StrongGrid.Resources
 		/// A teammate invite will expire after 7 days, but you may resend the invite at any time
 		/// to reset the expiration date.
 		/// </summary>
-		/// <param name="email">The email address of the teammate</param>
-		/// <param name="scopes">The scopes, or permissions, the teammate will be granted</param>
+		/// <param name="email">The email address of the teammate.</param>
+		/// <param name="scopes">The scopes, or permissions, the teammate will be granted.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
@@ -106,7 +106,7 @@ namespace StrongGrid.Resources
 		/// A teammate invite will expire after 7 days, but you may resend the invite at any time
 		/// to reset the expiration date.
 		/// </summary>
-		/// <param name="email">The email address of the teammate</param>
+		/// <param name="email">The email address of the teammate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
@@ -122,7 +122,7 @@ namespace StrongGrid.Resources
 		/// A teammate invite will expire after 7 days, but you may resend the invite at any time
 		/// to reset the expiration date.
 		/// </summary>
-		/// <param name="email">The email address of the teammate</param>
+		/// <param name="email">The email address of the teammate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
@@ -134,7 +134,7 @@ namespace StrongGrid.Resources
 		Task<TeammateInvitation> InviteTeammateAsAdminAsync(string email, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Retrieve a list of all current teammates
+		/// Retrieve a list of all current teammates.
 		/// </summary>
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
@@ -143,26 +143,26 @@ namespace StrongGrid.Resources
 		Task<Teammate[]> GetAllTeammatesAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Retrieve a specific teammate by username
+		/// Retrieve a specific teammate by username.
 		/// </summary>
-		/// <param name="username">The teammate username</param>
+		/// <param name="username">The teammate username.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>The <see cref="Teammate" />.</returns>
 		Task<Teammate> GetTeammateAsync(string username, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Retrieve a specific teammate by username
+		/// Retrieve a specific teammate by username.
 		/// </summary>
-		/// <param name="username">The teammate username</param>
-		/// <param name="scopes">The permissions to asign to the teammate</param>
+		/// <param name="username">The teammate username.</param>
+		/// <param name="scopes">The permissions to asign to the teammate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>The <see cref="Teammate" />.</returns>
 		Task<Teammate> UpdateTeammatePermissionsAsync(string username, IEnumerable<string> scopes, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Delete a teammate
+		/// Delete a teammate.
 		/// </summary>
-		/// <param name="username">The teammate username</param>
+		/// <param name="username">The teammate username.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.

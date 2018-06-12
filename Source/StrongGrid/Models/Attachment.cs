@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// An email attachment
+	/// An email attachment.
 	/// </summary>
 	public class Attachment
 	{

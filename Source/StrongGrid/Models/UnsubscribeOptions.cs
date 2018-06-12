@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Unsubscribe options
+	/// Unsubscribe options.
 	/// </summary>
 	public class UnsubscribeOptions
 	{

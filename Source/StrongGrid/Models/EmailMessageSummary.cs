@@ -149,7 +149,7 @@ namespace StrongGrid.Models
 		/// Gets or sets the version of the marketing campaign.
 		/// </summary>
 		/// <value>
-		/// The marketing campaign version
+		/// The marketing campaign version.
 		/// </value>
 		[JsonProperty("marketing_campaign_version", NullValueHandling = NullValueHandling.Ignore)]
 		public string MarketingCampaignVersion { get; set; }
@@ -158,7 +158,7 @@ namespace StrongGrid.Models
 		/// Gets or sets the categories associated to the message.
 		/// </summary>
 		/// <value>
-		/// The categories
+		/// The categories.
 		/// </value>
 		[JsonProperty("categories", NullValueHandling = NullValueHandling.Ignore)]
 		public string[] Categories { get; set; }
@@ -167,7 +167,7 @@ namespace StrongGrid.Models
 		/// Gets or sets the events.
 		/// </summary>
 		/// <value>
-		/// The events
+		/// The events.
 		/// </value>
 		[JsonProperty("events", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(EmailActivityEventConverter))]

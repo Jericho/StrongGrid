@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// Allows you to manage sender authentication settings
+	/// Allows you to manage sender authentication settings.
 	/// </summary>
 	/// <seealso cref="StrongGrid.Resources.ISenderAuthentication" />
 	/// <remarks>
@@ -22,21 +22,21 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SenderAuthentication" /> class.
 		/// </summary>
-		/// <param name="client">The HTTP client</param>
+		/// <param name="client">The HTTP client.</param>
 		internal SenderAuthentication(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
 		}
 
 		/// <summary>
-		/// Get all the authenticated domains
+		/// Get all the authenticated domains.
 		/// </summary>
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
 		/// <param name="excludeSubusers">if set to <c>true</c> [exclude subusers].</param>
 		/// <param name="username">The username.</param>
 		/// <param name="domain">The domain.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="AuthenticatedDomain" />.
@@ -56,11 +56,11 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get a specific authenticated domain
+		/// Get a specific authenticated domain.
 		/// </summary>
 		/// <param name="domainId">The domain identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="AuthenticatedDomain" />.
 		/// </returns>
@@ -74,15 +74,15 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Create a new authenticated domain
+		/// Create a new authenticated domain.
 		/// </summary>
 		/// <param name="domain">The domain.</param>
 		/// <param name="subdomain">The subdomain.</param>
 		/// <param name="automaticSecurity">if set to <c>true</c> [automatic security].</param>
 		/// <param name="customSpf">if set to <c>true</c> [custom SPF].</param>
 		/// <param name="isDefault">if set to <c>true</c> [is default].</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="AuthenticatedDomain" />.
 		/// </returns>
@@ -105,13 +105,13 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Update an authenticated domain
+		/// Update an authenticated domain.
 		/// </summary>
 		/// <param name="domainId">The domain identifier.</param>
 		/// <param name="isDefault">if set to <c>true</c> [is default].</param>
 		/// <param name="customSpf">if set to <c>true</c> [custom SPF].</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="AuthenticatedDomain" />.
 		/// </returns>
@@ -131,11 +131,11 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Delete an authenticated domain
+		/// Delete an authenticated domain.
 		/// </summary>
 		/// <param name="domainId">The identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
@@ -149,12 +149,12 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Add an IP to an authenticated domain
+		/// Add an IP to an authenticated domain.
 		/// </summary>
 		/// <param name="domainId">The domain identifier.</param>
 		/// <param name="ipAddress">The ip address.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="AuthenticatedDomain" />.
 		/// </returns>
@@ -173,12 +173,12 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Remove an IP from an authenticated domain
+		/// Remove an IP from an authenticated domain.
 		/// </summary>
 		/// <param name="domainId">The domain identifier.</param>
 		/// <param name="ipAddress">The ip address.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="AuthenticatedDomain" />.
 		/// </returns>
@@ -192,11 +192,11 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Validate an authenticated domain
+		/// Validate an authenticated domain.
 		/// </summary>
 		/// <param name="domainId">The domain identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="DomainValidation" />.
 		/// </returns>
@@ -210,11 +210,11 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get the associated domain
+		/// Get the associated domain.
 		/// </summary>
 		/// <param name="username">The username.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="AuthenticatedDomain" />.
 		/// </returns>
@@ -235,11 +235,11 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Disassociate the domain
+		/// Disassociate the domain.
 		/// </summary>
 		/// <param name="username">The username.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
@@ -254,12 +254,12 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Associate a domain
+		/// Associate a domain.
 		/// </summary>
 		/// <param name="domainId">The domain identifier.</param>
 		/// <param name="username">The username.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="AuthenticatedDomain" />.
 		/// </returns>
@@ -278,13 +278,13 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get all all the reverse DNS records created by this account
+		/// Get all all the reverse DNS records created by this account.
 		/// </summary>
 		/// <param name="segmentPrefix">The segment prefix.</param>
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="ReverseDns" />.
 		/// </returns>
@@ -301,11 +301,11 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get a specific reverse DNS
+		/// Get a specific reverse DNS.
 		/// </summary>
 		/// <param name="ipId">The identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="ReverseDns" />.
 		/// </returns>
@@ -319,13 +319,13 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Setup a reverse DNS
+		/// Setup a reverse DNS.
 		/// </summary>
 		/// <param name="ipAddress">The IP address that you want to set up reverse DNS.</param>
 		/// <param name="domain">The root, or sending, domain that will be used to send message from the IP.</param>
 		/// <param name="subdomain">The subdomain that will be used to send emails from the IP. Should be the same as the subdomain used to set up an authenticated domain.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="ReverseDns" />.
 		/// </returns>
@@ -349,11 +349,11 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Delete a reverse DNS record
+		/// Delete a reverse DNS record.
 		/// </summary>
 		/// <param name="ipId">The ip identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
@@ -367,11 +367,11 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Validate a reverse DNS record
+		/// Validate a reverse DNS record.
 		/// </summary>
 		/// <param name="ipId">The ip identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="ReverseDnsValidation" />.
 		/// </returns>
@@ -385,13 +385,13 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get all branded links
+		/// Get all branded links.
 		/// </summary>
 		/// <param name="segmentPrefix">The segment prefix.</param>
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="BrandedLink" />.
 		/// </returns>
@@ -413,11 +413,11 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get a specific branded link
+		/// Get a specific branded link.
 		/// </summary>
 		/// <param name="linkId">The identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="BrandedLink" />.
 		/// </returns>
@@ -431,13 +431,13 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Create a branded link
+		/// Create a branded link.
 		/// </summary>
 		/// <param name="domain">The domain.</param>
 		/// <param name="subdomain">The subdomain.</param>
 		/// <param name="isDefault">if set to <c>true</c> [is default].</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="BrandedLink" />.
 		/// </returns>
@@ -458,12 +458,12 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Update a branded link
+		/// Update a branded link.
 		/// </summary>
 		/// <param name="linkId">The link identifier.</param>
 		/// <param name="isDefault">if set to <c>true</c> [is default].</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="BrandedLink" />.
 		/// </returns>
@@ -482,11 +482,11 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Delete a branded link
+		/// Delete a branded link.
 		/// </summary>
 		/// <param name="linkId">The link identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
@@ -500,11 +500,11 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get the default branded link for a domain
+		/// Get the default branded link for a domain.
 		/// </summary>
 		/// <param name="domain">The domain.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="BrandedLink" />.
 		/// </returns>
@@ -519,11 +519,11 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Validate a branded link
+		/// Validate a branded link.
 		/// </summary>
 		/// <param name="linkId">The link identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="LinkValidation" />.
 		/// </returns>
@@ -537,11 +537,11 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get the branded link for a subuser
+		/// Get the branded link for a subuser.
 		/// </summary>
 		/// <param name="username">The username.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="BrandedLink" />.
 		/// </returns>
@@ -562,11 +562,11 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Disassociate a branded link from a subuser
+		/// Disassociate a branded link from a subuser.
 		/// </summary>
 		/// <param name="username">The username.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
@@ -581,12 +581,12 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Associate a branded link with a subuser
+		/// Associate a branded link with a subuser.
 		/// </summary>
 		/// <param name="linkId">The link identifier.</param>
 		/// <param name="username">The username.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="BrandedLink" />.
 		/// </returns>

@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Settings controling withelisted email addresses
+	/// Settings controling withelisted email addresses.
 	/// </summary>
 	public class AddressWhitelistSettings
 	{

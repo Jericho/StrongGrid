@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// A global setting
+	/// A global setting.
 	/// </summary>
 	public class GlobalSetting
 	{

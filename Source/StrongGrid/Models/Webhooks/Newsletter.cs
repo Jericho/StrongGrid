@@ -3,7 +3,7 @@
 namespace StrongGrid.Models.Webhooks
 {
 	/// <summary>
-	/// A newsletter
+	/// A newsletter.
 	/// </summary>
 	public class Newsletter
 	{

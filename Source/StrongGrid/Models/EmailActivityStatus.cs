@@ -5,19 +5,19 @@ using System.Runtime.Serialization;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Enumeration to indicate the status of the email activity
+	/// Enumeration to indicate the status of the email activity.
 	/// </summary>
 	[JsonConverter(typeof(StringEnumConverter))]
 	public enum EmailActivityStatus
 	{
 		/// <summary>
-		/// Message has been received and is ready to be delivered
+		/// Message has been received and is ready to be delivered.
 		/// </summary>
 		[EnumMember(Value = "processed")]
 		Processed,
 
 		/// <summary>
-		/// Message has not been delivered
+		/// Message has not been delivered.
 		/// </summary>
 		[EnumMember(Value = "not_delivered")]
 		NotDelivered,

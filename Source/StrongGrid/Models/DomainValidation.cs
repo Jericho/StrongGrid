@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Domain validation
+	/// Domain validation.
 	/// </summary>
 	public class DomainValidation
 	{

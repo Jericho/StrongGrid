@@ -5,25 +5,25 @@ using System.Runtime.Serialization;
 namespace StrongGrid.Models.Webhooks
 {
 	/// <summary>
-	/// Enumeration to indicate the type of url
+	/// Enumeration to indicate the type of url.
 	/// </summary>
 	[JsonConverter(typeof(StringEnumConverter))]
 	public enum UrlType
 	{
 		/// <summary>
-		/// Text
+		/// Text.
 		/// </summary>
 		[EnumMember(Value = "text")]
 		Text,
 
 		/// <summary>
-		/// HTML
+		/// HTML.
 		/// </summary>
 		[EnumMember(Value = "html")]
 		Html,
 
 		/// <summary>
-		/// Header
+		/// Header.
 		/// </summary>
 		[EnumMember(Value = "header")]
 		Header

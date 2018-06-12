@@ -8,7 +8,7 @@ namespace StrongGrid.Models
 	/// been created, the appropriate reverse DNS record for the IP is generated.
 	/// </summary>
 	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/ips.html
+	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/ips.html">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public class ReverseDns
 	{

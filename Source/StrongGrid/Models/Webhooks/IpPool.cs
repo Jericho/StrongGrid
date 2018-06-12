@@ -3,7 +3,7 @@
 namespace StrongGrid.Models.Webhooks
 {
 	/// <summary>
-	/// The IP pool used when email was sent
+	/// The IP pool used when email was sent.
 	/// </summary>
 	public class IpPool
 	{

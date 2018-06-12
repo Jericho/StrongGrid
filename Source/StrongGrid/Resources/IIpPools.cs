@@ -8,7 +8,7 @@ namespace StrongGrid.Resources
 	/// Allows you to manage IP pools.
 	/// </summary>
 	/// <remarks>
-	/// See https://sendgrid.api-docs.io/v3.0/ip-pools
+	/// See <a href="https://sendgrid.api-docs.io/v3.0/ip-pools">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public interface IIpPools
 	{

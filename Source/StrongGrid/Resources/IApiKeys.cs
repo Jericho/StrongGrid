@@ -10,26 +10,26 @@ namespace StrongGrid.Resources
 	/// Allows you to manage API Keys.
 	/// </summary>
 	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/API_Keys/index.html
+	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/API_Keys/index.html">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public interface IApiKeys
 	{
 		/// <summary>
-		/// Get an existing API Key
+		/// Get an existing API Key.
 		/// </summary>
 		/// <param name="keyId">The key identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="ApiKey" />.
 		/// </returns>
 		Task<ApiKey> GetAsync(string keyId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get all API Keys belonging to the authenticated user
+		/// Get all API Keys belonging to the authenticated user.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="ApiKey" />.
 		/// </returns>
@@ -40,56 +40,56 @@ namespace StrongGrid.Resources
 		Task<ApiKey[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Generate a new API Key
+		/// Generate a new API Key.
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <param name="scopes">The scopes.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="ApiKey" />.
 		/// </returns>
 		Task<ApiKey> CreateAsync(string name, Parameter<IEnumerable<string>> scopes = default(Parameter<IEnumerable<string>>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Revoke an existing API Key
+		/// Revoke an existing API Key.
 		/// </summary>
 		/// <param name="keyId">The key identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
 		Task DeleteAsync(string keyId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Update an API Key
+		/// Update an API Key.
 		/// </summary>
 		/// <param name="keyId">The key identifier.</param>
 		/// <param name="name">The name.</param>
 		/// <param name="scopes">The scopes.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>The <see cref="ApiKey"/>.</returns>
 		Task<ApiKey> UpdateAsync(string keyId, string name, Parameter<IEnumerable<string>> scopes = default(Parameter<IEnumerable<string>>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Generate a new API Key for billing
+		/// Generate a new API Key for billing.
 		/// </summary>
 		/// <param name="name">The name.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="ApiKey" />.
 		/// </returns>
 		Task<ApiKey> CreateWithBillingPermissionsAsync(string name, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Generate a new API Key with all permissions
+		/// Generate a new API Key with all permissions.
 		/// </summary>
 		/// <param name="name">The name.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="ApiKey" />.
 		/// </returns>
@@ -100,11 +100,11 @@ namespace StrongGrid.Resources
 		Task<ApiKey> CreateWithAllPermissionsAsync(string name, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Generate a new API Key with the same "read" permissions that have ben granted to you
+		/// Generate a new API Key with the same "read" permissions that have ben granted to you.
 		/// </summary>
 		/// <param name="name">The name.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="ApiKey" />.
 		/// </returns>

@@ -5,31 +5,31 @@ using System.Runtime.Serialization;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Enumeration to indicate how to aggregate statistics
+	/// Enumeration to indicate how to aggregate statistics.
 	/// </summary>
 	[JsonConverter(typeof(StringEnumConverter))]
 	public enum AggregateBy
 	{
 		/// <summary>
-		/// No aggregation
+		/// No aggregation.
 		/// </summary>
 		[EnumMember(Value = "none")]
 		None,
 
 		/// <summary>
-		/// Aggregate by day
+		/// Aggregate by day.
 		/// </summary>
 		[EnumMember(Value = "day")]
 		Day,
 
 		/// <summary>
-		/// Aggregate by week
+		/// Aggregate by week.
 		/// </summary>
 		[EnumMember(Value = "week")]
 		Week,
 
 		/// <summary>
-		/// Aggregate by month
+		/// Aggregate by month.
 		/// </summary>
 		[EnumMember(Value = "month")]
 		Month

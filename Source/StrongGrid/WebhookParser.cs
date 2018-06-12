@@ -54,7 +54,7 @@ namespace StrongGrid
 		/// Parses the inbound email webhook.
 		/// </summary>
 		/// <param name="stream">The stream.</param>
-		/// <returns>The <see cref="InboundEmail"/></returns>
+		/// <returns>The <see cref="InboundEmail"/>.</returns>
 		public InboundEmail ParseInboundEmailWebhook(Stream stream)
 		{
 			// Parse the multipart content received from SendGrid

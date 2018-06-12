@@ -11,31 +11,31 @@ namespace StrongGrid.Models
 	public enum ConditionOperator
 	{
 		/// <summary>
-		/// Equal
+		/// Equal.
 		/// </summary>
 		[EnumMember(Value = "eq")]
 		Equal,
 
 		/// <summary>
-		/// Not equal
+		/// Not equal.
 		/// </summary>
 		[EnumMember(Value = "ne")]
 		NotEqual,
 
 		/// <summary>
-		/// Less than
+		/// Less than.
 		/// </summary>
 		[EnumMember(Value = "lt")]
 		LessThan,
 
 		/// <summary>
-		/// Greather than
+		/// Greather than.
 		/// </summary>
 		[EnumMember(Value = "gt")]
 		GreatherThan,
 
 		/// <summary>
-		/// Contains
+		/// Contains.
 		/// </summary>
 		[EnumMember(Value = "contains")]
 		Contains

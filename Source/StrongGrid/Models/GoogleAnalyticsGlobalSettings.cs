@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Google Analytics global settings
+	/// Google Analytics global settings.
 	/// </summary>
 	public class GoogleAnalyticsGlobalSettings
 	{

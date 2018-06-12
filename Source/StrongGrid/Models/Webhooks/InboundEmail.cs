@@ -4,7 +4,7 @@ using System.Text;
 namespace StrongGrid.Models.Webhooks
 {
 	/// <summary>
-	/// The parsed information about an email sent by SendGrid via a webhook
+	/// The parsed information about an email sent by SendGrid via a webhook.
 	/// </summary>
 	public class InboundEmail
 	{
@@ -57,7 +57,7 @@ namespace StrongGrid.Models.Webhooks
 		public string Text { get; set; }
 
 		/// <summary>
-		/// Gets or sets from the email sender, as taken from the message headers
+		/// Gets or sets from the email sender, as taken from the message headers.
 		/// </summary>
 		/// <value>
 		/// From.

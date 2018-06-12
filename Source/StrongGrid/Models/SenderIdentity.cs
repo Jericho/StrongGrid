@@ -5,7 +5,7 @@ using System;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Sender identity
+	/// Sender identity.
 	/// </summary>
 	public class SenderIdentity
 	{

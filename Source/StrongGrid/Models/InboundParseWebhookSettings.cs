@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Inbound Parse Webhook settings
+	/// Inbound Parse Webhook settings.
 	/// </summary>
 	public class InboundParseWebhookSettings
 	{

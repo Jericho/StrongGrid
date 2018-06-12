@@ -9,7 +9,7 @@ namespace StrongGrid.Resources
 	/// Allows you to manage Alerts
 	/// </summary>
 	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/alerts.html
+	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/alerts.html">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public interface IAlerts
 	{
@@ -17,8 +17,8 @@ namespace StrongGrid.Resources
 		/// Retrieve a specific alert.
 		/// </summary>
 		/// <param name="alertId">The alert identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
@@ -27,8 +27,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve all alerts.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Alert" />.
 		/// </returns>
@@ -41,8 +41,8 @@ namespace StrongGrid.Resources
 		/// <param name="emailTo">The email to.</param>
 		/// <param name="frequency">The frequency.</param>
 		/// <param name="percentage">The percentage.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
@@ -52,8 +52,8 @@ namespace StrongGrid.Resources
 		/// Delete an alert.
 		/// </summary>
 		/// <param name="alertId">The alert identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
@@ -67,8 +67,8 @@ namespace StrongGrid.Resources
 		/// <param name="emailTo">The email to.</param>
 		/// <param name="frequency">The frequency.</param>
 		/// <param name="percentage">The percentage.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>

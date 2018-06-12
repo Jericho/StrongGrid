@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Metadata about a field
+	/// Metadata about a field.
 	/// </summary>
 	public class FieldMetadata
 	{

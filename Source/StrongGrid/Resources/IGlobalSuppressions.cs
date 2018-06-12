@@ -10,7 +10,7 @@ namespace StrongGrid.Resources
 	/// Allows you to manage email addresses that will not receive any emails.
 	/// </summary>
 	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/global_suppressions.html
+	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/global_suppressions.html">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public interface IGlobalSuppressions
 	{
@@ -21,7 +21,7 @@ namespace StrongGrid.Resources
 		/// <param name="endDate">The end date.</param>
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="GlobalSuppression"/>.
@@ -31,8 +31,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Check if a recipient address is in the global suppressions group.
 		/// </summary>
-		/// <param name="email">email address to check</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="email">email address to check.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		///   <c>true</c> if the email address is in the global suppression group; otherwise, <c>false</c>.
@@ -42,8 +42,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Add recipient addresses to the global suppression group.
 		/// </summary>
-		/// <param name="emails">Array of email addresses to add to the suppression group</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="emails">Array of email addresses to add to the suppression group.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
@@ -53,8 +53,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Delete a recipient email from the global suppressions group.
 		/// </summary>
-		/// <param name="email">email address to be removed from the global suppressions group</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="email">email address to be removed from the global suppressions group.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.

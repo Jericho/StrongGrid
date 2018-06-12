@@ -11,7 +11,7 @@ namespace StrongGrid.Models
 	/// are no longer relying on click tracking going through a domain that you do not control.
 	/// </summary>
 	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/links.html
+	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/links.html">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public class BrandedLink
 	{

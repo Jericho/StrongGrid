@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Information about a batch
+	/// Information about a batch.
 	/// </summary>
 	public class BatchInfo
 	{

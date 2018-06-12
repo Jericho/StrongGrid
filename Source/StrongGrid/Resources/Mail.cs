@@ -16,7 +16,7 @@ namespace StrongGrid.Resources
 	/// </summary>
 	/// <seealso cref="StrongGrid.Resources.IMail" />
 	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Mail/index.html
+	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/Mail/index.html">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public class Mail : IMail
 	{
@@ -29,14 +29,14 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Mail" /> class.
 		/// </summary>
-		/// <param name="client">The HTTP client</param>
+		/// <param name="client">The HTTP client.</param>
 		internal Mail(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
 		}
 
 		/// <summary>
-		/// Send an email to a single recipient
+		/// Send an email to a single recipient.
 		/// </summary>
 		/// <param name="to">To.</param>
 		/// <param name="from">From.</param>
@@ -66,8 +66,8 @@ namespace StrongGrid.Resources
 		/// This is a convenience method with simplified parameters.
 		/// If you need more options, use the <see cref="SendAsync" /> method.
 		/// </remarks>
-		/// <exception cref="ArgumentOutOfRangeException">Too many recipients</exception>
-		/// <exception cref="Exception">Email exceeds the size limit</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
 		public Task<string> SendToSingleRecipientAsync(
 			MailAddress to,
 			MailAddress from,
@@ -96,7 +96,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Send the same email to multiple recipients
+		/// Send the same email to multiple recipients.
 		/// </summary>
 		/// <param name="recipients">The recipients.</param>
 		/// <param name="from">From.</param>
@@ -126,8 +126,8 @@ namespace StrongGrid.Resources
 		/// This is a convenience method with simplified parameters.
 		/// If you need more options, use the <see cref="SendAsync" /> method.
 		/// </remarks>
-		/// <exception cref="ArgumentOutOfRangeException">Too many recipients</exception>
-		/// <exception cref="Exception">Email exceeds the size limit</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
 		public Task<string> SendToMultipleRecipientsAsync(
 			IEnumerable<MailAddress> recipients,
 			MailAddress from,
@@ -176,7 +176,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Send email(s) over SendGrid’s v3 Web API
+		/// Send email(s) over SendGrid’s v3 Web API.
 		/// </summary>
 		/// <param name="personalizations">The personalizations.</param>
 		/// <param name="subject">The subject.</param>
@@ -195,12 +195,12 @@ namespace StrongGrid.Resources
 		/// <param name="ipPoolName">Name of the ip pool.</param>
 		/// <param name="mailSettings">The mail settings.</param>
 		/// <param name="trackingSettings">The tracking settings.</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The message id.
 		/// </returns>
-		/// <exception cref="ArgumentOutOfRangeException">Too many recipients</exception>
-		/// <exception cref="Exception">Email exceeds the size limit</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
 		public async Task<string> SendAsync(
 			IEnumerable<MailPersonalization> personalizations,
 			string subject,
@@ -344,8 +344,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// If a recipient name contains a comma or a semi-colon, SendGrid requires that it be surrounded by double-quotes.
 		/// </summary>
-		/// <param name="recipients">The array of recipients</param>
-		/// <returns>An aray of recipient where their names have been quoted, if necessary</returns>
+		/// <param name="recipients">The array of recipients.</param>
+		/// <returns>An aray of recipient where their names have been quoted, if necessary.</returns>
 		private static MailAddress[] EnsureRecipientsNamesAreQuoted(MailAddress[] recipients)
 		{
 			if (recipients == null) return null;

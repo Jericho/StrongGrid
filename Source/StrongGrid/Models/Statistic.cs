@@ -4,7 +4,7 @@ using System;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Statistic
+	/// Statistic.
 	/// </summary>
 	public class Statistic
 	{

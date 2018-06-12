@@ -10,7 +10,7 @@ namespace StrongGrid.Warmup
 	/// </summary>
 	public class FileSystemWarmupProgressRepository : IWarmupProgressRepository
 	{
-		private string _rootFolder;
+		private readonly string _rootFolder;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FileSystemWarmupProgressRepository" /> class.
@@ -32,9 +32,9 @@ namespace StrongGrid.Warmup
 		/// <summary>
 		/// Retrieve the current progress of the warmup proces for a given pool.
 		/// </summary>
-		/// <param name="poolName">The name of the IP Pool</param>
-		/// <param name="cancellationToken">The cancellation token</param>
-		/// <returns>The status of the warmup process</returns>
+		/// <param name="poolName">The name of the IP Pool.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>The status of the warmup process.</returns>
 		public Task<WarmupStatus> GetWarmupStatusAsync(string poolName, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var warmupStatus = GetWarmupStatus(poolName);
@@ -44,9 +44,9 @@ namespace StrongGrid.Warmup
 		/// <summary>
 		/// Update the progress of the warmup proces for a given pool.
 		/// </summary>
-		/// <param name="warmupStatus">The status of the warmup process</param>
-		/// <param name="cancellationToken">The cancellation token</param>
-		/// <returns>The task</returns>
+		/// <param name="warmupStatus">The status of the warmup process.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>The task.</returns>
 		public Task UpdateStatusAsync(WarmupStatus warmupStatus, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			CreateOrUpdateStatusFile(warmupStatus);

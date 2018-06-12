@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// A list of contacts
+	/// A list of contacts.
 	/// </summary>
 	public class List
 	{

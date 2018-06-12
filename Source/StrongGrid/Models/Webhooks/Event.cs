@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace StrongGrid.Models.Webhooks
 {
 	/// <summary>
-	/// A webhook event
+	/// A webhook event.
 	/// </summary>
 	public abstract class Event
 	{

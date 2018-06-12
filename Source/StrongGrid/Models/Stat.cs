@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Stat
+	/// Stat.
 	/// </summary>
 	public class Stat
 	{

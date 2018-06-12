@@ -4,7 +4,7 @@ using System;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// User credits
+	/// User credits.
 	/// </summary>
 	public class UserCredits
 	{

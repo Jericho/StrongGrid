@@ -12,7 +12,7 @@ namespace StrongGrid.Resources
 	/// </summary>
 	/// <seealso cref="StrongGrid.Resources.IUser" />
 	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html
+	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/user.html">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public class User : IUser
 	{
@@ -22,16 +22,16 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Initializes a new instance of the <see cref="User" /> class.
 		/// </summary>
-		/// <param name="client">The HTTP client</param>
+		/// <param name="client">The HTTP client.</param>
 		internal User(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
 		}
 
 		/// <summary>
-		/// Get your user profile
+		/// Get your user profile.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="UserProfile" />.
@@ -46,7 +46,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Update your user profile
+		/// Update your user profile.
 		/// </summary>
 		/// <param name="address">The address.</param>
 		/// <param name="city">The city.</param>
@@ -58,7 +58,7 @@ namespace StrongGrid.Resources
 		/// <param name="state">The state.</param>
 		/// <param name="website">The website.</param>
 		/// <param name="zip">The zip.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="UserProfile" />.
@@ -87,9 +87,9 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get your user account
+		/// Get your user account.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Account" />.
@@ -104,9 +104,9 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Retrieve the email address on file for your account
+		/// Retrieve the email address on file for your account.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The email address from your user profile.
@@ -121,10 +121,10 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Update the email address on file for your account
+		/// Update the email address on file for your account.
 		/// </summary>
 		/// <param name="email">The email.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The email address from your user profile.
@@ -143,9 +143,9 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Retrieve your account username
+		/// Retrieve your account username.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The username from your user profile.
@@ -160,10 +160,10 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Update your account username
+		/// Update your account username.
 		/// </summary>
 		/// <param name="username">The username.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The username from your user profile.
@@ -182,9 +182,9 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Retrieve the current credit balance for your account
+		/// Retrieve the current credit balance for your account.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="UserCredits"/>.
@@ -199,11 +199,11 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Update the password for your account
+		/// Update the password for your account.
 		/// </summary>
 		/// <param name="oldPassword">The old password.</param>
 		/// <param name="newPassword">The new password.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
@@ -223,10 +223,10 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// List all available scopes for a user
+		/// List all available scopes for a user.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// An array of string representing the permissions (aka scopes).
 		/// </returns>

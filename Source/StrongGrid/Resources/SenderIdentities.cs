@@ -12,7 +12,7 @@ namespace StrongGrid.Resources
 	/// </summary>
 	/// <seealso cref="StrongGrid.Resources.ISenderIdentities" />
 	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/sender_identities.html
+	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/sender_identities.html">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public class SenderIdentities : ISenderIdentities
 	{
@@ -22,7 +22,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SenderIdentities" /> class.
 		/// </summary>
-		/// <param name="client">The HTTP client</param>
+		/// <param name="client">The HTTP client.</param>
 		internal SenderIdentities(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
@@ -40,7 +40,7 @@ namespace StrongGrid.Resources
 		/// <param name="state">The state.</param>
 		/// <param name="zip">The zip.</param>
 		/// <param name="country">The country.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="SenderIdentity" />.
@@ -60,7 +60,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve all sender identities.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="SenderIdentity" />.
@@ -78,7 +78,7 @@ namespace StrongGrid.Resources
 		/// Retrieve a sender identity.
 		/// </summary>
 		/// <param name="senderId">The sender identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="SenderIdentity" />.
@@ -105,7 +105,7 @@ namespace StrongGrid.Resources
 		/// <param name="state">The state.</param>
 		/// <param name="zip">The zip.</param>
 		/// <param name="country">The country.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="SenderIdentity" />.
@@ -137,7 +137,7 @@ namespace StrongGrid.Resources
 		/// Delete a sender identity.
 		/// </summary>
 		/// <param name="senderId">The sender identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
@@ -155,7 +155,7 @@ namespace StrongGrid.Resources
 		/// Resend the verification to a sender.
 		/// </summary>
 		/// <param name="senderId">The sender identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.

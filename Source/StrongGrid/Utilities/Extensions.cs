@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 namespace StrongGrid.Utilities
 {
 	/// <summary>
-	/// Extension methods
+	/// Extension methods.
 	/// </summary>
 	internal static class Extensions
 	{
@@ -59,7 +59,7 @@ namespace StrongGrid.Utilities
 		/// automatically calculated based on the charset in the response. Also, UTF-8
 		/// encoding will be used if the charset is absent from the response, is blank
 		/// or contains an invalid value.</param>
-		/// <returns>The string content of the response</returns>
+		/// <returns>The string content of the response.</returns>
 		/// <remarks>
 		/// This method is an improvement over the built-in ReadAsStringAsync method
 		/// because it can handle invalid charset returned in the response. For example
@@ -79,7 +79,7 @@ namespace StrongGrid.Utilities
 		/// "in some programming languages, you can use the syntax utf8 instead of utf-8".
 		/// In other words, they are happy to continue using the misspelled value which is
 		/// supported by "some" programming languages instead of using the properly spelled
-		/// value which is supported by all programming languages!
+		/// value which is supported by all programming languages.
 		/// </remarks>
 		/// <example>
 		/// <code>
@@ -121,7 +121,7 @@ namespace StrongGrid.Utilities
 		/// <param name="content">The content.</param>
 		/// <param name="defaultEncoding">The default encoding.</param>
 		/// <returns>
-		/// The encoding
+		/// The encoding.
 		/// </returns>
 		/// <remarks>
 		/// This method tries to get the encoding based on the charset or uses the
@@ -164,7 +164,7 @@ namespace StrongGrid.Utilities
 		/// <param name="parser">The parser.</param>
 		/// <param name="name">The name of the parameter.</param>
 		/// <param name="defaultValue">The default value.</param>
-		/// <returns>The value of the parameter</returns>
+		/// <returns>The value of the parameter.</returns>
 		public static string GetParameterValue(this MultipartFormDataParser parser, string name, string defaultValue)
 		{
 			if (parser.HasParameter(name)) return parser.GetParameterValue(name);
@@ -173,8 +173,8 @@ namespace StrongGrid.Utilities
 
 		/// <summary>Asynchronously retrieve the JSON encoded response body and convert it to a 'SendGrid' object of the desired type.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
-		/// <param name="response">The response</param>
-		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored</param>
+		/// <param name="response">The response.</param>
+		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
 		/// <exception cref="ApiException">An error occurred processing the response.</exception>
 		public static Task<T> AsSendGridObject<T>(this IResponse response, string propertyName = null)
@@ -184,8 +184,8 @@ namespace StrongGrid.Utilities
 
 		/// <summary>Asynchronously retrieve the JSON encoded response body and convert it to a 'SendGrid' object of the desired type.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
-		/// <param name="request">The request</param>
-		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored</param>
+		/// <param name="request">The request.</param>
+		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
 		/// <exception cref="ApiException">An error occurred processing the response.</exception>
 		public static async Task<T> AsSendGridObject<T>(this IRequest request, string propertyName = null)
@@ -211,10 +211,10 @@ namespace StrongGrid.Utilities
 		}
 
 		/// <summary>
-		/// Impersonate a user when making a call to the SendGrid API
+		/// Impersonate a user when making a call to the SendGrid API.
 		/// </summary>
-		/// <param name="request">The request</param>
-		/// <param name="username">The user to impersonate</param>
+		/// <param name="request">The request.</param>
+		/// <param name="username">The user to impersonate.</param>
 		/// <returns>Returns the request builder for chaining.</returns>
 		public static IRequest OnBehalfOf(this IRequest request, string username)
 		{
@@ -222,7 +222,7 @@ namespace StrongGrid.Utilities
 		}
 
 		/// <summary>Asynchronously retrieve the response body as a <see cref="string"/>.</summary>
-		/// <param name="response">The response</param>
+		/// <param name="response">The response.</param>
 		/// <param name="encoding">The encoding. You can leave this parameter null and the encoding will be
 		/// automatically calculated based on the charset in the response. Also, UTF-8
 		/// encoding will be used if the charset is absent from the response, is blank
@@ -235,7 +235,7 @@ namespace StrongGrid.Utilities
 		}
 
 		/// <summary>Asynchronously retrieve the response body as a <see cref="string"/>.</summary>
-		/// <param name="request">The request</param>
+		/// <param name="request">The request.</param>
 		/// <param name="encoding">The encoding. You can leave this parameter null and the encoding will be
 		/// automatically calculated based on the charset in the response. Also, UTF-8
 		/// encoding will be used if the charset is absent from the response, is blank
@@ -253,7 +253,7 @@ namespace StrongGrid.Utilities
 		///  representation by using a human readable format.
 		/// </summary>
 		/// <param name="timeSpan">The time span.</param>
-		/// <returns>Returns the human readable representation of the TimeSpan</returns>
+		/// <returns>Returns the human readable representation of the TimeSpan.</returns>
 		public static string ToDurationString(this TimeSpan timeSpan)
 		{
 			void AppendFormatIfNecessary(StringBuilder stringBuilder, string timePart, int value)
@@ -275,34 +275,34 @@ namespace StrongGrid.Utilities
 		}
 
 		/// <summary>
-		/// Ensure that a string starts with a given prefix
+		/// Ensure that a string starts with a given prefix.
 		/// </summary>
-		/// <param name="value">The value</param>
-		/// <param name="prefix">The prefix</param>
-		/// <returns>The value including the prefix</returns>
+		/// <param name="value">The value.</param>
+		/// <param name="prefix">The prefix.</param>
+		/// <returns>The value including the prefix.</returns>
 		public static string EnsureStartsWith(this string value, string prefix)
 		{
 			return !string.IsNullOrEmpty(value) && value.StartsWith(prefix) ? value : string.Concat(prefix, value);
 		}
 
 		/// <summary>
-		/// Ensure that a string ends with a given suffix
+		/// Ensure that a string ends with a given suffix.
 		/// </summary>
-		/// <param name="value">The value</param>
-		/// <param name="suffix">The sufix</param>
-		/// <returns>The value including the suffix</returns>
+		/// <param name="value">The value.</param>
+		/// <param name="suffix">The sufix.</param>
+		/// <returns>The value including the suffix.</returns>
 		public static string EnsureEndsWith(this string value, string suffix)
 		{
 			return !string.IsNullOrEmpty(value) && value.EndsWith(suffix) ? value : string.Concat(value, suffix);
 		}
 
 		/// <summary>
-		/// Retrieve the permissions (AKA "scopes") assigned to the current user
+		/// Retrieve the permissions (AKA "scopes") assigned to the current user.
 		/// </summary>
-		/// <param name="client">The client</param>
-		/// <param name="excludeBillingScopes">Indicates if billing permissions should be excluded from the result</param>
-		/// <param name="cancellationToken">The cancellation token</param>
-		/// <returns>An array of permisisons assigned to the current user</returns>
+		/// <param name="client">The client.</param>
+		/// <param name="excludeBillingScopes">Indicates if billing permissions should be excluded from the result.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>An array of permisisons assigned to the current user.</returns>
 		public static async Task<string[]> GetCurrentScopes(this Pathoschild.Http.Client.IClient client, bool excludeBillingScopes, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			// Get the current user's permissions
@@ -430,10 +430,10 @@ namespace StrongGrid.Utilities
 		/// <summary>
 		/// Get all of the details about the messages matching the criteria.
 		/// </summary>
-		/// <param name="emailActivities">The email activities resource</param>
+		/// <param name="emailActivities">The email activities resource.</param>
 		/// <param name="criteria">Filtering criteria.</param>
 		/// <param name="limit">Number of IP activity entries to return.</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
@@ -446,10 +446,10 @@ namespace StrongGrid.Utilities
 		/// <summary>
 		/// Get all of the details about the messages matching the criteria.
 		/// </summary>
-		/// <param name="emailActivities">The email activities resource</param>
+		/// <param name="emailActivities">The email activities resource.</param>
 		/// <param name="filterConditions">Filtering conditions.</param>
 		/// <param name="limit">Number of IP activity entries to return.</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
@@ -463,9 +463,9 @@ namespace StrongGrid.Utilities
 		/// <summary>
 		/// Gets the attribute of the specified type.
 		/// </summary>
-		/// <typeparam name="T">The type of the desired attribute</typeparam>
+		/// <typeparam name="T">The type of the desired attribute.</typeparam>
 		/// <param name="enumVal">The enum value.</param>
-		/// <returns>The attribute</returns>
+		/// <returns>The attribute.</returns>
 		public static T GetAttributeOfType<T>(this Enum enumVal)
 			where T : Attribute
 		{
@@ -477,10 +477,10 @@ namespace StrongGrid.Utilities
 		}
 
 		/// <summary>
-		/// Indicates if an object contain a numerical value
+		/// Indicates if an object contain a numerical value.
 		/// </summary>
-		/// <param name="value">The object</param>
-		/// <returns>A boolean indicating if the object contains a numerical value</returns>
+		/// <param name="value">The object.</param>
+		/// <returns>A boolean indicating if the object contains a numerical value.</returns>
 		public static bool IsNumber(this object value)
 		{
 			return value is sbyte
@@ -498,8 +498,8 @@ namespace StrongGrid.Utilities
 
 		/// <summary>Asynchronously converts the JSON encoded content and converts it to a 'SendGrid' object of the desired type.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
-		/// <param name="httpContent">The content</param>
-		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored</param>
+		/// <param name="httpContent">The content.</param>
+		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
 		/// <exception cref="ApiException">An error occurred processing the response.</exception>
 		private static async Task<T> AsSendGridObject<T>(this HttpContent httpContent, string propertyName = null)

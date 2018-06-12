@@ -9,14 +9,14 @@ namespace StrongGrid.Resources
 	/// Allows you to set and check the status of user settings.
 	/// </summary>
 	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/index.html
+	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/Settings/index.html">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public interface ISettings
 	{
 		/// <summary>
 		/// Get the current Enforced TLS settings.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="EnforcedTlsSettings" />.
@@ -24,11 +24,11 @@ namespace StrongGrid.Resources
 		Task<EnforcedTlsSettings> GetEnforcedTlsSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Change the Enforced TLS settings
+		/// Change the Enforced TLS settings.
 		/// </summary>
 		/// <param name="requireTls">if set to <c>true</c> [require TLS].</param>
 		/// <param name="requireValidCert">if set to <c>true</c> [require valid cert].</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="EnforcedTlsSettings" />.
@@ -36,11 +36,11 @@ namespace StrongGrid.Resources
 		Task<EnforcedTlsSettings> UpdateEnforcedTlsSettingsAsync(bool requireTls, bool requireValidCert, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get Partner Settings
+		/// Get Partner Settings.
 		/// </summary>
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="GlobalSetting" />.
@@ -48,9 +48,9 @@ namespace StrongGrid.Resources
 		Task<GlobalSetting[]> GetAllPartnerSettingsAsync(int limit = 25, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get New Relic Settings
+		/// Get New Relic Settings.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="NewRelicSettings" />.
@@ -58,11 +58,11 @@ namespace StrongGrid.Resources
 		Task<NewRelicSettings> GetNewRelicSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Change the New Relic settings
+		/// Change the New Relic settings.
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
 		/// <param name="licenseKey">The license key.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="NewRelicSettings" />.
@@ -70,11 +70,11 @@ namespace StrongGrid.Resources
 		Task<NewRelicSettings> UpdateNewRelicSettingsAsync(bool enabled, string licenseKey, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get Tracking Settings
+		/// Get Tracking Settings.
 		/// </summary>
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="GlobalSetting" />.
@@ -82,9 +82,9 @@ namespace StrongGrid.Resources
 		Task<GlobalSetting[]> GetAllTrackingSettingsAsync(int limit = 25, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get Click Tracking Settings
+		/// Get Click Tracking Settings.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		///   <c>true</c> if the setting is set; otherwise, <c>false</c>.
@@ -92,10 +92,10 @@ namespace StrongGrid.Resources
 		Task<bool> GetClickTrackingSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Change the click tracking settings
+		/// Change the click tracking settings.
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		///   <c>true</c> if the setting is set; otherwise, <c>false</c>.
@@ -103,9 +103,9 @@ namespace StrongGrid.Resources
 		Task<bool> UpdateClickTrackingSettingsAsync(bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get Google Analytics Settings
+		/// Get Google Analytics Settings.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="GoogleAnalyticsGlobalSettings" />.
@@ -113,7 +113,7 @@ namespace StrongGrid.Resources
 		Task<GoogleAnalyticsGlobalSettings> GetGoogleAnalyticsGlobalSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Change the New Relic settings
+		/// Change the New Relic settings.
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
 		/// <param name="utmSource">The utm source.</param>
@@ -121,7 +121,7 @@ namespace StrongGrid.Resources
 		/// <param name="utmTerm">The utm term.</param>
 		/// <param name="utmContent">Content of the utm.</param>
 		/// <param name="utmCampaign">The utm campaign.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="GoogleAnalyticsGlobalSettings" />.
@@ -129,9 +129,9 @@ namespace StrongGrid.Resources
 		Task<GoogleAnalyticsGlobalSettings> UpdateGoogleAnalyticsGlobalSettingsAsync(bool enabled, string utmSource, string utmMedium, string utmTerm, string utmContent, string utmCampaign, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get Open Tracking Settings
+		/// Get Open Tracking Settings.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		///   <c>true</c> if the setting is set; otherwise, <c>false</c>.
@@ -139,10 +139,10 @@ namespace StrongGrid.Resources
 		Task<bool> GetOpenTrackingSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Change the open tracking settings
+		/// Change the open tracking settings.
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		///   <c>true</c> if the setting is set; otherwise, <c>false</c>.
@@ -150,9 +150,9 @@ namespace StrongGrid.Resources
 		Task<bool> UpdateOpenTrackingSettingsAsync(bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get Subscription Tracking Settings
+		/// Get Subscription Tracking Settings.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="SubscriptionSettings" />.
@@ -160,7 +160,7 @@ namespace StrongGrid.Resources
 		Task<SubscriptionSettings> GetSubscriptionTrackingSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Change the Subscription Tracking settings
+		/// Change the Subscription Tracking settings.
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
 		/// <param name="landingPageHtml">The landing page HTML.</param>
@@ -168,7 +168,7 @@ namespace StrongGrid.Resources
 		/// <param name="replacementTag">The replacement tag.</param>
 		/// <param name="htmlContent">Content of the HTML.</param>
 		/// <param name="textContent">Content of the text.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="SubscriptionSettings" />.
@@ -176,11 +176,11 @@ namespace StrongGrid.Resources
 		Task<SubscriptionSettings> UpdateSubscriptionTrackingSettingsAsync(bool enabled, string landingPageHtml, string url, string replacementTag, string htmlContent, string textContent, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get Mail Settings
+		/// Get Mail Settings.
 		/// </summary>
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An aray of <see cref="GlobalSetting" />.
@@ -188,9 +188,9 @@ namespace StrongGrid.Resources
 		Task<GlobalSetting[]> GetAllMailSettingsAsync(int limit = 25, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get BCC Settings
+		/// Get BCC Settings.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="EmailAddressSetting" />.
@@ -198,11 +198,11 @@ namespace StrongGrid.Resources
 		Task<EmailAddressSetting> GetBccMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Change the BCC settings
+		/// Change the BCC settings.
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
 		/// <param name="email">The email.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="EmailAddressSetting" />.
@@ -210,9 +210,9 @@ namespace StrongGrid.Resources
 		Task<EmailAddressSetting> UpdateBccMailSettingsAsync(bool enabled, string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get Address Whitelist Settings
+		/// Get Address Whitelist Settings.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="AddressWhitelistSettings" />.
@@ -220,11 +220,11 @@ namespace StrongGrid.Resources
 		Task<AddressWhitelistSettings> GetAddressWhitelistMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Change the Address Whitelist settings
+		/// Change the Address Whitelist settings.
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
 		/// <param name="emailAddresses">The email addresses.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="AddressWhitelistSettings" />.
@@ -232,9 +232,9 @@ namespace StrongGrid.Resources
 		Task<AddressWhitelistSettings> UpdateAddressWhitelistMailSettingsAsync(bool enabled, IEnumerable<string> emailAddresses, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get Footer Settings
+		/// Get Footer Settings.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="FooterGlobalSettings" />.
@@ -242,12 +242,12 @@ namespace StrongGrid.Resources
 		Task<FooterGlobalSettings> GetFooterMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Change the Footer settings
+		/// Change the Footer settings.
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
 		/// <param name="htmlContent">Content of the HTML.</param>
 		/// <param name="textContent">Content of the text.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="FooterGlobalSettings" />.
@@ -255,9 +255,9 @@ namespace StrongGrid.Resources
 		Task<FooterGlobalSettings> UpdateFooterMailSettingsAsync(bool enabled, string htmlContent, string textContent, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get Forward Spam Settings
+		/// Get Forward Spam Settings.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="EmailAddressSetting" />.
@@ -265,11 +265,11 @@ namespace StrongGrid.Resources
 		Task<EmailAddressSetting> GetForwardSpamMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Change the Forward Spam settings
+		/// Change the Forward Spam settings.
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
 		/// <param name="email">The email.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="EmailAddressSetting" />.
@@ -277,9 +277,9 @@ namespace StrongGrid.Resources
 		Task<EmailAddressSetting> UpdateForwardSpamMailSettingsAsync(bool enabled, string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get Plain Content Settings
+		/// Get Plain Content Settings.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		///   <c>true</c> if the setting is set; otherwise, <c>false</c>.
@@ -287,10 +287,10 @@ namespace StrongGrid.Resources
 		Task<bool> GetPlainContentMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Change the Plain Content settings
+		/// Change the Plain Content settings.
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		///   <c>true</c> if the setting is set; otherwise, <c>false</c>.
@@ -298,9 +298,9 @@ namespace StrongGrid.Resources
 		Task<bool> UpdatePlainContentMailSettingsAsync(bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get Spam Check Settings
+		/// Get Spam Check Settings.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="SpamCheckingSettings" />.
@@ -308,12 +308,12 @@ namespace StrongGrid.Resources
 		Task<SpamCheckSettings> GetSpamCheckMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Change the Spam Check settings
+		/// Change the Spam Check settings.
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
 		/// <param name="postToUrl">The post to URL.</param>
 		/// <param name="threshold">The threshold.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="SpamCheckingSettings" />.
@@ -321,9 +321,9 @@ namespace StrongGrid.Resources
 		Task<SpamCheckSettings> UpdateSpamCheckMailSettingsAsync(bool enabled, string postToUrl, int threshold, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get Template Settings
+		/// Get Template Settings.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="TemplateSettings" />.
@@ -331,11 +331,11 @@ namespace StrongGrid.Resources
 		Task<TemplateSettings> GetTemplateMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Change the Template settings
+		/// Change the Template settings.
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
 		/// <param name="htmlContent">Content of the HTML.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="TemplateSettings" />.
@@ -343,9 +343,9 @@ namespace StrongGrid.Resources
 		Task<TemplateSettings> UpdateTemplateMailSettingsAsync(bool enabled, string htmlContent, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get Bounce Purge Settings
+		/// Get Bounce Purge Settings.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="BouncePurgeSettings" />.
@@ -353,12 +353,12 @@ namespace StrongGrid.Resources
 		Task<BouncePurgeSettings> GetBouncePurgeMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Change the Bounce Purge settings
+		/// Change the Bounce Purge settings.
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
 		/// <param name="hardBounces">The hard bounces.</param>
 		/// <param name="softBounces">The soft bounces.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="BouncePurgeSettings" />.
@@ -366,9 +366,9 @@ namespace StrongGrid.Resources
 		Task<BouncePurgeSettings> UpdatBouncePurgeMailSettingsAsync(bool enabled, int hardBounces, int softBounces, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Get Forward Bounce Settings
+		/// Get Forward Bounce Settings.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="EmailAddressSetting" />.
@@ -376,11 +376,11 @@ namespace StrongGrid.Resources
 		Task<EmailAddressSetting> GetForwardBounceMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Change the Forward Spam settings
+		/// Change the Forward Spam settings.
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
 		/// <param name="email">The email.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="EmailAddressSetting" />.

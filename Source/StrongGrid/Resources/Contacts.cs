@@ -15,7 +15,7 @@ namespace StrongGrid.Resources
 	/// </summary>
 	/// <seealso cref="StrongGrid.Resources.IContacts" />
 	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/contactdb.html
+	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/contactdb.html">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public class Contacts : IContacts
 	{
@@ -25,7 +25,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Contacts" /> class.
 		/// </summary>
-		/// <param name="client">The HTTP client</param>
+		/// <param name="client">The HTTP client.</param>
 		internal Contacts(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
@@ -38,7 +38,7 @@ namespace StrongGrid.Resources
 		/// <param name="firstName">The first name.</param>
 		/// <param name="lastName">The last name.</param>
 		/// <param name="customFields">The custom fields.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The identifier of the new contact.
@@ -80,7 +80,7 @@ namespace StrongGrid.Resources
 		/// <param name="firstName">The first name.</param>
 		/// <param name="lastName">The last name.</param>
 		/// <param name="customFields">The custom fields.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
@@ -118,7 +118,7 @@ namespace StrongGrid.Resources
 		/// Import contacts.
 		/// </summary>
 		/// <param name="contacts">The contacts.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="ImportResult">result</see> of the operation.
@@ -143,7 +143,7 @@ namespace StrongGrid.Resources
 		/// Delete a contact.
 		/// </summary>
 		/// <param name="contactId">The contact identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
@@ -157,7 +157,7 @@ namespace StrongGrid.Resources
 		/// Delete contacts.
 		/// </summary>
 		/// <param name="contactId">The contact identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
@@ -177,7 +177,7 @@ namespace StrongGrid.Resources
 		/// Retrieve a contact.
 		/// </summary>
 		/// <param name="contactId">The contact identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Contact" />.
@@ -196,7 +196,7 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="recordsPerPage">The records per page.</param>
 		/// <param name="page">The page.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Contact" />.
@@ -215,7 +215,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Gets the billable count.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The number of billable contacts.
@@ -232,7 +232,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Gets the total count.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The total number of contacts.
@@ -251,7 +251,7 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="conditions">The conditions.</param>
 		/// <param name="listId">The list identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Contact" />.
@@ -274,7 +274,7 @@ namespace StrongGrid.Resources
 		/// Retrieve the lists that a recipient is on.
 		/// </summary>
 		/// <param name="contactId">The contact identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="List" />.

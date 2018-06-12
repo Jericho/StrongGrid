@@ -10,12 +10,12 @@ namespace StrongGrid.Resources
 	/// Allows you to send email over SendGrid’s Web API.
 	/// </summary>
 	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Mail/index.html
+	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/Mail/index.html">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public interface IMail
 	{
 		/// <summary>
-		/// Send an email to a single recipient
+		/// Send an email to a single recipient.
 		/// </summary>
 		/// <param name="to">To.</param>
 		/// <param name="from">From.</param>
@@ -69,7 +69,7 @@ namespace StrongGrid.Resources
 			CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Send the same email to multiple recipients
+		/// Send the same email to multiple recipients.
 		/// </summary>
 		/// <param name="recipients">The recipients.</param>
 		/// <param name="from">From.</param>
@@ -123,7 +123,7 @@ namespace StrongGrid.Resources
 			CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Send email(s) over SendGrid’s v3 Web API
+		/// Send email(s) over SendGrid’s v3 Web API.
 		/// </summary>
 		/// <param name="personalizations">The personalizations.</param>
 		/// <param name="subject">The subject.</param>
@@ -142,7 +142,7 @@ namespace StrongGrid.Resources
 		/// <param name="ipPoolName">Name of the ip pool.</param>
 		/// <param name="mailSettings">The mail settings.</param>
 		/// <param name="trackingSettings">The tracking settings.</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The message id.
 		/// </returns>

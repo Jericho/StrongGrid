@@ -15,7 +15,7 @@ namespace StrongGrid.Resources
 	/// </summary>
 	/// <seealso cref="StrongGrid.Resources.IUnsubscribeGroups" />
 	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/groups.html
+	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/groups.html">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public class UnsubscribeGroups : IUnsubscribeGroups
 	{
@@ -24,9 +24,9 @@ namespace StrongGrid.Resources
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="UnsubscribeGroups" /> class.
-		/// See
+		/// See.
 		/// </summary>
-		/// <param name="client">The HTTP client</param>
+		/// <param name="client">The HTTP client.</param>
 		internal UnsubscribeGroups(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
@@ -35,7 +35,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve all suppression groups associated with the user.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="SuppressionGroup" />.
@@ -53,7 +53,7 @@ namespace StrongGrid.Resources
 		/// Retrieve the suppression groups that match the specified ids.
 		/// </summary>
 		/// <param name="groupIds">The Ids of the desired groups.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="SuppressionGroup" />.
@@ -78,8 +78,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get information on a single suppression group.
 		/// </summary>
-		/// <param name="groupId">ID of the suppression group to delete</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="groupId">ID of the suppression group to delete.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="SuppressionGroup" />.
@@ -96,10 +96,10 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Create a new suppression group.
 		/// </summary>
-		/// <param name="name">The name of the new suppression group</param>
-		/// <param name="description">A description of the suppression group</param>
-		/// <param name="isDefault">Default value is false</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="name">The name of the new suppression group.</param>
+		/// <param name="description">A description of the suppression group.</param>
+		/// <param name="isDefault">Default value is false.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="SuppressionGroup" />.
@@ -124,10 +124,10 @@ namespace StrongGrid.Resources
 		/// Update an existing suppression group.
 		/// </summary>
 		/// <param name="groupId">The group identifier.</param>
-		/// <param name="name">The name of the new suppression group</param>
-		/// <param name="description">A description of the suppression group</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="name">The name of the new suppression group.</param>
+		/// <param name="description">A description of the suppression group.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="SuppressionGroup" />.
 		/// </returns>
@@ -148,8 +148,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Delete a suppression group.
 		/// </summary>
-		/// <param name="groupId">ID of the suppression group to delete</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="groupId">ID of the suppression group to delete.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.

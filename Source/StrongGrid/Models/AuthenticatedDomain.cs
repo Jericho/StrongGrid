@@ -11,7 +11,7 @@ namespace StrongGrid.Models
 	/// records. If you turn Automated Security off, you will be given 2 TXT records and 1 MX record.
 	/// </summary>
 	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/domains.html
+	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/domains.html">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public class AuthenticatedDomain
 	{

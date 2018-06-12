@@ -3,102 +3,102 @@
 namespace StrongGrid.Models.Search
 {
 	/// <summary>
-	/// Enumeration to indicate the filtering operator when searching email activities
+	/// Enumeration to indicate the filtering operator when searching email activities.
 	/// </summary>
 	public enum SearchConditionOperator
 	{
 		/// <summary>
-		/// Equal
+		/// Equal.
 		/// </summary>
 		[EnumMember(Value = "=")]
 		Equal,
 
 		/// <summary>
-		/// Not equal
+		/// Not equal.
 		/// </summary>
 		[EnumMember(Value = "!=")]
 		NotEqual,
 
 		/// <summary>
-		/// Greather than
+		/// Greather than.
 		/// </summary>
 		[EnumMember(Value = ">")]
 		GreaterThan,
 
 		/// <summary>
-		/// Less than
+		/// Less than.
 		/// </summary>
 		[EnumMember(Value = "<")]
 		LessThan,
 
 		/// <summary>
-		/// Greather than or equal
+		/// Greather than or equal.
 		/// </summary>
 		[EnumMember(Value = ">=")]
 		GreaterEqual,
 
 		/// <summary>
-		/// Less than or equal
+		/// Less than or equal.
 		/// </summary>
 		[EnumMember(Value = "<=")]
 		LessEqual,
 
 		/// <summary>
-		/// Between
+		/// Between.
 		/// </summary>
 		[EnumMember(Value = "BETWEEN")]
 		Between,
 
 		/// <summary>
-		/// Not between
+		/// Not between.
 		/// </summary>
 		[EnumMember(Value = "NOT BETWEEN")]
 		NotBetween,
 
 		/// <summary>
-		/// In
+		/// In.
 		/// </summary>
 		[EnumMember(Value = "IN")]
 		In,
 
 		/// <summary>
-		/// Not in
+		/// Not in.
 		/// </summary>
 		[EnumMember(Value = "NOT IN")]
 		NotIn,
 
 		/// <summary>
-		/// Is
+		/// Is.
 		/// </summary>
 		[EnumMember(Value = "IS")]
 		Is,
 
 		/// <summary>
-		/// Is not
+		/// Is not.
 		/// </summary>
 		[EnumMember(Value = "IS NOT")]
 		IsNot,
 
 		/// <summary>
-		/// Like
+		/// Like.
 		/// </summary>
 		[EnumMember(Value = "LIKE")]
 		Like,
 
 		/// <summary>
-		/// Not like
+		/// Not like.
 		/// </summary>
 		[EnumMember(Value = "NOT LIKE")]
 		NotLike,
 
 		/// <summary>
-		/// Null
+		/// Null.
 		/// </summary>
 		[EnumMember(Value = "NULL")]
 		Null,
 
 		/// <summary>
-		/// Not Null
+		/// Not Null.
 		/// </summary>
 		[EnumMember(Value = "NOT NULL")]
 		NotNull

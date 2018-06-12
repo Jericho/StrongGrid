@@ -7,31 +7,31 @@ using System.Runtime.Serialization;
 namespace StrongGrid.Models.Search
 {
 	/// <summary>
-	/// Base class for search criteria classes
+	/// Base class for search criteria classes.
 	/// </summary>
 	public abstract class SearchCriteria : ISearchCriteria
 	{
 		/// <summary>
-		/// Gets or sets the filter used to filter the result
+		/// Gets or sets the filter used to filter the result.
 		/// </summary>
 		public FilterField FilterField { get; protected set; }
 
 		/// <summary>
-		/// Gets or sets the operator used to filter the result
+		/// Gets or sets the operator used to filter the result.
 		/// </summary>
 		public SearchConditionOperator FilterOperator { get; protected set; }
 
 		/// <summary>
-		/// Gets or sets the value used to filter the result
+		/// Gets or sets the value used to filter the result.
 		/// </summary>
 		public object FilterValue { get; protected set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SearchCriteria"/> class.
 		/// </summary>
-		/// <param name="filterField">The filter field</param>
-		/// <param name="filterOperator">The filter operator</param>
-		/// <param name="filterValue">The filter value</param>
+		/// <param name="filterField">The filter field.</param>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValue">The filter value.</param>
 		public SearchCriteria(FilterField filterField, SearchConditionOperator filterOperator, object filterValue)
 		{
 			this.FilterField = filterField;
@@ -49,8 +49,8 @@ namespace StrongGrid.Models.Search
 		/// <summary>
 		/// Returns the string representation of a given value as expected by the SendGrid Email Activities API.
 		/// </summary>
-		/// <param name="value">The value</param>
-		/// <returns>The <see cref="string"/> representation of the value</returns>
+		/// <param name="value">The value.</param>
+		/// <returns>The <see cref="string"/> representation of the value.</returns>
 		public static string ConvertToString(object value)
 		{
 			if (value is DateTime dateValue)
@@ -81,7 +81,7 @@ namespace StrongGrid.Models.Search
 		/// Converts the filter value into a string as expected by the SendGrid Email Activities API.
 		/// Can be overridden in subclasses if the value needs special formatting.
 		/// </summary>
-		/// <returns>The string representation of the value</returns>
+		/// <returns>The string representation of the value.</returns>
 		public virtual string ConvertValueToString()
 		{
 			return ConvertToString(FilterValue);
@@ -91,16 +91,16 @@ namespace StrongGrid.Models.Search
 		/// Converts the filter operator into a string as expected by the SendGrid Email Activities API.
 		/// Can be overridden in subclasses if the operator needs special formatting.
 		/// </summary>
-		/// <returns>The string representation of the operator</returns>
+		/// <returns>The string representation of the operator.</returns>
 		public virtual string ConvertOperatorToString()
 		{
 			return FilterOperator.GetAttributeOfType<EnumMemberAttribute>()?.Value ?? FilterOperator.ToString();
 		}
 
 		/// <summary>
-		/// Returns a string representation of the search criteria
+		/// Returns a string representation of the search criteria.
 		/// </summary>
-		/// <returns>A <see cref="string"/> representation of the search criteria</returns>
+		/// <returns>A <see cref="string"/> representation of the search criteria.</returns>
 		public override string ToString()
 		{
 			var fieldName = FilterField.GetAttributeOfType<EnumMemberAttribute>().Value;
