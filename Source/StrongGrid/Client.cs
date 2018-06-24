@@ -5,6 +5,7 @@ using StrongGrid.Utilities;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 
 namespace StrongGrid
 {
@@ -359,11 +360,9 @@ namespace StrongGrid
 			_mustDisposeHttpClient = httpClient == null;
 			_httpClient = httpClient;
 
+			Version = typeof(Client).GetTypeInfo().Assembly.GetName().Version.ToString(3);
 #if DEBUG
 			Version = "DEBUG";
-#else
-			var assemblyVersion = typeof(Client).GetTypeInfo().Assembly.GetName().Version;
-			Version = $"{assemblyVersion.Major}.{assemblyVersion.Minor}.{assemblyVersion.Build}";
 #endif
 
 			_fluentClient = new FluentClient(new Uri($"{baseUri.TrimEnd('/')}/{apiVersion.TrimStart('/')}"), httpClient)
