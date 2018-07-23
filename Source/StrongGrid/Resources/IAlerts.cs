@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// Allows you to manage Alerts
+	/// Allows you to manage Alerts.
 	/// </summary>
 	/// <remarks>
 	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/alerts.html">SendGrid documentation</a> for more information.

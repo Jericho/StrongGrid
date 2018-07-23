@@ -3,7 +3,7 @@
 namespace StrongGrid
 {
 	/// <summary>
-	/// Interface for the SendGrid REST client
+	/// Interface for the SendGrid REST client.
 	/// </summary>
 	public interface IClient
 	{

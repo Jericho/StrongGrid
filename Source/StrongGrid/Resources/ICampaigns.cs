@@ -12,7 +12,7 @@ namespace StrongGrid.Resources
 	/// </summary>
 	/// <remarks>
 	/// See <a href="">SendGrid documentation</a> for more information.
-	/// See also: https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/campaigns.html
+	/// See also: https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/campaigns.html.
 	/// </remarks>
 	public interface ICampaigns
 	{

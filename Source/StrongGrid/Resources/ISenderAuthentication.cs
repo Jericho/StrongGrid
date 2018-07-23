@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// Allows you to manage sender authentication settings
+	/// Allows you to manage sender authentication settings.
 	/// </summary>
 	/// <remarks>
 	/// Until April 2018, this was refered to as 'white labeling'.

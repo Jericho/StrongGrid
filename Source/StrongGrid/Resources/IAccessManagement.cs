@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// Allows you to manage IP whitelisting
+	/// Allows you to manage IP whitelisting.
 	/// </summary>
 	/// <remarks>
 	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/ip_access_management.html">SendGrid documentation</a> for more information.

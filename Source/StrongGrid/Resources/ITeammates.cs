@@ -7,7 +7,7 @@ namespace StrongGrid.Resources
 {
 	/// <summary>
 	/// You can invite teammates or they can request access to certain scopes and you can accept
-	/// or deny these requests
+	/// or deny these requests.
 	/// </summary>
 	/// <remarks>
 	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/teammates.html">SendGrid documentation</a> for more information.

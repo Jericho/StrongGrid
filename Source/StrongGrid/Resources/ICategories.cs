@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// Allows you to manage categories
+	/// Allows you to manage categories.
 	/// </summary>
 	/// <remarks>
 	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/Categories/categories.html">SendGrid documentation</a> for more information.

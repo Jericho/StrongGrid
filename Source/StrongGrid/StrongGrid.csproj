@@ -30,9 +30,7 @@
     <PackageReference Include="MimeTypesMap" Version="1.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
     <PackageReference Include="Pathoschild.Http.FluentClient" Version="3.2.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta007">
-      <PrivateAssets>All</PrivateAssets>
-    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" PrivateAssets="All" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
