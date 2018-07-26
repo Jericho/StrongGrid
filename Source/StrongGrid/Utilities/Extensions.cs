@@ -330,30 +330,62 @@ namespace StrongGrid.Utilities
 			jsonObject.Add(propertyName, value);
 		}
 
-		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, T value)
+		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, T value, JsonConverter converter = null)
 		{
 			if (EqualityComparer<T>.Default.Equals(value, default(T))) return;
-			jsonObject.Add(propertyName, JToken.FromObject(value));
+
+			var jsonSerializer = new JsonSerializer();
+			if (converter != null)
+			{
+				jsonSerializer.Converters.Add(converter);
+			}
+
+			jsonObject.Add(propertyName, JToken.FromObject(value, jsonSerializer));
 		}
 
-		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, IEnumerable<T> value)
+		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, IEnumerable<T> value, JsonConverter converter = null)
 		{
 			if (value == null || !value.Any()) return;
-			jsonObject.Add(propertyName, JArray.FromObject(value.ToArray()));
+
+			var jsonSerializer = new JsonSerializer();
+			if (converter != null)
+			{
+				jsonSerializer.Converters.Add(converter);
+			}
+
+			jsonObject.Add(propertyName, JArray.FromObject(value.ToArray(), jsonSerializer));
 		}
 
-		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, Parameter<T> parameter)
+		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, Parameter<T> parameter, JsonConverter converter = null)
 		{
-			AddPropertyIfValue(jsonObject, propertyName, parameter, value => JToken.FromObject(parameter.Value));
+			var jsonSerializer = new JsonSerializer();
+			if (converter != null)
+			{
+				jsonSerializer.Converters.Add(converter);
+			}
+
+			AddPropertyIfValue(jsonObject, propertyName, parameter, value => JToken.FromObject(parameter.Value, jsonSerializer));
 		}
 
-		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, Parameter<IEnumerable<T>> parameter)
+		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, Parameter<IEnumerable<T>> parameter, JsonConverter converter = null)
 		{
+			var jsonSerializer = new JsonSerializer();
+			if (converter != null)
+			{
+				jsonSerializer.Converters.Add(converter);
+			}
+
 			AddPropertyIfValue(jsonObject, propertyName, parameter, value => JArray.FromObject(value.ToArray()));
 		}
 
-		public static void AddPropertyIfEnumValue<T>(this JObject jsonObject, string propertyName, Parameter<T> parameter)
+		public static void AddPropertyIfEnumValue<T>(this JObject jsonObject, string propertyName, Parameter<T> parameter, JsonConverter converter = null)
 		{
+			var jsonSerializer = new JsonSerializer();
+			if (converter != null)
+			{
+				jsonSerializer.Converters.Add(converter);
+			}
+
 			AddPropertyIfValue(jsonObject, propertyName, parameter, value => JToken.Parse(JsonConvert.SerializeObject(value)).ToString());
 		}
 
