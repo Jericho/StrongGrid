@@ -114,7 +114,7 @@ namespace StrongGrid.UnitTests.Resources
 			var templates = new Templates(client);
 
 			// Act
-			var result = await templates.CreateAsync(name, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await templates.CreateAsync(name, TemplateType.Legacy, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -156,7 +156,7 @@ namespace StrongGrid.UnitTests.Resources
 			var templates = new Templates(client);
 
 			// Act
-			var result = await templates.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
+			var result = await templates.GetAllAsync(TemplateType.Legacy, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
