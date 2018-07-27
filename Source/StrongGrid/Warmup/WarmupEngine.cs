@@ -23,7 +23,7 @@ namespace StrongGrid.Warmup
 		/// </summary>
 		/// <param name="warmupSettings">The warmup settings.</param>
 		/// <param name="client">The StrongGrid client.</param>
-		/// <param name="warmupProgressRepository">The repository where progress information is stored</param>
+		/// <param name="warmupProgressRepository">The repository where progress information is stored.</param>
 		[StrongGrid.Utilities.ExcludeFromCodeCoverage]
 		public WarmupEngine(WarmupSettings warmupSettings, IClient client, IWarmupProgressRepository warmupProgressRepository = null)
 			: this(warmupSettings, client, warmupProgressRepository, null)
@@ -35,7 +35,7 @@ namespace StrongGrid.Warmup
 		/// </summary>
 		/// <param name="warmupSettings">The warmup settings.</param>
 		/// <param name="client">The StrongGrid client.</param>
-		/// <param name="warmupProgressRepository">The repository where progress information is stored</param>
+		/// <param name="warmupProgressRepository">The repository where progress information is stored.</param>
 		/// <param name="systemClock">The system clock. This is for unit testing only.</param>
 		internal WarmupEngine(WarmupSettings warmupSettings, IClient client, IWarmupProgressRepository warmupProgressRepository, ISystemClock systemClock)
 		{
@@ -79,7 +79,7 @@ namespace StrongGrid.Warmup
 		}
 
 		/// <summary>
-		/// Send an email to a single recipient
+		/// Send an email to a single recipient.
 		/// </summary>
 		/// <param name="to">To.</param>
 		/// <param name="from">From.</param>
@@ -108,8 +108,8 @@ namespace StrongGrid.Warmup
 		/// This is a convenience method with simplified parameters.
 		/// If you need more options, use the <see cref="SendAsync" /> method.
 		/// </remarks>
-		/// <exception cref="ArgumentOutOfRangeException">Too many recipients</exception>
-		/// <exception cref="Exception">Email exceeds the size limit</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
 		public Task<WarmupResult> SendToSingleRecipientAsync(
 			MailAddress to,
 			MailAddress from,
@@ -137,7 +137,7 @@ namespace StrongGrid.Warmup
 		}
 
 		/// <summary>
-		/// Send the same email to multiple recipients
+		/// Send the same email to multiple recipients.
 		/// </summary>
 		/// <param name="recipients">The recipients.</param>
 		/// <param name="from">From.</param>
@@ -166,8 +166,8 @@ namespace StrongGrid.Warmup
 		/// This is a convenience method with simplified parameters.
 		/// If you need more options, use the <see cref="SendAsync" /> method.
 		/// </remarks>
-		/// <exception cref="ArgumentOutOfRangeException">Too many recipients</exception>
-		/// <exception cref="Exception">Email exceeds the size limit</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
 		public Task<WarmupResult> SendToMultipleRecipientsAsync(
 			IEnumerable<MailAddress> recipients,
 			MailAddress from,
@@ -212,7 +212,7 @@ namespace StrongGrid.Warmup
 		}
 
 		/// <summary>
-		/// Send email(s) over SendGrid’s v3 Web API
+		/// Send email(s) over SendGrid’s v3 Web API.
 		/// </summary>
 		/// <param name="personalizations">The personalizations.</param>
 		/// <param name="subject">The subject.</param>
@@ -230,12 +230,12 @@ namespace StrongGrid.Warmup
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="mailSettings">The mail settings.</param>
 		/// <param name="trackingSettings">The tracking settings.</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The message id.
 		/// </returns>
-		/// <exception cref="ArgumentOutOfRangeException">Too many recipients</exception>
-		/// <exception cref="Exception">Email exceeds the size limit</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
 		public async Task<WarmupResult> SendAsync(
 			IEnumerable<MailPersonalization> personalizations,
 			string subject,

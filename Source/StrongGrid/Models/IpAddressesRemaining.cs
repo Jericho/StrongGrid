@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Information about remaining IP addresses
+	/// Information about remaining IP addresses.
 	/// </summary>
 	public class IpAddressesRemaining
 	{

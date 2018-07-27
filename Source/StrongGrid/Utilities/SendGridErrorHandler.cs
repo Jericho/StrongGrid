@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace StrongGrid.Utilities
 {
 	/// <summary>
-	/// Error handler for requests dispatched to the SendGrid API
+	/// Error handler for requests dispatched to the SendGrid API.
 	/// </summary>
 	/// <seealso cref="Pathoschild.Http.Client.Extensibility.IHttpFilter" />
 	internal class SendGridErrorHandler : IHttpFilter

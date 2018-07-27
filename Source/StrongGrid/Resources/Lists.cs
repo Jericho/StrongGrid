@@ -14,7 +14,7 @@ namespace StrongGrid.Resources
 	/// </summary>
 	/// <seealso cref="StrongGrid.Resources.ILists" />
 	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/contactdb.html
+	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/contactdb.html">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public class Lists : ILists
 	{
@@ -24,7 +24,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Lists" /> class.
 		/// </summary>
-		/// <param name="client">The HTTP client</param>
+		/// <param name="client">The HTTP client.</param>
 		internal Lists(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
@@ -34,7 +34,7 @@ namespace StrongGrid.Resources
 		/// Create a list.
 		/// </summary>
 		/// <param name="name">The name.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="List" />.
@@ -58,7 +58,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve all lists.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="List" />.
@@ -78,7 +78,7 @@ namespace StrongGrid.Resources
 		/// Delete a list.
 		/// </summary>
 		/// <param name="listId">The list identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
@@ -96,7 +96,7 @@ namespace StrongGrid.Resources
 		/// Delete multiple lists.
 		/// </summary>
 		/// <param name="listIds">The list ids.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
@@ -116,7 +116,7 @@ namespace StrongGrid.Resources
 		/// Retrieve a list.
 		/// </summary>
 		/// <param name="listId">The list identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="List" />.
@@ -137,7 +137,7 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="name">The name.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
@@ -162,7 +162,7 @@ namespace StrongGrid.Resources
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="recordsPerPage">The records per page.</param>
 		/// <param name="page">The page.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Contact" />.
@@ -185,7 +185,7 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="contactId">The contact identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
@@ -204,7 +204,7 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="contactId">The contact identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
@@ -223,7 +223,7 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="contactIds">The contact ids.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
@@ -244,7 +244,7 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="contactIds">The contact identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.

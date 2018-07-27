@@ -9,7 +9,7 @@ namespace StrongGrid.Resources
 	/// Allows you to manage templates.
 	/// </summary>
 	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Transactional_Templates/templates.html
+	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/Transactional_Templates/templates.html">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public interface ITemplates
 	{
@@ -17,28 +17,30 @@ namespace StrongGrid.Resources
 		/// Create a template.
 		/// </summary>
 		/// <param name="name">The name.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="type">The type of template.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Template" />.
 		/// </returns>
-		Task<Template> CreateAsync(string name, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Template> CreateAsync(string name, TemplateType type, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Retrieve all templates.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="type">The type of template.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Template" />.
 		/// </returns>
-		Task<Template[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Template[]> GetAllAsync(TemplateType type, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Retrieve a template.
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Template" />.
@@ -50,7 +52,7 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="name">The name.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Template" />.
@@ -61,7 +63,7 @@ namespace StrongGrid.Resources
 		/// Delete a template.
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
@@ -78,7 +80,7 @@ namespace StrongGrid.Resources
 		/// <param name="textContent">Content of the text.</param>
 		/// <param name="isActive">if set to <c>true</c> [is active].</param>
 		/// <param name="editorType">The type of editor.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="TemplateVersion" />.
@@ -90,7 +92,7 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="versionId">The version identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="TemplateVersion" />.
@@ -102,7 +104,7 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="versionId">The version identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="TemplateVersion" />.
@@ -120,7 +122,7 @@ namespace StrongGrid.Resources
 		/// <param name="textContent">Content of the text.</param>
 		/// <param name="isActive">if set to <c>true</c> [is active].</param>
 		/// <param name="editorType">The type of editor.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="TemplateVersion" />.
@@ -132,7 +134,7 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="versionId">The version identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.

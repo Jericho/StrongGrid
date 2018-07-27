@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Subscription settings
+	/// Subscription settings.
 	/// </summary>
 	public class SubscriptionSettings
 	{

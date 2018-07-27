@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// The result of importing a group of contacts
+	/// The result of importing a group of contacts.
 	/// </summary>
 	public class ImportResult
 	{

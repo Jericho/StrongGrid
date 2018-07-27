@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// A field
+	/// A field.
 	/// </summary>
 	public class Field
 	{
@@ -27,9 +27,9 @@ namespace StrongGrid.Models
 	}
 
 	/// <summary>
-	/// A field with typed content
+	/// A field with typed content.
 	/// </summary>
-	/// <typeparam name="T">The type of data contained in this field</typeparam>
+	/// <typeparam name="T">The type of data contained in this field.</typeparam>
 	public class Field<T> : Field
 	{
 		/// <summary>

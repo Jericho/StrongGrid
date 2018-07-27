@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// BCC settings
+	/// BCC settings.
 	/// </summary>
 	public class BccSettings
 	{

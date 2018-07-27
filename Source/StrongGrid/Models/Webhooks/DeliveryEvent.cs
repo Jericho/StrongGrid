@@ -10,7 +10,7 @@ namespace StrongGrid.Models.Webhooks
 	public class DeliveryEvent : Event
 	{
 		/// <summary>
-		/// Gets or sets the SMTP identifier attached to the message by the originating system
+		/// Gets or sets the SMTP identifier attached to the message by the originating system.
 		/// </summary>
 		/// <value>
 		/// The SMTP identifier.

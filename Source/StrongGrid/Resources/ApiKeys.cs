@@ -15,7 +15,7 @@ namespace StrongGrid.Resources
 	/// </summary>
 	/// <seealso cref="StrongGrid.Resources.IApiKeys" />
 	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/API_Keys/index.html
+	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/API_Keys/index.html">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public class ApiKeys : IApiKeys
 	{
@@ -25,18 +25,18 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ApiKeys" /> class.
 		/// </summary>
-		/// <param name="client">The HTTP client</param>
+		/// <param name="client">The HTTP client.</param>
 		internal ApiKeys(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
 		}
 
 		/// <summary>
-		/// Get an existing API Key
+		/// Get an existing API Key.
 		/// </summary>
 		/// <param name="keyId">The key identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="ApiKey" />.
 		/// </returns>
@@ -50,10 +50,10 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get all API Keys belonging to the authenticated user
+		/// Get all API Keys belonging to the authenticated user.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="ApiKey" />.
 		/// </returns>
@@ -71,12 +71,12 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Generate a new API Key
+		/// Generate a new API Key.
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <param name="scopes">The scopes.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="ApiKey" />.
 		/// </returns>
@@ -92,11 +92,11 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Revoke an existing API Key
+		/// Revoke an existing API Key.
 		/// </summary>
 		/// <param name="keyId">The key identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
@@ -110,13 +110,13 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Update an API Key
+		/// Update an API Key.
 		/// </summary>
 		/// <param name="keyId">The key identifier.</param>
 		/// <param name="name">The name.</param>
 		/// <param name="scopes">The scopes.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>The <see cref="ApiKey"/>.</returns>
 		public Task<ApiKey> UpdateAsync(string keyId, string name, Parameter<IEnumerable<string>> scopes = default(Parameter<IEnumerable<string>>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -129,11 +129,11 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Generate a new API Key for billing
+		/// Generate a new API Key for billing.
 		/// </summary>
 		/// <param name="name">The name.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="ApiKey" />.
 		/// </returns>
@@ -150,11 +150,11 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Generate a new API Key with the same permissions that have been granted to you
+		/// Generate a new API Key with the same permissions that have been granted to you.
 		/// </summary>
 		/// <param name="name">The name.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="ApiKey" />.
 		/// </returns>
@@ -170,11 +170,11 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Generate a new API Key with the same "read" permissions that have ben granted to you
+		/// Generate a new API Key with the same "read" permissions that have ben granted to you.
 		/// </summary>
 		/// <param name="name">The name.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="ApiKey" />.
 		/// </returns>

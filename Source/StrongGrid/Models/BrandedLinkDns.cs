@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Branded link DNS
+	/// Branded link DNS.
 	/// </summary>
 	public class BrandedLinkDns
 	{

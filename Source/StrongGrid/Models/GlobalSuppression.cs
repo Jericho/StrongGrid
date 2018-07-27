@@ -5,7 +5,7 @@ using System;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Information about a global suppression
+	/// Information about a global suppression.
 	/// </summary>
 	public class GlobalSuppression
 	{

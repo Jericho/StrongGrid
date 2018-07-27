@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Access request details
+	/// Access request details.
 	/// </summary>
 	public class AccessRequest
 	{

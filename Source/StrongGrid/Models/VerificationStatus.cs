@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Verification status
+	/// Verification status.
 	/// </summary>
 	public class VerificationStatus
 	{

@@ -12,7 +12,7 @@ namespace StrongGrid.Resources
 	/// Allows you to manage IP addresses.
 	/// </summary>
 	/// <remarks>
-	/// See https://sendgrid.api-docs.io/v3.0/ip-addresses
+	/// See <a href="https://sendgrid.api-docs.io/v3.0/ip-addresses">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public class IpAddresses : IIpAddresses
 	{
@@ -22,7 +22,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Initializes a new instance of the <see cref="IpAddresses" /> class.
 		/// </summary>
-		/// <param name="client">The HTTP client</param>
+		/// <param name="client">The HTTP client.</param>
 		internal IpAddresses(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
@@ -89,11 +89,11 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve all assigned and unassigned IP addresses.
 		/// </summary>
-		/// <param name="excludeWhitelabels">Should we exclude whitelabels?</param>
+		/// <param name="excludeWhitelabels">Boolean value indicating if we should exclude whitelabels.</param>
 		/// <param name="subuser">The subuser you are requesting for.</param>
 		/// <param name="limit">The number of IPs you want returned at the same time.</param>
 		/// <param name="offset">The offset for the number of IPs that you are requesting.</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="IpAddress">IP addresses</see>.
 		/// </returns>
@@ -115,7 +115,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve assigned IP addresses.
 		/// </summary>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="IpAddress">Ip addresses</see>.
 		/// </returns>
@@ -130,7 +130,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve unassigned IP addresses.
 		/// </summary>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="IpAddress">Ip addresses</see>.
 		/// </returns>
@@ -148,7 +148,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve all IP addresess that are currently warming up.
 		/// </summary>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="IpAddress">IP addresses</see>.
 		/// </returns>
@@ -164,7 +164,7 @@ namespace StrongGrid.Resources
 		/// Retrieve the warmup status for a specific IP address.
 		/// </summary>
 		/// <param name="address">The IP address to get.</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Block">Blocks</see>.
 		/// </returns>

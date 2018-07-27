@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Tracking settings
+	/// Tracking settings.
 	/// </summary>
 	public class TrackingSettings
 	{

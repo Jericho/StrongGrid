@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Spam checking settings
+	/// Spam checking settings.
 	/// </summary>
 	public class SpamCheckingSettings
 	{

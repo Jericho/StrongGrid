@@ -16,7 +16,7 @@ namespace StrongGrid.Resources
 	/// This allows you to maintain separate reputations for your different email traffic.
 	/// </summary>
 	/// <remarks>
-	/// See https://sendgrid.api-docs.io/v3.0/ip-pools
+	/// See <a href="https://sendgrid.api-docs.io/v3.0/ip-pools">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public class IpPools : IIpPools
 	{
@@ -26,7 +26,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Initializes a new instance of the <see cref="IpPools" /> class.
 		/// </summary>
-		/// <param name="client">The HTTP client</param>
+		/// <param name="client">The HTTP client.</param>
 		internal IpPools(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;

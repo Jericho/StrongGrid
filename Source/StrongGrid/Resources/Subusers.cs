@@ -13,7 +13,7 @@ namespace StrongGrid.Resources
 	/// </summary>
 	/// <seealso cref="StrongGrid.Resources.ISubusers" />
 	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/subusers.html
+	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/subusers.html">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public class Subusers : ISubusers
 	{
@@ -23,17 +23,17 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Subusers" /> class.
 		/// </summary>
-		/// <param name="client">The HTTP client</param>
+		/// <param name="client">The HTTP client.</param>
 		internal Subusers(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
 		}
 
 		/// <summary>
-		/// Get an existing Subuser
+		/// Get an existing Subuser.
 		/// </summary>
 		/// <param name="username">The username.</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Subuser" />.
 		/// </returns>
@@ -46,11 +46,11 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// List all Subusers for a parent
+		/// List all Subusers for a parent.
 		/// </summary>
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Subuser" />.
 		/// </returns>
@@ -65,13 +65,13 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Create a new Subuser
+		/// Create a new Subuser.
 		/// </summary>
 		/// <param name="username">The username.</param>
 		/// <param name="email">The email address.</param>
 		/// <param name="password">The password.</param>
 		/// <param name="ips">The ip addresses.</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Subuser" />.
 		/// </returns>
@@ -86,10 +86,10 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Delete an existing Subuser
+		/// Delete an existing Subuser.
 		/// </summary>
 		/// <param name="username">The username.</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
@@ -109,7 +109,7 @@ namespace StrongGrid.Resources
 		/// <param name="ips">The ips.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The task
+		/// The async task.
 		/// </returns>
 		public async Task UpdateAsync(string username, Parameter<bool> disabled, Parameter<IEnumerable<string>> ips, CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -141,7 +141,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get the monitor settings
+		/// Get the monitor settings.
 		/// </summary>
 		/// <param name="username">The sub user.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
@@ -157,7 +157,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Create monitor settings
+		/// Create monitor settings.
 		/// </summary>
 		/// <param name="username">The sub user.</param>
 		/// <param name="email">The email address to receive the monitor emails.</param>
@@ -181,7 +181,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Update monitor settings
+		/// Update monitor settings.
 		/// </summary>
 		/// <param name="username">The sub user.</param>
 		/// <param name="email">The email address to receive the monitor emails.</param>
@@ -204,10 +204,10 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Delete monitor settings
+		/// Delete monitor settings.
 		/// </summary>
 		/// <param name="username">The username.</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>

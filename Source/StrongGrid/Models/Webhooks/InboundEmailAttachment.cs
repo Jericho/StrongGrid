@@ -4,7 +4,7 @@ using System.IO;
 namespace StrongGrid.Models.Webhooks
 {
 	/// <summary>
-	/// Strongly typed representation of the information sudmited by SendGrid in a 'inbound parse' webhook
+	/// Strongly typed representation of the information sudmited by SendGrid in a 'inbound parse' webhook.
 	/// </summary>
 	public class InboundEmailAttachment
 	{

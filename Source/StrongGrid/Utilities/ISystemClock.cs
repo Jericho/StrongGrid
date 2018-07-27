@@ -3,7 +3,7 @@
 namespace StrongGrid.Utilities
 {
 	/// <summary>
-	/// Interface for the SystemClock
+	/// Interface for the SystemClock.
 	/// </summary>
 	internal interface ISystemClock
 	{

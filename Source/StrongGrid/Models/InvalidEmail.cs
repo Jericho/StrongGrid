@@ -5,7 +5,7 @@ using System;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// An invalid email address
+	/// An invalid email address.
 	/// </summary>
 	public class InvalidEmail
 	{

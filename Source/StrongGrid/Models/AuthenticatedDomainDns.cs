@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Authenticated domain DNS
+	/// Authenticated domain DNS.
 	/// </summary>
 	public class AuthenticatedDomainDns
 	{

@@ -14,7 +14,7 @@ namespace StrongGrid.Resources
 	/// </summary>
 	/// <seealso cref="StrongGrid.Resources.ISegments" />
 	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/campaigns.html
+	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/campaigns.html">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public class Segments : ISegments
 	{
@@ -24,7 +24,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Segments" /> class.
 		/// </summary>
-		/// <param name="client">The HTTP client</param>
+		/// <param name="client">The HTTP client.</param>
 		internal Segments(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
@@ -36,7 +36,7 @@ namespace StrongGrid.Resources
 		/// <param name="name">The name.</param>
 		/// <param name="conditions">The conditions.</param>
 		/// <param name="listId">The list identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Segment" />.
@@ -63,7 +63,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve all segments.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Segment" />.
@@ -81,7 +81,7 @@ namespace StrongGrid.Resources
 		/// Retrieve a segment.
 		/// </summary>
 		/// <param name="segmentId">The segment identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Segment" />.
@@ -102,7 +102,7 @@ namespace StrongGrid.Resources
 		/// <param name="name">The name.</param>
 		/// <param name="listId">The list identifier.</param>
 		/// <param name="conditions">The conditions.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Segment" />.
@@ -129,7 +129,7 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="segmentId">The segment identifier.</param>
 		/// <param name="deleteMatchingContacts">if set to <c>true</c> [delete matching contacts].</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
@@ -150,7 +150,7 @@ namespace StrongGrid.Resources
 		/// <param name="segmentId">The segment identifier.</param>
 		/// <param name="recordsPerPage">The records per page.</param>
 		/// <param name="page">The page.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Contact" />.

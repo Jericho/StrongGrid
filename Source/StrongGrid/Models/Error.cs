@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// An error
+	/// An error.
 	/// </summary>
 	public class Error
 	{

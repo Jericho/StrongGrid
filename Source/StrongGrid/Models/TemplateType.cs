@@ -5,21 +5,21 @@ using System.Runtime.Serialization;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Enumeration to indicate the editor used in the UI.
+	/// Enumeration to indicate the type of template.
 	/// </summary>
 	[JsonConverter(typeof(StringEnumConverter))]
-	public enum EditorType
+	public enum TemplateType
 	{
 		/// <summary>
-		/// This editor allows you to edit the HTML source.
+		/// The old type of template.
 		/// </summary>
-		[EnumMember(Value = "code")]
-		Code,
+		[EnumMember(Value = "legacy")]
+		Legacy,
 
 		/// <summary>
-		/// This editor allows you to drag and drop snippets.
+		/// The new dynamic type of template.
 		/// </summary>
-		[EnumMember(Value = "design")]
-		Design
+		[EnumMember(Value = "dynamic")]
+		Dynamic
 	}
 }

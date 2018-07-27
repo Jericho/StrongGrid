@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources
 {
 	/// <summary>
-	/// Allows you to manage IP whitelisting
+	/// Allows you to manage IP whitelisting.
 	/// </summary>
 	/// <seealso cref="StrongGrid.Resources.IAccessManagement" />
 	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/ip_access_management.html
+	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/blocks.html">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public class AccessManagement : IAccessManagement
 	{
@@ -25,7 +25,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AccessManagement" /> class.
 		/// </summary>
-		/// <param name="client">The HTTP client</param>
+		/// <param name="client">The HTTP client.</param>
 		internal AccessManagement(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
@@ -35,8 +35,8 @@ namespace StrongGrid.Resources
 		/// Returns a list of IPs that have accessed your account through the web or API.
 		/// </summary>
 		/// <param name="limit">Number of IP activity entries to return.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
@@ -53,8 +53,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve the whitelisted IPs.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="WhitelistedIp" />.
 		/// </returns>
@@ -68,11 +68,11 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Add an IP address to the list of whitelisted ip addresses
+		/// Add an IP address to the list of whitelisted ip addresses.
 		/// </summary>
 		/// <param name="ip">The ip address.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
@@ -96,11 +96,11 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Add multiple IP addresses to the list of whitelisted ip addresses
+		/// Add multiple IP addresses to the list of whitelisted ip addresses.
 		/// </summary>
 		/// <param name="ips">The ip addresses.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
@@ -129,8 +129,8 @@ namespace StrongGrid.Resources
 		/// Delete an ip address from the whitelist.
 		/// </summary>
 		/// <param name="id">The ip address identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
@@ -147,8 +147,8 @@ namespace StrongGrid.Resources
 		/// Delete multiple ip addresses from the whitelist.
 		/// </summary>
 		/// <param name="ids">The ip address identifiers.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
@@ -171,8 +171,8 @@ namespace StrongGrid.Resources
 		/// Returns information about a whitelisted ip address.
 		/// </summary>
 		/// <param name="id">The ip address identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>

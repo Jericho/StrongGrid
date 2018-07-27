@@ -5,7 +5,7 @@ using System;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Template version
+	/// Template version.
 	/// </summary>
 	public class TemplateVersion
 	{

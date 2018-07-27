@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Allows you to track whether a recipient clicked a link in your email
+	/// Allows you to track whether a recipient clicked a link in your email.
 	/// </summary>
 	public class ClickTrackingSettings
 	{

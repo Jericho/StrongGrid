@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Monitor settings
+	/// Monitor settings.
 	/// </summary>
 	public class MonitorSettings
 	{
@@ -20,7 +20,7 @@ namespace StrongGrid.Models
 		/// Gets or sets the frequency.
 		/// </summary>
 		/// <value>
-		/// Interval of emails between samples
+		/// Interval of emails between samples.
 		/// </value>
 		[JsonProperty("frequency", NullValueHandling = NullValueHandling.Ignore)]
 		public int Frequency { get; set; }

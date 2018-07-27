@@ -5,7 +5,7 @@ using System;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Information about an IP address
+	/// Information about an IP address.
 	/// </summary>
 	public class IpAddress
 	{

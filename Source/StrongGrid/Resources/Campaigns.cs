@@ -15,7 +15,7 @@ namespace StrongGrid.Resources
 	/// </summary>
 	/// <seealso cref="StrongGrid.Resources.ICampaigns" />
 	/// <remarks>
-	/// See also: https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/campaigns.html
+	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/campaigns.html">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public class Campaigns : ICampaigns
 	{
@@ -25,7 +25,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Campaigns" /> class.
 		/// </summary>
-		/// <param name="client">The HTTP client</param>
+		/// <param name="client">The HTTP client.</param>
 		internal Campaigns(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
@@ -46,7 +46,7 @@ namespace StrongGrid.Resources
 		/// <param name="customUnsubscribeUrl">The custom unsubscribe URL.</param>
 		/// <param name="ipPool">The ip pool.</param>
 		/// <param name="editor">The editor used in the UI. Allowed values: code, design.</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <remarks>
 		/// Note: In order to send or schedule the campaign, you will be required to provide a subject, sender ID, content (we suggest both html and plain text), and at least one list or segment ID. This information is not required when you create a campaign.
 		/// </remarks>
@@ -81,7 +81,7 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Campaign" />.
 		/// </returns>
@@ -98,8 +98,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve a campaign.
 		/// </summary>
-		/// <param name="campaignId">The id of the campaign</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="campaignId">The id of the campaign.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Campaign" />.
 		/// </returns>
@@ -114,8 +114,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Delete a campaign.
 		/// </summary>
-		/// <param name="campaignId">The id of the campaign</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="campaignId">The id of the campaign.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
@@ -128,9 +128,9 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Update a campaign
+		/// Update a campaign.
 		/// </summary>
-		/// <param name="campaignId">The id of the campaign</param>
+		/// <param name="campaignId">The id of the campaign.</param>
 		/// <param name="title">The title.</param>
 		/// <param name="senderId">The sender identifier.</param>
 		/// <param name="subject">The subject.</param>
@@ -143,7 +143,7 @@ namespace StrongGrid.Resources
 		/// <param name="customUnsubscribeUrl">The custom unsubscribe URL.</param>
 		/// <param name="ipPool">The ip pool.</param>
 		/// <param name="editor">The editor used in the UI. Allowed values: code, design.</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Campaign" />.
 		/// </returns>
@@ -174,8 +174,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Send a campaign immediately.
 		/// </summary>
-		/// <param name="campaignId">The id of the campaign</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="campaignId">The id of the campaign.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
@@ -192,9 +192,9 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Schedule a campaign to be sewnt at a later time.
 		/// </summary>
-		/// <param name="campaignId">The id of the campaign</param>
+		/// <param name="campaignId">The id of the campaign.</param>
 		/// <param name="sendOn">The send on.</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
@@ -212,11 +212,11 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Change the date a campaign is scheduled to be sent
+		/// Change the date a campaign is scheduled to be sent.
 		/// </summary>
-		/// <param name="campaignId">The id of the campaign</param>
+		/// <param name="campaignId">The id of the campaign.</param>
 		/// <param name="sendOn">The send on.</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
@@ -234,10 +234,10 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Retrieve the date a campaign is scheduled to be sent
+		/// Retrieve the date a campaign is scheduled to be sent.
 		/// </summary>
-		/// <param name="campaignId">The id of the campaign</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="campaignId">The id of the campaign.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="DateTime" /> the campaign is cheduled to be sent or <c>null</c> if the campaign is
 		/// not scheduled to be sent.
@@ -257,8 +257,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Unschedule a scheduled campaign.
 		/// </summary>
-		/// <param name="campaignId">The id of the campaign</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="campaignId">The id of the campaign.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
@@ -271,15 +271,15 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Send a test campaign
+		/// Send a test campaign.
 		/// </summary>
-		/// <param name="campaignId">The id of the campaign</param>
+		/// <param name="campaignId">The id of the campaign.</param>
 		/// <param name="emailAddresses">The email addresses.</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		/// <exception cref="System.ArgumentException">You must specify at least one email address</exception>
+		/// <exception cref="System.ArgumentException">You must specify at least one email address.</exception>
 		public Task SendTestAsync(long campaignId, IEnumerable<string> emailAddresses, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			emailAddresses = emailAddresses ?? Enumerable.Empty<string>();

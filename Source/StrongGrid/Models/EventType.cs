@@ -5,13 +5,13 @@ using System.Runtime.Serialization;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Enumeration to indicate the type of webhook event and email activity
+	/// Enumeration to indicate the type of webhook event and email activity.
 	/// </summary>
 	[JsonConverter(typeof(StringEnumConverter))]
 	public enum EventType
 	{
 		/// <summary>
-		/// Message has been received and is ready to be delivered
+		/// Message has been received and is ready to be delivered.
 		/// </summary>
 		[EnumMember(Value = "processed")]
 		Processed,
@@ -24,7 +24,7 @@ namespace StrongGrid.Models
 		///     - Bounced Address,
 		///     - Spam Reporting Address,
 		///     - Invalid,
-		///     - Recipient List over Package Quota
+		///     - Recipient List over Package Quota.
 		/// </summary>
 		[EnumMember(Value = "dropped")]
 		Dropped,

@@ -99,7 +99,7 @@ namespace StrongGrid.Utilities
 		/// true if the parameters' values are equal
 		/// or both parameters' values are omitted,
 		/// and false if the parameters' values are not
-		/// equal or only one parameter's value is ommitted
+		/// equal or only one parameter's value is ommitted.
 		/// </returns>
 		public static bool operator ==(Parameter<T> lhs, Parameter<T> rhs)
 		{
@@ -125,7 +125,7 @@ namespace StrongGrid.Utilities
 		/// <summary>
 		/// If the specified instance has a value, returns it, otherwise returns the defaut one.
 		/// </summary>
-		/// <param name="optional">The instance</param>
+		/// <param name="optional">The instance.</param>
 		/// <param name="default">The default value.</param>
 		public static T operator |(Parameter<T> optional, T @default)
 		{
@@ -144,7 +144,7 @@ namespace StrongGrid.Utilities
 		/// true if the parameters' values are equal
 		/// or both parameters' values are omitted,
 		/// and false if the parameters' values are not
-		/// equal or only one parameter's value is omitted
+		/// equal or only one parameter's value is omitted.
 		/// </returns>
 		public bool Equals(Parameter<T> other)
 		{
@@ -168,7 +168,7 @@ namespace StrongGrid.Utilities
 		/// or both parameters' values are omitted,
 		/// and false if the object is not a Parametern&lt;T&gt; or
 		/// the parameters' values are not equal
-		/// or only one parameter's value is omitted
+		/// or only one parameter's value is omitted.
 		/// </returns>
 		public override bool Equals(object obj)
 		{

@@ -5,7 +5,7 @@ using System;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Spam report
+	/// Spam report.
 	/// </summary>
 	public class SpamReport
 	{

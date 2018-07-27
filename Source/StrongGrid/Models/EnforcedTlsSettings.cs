@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Enforce TLS settings
+	/// Enforce TLS settings.
 	/// </summary>
 	public class EnforcedTlsSettings
 	{

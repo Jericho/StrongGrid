@@ -5,19 +5,19 @@ using System.Runtime.Serialization;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Enumeration to indicate the status of a batch
+	/// Enumeration to indicate the status of a batch.
 	/// </summary>
 	[JsonConverter(typeof(StringEnumConverter))]
 	public enum BatchStatus
 	{
 		/// <summary>
-		/// Batch has been paused
+		/// Batch has been paused.
 		/// </summary>
 		[EnumMember(Value = "pause")]
 		Paused,
 
 		/// <summary>
-		/// Batch has been canceled
+		/// Batch has been canceled.
 		/// </summary>
 		[EnumMember(Value = "cancel")]
 		Canceled

@@ -66,7 +66,7 @@ namespace StrongGrid.Utilities
 		/// <returns>
 		/// The object value.
 		/// </returns>
-		/// <exception cref="System.Exception">Unable to determine the field type</exception>
+		/// <exception cref="System.Exception">Unable to determine the field type.</exception>
 		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 		{
 			var metrics = new List<KeyValuePair<string, long>>();

@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Reverse DNS validation results
+	/// Reverse DNS validation results.
 	/// </summary>
 	public class ReverseDnsValidationResults
 	{

@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Controls how frequently hard and soft bounces are purged
+	/// Controls how frequently hard and soft bounces are purged.
 	/// </summary>
 	public class BouncePurgeSettings
 	{

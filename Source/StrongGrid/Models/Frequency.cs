@@ -5,31 +5,31 @@ using System.Runtime.Serialization;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Enumeration to indicate frequency
+	/// Enumeration to indicate frequency.
 	/// </summary>
 	[JsonConverter(typeof(StringEnumConverter))]
 	public enum Frequency
 	{
 		/// <summary>
-		/// Hourly
+		/// Hourly.
 		/// </summary>
 		[EnumMember(Value = "hourly")]
 		Hourly,
 
 		/// <summary>
-		/// Daily
+		/// Daily.
 		/// </summary>
 		[EnumMember(Value = "daily")]
 		Daily,
 
 		/// <summary>
-		/// Weekly
+		/// Weekly.
 		/// </summary>
 		[EnumMember(Value = "weekly")]
 		Weekly,
 
 		/// <summary>
-		/// Monthly
+		/// Monthly.
 		/// </summary>
 		[EnumMember(Value = "monthly")]
 		Monthly

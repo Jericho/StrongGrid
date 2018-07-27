@@ -30,10 +30,8 @@
     <PackageReference Include="MimeTypesMap" Version="1.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
     <PackageReference Include="Pathoschild.Http.FluentClient" Version="3.2.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta006">
-      <PrivateAssets>All</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="System.ValueTuple" Version="4.4.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" PrivateAssets="All" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
@@ -43,15 +41,19 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' != 'net452'">
-    <PackageReference Include="Microsoft.CSharp" Version="4.4.1" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net452' ">
     <DefineConstants>$(DefineConstants);NETFULL;LIBLOG_PORTABLE</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' != 'net452'">
-    <DefineConstants>$(DefineConstants);NETSTANDARD;LIBLOG_PORTABLE</DefineConstants>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
+    <DefineConstants>$(DefineConstants);NETSTANDARD;NETSTANDARD1;LIBLOG_PORTABLE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <DefineConstants>$(DefineConstants);NETSTANDARD;NETSTANDARD2;LIBLOG_PORTABLE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release' ">
@@ -59,11 +61,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="$(SolutionDir)\stylecop.json" Link="stylecop.json" />
+    <AdditionalFiles Include="$(SolutionDir)stylecop.json" Link="stylecop.json" />
   </ItemGroup>
 
   <PropertyGroup>
-    <CodeAnalysisRuleSet>$(SolutionDir)\StyleCopRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>$(SolutionDir)StyleCopRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
 </Project>

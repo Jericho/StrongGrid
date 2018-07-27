@@ -3,12 +3,12 @@
 namespace StrongGrid
 {
 	/// <summary>
-	/// Interface for the SendGrid REST client
+	/// Interface for the SendGrid REST client.
 	/// </summary>
 	public interface IClient
 	{
 		/// <summary>
-		/// Gets the Access Management resource which allows you to control IP whitelisting
+		/// Gets the Access Management resource which allows you to control IP whitelisting.
 		/// </summary>
 		/// <value>
 		/// The access management.
@@ -115,7 +115,7 @@ namespace StrongGrid
 		/// Gets the IpAddresses resource.
 		/// </summary>
 		/// <value>
-		/// The IP addresses
+		/// The IP addresses.
 		/// </value>
 		IIpAddresses IpAddresses { get; }
 
@@ -123,7 +123,7 @@ namespace StrongGrid
 		/// Gets the IpPools resource.
 		/// </summary>
 		/// <value>
-		/// The IP pools
+		/// The IP pools.
 		/// </value>
 		IIpPools IpPools { get; }
 

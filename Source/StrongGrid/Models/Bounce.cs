@@ -5,7 +5,7 @@ using System;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Information about an email address that bounced
+	/// Information about an email address that bounced.
 	/// </summary>
 	public class Bounce
 	{

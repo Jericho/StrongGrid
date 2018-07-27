@@ -14,7 +14,7 @@ namespace StrongGrid.Resources
 	/// Allows you to manage email addresses that have been declared invalid.
 	/// </summary>
 	/// <remarks>
-	/// See https://sendgrid.com/docs/API_Reference/Web_API_v3/invalid_emails.html
+	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/invalid_emails.html">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public class InvalidEmails : IInvalidEmails
 	{
@@ -24,7 +24,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Initializes a new instance of the <see cref="InvalidEmails" /> class.
 		/// </summary>
-		/// <param name="client">The HTTP client</param>
+		/// <param name="client">The HTTP client.</param>
 		internal InvalidEmails(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
@@ -37,8 +37,8 @@ namespace StrongGrid.Resources
 		/// <param name="endDate">The end date.</param>
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="InvalidEmail" />.
 		/// </returns>
@@ -59,8 +59,8 @@ namespace StrongGrid.Resources
 		/// Retrieve invalid emails for a given email address.
 		/// </summary>
 		/// <param name="emailAddress">The email address.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="InvalidEmail" />.
 		/// </returns>
@@ -76,8 +76,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Delete all invalid emails.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
@@ -99,8 +99,8 @@ namespace StrongGrid.Resources
 		/// Delete multiple invalid emails.
 		/// </summary>
 		/// <param name="emailAddresses">The email addresses.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
@@ -122,8 +122,8 @@ namespace StrongGrid.Resources
 		/// Delete a specific invalid emails.
 		/// </summary>
 		/// <param name="emailAddress">The email address.</param>
-		/// <param name="onBehalfOf">The user to impersonate</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>

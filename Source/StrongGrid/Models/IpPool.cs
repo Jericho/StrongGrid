@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Information about an IP pool
+	/// Information about an IP pool.
 	/// </summary>
 	public class IpPool
 	{

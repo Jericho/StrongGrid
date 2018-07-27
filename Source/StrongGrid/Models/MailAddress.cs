@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// The adress for a mail recipient, including the name and email address
+	/// The adress for a mail recipient, including the name and email address.
 	/// </summary>
 	public class MailAddress
 	{

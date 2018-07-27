@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Add IP Address result
+	/// Add IP Address result.
 	/// </summary>
 	public class AddIpAddressResult
 	{

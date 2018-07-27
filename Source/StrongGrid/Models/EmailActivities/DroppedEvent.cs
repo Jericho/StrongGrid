@@ -13,13 +13,13 @@ namespace StrongGrid.Models.EmailActivities
 		/// </summary>
 		/// <remarks>
 		/// You may see the following drop reasons:
-		/// - Invalid SMTPAPI header
-		/// - Spam Content (if spam checker app enabled)
-		/// - Unsubscribed Address
-		/// - Bounced Address
-		/// - Spam Reporting Address
-		/// - Invalid
-		/// - Recipient List over Package Quota
+		/// - Invalid SMTPAPI header.
+		/// - Spam Content (if spam checker app enabled).
+		/// - Unsubscribed Address.
+		/// - Bounced Address.
+		/// - Spam Reporting Address.
+		/// - Invalid.
+		/// - Recipient List over Package Quota.
 		/// </remarks>
 		/// <value>
 		/// The reason.

@@ -78,10 +78,10 @@ namespace StrongGrid.Warmup
 		/// <remarks>
 		/// The recommended daily volume values are documented on SendGrid's web site: https://sendgrid.com/docs/assets/IPWarmupSchedule.pdf.
 		/// </remarks>
-		/// <param name="poolName">The name of the pool</param>
+		/// <param name="poolName">The name of the pool.</param>
 		/// <param name="estimatedDailyVolume">The number of emails you expect to send in a typical day.</param>
 		/// <param name="resetDays">The number of days allowed between today and lastSendDate, default 1. For instance, if you send emails on a daily basis, this value should be 1. If you send on a weekly basis, this number should be 7.</param>
-		/// <returns>The warmup settings</returns>
+		/// <returns>The warmup settings.</returns>
 		public static WarmupSettings FromSendGridRecomendedSettings(string poolName, int estimatedDailyVolume, int resetDays = 1)
 		{
 			return new WarmupSettings()

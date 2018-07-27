@@ -5,25 +5,25 @@ using System.Runtime.Serialization;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Enumeration to indicate a logical operator
+	/// Enumeration to indicate a logical operator.
 	/// </summary>
 	[JsonConverter(typeof(StringEnumConverter))]
 	public enum LogicalOperator
 	{
 		/// <summary>
-		/// None
+		/// None.
 		/// </summary>
 		[EnumMember(Value = "")]
 		None,
 
 		/// <summary>
-		/// And
+		/// And.
 		/// </summary>
 		[EnumMember(Value = "and")]
 		And,
 
 		/// <summary>
-		/// Or
+		/// Or.
 		/// </summary>
 		[EnumMember(Value = "or")]
 		Or

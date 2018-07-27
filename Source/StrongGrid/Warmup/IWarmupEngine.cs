@@ -56,18 +56,18 @@ namespace StrongGrid.Warmup
 		/// <param name="mailSettings">The mail settings.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The result
+		/// The result.
 		/// </returns>
 		/// <remarks>
 		/// This is a convenience method with simplified parameters.
 		/// If you need more options, use the <see cref="SendAsync" /> method.
 		/// </remarks>
-		/// <exception cref="ArgumentOutOfRangeException">Too many recipients</exception>
-		/// <exception cref="Exception">Email exceeds the size limit</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
 		Task<WarmupResult> SendToSingleRecipientAsync(MailAddress to, MailAddress from, string subject, string htmlContent, string textContent, bool trackOpens = true, bool trackClicks = true, SubscriptionTrackingSettings subscriptionTracking = null, MailAddress replyTo = null, IEnumerable<Attachment> attachments = null, string templateId = null, IEnumerable<KeyValuePair<string, string>> sections = null, IEnumerable<KeyValuePair<string, string>> headers = null, IEnumerable<string> categories = null, IEnumerable<KeyValuePair<string, string>> customArgs = null, DateTime? sendAt = null, string batchId = null, UnsubscribeOptions unsubscribeOptions = null, MailSettings mailSettings = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Send the same email to multiple recipients
+		/// Send the same email to multiple recipients.
 		/// </summary>
 		/// <param name="recipients">The recipients.</param>
 		/// <param name="from">From.</param>
@@ -90,18 +90,18 @@ namespace StrongGrid.Warmup
 		/// <param name="mailSettings">The mail settings.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The result
+		/// The result.
 		/// </returns>
 		/// <remarks>
 		/// This is a convenience method with simplified parameters.
 		/// If you need more options, use the <see cref="SendAsync" /> method.
 		/// </remarks>
-		/// <exception cref="ArgumentOutOfRangeException">Too many recipients</exception>
-		/// <exception cref="Exception">Email exceeds the size limit</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
 		Task<WarmupResult> SendToMultipleRecipientsAsync(IEnumerable<MailAddress> recipients, MailAddress from, string subject, string htmlContent, string textContent, bool trackOpens = true, bool trackClicks = true, SubscriptionTrackingSettings subscriptionTracking = null, MailAddress replyTo = null, IEnumerable<Attachment> attachments = null, string templateId = null, IEnumerable<KeyValuePair<string, string>> sections = null, IEnumerable<KeyValuePair<string, string>> headers = null, IEnumerable<string> categories = null, IEnumerable<KeyValuePair<string, string>> customArgs = null, DateTime? sendAt = null, string batchId = null, UnsubscribeOptions unsubscribeOptions = null, MailSettings mailSettings = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Send email(s) over SendGrid’s v3 Web API
+		/// Send email(s) over SendGrid’s v3 Web API.
 		/// </summary>
 		/// <param name="personalizations">The personalizations.</param>
 		/// <param name="subject">The subject.</param>
@@ -119,12 +119,12 @@ namespace StrongGrid.Warmup
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="mailSettings">The mail settings.</param>
 		/// <param name="trackingSettings">The tracking settings.</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
-		/// The result
+		/// The result.
 		/// </returns>
-		/// <exception cref="ArgumentOutOfRangeException">Too many recipients</exception>
-		/// <exception cref="Exception">Email exceeds the size limit</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
 		Task<WarmupResult> SendAsync(IEnumerable<MailPersonalization> personalizations, string subject, IEnumerable<MailContent> contents, MailAddress from, MailAddress replyTo = null, IEnumerable<Attachment> attachments = null, string templateId = null, IEnumerable<KeyValuePair<string, string>> sections = null, IEnumerable<KeyValuePair<string, string>> headers = null, IEnumerable<string> categories = null, IEnumerable<KeyValuePair<string, string>> customArgs = null, DateTime? sendAt = null, string batchId = null, UnsubscribeOptions unsubscribeOptions = null, MailSettings mailSettings = null, TrackingSettings trackingSettings = null, CancellationToken cancellationToken = default(CancellationToken));
 	}
 }

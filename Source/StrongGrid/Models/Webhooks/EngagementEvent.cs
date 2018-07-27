@@ -3,7 +3,7 @@
 namespace StrongGrid.Models.Webhooks
 {
 	/// <summary>
-	/// User account details
+	/// User account details.
 	/// </summary>
 	public class EngagementEvent : Event
 	{

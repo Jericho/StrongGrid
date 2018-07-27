@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Link validation
+	/// Link validation.
 	/// </summary>
 	public class LinkValidation
 	{

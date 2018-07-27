@@ -5,25 +5,25 @@ using System.Runtime.Serialization;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Enumeration to indicate the type of a field
+	/// Enumeration to indicate the type of a field.
 	/// </summary>
 	[JsonConverter(typeof(StringEnumConverter))]
 	public enum FieldType
 	{
 		/// <summary>
-		/// Date
+		/// Date.
 		/// </summary>
 		[EnumMember(Value = "date")]
 		Date,
 
 		/// <summary>
-		/// Text
+		/// Text.
 		/// </summary>
 		[EnumMember(Value = "text")]
 		Text,
 
 		/// <summary>
-		/// Number
+		/// Number.
 		/// </summary>
 		[EnumMember(Value = "number")]
 		Number

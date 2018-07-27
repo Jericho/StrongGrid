@@ -5,7 +5,7 @@ using System;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Activity Entry
+	/// Activity Entry.
 	/// </summary>
 	public class AccessEntry
 	{
@@ -19,7 +19,7 @@ namespace StrongGrid.Models
 		public bool Allowed { get; set; }
 
 		/// <summary>
-		/// Gets or sets the authorization method
+		/// Gets or sets the authorization method.
 		/// </summary>
 		/// <value>
 		/// The authorization method.

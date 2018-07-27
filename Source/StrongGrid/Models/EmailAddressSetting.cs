@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Email address setting
+	/// Email address setting.
 	/// </summary>
 	public class EmailAddressSetting
 	{

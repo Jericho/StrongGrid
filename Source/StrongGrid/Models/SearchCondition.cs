@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Search condition
+	/// Search condition.
 	/// </summary>
 	public class SearchCondition
 	{

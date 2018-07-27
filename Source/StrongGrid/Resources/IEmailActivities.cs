@@ -12,7 +12,7 @@ namespace StrongGrid.Resources
 	/// </summary>
 	/// <seealso cref="StrongGrid.Resources.IEmailActivities" />
 	/// <remarks>
-	/// See https://sendgrid.api-docs.io/v3.0/email-activity
+	/// See <a href="https://sendgrid.api-docs.io/v3.0/email-activity">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public interface IEmailActivities
 	{
@@ -21,7 +21,7 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="filterConditions">Filtering conditions.</param>
 		/// <param name="limit">Maximum number of activity entries to return.</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
@@ -31,7 +31,7 @@ namespace StrongGrid.Resources
 		/// Get all of the details about the specified message.
 		/// </summary>
 		/// <param name="messageId">The ID of the message that you want to see details.</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="EmailMessageSummary" />.
 		/// </returns>
@@ -47,7 +47,7 @@ namespace StrongGrid.Resources
 		/// The CSV fill contain the last 1 million messages.This endpoint
 		/// will be rate limited to 1 request every 12 hours.
 		/// </remarks>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
@@ -57,7 +57,7 @@ namespace StrongGrid.Resources
 		/// Get the URL where the CSV can be downloaded.
 		/// </summary>
 		/// <param name="downloadUUID">UUID used to locate the download CSV request entry. You can find this UUID in the email that is sent with the POST Request a CSV.</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The URL as a string.
 		/// </returns>
@@ -67,7 +67,7 @@ namespace StrongGrid.Resources
 		/// Download the CSV as a stream.
 		/// </summary>
 		/// <param name="downloadUUID">UUID used to locate the download CSV request entry. You can find this UUID in the email that is sent with the POST Request a CSV.</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The stream.
 		/// </returns>
@@ -77,8 +77,8 @@ namespace StrongGrid.Resources
 		/// Download the CSV and save it to a file.
 		/// </summary>
 		/// <param name="downloadUUID">UUID used to locate the download CSV request entry. You can find this UUID in the email that is sent with the POST Request a CSV.</param>
-		/// <param name="destinationPath">The path and name of the CSV file</param>
-		/// <param name="cancellationToken">Cancellation token</param>
+		/// <param name="destinationPath">The path and name of the CSV file.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>

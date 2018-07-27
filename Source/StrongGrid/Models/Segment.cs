@@ -3,7 +3,7 @@
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Segment
+	/// Segment.
 	/// </summary>
 	public class Segment
 	{
