@@ -23,6 +23,9 @@ namespace StrongGrid.Resources
 		// SendGrid doesn't alow emails that exceed 30MB
 		private const int MAX_EMAIL_SIZE = 30 * 1024 * 1024;
 
+		// So called 'dynamic' templates have an id that starts with "d-"
+		private const string DYNAMIC_TEMPLATE_PREFIX = "d-";
+
 		private const string _endpoint = "mail";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
@@ -272,6 +275,9 @@ namespace StrongGrid.Resources
 				mailSettings.Bcc.EmailAddress = null;
 			}
 
+			var isDynamicTemplate = (templateId ?? string.Empty).StartsWith(DYNAMIC_TEMPLATE_PREFIX, StringComparison.OrdinalIgnoreCase);
+			var personalizationConverter = new MailPersonalizationConverter(isDynamicTemplate);
+
 			var data = new JObject();
 			data.AddPropertyIfValue("from", from);
 			data.AddPropertyIfValue("reply_to", replyTo);
@@ -286,7 +292,7 @@ namespace StrongGrid.Resources
 			data.AddPropertyIfValue("ip_pool_name", ipPoolName);
 			data.AddPropertyIfValue("mail_settings", mailSettings);
 			data.AddPropertyIfValue("tracking_settings", trackingSettings);
-			data.AddPropertyIfValue("personalizations", personalizationsCopy);
+			data.AddPropertyIfValue("personalizations", personalizationsCopy, personalizationConverter);
 
 			if (sections != null && sections.Any())
 			{

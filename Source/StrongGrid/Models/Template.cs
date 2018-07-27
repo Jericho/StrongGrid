@@ -29,6 +29,15 @@ namespace StrongGrid.Models
 		public string Name { get; set; }
 
 		/// <summary>
+		/// Gets or sets the type.
+		/// </summary>
+		/// <value>
+		/// The type.
+		/// </value>
+		[JsonProperty("generation", NullValueHandling = NullValueHandling.Ignore)]
+		public TemplateType Type { get; set; }
+
+		/// <summary>
 		/// Gets or sets the versions.
 		/// </summary>
 		/// <value>

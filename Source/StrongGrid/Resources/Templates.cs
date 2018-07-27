@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -32,17 +33,20 @@ namespace StrongGrid.Resources
 		/// Create a template.
 		/// </summary>
 		/// <param name="name">The name.</param>
+		/// <param name="type">The type of template.</param>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Template" />.
 		/// </returns>
-		public Task<Template> CreateAsync(string name, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Template> CreateAsync(string name, TemplateType type, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject
 			{
-				{ "name", name }
+				{ "name", name },
+				{ "generation", JToken.Parse(JsonConvert.SerializeObject(type)).ToString() }
 			};
+
 			return _client
 				.PostAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
@@ -54,15 +58,17 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve all templates.
 		/// </summary>
+		/// <param name="type">The type of template.</param>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Template" />.
 		/// </returns>
-		public Task<Template[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Template[]> GetAllAsync(TemplateType type, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return _client
 				.GetAsync(_endpoint)
+				.WithArgument("generations", JToken.Parse(JsonConvert.SerializeObject(type)).ToString())
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Template[]>("templates");

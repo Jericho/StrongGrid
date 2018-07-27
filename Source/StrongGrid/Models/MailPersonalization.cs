@@ -92,6 +92,7 @@ namespace StrongGrid.Models
 		/// The send at.
 		/// </value>
 		[JsonProperty("send_at", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonConverter(typeof(EpochConverter))]
 		public DateTime? SendAt { get; set; }
 	}
 }

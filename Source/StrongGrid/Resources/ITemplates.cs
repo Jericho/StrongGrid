@@ -17,22 +17,24 @@ namespace StrongGrid.Resources
 		/// Create a template.
 		/// </summary>
 		/// <param name="name">The name.</param>
+		/// <param name="type">The type of template.</param>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Template" />.
 		/// </returns>
-		Task<Template> CreateAsync(string name, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Template> CreateAsync(string name, TemplateType type, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Retrieve all templates.
 		/// </summary>
+		/// <param name="type">The type of template.</param>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Template" />.
 		/// </returns>
-		Task<Template[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Template[]> GetAllAsync(TemplateType type, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Retrieve a template.
