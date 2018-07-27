@@ -506,8 +506,10 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync("\n***** TEMPLATES *****\n").ConfigureAwait(false);
 
 			// GET TEMPLATES
-			var templates = await client.Templates.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"All templates retrieved. There are {templates.Length} templates").ConfigureAwait(false);
+			var legacyTemplates = await client.Templates.GetAllAsync(TemplateType.Legacy, null, cancellationToken).ConfigureAwait(false);
+			var dynamicTemplates = await client.Templates.GetAllAsync(TemplateType.Dynamic, null, cancellationToken).ConfigureAwait(false);
+			var templates = legacyTemplates.Union(dynamicTemplates);
+			await log.WriteLineAsync($"All templates retrieved. There are {legacyTemplates.Length} legacy templates and {dynamicTemplates.Length} dynamic templates").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
 			var cleanUpTasks = templates
@@ -525,29 +527,55 @@ namespace StrongGrid.IntegrationTests
 				});
 			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
-			var template = await client.Templates.CreateAsync("StrongGrid Integration Testing: My template", null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Template '{template.Name}' created. Id: {template.Id}");
+			// Legacy
+			var legacyTemplate = await client.Templates.CreateAsync("StrongGrid Integration Testing: My legacy template", TemplateType.Legacy, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Legacy template '{legacyTemplate.Name}' created. Id: {legacyTemplate.Id}");
 
-			await client.Templates.UpdateAsync(template.Id, "StrongGrid Integration Testing: updated name", null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Template '{template.Id}' updated").ConfigureAwait(false);
+			legacyTemplate = await client.Templates.UpdateAsync(legacyTemplate.Id, "StrongGrid Integration Testing: Legacy template updated name", null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Legacy template '{legacyTemplate.Id}' updated").ConfigureAwait(false);
 
-			template = await client.Templates.GetAsync(template.Id, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Template '{template.Id}' retrieved.").ConfigureAwait(false);
+			legacyTemplate = await client.Templates.GetAsync(legacyTemplate.Id, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Template '{legacyTemplate.Id}' retrieved.").ConfigureAwait(false);
 
-			var firstVersion = await client.Templates.CreateVersionAsync(template.Id, "StrongGrid Integration Testing: version 1", "My first Subject <%subject%>", "<html<body>hello world<br/><%body%></body></html>", "Hello world <%body%>", true, cancellationToken: cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"First version created. Id: {firstVersion.Id}").ConfigureAwait(false);
+			var firstLegacyVersion = await client.Templates.CreateVersionAsync(legacyTemplate.Id, "StrongGrid Integration Testing: Legacy version 1", "My first Subject <%subject%>", "<html<body>hello world<br/><%body%></body></html>", "Hello world <%body%>", true, cancellationToken: cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"First legacy version created. Id: {firstLegacyVersion.Id}").ConfigureAwait(false);
 
-			var secondVersion = await client.Templates.CreateVersionAsync(template.Id, "StrongGrid Integration Testing: version 2", "My second Subject <%subject%>", "<html<body>Qwerty<br/><%body%></body></html>", "Qwerty <%body%>", true, cancellationToken: cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Second version created. Id: {secondVersion.Id}").ConfigureAwait(false);
+			var secondLegacyVersion = await client.Templates.CreateVersionAsync(legacyTemplate.Id, "StrongGrid Integration Testing: Legacy version 2", "My second Subject <%subject%>", "<html<body>Qwerty<br/><%body%></body></html>", "Qwerty <%body%>", true, cancellationToken: cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Second legacy version created. Id: {secondLegacyVersion.Id}").ConfigureAwait(false);
 
-			await client.Templates.DeleteVersionAsync(template.Id, firstVersion.Id, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Version {firstVersion.Id} deleted").ConfigureAwait(false);
+			await client.Templates.DeleteVersionAsync(legacyTemplate.Id, firstLegacyVersion.Id, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Legacy version {firstLegacyVersion.Id} deleted").ConfigureAwait(false);
 
-			await client.Templates.DeleteVersionAsync(template.Id, secondVersion.Id, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Version {secondVersion.Id} deleted").ConfigureAwait(false);
+			await client.Templates.DeleteVersionAsync(legacyTemplate.Id, secondLegacyVersion.Id, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Legacy version {secondLegacyVersion.Id} deleted").ConfigureAwait(false);
 
-			await client.Templates.DeleteAsync(template.Id, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Template {template.Id} deleted").ConfigureAwait(false);
+			await client.Templates.DeleteAsync(legacyTemplate.Id, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Legacy template {legacyTemplate.Id} deleted").ConfigureAwait(false);
+
+			// Dynamic
+			var dynamicTemplate = await client.Templates.CreateAsync("StrongGrid Integration Testing: My dynamic template", TemplateType.Legacy, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Dynamic template '{dynamicTemplate.Name}' created. Id: {legacyTemplate.Id}");
+
+			dynamicTemplate = await client.Templates.UpdateAsync(dynamicTemplate.Id, "StrongGrid Integration Testing: Dynamic template updated name", null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Dynamic template '{dynamicTemplate.Id}' updated").ConfigureAwait(false);
+
+			dynamicTemplate = await client.Templates.GetAsync(dynamicTemplate.Id, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Template '{dynamicTemplate.Id}' retrieved.").ConfigureAwait(false);
+
+			var firstDynamicVersion = await client.Templates.CreateVersionAsync(dynamicTemplate.Id, "StrongGrid Integration Testing: Dynamic version 1", "Dear {{first_name}}", "<html<body>hello world<br/></body></html>", "Hello world", true, cancellationToken: cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"First dynamic version created. Id: {firstDynamicVersion.Id}").ConfigureAwait(false);
+
+			var secondDynamicVersion = await client.Templates.CreateVersionAsync(dynamicTemplate.Id, "StrongGrid Integration Testing: Dynamic version 2", "Dear {{first_name}}", "<html<body>Qwerty<br/></body></html>", "Qwerty", true, cancellationToken: cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Second dynamic version created. Id: {secondDynamicVersion.Id}").ConfigureAwait(false);
+
+			await client.Templates.DeleteVersionAsync(dynamicTemplate.Id, firstDynamicVersion.Id, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Dynamic version {firstDynamicVersion.Id} deleted").ConfigureAwait(false);
+
+			await client.Templates.DeleteVersionAsync(dynamicTemplate.Id, secondDynamicVersion.Id, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Dynamic version {secondDynamicVersion.Id} deleted").ConfigureAwait(false);
+
+			await client.Templates.DeleteAsync(dynamicTemplate.Id, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Dynamic template {dynamicTemplate.Id} deleted").ConfigureAwait(false);
 		}
 
 		private static async Task User(IClient client, TextWriter log, CancellationToken cancellationToken)
