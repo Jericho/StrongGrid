@@ -226,7 +226,7 @@ var warmupEngine = new WarmupEngine(warmupSettings, client);
 var ipAddresses = new[] { "168.245.123.132", "168.245.123.133" };
 await warmupEngine.PrepareWithExistingIpAddressesAsync(ipAddresses, CancellationToken.None).ConfigureAwait(false);
 
-// Send emails using any othe following methods
+// Send emails using any of the following methods
 var result = warmupEngine.SendToSingleRecipientAsync(...);
 var result = warmupEngine.SendToMultipleRecipientsAsync(...);
 var result = warmupEngine.SendAsync(...);
