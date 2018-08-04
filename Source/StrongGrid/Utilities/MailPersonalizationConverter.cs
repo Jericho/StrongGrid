@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using StrongGrid.Models;
 using System;
 using System.Collections.Generic;
@@ -14,7 +13,7 @@ namespace StrongGrid.Utilities
 	/// <seealso cref="Newtonsoft.Json.JsonConverter" />
 	internal class MailPersonalizationConverter : JsonConverter
 	{
-		private bool _isUsedWithDynamicTemplate;
+		private readonly bool _isUsedWithDynamicTemplate;
 
 		public MailPersonalizationConverter()
 			: this(false)
@@ -70,8 +69,6 @@ namespace StrongGrid.Utilities
 		{
 			if (value == null) return;
 
-			var substitutions = Enumerable.Empty<KeyValuePair<string, string>>();
-
 			writer.WriteStartObject();
 
 #if NETSTANDARD1
@@ -82,56 +79,47 @@ namespace StrongGrid.Utilities
 
 			foreach (var propertyInfo in props)
 			{
-				var customAttributes = propertyInfo.GetCustomAttributes(false);
+				var propertyCustomAttributes = propertyInfo.GetCustomAttributes(false);
+				var propertyConverterAttribute = propertyCustomAttributes.OfType<JsonConverterAttribute>().FirstOrDefault();
+				var propertyIsIgnored = propertyCustomAttributes.OfType<JsonIgnoreAttribute>().Any();
+				var propertyName = propertyCustomAttributes.OfType<JsonPropertyAttribute>().FirstOrDefault()?.PropertyName ?? propertyInfo.Name;
+				var propertyValue = propertyInfo.GetValue(value);
 
-				// Special cases when used with a dynamic template
-				if (_isUsedWithDynamicTemplate && propertyInfo.Name == "Substitutions")
+				// Skip the property if it's decorated with the 'ignore' attribute
+				if (propertyIsIgnored) continue;
+
+				// Ignore the property if it contains a null value
+				if (propertyValue == null) continue;
+
+				// Special case: substitutions
+				if (propertyInfo.Name == "Substitutions")
 				{
-					var tempSubstitutions = propertyInfo.GetValue(value);
-					if (tempSubstitutions != null) substitutions = (IEnumerable<KeyValuePair<string, string>>)tempSubstitutions;
-					continue;
+					// Ignore this property when email is sent using a dynamic template
+					if (_isUsedWithDynamicTemplate) continue;
+
+					// Ignore this property if the enumeration is empty
+					var substitutions = (IEnumerable<KeyValuePair<string, string>>)propertyValue;
+					if (!substitutions.Any()) continue;
+
+					// Write the substitutions to JSON
+					WriteJsonProperty(writer, propertyName, propertyValue, serializer, propertyConverterAttribute);
 				}
 
-				// Skip properties that have the 'ignore' attribute (if any)
-				var ignorAttribute = customAttributes.OfType<JsonIgnoreAttribute>().FirstOrDefault();
-				if (ignorAttribute != null) continue;
-
-				// Ignore properties that contain a null value
-				var tempVal = propertyInfo.GetValue(value);
-				if (tempVal == null) continue;
-
-				// Write the property name to JSON
-				var propertyName = customAttributes.OfType<JsonPropertyAttribute>().FirstOrDefault()?.PropertyName ?? propertyInfo.Name;
-				writer.WritePropertyName(propertyName);
-
-				// Write the property value to JSON
-				var converterAttribute = customAttributes.OfType<JsonConverterAttribute>().FirstOrDefault();
-				if (converterAttribute != null)
+				// Special case: dynamic data
+				else if (propertyInfo.Name == "DynamicData")
 				{
-					var propertyJsonSerializer = new JsonSerializer();
-					var propertyJsonConverter = Activator.CreateInstance(converterAttribute.ConverterType);
-					propertyJsonSerializer.Converters.Add((JsonConverter)propertyJsonConverter);
-					propertyJsonSerializer.Serialize(writer, tempVal);
+					// Ignore this property when email is sent without using a template or when using a 'legacy' template
+					if (!_isUsedWithDynamicTemplate) continue;
+
+					// Write the dynamic data to JSON
+					WriteJsonProperty(writer, propertyName, propertyValue, serializer, propertyConverterAttribute);
 				}
+
+				// Write the property to JSON
 				else
 				{
-					serializer.Serialize(writer, tempVal);
+					WriteJsonProperty(writer, propertyName, propertyValue, serializer, propertyConverterAttribute);
 				}
-			}
-
-			// Write the Substitutions to JSON
-			if (_isUsedWithDynamicTemplate && substitutions.Any())
-			{
-				writer.WritePropertyName("dynamic_template_data");
-				writer.WriteStartObject();
-
-				foreach (var pair in substitutions)
-				{
-					writer.WritePropertyName(pair.Key);
-					serializer.Serialize(writer, pair.Value);
-				}
-
-				writer.WriteEndObject();
 			}
 
 			// End of JSON serialization
@@ -151,6 +139,23 @@ namespace StrongGrid.Utilities
 		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 		{
 			throw new NotSupportedException("The MailPersonalizationConverter can only be used to write JSON");
+		}
+
+		private void WriteJsonProperty(JsonWriter writer, string propertyName, object propertyValue, JsonSerializer serializer, JsonConverterAttribute propertyConverterAttribute)
+		{
+			writer.WritePropertyName(propertyName);
+
+			if (propertyConverterAttribute != null)
+			{
+				var converter = (JsonConverter)Activator.CreateInstance(propertyConverterAttribute.ConverterType);
+				var propertyJsonSerializer = new JsonSerializer();
+				propertyJsonSerializer.Converters.Add(converter);
+				propertyJsonSerializer.Serialize(writer, propertyValue);
+			}
+			else
+			{
+				serializer.Serialize(writer, propertyValue);
+			}
 		}
 	}
 }
