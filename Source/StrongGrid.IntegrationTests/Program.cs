@@ -553,8 +553,8 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync($"Legacy template {legacyTemplate.Id} deleted").ConfigureAwait(false);
 
 			// Dynamic
-			var dynamicTemplate = await client.Templates.CreateAsync("StrongGrid Integration Testing: My dynamic template", TemplateType.Legacy, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Dynamic template '{dynamicTemplate.Name}' created. Id: {legacyTemplate.Id}");
+			var dynamicTemplate = await client.Templates.CreateAsync("StrongGrid Integration Testing: My dynamic template", TemplateType.Dynamic, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Dynamic template '{dynamicTemplate.Name}' created. Id: {dynamicTemplate.Id}");
 
 			dynamicTemplate = await client.Templates.UpdateAsync(dynamicTemplate.Id, "StrongGrid Integration Testing: Dynamic template updated name", null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Dynamic template '{dynamicTemplate.Id}' updated").ConfigureAwait(false);
@@ -565,7 +565,35 @@ namespace StrongGrid.IntegrationTests
 			var firstDynamicVersion = await client.Templates.CreateVersionAsync(dynamicTemplate.Id, "StrongGrid Integration Testing: Dynamic version 1", "Dear {{first_name}}", "<html<body>hello world<br/></body></html>", "Hello world", true, cancellationToken: cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"First dynamic version created. Id: {firstDynamicVersion.Id}").ConfigureAwait(false);
 
-			var secondDynamicVersion = await client.Templates.CreateVersionAsync(dynamicTemplate.Id, "StrongGrid Integration Testing: Dynamic version 2", "Dear {{first_name}}", "<html<body>Qwerty<br/></body></html>", "Qwerty", true, cancellationToken: cancellationToken).ConfigureAwait(false);
+			var dynamicHtmlContent = @"
+<html>
+	<body>
+		Hello {{Customer.first_name}} {{Customer.last_name}}. 
+		You have a credit balance of {{CreditBalance}}<br/>
+		<ol>
+		{{#each Orders}}
+			<li>You ordered: {{this.item}} on: {{this.date}}</li>
+		{{/each}}
+		</ol>
+	</body>
+</html>";
+			var testData = new
+			{
+				Customer = new
+				{
+					first_name = "aaa",
+					last_name = "aaa"
+				},
+				CreditBalance = 99.88,
+				Orders = new[]
+				{
+					new { item = "item1", date = "1/1/2018" },
+					new { item = "item2", date = "1/2/2018" },
+					new { item = "item3", date = "1/3/2018" }
+				}
+			};
+
+			var secondDynamicVersion = await client.Templates.CreateVersionAsync(dynamicTemplate.Id, "StrongGrid Integration Testing: Dynamic version 2", "Dear {{Customer.first_name}}", dynamicHtmlContent, "... this is the text content ...", true, EditorType.Code, testData, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Second dynamic version created. Id: {secondDynamicVersion.Id}").ConfigureAwait(false);
 
 			await client.Templates.DeleteVersionAsync(dynamicTemplate.Id, firstDynamicVersion.Id, null, cancellationToken).ConfigureAwait(false);

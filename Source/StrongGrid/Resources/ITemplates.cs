@@ -80,12 +80,13 @@ namespace StrongGrid.Resources
 		/// <param name="textContent">Content of the text.</param>
 		/// <param name="isActive">if set to <c>true</c> [is active].</param>
 		/// <param name="editorType">The type of editor.</param>
+		/// <param name="testData">For dynamic templates only, the mock data that will be used for template preview and test sends.</param>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="TemplateVersion" />.
 		/// </returns>
-		Task<TemplateVersion> CreateVersionAsync(string templateId, string name, string subject, string htmlContent, string textContent, bool isActive, Parameter<EditorType?> editorType = default(Parameter<EditorType?>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<TemplateVersion> CreateVersionAsync(string templateId, string name, string subject, string htmlContent, string textContent, bool isActive, Parameter<EditorType?> editorType = default(Parameter<EditorType?>), Parameter<object> testData = default(Parameter<object>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Activate a version.
@@ -122,12 +123,13 @@ namespace StrongGrid.Resources
 		/// <param name="textContent">Content of the text.</param>
 		/// <param name="isActive">if set to <c>true</c> [is active].</param>
 		/// <param name="editorType">The type of editor.</param>
+		/// <param name="testData">For dynamic templates only, the mock data that will be used for template preview and test sends.</param>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="TemplateVersion" />.
 		/// </returns>
-		Task<TemplateVersion> UpdateVersionAsync(string templateId, string versionId, Parameter<string> name = default(Parameter<string>), Parameter<string> subject = default(Parameter<string>), Parameter<string> htmlContent = default(Parameter<string>), Parameter<string> textContent = default(Parameter<string>), Parameter<bool> isActive = default(Parameter<bool>), Parameter<EditorType?> editorType = default(Parameter<EditorType?>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<TemplateVersion> UpdateVersionAsync(string templateId, string versionId, Parameter<string> name = default(Parameter<string>), Parameter<string> subject = default(Parameter<string>), Parameter<string> htmlContent = default(Parameter<string>), Parameter<string> textContent = default(Parameter<string>), Parameter<bool> isActive = default(Parameter<bool>), Parameter<EditorType?> editorType = default(Parameter<EditorType?>), Parameter<object> testData = default(Parameter<object>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Delete a template version.

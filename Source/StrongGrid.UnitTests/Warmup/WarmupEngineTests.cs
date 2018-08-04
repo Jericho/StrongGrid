@@ -116,7 +116,7 @@ namespace StrongGrid.UnitTests.Warmup
 			var warmupEngine = new WarmupEngine(warmupSettings, mockClient.Object, mockRepository.Object, mockSystemClock.Object);
 
 			// Act
-			var result = await warmupEngine.SendToSingleRecipientAsync(recipient, null, null, null, null, false, false, null, null, null, null, null, null, null, null, null, null, null, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await warmupEngine.SendToSingleRecipientAsync(recipient, null, null, null, null, null, null, false, false, null, null, null, null, null, null, null, null, null, null, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockClient.VerifyAll();

@@ -71,9 +71,28 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The substitutions.
 		/// </value>
+		/// <remarks>
+		/// This is used when sending emails without a template or when using a 'legacy' template.
+		/// Substitutions are ignored when using a dynamic template.
+		/// For dynamic templates, you must use <see cref="DynamicData"/>.
+		/// </remarks>
 		[JsonProperty("substitutions", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(KeyValuePairEnumerationConverter))]
 		public KeyValuePair<string, string>[] Substitutions { get; set; }
+
+		/// <summary>
+		/// Gets or sets the merge data.
+		/// </summary>
+		/// <value>
+		/// The data.
+		/// </value>
+		/// <remarks>
+		/// This is used when sending emails with a dynamic template.
+		/// DynamicData is ignored when using a legacy template.
+		/// For legacy templates, you must use <see cref="Substitutions"/>.
+		/// </remarks>
+		[JsonProperty("dynamic_template_data", NullValueHandling = NullValueHandling.Ignore)]
+		public object DynamicData { get; set; }
 
 		/// <summary>
 		/// Gets or sets the custom arguments.

@@ -15,7 +15,7 @@ namespace StrongGrid.Resources
 	public interface IMail
 	{
 		/// <summary>
-		/// Send an email to a single recipient.
+		/// Send an email to a single recipient without using a template (which means you must provide the subject, html content and text content).
 		/// </summary>
 		/// <param name="to">To.</param>
 		/// <param name="from">From.</param>
@@ -27,7 +27,63 @@ namespace StrongGrid.Resources
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
+		/// <param name="sections">The sections.</param>
+		/// <param name="headers">The headers.</param>
+		/// <param name="categories">The categories.</param>
+		/// <param name="customArgs">The custom arguments.</param>
+		/// <param name="sendAt">The send at.</param>
+		/// <param name="batchId">The batch identifier.</param>
+		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
+		/// <param name="ipPoolName">Name of the ip pool.</param>
+		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The message id.
+		/// </returns>
+		/// <remarks>
+		/// This overload is ideal when sending an email without using a template.
+		/// This is a convenience method with simplified parameters.
+		/// If you need more options, use the <see cref="SendAsync" /> method.
+		/// </remarks>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
+		Task<string> SendToSingleRecipientAsync(
+			MailAddress to,
+			MailAddress from,
+			string subject,
+			string htmlContent,
+			string textContent,
+			bool trackOpens = true,
+			bool trackClicks = true,
+			SubscriptionTrackingSettings subscriptionTracking = null,
+			MailAddress replyTo = null,
+			IEnumerable<Attachment> attachments = null,
+			IEnumerable<KeyValuePair<string, string>> sections = null,
+			IEnumerable<KeyValuePair<string, string>> headers = null,
+			IEnumerable<string> categories = null,
+			IEnumerable<KeyValuePair<string, string>> customArgs = null,
+			DateTime? sendAt = null,
+			string batchId = null,
+			UnsubscribeOptions unsubscribeOptions = null,
+			string ipPoolName = null,
+			MailSettings mailSettings = null,
+			CancellationToken cancellationToken = default(CancellationToken));
+
+		/// <summary>
+		/// Send an email to a single recipient using a legacy template.
+		/// </summary>
+		/// <param name="to">To.</param>
+		/// <param name="from">From.</param>
+		/// <param name="subject">The subject.</param>
+		/// <param name="htmlContent">Content of the HTML.</param>
+		/// <param name="textContent">Content of the text.</param>
 		/// <param name="templateId">The template identifier.</param>
+		/// <param name="substitutions">Data to be merged in the content.</param>
+		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
+		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
+		/// <param name="subscriptionTracking">The subscription tracking.</param>
+		/// <param name="replyTo">The reply to.</param>
+		/// <param name="attachments">The attachments.</param>
 		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
@@ -45,8 +101,118 @@ namespace StrongGrid.Resources
 		/// This is a convenience method with simplified parameters.
 		/// If you need more options, use the <see cref="SendAsync" /> method.
 		/// </remarks>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
 		Task<string> SendToSingleRecipientAsync(
 			MailAddress to,
+			MailAddress from,
+			string subject,
+			string htmlContent,
+			string textContent,
+			string templateId,
+			IEnumerable<KeyValuePair<string, string>> substitutions = null,
+			bool trackOpens = true,
+			bool trackClicks = true,
+			SubscriptionTrackingSettings subscriptionTracking = null,
+			MailAddress replyTo = null,
+			IEnumerable<Attachment> attachments = null,
+			IEnumerable<KeyValuePair<string, string>> sections = null,
+			IEnumerable<KeyValuePair<string, string>> headers = null,
+			IEnumerable<string> categories = null,
+			IEnumerable<KeyValuePair<string, string>> customArgs = null,
+			DateTime? sendAt = null,
+			string batchId = null,
+			UnsubscribeOptions unsubscribeOptions = null,
+			string ipPoolName = null,
+			MailSettings mailSettings = null,
+			CancellationToken cancellationToken = default(CancellationToken));
+
+		/// <summary>
+		/// Send an email to a single recipient using a dynamic template.
+		/// </summary>
+		/// <param name="to">To.</param>
+		/// <param name="from">From.</param>
+		/// <param name="dynamicTemplateId">The identifier of the template.</param>
+		/// <param name="dynamicData">The data to be merged in the content.</param>
+		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
+		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
+		/// <param name="subscriptionTracking">The subscription tracking.</param>
+		/// <param name="replyTo">The reply to.</param>
+		/// <param name="attachments">The attachments.</param>
+		/// <param name="sections">The sections.</param>
+		/// <param name="headers">The headers.</param>
+		/// <param name="categories">The categories.</param>
+		/// <param name="customArgs">The custom arguments.</param>
+		/// <param name="sendAt">The send at.</param>
+		/// <param name="batchId">The batch identifier.</param>
+		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
+		/// <param name="ipPoolName">Name of the ip pool.</param>
+		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The message id.
+		/// </returns>
+		/// <remarks>
+		/// This is a convenience method with simplified parameters.
+		/// If you need more options, use the <see cref="SendAsync" /> method.
+		/// </remarks>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
+		Task<string> SendToSingleRecipientAsync(
+			MailAddress to,
+			MailAddress from,
+			string dynamicTemplateId,
+			object dynamicData = null,
+			bool trackOpens = true,
+			bool trackClicks = true,
+			SubscriptionTrackingSettings subscriptionTracking = null,
+			MailAddress replyTo = null,
+			IEnumerable<Attachment> attachments = null,
+			IEnumerable<KeyValuePair<string, string>> sections = null,
+			IEnumerable<KeyValuePair<string, string>> headers = null,
+			IEnumerable<string> categories = null,
+			IEnumerable<KeyValuePair<string, string>> customArgs = null,
+			DateTime? sendAt = null,
+			string batchId = null,
+			UnsubscribeOptions unsubscribeOptions = null,
+			string ipPoolName = null,
+			MailSettings mailSettings = null,
+			CancellationToken cancellationToken = default(CancellationToken));
+
+		/// <summary>
+		/// Send the same email to multiple recipients without using a template (which means you must provide the subject, html content and text content).
+		/// </summary>
+		/// <param name="recipients">The recipients.</param>
+		/// <param name="from">From.</param>
+		/// <param name="subject">The subject.</param>
+		/// <param name="htmlContent">Content of the HTML.</param>
+		/// <param name="textContent">Content of the text.</param>
+		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
+		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
+		/// <param name="subscriptionTracking">The subscription tracking.</param>
+		/// <param name="replyTo">The reply to.</param>
+		/// <param name="attachments">The attachments.</param>
+		/// <param name="sections">The sections.</param>
+		/// <param name="headers">The headers.</param>
+		/// <param name="categories">The categories.</param>
+		/// <param name="customArgs">The custom arguments.</param>
+		/// <param name="sendAt">The send at.</param>
+		/// <param name="batchId">The batch identifier.</param>
+		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
+		/// <param name="ipPoolName">Name of the ip pool.</param>
+		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The message id.
+		/// </returns>
+		/// <remarks>
+		/// This is a convenience method with simplified parameters.
+		/// If you need more options, use the <see cref="SendAsync" /> method.
+		/// </remarks>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
+		Task<string> SendToMultipleRecipientsAsync(
+			IEnumerable<MailAddress> recipients,
 			MailAddress from,
 			string subject,
 			string htmlContent,
@@ -56,7 +222,64 @@ namespace StrongGrid.Resources
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			string templateId = null,
+			IEnumerable<KeyValuePair<string, string>> sections = null,
+			IEnumerable<KeyValuePair<string, string>> headers = null,
+			IEnumerable<string> categories = null,
+			IEnumerable<KeyValuePair<string, string>> customArgs = null,
+			DateTime? sendAt = null,
+			string batchId = null,
+			UnsubscribeOptions unsubscribeOptions = null,
+			string ipPoolName = null,
+			MailSettings mailSettings = null,
+			CancellationToken cancellationToken = default(CancellationToken));
+
+		/// <summary>
+		/// Send the same email to multiple recipients using a legacy template.
+		/// </summary>
+		/// <param name="recipients">The recipients.</param>
+		/// <param name="from">From.</param>
+		/// <param name="subject">The subject.</param>
+		/// <param name="htmlContent">Content of the HTML.</param>
+		/// <param name="textContent">Content of the text.</param>
+		/// <param name="templateId">The template identifier.</param>
+		/// <param name="substitutions">Data to be merged in the content.</param>
+		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
+		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
+		/// <param name="subscriptionTracking">The subscription tracking.</param>
+		/// <param name="replyTo">The reply to.</param>
+		/// <param name="attachments">The attachments.</param>
+		/// <param name="sections">The sections.</param>
+		/// <param name="headers">The headers.</param>
+		/// <param name="categories">The categories.</param>
+		/// <param name="customArgs">The custom arguments.</param>
+		/// <param name="sendAt">The send at.</param>
+		/// <param name="batchId">The batch identifier.</param>
+		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
+		/// <param name="ipPoolName">Name of the ip pool.</param>
+		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The message id.
+		/// </returns>
+		/// <remarks>
+		/// This is a convenience method with simplified parameters.
+		/// If you need more options, use the <see cref="SendAsync" /> method.
+		/// </remarks>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
+		Task<string> SendToMultipleRecipientsAsync(
+			IEnumerable<MailAddress> recipients,
+			MailAddress from,
+			string subject,
+			string htmlContent,
+			string textContent,
+			string templateId,
+			IEnumerable<KeyValuePair<string, string>> substitutions = null,
+			bool trackOpens = true,
+			bool trackClicks = true,
+			SubscriptionTrackingSettings subscriptionTracking = null,
+			MailAddress replyTo = null,
+			IEnumerable<Attachment> attachments = null,
 			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
@@ -73,15 +296,13 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="recipients">The recipients.</param>
 		/// <param name="from">From.</param>
-		/// <param name="subject">The subject.</param>
-		/// <param name="htmlContent">Content of the HTML.</param>
-		/// <param name="textContent">Content of the text.</param>
+		/// <param name="dynamicTemplateId">The identifier of the template.</param>
+		/// <param name="dynamicData">The data to be merged in the content.</param>
 		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
 		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
-		/// <param name="templateId">The template identifier.</param>
 		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
@@ -99,18 +320,18 @@ namespace StrongGrid.Resources
 		/// This is a convenience method with simplified parameters.
 		/// If you need more options, use the <see cref="SendAsync" /> method.
 		/// </remarks>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
 		Task<string> SendToMultipleRecipientsAsync(
 			IEnumerable<MailAddress> recipients,
 			MailAddress from,
-			string subject,
-			string htmlContent,
-			string textContent,
+			string dynamicTemplateId,
+			object dynamicData = null,
 			bool trackOpens = true,
 			bool trackClicks = true,
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			string templateId = null,
 			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
@@ -146,6 +367,8 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The message id.
 		/// </returns>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
 		Task<string> SendAsync(
 			IEnumerable<MailPersonalization> personalizations,
 			string subject,

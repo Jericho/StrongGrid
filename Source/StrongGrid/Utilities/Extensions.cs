@@ -364,7 +364,7 @@ namespace StrongGrid.Utilities
 				jsonSerializer.Converters.Add(converter);
 			}
 
-			AddPropertyIfValue(jsonObject, propertyName, parameter, value => JToken.FromObject(parameter.Value, jsonSerializer));
+			AddPropertyIfValue(jsonObject, propertyName, parameter, value => JToken.FromObject(value, jsonSerializer));
 		}
 
 		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, Parameter<IEnumerable<T>> parameter, JsonConverter converter = null)
