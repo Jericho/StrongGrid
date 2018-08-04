@@ -143,7 +143,7 @@ namespace WebApplication1.Controllers
 
 ### Warmup Engine
 
-SendGrid already provide a way to warm up ip addresses but you have no control over this process. StrongGrid solves this issue by providing you a warmup engine that you can tailor to your needs.
+SendGrid already provides a way to warm up ip addresses but you have no control over this process. StrongGrid solves this issue by providing you a warmup engine that you can tailor to your needs.
 
 #### Typical usage
 
@@ -185,7 +185,7 @@ var warmupSettings = WarmupSettings.FromSendGridRecomendedSettings(poolName, est
 
 **Progress repository:** By default StrongGrid's WarmupEngine will write progress information in a file on your computer's `temp` folder but you can override this settings. 
 You can change the folder where this file is saved but you can also decide to use a completely different repository. Out of the box, StrongGrid provides `FileSystemWarmupProgressRepository` and `MemoryWarmupProgressRepository`.
-It also provide an interface called `IWarmupProgressRepository` which allows you to write your own implementation to save the progress data to a location more suitable to you such as, a database, Azure, AWS, etc.
+It also provides an interface called `IWarmupProgressRepository` which allows you to write your own implementation to save the progress data to a location more suitable to you such as a database, Azure, AWS, etc.
 Please note that `MemoryWarmupProgressRepository` in intended to be used for testing and we don't recommend using it in production. The main reason for this recommendation is that the data is stored in memory and it's lost when your computer is restarted.
 This means that your warmup process would start all over from day 1 each time you computer is rebooted.
 
