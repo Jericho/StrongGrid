@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace StrongGrid.Models
 {
@@ -45,5 +46,16 @@ namespace StrongGrid.Models
 		/// </value>
 		[JsonProperty("versions", NullValueHandling = NullValueHandling.Ignore)]
 		public TemplateVersion[] Versions { get; set; }
+
+		/// <summary>
+		/// Checks if a given identifier refers to a dynamic template.
+		/// </summary>
+		/// <param name="templateId">The identifier of the template.</param>
+		/// <returns>true if the identifier refers to a dynamic template. Otherwise false.</returns>
+		public static bool IsDynamic(string templateId)
+		{
+			// Dynamic templates have an id that starts with "d-"
+			return (templateId ?? string.Empty).StartsWith("d-", StringComparison.OrdinalIgnoreCase);
+		}
 	}
 }
