@@ -94,6 +94,73 @@ var globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, en
 var template = await client.Templates.CreateAsync("My template");
 ```
 
+### Dynamic templates
+In August 2018, SendGrid released a new feature in their API that allows you to use the [Handlebars syntax](https://sendgrid.com/docs/User_Guide/Transactional_Templates/Using_handlebars.html) to specify merge fields in your content. Using this powerfull new feature in StrongGrid is very easy.
+
+First, you must specify `TemplateType.Dynamic` when creating a new template like in this example:
+
+```csharp
+var dynamicTemplate = await client.Templates.CreateAsync("My dynamic template", TemplateType.Dynamic).ConfigureAwait(false);
+```
+
+Second, you create a version of your content where you use the Handlebars syntax to define the merge fields and you can also specify an optional "test data" that will be used by the SendGrid UI to show you a sample. Rest assured that this test data will never be sent to any recipient. The following code sample demonstrates creating a dynamic template version containing [simple substitution](https://sendgrid.com/docs/User_Guide/Transactional_Templates/Using_handlebars.html#-Substitution) for `CreditBalance`, [deep object replacements](https://sendgrid.com/docs/User_Guide/Transactional_Templates/Using_handlebars.html#-Deep-object-replacement) for `Customer.first_name` and `Customer.last_name` and an [iterator](https://sendgrid.com/docs/User_Guide/Transactional_Templates/Using_handlebars.html#-Iterations) that displays information about multiple orders.
+
+```csharp
+var subject = "Dear {{Customer.first_name}}";
+var htmlContent = @"
+    <html>
+    	<body>
+	    	Hello {{Customer.first_name}} {{Customer.last_name}}. 
+		    You have a credit balance of {{CreditBalance}}<br/>
+    		<ol>
+	    	{{#each Orders}}
+		    	<li>You ordered: {{this.item}} on: {{this.date}}</li>
+    		{{/each}}
+	    	</ol>
+    	</body>
+    </html>";
+var textContent = "... this is the text content ...";
+var testData = new
+{
+	Customer = new
+	{
+		first_name = "aaa",
+		last_name = "aaa"
+	},
+	CreditBalance = 99.88,
+	Orders = new[]
+	{
+		new { item = "item1", date = "1/1/2018" },
+		new { item = "item2", date = "1/2/2018" },
+		new { item = "item3", date = "1/3/2018" }
+	}
+};
+await client.Templates.CreateVersionAsync(dynamicTemplate.Id, "Version 1", subject, htmlContent, textContent, true, EditorType.Code, testData).ConfigureAwait(false);
+```
+
+Finally, you can send an email to a recipient and specify the dynamic data that applies to them like so:
+
+```csharp
+var dynamicData = new
+{
+	Customer = new
+	{
+		first_name = "Bob",
+		last_name = "Smith"
+	},
+	CreditBalance = 56.78,
+	Orders = new[]
+	{
+		new { item = "shoes", date = "2/1/2018" },
+		new { item = "hat", date = "1/4/2018" }
+	}
+};
+var to = new MailAddress("bobsmith@hotmail.com", "Bob Smith");
+var from = new MailAddress("test@example.com", "John Smith");
+var messageId = await client.Mail.SendToSingleRecipientAsync(to, from, dynamicTemplate.Id, dynamicData).ConfigureAwait(false);
+```
+
+
 ### Parser
  
 Here's a basic example of an API controller which parses the webhook from SendGrid into an array of Events:
