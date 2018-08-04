@@ -239,7 +239,7 @@ Let's use an example to illustrate: let's say that you have 15 emails left befor
 
 #### More advanced usage
 
-**Recommended daily volume:** If you are unsure what daily limits to use, [SendGrid has provided a recommended schedule](https://sendgrid.com/docs/assets/IPWarmupSchedule.pdf) and StrongGrid provides a convenient method to use the recommended schedule tailored to number of emails you expect to send in a typical day.
+**Recommended daily volume:** If you are unsure what daily limits to use, [SendGrid has provided a recommended schedule](https://sendgrid.com/docs/assets/IPWarmupSchedule.pdf) and StrongGrid provides a convenient method to use the recommended schedule tailored to the number of emails you expect to send in a typical day.
 All you have to do is come up with a rough estimate of your daily volume and StrongGrid can configure the appropriate warmup settings.
 Here's an example:
 
