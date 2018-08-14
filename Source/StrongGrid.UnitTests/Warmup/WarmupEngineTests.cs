@@ -40,13 +40,13 @@ namespace StrongGrid.UnitTests.Warmup
 			var mockIpPoolsResource = new Mock<IIpPools>(MockBehavior.Strict);
 			mockIpPoolsResource
 				.Setup(r => r.CreateAsync(poolName, It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new IpPool() { Name = poolName });
+				.ReturnsAsync(poolName);
 			mockIpPoolsResource
 				.Setup(r => r.AddAddressAsync(poolName, ipAddresses[0], It.IsAny<CancellationToken>()))
-				.Returns(Task.FromResult(new IpPoolAddress() { Address = ipAddresses[0], WarmupStartedOn = null, Warmup = false }));
+				.ReturnsAsync(new IpPoolAddress() { Address = ipAddresses[0], WarmupStartedOn = null, Warmup = false });
 			mockIpPoolsResource
 				.Setup(r => r.AddAddressAsync(poolName, ipAddresses[1], It.IsAny<CancellationToken>()))
-				.Returns(Task.FromResult(new IpPoolAddress() { Address = ipAddresses[1], WarmupStartedOn = null, Warmup = false }));
+				.ReturnsAsync(new IpPoolAddress() { Address = ipAddresses[1], WarmupStartedOn = null, Warmup = false });
 
 			var mockClient = new Mock<IClient>(MockBehavior.Strict);
 			mockClient.SetupGet(c => c.IpAddresses).Returns(mockIpAddressesResource.Object);

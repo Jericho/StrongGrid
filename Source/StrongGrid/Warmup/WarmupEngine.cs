@@ -735,7 +735,7 @@ namespace StrongGrid.Warmup
 		private async Task PrepareEngineAsync(Func<IEnumerable<string>> getIpAddresses, CancellationToken cancellationToken)
 		{
 			// Create a new pool
-			var newIpPool = await _client.IpPools.CreateAsync(_warmupSettings.PoolName, cancellationToken).ConfigureAwait(false);
+			var newPoolName = await _client.IpPools.CreateAsync(_warmupSettings.PoolName, cancellationToken).ConfigureAwait(false);
 
 			// Get the ip addresses
 			var ipAddresses = getIpAddresses().ToArray();
@@ -743,7 +743,7 @@ namespace StrongGrid.Warmup
 			// Add each address to the new pool
 			foreach (var ipAddress in ipAddresses)
 			{
-				await _client.IpPools.AddAddressAsync(newIpPool.Name, ipAddress, cancellationToken).ConfigureAwait(false);
+				await _client.IpPools.AddAddressAsync(newPoolName, ipAddress, cancellationToken).ConfigureAwait(false);
 			}
 
 			// Record the start of process
@@ -753,7 +753,7 @@ namespace StrongGrid.Warmup
 				DateLastSent = DateTime.MinValue,
 				EmailsSentLastDay = 0,
 				IpAddresses = ipAddresses,
-				PoolName = _warmupSettings.PoolName,
+				PoolName = newPoolName,
 				WarmupDay = 0
 			};
 			await _warmupProgressRepository.UpdateStatusAsync(warmupStatus, cancellationToken).ConfigureAwait(false);
