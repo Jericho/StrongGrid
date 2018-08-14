@@ -2,6 +2,7 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -54,18 +55,26 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Retrieve all IP pools.
+		/// Retrieve the names of all IP pools.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// An array of <see cref="IpPool" />.
+		/// The names of all existing IP pools.
 		/// </returns>
-		public Task<IpPool[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<string[]> GetAllNamesAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			return _client
+			var responseContent = await _client
 				.GetAsync(_endpoint)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<IpPool[]>();
+				.AsString(null)
+				.ConfigureAwait(false);
+
+			var allNames = JArray
+				.Parse(responseContent)
+				.Select(o => o.GetPropertyValue<string>("name"))
+				.ToArray();
+
+			return allNames;
 		}
 
 		/// <summary>

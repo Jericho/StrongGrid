@@ -23,13 +23,13 @@ namespace StrongGrid.Resources
 		Task<IpPool> CreateAsync(string name, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Retrieve all IP pools.
+		/// Retrieve the names of all IP pools.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// An array of <see cref="IpPool" />.
+		/// The names of all existing IP pools.
 		/// </returns>
-		Task<IpPool[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken));
+		Task<string[]> GetAllNamesAsync(CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Retrieve an IP pool.
