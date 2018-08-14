@@ -142,11 +142,13 @@ namespace StrongGrid.UnitTests.Resources
 			var ipPools = new IpPools(client);
 
 			// Act
-			await ipPools.UpdateAsync(oldName, newName, CancellationToken.None).ConfigureAwait(false);
+			var result = await ipPools.UpdateAsync(oldName, newName, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+			result.ShouldBe(newName);
 		}
 
 		[Fact]
