@@ -18,9 +18,9 @@ namespace StrongGrid.Resources
 		/// <param name="name">The name.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The <see cref="IpPool" />.
+		/// The name of the newly created <see cref="IpPool" />.
 		/// </returns>
-		Task<IpPool> CreateAsync(string name, CancellationToken cancellationToken = default(CancellationToken));
+		Task<string> CreateAsync(string name, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Retrieve the names of all IP pools.
@@ -48,9 +48,9 @@ namespace StrongGrid.Resources
 		/// <param name="newName">The new name of the IP pool.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The async task.
+		/// The name of the updated <see cref="IpPool" />.
 		/// </returns>
-		Task UpdateAsync(string name, string newName, CancellationToken cancellationToken = default(CancellationToken));
+		Task<string> UpdateAsync(string name, string newName, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Delete an IP pool.
