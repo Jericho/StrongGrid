@@ -19,7 +19,12 @@ namespace StrongGrid.UnitTests.Resources
 
 		private const string SINGLE_IPPOOL_JSON = @"{
 			'name': 'marketing',
-			'ips': ['1.1.1.1','2.2.2.2','3.3.3.3']
+			'ips':
+			[
+				{ 'ip': '1.1.1.1', 'start_date': null, 'warmup': false },
+				{ 'ip': '2.2.2.2', 'start_date': null, 'warmup': false },
+				{ 'ip': '3.3.3.3', 'start_date': null, 'warmup': false }
+			]
 		}";
 
 		#endregion
@@ -36,9 +41,9 @@ namespace StrongGrid.UnitTests.Resources
 			result.ShouldNotBeNull();
 			result.Name.ShouldBe("marketing");
 			result.IpAddresses.Length.ShouldBe(3);
-			result.IpAddresses[0].ShouldBe("1.1.1.1");
-			result.IpAddresses[1].ShouldBe("2.2.2.2");
-			result.IpAddresses[2].ShouldBe("3.3.3.3");
+			result.IpAddresses[0].Address.ShouldBe("1.1.1.1");
+			result.IpAddresses[1].Address.ShouldBe("2.2.2.2");
+			result.IpAddresses[2].Address.ShouldBe("3.3.3.3");
 		}
 
 		[Fact]

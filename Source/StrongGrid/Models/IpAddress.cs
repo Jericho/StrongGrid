@@ -71,7 +71,7 @@ namespace StrongGrid.Models
 		/// </value>
 		[JsonProperty("start_date", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(EpochConverter))]
-		public DateTime WarmupStartedOn { get; set; }
+		public DateTime? WarmupStartedOn { get; set; }
 
 		/// <summary>
 		/// Gets or sets the date that the IP address was assigned to the user.
