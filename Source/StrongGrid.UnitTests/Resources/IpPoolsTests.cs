@@ -69,11 +69,11 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
-			result.Name.ShouldBe(name);
+			result.ShouldBe(name);
 		}
 
 		[Fact]
-		public async Task GetAllAsync()
+		public async Task GetAllNamesAsync()
 		{
 			// Arrange
 			var apiResponse = @"[
@@ -92,15 +92,15 @@ namespace StrongGrid.UnitTests.Resources
 			var ipPools = new IpPools(client);
 
 			// Act
-			var result = await ipPools.GetAllAsync(CancellationToken.None).ConfigureAwait(false);
+			var result = await ipPools.GetAllNamesAsync(CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(2);
-			result[0].Name.ShouldBe("marketing");
-			result[1].Name.ShouldBe("transactional");
+			result[0].ShouldBe("marketing");
+			result[1].ShouldBe("transactional");
 		}
 
 		[Fact]
