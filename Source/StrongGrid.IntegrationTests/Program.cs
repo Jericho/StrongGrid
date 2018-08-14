@@ -118,10 +118,10 @@ namespace StrongGrid.IntegrationTests
 			.ConfigureAwait(false);
 
 			// Display summary
-			var alog = new StringWriter();
-			await alog.WriteLineAsync("\n\n**************************************************").ConfigureAwait(false);
-			await alog.WriteLineAsync("******************** SUMMARY *********************").ConfigureAwait(false);
-			await alog.WriteLineAsync("**************************************************").ConfigureAwait(false);
+			var summary = new StringWriter();
+			await summary.WriteLineAsync("\n\n**************************************************").ConfigureAwait(false);
+			await summary.WriteLineAsync("******************** SUMMARY *********************").ConfigureAwait(false);
+			await summary.WriteLineAsync("**************************************************").ConfigureAwait(false);
 
 			var resultsWithMessage = results
 				.Where(r => !string.IsNullOrEmpty(r.Message))
@@ -133,16 +133,16 @@ namespace StrongGrid.IntegrationTests
 				{
 					const int TEST_NAME_MAX_LENGTH = 25;
 					var name = TestName.Length <= TEST_NAME_MAX_LENGTH ? TestName : TestName.Substring(0, TEST_NAME_MAX_LENGTH - 3) + "...";
-					await alog.WriteLineAsync($"{name.PadRight(TEST_NAME_MAX_LENGTH, ' ')} : {Message}").ConfigureAwait(false);
+					await summary.WriteLineAsync($"{name.PadRight(TEST_NAME_MAX_LENGTH, ' ')} : {Message}").ConfigureAwait(false);
 				}
 			}
 			else
 			{
-				await alog.WriteLineAsync("All tests completed succesfully").ConfigureAwait(false);
+				await summary.WriteLineAsync("All tests completed succesfully").ConfigureAwait(false);
 			}
 
-			await alog.WriteLineAsync("**************************************************").ConfigureAwait(false);
-			await Console.Out.WriteLineAsync(alog.ToString()).ConfigureAwait(false);
+			await summary.WriteLineAsync("**************************************************").ConfigureAwait(false);
+			await Console.Out.WriteLineAsync(summary.ToString()).ConfigureAwait(false);
 
 			// Prompt user to press a key in order to allow reading the log in the console
 			var promptLog = new StringWriter();
