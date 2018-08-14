@@ -23,6 +23,6 @@ namespace StrongGrid.Models
 		/// The IP addresses.
 		/// </value>
 		[JsonProperty("ips", NullValueHandling = NullValueHandling.Ignore)]
-		public string[] IpAddresses { get; set; }
+		public IpPoolAddress[] IpAddresses { get; set; }
 	}
 }
