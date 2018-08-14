@@ -1202,35 +1202,35 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync("\n***** IP POOLS *****\n").ConfigureAwait(false);
 
 			// GET ALL THE IP POOLS
-			var allIpPools = await client.IpPools.GetAllAsync(cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"There are {allIpPools.Length} IP pools on your account").ConfigureAwait(false);
+			var allIpPoolNames = await client.IpPools.GetAllNamesAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {allIpPoolNames.Length} IP pools on your account").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			var cleanUpTasks = allIpPools
-				.Where(p => p.Name.StartsWith("StrongGrid Integration Testing:"))
-				.Select(async oldPool =>
+			var cleanUpTasks = allIpPoolNames
+				.Where(p => p.StartsWith("StrongGrid Integration Testing:"))
+				.Select(async poolName =>
 				{
-					await client.IpPools.DeleteAsync(oldPool.Name, cancellationToken).ConfigureAwait(false);
-					await log.WriteLineAsync($"Ip Pool {oldPool.Name} deleted").ConfigureAwait(false);
+					await client.IpPools.DeleteAsync(poolName, cancellationToken).ConfigureAwait(false);
+					await log.WriteLineAsync($"Ip Pool {poolName} deleted").ConfigureAwait(false);
 					await Task.Delay(250).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
 				});
 			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
 			// CREATE A NEW POOL
-			var newPool = await client.IpPools.CreateAsync("StrongGrid Integration Testing: new pool", cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"New pool created: {newPool.Name}").ConfigureAwait(false);
+			var newPoolName = await client.IpPools.CreateAsync("StrongGrid Integration Testing: new pool", cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"New pool created: {newPoolName}").ConfigureAwait(false);
 
 			// UPDATE THE IP POOL
-			await client.IpPools.UpdateAsync("StrongGrid Integration Testing: new pool", "StrongGrid Integration Testing: updated name", cancellationToken).ConfigureAwait(false);
+			var updatedPoolName = await client.IpPools.UpdateAsync(newPoolName, "StrongGrid Integration Testing: updated name", cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("New pool has been updated").ConfigureAwait(false);
 
 			// GET THE IP POOL
-			var marketingPool = await client.IpPools.GetAsync("StrongGrid Integration Testing: updated name", cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Retrieved pool '{marketingPool.Name}'").ConfigureAwait(false);
+			var ipPool = await client.IpPools.GetAsync(updatedPoolName, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Retrieved pool '{ipPool.Name}'").ConfigureAwait(false);
 
 			// DELETE THE IP POOL
-			await client.IpPools.DeleteAsync(marketingPool.Name, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Deleted pool '{marketingPool.Name}'").ConfigureAwait(false);
+			await client.IpPools.DeleteAsync(ipPool.Name, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Deleted pool '{ipPool.Name}'").ConfigureAwait(false);
 		}
 
 		private static async Task Subusers(IClient client, TextWriter log, CancellationToken cancellationToken)

@@ -2,6 +2,7 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -40,7 +41,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="IpPool" />.
 		/// </returns>
-		public Task<IpPool> CreateAsync(string name, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<string> CreateAsync(string name, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject()
 			{
@@ -50,22 +51,30 @@ namespace StrongGrid.Resources
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<IpPool>();
+				.AsSendGridObject<string>("name");
 		}
 
 		/// <summary>
-		/// Retrieve all IP pools.
+		/// Retrieve the names of all IP pools.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// An array of <see cref="IpPool" />.
+		/// The names of all existing IP pools.
 		/// </returns>
-		public Task<IpPool[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<string[]> GetAllNamesAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			return _client
+			var responseContent = await _client
 				.GetAsync(_endpoint)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<IpPool[]>();
+				.AsString(null)
+				.ConfigureAwait(false);
+
+			var allNames = JArray
+				.Parse(responseContent)
+				.Select(o => o.GetPropertyValue<string>("name"))
+				.ToArray();
+
+			return allNames;
 		}
 
 		/// <summary>
@@ -91,9 +100,9 @@ namespace StrongGrid.Resources
 		/// <param name="newName">The new name of the IP pool.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The async task.
+		/// The name of the updated <see cref="IpPool" />.
 		/// </returns>
-		public Task UpdateAsync(string name, string newName, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<string> UpdateAsync(string name, string newName, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject()
 			{
@@ -103,7 +112,7 @@ namespace StrongGrid.Resources
 				.PutAsync($"{_endpoint}/{name}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsMessage();
+				.AsSendGridObject<string>("name");
 		}
 
 		/// <summary>
