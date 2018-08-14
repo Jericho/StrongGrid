@@ -131,7 +131,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task AddAddressAsync(string name, string address, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<IpPoolAddress> AddAddressAsync(string name, string address, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var data = new JObject()
 			{
@@ -141,7 +141,7 @@ namespace StrongGrid.Resources
 				.PostAsync($"{_endpoint}/{name}/ips")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsMessage();
+				.AsSendGridObject<IpPoolAddress>();
 		}
 
 		/// <summary>
