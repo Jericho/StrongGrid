@@ -18,7 +18,7 @@ namespace StrongGrid.UnitTests.Resources
 		private const string ENDPOINT = "ips/pools";
 
 		private const string SINGLE_IPPOOL_JSON = @"{
-			'name': 'marketing',
+			'pool_name': 'marketing',
 			'ips':
 			[
 				{ 'ip': '1.1.1.1', 'start_date': null, 'warmup': false },
