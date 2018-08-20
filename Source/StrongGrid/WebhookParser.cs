@@ -57,6 +57,20 @@ namespace StrongGrid
 		/// <returns>The <see cref="InboundEmail"/>.</returns>
 		public InboundEmail ParseInboundEmailWebhook(Stream stream)
 		{
+			// We need to be able to rewind the stream.
+			// Therefore, we must make a copy of the stream if it doesn't allow changing the position
+			if (!stream.CanSeek)
+			{
+				using (var ms = new MemoryStream())
+				{
+					stream.CopyTo(ms);
+					return ParseInboundEmailWebhook(ms);
+				}
+			}
+
+			// It's important to rewind the stream
+			stream.Position = 0;
+
 			// Parse the multipart content received from SendGrid
 			var parser = new MultipartFormDataParser(stream, Encoding.UTF8);
 
@@ -117,7 +131,7 @@ namespace StrongGrid
 				.Distinct()
 				.Select(encoding =>
 				{
-					stream.Position = 0;
+					stream.Position = 0; // It's important to rewind the stream
 					return new
 					{
 						Encoding = encoding,
