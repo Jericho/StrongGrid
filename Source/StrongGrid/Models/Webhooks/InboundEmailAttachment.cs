@@ -22,6 +22,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The content-type.
 		/// </value>
+		[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
 		public string ContentType { get; set; }
 
 		/// <summary>
