@@ -85,8 +85,9 @@ namespace StrongGrid
 					var file = parser.Files.FirstOrDefault(f => f.Name == prop.Name);
 					if (file != null)
 					{
-						attachment.ContentType = file.ContentType;
 						attachment.Data = file.Data;
+						if (string.IsNullOrEmpty(attachment.ContentType)) attachment.ContentType = file.ContentType;
+						if (string.IsNullOrEmpty(attachment.FileName)) attachment.FileName = file.FileName;
 					}
 
 					return attachment;
