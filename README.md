@@ -108,17 +108,17 @@ Second, you create a version of your content where you use the Handlebars syntax
 ```csharp
 var subject = "Dear {{Customer.first_name}}";
 var htmlContent = @"
-    <html>
-    	<body>
-	    	Hello {{Customer.first_name}} {{Customer.last_name}}. 
-		    You have a credit balance of {{CreditBalance}}<br/>
-    		<ol>
-	    	{{#each Orders}}
-		    	<li>You ordered: {{this.item}} on: {{this.date}}</li>
-    		{{/each}}
-	    	</ol>
-    	</body>
-    </html>";
+	<html>
+		<body>
+			Hello {{Customer.first_name}} {{Customer.last_name}}. 
+			You have a credit balance of {{CreditBalance}}<br/>
+			<ol>
+			{{#each Orders}}
+				<li>You ordered: {{this.item}} on: {{this.date}}</li>
+			{{/each}}
+			</ol>
+		</body>
+	</html>";
 var textContent = "... this is the text content ...";
 var testData = new
 {
