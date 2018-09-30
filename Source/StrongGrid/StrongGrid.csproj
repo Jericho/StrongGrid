@@ -10,6 +10,12 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+
+  <PropertyGroup>
       <PackageId>StrongGrid</PackageId>
       <AssemblyName>StrongGrid</AssemblyName>
       <AssemblyTitle>StrongGrid</AssemblyTitle>
@@ -28,6 +34,11 @@
   <ItemGroup>
     <PackageReference Include="HttpMultipartParser" Version="2.2.1" />
     <PackageReference Include="MimeTypesMap" Version="1.0.7" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="MimeTypesMap" Version="1.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
     <PackageReference Include="Pathoschild.Http.FluentClient" Version="3.3.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" />
