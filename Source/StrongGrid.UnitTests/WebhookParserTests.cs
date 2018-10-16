@@ -160,6 +160,7 @@ namespace StrongGrid.UnitTests
 
 		private const string SPAMREPORT_JSON = @"
 		{
+			'smtp-id':'<original-smtp-id@domain.com>',
 			'sg_event_id':'sendgrid_internal_event_id',
 			'sg_message_id':'sendgrid_internal_message_id',
 			'email':'email@example.com',
@@ -172,6 +173,7 @@ namespace StrongGrid.UnitTests
 
 		private const string UNSUBSCRIBE_JSON = @"
 		{
+			'smtp-id':'<original-smtp-id@domain.com>',
 			'sg_message_id':'sendgrid_internal_message_id',
 			'email':'email@example.com',
 			'timestamp':1249948800,
@@ -183,6 +185,7 @@ namespace StrongGrid.UnitTests
 
 		private const string GROUPUNSUBSCRIBE_JSON = @"
 		{
+			'smtp-id':'<original-smtp-id@domain.com>',
 			'sg_message_id':'sendgrid_internal_message_id',
 			'email':'email@example.com',
 			'timestamp':1249948800,
@@ -196,6 +199,7 @@ namespace StrongGrid.UnitTests
 
 		private const string GROUPRESUBSCRIBE_JSON = @"
 		{
+			'smtp-id':'<original-smtp-id@domain.com>',
 			'sg_message_id':'sendgrid_internal_message_id',
 			'email':'email@example.com',
 			'timestamp':1249948800,
@@ -637,6 +641,7 @@ Content-Disposition: form-data; name=""attachments""
 			result.UniqueArguments.Keys.ShouldContain("unique_arg_key");
 			result.UniqueArguments["unique_arg_key"].ShouldBe("unique_arg_value");
 			result.UserAgent.ShouldBeNull();
+			result.SmtpId.ShouldBe("<original-smtp-id@domain.com>");
 		}
 
 		[Fact]
@@ -663,6 +668,7 @@ Content-Disposition: form-data; name=""attachments""
 			result.UniqueArguments.Keys.ShouldContain("unique_arg_key");
 			result.UniqueArguments["unique_arg_key"].ShouldBe("unique_arg_value");
 			result.UserAgent.ShouldBeNull();
+			result.SmtpId.ShouldBe("<original-smtp-id@domain.com>");
 		}
 
 		[Fact]
@@ -689,6 +695,7 @@ Content-Disposition: form-data; name=""attachments""
 			result.UniqueArguments.Keys.ShouldContain("unique_arg_key");
 			result.UniqueArguments["unique_arg_key"].ShouldBe("unique_arg_value");
 			result.UserAgent.ShouldBe("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36");
+			result.SmtpId.ShouldBe("<original-smtp-id@domain.com>");
 		}
 
 		[Fact]
@@ -715,6 +722,7 @@ Content-Disposition: form-data; name=""attachments""
 			result.UniqueArguments.Keys.ShouldContain("unique_arg_key");
 			result.UniqueArguments["unique_arg_key"].ShouldBe("unique_arg_value");
 			result.UserAgent.ShouldBe("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36");
+			result.SmtpId.ShouldBe("<original-smtp-id@domain.com>");
 		}
 
 		[Fact]

@@ -17,5 +17,14 @@ namespace StrongGrid.Models.Webhooks
 		/// </value>
 		[JsonProperty("asm_group_id", NullValueHandling = NullValueHandling.Ignore)]
 		public long AsmGroupId { get; set; }
+
+		/// <summary>
+		/// Gets or sets the SMTP identifier attached to the message by the originating system.
+		/// </summary>
+		/// <value>
+		/// The SMTP identifier.
+		/// </value>
+		[JsonProperty("smtp-id", NullValueHandling = NullValueHandling.Ignore)]
+		public string SmtpId { get; set; }
 	}
 }
