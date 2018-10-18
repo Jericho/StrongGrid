@@ -87,6 +87,9 @@ namespace StrongGrid
 					return new KeyValuePair<string, string>(key, value);
 				}).ToArray();
 
+			// Raw email
+			var rawEmail = parser.GetParameterValue("email", string.Empty);
+
 			// Combine the 'attachment-info' and Files into an array of Attachments
 			var attachmentInfoAsJObject = JObject.Parse(parser.GetParameterValue("attachment-info", "{}"));
 			var attachments = attachmentInfoAsJObject
@@ -173,7 +176,8 @@ namespace StrongGrid
 				Subject = GetEncodedValue("subject", charsets, encodedParsers, null),
 				Text = GetEncodedValue("text", charsets, encodedParsers, null),
 				To = to,
-				Cc = cc
+				Cc = cc,
+				RawEmail = rawEmail
 			};
 
 			return inboundEmail;

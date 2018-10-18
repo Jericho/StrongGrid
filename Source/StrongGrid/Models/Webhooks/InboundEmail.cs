@@ -131,5 +131,13 @@ namespace StrongGrid.Models.Webhooks
 		/// The SPF.
 		/// </value>
 		public string Spf { get; set; }
+
+		/// <summary>
+		/// Gets or sets the raw email received.
+		/// </summary>
+		/// <value>
+		/// The raw email.
+		/// </value>
+		public string RawEmail { get; set; }
 	}
 }
