@@ -20,6 +20,17 @@ namespace StrongGrid
 	/// </summary>
 	public class WebhookParser
 	{
+		#region CTOR
+
+#if NETSTANDARD
+		static WebhookParser()
+		{
+			Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+		}
+#endif
+
+		#endregion
+
 		#region PUBLIC METHODS
 
 		/// <summary>
