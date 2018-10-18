@@ -133,10 +133,10 @@ namespace StrongGrid.Models.Webhooks
 		public string Spf { get; set; }
 
 		/// <summary>
-		/// Get or sets the raw email received
+		/// Gets or sets the raw email received.
 		/// </summary>
 		/// <value>
-		/// RAW EMAIL
+		/// The raw email.
 		/// </value>
 		public string RawEmail { get; set; }
 	}
