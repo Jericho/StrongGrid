@@ -86,10 +86,9 @@ namespace StrongGrid
 			var parser = new MultipartFormDataParser(stream, Encoding.UTF8);
 
 			// Convert the 'headers' from a string into array of KeyValuePair
-			var rawHeaders = parser
+			var headers = parser
 				.GetParameterValue("headers", string.Empty)
-				.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-			var headers = rawHeaders
+				.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries)
 				.Select(header =>
 				{
 					var splitHeader = header.Split(new[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
