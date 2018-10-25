@@ -20,6 +20,17 @@ namespace StrongGrid
 	/// </summary>
 	public class WebhookParser
 	{
+		#region CTOR
+
+#if NETSTANDARD
+		static WebhookParser()
+		{
+			Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+		}
+#endif
+
+		#endregion
+
 		#region PUBLIC METHODS
 
 		/// <summary>
@@ -75,10 +86,9 @@ namespace StrongGrid
 			var parser = new MultipartFormDataParser(stream, Encoding.UTF8);
 
 			// Convert the 'headers' from a string into array of KeyValuePair
-			var rawHeaders = parser
+			var headers = parser
 				.GetParameterValue("headers", string.Empty)
-				.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-			var headers = rawHeaders
+				.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries)
 				.Select(header =>
 				{
 					var splitHeader = header.Split(new[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
@@ -86,6 +96,9 @@ namespace StrongGrid
 					var value = splitHeader.Length >= 2 ? splitHeader[1] : null;
 					return new KeyValuePair<string, string>(key, value);
 				}).ToArray();
+
+			// Raw email
+			var rawEmail = parser.GetParameterValue("email", string.Empty);
 
 			// Combine the 'attachment-info' and Files into an array of Attachments
 			var attachmentInfoAsJObject = JObject.Parse(parser.GetParameterValue("attachment-info", "{}"));
@@ -173,7 +186,8 @@ namespace StrongGrid
 				Subject = GetEncodedValue("subject", charsets, encodedParsers, null),
 				Text = GetEncodedValue("text", charsets, encodedParsers, null),
 				To = to,
-				Cc = cc
+				Cc = cc,
+				RawEmail = rawEmail
 			};
 
 			return inboundEmail;

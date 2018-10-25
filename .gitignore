@@ -7,6 +7,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # User-specific files
+*.rsuser
 *.suo
 *.user
 *.userosscache
@@ -62,7 +63,7 @@ StyleCopReport.xml
 # Files built by Visual Studio
 *_i.c
 *_p.c
-*_i.h
+*_h.h
 *.ilk
 *.meta
 *.obj
@@ -79,6 +80,7 @@ StyleCopReport.xml
 *.tlh
 *.tmp
 *.tmp_proj
+*_wpftmp.csproj
 *.log
 *.vspscc
 *.vssscc
@@ -293,8 +295,8 @@ paket-files/
 .idea/
 *.sln.iml
 
-# CodeRush
-.cr/
+# CodeRush personal settings
+.cr/personal
 
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
@@ -330,6 +332,9 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder
 .mfractor/
+
+# Local History for Visual Studio
+.localhistory/
 
 
 # WinMerge

@@ -23,5 +23,18 @@
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="InboudEmailTestData\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="InboudEmailTestData\raw_data_with_attachments.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="InboudEmailTestData\raw_email_with_attachments.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   
 </Project>

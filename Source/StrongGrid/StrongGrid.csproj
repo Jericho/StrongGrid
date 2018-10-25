@@ -42,6 +42,7 @@
 
   <ItemGroup Condition="'$(TargetFramework)' != 'net452'">
     <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.5.0" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net452' ">

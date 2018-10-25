@@ -3,7 +3,9 @@ using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Models.Webhooks;
 using StrongGrid.Utilities;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -389,6 +391,53 @@ Content-Disposition: form-data; name=""attachments""
 				inboundEmail.To[0].Email.ShouldBe("test@api.yourdomain.com");
 				inboundEmail.To[0].Name.ShouldBe("Test Recipient");
 			}
+		}
+
+		[Fact]
+		public async void RawPayloadWithAttachments()
+		{
+			var parser = new WebhookParser();
+
+			Stream stream = new MemoryStream();
+			await File.OpenRead("InboudEmailTestData/raw_data_with_attachments.txt").CopyToAsync(stream);
+			stream.Position = 0;
+
+			InboundEmail inboundEmail = parser.ParseInboundEmailWebhook(stream);
+
+			inboundEmail.ShouldNotBeNull();
+
+			inboundEmail.Dkim.ShouldBe("{@sendgrid.com : pass}");
+
+			var rawEmailTestData = File.ReadAllText("InboudEmailTestData/raw_email_with_attachments.txt");
+			inboundEmail.RawEmail.Trim().ShouldBe(rawEmailTestData);
+
+			inboundEmail.To[0].Email.ShouldBe("inbound@inbound.example.com");
+			inboundEmail.To[0].Name.ShouldBe(string.Empty);
+
+			inboundEmail.Cc.Length.ShouldBe(0);
+
+			inboundEmail.From.Email.ShouldBe("test@example.com");
+			inboundEmail.From.Name.ShouldBe("Example User");
+
+			inboundEmail.SenderIp.ShouldBe("0.0.0.0");
+
+			inboundEmail.SpamReport.ShouldBeNull();
+
+			inboundEmail.Envelope.From.ShouldBe("test@example.com");
+			inboundEmail.Envelope.To.Length.ShouldBe(1);
+			inboundEmail.Envelope.To.ShouldContain("inbound@inbound.example.com");
+
+			inboundEmail.Subject.ShouldBe("Raw Payload");
+
+			inboundEmail.SpamScore.ShouldBeNull();
+
+			inboundEmail.Charsets.Except(new[] {
+				new KeyValuePair<string, Encoding>("to", Encoding.UTF8),
+				new KeyValuePair<string, Encoding>("subject", Encoding.UTF8),
+				new KeyValuePair<string, Encoding>("from", Encoding.UTF8)
+			}).Count().ShouldBe(0);
+
+			inboundEmail.Spf.ShouldBe("pass");
 		}
 
 		[Fact]
