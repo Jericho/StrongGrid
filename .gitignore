@@ -1,4 +1,5 @@
 # Created with the help of https://www.gitignore.io/api/visualstudio
+# Edit at https://www.gitignore.io/?templates=visualstudio
 
 ### VisualStudio ###
 ## Ignore Visual Studio temporary files, build results, and
@@ -335,7 +336,6 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
-
 
 # WinMerge
 *.bak
