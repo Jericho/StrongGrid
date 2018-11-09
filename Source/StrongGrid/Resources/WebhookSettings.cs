@@ -151,7 +151,7 @@ namespace StrongGrid.Resources
 		{
 			var data = CreateJObject(hostname, url, spamCheck, sendRaw);
 			return _client
-				.PatchAsync($"{_inboundParseWebhookEndpoint}/settings")
+				.PostAsync($"{_inboundParseWebhookEndpoint}/settings")
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
