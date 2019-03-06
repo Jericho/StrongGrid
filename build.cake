@@ -2,10 +2,10 @@
 #addin nuget:?package=Cake.Coveralls&version=0.9.0
 
 // Install tools.
-#tool nuget:?package=GitVersion.CommandLine&version=5.0.0-beta1-72
+#tool nuget:?package=GitVersion.CommandLine&version=5.0.0-beta2-6
 #tool nuget:?package=GitReleaseManager&version=0.8.0
 #tool nuget:?package=OpenCover&version=4.7.922
-#tool nuget:?package=ReportGenerator&version=4.0.13.1
+#tool nuget:?package=ReportGenerator&version=4.0.15
 #tool nuget:?package=coveralls.io&version=1.4.2
 #tool nuget:?package=xunit.runner.console&version=2.4.1
 
