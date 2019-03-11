@@ -31,7 +31,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The validation results.
 		/// </value>
-		[JsonProperty("validation_resuts", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("validation_results", NullValueHandling = NullValueHandling.Ignore)]
 		public DomainValidationResults ValidationResults { get; set; }
 	}
 }
