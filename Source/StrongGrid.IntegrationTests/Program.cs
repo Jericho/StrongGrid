@@ -1042,6 +1042,11 @@ namespace StrongGrid.IntegrationTests
 
 			await client.SenderAuthentication.DeleteDomainAsync(domain.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"AuthenticatedSender domain {domain.Id} deleted.").ConfigureAwait(false);
+			await log.WriteLineAsync($"AuthenticatedSender domain validation: {domainValidation.IsValid}").ConfigureAwait(false);
+			await log.WriteLineAsync($"  Dkim1 validation: {domainValidation.ValidationResults.Dkim1.IsValid}").ConfigureAwait(false);
+			await log.WriteLineAsync($"  Dkim2 validation: {domainValidation.ValidationResults.Dkim2.IsValid}").ConfigureAwait(false);
+			await log.WriteLineAsync($"  Mail validation: {domainValidation.ValidationResults.Mail.IsValid}").ConfigureAwait(false);
+			await log.WriteLineAsync($"  SPF validation: {domainValidation.ValidationResults.Spf.IsValid}").ConfigureAwait(false);
 
 
 			await log.WriteLineAsync("\n***** SENDER AUTHENTICATION: Reverse DNS *****").ConfigureAwait(false);
