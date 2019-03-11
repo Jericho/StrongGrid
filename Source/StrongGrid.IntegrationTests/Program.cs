@@ -1023,8 +1023,9 @@ namespace StrongGrid.IntegrationTests
 			var domains = await client.SenderAuthentication.GetAllDomainsAsync(50, 0, false, null, null, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All AuthenticatedSender domains retrieved. There are {domains.Length} domains").ConfigureAwait(false);
 
+			var fictitiousDomain = "StrongGridIntegrationTesting.com";
 			var cleanUpTasks = domains
-				.Where(d => d.Domain == "example.com")
+				.Where(d => d.Domain == fictitiousDomain)
 				.Select(async oldDomain =>
 				{
 					await client.SenderAuthentication.DeleteDomainAsync(oldDomain.Id, null, cancellationToken).ConfigureAwait(false);
@@ -1033,20 +1034,18 @@ namespace StrongGrid.IntegrationTests
 				});
 			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
-
-			var domain = await client.SenderAuthentication.CreateDomainAsync("example.com", "email", false, false, false, null, cancellationToken).ConfigureAwait(false);
+			var domain = await client.SenderAuthentication.CreateDomainAsync(fictitiousDomain, "email", false, false, false, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"AuthenticatedSender domain created. Id: {domain.Id}").ConfigureAwait(false);
 
 			var domainValidation = await client.SenderAuthentication.ValidateDomainAsync(domain.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"AuthenticatedSender domain validation: {domainValidation.IsValid}").ConfigureAwait(false);
+			await log.WriteLineAsync($"  Dkim1 validation: {domainValidation.ValidationResults.Dkim1?.IsValid.ToString() ?? "Unknown"}").ConfigureAwait(false);
+			await log.WriteLineAsync($"  Dkim2 validation: {domainValidation.ValidationResults.Dkim2?.IsValid.ToString() ?? "Unknown"}").ConfigureAwait(false);
+			await log.WriteLineAsync($"  Mail validation: {domainValidation.ValidationResults.Mail?.IsValid.ToString() ?? "Unknown"}").ConfigureAwait(false);
+			await log.WriteLineAsync($"  SPF validation: {domainValidation.ValidationResults.Spf?.IsValid.ToString() ?? "Unknown"}").ConfigureAwait(false);
 
 			await client.SenderAuthentication.DeleteDomainAsync(domain.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"AuthenticatedSender domain {domain.Id} deleted.").ConfigureAwait(false);
-			await log.WriteLineAsync($"AuthenticatedSender domain validation: {domainValidation.IsValid}").ConfigureAwait(false);
-			await log.WriteLineAsync($"  Dkim1 validation: {domainValidation.ValidationResults.Dkim1.IsValid}").ConfigureAwait(false);
-			await log.WriteLineAsync($"  Dkim2 validation: {domainValidation.ValidationResults.Dkim2.IsValid}").ConfigureAwait(false);
-			await log.WriteLineAsync($"  Mail validation: {domainValidation.ValidationResults.Mail.IsValid}").ConfigureAwait(false);
-			await log.WriteLineAsync($"  SPF validation: {domainValidation.ValidationResults.Spf.IsValid}").ConfigureAwait(false);
 
 
 			await log.WriteLineAsync("\n***** SENDER AUTHENTICATION: Reverse DNS *****").ConfigureAwait(false);
@@ -1060,7 +1059,7 @@ namespace StrongGrid.IntegrationTests
 			var links = await client.SenderAuthentication.GetAllLinksAsync(null, 50, 0, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All AuthenticatedSender links retrieved. There are {links.Length} links").ConfigureAwait(false);
 
-			cleanUpTasks = links.Where(d => d.Domain == "example.com")
+			cleanUpTasks = links.Where(d => d.Domain == fictitiousDomain)
 				.Select(async oldDomain =>
 				{
 					await client.SenderAuthentication.DeleteDomainAsync(oldDomain.Id, null, cancellationToken).ConfigureAwait(false);
@@ -1069,7 +1068,7 @@ namespace StrongGrid.IntegrationTests
 				});
 			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
-			var link = await client.SenderAuthentication.CreateLinkAsync("example.com", "email", true, null, cancellationToken).ConfigureAwait(false);
+			var link = await client.SenderAuthentication.CreateLinkAsync(fictitiousDomain, "email", true, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"AuthenticatedSender link created. Id: {link.Id}").ConfigureAwait(false);
 
 			var linkValidation = await client.SenderAuthentication.ValidateLinkAsync(link.Id, null, cancellationToken).ConfigureAwait(false);
