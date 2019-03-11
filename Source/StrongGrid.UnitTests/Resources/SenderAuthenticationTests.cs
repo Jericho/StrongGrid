@@ -519,7 +519,7 @@ namespace StrongGrid.UnitTests.Resources
 			var apiResponse = @"{
 				'id': 1,
 				'valid': true,
-				'validation_resuts': {
+				'validation_results': {
 					'mail_cname': {
 						'valid': false,
 						'reason': 'Expected your MX record to be \'mx.sendgrid.net\' but found \'example.com\'.'
