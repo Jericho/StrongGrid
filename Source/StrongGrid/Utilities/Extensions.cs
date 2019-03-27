@@ -268,9 +268,9 @@ namespace StrongGrid.Utilities
 			var result = new StringBuilder();
 			AppendFormatIfNecessary(result, "day", timeSpan.Days);
 			AppendFormatIfNecessary(result, "hour", timeSpan.Hours);
-			AppendFormatIfNecessary(result, "minute", timeSpan.Days);
-			AppendFormatIfNecessary(result, "second", timeSpan.Days);
-			AppendFormatIfNecessary(result, "millisecond", timeSpan.Days);
+			AppendFormatIfNecessary(result, "minute", timeSpan.Minutes);
+			AppendFormatIfNecessary(result, "second", timeSpan.Seconds);
+			AppendFormatIfNecessary(result, "millisecond", timeSpan.Milliseconds);
 			return result.ToString().Trim();
 		}
 
