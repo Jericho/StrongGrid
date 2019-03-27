@@ -142,17 +142,17 @@ namespace StrongGrid.Utilities
 		public static Encoding GetEncoding(this HttpContent content, Encoding defaultEncoding)
 		{
 			var encoding = defaultEncoding;
-			var charset = content.Headers.ContentType.CharSet;
-			if (!string.IsNullOrEmpty(charset))
+			try
 			{
-				try
+				var charset = content?.Headers?.ContentType?.CharSet;
+				if (!string.IsNullOrEmpty(charset))
 				{
 					encoding = Encoding.GetEncoding(charset);
 				}
-				catch
-				{
-					encoding = defaultEncoding;
-				}
+			}
+			catch
+			{
+				encoding = defaultEncoding;
 			}
 
 			return encoding;
