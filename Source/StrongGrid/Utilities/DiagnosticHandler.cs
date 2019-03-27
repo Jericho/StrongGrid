@@ -49,28 +49,49 @@ namespace StrongGrid.Utilities
 		/// <param name="httpErrorAsException">Whether HTTP error responses should be raised as exceptions.</param>
 		public void OnResponse(IResponse response, bool httpErrorAsException)
 		{
-			var diagnosticInfo = GetDiagnosticInfo(response.Message.RequestMessage);
-			var diagnosticMessage = diagnosticInfo.Item1;
-			var timer = diagnosticInfo.Item2;
-			if (timer != null) timer.Stop();
+			var diagnosticMessage = string.Empty;
 
-			var httpResponse = response.Message;
-
-			diagnosticMessage.AppendLine($"Response: {httpResponse}");
-			diagnosticMessage.AppendLine($"Response Content: {httpResponse.Content?.ReadAsStringAsync(null).Result ?? "<NULL>"}");
-
-			if (timer != null)
+			try
 			{
-				diagnosticMessage.AppendLine($"The request took {timer.Elapsed.ToDurationString()}");
+				var diagnosticInfo = GetDiagnosticInfo(response.Message.RequestMessage);
+				var diagnosticStringBuilder = diagnosticInfo.Item1;
+				var diagnosticTimer = diagnosticInfo.Item2;
+				if (diagnosticTimer != null) diagnosticTimer?.Stop();
+
+				var httpResponse = response.Message;
+
+				diagnosticStringBuilder.AppendLine($"Response: {httpResponse}");
+				diagnosticStringBuilder.AppendLine($"Response Content: {httpResponse.Content?.ReadAsStringAsync(null).GetAwaiter().GetResult() ?? "<NULL>"}");
+
+				if (diagnosticTimer != null)
+				{
+					diagnosticStringBuilder.AppendLine($"The request took {diagnosticTimer.Elapsed.ToDurationString()}");
+				}
+
+				diagnosticMessage = diagnosticStringBuilder.ToString();
 			}
-
-			Debug.WriteLine("{0}\r\n{1}{0}", new string('=', 25), diagnosticMessage.ToString());
-
-			if (_logger != null && _logger.IsDebugEnabled())
+			catch (Exception e)
 			{
-				_logger.Debug(diagnosticMessage.ToString()
-					.Replace("{", "{{")
-					.Replace("}", "}}"));
+				Debug.WriteLine("{0}\r\nAN EXCEPTION OCCURED: {1}\r\n{0}", new string('=', 25), e.GetBaseException().Message);
+
+				if (_logger != null && _logger.IsErrorEnabled())
+				{
+					_logger.Error(e, "An exception occured when inspecting the response from SendGrid");
+				}
+			}
+			finally
+			{
+				if (!string.IsNullOrEmpty(diagnosticMessage))
+				{
+					Debug.WriteLine("{0}\r\n{1}{0}", new string('=', 25), diagnosticMessage);
+
+					if (_logger != null && _logger.IsDebugEnabled())
+					{
+						_logger.Debug(diagnosticMessage
+							.Replace("{", "{{")
+							.Replace("}", "}}"));
+					}
+				}
 			}
 		}
 
