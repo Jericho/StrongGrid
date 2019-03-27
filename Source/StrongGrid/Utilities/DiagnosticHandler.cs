@@ -72,7 +72,7 @@ namespace StrongGrid.Utilities
 							diagnosticStringBuilder.AppendLine($"Content.Headers.ContentType is null: {httpResponse.Content.Headers.ContentType == null}");
 							if (httpResponse.Content?.Headers?.ContentType != null)
 							{
-								diagnosticStringBuilder.AppendLine($"Content.Headers.ContentType.CharSet: {httpResponse.Content.Headers.ContentType.CharSet}");
+								diagnosticStringBuilder.AppendLine($"Content.Headers.ContentType.CharSet: {httpResponse.Content.Headers.ContentType.CharSet ?? "<NULL>"}");
 							}
 						}
 					}
