@@ -64,19 +64,9 @@ namespace StrongGrid.Utilities
 				{
 					diagnosticStringBuilder.AppendLine($"Response: {httpResponse}");
 					diagnosticStringBuilder.AppendLine($"Content is null: {httpResponse.Content == null}");
-					if (httpResponse.Content != null)
-					{
-						diagnosticStringBuilder.AppendLine($"Content.Headers is null: {httpResponse.Content.Headers == null}");
-						if (httpResponse.Content?.Headers != null)
-						{
-							diagnosticStringBuilder.AppendLine($"Content.Headers.ContentType is null: {httpResponse.Content.Headers.ContentType == null}");
-							if (httpResponse.Content?.Headers?.ContentType != null)
-							{
-								diagnosticStringBuilder.AppendLine($"Content.Headers.ContentType.CharSet: {httpResponse.Content.Headers.ContentType.CharSet ?? "<NULL>"}");
-							}
-						}
-					}
-
+					diagnosticStringBuilder.AppendLine($"Content.Headers is null: {httpResponse.Content?.Headers == null}");
+					diagnosticStringBuilder.AppendLine($"Content.Headers.ContentType is null: {httpResponse.Content?.Headers?.ContentType == null}");
+					diagnosticStringBuilder.AppendLine($"Content.Headers.ContentType.CharSet: {httpResponse.Content?.Headers?.ContentType?.CharSet ?? "<NULL>"}");
 					diagnosticStringBuilder.AppendLine($"Response Content: {httpResponse.Content?.ReadAsStringAsync(null).GetAwaiter().GetResult() ?? "<NULL>"}");
 				}
 				catch
