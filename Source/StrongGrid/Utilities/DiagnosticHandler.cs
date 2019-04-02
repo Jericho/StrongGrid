@@ -60,19 +60,8 @@ namespace StrongGrid.Utilities
 
 				var httpResponse = response.Message;
 
-				try
-				{
-					diagnosticStringBuilder.AppendLine($"Response: {httpResponse}");
-					diagnosticStringBuilder.AppendLine($"Response.Content is null: {httpResponse.Content == null}");
-					diagnosticStringBuilder.AppendLine($"Response.Content.Headers is null: {httpResponse.Content?.Headers == null}");
-					diagnosticStringBuilder.AppendLine($"Response.Content.Headers.ContentType is null: {httpResponse.Content?.Headers?.ContentType == null}");
-					diagnosticStringBuilder.AppendLine($"Response.Content.Headers.ContentType.CharSet: {httpResponse.Content?.Headers?.ContentType?.CharSet ?? "<NULL>"}");
-					diagnosticStringBuilder.AppendLine($"Response.Content: {httpResponse.Content?.ReadAsStringAsync(null).GetAwaiter().GetResult() ?? "<NULL>"}");
-				}
-				catch
-				{
-					// Intentionally ignore errors that may occur when attempting to log the content of the response
-				}
+				diagnosticStringBuilder.AppendLine($"Response: {httpResponse}");
+				diagnosticStringBuilder.AppendLine($"Response.Content: {httpResponse.Content?.ReadAsStringAsync(null).GetAwaiter().GetResult() ?? "<NULL>"}");
 
 				if (diagnosticTimer != null)
 				{
