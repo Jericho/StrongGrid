@@ -16,8 +16,7 @@ namespace StrongGrid
 	{
 		#region FIELDS
 
-		private const string DEFAULT_BASE_URI = "https://api.sendgrid.com";
-		private const string DEFAULT_API_VERSION = "v3";
+		private const string SENDGRID_V3_BASE_URI = "https://api.sendgrid.com/v3";
 
 		private readonly bool _mustDisposeHttpClient;
 
@@ -293,30 +292,37 @@ namespace StrongGrid
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key.</param>
 		public Client(string apiKey)
-			: this(apiKey, null, null, DEFAULT_BASE_URI, DEFAULT_API_VERSION, null)
+			: this(apiKey, null, null, null, false)
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Client"/> class.
+		/// Initializes a new instance of the <see cref="Client"/> class with a specific proxy.
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key.</param>
 		/// <param name="proxy">Allows you to specify a proxy.</param>
-		public Client(string apiKey, IWebProxy proxy = null)
-			: this(apiKey, null, null, DEFAULT_BASE_URI, DEFAULT_API_VERSION, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }))
+		public Client(string apiKey, IWebProxy proxy)
+			: this(apiKey, new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null })
 		{
-			_mustDisposeHttpClient = true;
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Client" /> class.
+		/// Initializes a new instance of the <see cref="Client"/> class with a specific handler.
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key.</param>
-		/// <param name="baseUri">Base SendGrid API Uri.</param>
-		/// <param name="apiVersion">The SendGrid API version. Please note: currently, only 'v3' is supported.</param>
+		/// <param name="handler">TThe HTTP handler stack to use for sending requests.</param>
+		public Client(string apiKey, HttpMessageHandler handler)
+			: this(apiKey, null, null, new HttpClient(handler), true)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Client" /> class with a specific http client.
+		/// </summary>
+		/// <param name="apiKey">Your SendGrid API Key.</param>
 		/// <param name="httpClient">Allows you to inject your own HttpClient. This is useful, for example, to setup the HtppClient with a proxy.</param>
-		public Client(string apiKey, string baseUri = DEFAULT_BASE_URI, string apiVersion = DEFAULT_API_VERSION, HttpClient httpClient = null)
-			: this(apiKey, null, null, baseUri, apiVersion, httpClient)
+		public Client(string apiKey, HttpClient httpClient)
+			: this(apiKey, null, null, httpClient, false)
 		{
 		}
 
@@ -326,7 +332,7 @@ namespace StrongGrid
 		/// <param name="username">Your username.</param>
 		/// <param name="password">Your password.</param>
 		public Client(string username, string password)
-			: this(null, username, password, DEFAULT_BASE_URI, DEFAULT_API_VERSION, null)
+			: this(null, username, password, null, false)
 		{
 		}
 
@@ -336,10 +342,20 @@ namespace StrongGrid
 		/// <param name="username">Your username.</param>
 		/// <param name="password">Your password.</param>
 		/// <param name="proxy">Allows you to specify a proxy.</param>
-		public Client(string username, string password, IWebProxy proxy = null)
-			: this(null, username, password, DEFAULT_BASE_URI, DEFAULT_API_VERSION, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }))
+		public Client(string username, string password, IWebProxy proxy)
+			: this(username, password, new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null })
 		{
-			_mustDisposeHttpClient = true;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Client"/> class.
+		/// </summary>
+		/// <param name="username">Your username.</param>
+		/// <param name="password">Your password.</param>
+		/// <param name="handler">TThe HTTP handler stack to use for sending requests.</param>
+		public Client(string username, string password, HttpMessageHandler handler)
+			: this(null, username, password, new HttpClient(handler), true)
+		{
 		}
 
 		/// <summary>
@@ -347,17 +363,15 @@ namespace StrongGrid
 		/// </summary>
 		/// <param name="username">Your username.</param>
 		/// <param name="password">Your password.</param>
-		/// <param name="baseUri">Base SendGrid API Uri.</param>
-		/// <param name="apiVersion">The SendGrid API version. Please note: currently, only 'v3' is supported.</param>
 		/// <param name="httpClient">Allows you to inject your own HttpClient. This is useful, for example, to setup the HtppClient with a proxy.</param>
-		public Client(string username, string password, string baseUri = DEFAULT_BASE_URI, string apiVersion = DEFAULT_API_VERSION, HttpClient httpClient = null)
-			: this(null, username, password, baseUri, apiVersion, httpClient)
+		public Client(string username, string password, HttpClient httpClient)
+			: this(null, username, password, httpClient, false)
 		{
 		}
 
-		private Client(string apiKey, string username, string password, string baseUri, string apiVersion, HttpClient httpClient)
+		private Client(string apiKey, string username, string password, HttpClient httpClient, bool disposeClient)
 		{
-			_mustDisposeHttpClient = httpClient == null;
+			_mustDisposeHttpClient = disposeClient;
 			_httpClient = httpClient;
 
 			Version = typeof(Client).GetTypeInfo().Assembly.GetName().Version.ToString(3);
@@ -365,7 +379,7 @@ namespace StrongGrid
 			Version = "DEBUG";
 #endif
 
-			_fluentClient = new FluentClient(new Uri($"{baseUri.TrimEnd('/')}/{apiVersion.TrimStart('/')}"), httpClient)
+			_fluentClient = new FluentClient(new Uri(SENDGRID_V3_BASE_URI), httpClient)
 				.SetUserAgent($"StrongGrid/{Version} (+https://github.com/Jericho/StrongGrid)")
 				.SetRequestCoordinator(new SendGridRetryStrategy());
 

@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
 
 namespace StrongGrid.Utilities
@@ -18,9 +17,9 @@ namespace StrongGrid.Utilities
 	{
 		#region FIELDS
 
-		private const string DIAGNOSTIC_ID_HEADER_NAME = "StrongGrid-DiagnosticId";
+		private const string DIAGNOSTIC_ID_HEADER_NAME = "StrongGrid-Diagnostic-Id";
+		private const string DIAGNOSTIC_TIMESTAMP_HEADER_NAME = "StrongGrid-Diagnostic-Timestamp";
 		private static readonly ILog _logger = LogProvider.For<DiagnosticHandler>();
-		private readonly IDictionary<WeakReference<HttpRequestMessage>, Tuple<StringBuilder, Stopwatch>> _diagnostics = new Dictionary<WeakReference<HttpRequestMessage>, Tuple<StringBuilder, Stopwatch>>();
 
 		#endregion
 
@@ -30,18 +29,11 @@ namespace StrongGrid.Utilities
 		/// <param name="request">The HTTP request.</param>
 		public void OnRequest(IRequest request)
 		{
+			// Add a unique ID to the request header
 			request.WithHeader(DIAGNOSTIC_ID_HEADER_NAME, Guid.NewGuid().ToString("N"));
 
-			var httpRequest = request.Message;
-
-			var diagnosticMessage = new StringBuilder();
-			diagnosticMessage.AppendLine($"Request: {httpRequest}");
-			diagnosticMessage.AppendLine($"Request Content: {httpRequest.Content?.ReadAsStringAsync(null).GetAwaiter().GetResult() ?? "<NULL>"}");
-
-			lock (_diagnostics)
-			{
-				_diagnostics.Add(new WeakReference<HttpRequestMessage>(request.Message), new Tuple<StringBuilder, Stopwatch>(diagnosticMessage, Stopwatch.StartNew()));
-			}
+			// Add a timestamp to the request header
+			request.WithHeader(DIAGNOSTIC_TIMESTAMP_HEADER_NAME, Stopwatch.GetTimestamp().ToString());
 		}
 
 		/// <summary>Method invoked just after the HTTP response is received. This method can modify the incoming HTTP response.</summary>
@@ -50,33 +42,28 @@ namespace StrongGrid.Utilities
 		public void OnResponse(IResponse response, bool httpErrorAsException)
 		{
 			var diagnosticMessage = string.Empty;
+			var responseTimestamp = Stopwatch.GetTimestamp();
 
 			try
 			{
-				var diagnosticInfo = GetDiagnosticInfo(response.Message.RequestMessage);
-				var diagnosticStringBuilder = diagnosticInfo.Item1;
-				var diagnosticTimer = diagnosticInfo.Item2;
-				if (diagnosticTimer != null) diagnosticTimer?.Stop();
+				var diagnosticStringBuilder = new StringBuilder();
+
+				var httpRequest = response.Message.RequestMessage;
+				diagnosticStringBuilder.AppendLine($"Request: {httpRequest}");
+				diagnosticStringBuilder.AppendLine($"Request Content: {httpRequest.Content?.ReadAsStringAsync(null).GetAwaiter().GetResult() ?? "<NULL>"}");
 
 				var httpResponse = response.Message;
+				diagnosticStringBuilder.AppendLine($"Response: {httpResponse}");
+				diagnosticStringBuilder.AppendLine($"Response.Content: {httpResponse.Content?.ReadAsStringAsync(null).GetAwaiter().GetResult() ?? "<NULL>"}");
 
-				try
+				if (httpRequest.Headers.TryGetValues(DIAGNOSTIC_TIMESTAMP_HEADER_NAME, out IEnumerable<string> timestampHeaderValues))
 				{
-					diagnosticStringBuilder.AppendLine($"Response: {httpResponse}");
-					diagnosticStringBuilder.AppendLine($"Response.Content is null: {httpResponse.Content == null}");
-					diagnosticStringBuilder.AppendLine($"Response.Content.Headers is null: {httpResponse.Content?.Headers == null}");
-					diagnosticStringBuilder.AppendLine($"Response.Content.Headers.ContentType is null: {httpResponse.Content?.Headers?.ContentType == null}");
-					diagnosticStringBuilder.AppendLine($"Response.Content.Headers.ContentType.CharSet: {httpResponse.Content?.Headers?.ContentType?.CharSet ?? "<NULL>"}");
-					diagnosticStringBuilder.AppendLine($"Response.Content: {httpResponse.Content?.ReadAsStringAsync(null).GetAwaiter().GetResult() ?? "<NULL>"}");
-				}
-				catch
-				{
-					// Intentionally ignore errors that may occur when attempting to log the content of the response
-				}
-
-				if (diagnosticTimer != null)
-				{
-					diagnosticStringBuilder.AppendLine($"The request took {diagnosticTimer.Elapsed.ToDurationString()}");
+					var diagnosticTimestamp = timestampHeaderValues.FirstOrDefault();
+					if (long.TryParse(diagnosticTimestamp, out long requestTimestamp))
+					{
+						var elapsed = TimeSpan.FromTicks(responseTimestamp - requestTimestamp);
+						diagnosticStringBuilder.AppendLine($"The request took {elapsed.ToDurationString()}");
+					}
 				}
 
 				diagnosticMessage = diagnosticStringBuilder.ToString();
@@ -104,45 +91,6 @@ namespace StrongGrid.Utilities
 					}
 				}
 			}
-		}
-
-		#endregion
-
-		#region PRIVATE METHODS
-
-		private Tuple<StringBuilder, Stopwatch> GetDiagnosticInfo(HttpRequestMessage requestMessage)
-		{
-			lock (_diagnostics)
-			{
-				var diagnosticId = requestMessage.Headers.GetValues(DIAGNOSTIC_ID_HEADER_NAME).FirstOrDefault();
-
-				foreach (WeakReference<HttpRequestMessage> key in _diagnostics.Keys.ToArray())
-				{
-					// Check if garbage collected
-					if (!key.TryGetTarget(out HttpRequestMessage request))
-					{
-						_diagnostics.Remove(key);
-						continue;
-					}
-
-					// Check if different request
-					var requestDiagnosticId = request.Headers.GetValues(DIAGNOSTIC_ID_HEADER_NAME).FirstOrDefault();
-					if (requestDiagnosticId != diagnosticId)
-					{
-						continue;
-					}
-
-					// Get the diagnostic info from dictionary
-					var diagnosticInfo = _diagnostics[key];
-
-					// Remove the diagnostic info from dictionary
-					_diagnostics.Remove(key);
-
-					return diagnosticInfo;
-				}
-			}
-
-			return new Tuple<StringBuilder, Stopwatch>(new StringBuilder(), null);
 		}
 
 		#endregion
