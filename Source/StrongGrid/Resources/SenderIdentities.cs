@@ -45,7 +45,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SenderIdentity" />.
 		/// </returns>
-		public Task<SenderIdentity> CreateAsync(string nickname, MailAddress from, MailAddress replyTo, string address1, string address2, string city, string state, string zip, string country, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SenderIdentity> CreateAsync(string nickname, MailAddress from, MailAddress replyTo, string address1, string address2, string city, string state, string zip, string country, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = CreateJObject(nickname, from, replyTo, address1, address2, city, state, zip, country);
 
@@ -65,7 +65,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="SenderIdentity" />.
 		/// </returns>
-		public Task<SenderIdentity[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SenderIdentity[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync(_endpoint)
@@ -83,7 +83,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SenderIdentity" />.
 		/// </returns>
-		public Task<SenderIdentity> GetAsync(long senderId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SenderIdentity> GetAsync(long senderId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{senderId}")
@@ -112,17 +112,17 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<SenderIdentity> UpdateAsync(
 			long senderId,
-			Parameter<string> nickname = default(Parameter<string>),
-			Parameter<MailAddress> from = default(Parameter<MailAddress>),
-			Parameter<MailAddress> replyTo = default(Parameter<MailAddress>),
-			Parameter<string> address1 = default(Parameter<string>),
-			Parameter<string> address2 = default(Parameter<string>),
-			Parameter<string> city = default(Parameter<string>),
-			Parameter<string> state = default(Parameter<string>),
-			Parameter<string> zip = default(Parameter<string>),
-			Parameter<string> country = default(Parameter<string>),
+			Parameter<string> nickname = default,
+			Parameter<MailAddress> from = default,
+			Parameter<MailAddress> replyTo = default,
+			Parameter<string> address1 = default,
+			Parameter<string> address2 = default,
+			Parameter<string> city = default,
+			Parameter<string> state = default,
+			Parameter<string> zip = default,
+			Parameter<string> country = default,
 			string onBehalfOf = null,
-			CancellationToken cancellationToken = default(CancellationToken))
+			CancellationToken cancellationToken = default)
 		{
 			var data = CreateJObject(nickname, from, replyTo, address1, address2, city, state, zip, country);
 
@@ -142,7 +142,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(long senderId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(long senderId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{senderId}")
@@ -160,7 +160,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task ResendVerification(long senderId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task ResendVerification(long senderId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.PostAsync($"{_endpoint}/{senderId}/resend_verification")

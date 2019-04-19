@@ -21,7 +21,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="EnforcedTlsSettings" />.
 		/// </returns>
-		Task<EnforcedTlsSettings> GetEnforcedTlsSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<EnforcedTlsSettings> GetEnforcedTlsSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Change the Enforced TLS settings.
@@ -33,7 +33,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="EnforcedTlsSettings" />.
 		/// </returns>
-		Task<EnforcedTlsSettings> UpdateEnforcedTlsSettingsAsync(bool requireTls, bool requireValidCert, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<EnforcedTlsSettings> UpdateEnforcedTlsSettingsAsync(bool requireTls, bool requireValidCert, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get Partner Settings.
@@ -45,7 +45,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="GlobalSetting" />.
 		/// </returns>
-		Task<GlobalSetting[]> GetAllPartnerSettingsAsync(int limit = 25, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<GlobalSetting[]> GetAllPartnerSettingsAsync(int limit = 25, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get New Relic Settings.
@@ -55,7 +55,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="NewRelicSettings" />.
 		/// </returns>
-		Task<NewRelicSettings> GetNewRelicSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<NewRelicSettings> GetNewRelicSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Change the New Relic settings.
@@ -67,7 +67,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="NewRelicSettings" />.
 		/// </returns>
-		Task<NewRelicSettings> UpdateNewRelicSettingsAsync(bool enabled, string licenseKey, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<NewRelicSettings> UpdateNewRelicSettingsAsync(bool enabled, string licenseKey, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get Tracking Settings.
@@ -79,7 +79,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="GlobalSetting" />.
 		/// </returns>
-		Task<GlobalSetting[]> GetAllTrackingSettingsAsync(int limit = 25, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<GlobalSetting[]> GetAllTrackingSettingsAsync(int limit = 25, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get Click Tracking Settings.
@@ -89,7 +89,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		///   <c>true</c> if the setting is set; otherwise, <c>false</c>.
 		/// </returns>
-		Task<bool> GetClickTrackingSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<bool> GetClickTrackingSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Change the click tracking settings.
@@ -100,7 +100,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		///   <c>true</c> if the setting is set; otherwise, <c>false</c>.
 		/// </returns>
-		Task<bool> UpdateClickTrackingSettingsAsync(bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<bool> UpdateClickTrackingSettingsAsync(bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get Google Analytics Settings.
@@ -110,7 +110,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="GoogleAnalyticsGlobalSettings" />.
 		/// </returns>
-		Task<GoogleAnalyticsGlobalSettings> GetGoogleAnalyticsGlobalSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<GoogleAnalyticsGlobalSettings> GetGoogleAnalyticsGlobalSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Change the New Relic settings.
@@ -126,7 +126,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="GoogleAnalyticsGlobalSettings" />.
 		/// </returns>
-		Task<GoogleAnalyticsGlobalSettings> UpdateGoogleAnalyticsGlobalSettingsAsync(bool enabled, string utmSource, string utmMedium, string utmTerm, string utmContent, string utmCampaign, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<GoogleAnalyticsGlobalSettings> UpdateGoogleAnalyticsGlobalSettingsAsync(bool enabled, string utmSource, string utmMedium, string utmTerm, string utmContent, string utmCampaign, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get Open Tracking Settings.
@@ -136,7 +136,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		///   <c>true</c> if the setting is set; otherwise, <c>false</c>.
 		/// </returns>
-		Task<bool> GetOpenTrackingSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<bool> GetOpenTrackingSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Change the open tracking settings.
@@ -147,7 +147,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		///   <c>true</c> if the setting is set; otherwise, <c>false</c>.
 		/// </returns>
-		Task<bool> UpdateOpenTrackingSettingsAsync(bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<bool> UpdateOpenTrackingSettingsAsync(bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get Subscription Tracking Settings.
@@ -157,7 +157,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SubscriptionSettings" />.
 		/// </returns>
-		Task<SubscriptionSettings> GetSubscriptionTrackingSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<SubscriptionSettings> GetSubscriptionTrackingSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Change the Subscription Tracking settings.
@@ -173,7 +173,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SubscriptionSettings" />.
 		/// </returns>
-		Task<SubscriptionSettings> UpdateSubscriptionTrackingSettingsAsync(bool enabled, string landingPageHtml, string url, string replacementTag, string htmlContent, string textContent, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<SubscriptionSettings> UpdateSubscriptionTrackingSettingsAsync(bool enabled, string landingPageHtml, string url, string replacementTag, string htmlContent, string textContent, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get Mail Settings.
@@ -185,7 +185,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An aray of <see cref="GlobalSetting" />.
 		/// </returns>
-		Task<GlobalSetting[]> GetAllMailSettingsAsync(int limit = 25, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<GlobalSetting[]> GetAllMailSettingsAsync(int limit = 25, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get BCC Settings.
@@ -195,7 +195,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="EmailAddressSetting" />.
 		/// </returns>
-		Task<EmailAddressSetting> GetBccMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<EmailAddressSetting> GetBccMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Change the BCC settings.
@@ -207,7 +207,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="EmailAddressSetting" />.
 		/// </returns>
-		Task<EmailAddressSetting> UpdateBccMailSettingsAsync(bool enabled, string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<EmailAddressSetting> UpdateBccMailSettingsAsync(bool enabled, string email, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get Address Whitelist Settings.
@@ -217,7 +217,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="AddressWhitelistSettings" />.
 		/// </returns>
-		Task<AddressWhitelistSettings> GetAddressWhitelistMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<AddressWhitelistSettings> GetAddressWhitelistMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Change the Address Whitelist settings.
@@ -229,7 +229,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="AddressWhitelistSettings" />.
 		/// </returns>
-		Task<AddressWhitelistSettings> UpdateAddressWhitelistMailSettingsAsync(bool enabled, IEnumerable<string> emailAddresses, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<AddressWhitelistSettings> UpdateAddressWhitelistMailSettingsAsync(bool enabled, IEnumerable<string> emailAddresses, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get Footer Settings.
@@ -239,7 +239,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="FooterGlobalSettings" />.
 		/// </returns>
-		Task<FooterGlobalSettings> GetFooterMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<FooterGlobalSettings> GetFooterMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Change the Footer settings.
@@ -252,7 +252,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="FooterGlobalSettings" />.
 		/// </returns>
-		Task<FooterGlobalSettings> UpdateFooterMailSettingsAsync(bool enabled, string htmlContent, string textContent, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<FooterGlobalSettings> UpdateFooterMailSettingsAsync(bool enabled, string htmlContent, string textContent, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get Forward Spam Settings.
@@ -262,7 +262,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="EmailAddressSetting" />.
 		/// </returns>
-		Task<EmailAddressSetting> GetForwardSpamMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<EmailAddressSetting> GetForwardSpamMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Change the Forward Spam settings.
@@ -274,7 +274,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="EmailAddressSetting" />.
 		/// </returns>
-		Task<EmailAddressSetting> UpdateForwardSpamMailSettingsAsync(bool enabled, string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<EmailAddressSetting> UpdateForwardSpamMailSettingsAsync(bool enabled, string email, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get Plain Content Settings.
@@ -284,7 +284,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		///   <c>true</c> if the setting is set; otherwise, <c>false</c>.
 		/// </returns>
-		Task<bool> GetPlainContentMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<bool> GetPlainContentMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Change the Plain Content settings.
@@ -295,7 +295,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		///   <c>true</c> if the setting is set; otherwise, <c>false</c>.
 		/// </returns>
-		Task<bool> UpdatePlainContentMailSettingsAsync(bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<bool> UpdatePlainContentMailSettingsAsync(bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get Spam Check Settings.
@@ -305,7 +305,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SpamCheckingSettings" />.
 		/// </returns>
-		Task<SpamCheckSettings> GetSpamCheckMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<SpamCheckSettings> GetSpamCheckMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Change the Spam Check settings.
@@ -318,7 +318,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SpamCheckingSettings" />.
 		/// </returns>
-		Task<SpamCheckSettings> UpdateSpamCheckMailSettingsAsync(bool enabled, string postToUrl, int threshold, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<SpamCheckSettings> UpdateSpamCheckMailSettingsAsync(bool enabled, string postToUrl, int threshold, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get Template Settings.
@@ -328,7 +328,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="TemplateSettings" />.
 		/// </returns>
-		Task<TemplateSettings> GetTemplateMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<TemplateSettings> GetTemplateMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Change the Template settings.
@@ -340,7 +340,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="TemplateSettings" />.
 		/// </returns>
-		Task<TemplateSettings> UpdateTemplateMailSettingsAsync(bool enabled, string htmlContent, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<TemplateSettings> UpdateTemplateMailSettingsAsync(bool enabled, string htmlContent, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get Bounce Purge Settings.
@@ -350,7 +350,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="BouncePurgeSettings" />.
 		/// </returns>
-		Task<BouncePurgeSettings> GetBouncePurgeMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<BouncePurgeSettings> GetBouncePurgeMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Change the Bounce Purge settings.
@@ -363,7 +363,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="BouncePurgeSettings" />.
 		/// </returns>
-		Task<BouncePurgeSettings> UpdatBouncePurgeMailSettingsAsync(bool enabled, int hardBounces, int softBounces, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<BouncePurgeSettings> UpdatBouncePurgeMailSettingsAsync(bool enabled, int hardBounces, int softBounces, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get Forward Bounce Settings.
@@ -373,7 +373,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="EmailAddressSetting" />.
 		/// </returns>
-		Task<EmailAddressSetting> GetForwardBounceMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<EmailAddressSetting> GetForwardBounceMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Change the Forward Spam settings.
@@ -385,6 +385,6 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="EmailAddressSetting" />.
 		/// </returns>
-		Task<EmailAddressSetting> UpdateForwardBounceMailSettingsAsync(bool enabled, string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<EmailAddressSetting> UpdateForwardBounceMailSettingsAsync(bool enabled, string email, string onBehalfOf = null, CancellationToken cancellationToken = default);
 	}
 }

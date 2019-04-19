@@ -23,7 +23,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Template" />.
 		/// </returns>
-		Task<Template> CreateAsync(string name, TemplateType type, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Template> CreateAsync(string name, TemplateType type, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve all templates.
@@ -34,7 +34,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Template" />.
 		/// </returns>
-		Task<Template[]> GetAllAsync(TemplateType type, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Template[]> GetAllAsync(TemplateType type, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve a template.
@@ -45,7 +45,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Template" />.
 		/// </returns>
-		Task<Template> GetAsync(string templateId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Template> GetAsync(string templateId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Update a template.
@@ -57,7 +57,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Template" />.
 		/// </returns>
-		Task<Template> UpdateAsync(string templateId, string name, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Template> UpdateAsync(string templateId, string name, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete a template.
@@ -68,7 +68,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteAsync(string templateId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteAsync(string templateId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Create a template version.
@@ -86,7 +86,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="TemplateVersion" />.
 		/// </returns>
-		Task<TemplateVersion> CreateVersionAsync(string templateId, string name, string subject, string htmlContent, string textContent, bool isActive, Parameter<EditorType?> editorType = default(Parameter<EditorType?>), Parameter<object> testData = default(Parameter<object>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<TemplateVersion> CreateVersionAsync(string templateId, string name, string subject, string htmlContent, string textContent, bool isActive, Parameter<EditorType?> editorType = default, Parameter<object> testData = default, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Activate a version.
@@ -98,7 +98,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="TemplateVersion" />.
 		/// </returns>
-		Task<TemplateVersion> ActivateVersionAsync(string templateId, string versionId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<TemplateVersion> ActivateVersionAsync(string templateId, string versionId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve a template version.
@@ -110,7 +110,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="TemplateVersion" />.
 		/// </returns>
-		Task<TemplateVersion> GetVersionAsync(string templateId, string versionId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<TemplateVersion> GetVersionAsync(string templateId, string versionId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Update a template version.
@@ -129,7 +129,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="TemplateVersion" />.
 		/// </returns>
-		Task<TemplateVersion> UpdateVersionAsync(string templateId, string versionId, Parameter<string> name = default(Parameter<string>), Parameter<string> subject = default(Parameter<string>), Parameter<string> htmlContent = default(Parameter<string>), Parameter<string> textContent = default(Parameter<string>), Parameter<bool> isActive = default(Parameter<bool>), Parameter<EditorType?> editorType = default(Parameter<EditorType?>), Parameter<object> testData = default(Parameter<object>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<TemplateVersion> UpdateVersionAsync(string templateId, string versionId, Parameter<string> name = default, Parameter<string> subject = default, Parameter<string> htmlContent = default, Parameter<string> textContent = default, Parameter<bool> isActive = default, Parameter<EditorType?> editorType = default, Parameter<object> testData = default, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete a template version.
@@ -141,6 +141,6 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteVersionAsync(string templateId, string versionId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteVersionAsync(string templateId, string versionId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 	}
 }

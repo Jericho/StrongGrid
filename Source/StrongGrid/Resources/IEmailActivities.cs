@@ -25,7 +25,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
-		Task<EmailMessageActivity[]> SearchAsync(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions, int limit = 20, CancellationToken cancellationToken = default(CancellationToken));
+		Task<EmailMessageActivity[]> SearchAsync(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions, int limit = 20, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get all of the details about the specified message.
@@ -35,7 +35,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="EmailMessageSummary" />.
 		/// </returns>
-		Task<EmailMessageSummary> GetMessageSummaryAsync(string messageId, CancellationToken cancellationToken = default(CancellationToken));
+		Task<EmailMessageSummary> GetMessageSummaryAsync(string messageId, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// This request kicks of a process to generate a CSV file. When the file is
@@ -51,7 +51,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task RequestCsvAsync(CancellationToken cancellationToken = default(CancellationToken));
+		Task RequestCsvAsync(CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get the URL where the CSV can be downloaded.
@@ -61,7 +61,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The URL as a string.
 		/// </returns>
-		Task<string> GetCsvDownloadUrlAsync(string downloadUUID, CancellationToken cancellationToken = default(CancellationToken));
+		Task<string> GetCsvDownloadUrlAsync(string downloadUUID, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Download the CSV as a stream.
@@ -71,7 +71,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The stream.
 		/// </returns>
-		Task<Stream> DownloadCsvAsync(string downloadUUID, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Stream> DownloadCsvAsync(string downloadUUID, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Download the CSV and save it to a file.
@@ -82,6 +82,6 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DownloadCsvAsync(string downloadUUID, string destinationPath, CancellationToken cancellationToken = default(CancellationToken));
+		Task DownloadCsvAsync(string downloadUUID, string destinationPath, CancellationToken cancellationToken = default);
 	}
 }

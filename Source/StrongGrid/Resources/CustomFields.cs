@@ -37,7 +37,7 @@ namespace StrongGrid.Resources
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>The <see cref="CustomFieldMetadata">metadata</see> about the new field.</returns>
-		public Task<CustomFieldMetadata> CreateAsync(string name, FieldType type, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<CustomFieldMetadata> CreateAsync(string name, FieldType type, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject
 			{
@@ -60,7 +60,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="CustomFieldMetadata">metadata</see> about the fields.
 		/// </returns>
-		public Task<CustomFieldMetadata[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<CustomFieldMetadata[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync(_endpoint)
@@ -78,7 +78,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="CustomFieldMetadata">metadata</see> about the field.
 		/// </returns>
-		public Task<CustomFieldMetadata> GetAsync(long fieldId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<CustomFieldMetadata> GetAsync(long fieldId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{fieldId}")
@@ -96,7 +96,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(long fieldId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(long fieldId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{fieldId}")
@@ -113,7 +113,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Field" />.
 		/// </returns>
-		public Task<Field[]> GetReservedFieldsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Field[]> GetReservedFieldsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync("contactdb/reserved_fields")

@@ -23,7 +23,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="ApiKey" />.
 		/// </returns>
-		Task<ApiKey> GetAsync(string keyId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ApiKey> GetAsync(string keyId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get all API Keys belonging to the authenticated user.
@@ -37,7 +37,7 @@ namespace StrongGrid.Resources
 		/// The response does not include the permissions associated with each api key.
 		/// In order to get the permission for a given key, you need to <see cref="GetAsync(string, string, CancellationToken)">retrieve keys one at a time</see>.
 		/// </remarks>
-		Task<ApiKey[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ApiKey[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Generate a new API Key.
@@ -49,7 +49,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="ApiKey" />.
 		/// </returns>
-		Task<ApiKey> CreateAsync(string name, Parameter<IEnumerable<string>> scopes = default(Parameter<IEnumerable<string>>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ApiKey> CreateAsync(string name, Parameter<IEnumerable<string>> scopes = default, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Revoke an existing API Key.
@@ -60,7 +60,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteAsync(string keyId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteAsync(string keyId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Update an API Key.
@@ -71,7 +71,7 @@ namespace StrongGrid.Resources
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>The <see cref="ApiKey"/>.</returns>
-		Task<ApiKey> UpdateAsync(string keyId, string name, Parameter<IEnumerable<string>> scopes = default(Parameter<IEnumerable<string>>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ApiKey> UpdateAsync(string keyId, string name, Parameter<IEnumerable<string>> scopes = default, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Generate a new API Key for billing.
@@ -82,7 +82,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="ApiKey" />.
 		/// </returns>
-		Task<ApiKey> CreateWithBillingPermissionsAsync(string name, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ApiKey> CreateWithBillingPermissionsAsync(string name, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Generate a new API Key with all permissions.
@@ -97,7 +97,7 @@ namespace StrongGrid.Resources
 		/// If you specify an API Key when instanciating the <see cref="Client" />, the new API Key will inherit the permissions of that API Key.
 		/// If you specify a username and password when instanciating the <see cref="Client" />, the new API Key will inherit the permissions of that user.
 		/// </remarks>
-		Task<ApiKey> CreateWithAllPermissionsAsync(string name, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ApiKey> CreateWithAllPermissionsAsync(string name, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Generate a new API Key with the same "read" permissions that have ben granted to you.
@@ -112,6 +112,6 @@ namespace StrongGrid.Resources
 		/// If you specify an API Key when instanciating the <see cref="Client" />, the new API Key will inherit the "read" permissions of that API Key.
 		/// If you specify a username and password when instanciating the <see cref="Client" />, the new API Key will inherit the "read" permissions of that user.
 		/// </remarks>
-		Task<ApiKey> CreateWithReadOnlyPermissionsAsync(string name, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ApiKey> CreateWithReadOnlyPermissionsAsync(string name, string onBehalfOf = null, CancellationToken cancellationToken = default);
 	}
 }

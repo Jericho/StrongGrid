@@ -22,7 +22,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="SuppressionGroup" />.
 		/// </returns>
-		Task<SuppressionGroup[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<SuppressionGroup[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve the suppression groups that match the specified ids.
@@ -33,7 +33,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="SuppressionGroup" />.
 		/// </returns>
-		Task<SuppressionGroup[]> GetMultipleAsync(IEnumerable<int> groupIds, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<SuppressionGroup[]> GetMultipleAsync(IEnumerable<int> groupIds, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get information on a single suppression group.
@@ -44,7 +44,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SuppressionGroup" />.
 		/// </returns>
-		Task<SuppressionGroup> GetAsync(long groupId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<SuppressionGroup> GetAsync(long groupId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Create a new suppression group.
@@ -57,7 +57,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SuppressionGroup" />.
 		/// </returns>
-		Task<SuppressionGroup> CreateAsync(string name, string description, bool isDefault, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<SuppressionGroup> CreateAsync(string name, string description, bool isDefault, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Update an existing suppression group.
@@ -70,7 +70,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SuppressionGroup" />.
 		/// </returns>
-		Task<SuppressionGroup> UpdateAsync(long groupId, Parameter<string> name = default(Parameter<string>), Parameter<string> description = default(Parameter<string>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<SuppressionGroup> UpdateAsync(long groupId, Parameter<string> name = default, Parameter<string> description = default, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete a suppression group.
@@ -81,6 +81,6 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteAsync(long groupId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteAsync(long groupId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 	}
 }

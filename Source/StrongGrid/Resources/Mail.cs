@@ -88,7 +88,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken))
+			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
 			return SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, cancellationToken);
@@ -150,7 +150,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken))
+			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
 			return SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, templateId, substitutions, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, cancellationToken);
@@ -206,7 +206,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken))
+			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
 			return SendToMultipleRecipientsAsync(recipients, from, dynamicTemplateId, dynamicData, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, cancellationToken);
@@ -264,7 +264,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken))
+			CancellationToken cancellationToken = default)
 		{
 			var personalizations = new[]
 			{
@@ -349,7 +349,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken))
+			CancellationToken cancellationToken = default)
 		{
 			var personalizations = new[]
 			{
@@ -429,7 +429,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken))
+			CancellationToken cancellationToken = default)
 		{
 			if (!Template.IsDynamic(dynamicTemplateId))
 			{
@@ -504,7 +504,7 @@ namespace StrongGrid.Resources
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
 			TrackingSettings trackingSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken))
+			CancellationToken cancellationToken = default)
 		{
 			if (personalizations == null || !personalizations.Any())
 			{

@@ -22,6 +22,6 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of strings representing the catgories.
 		/// </returns>
-		Task<string[]> GetAsync(string searchPrefix = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<string[]> GetAsync(string searchPrefix = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default);
 	}
 }

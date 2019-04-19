@@ -29,11 +29,11 @@ namespace StrongGrid.Resources
 		/// <exception cref="System.Exception">Thrown when an exception occured while creating the contact.</exception>
 		Task<string> CreateAsync(
 			string email,
-			Parameter<string> firstName = default(Parameter<string>),
-			Parameter<string> lastName = default(Parameter<string>),
-			Parameter<IEnumerable<Field>> customFields = default(Parameter<IEnumerable<Field>>),
+			Parameter<string> firstName = default,
+			Parameter<string> lastName = default,
+			Parameter<IEnumerable<Field>> customFields = default,
 			string onBehalfOf = null,
-			CancellationToken cancellationToken = default(CancellationToken));
+			CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Updates the contact.
@@ -50,11 +50,11 @@ namespace StrongGrid.Resources
 		/// <exception cref="System.Exception">Thrown when an exception occured while updating the contact.</exception>
 		Task UpdateAsync(
 			string email,
-			Parameter<string> firstName = default(Parameter<string>),
-			Parameter<string> lastName = default(Parameter<string>),
-			Parameter<IEnumerable<Field>> customFields = default(Parameter<IEnumerable<Field>>),
+			Parameter<string> firstName = default,
+			Parameter<string> lastName = default,
+			Parameter<IEnumerable<Field>> customFields = default,
 			string onBehalfOf = null,
-			CancellationToken cancellationToken = default(CancellationToken));
+			CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Import contacts.
@@ -65,7 +65,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="ImportResult">result</see> of the operation.
 		/// </returns>
-		Task<ImportResult> ImportAsync(IEnumerable<Contact> contacts, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ImportResult> ImportAsync(IEnumerable<Contact> contacts, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete a contact.
@@ -76,7 +76,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteAsync(string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteAsync(string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete contacts.
@@ -87,7 +87,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteAsync(IEnumerable<string> contactId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteAsync(IEnumerable<string> contactId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve a contact.
@@ -98,7 +98,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Contact" />.
 		/// </returns>
-		Task<Contact> GetAsync(string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Contact> GetAsync(string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve multiple contacts.
@@ -110,7 +110,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Contact" />.
 		/// </returns>
-		Task<Contact[]> GetAsync(int recordsPerPage = 100, int page = 1, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Contact[]> GetAsync(int recordsPerPage = 100, int page = 1, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Gets the billable count.
@@ -120,7 +120,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The number of billable contacts.
 		/// </returns>
-		Task<long> GetBillableCountAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<long> GetBillableCountAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Gets the total count.
@@ -130,7 +130,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The total number of contacts.
 		/// </returns>
-		Task<long> GetTotalCountAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<long> GetTotalCountAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Searches for contacts matching the specified conditions.
@@ -142,7 +142,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Contact" />.
 		/// </returns>
-		Task<Contact[]> SearchAsync(IEnumerable<SearchCondition> conditions, long? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Contact[]> SearchAsync(IEnumerable<SearchCondition> conditions, long? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve the lists that a recipient is on.
@@ -153,6 +153,6 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="List" />.
 		/// </returns>
-		Task<List[]> GetListsAsync(string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<List[]> GetListsAsync(string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 	}
 }

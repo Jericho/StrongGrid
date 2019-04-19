@@ -25,7 +25,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="AuthenticatedDomain" />.
 		/// </returns>
-		Task<AuthenticatedDomain[]> GetAllDomainsAsync(int limit = 50, int offset = 0, bool excludeSubusers = false, string username = null, string domain = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<AuthenticatedDomain[]> GetAllDomainsAsync(int limit = 50, int offset = 0, bool excludeSubusers = false, string username = null, string domain = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get a specific authenticated domain.
@@ -36,7 +36,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="AuthenticatedDomain" />.
 		/// </returns>
-		Task<AuthenticatedDomain> GetDomainAsync(long domainId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<AuthenticatedDomain> GetDomainAsync(long domainId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Create a new authenticated domain.
@@ -51,7 +51,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="AuthenticatedDomain" />.
 		/// </returns>
-		Task<AuthenticatedDomain> CreateDomainAsync(string domain, string subdomain, bool automaticSecurity = false, bool customSpf = false, bool isDefault = false, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<AuthenticatedDomain> CreateDomainAsync(string domain, string subdomain, bool automaticSecurity = false, bool customSpf = false, bool isDefault = false, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Update an authenticated domain.
@@ -64,7 +64,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="AuthenticatedDomain" />.
 		/// </returns>
-		Task<AuthenticatedDomain> UpdateDomainAsync(long domainId, bool isDefault = false, bool customSpf = false, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<AuthenticatedDomain> UpdateDomainAsync(long domainId, bool isDefault = false, bool customSpf = false, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete an authenticated whitelabel.
@@ -75,7 +75,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteDomainAsync(long domainId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteDomainAsync(long domainId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Add an IP to an authenticated domain.
@@ -87,7 +87,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="AuthenticatedDomain" />.
 		/// </returns>
-		Task<AuthenticatedDomain> AddIpAddressToDomainAsync(long domainId, string ipAddress, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<AuthenticatedDomain> AddIpAddressToDomainAsync(long domainId, string ipAddress, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Remove an IP from an authenticated domain.
@@ -99,7 +99,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="AuthenticatedDomain" />.
 		/// </returns>
-		Task<AuthenticatedDomain> DeleteIpAddressFromDomainAsync(long domainId, string ipAddress, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<AuthenticatedDomain> DeleteIpAddressFromDomainAsync(long domainId, string ipAddress, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Validate an authenticated domain.
@@ -110,7 +110,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="DomainValidation" />.
 		/// </returns>
-		Task<DomainValidation> ValidateDomainAsync(long domainId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<DomainValidation> ValidateDomainAsync(long domainId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get the associated domain.
@@ -127,7 +127,7 @@ namespace StrongGrid.Resources
 		/// account must first create an authenticated domain and validate it. Then the parent may associate
 		/// the domain in subuser management.
 		/// </remarks>
-		Task<AuthenticatedDomain> GetAssociatedDomainAsync(string username = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<AuthenticatedDomain> GetAssociatedDomainAsync(string username = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Disassociate the domain.
@@ -138,7 +138,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DisassociateDomainAsync(string username = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task DisassociateDomainAsync(string username = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Associate a domain.
@@ -150,7 +150,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="AuthenticatedDomain" />.
 		/// </returns>
-		Task<AuthenticatedDomain> AssociateDomainAsync(long domainId, string username = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<AuthenticatedDomain> AssociateDomainAsync(long domainId, string username = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get all all the reverse DNS records created by this account.
@@ -163,7 +163,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="ReverseDns" />.
 		/// </returns>
-		Task<ReverseDns[]> GetAllReverseDnsAsync(string segmentPrefix = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ReverseDns[]> GetAllReverseDnsAsync(string segmentPrefix = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get a specific reverse DNS.
@@ -174,7 +174,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="ReverseDns" />.
 		/// </returns>
-		Task<ReverseDns> GetReverseDnsAsync(long ipId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ReverseDns> GetReverseDnsAsync(long ipId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Setup a reverse DNS.
@@ -190,7 +190,7 @@ namespace StrongGrid.Resources
 		/// <remarks>
 		/// When setting up reverse DNS, use the same subdomain that you used when you authenticated your domain.
 		/// </remarks>
-		Task<ReverseDns> SetupReverseDnsAsync(string ipAddress, string domain, string subdomain, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ReverseDns> SetupReverseDnsAsync(string ipAddress, string domain, string subdomain, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete a reverse DNS record.
@@ -201,7 +201,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteReverseDnsAsync(long ipId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteReverseDnsAsync(long ipId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Validate a reverse DNS record.
@@ -212,7 +212,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="ReverseDnsValidation" />.
 		/// </returns>
-		Task<ReverseDnsValidation> ValidateReverseDnsAsync(long ipId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ReverseDnsValidation> ValidateReverseDnsAsync(long ipId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get all branded links.
@@ -230,7 +230,7 @@ namespace StrongGrid.Resources
 		/// messages. Our customer will be asked to create a couple CNAME records for the links to be
 		/// rewritten to and for us to verify that they are the domain owners.
 		/// </remarks>
-		Task<BrandedLink[]> GetAllLinksAsync(string segmentPrefix = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<BrandedLink[]> GetAllLinksAsync(string segmentPrefix = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get a specific branded link.
@@ -241,7 +241,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="BrandedLink" />.
 		/// </returns>
-		Task<BrandedLink> GetLinkAsync(long linkId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<BrandedLink> GetLinkAsync(long linkId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Create a branded link.
@@ -254,7 +254,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="BrandedLink" />.
 		/// </returns>
-		Task<BrandedLink> CreateLinkAsync(string domain, string subdomain, bool isDefault, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<BrandedLink> CreateLinkAsync(string domain, string subdomain, bool isDefault, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Update a branded link.
@@ -266,7 +266,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="BrandedLink" />.
 		/// </returns>
-		Task<BrandedLink> UpdateLinkAsync(long linkId, bool isDefault, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<BrandedLink> UpdateLinkAsync(long linkId, bool isDefault, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete a branded link.
@@ -277,7 +277,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteLinkAsync(long linkId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteLinkAsync(long linkId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get the default branded link for a domain.
@@ -288,7 +288,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="BrandedLink" />.
 		/// </returns>
-		Task<BrandedLink> GetDefaultLinkAsync(string domain, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<BrandedLink> GetDefaultLinkAsync(string domain, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Validate a branded link.
@@ -299,7 +299,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="LinkValidation" />.
 		/// </returns>
-		Task<LinkValidation> ValidateLinkAsync(long linkId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<LinkValidation> ValidateLinkAsync(long linkId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get the associated branded link for a subuser.
@@ -317,7 +317,7 @@ namespace StrongGrid.Resources
 		/// associate that branded link with a subuser via the API or the Subuser Management page in the
 		/// user interface.
 		/// </remarks>
-		Task<BrandedLink> GetAssociatedLinkAsync(string username = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<BrandedLink> GetAssociatedLinkAsync(string username = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Disassociate a branded link from a subuser.
@@ -328,7 +328,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DisassociateLinkAsync(string username = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task DisassociateLinkAsync(string username = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Associate a branded link with a subuser.
@@ -340,6 +340,6 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="BrandedLink" />.
 		/// </returns>
-		Task<BrandedLink> AssociateLinkAsync(long linkId, string username = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<BrandedLink> AssociateLinkAsync(long linkId, string username = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
 	}
 }

@@ -54,7 +54,7 @@ namespace StrongGrid.Warmup
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task PrepareWithNewIpAddressesAsync(int count, string[] subusers, CancellationToken cancellationToken = default(CancellationToken))
+		public Task PrepareWithNewIpAddressesAsync(int count, string[] subusers, CancellationToken cancellationToken = default)
 		{
 			return PrepareEngineAsync(
 				() =>
@@ -73,7 +73,7 @@ namespace StrongGrid.Warmup
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task PrepareWithExistingIpAddressesAsync(string[] ipAddresses, CancellationToken cancellationToken = default(CancellationToken))
+		public Task PrepareWithExistingIpAddressesAsync(string[] ipAddresses, CancellationToken cancellationToken = default)
 		{
 			return PrepareEngineAsync(() => ipAddresses, cancellationToken);
 		}
@@ -129,7 +129,7 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken))
+			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
 			return SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, cancellationToken);
@@ -189,7 +189,7 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken))
+			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
 			return SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, templateId, substitutions, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, cancellationToken);
@@ -243,7 +243,7 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken))
+			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
 			return SendToMultipleRecipientsAsync(recipients, from, dynamicTemplateId, dynamicData, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, cancellationToken);
@@ -299,7 +299,7 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken))
+			CancellationToken cancellationToken = default)
 		{
 			var personalizations = new[]
 			{
@@ -382,7 +382,7 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken))
+			CancellationToken cancellationToken = default)
 		{
 			var personalizations = new[]
 			{
@@ -460,7 +460,7 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken))
+			CancellationToken cancellationToken = default)
 		{
 			if (!Template.IsDynamic(dynamicTemplateId))
 			{
@@ -533,7 +533,7 @@ namespace StrongGrid.Warmup
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
 			TrackingSettings trackingSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken))
+			CancellationToken cancellationToken = default)
 		{
 			// Validate parameters
 			if (personalizations == null || !personalizations.Any())
@@ -703,7 +703,7 @@ namespace StrongGrid.Warmup
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
 			TrackingSettings trackingSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken))
+			CancellationToken cancellationToken = default)
 		{
 			if (personalizations == null || !personalizations.Any())
 			{

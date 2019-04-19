@@ -17,7 +17,7 @@ namespace StrongGrid.Warmup
 		/// <param name="poolName">The name of the IP Pool.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>The status of the warmup process.</returns>
-		public Task<WarmupStatus> GetWarmupStatusAsync(string poolName, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<WarmupStatus> GetWarmupStatusAsync(string poolName, CancellationToken cancellationToken = default)
 		{
 			return Task.FromResult(_progressInfo[poolName]);
 		}
@@ -28,7 +28,7 @@ namespace StrongGrid.Warmup
 		/// <param name="warmupStatus">The status of the warmup process.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>The task.</returns>
-		public Task UpdateStatusAsync(WarmupStatus warmupStatus, CancellationToken cancellationToken = default(CancellationToken))
+		public Task UpdateStatusAsync(WarmupStatus warmupStatus, CancellationToken cancellationToken = default)
 		{
 			_progressInfo[warmupStatus.PoolName] = warmupStatus;
 			return Task.FromResult(true);

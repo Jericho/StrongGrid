@@ -40,7 +40,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		public Task<AccessEntry[]> GetAccessHistoryAsync(int limit = 20, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<AccessEntry[]> GetAccessHistoryAsync(int limit = 20, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/activity")
@@ -58,7 +58,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="WhitelistedIp" />.
 		/// </returns>
-		public Task<WhitelistedIp[]> GetWhitelistedIpAddressesAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<WhitelistedIp[]> GetWhitelistedIpAddressesAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/whitelist")
@@ -76,7 +76,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		public async Task<WhitelistedIp> AddIpAddressToWhitelistAsync(string ip, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<WhitelistedIp> AddIpAddressToWhitelistAsync(string ip, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject
 			{
@@ -104,7 +104,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		public Task<WhitelistedIp[]> AddIpAddressesToWhitelistAsync(IEnumerable<string> ips, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<WhitelistedIp[]> AddIpAddressesToWhitelistAsync(IEnumerable<string> ips, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var ipsJsonArray = new JArray();
 			foreach (var ip in ips)
@@ -134,7 +134,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task RemoveIpAddressFromWhitelistAsync(long id, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task RemoveIpAddressFromWhitelistAsync(long id, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/whitelist/{id}")
@@ -152,7 +152,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task RemoveIpAddressesFromWhitelistAsync(IEnumerable<long> ids, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task RemoveIpAddressesFromWhitelistAsync(IEnumerable<long> ids, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject
 			{
@@ -176,7 +176,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		public Task<WhitelistedIp> GetWhitelistedIpAddressAsync(long id, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<WhitelistedIp> GetWhitelistedIpAddressAsync(long id, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/whitelist/{id}")

@@ -20,7 +20,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The name of the newly created <see cref="IpPool" />.
 		/// </returns>
-		Task<string> CreateAsync(string name, CancellationToken cancellationToken = default(CancellationToken));
+		Task<string> CreateAsync(string name, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve the names of all IP pools.
@@ -29,7 +29,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The names of all existing IP pools.
 		/// </returns>
-		Task<string[]> GetAllNamesAsync(CancellationToken cancellationToken = default(CancellationToken));
+		Task<string[]> GetAllNamesAsync(CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve an IP pool.
@@ -39,7 +39,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="IpPool" />.
 		/// </returns>
-		Task<IpPool> GetAsync(string name, CancellationToken cancellationToken = default(CancellationToken));
+		Task<IpPool> GetAsync(string name, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Update a list.
@@ -50,7 +50,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The name of the updated <see cref="IpPool" />.
 		/// </returns>
-		Task<string> UpdateAsync(string name, string newName, CancellationToken cancellationToken = default(CancellationToken));
+		Task<string> UpdateAsync(string name, string newName, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete an IP pool.
@@ -60,7 +60,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteAsync(string name, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteAsync(string name, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Add an address to an IP pool.
@@ -71,7 +71,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task<IpPoolAddress> AddAddressAsync(string name, string address, CancellationToken cancellationToken = default(CancellationToken));
+		Task<IpPoolAddress> AddAddressAsync(string name, string address, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Remove an address from an IP pool.
@@ -82,6 +82,6 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task RemoveAddressAsync(string name, string address, CancellationToken cancellationToken = default(CancellationToken));
+		Task RemoveAddressAsync(string name, string address, CancellationToken cancellationToken = default);
 	}
 }

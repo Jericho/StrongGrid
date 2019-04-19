@@ -43,7 +43,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="GlobalSuppression"/>.
 		/// </returns>
-		public Task<GlobalSuppression[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<GlobalSuppression[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync("suppression/unsubscribes")
@@ -65,7 +65,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		///   <c>true</c> if the email address is in the global suppression group; otherwise, <c>false</c>.
 		/// </returns>
-		public async Task<bool> IsUnsubscribedAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<bool> IsUnsubscribedAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var responseContent = await _client
 				.GetAsync($"{_endpoint}/{email}")
@@ -96,7 +96,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task AddAsync(IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task AddAsync(IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject(new JProperty("recipient_emails", JArray.FromObject(emails.ToArray())));
 			return _client
@@ -116,7 +116,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task RemoveAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task RemoveAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{email}")
