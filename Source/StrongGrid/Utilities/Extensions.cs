@@ -54,7 +54,7 @@ namespace StrongGrid.Utilities
 		/// <summary>
 		/// Reads the content of the HTTP response as string asynchronously.
 		/// </summary>
-		/// <param name="content">The content.</param>
+		/// <param name="httpContent">The content.</param>
 		/// <param name="encoding">The encoding. You can leave this parameter null and the encoding will be
 		/// automatically calculated based on the charset in the response. Also, UTF-8
 		/// encoding will be used if the charset is absent from the response, is blank
@@ -93,29 +93,33 @@ namespace StrongGrid.Utilities
 		/// var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 		/// </code>
 		/// </example>
-		public static async Task<string> ReadAsStringAsync(this HttpContent content, Encoding encoding)
+		public static async Task<string> ReadAsStringAsync(this HttpContent httpContent, Encoding encoding)
 		{
-			var responseStream = await content.ReadAsStreamAsync().ConfigureAwait(false);
-			var responseContent = string.Empty;
+			var content = string.Empty;
 
-			if (encoding == null) encoding = content.GetEncoding(Encoding.UTF8);
-
-			// This is important: we must make a copy of the response stream otherwise we would get an
-			// exception on subsequent attempts to read the content of the stream
-			using (var ms = new MemoryStream())
+			if (httpContent != null)
 			{
-				await responseStream.CopyToAsync(ms).ConfigureAwait(false);
-				ms.Position = 0;
-				using (var sr = new StreamReader(ms, encoding))
-				{
-					responseContent = await sr.ReadToEndAsync().ConfigureAwait(false);
-				}
+				var contentStream = await httpContent.ReadAsStreamAsync().ConfigureAwait(false);
 
-				// It's important to rewind the stream
-				if (responseStream.CanSeek) responseStream.Position = 0;
+				if (encoding == null) encoding = httpContent.GetEncoding(Encoding.UTF8);
+
+				// This is important: we must make a copy of the response stream otherwise we would get an
+				// exception on subsequent attempts to read the content of the stream
+				using (var ms = new MemoryStream())
+				{
+					await contentStream.CopyToAsync(ms).ConfigureAwait(false);
+					ms.Position = 0;
+					using (var sr = new StreamReader(ms, encoding))
+					{
+						content = await sr.ReadToEndAsync().ConfigureAwait(false);
+					}
+
+					// It's important to rewind the stream
+					if (contentStream.CanSeek) contentStream.Position = 0;
+				}
 			}
 
-			return responseContent;
+			return content;
 		}
 
 		/// <summary>
