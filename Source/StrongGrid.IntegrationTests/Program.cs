@@ -36,14 +36,14 @@ namespace StrongGrid.IntegrationTests
 			var debugHttpMessagesToConsole = false;
 			// -----------------------------------------------------------------------------
 
-			var proxy = useFiddler ? new WebProxy("http://localhost:8888") : null;
-			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
-			var client = new Client(apiKey, proxy);
-
 			if (debugHttpMessagesToConsole)
 			{
 				LogProvider.SetCurrentLogProvider(new ConsoleLogProvider());
 			}
+
+			var proxy = useFiddler ? new WebProxy("http://localhost:8888") : null;
+			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
+			var client = new Client(apiKey, proxy);
 
 			var source = new CancellationTokenSource();
 			Console.CancelKeyPress += (s, e) =>
@@ -83,9 +83,9 @@ namespace StrongGrid.IntegrationTests
 				Teammates,
 				Templates,
 				User,
-				WebhookSettings,
-				WebhookStats,
-				SenderAuthentication
+				//WebhookSettings,
+				//WebhookStats,
+				//SenderAuthentication
 			};
 
 			// Execute the async tests in parallel (with max degree of parallelism)
