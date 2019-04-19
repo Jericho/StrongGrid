@@ -22,14 +22,14 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="AddIpAddressResult">result</see>.
 		/// </returns>
-		Task<AddIpAddressResult> AddAsync(int count, string[] subusers, bool? warmup, CancellationToken cancellationToken = default(CancellationToken));
+		Task<AddIpAddressResult> AddAsync(int count, string[] subusers, bool? warmup, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get how many IP Addresses can still be created during a given period and the price of those IPs.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>The information about <see cref="IpAddressesRemaining">remaining IP addresses</see>.</returns>
-		Task<IpAddressesRemaining> GetRemainingCountAsync(CancellationToken cancellationToken = default(CancellationToken));
+		Task<IpAddressesRemaining> GetRemainingCountAsync(CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve an IP address.
@@ -39,7 +39,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="IpAddress" />.
 		/// </returns>
-		Task<IpAddress> GetAsync(string address, CancellationToken cancellationToken = default(CancellationToken));
+		Task<IpAddress> GetAsync(string address, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve all assigned and unassigned IP addresses.
@@ -52,7 +52,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="IpAddress">IP addresses</see>.
 		/// </returns>
-		Task<IpAddress[]> GetAllAsync(bool excludeWhitelabels = false, string subuser = null, int limit = 10, int offset = 0, CancellationToken cancellationToken = default(CancellationToken));
+		Task<IpAddress[]> GetAllAsync(bool excludeWhitelabels = false, string subuser = null, int limit = 10, int offset = 0, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve assigned IP addresses.
@@ -61,7 +61,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="IpAddress">Ip addresses</see>.
 		/// </returns>
-		Task<IpAddress[]> GetAssignedAsync(CancellationToken cancellationToken = default(CancellationToken));
+		Task<IpAddress[]> GetAssignedAsync(CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve unassigned IP addresses.
@@ -70,7 +70,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="IpAddress">Ip addresses</see>.
 		/// </returns>
-		Task<IpAddress[]> GetUnassignedAsync(CancellationToken cancellationToken = default(CancellationToken));
+		Task<IpAddress[]> GetUnassignedAsync(CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve all IP addresses that are currently warming up.
@@ -79,7 +79,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="IpAddress">IP addresses</see>.
 		/// </returns>
-		Task<IpAddress[]> GetWarmingUpAsync(CancellationToken cancellationToken = default(CancellationToken));
+		Task<IpAddress[]> GetWarmingUpAsync(CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve the warmup status for a specific IP address.
@@ -89,6 +89,6 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Block">Blocks</see>.
 		/// </returns>
-		Task<IpAddress> GetWarmupStatusAsync(string address, CancellationToken cancellationToken = default(CancellationToken));
+		Task<IpAddress> GetWarmupStatusAsync(string address, CancellationToken cancellationToken = default);
 	}
 }

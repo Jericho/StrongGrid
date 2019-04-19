@@ -30,7 +30,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SenderIdentity" />.
 		/// </returns>
-		Task<SenderIdentity> CreateAsync(string nickname, MailAddress from, MailAddress replyTo, string address1, string address2, string city, string state, string zip, string country, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<SenderIdentity> CreateAsync(string nickname, MailAddress from, MailAddress replyTo, string address1, string address2, string city, string state, string zip, string country, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve all sender identities.
@@ -40,7 +40,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="SenderIdentity" />.
 		/// </returns>
-		Task<SenderIdentity[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<SenderIdentity[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve a sender identity.
@@ -51,7 +51,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SenderIdentity" />.
 		/// </returns>
-		Task<SenderIdentity> GetAsync(long senderId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<SenderIdentity> GetAsync(long senderId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Update a sender identity.
@@ -73,17 +73,17 @@ namespace StrongGrid.Resources
 		/// </returns>
 		Task<SenderIdentity> UpdateAsync(
 			long senderId,
-			Parameter<string> nickname = default(Parameter<string>),
-			Parameter<MailAddress> from = default(Parameter<MailAddress>),
-			Parameter<MailAddress> replyTo = default(Parameter<MailAddress>),
-			Parameter<string> address1 = default(Parameter<string>),
-			Parameter<string> address2 = default(Parameter<string>),
-			Parameter<string> city = default(Parameter<string>),
-			Parameter<string> state = default(Parameter<string>),
-			Parameter<string> zip = default(Parameter<string>),
-			Parameter<string> country = default(Parameter<string>),
+			Parameter<string> nickname = default,
+			Parameter<MailAddress> from = default,
+			Parameter<MailAddress> replyTo = default,
+			Parameter<string> address1 = default,
+			Parameter<string> address2 = default,
+			Parameter<string> city = default,
+			Parameter<string> state = default,
+			Parameter<string> zip = default,
+			Parameter<string> country = default,
 			string onBehalfOf = null,
-			CancellationToken cancellationToken = default(CancellationToken));
+			CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete a sender identity.
@@ -94,7 +94,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteAsync(long senderId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteAsync(long senderId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Resend the verification to a sender.
@@ -105,6 +105,6 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task ResendVerification(long senderId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task ResendVerification(long senderId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 	}
 }

@@ -67,7 +67,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken));
+			CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Send an email to a single recipient using a legacy template.
@@ -125,7 +125,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken));
+			CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Send an email to a single recipient using a dynamic template.
@@ -177,7 +177,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken));
+			CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Send the same email to multiple recipients without using a template (which means you must provide the subject, html content and text content).
@@ -231,7 +231,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken));
+			CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Send the same email to multiple recipients using a legacy template.
@@ -289,7 +289,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken));
+			CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Send the same email to multiple recipients.
@@ -341,7 +341,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken));
+			CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Send email(s) over SendGrid’s v3 Web API.
@@ -387,6 +387,6 @@ namespace StrongGrid.Resources
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
 			TrackingSettings trackingSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken));
+			CancellationToken cancellationToken = default);
 	}
 }

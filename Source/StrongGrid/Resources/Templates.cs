@@ -39,7 +39,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Template" />.
 		/// </returns>
-		public Task<Template> CreateAsync(string name, TemplateType type, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Template> CreateAsync(string name, TemplateType type, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject
 			{
@@ -64,7 +64,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Template" />.
 		/// </returns>
-		public Task<Template[]> GetAllAsync(TemplateType type, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Template[]> GetAllAsync(TemplateType type, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync(_endpoint)
@@ -83,7 +83,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Template" />.
 		/// </returns>
-		public Task<Template> GetAsync(string templateId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Template> GetAsync(string templateId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{templateId}")
@@ -102,7 +102,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Template" />.
 		/// </returns>
-		public Task<Template> UpdateAsync(string templateId, string name, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Template> UpdateAsync(string templateId, string name, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject
 			{
@@ -125,7 +125,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(string templateId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(string templateId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{templateId}")
@@ -150,7 +150,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="TemplateVersion" />.
 		/// </returns>
-		public Task<TemplateVersion> CreateVersionAsync(string templateId, string name, string subject, string htmlContent, string textContent, bool isActive, Parameter<EditorType?> editorType = default(Parameter<EditorType?>), Parameter<object> testData = default(Parameter<object>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<TemplateVersion> CreateVersionAsync(string templateId, string name, string subject, string htmlContent, string textContent, bool isActive, Parameter<EditorType?> editorType = default, Parameter<object> testData = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject
 			{
@@ -181,7 +181,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="TemplateVersion" />.
 		/// </returns>
-		public Task<TemplateVersion> ActivateVersionAsync(string templateId, string versionId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<TemplateVersion> ActivateVersionAsync(string templateId, string versionId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.PostAsync($"{_endpoint}/{templateId}/versions/{versionId}/activate")
@@ -200,7 +200,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="TemplateVersion" />.
 		/// </returns>
-		public Task<TemplateVersion> GetVersionAsync(string templateId, string versionId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<TemplateVersion> GetVersionAsync(string templateId, string versionId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{templateId}/versions/{versionId}")
@@ -226,7 +226,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="TemplateVersion" />.
 		/// </returns>
-		public Task<TemplateVersion> UpdateVersionAsync(string templateId, string versionId, Parameter<string> name = default(Parameter<string>), Parameter<string> subject = default(Parameter<string>), Parameter<string> htmlContent = default(Parameter<string>), Parameter<string> textContent = default(Parameter<string>), Parameter<bool> isActive = default(Parameter<bool>), Parameter<EditorType?> editorType = default(Parameter<EditorType?>), Parameter<object> testData = default(Parameter<object>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<TemplateVersion> UpdateVersionAsync(string templateId, string versionId, Parameter<string> name = default, Parameter<string> subject = default, Parameter<string> htmlContent = default, Parameter<string> textContent = default, Parameter<bool> isActive = default, Parameter<EditorType?> editorType = default, Parameter<object> testData = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject();
 			data.AddPropertyIfValue("name", name);
@@ -255,7 +255,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteVersionAsync(string templateId, string versionId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteVersionAsync(string templateId, string versionId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{templateId}/versions/{versionId}")

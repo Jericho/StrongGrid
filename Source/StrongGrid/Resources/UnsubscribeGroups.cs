@@ -40,7 +40,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="SuppressionGroup" />.
 		/// </returns>
-		public Task<SuppressionGroup[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SuppressionGroup[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync(_endpoint)
@@ -58,7 +58,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="SuppressionGroup" />.
 		/// </returns>
-		public Task<SuppressionGroup[]> GetMultipleAsync(IEnumerable<int> groupIds, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SuppressionGroup[]> GetMultipleAsync(IEnumerable<int> groupIds, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			if (groupIds == null || !groupIds.Any()) throw new ArgumentNullException(nameof(groupIds), "You must specify at least one group id");
 
@@ -84,7 +84,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SuppressionGroup" />.
 		/// </returns>
-		public Task<SuppressionGroup> GetAsync(long groupId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SuppressionGroup> GetAsync(long groupId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{groupId}")
@@ -104,7 +104,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SuppressionGroup" />.
 		/// </returns>
-		public Task<SuppressionGroup> CreateAsync(string name, string description, bool isDefault, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SuppressionGroup> CreateAsync(string name, string description, bool isDefault, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject
 			{
@@ -131,7 +131,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SuppressionGroup" />.
 		/// </returns>
-		public Task<SuppressionGroup> UpdateAsync(long groupId, Parameter<string> name = default(Parameter<string>), Parameter<string> description = default(Parameter<string>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<SuppressionGroup> UpdateAsync(long groupId, Parameter<string> name = default, Parameter<string> description = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject();
 			data.AddPropertyIfValue("name", name.Value);
@@ -154,7 +154,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(long groupId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(long groupId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{groupId}")

@@ -46,11 +46,11 @@ namespace StrongGrid.Resources
 		/// <exception cref="System.Exception">Thrown when an exception occured while creating the contact.</exception>
 		public async Task<string> CreateAsync(
 			string email,
-			Parameter<string> firstName = default(Parameter<string>),
-			Parameter<string> lastName = default(Parameter<string>),
-			Parameter<IEnumerable<Field>> customFields = default(Parameter<IEnumerable<Field>>),
+			Parameter<string> firstName = default,
+			Parameter<string> lastName = default,
+			Parameter<IEnumerable<Field>> customFields = default,
 			string onBehalfOf = null,
-			CancellationToken cancellationToken = default(CancellationToken))
+			CancellationToken cancellationToken = default)
 		{
 			// SendGrid expects an array despite the fact we are creating a single contact
 			var data = new[] { ConvertToJObject(email, firstName, lastName, customFields) };
@@ -88,11 +88,11 @@ namespace StrongGrid.Resources
 		/// <exception cref="System.Exception">Thrown when an exception occured while updating the contact.</exception>
 		public async Task UpdateAsync(
 			string email,
-			Parameter<string> firstName = default(Parameter<string>),
-			Parameter<string> lastName = default(Parameter<string>),
-			Parameter<IEnumerable<Field>> customFields = default(Parameter<IEnumerable<Field>>),
+			Parameter<string> firstName = default,
+			Parameter<string> lastName = default,
+			Parameter<IEnumerable<Field>> customFields = default,
 			string onBehalfOf = null,
-			CancellationToken cancellationToken = default(CancellationToken))
+			CancellationToken cancellationToken = default)
 		{
 			// SendGrid expects an array despite the fact we are updating a single contact
 			var data = new[] { ConvertToJObject(email, firstName, lastName, customFields) };
@@ -123,7 +123,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="ImportResult">result</see> of the operation.
 		/// </returns>
-		public Task<ImportResult> ImportAsync(IEnumerable<Contact> contacts, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<ImportResult> ImportAsync(IEnumerable<Contact> contacts, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JArray();
 			foreach (var contact in contacts)
@@ -148,7 +148,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return DeleteAsync(new[] { contactId }, onBehalfOf, cancellationToken);
 		}
@@ -162,7 +162,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(IEnumerable<string> contactId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(IEnumerable<string> contactId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = JArray.FromObject(contactId.ToArray());
 			return _client
@@ -182,7 +182,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Contact" />.
 		/// </returns>
-		public Task<Contact> GetAsync(string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Contact> GetAsync(string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{contactId}")
@@ -201,7 +201,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Contact" />.
 		/// </returns>
-		public Task<Contact[]> GetAsync(int recordsPerPage = 100, int page = 1, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Contact[]> GetAsync(int recordsPerPage = 100, int page = 1, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync(_endpoint)
@@ -220,7 +220,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The number of billable contacts.
 		/// </returns>
-		public Task<long> GetBillableCountAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<long> GetBillableCountAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/billable_count")
@@ -237,7 +237,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The total number of contacts.
 		/// </returns>
-		public Task<long> GetTotalCountAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<long> GetTotalCountAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/count")
@@ -256,7 +256,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Contact" />.
 		/// </returns>
-		public Task<Contact[]> SearchAsync(IEnumerable<SearchCondition> conditions, long? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Contact[]> SearchAsync(IEnumerable<SearchCondition> conditions, long? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject();
 			data.AddPropertyIfValue("list_id", listId);
@@ -279,7 +279,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="List" />.
 		/// </returns>
-		public Task<List[]> GetListsAsync(string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<List[]> GetListsAsync(string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{contactId}/lists")

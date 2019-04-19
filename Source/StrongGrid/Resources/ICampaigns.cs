@@ -38,17 +38,17 @@ namespace StrongGrid.Resources
 		Task<Campaign> CreateAsync(
 			string title,
 			long senderId,
-			Parameter<string> subject = default(Parameter<string>),
-			Parameter<string> htmlContent = default(Parameter<string>),
-			Parameter<string> textContent = default(Parameter<string>),
-			Parameter<IEnumerable<long>> listIds = default(Parameter<IEnumerable<long>>),
-			Parameter<IEnumerable<long>> segmentIds = default(Parameter<IEnumerable<long>>),
-			Parameter<IEnumerable<string>> categories = default(Parameter<IEnumerable<string>>),
-			Parameter<long?> suppressionGroupId = default(Parameter<long?>),
-			Parameter<string> customUnsubscribeUrl = default(Parameter<string>),
-			Parameter<string> ipPool = default(Parameter<string>),
-			Parameter<EditorType?> editor = default(Parameter<EditorType?>),
-			CancellationToken cancellationToken = default(CancellationToken));
+			Parameter<string> subject = default,
+			Parameter<string> htmlContent = default,
+			Parameter<string> textContent = default,
+			Parameter<IEnumerable<long>> listIds = default,
+			Parameter<IEnumerable<long>> segmentIds = default,
+			Parameter<IEnumerable<string>> categories = default,
+			Parameter<long?> suppressionGroupId = default,
+			Parameter<string> customUnsubscribeUrl = default,
+			Parameter<string> ipPool = default,
+			Parameter<EditorType?> editor = default,
+			CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve all campaigns.
@@ -59,7 +59,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Campaign" />.
 		/// </returns>
-		Task<Campaign[]> GetAllAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Campaign[]> GetAllAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve a campaign.
@@ -69,7 +69,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Campaign" />.
 		/// </returns>
-		Task<Campaign> GetAsync(long campaignId, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Campaign> GetAsync(long campaignId, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete a campaign.
@@ -79,7 +79,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteAsync(long campaignId, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteAsync(long campaignId, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Update a campaign.
@@ -103,19 +103,19 @@ namespace StrongGrid.Resources
 		/// </returns>
 		Task<Campaign> UpdateAsync(
 			long campaignId,
-			Parameter<string> title = default(Parameter<string>),
-			Parameter<long?> senderId = default(Parameter<long?>),
-			Parameter<string> subject = default(Parameter<string>),
-			Parameter<string> htmlContent = default(Parameter<string>),
-			Parameter<string> textContent = default(Parameter<string>),
-			Parameter<IEnumerable<long>> listIds = default(Parameter<IEnumerable<long>>),
-			Parameter<IEnumerable<long>> segmentIds = default(Parameter<IEnumerable<long>>),
-			Parameter<IEnumerable<string>> categories = default(Parameter<IEnumerable<string>>),
-			Parameter<long?> suppressionGroupId = default(Parameter<long?>),
-			Parameter<string> customUnsubscribeUrl = default(Parameter<string>),
-			Parameter<string> ipPool = default(Parameter<string>),
-			Parameter<EditorType?> editor = default(Parameter<EditorType?>),
-			CancellationToken cancellationToken = default(CancellationToken));
+			Parameter<string> title = default,
+			Parameter<long?> senderId = default,
+			Parameter<string> subject = default,
+			Parameter<string> htmlContent = default,
+			Parameter<string> textContent = default,
+			Parameter<IEnumerable<long>> listIds = default,
+			Parameter<IEnumerable<long>> segmentIds = default,
+			Parameter<IEnumerable<string>> categories = default,
+			Parameter<long?> suppressionGroupId = default,
+			Parameter<string> customUnsubscribeUrl = default,
+			Parameter<string> ipPool = default,
+			Parameter<EditorType?> editor = default,
+			CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Send a campaign immediately.
@@ -125,7 +125,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task SendNowAsync(long campaignId, CancellationToken cancellationToken = default(CancellationToken));
+		Task SendNowAsync(long campaignId, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Schedule a campaign to be sewnt at a later time.
@@ -136,7 +136,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task ScheduleAsync(long campaignId, DateTime sendOn, CancellationToken cancellationToken = default(CancellationToken));
+		Task ScheduleAsync(long campaignId, DateTime sendOn, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Change the date a campaign is scheduled to be sent.
@@ -147,7 +147,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task RescheduleAsync(long campaignId, DateTime sendOn, CancellationToken cancellationToken = default(CancellationToken));
+		Task RescheduleAsync(long campaignId, DateTime sendOn, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve the date a campaign is scheduled to be sent.
@@ -158,7 +158,7 @@ namespace StrongGrid.Resources
 		/// The <see cref="DateTime" /> the campaign is cheduled to be sent or <c>null</c> if the campaign is
 		/// not scheduled to be sent.
 		/// </returns>
-		Task<DateTime?> GetScheduledDateAsync(long campaignId, CancellationToken cancellationToken = default(CancellationToken));
+		Task<DateTime?> GetScheduledDateAsync(long campaignId, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Unschedule a scheduled campaign.
@@ -168,7 +168,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task UnscheduleAsync(long campaignId, CancellationToken cancellationToken = default(CancellationToken));
+		Task UnscheduleAsync(long campaignId, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Send a test campaign.
@@ -180,6 +180,6 @@ namespace StrongGrid.Resources
 		/// The async task.
 		/// </returns>
 		/// <exception cref="System.ArgumentException">You must specify at least one email address.</exception>
-		Task SendTestAsync(long campaignId, IEnumerable<string> emailAddresses, CancellationToken cancellationToken = default(CancellationToken));
+		Task SendTestAsync(long campaignId, IEnumerable<string> emailAddresses, CancellationToken cancellationToken = default);
 	}
 }

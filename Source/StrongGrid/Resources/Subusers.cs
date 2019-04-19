@@ -37,7 +37,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Subuser" />.
 		/// </returns>
-		public Task<Subuser> GetAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Subuser> GetAsync(string username, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{username}")
@@ -54,7 +54,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Subuser" />.
 		/// </returns>
-		public Task<Subuser[]> GetAllAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Subuser[]> GetAllAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync(_endpoint)
@@ -75,7 +75,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Subuser" />.
 		/// </returns>
-		public Task<Subuser> CreateAsync(string username, string email, string password, Parameter<IEnumerable<string>> ips = default(Parameter<IEnumerable<string>>), CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Subuser> CreateAsync(string username, string email, string password, Parameter<IEnumerable<string>> ips = default, CancellationToken cancellationToken = default)
 		{
 			var data = CreateJObject(username: username, email: email, password: password, ips: ips);
 			return _client
@@ -93,7 +93,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(string username, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{username}")
@@ -111,7 +111,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public async Task UpdateAsync(string username, Parameter<bool> disabled, Parameter<IEnumerable<string>> ips, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task UpdateAsync(string username, Parameter<bool> disabled, Parameter<IEnumerable<string>> ips, CancellationToken cancellationToken = default)
 		{
 			if (disabled.HasValue)
 			{
@@ -148,7 +148,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="MonitorSettings" />.
 		/// </returns>
-		public Task<MonitorSettings> GetMonitorSettingsAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<MonitorSettings> GetMonitorSettingsAsync(string username, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{username}/monitor")
@@ -166,7 +166,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="MonitorSettings" />.
 		/// </returns>
-		public Task<MonitorSettings> CreateMonitorSettingsAsync(string username, string email, int frequency, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<MonitorSettings> CreateMonitorSettingsAsync(string username, string email, int frequency, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject()
 			{
@@ -190,7 +190,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="MonitorSettings" />.
 		/// </returns>
-		public Task<MonitorSettings> UpdateMonitorSettingsAsync(string username, Parameter<string> email = default(Parameter<string>), Parameter<int> frequency = default(Parameter<int>), CancellationToken cancellationToken = default(CancellationToken))
+		public Task<MonitorSettings> UpdateMonitorSettingsAsync(string username, Parameter<string> email = default, Parameter<int> frequency = default, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject();
 			data.AddPropertyIfValue("email", email);
@@ -211,7 +211,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteMonitorSettingsAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteMonitorSettingsAsync(string username, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{username}/monitor")
@@ -220,11 +220,11 @@ namespace StrongGrid.Resources
 		}
 
 		private static JObject CreateJObject(
-			Parameter<int> id = default(Parameter<int>),
-			Parameter<string> username = default(Parameter<string>),
-			Parameter<string> password = default(Parameter<string>),
-			Parameter<string> email = default(Parameter<string>),
-			Parameter<IEnumerable<string>> ips = default(Parameter<IEnumerable<string>>))
+			Parameter<int> id = default,
+			Parameter<string> username = default,
+			Parameter<string> password = default,
+			Parameter<string> email = default,
+			Parameter<IEnumerable<string>> ips = default)
 		{
 			var result = new JObject();
 			result.AddPropertyIfValue("id", id);

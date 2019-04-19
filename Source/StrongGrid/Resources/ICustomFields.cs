@@ -20,7 +20,7 @@ namespace StrongGrid.Resources
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>The <see cref="CustomFieldMetadata">metadata</see> about the new field.</returns>
-		Task<CustomFieldMetadata> CreateAsync(string name, FieldType type, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<CustomFieldMetadata> CreateAsync(string name, FieldType type, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve all custom fields.
@@ -30,7 +30,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="CustomFieldMetadata">metadata</see> about the fields.
 		/// </returns>
-		Task<CustomFieldMetadata[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<CustomFieldMetadata[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve a custom field.
@@ -41,7 +41,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="CustomFieldMetadata">metadata</see> about the field.
 		/// </returns>
-		Task<CustomFieldMetadata> GetAsync(long fieldId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<CustomFieldMetadata> GetAsync(long fieldId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete a custom field.
@@ -52,7 +52,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteAsync(long fieldId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteAsync(long fieldId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve the reserved fields.
@@ -62,6 +62,6 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Field" />.
 		/// </returns>
-		Task<Field[]> GetReservedFieldsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Field[]> GetReservedFieldsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 	}
 }

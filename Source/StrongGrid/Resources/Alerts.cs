@@ -38,7 +38,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		public Task<Alert> GetAsync(long alertId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Alert> GetAsync(long alertId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{alertId}")
@@ -55,7 +55,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Alert" />.
 		/// </returns>
-		public Task<Alert[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Alert[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync(_endpoint)
@@ -76,7 +76,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		public Task<Alert> CreateAsync(AlertType type, Parameter<string> emailTo = default(Parameter<string>), Parameter<Frequency?> frequency = default(Parameter<Frequency?>), Parameter<int?> percentage = default(Parameter<int?>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Alert> CreateAsync(AlertType type, Parameter<string> emailTo = default, Parameter<Frequency?> frequency = default, Parameter<int?> percentage = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = CreateJObject(type, emailTo, frequency, percentage);
 			return _client
@@ -96,7 +96,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(long alertId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(long alertId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{alertId}")
@@ -117,7 +117,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		public Task<Alert> UpdateAsync(long alertId, Parameter<AlertType?> type = default(Parameter<AlertType?>), Parameter<string> emailTo = default(Parameter<string>), Parameter<Frequency?> frequency = default(Parameter<Frequency?>), Parameter<int?> percentage = default(Parameter<int?>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Alert> UpdateAsync(long alertId, Parameter<AlertType?> type = default, Parameter<string> emailTo = default, Parameter<Frequency?> frequency = default, Parameter<int?> percentage = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = CreateJObject(type, emailTo, frequency, percentage);
 			return _client
