@@ -7,7 +7,6 @@
 	// Inspired by: https://github.com/damianh/LibLog/blob/master/src/LibLog.Example.ColoredConsoleLogProvider/ColoredConsoleLogProvider.cs
 	public class ConsoleLogProvider : ILogProvider
 	{
-
 		public Logger GetLogger(string name)
 		{
 			return (logLevel, messageFunc, exception, formatParameters) =>

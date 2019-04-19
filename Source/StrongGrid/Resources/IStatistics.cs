@@ -26,7 +26,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		Task<Statistic[]> GetGlobalStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Statistic[]> GetGlobalStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get email statistics for the given categories. If you don’t pass any parameters, the endpoint will return a sum for each category 10 at a time.
@@ -41,7 +41,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		Task<Statistic[]> GetCategoriesStatisticsAsync(IEnumerable<string> categories, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Statistic[]> GetCategoriesStatisticsAsync(IEnumerable<string> categories, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get email statistics for the given subusers. You can add up to 10 subusers parameters, one for each subuser you want stats for.
@@ -56,7 +56,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		Task<Statistic[]> GetSubusersStatisticsAsync(IEnumerable<string> subusers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Statistic[]> GetSubusersStatisticsAsync(IEnumerable<string> subusers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Gets email statistics by country and state/province. Only supported for US and CA.
@@ -71,7 +71,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		Task<Statistic[]> GetCountryStatisticsAsync(string country, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Statistic[]> GetCountryStatisticsAsync(string country, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Gets email statistics by device type.
@@ -85,7 +85,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		Task<Statistic[]> GetDeviceTypesStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Statistic[]> GetDeviceTypesStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get email statistics by client type.
@@ -99,7 +99,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		Task<Statistic[]> GetClientTypesStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Statistic[]> GetClientTypesStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Gets email statistics by mailbox provider.
@@ -114,7 +114,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		Task<Statistic[]> GetInboxProvidersStatisticsAsync(IEnumerable<string> providers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Statistic[]> GetInboxProvidersStatisticsAsync(IEnumerable<string> providers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Gets email statistics by browser.
@@ -129,6 +129,6 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		Task<Statistic[]> GetBrowsersStatisticsAsync(IEnumerable<string> browsers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Statistic[]> GetBrowsersStatisticsAsync(IEnumerable<string> browsers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default);
 	}
 }

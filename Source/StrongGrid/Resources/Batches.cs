@@ -34,7 +34,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The batch id.
 		/// </returns>
-		public Task<string> GenerateBatchIdAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<string> GenerateBatchIdAsync(CancellationToken cancellationToken = default)
 		{
 			return _client
 				.PostAsync(_endpoint)
@@ -50,7 +50,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		///   <c>true</c> if the batch id is valid; otherwise, <c>false</c>.
 		/// </returns>
-		public async Task<bool> ValidateBatchIdAsync(string batchId, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<bool> ValidateBatchIdAsync(string batchId, CancellationToken cancellationToken = default)
 		{
 			try
 			{
@@ -77,7 +77,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task Cancel(string batchId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task Cancel(string batchId, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject
 			{
@@ -99,7 +99,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task Pause(string batchId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task Pause(string batchId, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject
 			{
@@ -120,7 +120,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="BatchInfo" />.
 		/// </returns>
-		public Task<BatchInfo[]> GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<BatchInfo[]> GetAllAsync(CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync("user/scheduled_sends")
@@ -136,7 +136,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// A <see cref="BatchInfo" />.
 		/// </returns>
-		public async Task<BatchInfo> GetAsync(string batchId, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<BatchInfo> GetAsync(string batchId, CancellationToken cancellationToken = default)
 		{
 			var result = await _client
 				.GetAsync($"user/scheduled_sends/{batchId}")
@@ -157,7 +157,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task Resume(string batchId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task Resume(string batchId, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{batchId}")

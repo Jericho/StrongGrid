@@ -22,7 +22,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Subuser" />.
 		/// </returns>
-		Task<Subuser> GetAsync(string username, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Subuser> GetAsync(string username, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// List all Subusers for a parent.
@@ -33,7 +33,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Subuser" />.
 		/// </returns>
-		Task<Subuser[]> GetAllAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Subuser[]> GetAllAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Create a new Subuser.
@@ -46,7 +46,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Subuser" />.
 		/// </returns>
-		Task<Subuser> CreateAsync(string username, string email, string password, Parameter<IEnumerable<string>> ips = default(Parameter<IEnumerable<string>>), CancellationToken cancellationToken = default(CancellationToken));
+		Task<Subuser> CreateAsync(string username, string email, string password, Parameter<IEnumerable<string>> ips = default, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete an existing Subuser.
@@ -56,7 +56,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteAsync(string username, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteAsync(string username, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Update a Subuser.
@@ -68,7 +68,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task UpdateAsync(string username, Parameter<bool> disabled, Parameter<IEnumerable<string>> ips, CancellationToken cancellationToken = default(CancellationToken));
+		Task UpdateAsync(string username, Parameter<bool> disabled, Parameter<IEnumerable<string>> ips, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get the monitor settings.
@@ -78,7 +78,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="MonitorSettings" />.
 		/// </returns>
-		Task<MonitorSettings> GetMonitorSettingsAsync(string username, CancellationToken cancellationToken = default(CancellationToken));
+		Task<MonitorSettings> GetMonitorSettingsAsync(string username, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Create monitor settings.
@@ -90,7 +90,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="MonitorSettings" />.
 		/// </returns>
-		Task<MonitorSettings> CreateMonitorSettingsAsync(string username, string email, int frequency, CancellationToken cancellationToken = default(CancellationToken));
+		Task<MonitorSettings> CreateMonitorSettingsAsync(string username, string email, int frequency, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Update monitor settings.
@@ -102,7 +102,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="MonitorSettings" />.
 		/// </returns>
-		Task<MonitorSettings> UpdateMonitorSettingsAsync(string username, Parameter<string> email = default(Parameter<string>), Parameter<int> frequency = default(Parameter<int>), CancellationToken cancellationToken = default(CancellationToken));
+		Task<MonitorSettings> UpdateMonitorSettingsAsync(string username, Parameter<string> email = default, Parameter<int> frequency = default, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete monitor settings.
@@ -112,6 +112,6 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteMonitorSettingsAsync(string username, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteMonitorSettingsAsync(string username, CancellationToken cancellationToken = default);
 	}
 }

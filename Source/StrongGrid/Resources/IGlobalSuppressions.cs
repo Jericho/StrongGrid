@@ -26,7 +26,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="GlobalSuppression"/>.
 		/// </returns>
-		Task<GlobalSuppression[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<GlobalSuppression[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Check if a recipient address is in the global suppressions group.
@@ -37,7 +37,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		///   <c>true</c> if the email address is in the global suppression group; otherwise, <c>false</c>.
 		/// </returns>
-		Task<bool> IsUnsubscribedAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<bool> IsUnsubscribedAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Add recipient addresses to the global suppression group.
@@ -48,7 +48,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task AddAsync(IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task AddAsync(IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete a recipient email from the global suppressions group.
@@ -59,6 +59,6 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task RemoveAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task RemoveAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default);
 	}
 }

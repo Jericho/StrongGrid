@@ -21,7 +21,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="UserProfile" />.
 		/// </returns>
-		Task<UserProfile> GetProfileAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<UserProfile> GetProfileAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Update your user profile.
@@ -42,18 +42,18 @@ namespace StrongGrid.Resources
 		/// The <see cref="UserProfile" />.
 		/// </returns>
 		Task<UserProfile> UpdateProfileAsync(
-			Parameter<string> address = default(Parameter<string>),
-			Parameter<string> city = default(Parameter<string>),
-			Parameter<string> company = default(Parameter<string>),
-			Parameter<string> country = default(Parameter<string>),
-			Parameter<string> firstName = default(Parameter<string>),
-			Parameter<string> lastName = default(Parameter<string>),
-			Parameter<string> phone = default(Parameter<string>),
-			Parameter<string> state = default(Parameter<string>),
-			Parameter<string> website = default(Parameter<string>),
-			Parameter<string> zip = default(Parameter<string>),
+			Parameter<string> address = default,
+			Parameter<string> city = default,
+			Parameter<string> company = default,
+			Parameter<string> country = default,
+			Parameter<string> firstName = default,
+			Parameter<string> lastName = default,
+			Parameter<string> phone = default,
+			Parameter<string> state = default,
+			Parameter<string> website = default,
+			Parameter<string> zip = default,
 			string onBehalfOf = null,
-			CancellationToken cancellationToken = default(CancellationToken));
+			CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get your user account.
@@ -63,7 +63,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Account" />.
 		/// </returns>
-		Task<Account> GetAccountAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Account> GetAccountAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve the email address on file for your account.
@@ -73,7 +73,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The email address from your user profile.
 		/// </returns>
-		Task<string> GetEmailAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<string> GetEmailAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Update the email address on file for your account.
@@ -84,7 +84,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The email address from your user profile.
 		/// </returns>
-		Task<string> UpdateEmailAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<string> UpdateEmailAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve your account username.
@@ -94,7 +94,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The username from your user profile.
 		/// </returns>
-		Task<string> GetUsernameAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<string> GetUsernameAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Update your account username.
@@ -105,7 +105,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The username from your user profile.
 		/// </returns>
-		Task<string> UpdateUsernameAsync(string username, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<string> UpdateUsernameAsync(string username, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve the current credit balance for your account.
@@ -115,7 +115,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="UserCredits"/>.
 		/// </returns>
-		Task<UserCredits> GetCreditsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<UserCredits> GetCreditsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Update the password for your account.
@@ -127,7 +127,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task UpdatePasswordAsync(string oldPassword, string newPassword, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task UpdatePasswordAsync(string oldPassword, string newPassword, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// List all available scopes for a user.
@@ -137,6 +137,6 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of string representing the permissions (aka scopes).
 		/// </returns>
-		Task<string[]> GetPermissionsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<string[]> GetPermissionsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 	}
 }

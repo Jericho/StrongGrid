@@ -41,7 +41,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		public Task<Statistic[]> GetInboundParseUsageAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Statistic[]> GetInboundParseUsageAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var request = _client
 				.GetAsync(_endpoint)

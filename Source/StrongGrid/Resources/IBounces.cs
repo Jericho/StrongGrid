@@ -24,7 +24,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Bounce" />.
 		/// </returns>
-		Task<Bounce[]> GetAllAsync(DateTime? start = null, DateTime? end = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Bounce[]> GetAllAsync(DateTime? start = null, DateTime? end = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get a list of bounces for a given email address.
@@ -35,7 +35,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Bounce" />.
 		/// </returns>
-		Task<Bounce[]> GetAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Bounce[]> GetAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete all bounces.
@@ -45,7 +45,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete bounces for a specified group of email addresses.
@@ -56,7 +56,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteAsync(IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteAsync(IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete bounces for a specified email address.
@@ -67,6 +67,6 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default);
 	}
 }

@@ -39,7 +39,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Suppression"/>.
 		/// </returns>
-		public Task<Suppression[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Suppression[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/suppressions")
@@ -57,7 +57,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Suppression"/>.
 		/// </returns>
-		public async Task<SuppressionGroup[]> GetUnsubscribedGroupsAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<SuppressionGroup[]> GetUnsubscribedGroupsAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var result = await _client
 				.GetAsync($"{_endpoint}/suppressions/{email}")
@@ -86,7 +86,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of string representing the email addresses.
 		/// </returns>
-		public Task<string[]> GetUnsubscribedAddressesAsync(long groupId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<string[]> GetUnsubscribedAddressesAsync(long groupId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/groups/{groupId}/suppressions")
@@ -106,7 +106,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task AddAddressToUnsubscribeGroupAsync(long groupId, string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task AddAddressToUnsubscribeGroupAsync(long groupId, string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return AddAddressToUnsubscribeGroupAsync(groupId, new[] { email }, onBehalfOf, cancellationToken);
 		}
@@ -122,7 +122,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task AddAddressToUnsubscribeGroupAsync(long groupId, IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task AddAddressToUnsubscribeGroupAsync(long groupId, IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject(new JProperty("recipient_emails", JArray.FromObject(emails.ToArray())));
 			return _client
@@ -143,7 +143,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task RemoveAddressFromSuppressionGroupAsync(long groupId, string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task RemoveAddressFromSuppressionGroupAsync(long groupId, string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/groups/{groupId}/suppressions/{email}")
@@ -162,7 +162,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		///   <c>true</c> if the email address is in the global suppression group; otherwise, <c>false</c>.
 		/// </returns>
-		public async Task<bool> IsSuppressedAsync(long groupId, string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<bool> IsSuppressedAsync(long groupId, string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject
 			{

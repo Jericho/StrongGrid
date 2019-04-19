@@ -40,7 +40,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of access requests.
 		/// </returns>
-		public Task<AccessRequest[]> GetAccessRequestsAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<AccessRequest[]> GetAccessRequestsAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync("scopes/requests")
@@ -58,7 +58,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DenyAccessRequestAsync(string requestId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DenyAccessRequestAsync(string requestId, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.DeleteAsync($"scopes/requests/{requestId}")
@@ -74,7 +74,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task ApproveAccessRequestAsync(string requestId, CancellationToken cancellationToken = default(CancellationToken))
+		public Task ApproveAccessRequestAsync(string requestId, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.PatchAsync($"scopes/requests/{requestId}")
@@ -94,7 +94,7 @@ namespace StrongGrid.Resources
 		/// Teammate invitations will expire after 7 days.
 		/// Resending an invite will reset the expiration date.
 		/// </remarks>
-		public Task ResendInvitationAsync(string token, CancellationToken cancellationToken = default(CancellationToken))
+		public Task ResendInvitationAsync(string token, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.PostAsync($"{_endpoint}/pending/{token}/resend")
@@ -111,7 +111,7 @@ namespace StrongGrid.Resources
 		/// Each teammate invitation is valid for 7 days.
 		/// Users may resend the invite to refresh the expiration date.
 		/// </remarks>
-		public Task<TeammateInvitation[]> GetAllPendingInvitationsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public Task<TeammateInvitation[]> GetAllPendingInvitationsAsync(CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/pending")
@@ -131,7 +131,7 @@ namespace StrongGrid.Resources
 		/// Each teammate invitation is valid for 7 days.
 		/// Users may resend the invite to refresh the expiration date.
 		/// </remarks>
-		public Task DeleteInvitationAsync(string token, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteInvitationAsync(string token, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/pending/{token}")
@@ -154,7 +154,7 @@ namespace StrongGrid.Resources
 		/// Essentials, Legacy Lite, and Free Trial users may create up to one teammate per account.
 		/// There is not a teammate limit for Pro and higher plans.
 		/// </remarks>
-		public Task<TeammateInvitation> InviteTeammateAsync(string email, IEnumerable<string> scopes, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<TeammateInvitation> InviteTeammateAsync(string email, IEnumerable<string> scopes, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject
 			{
@@ -183,7 +183,7 @@ namespace StrongGrid.Resources
 		/// Essentials, Legacy Lite, and Free Trial users may create up to one teammate per account.
 		/// There is not a teammate limit for Pro and higher plans.
 		/// </remarks>
-		public async Task<TeammateInvitation> InviteTeammateWithReadOnlyPrivilegesAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<TeammateInvitation> InviteTeammateWithReadOnlyPrivilegesAsync(string email, CancellationToken cancellationToken = default)
 		{
 			var scopes = await _client.GetCurrentScopes(true, cancellationToken).ConfigureAwait(true);
 			scopes = scopes.Where(s => s.EndsWith(".read", System.StringComparison.OrdinalIgnoreCase)).ToArray();
@@ -216,7 +216,7 @@ namespace StrongGrid.Resources
 		/// Essentials, Legacy Lite, and Free Trial users may create up to one teammate per account.
 		/// There is not a teammate limit for Pro and higher plans.
 		/// </remarks>
-		public Task<TeammateInvitation> InviteTeammateAsAdminAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<TeammateInvitation> InviteTeammateAsAdminAsync(string email, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject
 			{
@@ -237,7 +237,7 @@ namespace StrongGrid.Resources
 		/// <param name="offset">The offset.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>An array of <see cref="Teammate" />.</returns>
-		public Task<Teammate[]> GetAllTeammatesAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Teammate[]> GetAllTeammatesAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync(_endpoint)
@@ -253,7 +253,7 @@ namespace StrongGrid.Resources
 		/// <param name="username">The teammate username.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>The <see cref="Teammate" />.</returns>
-		public Task<Teammate> GetTeammateAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Teammate> GetTeammateAsync(string username, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{username}")
@@ -268,7 +268,7 @@ namespace StrongGrid.Resources
 		/// <param name="scopes">The permissions to asign to the teammate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>The <see cref="Teammate" />.</returns>
-		public Task<Teammate> UpdateTeammatePermissionsAsync(string username, IEnumerable<string> scopes, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Teammate> UpdateTeammatePermissionsAsync(string username, IEnumerable<string> scopes, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject
 			{
@@ -290,7 +290,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteTeammateAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteTeammateAsync(string username, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{username}")

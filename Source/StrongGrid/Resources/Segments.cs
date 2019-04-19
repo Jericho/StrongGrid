@@ -41,7 +41,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Segment" />.
 		/// </returns>
-		public Task<Segment> CreateAsync(string name, IEnumerable<SearchCondition> conditions, long? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Segment> CreateAsync(string name, IEnumerable<SearchCondition> conditions, long? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			conditions = conditions ?? Enumerable.Empty<SearchCondition>();
 
@@ -68,7 +68,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Segment" />.
 		/// </returns>
-		public Task<Segment[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Segment[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync(_endpoint)
@@ -86,7 +86,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Segment" />.
 		/// </returns>
-		public Task<Segment> GetAsync(long segmentId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Segment> GetAsync(long segmentId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{segmentId}")
@@ -107,7 +107,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Segment" />.
 		/// </returns>
-		public Task<Segment> UpdateAsync(long segmentId, string name = null, long? listId = null, IEnumerable<SearchCondition> conditions = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Segment> UpdateAsync(long segmentId, string name = null, long? listId = null, IEnumerable<SearchCondition> conditions = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			conditions = conditions ?? Enumerable.Empty<SearchCondition>();
 
@@ -134,7 +134,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(long segmentId, bool deleteMatchingContacts = false, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(long segmentId, bool deleteMatchingContacts = false, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{segmentId}")
@@ -155,7 +155,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Contact" />.
 		/// </returns>
-		public Task<Contact[]> GetRecipientsAsync(long segmentId, int recordsPerPage = 100, int page = 1, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Contact[]> GetRecipientsAsync(long segmentId, int recordsPerPage = 100, int page = 1, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{segmentId}/recipients")

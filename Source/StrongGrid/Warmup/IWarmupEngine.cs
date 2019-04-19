@@ -20,7 +20,7 @@ namespace StrongGrid.Warmup
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task PrepareWithNewIpAddressesAsync(int count, string[] subusers, CancellationToken cancellationToken = default(CancellationToken));
+		Task PrepareWithNewIpAddressesAsync(int count, string[] subusers, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Prepare a new IP pool to warmup the specified IP addresses.
@@ -30,7 +30,7 @@ namespace StrongGrid.Warmup
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task PrepareWithExistingIpAddressesAsync(string[] ipAddresses, CancellationToken cancellationToken = default(CancellationToken));
+		Task PrepareWithExistingIpAddressesAsync(string[] ipAddresses, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Send an email to a single recipient without using a template (which means you must provide the subject, html content and text content).
@@ -83,7 +83,7 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken));
+			CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Send an email to a single recipient using a legacy template.
@@ -139,7 +139,7 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken));
+			CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Send an email to a single recipient using a dynamic template.
@@ -189,7 +189,7 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken));
+			CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Send the same email to multiple recipients without using a template (which means you must provide the subject, html content and text content).
@@ -241,7 +241,7 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken));
+			CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Send the same email to multiple recipients using a legacy template.
@@ -297,7 +297,7 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken));
+			CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Send the same email to multiple recipients.
@@ -347,7 +347,7 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
-			CancellationToken cancellationToken = default(CancellationToken));
+			CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Send email(s) over SendGrid’s v3 Web API.
@@ -374,6 +374,6 @@ namespace StrongGrid.Warmup
 		/// </returns>
 		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
 		/// <exception cref="Exception">Email exceeds the size limit.</exception>
-		Task<WarmupResult> SendAsync(IEnumerable<MailPersonalization> personalizations, string subject, IEnumerable<MailContent> contents, MailAddress from, MailAddress replyTo = null, IEnumerable<Attachment> attachments = null, string templateId = null, IEnumerable<KeyValuePair<string, string>> sections = null, IEnumerable<KeyValuePair<string, string>> headers = null, IEnumerable<string> categories = null, IEnumerable<KeyValuePair<string, string>> customArgs = null, DateTime? sendAt = null, string batchId = null, UnsubscribeOptions unsubscribeOptions = null, MailSettings mailSettings = null, TrackingSettings trackingSettings = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<WarmupResult> SendAsync(IEnumerable<MailPersonalization> personalizations, string subject, IEnumerable<MailContent> contents, MailAddress from, MailAddress replyTo = null, IEnumerable<Attachment> attachments = null, string templateId = null, IEnumerable<KeyValuePair<string, string>> sections = null, IEnumerable<KeyValuePair<string, string>> headers = null, IEnumerable<string> categories = null, IEnumerable<KeyValuePair<string, string>> customArgs = null, DateTime? sendAt = null, string batchId = null, UnsubscribeOptions unsubscribeOptions = null, MailSettings mailSettings = null, TrackingSettings trackingSettings = null, CancellationToken cancellationToken = default);
 	}
 }

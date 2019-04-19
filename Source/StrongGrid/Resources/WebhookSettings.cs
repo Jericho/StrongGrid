@@ -39,7 +39,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="EventWebhookSettings" />.
 		/// </returns>
-		public Task<EventWebhookSettings> GetEventWebhookSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<EventWebhookSettings> GetEventWebhookSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_eventWebhookEndpoint}/settings")
@@ -72,19 +72,19 @@ namespace StrongGrid.Resources
 		public Task<EventWebhookSettings> UpdateEventWebhookSettingsAsync(
 			bool enabled,
 			string url,
-			bool bounce = default(bool),
-			bool click = default(bool),
-			bool deferred = default(bool),
-			bool delivered = default(bool),
-			bool dropped = default(bool),
-			bool groupResubscribe = default(bool),
-			bool groupUnsubscribe = default(bool),
-			bool open = default(bool),
-			bool processed = default(bool),
-			bool spamReport = default(bool),
-			bool unsubscribe = default(bool),
+			bool bounce = default,
+			bool click = default,
+			bool deferred = default,
+			bool delivered = default,
+			bool dropped = default,
+			bool groupResubscribe = default,
+			bool groupUnsubscribe = default,
+			bool open = default,
+			bool processed = default,
+			bool spamReport = default,
+			bool unsubscribe = default,
 			string onBehalfOf = null,
-			CancellationToken cancellationToken = default(CancellationToken))
+			CancellationToken cancellationToken = default)
 		{
 			var eventWebhookSettings = new EventWebhookSettings
 			{
@@ -120,7 +120,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task SendEventTestAsync(string url, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task SendEventTestAsync(string url, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject
 			{
@@ -147,7 +147,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="InboundParseWebhookSettings" />.
 		/// </returns>
-		public Task<InboundParseWebhookSettings> CreateInboundParseWebhookSettings(string hostname, string url, bool spamCheck = false, bool sendRaw = false, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<InboundParseWebhookSettings> CreateInboundParseWebhookSettings(string hostname, string url, bool spamCheck = false, bool sendRaw = false, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = CreateJObject(hostname, url, spamCheck, sendRaw);
 			return _client
@@ -166,7 +166,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="InboundParseWebhookSettings" />.
 		/// </returns>
-		public Task<InboundParseWebhookSettings[]> GetAllInboundParseWebhookSettings(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<InboundParseWebhookSettings[]> GetAllInboundParseWebhookSettings(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_inboundParseWebhookEndpoint}/settings")
@@ -184,7 +184,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="InboundParseWebhookSettings" />.
 		/// </returns>
-		public Task<InboundParseWebhookSettings> GetInboundParseWebhookSettings(string hostname, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<InboundParseWebhookSettings> GetInboundParseWebhookSettings(string hostname, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_inboundParseWebhookEndpoint}/settings/{hostname}")
@@ -205,7 +205,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="InboundParseWebhookSettings" />.
 		/// </returns>
-		public Task UpdateInboundParseWebhookSettings(string hostname, Parameter<string> url = default(Parameter<string>), Parameter<bool> spamCheck = default(Parameter<bool>), Parameter<bool> sendRaw = default(Parameter<bool>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task UpdateInboundParseWebhookSettings(string hostname, Parameter<string> url = default, Parameter<bool> spamCheck = default, Parameter<bool> sendRaw = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = CreateJObject(hostname, url, spamCheck, sendRaw);
 			return _client
@@ -225,7 +225,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteInboundParseWebhookSettings(string hostname, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteInboundParseWebhookSettings(string hostname, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.DeleteAsync($"{_inboundParseWebhookEndpoint}/settings/{hostname}")

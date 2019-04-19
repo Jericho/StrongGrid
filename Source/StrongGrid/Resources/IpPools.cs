@@ -41,7 +41,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="IpPool" />.
 		/// </returns>
-		public Task<string> CreateAsync(string name, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<string> CreateAsync(string name, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject()
 			{
@@ -61,7 +61,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The names of all existing IP pools.
 		/// </returns>
-		public async Task<string[]> GetAllNamesAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<string[]> GetAllNamesAsync(CancellationToken cancellationToken = default)
 		{
 			var responseContent = await _client
 				.GetAsync(_endpoint)
@@ -85,7 +85,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="IpPool" />.
 		/// </returns>
-		public Task<IpPool> GetAsync(string name, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<IpPool> GetAsync(string name, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{name}")
@@ -102,7 +102,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The name of the updated <see cref="IpPool" />.
 		/// </returns>
-		public Task<string> UpdateAsync(string name, string newName, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<string> UpdateAsync(string name, string newName, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject()
 			{
@@ -123,7 +123,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(string name, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(string name, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{name}")
@@ -140,7 +140,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task<IpPoolAddress> AddAddressAsync(string name, string address, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<IpPoolAddress> AddAddressAsync(string name, string address, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject()
 			{
@@ -162,7 +162,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task RemoveAddressAsync(string name, string address, CancellationToken cancellationToken = default(CancellationToken))
+		public Task RemoveAddressAsync(string name, string address, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{name}/ips/{address}")

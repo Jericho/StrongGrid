@@ -54,7 +54,7 @@ namespace StrongGrid.Utilities
 		/// <summary>
 		/// Reads the content of the HTTP response as string asynchronously.
 		/// </summary>
-		/// <param name="content">The content.</param>
+		/// <param name="httpContent">The content.</param>
 		/// <param name="encoding">The encoding. You can leave this parameter null and the encoding will be
 		/// automatically calculated based on the charset in the response. Also, UTF-8
 		/// encoding will be used if the charset is absent from the response, is blank
@@ -93,26 +93,33 @@ namespace StrongGrid.Utilities
 		/// var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 		/// </code>
 		/// </example>
-		public static async Task<string> ReadAsStringAsync(this HttpContent content, Encoding encoding)
+		public static async Task<string> ReadAsStringAsync(this HttpContent httpContent, Encoding encoding)
 		{
-			var responseStream = await content.ReadAsStreamAsync().ConfigureAwait(false);
-			var responseContent = string.Empty;
+			var content = string.Empty;
 
-			if (encoding == null) encoding = content.GetEncoding(Encoding.UTF8);
-
-			// This is important: we must make a copy of the response stream otherwise we would get an
-			// exception on subsequent attempts to read the content of the stream
-			using (var ms = new MemoryStream())
+			if (httpContent != null)
 			{
-				await content.CopyToAsync(ms).ConfigureAwait(false);
-				ms.Position = 0;
-				using (var sr = new StreamReader(ms, encoding))
+				var contentStream = await httpContent.ReadAsStreamAsync().ConfigureAwait(false);
+
+				if (encoding == null) encoding = httpContent.GetEncoding(Encoding.UTF8);
+
+				// This is important: we must make a copy of the response stream otherwise we would get an
+				// exception on subsequent attempts to read the content of the stream
+				using (var ms = new MemoryStream())
 				{
-					responseContent = await sr.ReadToEndAsync().ConfigureAwait(false);
+					await contentStream.CopyToAsync(ms).ConfigureAwait(false);
+					ms.Position = 0;
+					using (var sr = new StreamReader(ms, encoding))
+					{
+						content = await sr.ReadToEndAsync().ConfigureAwait(false);
+					}
+
+					// It's important to rewind the stream
+					if (contentStream.CanSeek) contentStream.Position = 0;
 				}
 			}
 
-			return responseContent;
+			return content;
 		}
 
 		/// <summary>
@@ -303,7 +310,7 @@ namespace StrongGrid.Utilities
 		/// <param name="excludeBillingScopes">Indicates if billing permissions should be excluded from the result.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>An array of permisisons assigned to the current user.</returns>
-		public static async Task<string[]> GetCurrentScopes(this Pathoschild.Http.Client.IClient client, bool excludeBillingScopes, CancellationToken cancellationToken = default(CancellationToken))
+		public static async Task<string[]> GetCurrentScopes(this Pathoschild.Http.Client.IClient client, bool excludeBillingScopes, CancellationToken cancellationToken = default)
 		{
 			// Get the current user's permissions
 			var scopes = await client
@@ -332,7 +339,7 @@ namespace StrongGrid.Utilities
 
 		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, T value, JsonConverter converter = null)
 		{
-			if (EqualityComparer<T>.Default.Equals(value, default(T))) return;
+			if (EqualityComparer<T>.Default.Equals(value, default)) return;
 
 			var jsonSerializer = new JsonSerializer();
 			if (converter != null)
@@ -406,7 +413,7 @@ namespace StrongGrid.Utilities
 
 		public static T GetPropertyValue<T>(this JToken item, string name)
 		{
-			if (item[name] == null) return default(T);
+			if (item[name] == null) return default;
 			return item[name].Value<T>();
 		}
 
@@ -469,7 +476,7 @@ namespace StrongGrid.Utilities
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
-		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, ISearchCriteria criteria, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, ISearchCriteria criteria, int limit = 20, CancellationToken cancellationToken = default)
 		{
 			var filterCriteria = criteria == null ? Enumerable.Empty<ISearchCriteria>() : new[] { criteria };
 			return emailActivities.SearchAsync(filterCriteria, limit, cancellationToken);
@@ -485,7 +492,7 @@ namespace StrongGrid.Utilities
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
-		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, IEnumerable<ISearchCriteria> filterConditions, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, IEnumerable<ISearchCriteria> filterConditions, int limit = 20, CancellationToken cancellationToken = default)
 		{
 			var filters = new List<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>>();
 			if (filterConditions != null && filterConditions.Any()) filters.Add(new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.And, filterConditions));

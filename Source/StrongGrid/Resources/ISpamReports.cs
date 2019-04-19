@@ -23,7 +23,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="SpamReport" />.
 		/// </returns>
-		Task<SpamReport[]> GetAsync(string emailAddress, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<SpamReport[]> GetAsync(string emailAddress, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// List all spam reports.
@@ -37,7 +37,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="SpamReport" />.
 		/// </returns>
-		Task<SpamReport[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 25, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<SpamReport[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 25, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete all spam reports.
@@ -47,7 +47,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete multiple spam reports.
@@ -58,7 +58,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteMultipleAsync(IEnumerable<string> emailAddresses, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteMultipleAsync(IEnumerable<string> emailAddresses, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete a specific spam report.
@@ -69,6 +69,6 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteAsync(string emailAddress, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteAsync(string emailAddress, string onBehalfOf = null, CancellationToken cancellationToken = default);
 	}
 }

@@ -44,7 +44,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		public Task<Statistic[]> GetGlobalStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Statistic[]> GetGlobalStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var request = _client
 				.GetAsync(_endpoint)
@@ -71,7 +71,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		public Task<Statistic[]> GetCategoriesStatisticsAsync(IEnumerable<string> categories, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Statistic[]> GetCategoriesStatisticsAsync(IEnumerable<string> categories, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var request = _client.GetAsync($"categories/{_endpoint}")
 				.WithArgument("start_date", startDate.ToString("yyyy-MM-dd"))
@@ -103,7 +103,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		public Task<Statistic[]> GetSubusersStatisticsAsync(IEnumerable<string> subusers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Statistic[]> GetSubusersStatisticsAsync(IEnumerable<string> subusers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var request = _client
 				.GetAsync($"subusers/{_endpoint}")
@@ -137,7 +137,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		public Task<Statistic[]> GetCountryStatisticsAsync(string country, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Statistic[]> GetCountryStatisticsAsync(string country, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var request = _client
 				.GetAsync($"geo/{_endpoint}")
@@ -164,7 +164,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		public Task<Statistic[]> GetDeviceTypesStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Statistic[]> GetDeviceTypesStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var request = _client
 				.GetAsync($"devices/{_endpoint}")
@@ -190,7 +190,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		public Task<Statistic[]> GetClientTypesStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Statistic[]> GetClientTypesStatisticsAsync(DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var request = _client
 				.GetAsync($"clients/{_endpoint}")
@@ -217,7 +217,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		public Task<Statistic[]> GetInboxProvidersStatisticsAsync(IEnumerable<string> providers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Statistic[]> GetInboxProvidersStatisticsAsync(IEnumerable<string> providers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var request = _client
 				.GetAsync($"mailbox_providers/{_endpoint}")
@@ -252,7 +252,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Statistic" />.
 		/// </returns>
-		public Task<Statistic[]> GetBrowsersStatisticsAsync(IEnumerable<string> browsers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Statistic[]> GetBrowsersStatisticsAsync(IEnumerable<string> browsers, DateTime startDate, DateTime? endDate = null, AggregateBy aggregatedBy = AggregateBy.None, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var request = _client
 				.GetAsync($"browsers/{_endpoint}")

@@ -39,7 +39,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of strings representing the catgories.
 		/// </returns>
-		public async Task<string[]> GetAsync(string searchPrefix = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<string[]> GetAsync(string searchPrefix = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var responseContent = await _client
 				.GetAsync(_endpoint)

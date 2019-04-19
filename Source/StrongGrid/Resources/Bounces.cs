@@ -41,7 +41,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Bounce" />.
 		/// </returns>
-		public Task<Bounce[]> GetAllAsync(DateTime? start = null, DateTime? end = null, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Bounce[]> GetAllAsync(DateTime? start = null, DateTime? end = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync(_endpoint)
@@ -61,7 +61,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Bounce" />.
 		/// </returns>
-		public Task<Bounce[]> GetAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Bounce[]> GetAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{email}")
@@ -78,7 +78,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject(new JProperty("delete_all", true));
 			return _client
@@ -98,7 +98,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject(new JProperty("emails", JArray.FromObject(emails.ToArray())));
 			return _client
@@ -118,7 +118,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DeleteAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{email}")

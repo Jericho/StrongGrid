@@ -22,7 +22,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		Task<Alert> GetAsync(long alertId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Alert> GetAsync(long alertId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve all alerts.
@@ -32,7 +32,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Alert" />.
 		/// </returns>
-		Task<Alert[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Alert[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Create a new alert.
@@ -46,7 +46,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		Task<Alert> CreateAsync(AlertType type, Parameter<string> emailTo = default(Parameter<string>), Parameter<Frequency?> frequency = default(Parameter<Frequency?>), Parameter<int?> percentage = default(Parameter<int?>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Alert> CreateAsync(AlertType type, Parameter<string> emailTo = default, Parameter<Frequency?> frequency = default, Parameter<int?> percentage = default, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete an alert.
@@ -57,7 +57,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteAsync(long alertId, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteAsync(long alertId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Update an alert.
@@ -72,6 +72,6 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Alert" />.
 		/// </returns>
-		Task<Alert> UpdateAsync(long alertId, Parameter<AlertType?> type = default(Parameter<AlertType?>), Parameter<string> emailTo = default(Parameter<string>), Parameter<Frequency?> frequency = default(Parameter<Frequency?>), Parameter<int?> percentage = default(Parameter<int?>), string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Alert> UpdateAsync(long alertId, Parameter<AlertType?> type = default, Parameter<string> emailTo = default, Parameter<Frequency?> frequency = default, Parameter<int?> percentage = default, string onBehalfOf = null, CancellationToken cancellationToken = default);
 	}
 }

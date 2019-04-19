@@ -36,7 +36,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="UserProfile" />.
 		/// </returns>
-		public Task<UserProfile> GetProfileAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<UserProfile> GetProfileAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync(_endpoint)
@@ -64,18 +64,18 @@ namespace StrongGrid.Resources
 		/// The <see cref="UserProfile" />.
 		/// </returns>
 		public Task<UserProfile> UpdateProfileAsync(
-			Parameter<string> address = default(Parameter<string>),
-			Parameter<string> city = default(Parameter<string>),
-			Parameter<string> company = default(Parameter<string>),
-			Parameter<string> country = default(Parameter<string>),
-			Parameter<string> firstName = default(Parameter<string>),
-			Parameter<string> lastName = default(Parameter<string>),
-			Parameter<string> phone = default(Parameter<string>),
-			Parameter<string> state = default(Parameter<string>),
-			Parameter<string> website = default(Parameter<string>),
-			Parameter<string> zip = default(Parameter<string>),
+			Parameter<string> address = default,
+			Parameter<string> city = default,
+			Parameter<string> company = default,
+			Parameter<string> country = default,
+			Parameter<string> firstName = default,
+			Parameter<string> lastName = default,
+			Parameter<string> phone = default,
+			Parameter<string> state = default,
+			Parameter<string> website = default,
+			Parameter<string> zip = default,
 			string onBehalfOf = null,
-			CancellationToken cancellationToken = default(CancellationToken))
+			CancellationToken cancellationToken = default)
 		{
 			var data = CreateJObject(address, city, company, country, firstName, lastName, phone, state, website, zip);
 			return _client
@@ -94,7 +94,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Account" />.
 		/// </returns>
-		public Task<Account> GetAccountAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<Account> GetAccountAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync("user/account")
@@ -111,7 +111,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The email address from your user profile.
 		/// </returns>
-		public Task<string> GetEmailAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<string> GetEmailAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync("user/email")
@@ -129,7 +129,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The email address from your user profile.
 		/// </returns>
-		public Task<string> UpdateEmailAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<string> UpdateEmailAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject();
 			data.Add("email", email);
@@ -150,7 +150,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The username from your user profile.
 		/// </returns>
-		public Task<string> GetUsernameAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<string> GetUsernameAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync("user/username")
@@ -168,7 +168,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The username from your user profile.
 		/// </returns>
-		public Task<string> UpdateUsernameAsync(string username, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<string> UpdateUsernameAsync(string username, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject();
 			data.Add("username", username);
@@ -189,7 +189,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="UserCredits"/>.
 		/// </returns>
-		public Task<UserCredits> GetCreditsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<UserCredits> GetCreditsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync("user/credits")
@@ -208,7 +208,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task UpdatePasswordAsync(string oldPassword, string newPassword, string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task UpdatePasswordAsync(string oldPassword, string newPassword, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject();
 			data.Add("new_password", oldPassword);
@@ -230,7 +230,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of string representing the permissions (aka scopes).
 		/// </returns>
-		public Task<string[]> GetPermissionsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default(CancellationToken))
+		public Task<string[]> GetPermissionsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync("scopes")
@@ -240,16 +240,16 @@ namespace StrongGrid.Resources
 		}
 
 		private static JObject CreateJObject(
-			Parameter<string> address = default(Parameter<string>),
-			Parameter<string> city = default(Parameter<string>),
-			Parameter<string> company = default(Parameter<string>),
-			Parameter<string> country = default(Parameter<string>),
-			Parameter<string> firstName = default(Parameter<string>),
-			Parameter<string> lastName = default(Parameter<string>),
-			Parameter<string> phone = default(Parameter<string>),
-			Parameter<string> state = default(Parameter<string>),
-			Parameter<string> website = default(Parameter<string>),
-			Parameter<string> zip = default(Parameter<string>))
+			Parameter<string> address = default,
+			Parameter<string> city = default,
+			Parameter<string> company = default,
+			Parameter<string> country = default,
+			Parameter<string> firstName = default,
+			Parameter<string> lastName = default,
+			Parameter<string> phone = default,
+			Parameter<string> state = default,
+			Parameter<string> website = default,
+			Parameter<string> zip = default)
 		{
 			var result = new JObject();
 			result.AddPropertyIfValue("address", address);
