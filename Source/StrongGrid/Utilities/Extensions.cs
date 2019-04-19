@@ -104,12 +104,15 @@ namespace StrongGrid.Utilities
 			// exception on subsequent attempts to read the content of the stream
 			using (var ms = new MemoryStream())
 			{
-				await content.CopyToAsync(ms).ConfigureAwait(false);
+				await responseStream.CopyToAsync(ms).ConfigureAwait(false);
 				ms.Position = 0;
 				using (var sr = new StreamReader(ms, encoding))
 				{
 					responseContent = await sr.ReadToEndAsync().ConfigureAwait(false);
 				}
+
+				// It's important to rewind the stream
+				if (responseStream.CanSeek) responseStream.Position = 0;
 			}
 
 			return responseContent;
@@ -303,7 +306,7 @@ namespace StrongGrid.Utilities
 		/// <param name="excludeBillingScopes">Indicates if billing permissions should be excluded from the result.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>An array of permisisons assigned to the current user.</returns>
-		public static async Task<string[]> GetCurrentScopes(this Pathoschild.Http.Client.IClient client, bool excludeBillingScopes, CancellationToken cancellationToken = default(CancellationToken))
+		public static async Task<string[]> GetCurrentScopes(this Pathoschild.Http.Client.IClient client, bool excludeBillingScopes, CancellationToken cancellationToken = default)
 		{
 			// Get the current user's permissions
 			var scopes = await client
@@ -332,7 +335,7 @@ namespace StrongGrid.Utilities
 
 		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, T value, JsonConverter converter = null)
 		{
-			if (EqualityComparer<T>.Default.Equals(value, default(T))) return;
+			if (EqualityComparer<T>.Default.Equals(value, default)) return;
 
 			var jsonSerializer = new JsonSerializer();
 			if (converter != null)
@@ -406,7 +409,7 @@ namespace StrongGrid.Utilities
 
 		public static T GetPropertyValue<T>(this JToken item, string name)
 		{
-			if (item[name] == null) return default(T);
+			if (item[name] == null) return default;
 			return item[name].Value<T>();
 		}
 
@@ -469,7 +472,7 @@ namespace StrongGrid.Utilities
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
-		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, ISearchCriteria criteria, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, ISearchCriteria criteria, int limit = 20, CancellationToken cancellationToken = default)
 		{
 			var filterCriteria = criteria == null ? Enumerable.Empty<ISearchCriteria>() : new[] { criteria };
 			return emailActivities.SearchAsync(filterCriteria, limit, cancellationToken);
@@ -485,7 +488,7 @@ namespace StrongGrid.Utilities
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
-		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, IEnumerable<ISearchCriteria> filterConditions, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, IEnumerable<ISearchCriteria> filterConditions, int limit = 20, CancellationToken cancellationToken = default)
 		{
 			var filters = new List<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>>();
 			if (filterConditions != null && filterConditions.Any()) filters.Add(new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.And, filterConditions));
