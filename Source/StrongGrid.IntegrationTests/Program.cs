@@ -83,9 +83,9 @@ namespace StrongGrid.IntegrationTests
 				Teammates,
 				Templates,
 				User,
-				//WebhookSettings,
-				//WebhookStats,
-				//SenderAuthentication
+				WebhookSettings,
+				WebhookStats,
+				SenderAuthentication
 			};
 
 			// Execute the async tests in parallel (with max degree of parallelism)
