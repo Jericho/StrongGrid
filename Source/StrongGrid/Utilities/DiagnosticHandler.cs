@@ -134,7 +134,11 @@ namespace StrongGrid.Utilities
 
 		private void LogContent(StringBuilder diagnostic, HttpContent httpContent)
 		{
-			if (httpContent != null)
+			if (httpContent == null)
+			{
+				diagnostic.AppendLine("  Content-Length: 0");
+			}
+			else
 			{
 				LogHeaders(diagnostic, httpContent.Headers);
 
