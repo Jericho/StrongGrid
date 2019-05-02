@@ -23,7 +23,7 @@ namespace StrongGrid.Utilities
 		/// <param name="httpErrorAsException">Whether HTTP error responses should be raised as exceptions.</param>
 		public void OnResponse(IResponse response, bool httpErrorAsException)
 		{
-			if (response.Message.IsSuccessStatusCode) return;
+			if (response.IsSuccessStatusCode) return;
 
 			var errorMessage = GetErrorMessage(response.Message).Result;
 			throw new SendGridException(errorMessage, response.Status);
