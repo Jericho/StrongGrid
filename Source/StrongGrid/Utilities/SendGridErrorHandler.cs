@@ -26,7 +26,7 @@ namespace StrongGrid.Utilities
 			if (response.IsSuccessStatusCode) return;
 
 			var errorMessage = GetErrorMessage(response.Message).Result;
-			throw new SendGridException(errorMessage, response.Status);
+			throw new SendGridException(errorMessage, response.Message);
 		}
 
 		private static async Task<string> GetErrorMessage(HttpResponseMessage message)
