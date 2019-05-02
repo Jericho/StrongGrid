@@ -20,7 +20,6 @@ namespace StrongGrid.Utilities
 		#region FIELDS
 
 		private const string DIAGNOSTIC_ID_HEADER_NAME = "StrongGrid-Diagnostic-Id";
-		private const string DIAGNOSTIC_TIMESTAMP_HEADER_NAME = "StrongGrid-Diagnostic-Timestamp";
 		private static readonly ILog _logger = LogProvider.For<DiagnosticHandler>();
 		private readonly IDictionary<WeakReference<HttpRequestMessage>, (StringBuilder, long)> _diagnostics = new Dictionary<WeakReference<HttpRequestMessage>, (StringBuilder, long)>();
 

@@ -1,5 +1,6 @@
 ﻿using Pathoschild.Http.Client.Retry;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -96,11 +97,12 @@ namespace StrongGrid.Utilities
 			// Get the 'reset' time from the HTTP headers (if present)
 			if (response?.Headers != null)
 			{
-				var values = response.Headers.Where(h => h.Key == "X-RateLimit-Reset");
-				if (values.Any())
+				if (response.Headers.TryGetValues("X-RateLimit-Reset", out IEnumerable<string> values))
 				{
-					var reset = long.Parse(values.First().Value.First());
-					waitTime = reset.FromUnixTime().Subtract(_systemClock.UtcNow);
+					if (long.TryParse(values?.FirstOrDefault(), out long reset))
+					{
+						waitTime = reset.FromUnixTime().Subtract(_systemClock.UtcNow);
+					}
 				}
 			}
 

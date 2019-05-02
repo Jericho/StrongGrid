@@ -620,13 +620,12 @@ namespace StrongGrid.Resources
 				.AsResponse()
 				.ConfigureAwait(false);
 
-			var messageId = (string)null;
-			if (response.Message.Headers.Contains("X-Message-Id"))
+			if (response.Message.Headers.TryGetValues("X-Message-Id", out IEnumerable<string> values))
 			{
-				messageId = response.Message.Headers.GetValues("X-Message-Id").FirstOrDefault();
+				return values?.FirstOrDefault();
 			}
 
-			return messageId;
+			return null;
 		}
 
 		/// <summary>
