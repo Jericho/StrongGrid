@@ -9,15 +9,15 @@ namespace StrongGrid.Utilities
 	public class SendGridException : Exception
 	{
 		/// <summary>
-		/// The status code of the non-successful call
+		/// The status code of the non-successful call.
 		/// </summary>
 		public HttpStatusCode StatusCode { get; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SendGridException"/> class.
 		/// </summary>
-		/// <param name="message">The exception message</param>
-		/// <param name="statusCode">The status code of the non-successful call</param>
+		/// <param name="message">The exception message.</param>
+		/// <param name="statusCode">The status code of the non-successful call.</param>
 		public SendGridException(string message, HttpStatusCode statusCode)
 			: base(message)
 		{
