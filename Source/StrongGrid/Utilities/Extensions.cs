@@ -214,7 +214,7 @@ namespace StrongGrid.Utilities
 		/// </remarks>
 		public static IRequest WithJsonBody<T>(this IRequest request, T body)
 		{
-			return request.WithBody(body, new MediaTypeHeaderValue("application/json"));
+			return request.WithBody(bodyBuilder => bodyBuilder.Model(body, new MediaTypeHeaderValue("application/json")));
 		}
 
 		/// <summary>
