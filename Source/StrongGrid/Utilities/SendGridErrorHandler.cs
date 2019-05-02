@@ -34,56 +34,53 @@ namespace StrongGrid.Utilities
 			// Default error message
 			var errorMessage = $"{(int)message.StatusCode}: {message.ReasonPhrase}";
 
-			if (message.Content != null)
-			{
-				/*
-					In case of an error, the SendGrid API returns a JSON string that looks like this:
-					{
-						"errors": [
-							{
-								"message": "An error has occured",
-								"field": null,
-								"help": null
-							}
-						]
-					}
-
-					I have also seen cases where the JSON string looks like this:
-					{
-						"error": "Name already exists"
-					}
-				*/
-
-				var responseContent = await message.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-
-				if (!string.IsNullOrEmpty(responseContent))
+			/*
+				In case of an error, the SendGrid API returns a JSON string that looks like this:
 				{
-					try
+					"errors": [
+						{
+							"message": "An error has occured",
+							"field": null,
+							"help": null
+						}
+					]
+				}
+
+				I have also seen cases where the JSON string looks like this:
+				{
+					"error": "Name already exists"
+				}
+			*/
+
+			var responseContent = await message.Content.ReadAsStringAsync(null).ConfigureAwait(false);
+
+			if (!string.IsNullOrEmpty(responseContent))
+			{
+				try
+				{
+					// Check for the presence of property called 'errors'
+					var jObject = JObject.Parse(responseContent);
+					var errorsArray = (JArray)jObject["errors"];
+					if (errorsArray != null && errorsArray.Count > 0)
 					{
-						// Check for the presence of property called 'errors'
-						var jObject = JObject.Parse(responseContent);
-						var errorsArray = (JArray)jObject["errors"];
-						if (errorsArray != null && errorsArray.Count > 0)
+						// Get the first error message
+						errorMessage = errorsArray[0]["message"].Value<string>();
+					}
+					else
+					{
+						// Check for the presence of property called 'error'
+						var errorProperty = jObject["error"];
+						if (errorProperty != null)
 						{
-							// Get the first error message
-							errorMessage = errorsArray[0]["message"].Value<string>();
+							errorMessage = errorProperty.Value<string>();
 						}
-						else
-						{
-							// Check for the presence of property called 'error'
-							var errorProperty = jObject["error"];
-							if (errorProperty != null)
-							{
-								errorMessage = errorProperty.Value<string>();
-							}
-						}
+					}
 #pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
-					}
-					catch
+				}
+				catch
 #pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
-					{
-						// Intentionally ignore parsing errors
-					}
+				{
+					// Intentionally ignore parsing errors
 				}
 			}
 
