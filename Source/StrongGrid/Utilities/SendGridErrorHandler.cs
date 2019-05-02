@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using Pathoschild.Http.Client.Extensibility;
-using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -27,7 +26,7 @@ namespace StrongGrid.Utilities
 			if (response.Message.IsSuccessStatusCode) return;
 
 			var errorMessage = GetErrorMessage(response.Message).Result;
-			throw new Exception(errorMessage);
+			throw new SendGridException(errorMessage, response.Message.StatusCode);
 		}
 
 		private static async Task<string> GetErrorMessage(HttpResponseMessage message)
