@@ -9,7 +9,7 @@ namespace StrongGrid.Utilities
 	public class SendGridException : Exception
 	{
 		/// <summary>
-		/// The status code of the non-successful call.
+		/// Gets the status code of the non-successful call.
 		/// </summary>
 		public HttpStatusCode StatusCode { get; }
 
