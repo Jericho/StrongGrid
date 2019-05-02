@@ -183,7 +183,7 @@ namespace StrongGrid.Utilities
 		/// <param name="response">The response.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
-		/// <exception cref="ApiException">An error occurred processing the response.</exception>
+		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
 		public static Task<T> AsSendGridObject<T>(this IResponse response, string propertyName = null)
 		{
 			return response.Message.Content.AsSendGridObject<T>(propertyName);
@@ -194,7 +194,7 @@ namespace StrongGrid.Utilities
 		/// <param name="request">The request.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
-		/// <exception cref="ApiException">An error occurred processing the response.</exception>
+		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
 		public static async Task<T> AsSendGridObject<T>(this IRequest request, string propertyName = null)
 		{
 			var response = await request.AsMessage().ConfigureAwait(false);
@@ -235,7 +235,7 @@ namespace StrongGrid.Utilities
 		/// encoding will be used if the charset is absent from the response, is blank
 		/// or contains an invalid value.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
-		/// <exception cref="ApiException">An error occurred processing the response.</exception>
+		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
 		public static Task<string> AsString(this IResponse response, Encoding encoding)
 		{
 			return response.Message.Content.ReadAsStringAsync(encoding);
@@ -248,7 +248,7 @@ namespace StrongGrid.Utilities
 		/// encoding will be used if the charset is absent from the response, is blank
 		/// or contains an invalid value.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
-		/// <exception cref="ApiException">An error occurred processing the response.</exception>
+		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
 		public static async Task<string> AsString(this IRequest request, Encoding encoding)
 		{
 			IResponse response = await request.AsResponse().ConfigureAwait(false);
@@ -540,7 +540,7 @@ namespace StrongGrid.Utilities
 		/// <param name="httpContent">The content.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
-		/// <exception cref="ApiException">An error occurred processing the response.</exception>
+		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
 		private static async Task<T> AsSendGridObject<T>(this HttpContent httpContent, string propertyName = null)
 		{
 			var responseContent = await httpContent.ReadAsStringAsync(null).ConfigureAwait(false);
