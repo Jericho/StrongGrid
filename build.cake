@@ -228,13 +228,14 @@ Task("Create-NuGet-Package")
 	{
 		Configuration = configuration,
 		IncludeSource = false,
-		IncludeSymbols = false,
+		IncludeSymbols = true,
 		NoBuild = true,
 		NoDependencies = true,
 		OutputDirectory = outputDir,
 		ArgumentCustomization = (args) =>
 		{
 			return args
+				.Append("/p:SymbolPackageFormat=snupkg")
 				.Append("/p:Version={0}", versionInfo.LegacySemVerPadded)
 				.Append("/p:AssemblyVersion={0}", versionInfo.MajorMinorPatch)
 				.Append("/p:FileVersion={0}", versionInfo.MajorMinorPatch)
