@@ -16,19 +16,19 @@
   </PropertyGroup>
 
   <PropertyGroup>
-      <PackageId>StrongGrid</PackageId>
-      <AssemblyName>StrongGrid</AssemblyName>
-      <AssemblyTitle>StrongGrid</AssemblyTitle>
-      <Authors>Jeremie Desautels</Authors>
-      <Company></Company>
-      <Description>StrongGrid is a strongly typed .NET client for SendGrid's v3 API.</Description>
-      <Copyright>Copyright © Jeremie Desautels and contributors 2016 - Present</Copyright>
-      <PackageLicenseExpression>MIT</PackageLicenseExpression>
-      <PackageProjectUrl>https://github.com/Jericho/StrongGrid</PackageProjectUrl>
-      <PackageIconUrl>https://github.com/identicons/jericho.png</PackageIconUrl>
-      <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-      <PackageTags>StrongGrid SendGrid email</PackageTags>
-      <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageId>StrongGrid</PackageId>
+    <AssemblyName>StrongGrid</AssemblyName>
+    <AssemblyTitle>StrongGrid</AssemblyTitle>
+    <Authors>Jeremie Desautels</Authors>
+    <Company></Company>
+    <Description>StrongGrid is a strongly typed .NET client for SendGrid's v3 API.</Description>
+    <Copyright>Copyright © Jeremie Desautels and contributors 2016 - Present</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Jericho/StrongGrid</PackageProjectUrl>
+    <PackageIconUrl>https://github.com/identicons/jericho.png</PackageIconUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>StrongGrid SendGrid email</PackageTags>
+    <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
