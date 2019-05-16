@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net452;netstandard1.3;netstandard2.0</TargetFrameworks>
@@ -6,27 +6,34 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <OutputType>Library</OutputType>
     <Version>$(SemVer)</Version>
-    <DebugType>full</DebugType>
+    <DebugType>portable</DebugType>
   </PropertyGroup>
 
   <PropertyGroup>
-      <PackageId>StrongGrid</PackageId>
-      <AssemblyName>StrongGrid</AssemblyName>
-      <AssemblyTitle>StrongGrid</AssemblyTitle>
-      <Authors>Jeremie Desautels</Authors>
-      <Company></Company>
-      <Description>StrongGrid is a strongly typed .NET client for SendGrid's v3 API.</Description>
-      <Copyright>Copyright © Jeremie Desautels and contributors 2016 - Present</Copyright>
-      <PackageLicenseExpression>MIT</PackageLicenseExpression>
-      <PackageProjectUrl>https://github.com/Jericho/StrongGrid</PackageProjectUrl>
-      <PackageIconUrl>https://github.com/identicons/jericho.png</PackageIconUrl>
-      <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-      <PackageTags>StrongGrid SendGrid email</PackageTags>
-      <PackageReleaseNotes></PackageReleaseNotes>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>StrongGrid</PackageId>
+    <AssemblyName>StrongGrid</AssemblyName>
+    <AssemblyTitle>StrongGrid</AssemblyTitle>
+    <Authors>Jeremie Desautels</Authors>
+    <Company></Company>
+    <Description>StrongGrid is a strongly typed .NET client for SendGrid's v3 API.</Description>
+    <Copyright>Copyright © Jeremie Desautels and contributors 2016 - Present</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Jericho/StrongGrid</PackageProjectUrl>
+    <PackageIconUrl>https://github.com/identicons/jericho.png</PackageIconUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>StrongGrid SendGrid email</PackageTags>
+    <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="HttpMultipartParser" Version="2.2.1" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" PrivateAssets="All" />
     <PackageReference Include="MimeTypesMap" Version="1.0.7" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
     <PackageReference Include="Pathoschild.Http.FluentClient" Version="3.3.0" />
