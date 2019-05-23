@@ -27,8 +27,9 @@ namespace StrongGrid.IntegrationTests
 		static async Task<int> Main()
 		{
 			// -----------------------------------------------------------------------------
-			// Do you want to proxy requests through Fiddler (useful for debugging)?
-			var useFiddler = true;
+			// Do you want to proxy requests through Fiddler?
+			// Can be useful for debugging.
+			var useFiddler = false;
 
 			// As an alternative to Fiddler, you can display debug information about
 			// every HTTP request/response in the console. This is useful for debugging
