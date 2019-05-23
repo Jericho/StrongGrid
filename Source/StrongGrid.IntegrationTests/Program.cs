@@ -1,4 +1,4 @@
-﻿using StrongGrid.Logging;
+using StrongGrid.Logging;
 using StrongGrid.Models;
 using StrongGrid.Models.Search;
 using StrongGrid.Utilities;
@@ -38,7 +38,7 @@ namespace StrongGrid.IntegrationTests
 
 			if (debugHttpMessagesToConsole)
 			{
-				LogProvider.SetCurrentLogProvider(new ConsoleLogProvider());
+				LogProvider.SetCurrentLogProvider(new ColoredConsoleLogProvider());
 			}
 
 			var proxy = useFiddler ? new WebProxy("http://localhost:8888") : null;
