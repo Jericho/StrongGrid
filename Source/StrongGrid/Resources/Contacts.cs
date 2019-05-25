@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -43,7 +43,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The identifier of the new contact.
 		/// </returns>
-		/// <exception cref="System.Exception">Thrown when an exception occured while creating the contact.</exception>
+		/// <exception cref="System.Exception">Thrown when an exception occurred while creating the contact.</exception>
 		public async Task<string> CreateAsync(
 			string email,
 			Parameter<string> firstName = default,
@@ -85,7 +85,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		/// <exception cref="System.Exception">Thrown when an exception occured while updating the contact.</exception>
+		/// <exception cref="System.Exception">Thrown when an exception occurred while updating the contact.</exception>
 		public async Task UpdateAsync(
 			string email,
 			Parameter<string> firstName = default,

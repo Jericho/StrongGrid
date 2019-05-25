@@ -1,4 +1,4 @@
-﻿using RichardSzalay.MockHttp;
+using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Resources;
 using System;
@@ -125,7 +125,7 @@ namespace StrongGrid.UnitTests.Resources
 				'errors': [
 					{
 						'field': null,
-						'message': 'an error has occured'
+						'message': 'an error has occurred'
 					}
 				]
 			}";
@@ -143,7 +143,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 
-			result.Message.ShouldBe("an error has occured");
+			result.Message.ShouldBe("an error has occurred");
 
 		}
 

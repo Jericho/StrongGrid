@@ -1,4 +1,4 @@
-﻿using Pathoschild.Http.Client;
+using Pathoschild.Http.Client;
 using Pathoschild.Http.Client.Extensibility;
 using StrongGrid.Logging;
 using System;
@@ -83,12 +83,12 @@ namespace StrongGrid.Utilities
 			}
 			catch (Exception e)
 			{
-				Debug.WriteLine("{0}\r\nAN EXCEPTION OCCURED: {1}\r\n{0}", new string('=', 50), e.GetBaseException().Message);
-				diagnostic.AppendLine($"AN EXCEPTION OCCURED: {e.GetBaseException().Message}");
+				Debug.WriteLine("{0}\r\nAN EXCEPTION OCCURRED: {1}\r\n{0}", new string('=', 50), e.GetBaseException().Message);
+				diagnostic.AppendLine($"AN EXCEPTION OCCURRED: {e.GetBaseException().Message}");
 
 				if (_logger != null && _logger.IsErrorEnabled())
 				{
-					_logger.Error(e, "An exception occured when inspecting the response from SendGrid");
+					_logger.Error(e, "An exception occurred when inspecting the response from SendGrid");
 				}
 			}
 			finally
