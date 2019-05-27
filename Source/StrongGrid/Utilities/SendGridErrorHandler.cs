@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using Pathoschild.Http.Client.Extensibility;
 using System.Net.Http;
@@ -25,8 +25,12 @@ namespace StrongGrid.Utilities
 		{
 			if (response.IsSuccessStatusCode) return;
 
+			var diagnosticId = response.Message.RequestMessage.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
+			var diagnosticInfo = DiagnosticHandler.DiagnosticsInfo[diagnosticId];
+			var diagnosticMessage = diagnosticInfo.Diagnostic.ToString();
+
 			var errorMessage = GetErrorMessage(response.Message).Result;
-			throw new SendGridException(errorMessage, response.Message);
+			throw new SendGridException(errorMessage, response.Message, diagnosticMessage);
 		}
 
 		private static async Task<string> GetErrorMessage(HttpResponseMessage message)
@@ -39,7 +43,7 @@ namespace StrongGrid.Utilities
 				{
 					"errors": [
 						{
-							"message": "An error has occured",
+							"message": "An error has occurred",
 							"field": null,
 							"help": null
 						}

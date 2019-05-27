@@ -22,20 +22,20 @@ namespace StrongGrid.Utilities
 		/// <summary>
 		/// Gets the human readable representation of the request/response.
 		/// </summary>
-		public string RequestResponseLog { get; }
+		public string DiagnosticLog { get; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SendGridException"/> class.
 		/// </summary>
 		/// <param name="message">The exception message.</param>
 		/// <param name="responseMessage">The response message of the non-successful call.</param>
-		/// <param name="requestResponseLog">The human readable representation of the request/response.</param>
+		/// <param name="diagnosticLog">The human readable representation of the request/response.</param>
 		/// <param name="innerException">The exception that is the cause of the current exception, or a null reference if no inner exception is specified.</param>
-		public SendGridException(string message, HttpResponseMessage responseMessage, string requestResponseLog, Exception innerException = null)
+		public SendGridException(string message, HttpResponseMessage responseMessage, string diagnosticLog, Exception innerException = null)
 			: base(message, innerException)
 		{
 			ResponseMessage = responseMessage;
-			RequestResponseLog = requestResponseLog;
+			DiagnosticLog = diagnosticLog;
 		}
 	}
 }
