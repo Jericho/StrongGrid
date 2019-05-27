@@ -43,7 +43,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The identifier of the new contact.
 		/// </returns>
-		/// <exception cref="System.Exception">Thrown when an exception occurred while creating the contact.</exception>
+		/// <exception cref="SendGridException">Thrown when an exception occurred while creating the contact.</exception>
 		public async Task<string> CreateAsync(
 			string email,
 			Parameter<string> firstName = default,
@@ -55,19 +55,27 @@ namespace StrongGrid.Resources
 			// SendGrid expects an array despite the fact we are creating a single contact
 			var data = new[] { ConvertToJObject(email, firstName, lastName, customFields) };
 
-			var importResult = await _client
+			var request = _client
 				.PostAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
-				.WithCancellationToken(cancellationToken)
-				.As<ImportResult>()
-				.ConfigureAwait(false);
+				.WithCancellationToken(cancellationToken);
+
+			var response = await request.AsMessage().ConfigureAwait(false);
+			var importResult = await response.Content.AsSendGridObject<ImportResult>().ConfigureAwait(false);
 
 			if (importResult.ErrorCount > 0)
 			{
 				// There should only be one error message but to be safe let's combine all error messages into a single string
 				var errorMsg = string.Join(Environment.NewLine, importResult.Errors.Select(e => e.Message));
-				throw new Exception(errorMsg);
+
+				// Get the diagnostic info
+				var diagnosticId = request.Message.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
+				var diagnosticInfo = DiagnosticHandler.DiagnosticsInfo[diagnosticId];
+				var diagnosticMessage = diagnosticInfo.Diagnostic.ToString();
+
+				// Throw exception with diagnostic info
+				throw new SendGridException(errorMsg, response, diagnosticMessage);
 			}
 
 			return importResult.PersistedRecipients.Single();
@@ -85,7 +93,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		/// <exception cref="System.Exception">Thrown when an exception occurred while updating the contact.</exception>
+		/// <exception cref="SendGridException">Thrown when an exception occurred while updating the contact.</exception>
 		public async Task UpdateAsync(
 			string email,
 			Parameter<string> firstName = default,
@@ -97,20 +105,27 @@ namespace StrongGrid.Resources
 			// SendGrid expects an array despite the fact we are updating a single contact
 			var data = new[] { ConvertToJObject(email, firstName, lastName, customFields) };
 
-			var responseContent = await _client
+			var request = _client
 				.PatchAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
-				.WithCancellationToken(cancellationToken)
-				.AsString(null)
-				.ConfigureAwait(false);
+				.WithCancellationToken(cancellationToken);
 
-			var importResult = JObject.Parse(responseContent).ToObject<ImportResult>();
+			var response = await request.AsMessage().ConfigureAwait(false);
+			var importResult = await response.Content.AsSendGridObject<ImportResult>().ConfigureAwait(false);
+
 			if (importResult.ErrorCount > 0)
 			{
 				// There should only be one error message but to be safe let's combine all error messages into a single string
 				var errorMsg = string.Join(Environment.NewLine, importResult.Errors.Select(e => e.Message));
-				throw new Exception(errorMsg);
+
+				// Get the diagnostic info
+				var diagnosticId = request.Message.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
+				var diagnosticInfo = DiagnosticHandler.DiagnosticsInfo[diagnosticId];
+				var diagnosticMessage = diagnosticInfo.Diagnostic.ToString();
+
+				// Throw exception with diagnostic info
+				throw new SendGridException(errorMsg, response, diagnosticMessage);
 			}
 		}
 
