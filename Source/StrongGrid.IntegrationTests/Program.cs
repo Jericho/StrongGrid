@@ -108,7 +108,7 @@ namespace StrongGrid.IntegrationTests
 					catch (Exception e)
 					{
 						var exceptionMessage = e.GetBaseException().Message;
-						await log.WriteLineAsync($"-----> AN EXCEPTION OCCURED: {exceptionMessage}").ConfigureAwait(false);
+						await log.WriteLineAsync($"-----> AN EXCEPTION OCCURRED: {exceptionMessage}").ConfigureAwait(false);
 						return (TestName: integrationTest.Method.Name, ResultCode: ResultCodes.Exception, Message: exceptionMessage);
 					}
 					finally

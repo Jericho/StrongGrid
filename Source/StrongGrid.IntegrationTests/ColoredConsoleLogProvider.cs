@@ -1,10 +1,10 @@
+using StrongGrid.Logging;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+
 namespace StrongGrid.IntegrationTests
 {
-	using Logging;
-	using System;
-	using System.Collections.Generic;
-	using System.Globalization;
-
 	// Inspired by: https://github.com/damianh/LibLog/blob/master/src/LibLog.Example.ColoredConsoleLogProvider/ColoredConsoleLogProvider.cs
 	public class ColoredConsoleLogProvider : ILogProvider
 	{
@@ -18,6 +18,11 @@ namespace StrongGrid.IntegrationTests
 			{LogLevel.Trace, ConsoleColor.DarkGray}
 		};
 		private readonly LogLevel _minLevel = LogLevel.Trace;
+
+		public ColoredConsoleLogProvider()
+			: this(LogLevel.Trace)
+		{
+		}
 
 		public ColoredConsoleLogProvider(LogLevel minLevel = LogLevel.Trace)
 		{

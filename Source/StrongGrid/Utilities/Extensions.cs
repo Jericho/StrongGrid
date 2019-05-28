@@ -1,4 +1,4 @@
-﻿using HttpMultipartParser;
+using HttpMultipartParser;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
@@ -535,13 +535,31 @@ namespace StrongGrid.Utilities
 					|| value is decimal;
 		}
 
+		/// <summary>
+		/// Returns the first value for a specified header stored in the System.Net.Http.Headers.HttpHeaderscollection.
+		/// </summary>
+		/// <param name="headers">The HTTP headers.</param>
+		/// <param name="name">The specified header to return value for.</param>
+		/// <returns>A string.</returns>
+		public static string GetValue(this HttpHeaders headers, string name)
+		{
+			if (headers == null) return null;
+
+			if (headers.TryGetValues(name, out IEnumerable<string> values))
+			{
+				return values.FirstOrDefault();
+			}
+
+			return null;
+		}
+
 		/// <summary>Asynchronously converts the JSON encoded content and converts it to a 'SendGrid' object of the desired type.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="httpContent">The content.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		private static async Task<T> AsSendGridObject<T>(this HttpContent httpContent, string propertyName = null)
+		internal static async Task<T> AsSendGridObject<T>(this HttpContent httpContent, string propertyName = null)
 		{
 			var responseContent = await httpContent.ReadAsStringAsync(null).ConfigureAwait(false);
 

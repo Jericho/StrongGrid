@@ -1,4 +1,4 @@
-﻿using Pathoschild.Http.Client;
+using Pathoschild.Http.Client;
 using Pathoschild.Http.Client.Extensibility;
 using StrongGrid.Logging;
 using System;
@@ -19,9 +19,14 @@ namespace StrongGrid.Utilities
 	{
 		#region FIELDS
 
-		private const string DIAGNOSTIC_ID_HEADER_NAME = "StrongGrid-Diagnostic-Id";
+		internal const string DIAGNOSTIC_ID_HEADER_NAME = "StrongGrid-Diagnostic-Id";
 		private static readonly ILog _logger = LogProvider.For<DiagnosticHandler>();
-		private readonly IDictionary<WeakReference<HttpRequestMessage>, (StringBuilder, long)> _diagnostics = new Dictionary<WeakReference<HttpRequestMessage>, (StringBuilder, long)>();
+
+		#endregion
+
+		#region PROPERTIES
+
+		internal static IDictionary<string, (WeakReference<HttpRequestMessage> RequestReference, StringBuilder Diagnostic, long RequestTimestamp, long ResponseTimeStamp)> DiagnosticsInfo { get; } = new Dictionary<string, (WeakReference<HttpRequestMessage>, StringBuilder, long, long)>();
 
 		#endregion
 
@@ -32,7 +37,8 @@ namespace StrongGrid.Utilities
 		public void OnRequest(IRequest request)
 		{
 			// Add a unique ID to the request header
-			request.WithHeader(DIAGNOSTIC_ID_HEADER_NAME, Guid.NewGuid().ToString("N"));
+			var diagnosticId = Guid.NewGuid().ToString("N");
+			request.WithHeader(DIAGNOSTIC_ID_HEADER_NAME, diagnosticId);
 
 			// Log the request
 			var httpRequest = request.Message;
@@ -44,9 +50,9 @@ namespace StrongGrid.Utilities
 			LogContent(diagnostic, httpRequest.Content);
 
 			// Add the diagnotic info to our cache
-			lock (_diagnostics)
+			lock (DiagnosticsInfo)
 			{
-				_diagnostics.Add(new WeakReference<HttpRequestMessage>(request.Message), (diagnostic, Stopwatch.GetTimestamp()));
+				DiagnosticsInfo.Add(diagnosticId, (new WeakReference<HttpRequestMessage>(request.Message), diagnostic, Stopwatch.GetTimestamp(), long.MinValue));
 			}
 		}
 
@@ -57,43 +63,41 @@ namespace StrongGrid.Utilities
 		{
 			var responseTimestamp = Stopwatch.GetTimestamp();
 			var httpResponse = response.Message;
-			var (diagnostic, requestTimestamp) = GetDiagnosticInfo(response.Message.RequestMessage);
+
+			var diagnosticId = response.Message.RequestMessage.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
+			var diagnosticInfo = DiagnosticsInfo[diagnosticId];
+			diagnosticInfo.ResponseTimeStamp = responseTimestamp;
 
 			try
 			{
 				// Log the response
-				diagnostic.AppendLine();
-				diagnostic.AppendLine("RESPONSE:");
-				diagnostic.AppendLine($"  HTTP/{httpResponse.Version} {(int)httpResponse.StatusCode} {httpResponse.ReasonPhrase}");
-				LogHeaders(diagnostic, httpResponse.Headers);
-				LogContent(diagnostic, httpResponse.Content);
+				diagnosticInfo.Diagnostic.AppendLine();
+				diagnosticInfo.Diagnostic.AppendLine("RESPONSE:");
+				diagnosticInfo.Diagnostic.AppendLine($"  HTTP/{httpResponse.Version} {(int)httpResponse.StatusCode} {httpResponse.ReasonPhrase}");
+				LogHeaders(diagnosticInfo.Diagnostic, httpResponse.Headers);
+				LogContent(diagnosticInfo.Diagnostic, httpResponse.Content);
+
+				// Calculate how much time elapsed between request and response
+				var elapsed = TimeSpan.FromTicks(diagnosticInfo.ResponseTimeStamp - diagnosticInfo.RequestTimestamp);
 
 				// Log diagnostic
-				diagnostic.AppendLine();
-				diagnostic.AppendLine("DIAGNOSTIC:");
-				if (requestTimestamp == long.MinValue)
-				{
-					diagnostic.AppendLine("  Unable to calculate how long the request took");
-				}
-				else
-				{
-					var elapsed = TimeSpan.FromTicks(responseTimestamp - requestTimestamp);
-					diagnostic.AppendLine($"  The request took {elapsed.ToDurationString()}");
-				}
+				diagnosticInfo.Diagnostic.AppendLine();
+				diagnosticInfo.Diagnostic.AppendLine("DIAGNOSTIC:");
+				diagnosticInfo.Diagnostic.AppendLine($"  The request took {elapsed.ToDurationString()}");
 			}
 			catch (Exception e)
 			{
-				Debug.WriteLine("{0}\r\nAN EXCEPTION OCCURED: {1}\r\n{0}", new string('=', 50), e.GetBaseException().Message);
-				diagnostic.AppendLine($"AN EXCEPTION OCCURED: {e.GetBaseException().Message}");
+				Debug.WriteLine("{0}\r\nAN EXCEPTION OCCURRED: {1}\r\n{0}", new string('=', 50), e.GetBaseException().Message);
+				diagnosticInfo.Diagnostic.AppendLine($"AN EXCEPTION OCCURRED: {e.GetBaseException().Message}");
 
 				if (_logger != null && _logger.IsErrorEnabled())
 				{
-					_logger.Error(e, "An exception occured when inspecting the response from SendGrid");
+					_logger.Error(e, "An exception occurred when inspecting the response from SendGrid");
 				}
 			}
 			finally
 			{
-				var diagnosticMessage = diagnostic.ToString();
+				var diagnosticMessage = diagnosticInfo.Diagnostic.ToString();
 
 				if (!string.IsNullOrEmpty(diagnosticMessage))
 				{
@@ -106,6 +110,10 @@ namespace StrongGrid.Utilities
 							.Replace("}", "}}"));
 					}
 				}
+
+				DiagnosticsInfo[diagnosticId] = diagnosticInfo;
+
+				Cleanup();
 			}
 		}
 
@@ -155,36 +163,25 @@ namespace StrongGrid.Utilities
 			}
 		}
 
-		private (StringBuilder, long) GetDiagnosticInfo(HttpRequestMessage requestMessage)
+		private void Cleanup()
 		{
-			var diagnosticId = requestMessage.Headers.GetValues(DIAGNOSTIC_ID_HEADER_NAME).FirstOrDefault();
-
-			foreach (WeakReference<HttpRequestMessage> key in _diagnostics.Keys.ToArray())
+			try
 			{
-				// Check if garbage collected
-				if (!key.TryGetTarget(out HttpRequestMessage request))
+				// Remove diagnostic information for requests that have been garbage collected
+				foreach (string key in DiagnosticHandler.DiagnosticsInfo.Keys.ToArray())
 				{
-					_diagnostics.Remove(key);
-					continue;
+					var diagnosticInfo = DiagnosticHandler.DiagnosticsInfo[key];
+					if (!diagnosticInfo.RequestReference.TryGetTarget(out HttpRequestMessage request))
+					{
+						DiagnosticHandler.DiagnosticsInfo.Remove(key);
+						continue;
+					}
 				}
-
-				// Check if different request
-				var requestDiagnosticId = request.Headers.GetValues(DIAGNOSTIC_ID_HEADER_NAME).FirstOrDefault();
-				if (requestDiagnosticId != diagnosticId)
-				{
-					continue;
-				}
-
-				// Get the diagnostic info from dictionary
-				var diagnosticInfo = _diagnostics[key];
-
-				// Remove the diagnostic info from dictionary
-				_diagnostics.Remove(key);
-
-				return diagnosticInfo;
 			}
-
-			return (new StringBuilder(), long.MinValue);
+			catch
+			{
+				// Intentionally left empty
+			}
 		}
 
 		#endregion

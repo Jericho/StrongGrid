@@ -1,4 +1,4 @@
-﻿using Pathoschild.Http.Client;
+using Pathoschild.Http.Client;
 using Pathoschild.Http.Client.Extensibility;
 using StrongGrid.Resources;
 using StrongGrid.Utilities;
@@ -384,6 +384,9 @@ namespace StrongGrid
 				.SetRequestCoordinator(new SendGridRetryStrategy());
 
 			_fluentClient.Filters.Remove<DefaultErrorFilter>();
+
+			// Order is important: DiagnosticHandler must be first.
+			// Also, the list of filters must be kept in sync with the filters in Utils.GetFluentClient in the unit testing project.
 			_fluentClient.Filters.Add(new DiagnosticHandler());
 			_fluentClient.Filters.Add(new SendGridErrorHandler());
 
