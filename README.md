@@ -22,7 +22,7 @@ StrongGrid also includes a parser for webhook sent from SendGrid to your own Web
 
 Since November 2017, StrongGrid also includes a "warmup engine" that allows you to warmup IP addresses using a custom schedule.
 
-If you information about how to setup the SendGrid webhooks, please consult the following resources:
+If you need information about how to setup the SendGrid webhooks, please consult the following resources:
 - [Webhooks Overview](https://sendgrid.com/docs/API_Reference/Webhooks/debug.html)
 - [Guide to debug webhooks](https://sendgrid.com/docs/API_Reference/Webhooks/index.html)
 - [Setting up the inbound parse webhook](https://sendgrid.com/docs/Classroom/Basics/Inbound_Parse_Webhook/setting_up_the_inbound_parse_webhook.html)

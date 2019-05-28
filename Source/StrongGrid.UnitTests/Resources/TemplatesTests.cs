@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
@@ -105,7 +105,6 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var name = "My template";
-			var scopes = new[] { "mail.send", "alerts.create", "alerts.read" };
 
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", SINGLE_TEMPLATE_JSON);

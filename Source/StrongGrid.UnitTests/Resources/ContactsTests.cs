@@ -143,21 +143,15 @@ namespace StrongGrid.UnitTests.Resources
 
 			var apiResponse = @"{
 				'error_count': 1,
-				'error_indices': [
-					0
-				],
-				'unmodified_indices': [
-				],
+				'error_indices': [0],
+				'unmodified_indices': [],
 				'new_count': 0,
-				'persisted_recipients': [
-				],
+				'persisted_recipients': [],
 				'updated_count': 0,
 				'errors': [
 					{
 						'message': 'Invalid email.',
-						'error_indices': [
-							0
-						]
+						'error_indices': [0]
 					}
 				]
 			}";
@@ -289,21 +283,15 @@ namespace StrongGrid.UnitTests.Resources
 
 			var apiResponse = @"{
 				'error_count': 1,
-				'error_indices': [
-					0
-				],
-				'unmodified_indices': [
-				],
+				'error_indices': [0],
+				'unmodified_indices': [],
 				'new_count': 0,
-				'persisted_recipients': [
-				],
+				'persisted_recipients': [],
 				'updated_count': 0,
 				'errors': [
 					{
 						'message': 'Invalid email.',
-						'error_indices': [
-							0
-						]
+						'error_indices': [0]
 					}
 				]
 			}";

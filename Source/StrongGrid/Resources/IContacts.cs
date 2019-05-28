@@ -1,4 +1,4 @@
-﻿using StrongGrid.Models;
+using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Threading;
@@ -26,7 +26,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The identifier of the new contact.
 		/// </returns>
-		/// <exception cref="System.Exception">Thrown when an exception occured while creating the contact.</exception>
+		/// <exception cref="SendGridException">Thrown when an exception occurred while creating the contact.</exception>
 		Task<string> CreateAsync(
 			string email,
 			Parameter<string> firstName = default,
@@ -47,7 +47,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		/// <exception cref="System.Exception">Thrown when an exception occured while updating the contact.</exception>
+		/// <exception cref="SendGridException">Thrown when an exception occurred while updating the contact.</exception>
 		Task UpdateAsync(
 			string email,
 			Parameter<string> firstName = default,

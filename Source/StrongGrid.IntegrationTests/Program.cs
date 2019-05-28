@@ -1,4 +1,4 @@
-﻿using StrongGrid.Logging;
+using StrongGrid.Logging;
 using StrongGrid.Models;
 using StrongGrid.Models.Search;
 using StrongGrid.Utilities;
@@ -27,23 +27,25 @@ namespace StrongGrid.IntegrationTests
 		static async Task<int> Main()
 		{
 			// -----------------------------------------------------------------------------
-			// Do you want to proxy requests through Fiddler (useful for debugging)?
-			var useFiddler = true;
+			// Do you want to proxy requests through Fiddler? Can be useful for debugging.
+			var useFiddler = false;
 
-			// As an alternative to Fiddler, you can display debug information about
-			// every HTTP request/response in the console. This is useful for debugging
-			// purposes but the amount of information can be overwhelming.
-			var debugHttpMessagesToConsole = false;
+			// As an alternative to Fiddler, you can display debug information in the console.
+			var logToConsole = true;
+
+			// Decide which calls should be logged. You can choose to log only successful calls, only failed calls, both or neither.
+			var logBehavior = LogBehavior.LogFailedCalls;
 			// -----------------------------------------------------------------------------
 
-			if (debugHttpMessagesToConsole)
+			if (logToConsole)
 			{
-				LogProvider.SetCurrentLogProvider(new ConsoleLogProvider());
+				LogProvider.SetCurrentLogProvider(new ColoredConsoleLogProvider());
 			}
 
-			var proxy = useFiddler ? new WebProxy("http://localhost:8888") : null;
 			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
-			var client = new Client(apiKey, proxy);
+			var proxy = useFiddler ? new WebProxy("http://localhost:8888") : null;
+			var options = new StrongGridClientOptions() { LogBehavior = logBehavior };
+			var client = new Client(apiKey, proxy, options);
 
 			var source = new CancellationTokenSource();
 			Console.CancelKeyPress += (s, e) =>
@@ -107,7 +109,7 @@ namespace StrongGrid.IntegrationTests
 					catch (Exception e)
 					{
 						var exceptionMessage = e.GetBaseException().Message;
-						await log.WriteLineAsync($"-----> AN EXCEPTION OCCURED: {exceptionMessage}").ConfigureAwait(false);
+						await log.WriteLineAsync($"-----> AN EXCEPTION OCCURRED: {exceptionMessage}").ConfigureAwait(false);
 						return (TestName: integrationTest.Method.Name, ResultCode: ResultCodes.Exception, Message: exceptionMessage);
 					}
 					finally
