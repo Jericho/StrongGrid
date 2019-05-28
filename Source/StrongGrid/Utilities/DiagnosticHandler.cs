@@ -165,15 +165,22 @@ namespace StrongGrid.Utilities
 
 		private void Cleanup()
 		{
-			// Remove diagnostic information for requests that have been garbage collected
-			foreach (string key in DiagnosticHandler.DiagnosticsInfo.Keys.ToArray())
+			try
 			{
-				var diagnosticInfo = DiagnosticHandler.DiagnosticsInfo[key];
-				if (!diagnosticInfo.RequestReference.TryGetTarget(out HttpRequestMessage request))
+				// Remove diagnostic information for requests that have been garbage collected
+				foreach (string key in DiagnosticHandler.DiagnosticsInfo.Keys.ToArray())
 				{
-					DiagnosticHandler.DiagnosticsInfo.Remove(key);
-					continue;
+					var diagnosticInfo = DiagnosticHandler.DiagnosticsInfo[key];
+					if (!diagnosticInfo.RequestReference.TryGetTarget(out HttpRequestMessage request))
+					{
+						DiagnosticHandler.DiagnosticsInfo.Remove(key);
+						continue;
+					}
 				}
+			}
+			catch
+			{
+				// Intentionally left empty
 			}
 		}
 
