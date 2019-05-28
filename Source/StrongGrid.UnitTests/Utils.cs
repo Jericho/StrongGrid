@@ -16,7 +16,7 @@ namespace StrongGrid.UnitTests
 			var client = new FluentClient(SENDGRID_API_BASE_URI, httpClient);
 			client.SetRequestCoordinator(new SendGridRetryStrategy());
 			client.Filters.Remove<DefaultErrorFilter>();
-			client.Filters.Add(new DiagnosticHandler());
+			client.Filters.Add(new DiagnosticHandler(LogBehavior.LogNothing));
 			client.Filters.Add(new SendGridErrorHandler());
 			return client;
 		}
