@@ -82,7 +82,7 @@ namespace StrongGrid.IntegrationTests
 		/// <param name="key">A key.</param>
 		/// <param name="value">A value.</param>
 		/// <returns>A disposable that when disposed removes the map from the context.</returns>
-		public IDisposable OpenMappedContext(string key, string value)
+		public IDisposable OpenMappedContext(string key, object value, bool destructure = false)
 		{
 			return NullDisposable.Instance;
 		}
