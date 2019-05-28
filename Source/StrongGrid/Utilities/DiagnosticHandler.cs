@@ -21,12 +21,22 @@ namespace StrongGrid.Utilities
 
 		internal const string DIAGNOSTIC_ID_HEADER_NAME = "StrongGrid-Diagnostic-Id";
 		private static readonly ILog _logger = LogProvider.For<DiagnosticHandler>();
+		private readonly LogBehavior _logBehavior;
 
 		#endregion
 
 		#region PROPERTIES
 
 		internal static IDictionary<string, (WeakReference<HttpRequestMessage> RequestReference, StringBuilder Diagnostic, long RequestTimestamp, long ResponseTimeStamp)> DiagnosticsInfo { get; } = new Dictionary<string, (WeakReference<HttpRequestMessage>, StringBuilder, long, long)>();
+
+		#endregion
+
+		#region CTOR
+
+		public DiagnosticHandler(LogBehavior logBehavior)
+		{
+			_logBehavior = logBehavior;
+		}
 
 		#endregion
 
@@ -105,9 +115,15 @@ namespace StrongGrid.Utilities
 
 					if (_logger != null && _logger.IsDebugEnabled())
 					{
-						_logger.Debug(diagnosticMessage
-							.Replace("{", "{{")
-							.Replace("}", "}}"));
+						var shouldLog = response.IsSuccessStatusCode && _logBehavior.HasFlag(LogBehavior.LogSuccessfulCalls);
+						shouldLog |= !response.IsSuccessStatusCode && _logBehavior.HasFlag(LogBehavior.LogFailedCalls);
+
+						if (shouldLog)
+						{
+							_logger.Debug(diagnosticMessage
+								.Replace("{", "{{")
+								.Replace("}", "}}"));
+						}
 					}
 				}
 
