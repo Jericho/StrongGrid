@@ -5,6 +5,8 @@ using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -71,8 +73,11 @@ namespace StrongGrid.Resources
 
 				// Get the diagnostic info
 				var diagnosticId = request.Message.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
-				var diagnosticInfo = DiagnosticHandler.DiagnosticsInfo[diagnosticId];
-				var diagnosticMessage = diagnosticInfo.Diagnostic.ToString();
+				var diagnosticMessage = string.Empty;
+				if (DiagnosticHandler.DiagnosticsInfo.TryGetValue(diagnosticId, out (WeakReference<HttpRequestMessage> RequestReference, StringBuilder Diagnostic, long RequestTimeStamp, long ResponseTimestamp) diagnosticInfo))
+				{
+					diagnosticMessage = diagnosticInfo.Diagnostic.ToString();
+				}
 
 				// Throw exception with diagnostic info
 				throw new SendGridException(errorMsg, response, diagnosticMessage);
@@ -121,8 +126,11 @@ namespace StrongGrid.Resources
 
 				// Get the diagnostic info
 				var diagnosticId = request.Message.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
-				var diagnosticInfo = DiagnosticHandler.DiagnosticsInfo[diagnosticId];
-				var diagnosticMessage = diagnosticInfo.Diagnostic.ToString();
+				var diagnosticMessage = string.Empty;
+				if (DiagnosticHandler.DiagnosticsInfo.TryGetValue(diagnosticId, out (WeakReference<HttpRequestMessage> RequestReference, StringBuilder Diagnostic, long RequestTimeStamp, long ResponseTimestamp) diagnosticInfo))
+				{
+					diagnosticMessage = diagnosticInfo.Diagnostic.ToString();
+				}
 
 				// Throw exception with diagnostic info
 				throw new SendGridException(errorMsg, response, diagnosticMessage);
