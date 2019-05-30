@@ -21,7 +21,8 @@ namespace StrongGrid.Utilities
 
 		internal const string DIAGNOSTIC_ID_HEADER_NAME = "StrongGrid-Diagnostic-Id";
 		private static readonly ILog _logger = LogProvider.For<DiagnosticHandler>();
-		private readonly LogBehavior _logBehavior;
+		private readonly LogLevel _logLevelSuccessfulCalls;
+		private readonly LogLevel _logLevelFailedCalls;
 
 		#endregion
 
@@ -33,9 +34,10 @@ namespace StrongGrid.Utilities
 
 		#region CTOR
 
-		public DiagnosticHandler(LogBehavior logBehavior)
+		public DiagnosticHandler(LogLevel logLevelSuccessfulCalls, LogLevel logLevelFailedCalls)
 		{
-			_logBehavior = logBehavior;
+			_logLevelSuccessfulCalls = logLevelSuccessfulCalls;
+			_logLevelFailedCalls = logLevelFailedCalls;
 		}
 
 		#endregion
@@ -106,21 +108,22 @@ namespace StrongGrid.Utilities
 				{
 					var diagnosticMessage = updatedDiagnostic.ToString();
 
-					if (!string.IsNullOrEmpty(diagnosticMessage))
+					if (_logger != null)
 					{
-						Debug.WriteLine("{0}\r\n{1}{0}", new string('=', 50), diagnosticMessage);
-
-						if (_logger != null && _logger.IsDebugEnabled())
+						var shouldLogSuccessfulCalls = _logger.Log(_logLevelSuccessfulCalls, null, null, Array.Empty<object>());
+						if (response.IsSuccessStatusCode && shouldLogSuccessfulCalls)
 						{
-							var shouldLog = response.IsSuccessStatusCode && _logBehavior.HasFlag(LogBehavior.LogSuccessfulCalls);
-							shouldLog |= !response.IsSuccessStatusCode && _logBehavior.HasFlag(LogBehavior.LogFailedCalls);
+							_logger.Log(_logLevelSuccessfulCalls, () => diagnosticMessage
+								.Replace("{", "{{")
+								.Replace("}", "}}"));
+						}
 
-							if (shouldLog)
-							{
-								_logger.Debug(diagnosticMessage
-									.Replace("{", "{{")
-									.Replace("}", "}}"));
-							}
+						var shouldLogFailedCalls = _logger.Log(_logLevelFailedCalls, null, null, Array.Empty<object>());
+						if (!response.IsSuccessStatusCode && shouldLogFailedCalls)
+						{
+							_logger.Log(_logLevelFailedCalls, () => diagnosticMessage
+								.Replace("{", "{{")
+								.Replace("}", "}}"));
 						}
 					}
 

@@ -1,5 +1,6 @@
 using Pathoschild.Http.Client;
 using Pathoschild.Http.Client.Extensibility;
+using StrongGrid.Logging;
 using StrongGrid.Resources;
 using StrongGrid.Utilities;
 using System;
@@ -397,7 +398,7 @@ namespace StrongGrid
 
 			// Order is important: DiagnosticHandler must be first.
 			// Also, the list of filters must be kept in sync with the filters in Utils.GetFluentClient in the unit testing project.
-			_fluentClient.Filters.Add(new DiagnosticHandler(_options.LogBehavior));
+			_fluentClient.Filters.Add(new DiagnosticHandler(_options.LogLevelSuccessfulCalls, _options.LogLevelFailedCalls));
 			_fluentClient.Filters.Add(new SendGridErrorHandler());
 
 			if (!string.IsNullOrEmpty(apiKey)) _fluentClient.SetBearerAuthentication(apiKey);
@@ -510,7 +511,11 @@ namespace StrongGrid
 		{
 			return new StrongGridClientOptions()
 			{
-				LogBehavior = LogBehavior.LogEverything
+				// Setting to 'Debug' to mimic previous behavior. I think this is a sensible default setting.
+				LogLevelSuccessfulCalls = LogLevel.Debug,
+
+				// Setting to 'Debug' to mimic previous behavior. I think 'Error' would make more sense.
+				LogLevelFailedCalls = LogLevel.Debug
 			};
 		}
 
