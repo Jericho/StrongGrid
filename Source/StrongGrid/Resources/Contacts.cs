@@ -64,7 +64,7 @@ namespace StrongGrid.Resources
 				.AsResponse()
 				.ConfigureAwait(false);
 
-			response.EnsureSuccessSendGridResponse();
+			response.CheckForSendGridErrors();
 
 			var importResult = await response.Message.Content.AsSendGridObject<ImportResult>().ConfigureAwait(false);
 			return importResult.PersistedRecipients.Single();
@@ -102,7 +102,7 @@ namespace StrongGrid.Resources
 				.AsResponse()
 				.ConfigureAwait(false);
 
-			response.EnsureSuccessSendGridResponse();
+			response.CheckForSendGridErrors();
 		}
 
 		/// <summary>

@@ -20,7 +20,7 @@ namespace StrongGrid.Utilities
 		/// <param name="httpErrorAsException">Whether HTTP error responses should be raised as exceptions.</param>
 		public void OnResponse(IResponse response, bool httpErrorAsException)
 		{
-			response.EnsureSuccessSendGridResponse();
+			response.CheckForSendGridErrors();
 		}
 
 		#endregion

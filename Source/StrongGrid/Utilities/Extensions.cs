@@ -553,7 +553,7 @@ namespace StrongGrid.Utilities
 			return null;
 		}
 
-		public static void EnsureSuccessSendGridResponse(this IResponse response)
+		public static void CheckForSendGridErrors(this IResponse response)
 		{
 			var (isError, errorMessage) = GetErrorMessage(response.Message).GetAwaiter().GetResult();
 			if (!isError) return;
@@ -637,7 +637,7 @@ namespace StrongGrid.Utilities
 					var errorsArray = (JArray)jObject["errors"];
 					if (errorsArray != null && errorsArray.Count > 0)
 					{
-						errorMessage = string.Join(Environment.NewLine, errorsArray.Select(e => e["message"].Value<string>()));
+						errorMessage = string.Join(Environment.NewLine, errorsArray.Select(token => token["message"].Value<string>()));
 						isError = true;
 					}
 					else
