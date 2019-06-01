@@ -1,6 +1,7 @@
 using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using Pathoschild.Http.Client.Extensibility;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -25,11 +26,17 @@ namespace StrongGrid.Utilities
 		{
 			if (response.IsSuccessStatusCode) return;
 
-			var diagnosticId = response.Message.RequestMessage.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
-			var diagnosticInfo = DiagnosticHandler.DiagnosticsInfo[diagnosticId];
-
 			var errorMessage = GetErrorMessage(response.Message).Result;
-			throw new SendGridException(errorMessage, response.Message, diagnosticInfo.Diagnostic);
+
+			var diagnosticId = response.Message.RequestMessage.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
+			if (DiagnosticHandler.DiagnosticsInfo.TryGetValue(diagnosticId, out (WeakReference<HttpRequestMessage> RequestReference, string Diagnostic, long RequestTimeStamp, long ResponseTimestamp) diagnosticInfo))
+			{
+				throw new SendGridException(errorMessage, response.Message, diagnosticInfo.Diagnostic);
+			}
+			else
+			{
+				throw new SendGridException(errorMessage, response.Message, "Diagnostic log unavailable");
+			}
 		}
 
 		private static async Task<string> GetErrorMessage(HttpResponseMessage message)
