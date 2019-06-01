@@ -28,7 +28,7 @@ namespace StrongGrid.Utilities
 
 		#region PROPERTIES
 
-		internal static ConcurrentDictionary<string, (WeakReference<HttpRequestMessage> RequestReference, StringBuilder Diagnostic, long RequestTimestamp, long ResponseTimeStamp)> DiagnosticsInfo { get; } = new ConcurrentDictionary<string, (WeakReference<HttpRequestMessage>, StringBuilder, long, long)>();
+		internal static ConcurrentDictionary<string, (WeakReference<HttpRequestMessage> RequestReference, string Diagnostic, long RequestTimestamp, long ResponseTimeStamp)> DiagnosticsInfo { get; } = new ConcurrentDictionary<string, (WeakReference<HttpRequestMessage>, string, long, long)>();
 
 		#endregion
 
@@ -62,7 +62,7 @@ namespace StrongGrid.Utilities
 			LogContent(diagnostic, httpRequest.Content);
 
 			// Add the diagnotic info to our cache
-			DiagnosticsInfo.TryAdd(diagnosticId, (new WeakReference<HttpRequestMessage>(request.Message), diagnostic, Stopwatch.GetTimestamp(), long.MinValue));
+			DiagnosticsInfo.TryAdd(diagnosticId, (new WeakReference<HttpRequestMessage>(request.Message), diagnostic.ToString(), Stopwatch.GetTimestamp(), long.MinValue));
 		}
 
 		/// <summary>Method invoked just after the HTTP response is received. This method can modify the incoming HTTP response.</summary>
@@ -74,9 +74,9 @@ namespace StrongGrid.Utilities
 			var httpResponse = response.Message;
 
 			var diagnosticId = response.Message.RequestMessage.Headers.GetValue(DIAGNOSTIC_ID_HEADER_NAME);
-			if (DiagnosticsInfo.TryGetValue(diagnosticId, out (WeakReference<HttpRequestMessage> RequestReference, StringBuilder Diagnostic, long RequestTimestamp, long ResponseTimestamp) diagnosticInfo))
+			if (DiagnosticsInfo.TryGetValue(diagnosticId, out (WeakReference<HttpRequestMessage> RequestReference, string Diagnostic, long RequestTimestamp, long ResponseTimestamp) diagnosticInfo))
 			{
-				var updatedDiagnostic = new StringBuilder(diagnosticInfo.Diagnostic.ToString());
+				var updatedDiagnostic = new StringBuilder(diagnosticInfo.Diagnostic);
 				try
 				{
 					// Log the response
@@ -108,28 +108,12 @@ namespace StrongGrid.Utilities
 				{
 					var diagnosticMessage = updatedDiagnostic.ToString();
 
-					if (_logger != null)
-					{
-						var shouldLogSuccessfulCalls = _logger.Log(_logLevelSuccessfulCalls, null, null, Array.Empty<object>());
-						if (response.IsSuccessStatusCode && shouldLogSuccessfulCalls)
-						{
-							_logger.Log(_logLevelSuccessfulCalls, () => diagnosticMessage
-								.Replace("{", "{{")
-								.Replace("}", "}}"));
-						}
-
-						var shouldLogFailedCalls = _logger.Log(_logLevelFailedCalls, null, null, Array.Empty<object>());
-						if (!response.IsSuccessStatusCode && shouldLogFailedCalls)
-						{
-							_logger.Log(_logLevelFailedCalls, () => diagnosticMessage
-								.Replace("{", "{{")
-								.Replace("}", "}}"));
-						}
-					}
+					LogDiagnostic(response.IsSuccessStatusCode, _logLevelSuccessfulCalls, diagnosticMessage);
+					LogDiagnostic(!response.IsSuccessStatusCode, _logLevelFailedCalls, diagnosticMessage);
 
 					DiagnosticsInfo.TryUpdate(
 						diagnosticId,
-						(diagnosticInfo.RequestReference, updatedDiagnostic, diagnosticInfo.RequestTimestamp, responseTimestamp),
+						(diagnosticInfo.RequestReference, updatedDiagnostic.ToString(), diagnosticInfo.RequestTimestamp, responseTimestamp),
 						(diagnosticInfo.RequestReference, diagnosticInfo.Diagnostic, diagnosticInfo.RequestTimestamp, diagnosticInfo.ResponseTimestamp));
 				}
 			}
@@ -183,6 +167,20 @@ namespace StrongGrid.Utilities
 			}
 		}
 
+		private void LogDiagnostic(bool shouldLog, LogLevel logLEvel, string diagnosticMessage)
+		{
+			if (_logger != null)
+			{
+				var logLevelEnabled = _logger.Log(logLEvel, null, null, Array.Empty<object>());
+				if (shouldLog && logLevelEnabled)
+				{
+					_logger.Log(logLEvel, () => diagnosticMessage
+						.Replace("{", "{{")
+						.Replace("}", "}}"));
+				}
+			}
+		}
+
 		private void Cleanup()
 		{
 			try
@@ -190,7 +188,7 @@ namespace StrongGrid.Utilities
 				// Remove diagnostic information for requests that have been garbage collected
 				foreach (string key in DiagnosticHandler.DiagnosticsInfo.Keys.ToArray())
 				{
-					if (DiagnosticHandler.DiagnosticsInfo.TryGetValue(key, out (WeakReference<HttpRequestMessage> RequestReference, StringBuilder Diagnostic, long RequestTimeStamp, long ResponseTimestamp) diagnosticInfo))
+					if (DiagnosticHandler.DiagnosticsInfo.TryGetValue(key, out (WeakReference<HttpRequestMessage> RequestReference, string Diagnostic, long RequestTimeStamp, long ResponseTimestamp) diagnosticInfo))
 					{
 						if (!diagnosticInfo.RequestReference.TryGetTarget(out HttpRequestMessage request))
 						{

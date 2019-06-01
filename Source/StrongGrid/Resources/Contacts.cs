@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -71,16 +70,16 @@ namespace StrongGrid.Resources
 				// There should only be one error message but to be safe let's combine all error messages into a single string
 				var errorMsg = string.Join(Environment.NewLine, importResult.Errors.Select(e => e.Message));
 
-				// Get the diagnostic info
-				var diagnosticId = request.Message.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
-				var diagnosticMessage = string.Empty;
-				if (DiagnosticHandler.DiagnosticsInfo.TryGetValue(diagnosticId, out (WeakReference<HttpRequestMessage> RequestReference, StringBuilder Diagnostic, long RequestTimeStamp, long ResponseTimestamp) diagnosticInfo))
-				{
-					diagnosticMessage = diagnosticInfo.Diagnostic.ToString();
-				}
-
 				// Throw exception with diagnostic info
-				throw new SendGridException(errorMsg, response, diagnosticMessage);
+				var diagnosticId = request.Message.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
+				if (DiagnosticHandler.DiagnosticsInfo.TryGetValue(diagnosticId, out (WeakReference<HttpRequestMessage> RequestReference, string Diagnostic, long RequestTimeStamp, long ResponseTimestamp) diagnosticInfo))
+				{
+					throw new SendGridException(errorMsg, response, diagnosticInfo.Diagnostic);
+				}
+				else
+				{
+					throw new SendGridException(errorMsg, response, "Diagnostic log unavailable");
+				}
 			}
 
 			return importResult.PersistedRecipients.Single();
@@ -124,16 +123,17 @@ namespace StrongGrid.Resources
 				// There should only be one error message but to be safe let's combine all error messages into a single string
 				var errorMsg = string.Join(Environment.NewLine, importResult.Errors.Select(e => e.Message));
 
-				// Get the diagnostic info
+				// Throw exception with diagnostic info
 				var diagnosticId = request.Message.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
 				var diagnosticMessage = string.Empty;
-				if (DiagnosticHandler.DiagnosticsInfo.TryGetValue(diagnosticId, out (WeakReference<HttpRequestMessage> RequestReference, StringBuilder Diagnostic, long RequestTimeStamp, long ResponseTimestamp) diagnosticInfo))
+				if (DiagnosticHandler.DiagnosticsInfo.TryGetValue(diagnosticId, out (WeakReference<HttpRequestMessage> RequestReference, string Diagnostic, long RequestTimeStamp, long ResponseTimestamp) diagnosticInfo))
 				{
-					diagnosticMessage = diagnosticInfo.Diagnostic.ToString();
+					throw new SendGridException(errorMsg, response, diagnosticInfo.Diagnostic);
 				}
-
-				// Throw exception with diagnostic info
-				throw new SendGridException(errorMsg, response, diagnosticMessage);
+				else
+				{
+					throw new SendGridException(errorMsg, response, "Diagnostic log unavailable");
+				}
 			}
 		}
 
