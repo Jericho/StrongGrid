@@ -1,9 +1,5 @@
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using Pathoschild.Http.Client.Extensibility;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace StrongGrid.Utilities
 {
@@ -24,77 +20,7 @@ namespace StrongGrid.Utilities
 		/// <param name="httpErrorAsException">Whether HTTP error responses should be raised as exceptions.</param>
 		public void OnResponse(IResponse response, bool httpErrorAsException)
 		{
-			if (response.IsSuccessStatusCode) return;
-
-			var errorMessage = GetErrorMessage(response.Message).Result;
-
-			var diagnosticId = response.Message.RequestMessage.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
-			if (DiagnosticHandler.DiagnosticsInfo.TryGetValue(diagnosticId, out (WeakReference<HttpRequestMessage> RequestReference, string Diagnostic, long RequestTimeStamp, long ResponseTimestamp) diagnosticInfo))
-			{
-				throw new SendGridException(errorMessage, response.Message, diagnosticInfo.Diagnostic);
-			}
-			else
-			{
-				throw new SendGridException(errorMessage, response.Message, "Diagnostic log unavailable");
-			}
-		}
-
-		private static async Task<string> GetErrorMessage(HttpResponseMessage message)
-		{
-			// Default error message
-			var errorMessage = $"{(int)message.StatusCode}: {message.ReasonPhrase}";
-
-			/*
-				In case of an error, the SendGrid API returns a JSON string that looks like this:
-				{
-					"errors": [
-						{
-							"message": "An error has occurred",
-							"field": null,
-							"help": null
-						}
-					]
-				}
-
-				I have also seen cases where the JSON string looks like this:
-				{
-					"error": "Name already exists"
-				}
-			*/
-
-			var responseContent = await message.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-
-			if (!string.IsNullOrEmpty(responseContent))
-			{
-				try
-				{
-					// Check for the presence of property called 'errors'
-					var jObject = JObject.Parse(responseContent);
-					var errorsArray = (JArray)jObject["errors"];
-					if (errorsArray != null && errorsArray.Count > 0)
-					{
-						// Get the first error message
-						errorMessage = errorsArray[0]["message"].Value<string>();
-					}
-					else
-					{
-						// Check for the presence of property called 'error'
-						var errorProperty = jObject["error"];
-						if (errorProperty != null)
-						{
-							errorMessage = errorProperty.Value<string>();
-						}
-					}
-#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
-				}
-				catch
-#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
-				{
-					// Intentionally ignore parsing errors
-				}
-			}
-
-			return errorMessage;
+			response.EnsureSuccessSendGridResponse();
 		}
 
 		#endregion
