@@ -56,31 +56,16 @@ namespace StrongGrid.Resources
 			// SendGrid expects an array despite the fact we are creating a single contact
 			var data = new[] { ConvertToJObject(email, firstName, lastName, customFields) };
 
-			var request = _client
+			var response = await _client
 				.PostAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
-				.WithCancellationToken(cancellationToken);
+				.WithCancellationToken(cancellationToken)
+				.AsMessage()
+				.ConfigureAwait(false);
 
-			var response = await request.AsMessage().ConfigureAwait(false);
 			var importResult = await response.Content.AsSendGridObject<ImportResult>().ConfigureAwait(false);
-
-			if (importResult.ErrorCount > 0)
-			{
-				// There should only be one error message but to be safe let's combine all error messages into a single string
-				var errorMessage = string.Join(Environment.NewLine, importResult.Errors.Select(e => e.Message));
-
-				// Throw exception with diagnostic info
-				var diagnosticId = request.Message.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
-				if (DiagnosticHandler.DiagnosticsInfo.TryGetValue(diagnosticId, out (WeakReference<HttpRequestMessage> RequestReference, string Diagnostic, long RequestTimeStamp, long ResponseTimestamp) diagnosticInfo))
-				{
-					throw new SendGridException(errorMessage, response, diagnosticInfo.Diagnostic);
-				}
-				else
-				{
-					throw new SendGridException(errorMessage, response, "Diagnostic log unavailable");
-				}
-			}
+			ThrowExceptionIfAnyImportError(importResult, response);
 
 			return importResult.PersistedRecipients.Single();
 		}
@@ -109,31 +94,16 @@ namespace StrongGrid.Resources
 			// SendGrid expects an array despite the fact we are updating a single contact
 			var data = new[] { ConvertToJObject(email, firstName, lastName, customFields) };
 
-			var request = _client
+			var response = await _client
 				.PatchAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
-				.WithCancellationToken(cancellationToken);
+				.WithCancellationToken(cancellationToken)
+				.AsMessage()
+				.ConfigureAwait(false);
 
-			var response = await request.AsMessage().ConfigureAwait(false);
 			var importResult = await response.Content.AsSendGridObject<ImportResult>().ConfigureAwait(false);
-
-			if (importResult.ErrorCount > 0)
-			{
-				// There should only be one error message but to be safe let's combine all error messages into a single string
-				var errorMessage = string.Join(Environment.NewLine, importResult.Errors.Select(e => e.Message));
-
-				// Throw exception with diagnostic info
-				var diagnosticId = request.Message.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
-				if (DiagnosticHandler.DiagnosticsInfo.TryGetValue(diagnosticId, out (WeakReference<HttpRequestMessage> RequestReference, string Diagnostic, long RequestTimeStamp, long ResponseTimestamp) diagnosticInfo))
-				{
-					throw new SendGridException(errorMessage, response, diagnosticInfo.Diagnostic);
-				}
-				else
-				{
-					throw new SendGridException(errorMessage, response, "Diagnostic log unavailable");
-				}
-			}
+			ThrowExceptionIfAnyImportError(importResult, response);
 		}
 
 		/// <summary>
@@ -158,7 +128,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.As<ImportResult>();
+				.AsSendGridObject<ImportResult>();
 		}
 
 		/// <summary>
@@ -357,6 +327,26 @@ namespace StrongGrid.Resources
 			var result = ConvertToJObject(contact.Email, contact.FirstName, contact.LastName, contact.CustomFields);
 			result.AddPropertyIfValue("id", contact.Id);
 			return result;
+		}
+
+		private static void ThrowExceptionIfAnyImportError(ImportResult importResult, HttpResponseMessage response)
+		{
+			if (importResult.ErrorCount > 0)
+			{
+				// There should only be one error message but to be safe let's combine all error messages into a single string
+				var errorMessage = string.Join(Environment.NewLine, importResult.Errors.Select(e => e.Message));
+
+				// Throw exception with diagnostic info
+				var diagnosticId = response.RequestMessage.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
+				if (DiagnosticHandler.DiagnosticsInfo.TryGetValue(diagnosticId, out (WeakReference<HttpRequestMessage> RequestReference, string Diagnostic, long RequestTimeStamp, long ResponseTimestamp) diagnosticInfo))
+				{
+					throw new SendGridException(errorMessage, response, diagnosticInfo.Diagnostic);
+				}
+				else
+				{
+					throw new SendGridException(errorMessage, response, "Diagnostic log unavailable");
+				}
+			}
 		}
 	}
 }
