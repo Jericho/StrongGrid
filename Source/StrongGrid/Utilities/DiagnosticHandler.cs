@@ -169,10 +169,10 @@ namespace StrongGrid.Utilities
 
 		private void LogDiagnostic(bool shouldLog, LogLevel logLEvel, string diagnosticMessage)
 		{
-			if (_logger != null)
+			if (shouldLog && _logger != null)
 			{
 				var logLevelEnabled = _logger.Log(logLEvel, null, null, Array.Empty<object>());
-				if (shouldLog && logLevelEnabled)
+				if (logLevelEnabled)
 				{
 					_logger.Log(logLEvel, () => diagnosticMessage
 						.Replace("{", "{{")
