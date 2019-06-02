@@ -1,4 +1,7 @@
-using StrongGrid.Logging;
+using Logzio.DotNet.NLog;
+using NLog;
+using NLog.Config;
+using NLog.Targets;
 using StrongGrid.Models;
 using StrongGrid.Models.Search;
 using StrongGrid.Utilities;
@@ -30,26 +33,34 @@ namespace StrongGrid.IntegrationTests
 			// Do you want to proxy requests through Fiddler? Can be useful for debugging.
 			var useFiddler = false;
 
-			// Do you want debug information displayed in the console?
-			var logToConsole = true;
-
 			// Logging options.
 			var options = new StrongGridClientOptions()
 			{
-				LogLevelFailedCalls = LogLevel.Error,
-				LogLevelSuccessfulCalls = LogLevel.Debug
+				LogLevelFailedCalls = StrongGrid.Logging.LogLevel.Error,
+				LogLevelSuccessfulCalls = StrongGrid.Logging.LogLevel.Debug
 			};
-
-			// To see only errors, set this value to 'LogLevel.Error'.
-			// To see every single call made to SendGrid's API, set this value to 'LogLevel.Debug'.
-			var minLogLevel = LogLevel.Error;
 			// -----------------------------------------------------------------------------
 
-			if (logToConsole)
+			// Configure logging
+			var nLogConfig = new LoggingConfiguration();
+
+			// Send logs to logz.io
+			var logzioToken = Environment.GetEnvironmentVariable("LOGZIO_TOKEN");
+			if (!string.IsNullOrEmpty(logzioToken))
 			{
-				LogProvider.SetCurrentLogProvider(new ColoredConsoleLogProvider(minLogLevel));
+				var logzioTarget = new LogzioTarget { Token = logzioToken };
+				nLogConfig.AddTarget("Logzio", logzioTarget);
+				nLogConfig.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, "Logzio", "*");
 			}
 
+			// Send logs to console
+			var consoleTarget = new ColoredConsoleTarget();
+			nLogConfig.AddTarget("ColoredConsole", consoleTarget);
+			nLogConfig.AddRule(NLog.LogLevel.Warn, NLog.LogLevel.Fatal, "ColoredConsole", "*");
+
+			LogManager.Configuration = nLogConfig;
+
+			// Configure StrongGrid client
 			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
 			var proxy = useFiddler ? new WebProxy("http://localhost:8888") : null;
 			var client = new Client(apiKey, proxy, options);
