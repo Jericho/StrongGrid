@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -57,32 +56,17 @@ namespace StrongGrid.Resources
 			// SendGrid expects an array despite the fact we are creating a single contact
 			var data = new[] { ConvertToJObject(email, firstName, lastName, customFields) };
 
-			var request = _client
+			var response = await _client
 				.PostAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
-				.WithCancellationToken(cancellationToken);
+				.WithCancellationToken(cancellationToken)
+				.AsResponse()
+				.ConfigureAwait(false);
 
-			var response = await request.AsMessage().ConfigureAwait(false);
-			var importResult = await response.Content.AsSendGridObject<ImportResult>().ConfigureAwait(false);
+			response.CheckForSendGridErrors();
 
-			if (importResult.ErrorCount > 0)
-			{
-				// There should only be one error message but to be safe let's combine all error messages into a single string
-				var errorMsg = string.Join(Environment.NewLine, importResult.Errors.Select(e => e.Message));
-
-				// Get the diagnostic info
-				var diagnosticId = request.Message.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
-				var diagnosticMessage = string.Empty;
-				if (DiagnosticHandler.DiagnosticsInfo.TryGetValue(diagnosticId, out (WeakReference<HttpRequestMessage> RequestReference, StringBuilder Diagnostic, long RequestTimeStamp, long ResponseTimestamp) diagnosticInfo))
-				{
-					diagnosticMessage = diagnosticInfo.Diagnostic.ToString();
-				}
-
-				// Throw exception with diagnostic info
-				throw new SendGridException(errorMsg, response, diagnosticMessage);
-			}
-
+			var importResult = await response.Message.Content.AsSendGridObject<ImportResult>().ConfigureAwait(false);
 			return importResult.PersistedRecipients.Single();
 		}
 
@@ -110,31 +94,15 @@ namespace StrongGrid.Resources
 			// SendGrid expects an array despite the fact we are updating a single contact
 			var data = new[] { ConvertToJObject(email, firstName, lastName, customFields) };
 
-			var request = _client
+			var response = await _client
 				.PatchAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
-				.WithCancellationToken(cancellationToken);
+				.WithCancellationToken(cancellationToken)
+				.AsResponse()
+				.ConfigureAwait(false);
 
-			var response = await request.AsMessage().ConfigureAwait(false);
-			var importResult = await response.Content.AsSendGridObject<ImportResult>().ConfigureAwait(false);
-
-			if (importResult.ErrorCount > 0)
-			{
-				// There should only be one error message but to be safe let's combine all error messages into a single string
-				var errorMsg = string.Join(Environment.NewLine, importResult.Errors.Select(e => e.Message));
-
-				// Get the diagnostic info
-				var diagnosticId = request.Message.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
-				var diagnosticMessage = string.Empty;
-				if (DiagnosticHandler.DiagnosticsInfo.TryGetValue(diagnosticId, out (WeakReference<HttpRequestMessage> RequestReference, StringBuilder Diagnostic, long RequestTimeStamp, long ResponseTimestamp) diagnosticInfo))
-				{
-					diagnosticMessage = diagnosticInfo.Diagnostic.ToString();
-				}
-
-				// Throw exception with diagnostic info
-				throw new SendGridException(errorMsg, response, diagnosticMessage);
-			}
+			response.CheckForSendGridErrors();
 		}
 
 		/// <summary>
@@ -159,7 +127,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.As<ImportResult>();
+				.AsSendGridObject<ImportResult>();
 		}
 
 		/// <summary>

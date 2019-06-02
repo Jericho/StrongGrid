@@ -30,21 +30,28 @@ namespace StrongGrid.IntegrationTests
 			// Do you want to proxy requests through Fiddler? Can be useful for debugging.
 			var useFiddler = false;
 
-			// As an alternative to Fiddler, you can display debug information in the console.
+			// Do you want debug information displayed in the console?
 			var logToConsole = true;
 
-			// Decide which calls should be logged. You can choose to log only successful calls, only failed calls, both or neither.
-			var logBehavior = LogBehavior.LogFailedCalls;
+			// Logging options.
+			var options = new StrongGridClientOptions()
+			{
+				LogLevelFailedCalls = LogLevel.Error,
+				LogLevelSuccessfulCalls = LogLevel.Debug
+			};
+
+			// To see only errors, set this value to 'LogLevel.Error'.
+			// To see every single call made to SendGrid's API, set this value to 'LogLevel.Debug'.
+			var minLogLevel = LogLevel.Error;
 			// -----------------------------------------------------------------------------
 
 			if (logToConsole)
 			{
-				LogProvider.SetCurrentLogProvider(new ColoredConsoleLogProvider());
+				LogProvider.SetCurrentLogProvider(new ColoredConsoleLogProvider(minLogLevel));
 			}
 
 			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
 			var proxy = useFiddler ? new WebProxy("http://localhost:8888") : null;
-			var options = new StrongGridClientOptions() { LogBehavior = logBehavior };
 			var client = new Client(apiKey, proxy, options);
 
 			var source = new CancellationTokenSource();
