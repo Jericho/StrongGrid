@@ -637,7 +637,7 @@ namespace StrongGrid.Utilities
 					var errorsArray = (JArray)jObject["errors"];
 					if (errorsArray != null && errorsArray.Count > 0)
 					{
-						errorMessage = string.Join(Environment.NewLine, errorsArray.Select(token => token["message"].Value<string>()));
+						errorMessage = string.Join(Environment.NewLine, errorsArray.Select(error => error["message"].Value<string>()));
 						isError = true;
 					}
 					else
