@@ -553,6 +553,22 @@ namespace StrongGrid.Utilities
 			return null;
 		}
 
+		public static void CheckForSendGridErrors(this IResponse response)
+		{
+			var (isError, errorMessage) = GetErrorMessage(response.Message).GetAwaiter().GetResult();
+			if (!isError) return;
+
+			var diagnosticId = response.Message.RequestMessage.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
+			if (DiagnosticHandler.DiagnosticsInfo.TryGetValue(diagnosticId, out (WeakReference<HttpRequestMessage> RequestReference, string Diagnostic, long RequestTimeStamp, long ResponseTimestamp) diagnosticInfo))
+			{
+				throw new SendGridException(errorMessage, response.Message, diagnosticInfo.Diagnostic);
+			}
+			else
+			{
+				throw new SendGridException(errorMessage, response.Message, "Diagnostic log unavailable");
+			}
+		}
+
 		/// <summary>Asynchronously converts the JSON encoded content and converts it to a 'SendGrid' object of the desired type.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="httpContent">The content.</param>
@@ -582,6 +598,68 @@ namespace StrongGrid.Utilities
 			{
 				return JObject.Parse(responseContent).ToObject<T>();
 			}
+		}
+
+		private static async Task<(bool, string)> GetErrorMessage(HttpResponseMessage message)
+		{
+			// Assume there is no error
+			var isError = false;
+
+			// Default error message
+			var errorMessage = $"{(int)message.StatusCode}: {message.ReasonPhrase}";
+
+			/*
+				In case of an error, the SendGrid API returns a JSON string that looks like this:
+				{
+					"errors": [
+						{
+							"message": "An error has occurred",
+							"field": null,
+							"help": null
+						}
+					]
+				}
+
+				I have also seen cases where the JSON string looks like this:
+				{
+					"error": "Name already exists"
+				}
+			*/
+
+			var responseContent = await message.Content.ReadAsStringAsync(null).ConfigureAwait(false);
+
+			if (!string.IsNullOrEmpty(responseContent))
+			{
+				try
+				{
+					// Check for the presence of property called 'errors'
+					var jObject = JObject.Parse(responseContent);
+					var errorsArray = (JArray)jObject["errors"];
+					if (errorsArray != null && errorsArray.Count > 0)
+					{
+						errorMessage = string.Join(Environment.NewLine, errorsArray.Select(error => error["message"].Value<string>()));
+						isError = true;
+					}
+					else
+					{
+						// Check for the presence of property called 'error'
+						var errorProperty = jObject["error"];
+						if (errorProperty != null)
+						{
+							errorMessage = errorProperty.Value<string>();
+							isError = true;
+						}
+					}
+#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
+				}
+				catch
+#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
+				{
+					// Intentionally ignore parsing errors
+				}
+			}
+
+			return (isError, errorMessage);
 		}
 	}
 }

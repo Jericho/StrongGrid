@@ -1,4 +1,7 @@
-using StrongGrid.Logging;
+using Logzio.DotNet.NLog;
+using NLog;
+using NLog.Config;
+using NLog.Targets;
 using StrongGrid.Models;
 using StrongGrid.Models.Search;
 using StrongGrid.Utilities;
@@ -30,23 +33,42 @@ namespace StrongGrid.IntegrationTests
 			// Do you want to proxy requests through Fiddler? Can be useful for debugging.
 			var useFiddler = false;
 
-			// As an alternative to Fiddler, you can display debug information in the console.
-			var logToConsole = true;
-
-			// Decide which calls should be logged. You can choose to log only successful calls, only failed calls, both or neither.
-			var logBehavior = LogBehavior.LogFailedCalls;
+			// Logging options.
+			var options = new StrongGridClientOptions()
+			{
+				LogLevelFailedCalls = StrongGrid.Logging.LogLevel.Error,
+				LogLevelSuccessfulCalls = StrongGrid.Logging.LogLevel.Debug
+			};
 			// -----------------------------------------------------------------------------
 
-			if (logToConsole)
+			// Configure logging
+			var nLogConfig = new LoggingConfiguration();
+
+			// Send logs to logz.io
+			var logzioToken = Environment.GetEnvironmentVariable("LOGZIO_TOKEN");
+			if (!string.IsNullOrEmpty(logzioToken))
 			{
-				LogProvider.SetCurrentLogProvider(new ColoredConsoleLogProvider());
+				var logzioTarget = new LogzioTarget { Token = logzioToken };
+				logzioTarget.ContextProperties.Add(new TargetPropertyWithContext("source", "StrongGrid_integration_tests"));
+				logzioTarget.ContextProperties.Add(new TargetPropertyWithContext("StrongGrid-Version", StrongGrid.Client.Version));
+
+				nLogConfig.AddTarget("Logzio", logzioTarget);
+				nLogConfig.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, "Logzio", "*");
 			}
 
+			// Send logs to console
+			var consoleTarget = new ColoredConsoleTarget();
+			nLogConfig.AddTarget("ColoredConsole", consoleTarget);
+			nLogConfig.AddRule(NLog.LogLevel.Warn, NLog.LogLevel.Fatal, "ColoredConsole", "*");
+
+			LogManager.Configuration = nLogConfig;
+
+			// Configure StrongGrid client
 			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
 			var proxy = useFiddler ? new WebProxy("http://localhost:8888") : null;
-			var options = new StrongGridClientOptions() { LogBehavior = logBehavior };
 			var client = new Client(apiKey, proxy, options);
 
+			// Configure Console
 			var source = new CancellationTokenSource();
 			Console.CancelKeyPress += (s, e) =>
 			{

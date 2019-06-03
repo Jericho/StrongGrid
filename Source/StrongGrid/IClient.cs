@@ -1,4 +1,4 @@
-﻿using StrongGrid.Resources;
+using StrongGrid.Resources;
 
 namespace StrongGrid
 {
@@ -230,14 +230,6 @@ namespace StrongGrid
 		/// The user.
 		/// </value>
 		IUser User { get; }
-
-		/// <summary>
-		/// Gets the Version.
-		/// </summary>
-		/// <value>
-		/// The version.
-		/// </value>
-		string Version { get; }
 
 		/// <summary>
 		/// Gets the WebhookSettings resource.

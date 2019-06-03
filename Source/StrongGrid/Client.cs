@@ -1,5 +1,6 @@
 using Pathoschild.Http.Client;
 using Pathoschild.Http.Client.Extensibility;
+using StrongGrid.Logging;
 using StrongGrid.Resources;
 using StrongGrid.Utilities;
 using System;
@@ -27,6 +28,19 @@ namespace StrongGrid
 		#endregion
 
 		#region PROPERTIES
+
+		/// <summary>
+		/// Gets the Version.
+		/// </summary>
+		/// <value>
+		/// The version.
+		/// </value>
+		public static string Version { get; private set; }
+
+		/// <summary>
+		/// Gets the user agent.
+		/// </summary>
+		public static string UserAgent { get; private set; }
 
 		/// <summary>
 		/// Gets the Access Management resource which allows you to control IP whitelisting.
@@ -253,14 +267,6 @@ namespace StrongGrid
 		public IUser User { get; private set; }
 
 		/// <summary>
-		/// Gets the Version.
-		/// </summary>
-		/// <value>
-		/// The version.
-		/// </value>
-		public string Version { get; private set; }
-
-		/// <summary>
 		/// Gets the SenderAuthentication resource.
 		/// </summary>
 		/// <value>
@@ -289,12 +295,24 @@ namespace StrongGrid
 		#region CTOR
 
 		/// <summary>
+		/// Initializes static members of the <see cref="Client"/> class.
+		/// </summary>
+		static Client()
+		{
+			Version = typeof(Client).GetTypeInfo().Assembly.GetName().Version.ToString(3);
+#if DEBUG
+			Version = "DEBUG";
+#endif
+			UserAgent = $"StrongGrid/{Version} (+https://github.com/Jericho/StrongGrid)";
+		}
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="Client"/> class.
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key.</param>
 		/// <param name="options">Options for the SendGrid client.</param>
 		public Client(string apiKey, StrongGridClientOptions options = null)
-			: this(apiKey, null, null, null, false, options)
+		: this(apiKey, null, null, null, false, options)
 		{
 		}
 
@@ -384,20 +402,15 @@ namespace StrongGrid
 			_httpClient = httpClient;
 			_options = options ?? GetDefaultOptions();
 
-			Version = typeof(Client).GetTypeInfo().Assembly.GetName().Version.ToString(3);
-#if DEBUG
-			Version = "DEBUG";
-#endif
-
 			_fluentClient = new FluentClient(new Uri(SENDGRID_V3_BASE_URI), httpClient)
-				.SetUserAgent($"StrongGrid/{Version} (+https://github.com/Jericho/StrongGrid)")
+				.SetUserAgent(Client.UserAgent)
 				.SetRequestCoordinator(new SendGridRetryStrategy());
 
 			_fluentClient.Filters.Remove<DefaultErrorFilter>();
 
 			// Order is important: DiagnosticHandler must be first.
 			// Also, the list of filters must be kept in sync with the filters in Utils.GetFluentClient in the unit testing project.
-			_fluentClient.Filters.Add(new DiagnosticHandler(_options.LogBehavior));
+			_fluentClient.Filters.Add(new DiagnosticHandler(_options.LogLevelSuccessfulCalls, _options.LogLevelFailedCalls));
 			_fluentClient.Filters.Add(new SendGridErrorHandler());
 
 			if (!string.IsNullOrEmpty(apiKey)) _fluentClient.SetBearerAuthentication(apiKey);
@@ -510,7 +523,11 @@ namespace StrongGrid
 		{
 			return new StrongGridClientOptions()
 			{
-				LogBehavior = LogBehavior.LogEverything
+				// Setting to 'Debug' to mimic previous behavior. I think this is a sensible default setting.
+				LogLevelSuccessfulCalls = LogLevel.Debug,
+
+				// Setting to 'Debug' to mimic previous behavior. I think 'Error' would make more sense.
+				LogLevelFailedCalls = LogLevel.Debug
 			};
 		}
 
