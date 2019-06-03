@@ -30,6 +30,19 @@ namespace StrongGrid
 		#region PROPERTIES
 
 		/// <summary>
+		/// Gets the Version.
+		/// </summary>
+		/// <value>
+		/// The version.
+		/// </value>
+		public static string Version { get; private set; }
+
+		/// <summary>
+		/// Gets the user agent.
+		/// </summary>
+		public static string UserAgent { get; private set; }
+
+		/// <summary>
 		/// Gets the Access Management resource which allows you to control IP whitelisting.
 		/// </summary>
 		/// <value>
@@ -254,14 +267,6 @@ namespace StrongGrid
 		public IUser User { get; private set; }
 
 		/// <summary>
-		/// Gets the Version.
-		/// </summary>
-		/// <value>
-		/// The version.
-		/// </value>
-		public string Version { get; private set; }
-
-		/// <summary>
 		/// Gets the SenderAuthentication resource.
 		/// </summary>
 		/// <value>
@@ -290,12 +295,24 @@ namespace StrongGrid
 		#region CTOR
 
 		/// <summary>
+		/// Initializes static members of the <see cref="Client"/> class.
+		/// </summary>
+		static Client()
+		{
+			Version = typeof(Client).GetTypeInfo().Assembly.GetName().Version.ToString(3);
+#if DEBUG
+			Version = "DEBUG";
+#endif
+			UserAgent = $"StrongGrid/{Version} (+https://github.com/Jericho/StrongGrid)";
+		}
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="Client"/> class.
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key.</param>
 		/// <param name="options">Options for the SendGrid client.</param>
 		public Client(string apiKey, StrongGridClientOptions options = null)
-			: this(apiKey, null, null, null, false, options)
+		: this(apiKey, null, null, null, false, options)
 		{
 		}
 
@@ -385,13 +402,8 @@ namespace StrongGrid
 			_httpClient = httpClient;
 			_options = options ?? GetDefaultOptions();
 
-			Version = typeof(Client).GetTypeInfo().Assembly.GetName().Version.ToString(3);
-#if DEBUG
-			Version = "DEBUG";
-#endif
-
 			_fluentClient = new FluentClient(new Uri(SENDGRID_V3_BASE_URI), httpClient)
-				.SetUserAgent($"StrongGrid/{Version} (+https://github.com/Jericho/StrongGrid)")
+				.SetUserAgent(Client.UserAgent)
 				.SetRequestCoordinator(new SendGridRetryStrategy());
 
 			_fluentClient.Filters.Remove<DefaultErrorFilter>();
