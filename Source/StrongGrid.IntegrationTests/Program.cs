@@ -49,6 +49,9 @@ namespace StrongGrid.IntegrationTests
 			if (!string.IsNullOrEmpty(logzioToken))
 			{
 				var logzioTarget = new LogzioTarget { Token = logzioToken };
+				logzioTarget.ContextProperties.Add(new TargetPropertyWithContext("source", "StrongGrid_integration_tests"));
+				logzioTarget.ContextProperties.Add(new TargetPropertyWithContext("StrongGrid-Version", StrongGrid.Client.Version));
+
 				nLogConfig.AddTarget("Logzio", logzioTarget);
 				nLogConfig.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, "Logzio", "*");
 			}
@@ -65,6 +68,7 @@ namespace StrongGrid.IntegrationTests
 			var proxy = useFiddler ? new WebProxy("http://localhost:8888") : null;
 			var client = new Client(apiKey, proxy, options);
 
+			// Configure Console
 			var source = new CancellationTokenSource();
 			Console.CancelKeyPress += (s, e) =>
 			{
