@@ -2,11 +2,17 @@
 
 [![Join the chat at https://gitter.im/StrongGrid/Lobby](https://badges.gitter.im/StrongGrid/Lobby.svg)](https://gitter.im/StrongGrid/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FJericho%2FStrongGrid.svg?type=shield)](https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FJericho%2FStrongGrid?ref=badge_shield)
-
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://jericho.mit-license.org/)
+[![Sourcelink](https://img.shields.io/badge/sourcelink-enabled-brightgreen.svg)](https://github.com/dotnet/sourcelink)
+
 [![Build status](https://ci.appveyor.com/api/projects/status/4c0c37snfwkhgpos?svg=true)](https://ci.appveyor.com/project/Jericho/stronggrid)
+[![Tests](https://img.shields.io/appveyor/tests/jericho/stronggrid/master.svg)](https://ci.appveyor.com/project/jericho/stronggrid/build/tests)
 [![Coverage Status](https://coveralls.io/repos/github/Jericho/StrongGrid/badge.svg?branch=master)](https://coveralls.io/github/Jericho/StrongGrid?branch=master)
 [![CodeFactor](https://www.codefactor.io/repository/github/jericho/stronggrid/badge)](https://www.codefactor.io/repository/github/jericho/stronggrid)
+
+| Release Notes| NuGet (stable) | MyGet (prerelease) |
+|--------------|----------------|--------------------|
+| [![GitHub release](https://img.shields.io/github/release/jericho/stronggrid.svg)](https://github.com/Jericho/StrongGrid/releases) | [![NuGet Version](http://img.shields.io/nuget/v/StrongGrid.svg)](https://www.nuget.org/packages/StrongGrid/) | [![MyGet Pre Release](https://img.shields.io/myget/jericho/vpre/StrongGrid.svg)](http://myget.org/gallery/jericho) |
 
 ## About
 
@@ -26,14 +32,6 @@ If you need information about how to setup the SendGrid webhooks, please consult
 - [Webhooks Overview](https://sendgrid.com/docs/API_Reference/Webhooks/debug.html)
 - [Guide to debug webhooks](https://sendgrid.com/docs/API_Reference/Webhooks/index.html)
 - [Setting up the inbound parse webhook](https://sendgrid.com/docs/Classroom/Basics/Inbound_Parse_Webhook/setting_up_the_inbound_parse_webhook.html)
-
-
-| | |
-|---------------|----------|
-| Release Notes | [![GitHub release](https://img.shields.io/github/release/jericho/stronggrid.svg)](https://github.com/Jericho/StrongGrid/releases) |
-| Released package | [![NuGet Version](http://img.shields.io/nuget/v/StrongGrid.svg)](https://www.nuget.org/packages/StrongGrid/) |
-| Pre-release package | [![MyGet Pre Release](https://img.shields.io/myget/jericho/vpre/StrongGrid.svg)](http://myget.org/gallery/jericho) |
-
 
 ## Installation
 
