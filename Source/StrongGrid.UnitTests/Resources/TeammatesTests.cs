@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
@@ -15,7 +15,6 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string BASE_URI = "https://api.sendgrid.com";
 		private const string ENDPOINT = "teammates";
 
 		private const string MULTIPLE_ACCESS_REQUESTS_JSON = @"[
@@ -396,6 +395,5 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 		}
-
 	}
 }

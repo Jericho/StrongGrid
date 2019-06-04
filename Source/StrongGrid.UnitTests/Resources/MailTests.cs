@@ -1,4 +1,4 @@
-﻿using RichardSzalay.MockHttp;
+using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Resources;
@@ -135,7 +135,7 @@ namespace StrongGrid.UnitTests.Resources
 			for (int i = 0; i < 999; i++)
 			{
 				recipients.Add(new MailAddress($"{i}@{i}.com", $"{i} {i}"));
-			};
+			}
 			var personalizations = recipients.Select(r => new MailPersonalization { To = new[] { r } });
 			var contents = new[]
 			{
