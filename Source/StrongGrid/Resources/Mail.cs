@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
@@ -526,12 +526,12 @@ namespace StrongGrid.Resources
 					.ToArray();
 				personalization.Cc = personalization.Cc?
 					.Distinct(emailAddressComparer)
-					.Except(personalization.To, emailAddressComparer)
+					.Except(personalization.To ?? new MailAddress[] { }, emailAddressComparer)
 					.ToArray();
 				personalization.Bcc = personalization.Bcc?
 					.Distinct(emailAddressComparer)
-					.Except(personalization.To, emailAddressComparer)
-					.Except(personalization.Cc, emailAddressComparer)
+					.Except(personalization.To ?? new MailAddress[] { }, emailAddressComparer)
+					.Except(personalization.Cc ?? new MailAddress[] { }, emailAddressComparer)
 					.ToArray();
 
 				// SendGrid doesn't like empty arrays

@@ -81,6 +81,38 @@ namespace StrongGrid.UnitTests.Resources
 		}
 
 		[Fact]
+		public async Task SendAsync_request_with_bcc_only()
+		{
+			// Arrange
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "send")).Respond((HttpRequestMessage request) =>
+			{
+				var response = new HttpResponseMessage(HttpStatusCode.OK);
+				response.Headers.Add("X-Message-Id", "abc123");
+				return response;
+			});
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var mail = new Mail(client);
+
+			var personalizations = new[]
+			{
+				new MailPersonalization()
+				{
+					Bcc = new[] { new MailAddress("bob@example.com", "Bob Smith"), new MailAddress("bob@example.com", "Bob Smith") }
+				}
+			};
+
+			// Act
+			var result = await mail.SendAsync(personalizations, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, CancellationToken.None).ConfigureAwait(false);
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldBe("abc123");
+		}
+
+		[Fact]
 		public async Task SendToSingleRecipientAsync()
 		{
 			// Arrange
