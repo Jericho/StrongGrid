@@ -518,6 +518,11 @@ namespace StrongGrid.Resources
 			var personalizationsCopy = personalizations.Where(p => p != null).ToArray();
 			foreach (var personalization in personalizationsCopy)
 			{
+				// Make sure the arrays are not null otherwise Linq's 'Except' method will throw a ArgumentNull exception (See GH-286).
+				if (personalization.To == null) personalization.To = Array.Empty<MailAddress>();
+				if (personalization.Cc == null) personalization.Cc = Array.Empty<MailAddress>();
+				if (personalization.Bcc == null) personalization.Bcc = Array.Empty<MailAddress>();
+
 				// Avoid duplicate addresses. This is important because SendGrid does not throw any
 				// exception when a recipient is duplicated (which gives you the impression the email
 				// was sent) but it does not actually send the email
@@ -526,12 +531,12 @@ namespace StrongGrid.Resources
 					.ToArray();
 				personalization.Cc = personalization.Cc?
 					.Distinct(emailAddressComparer)
-					.Except(personalization.To ?? new MailAddress[] { }, emailAddressComparer)
+					.Except(personalization.To, emailAddressComparer)
 					.ToArray();
 				personalization.Bcc = personalization.Bcc?
 					.Distinct(emailAddressComparer)
-					.Except(personalization.To ?? new MailAddress[] { }, emailAddressComparer)
-					.Except(personalization.Cc ?? new MailAddress[] { }, emailAddressComparer)
+					.Except(personalization.To, emailAddressComparer)
+					.Except(personalization.Cc, emailAddressComparer)
 					.ToArray();
 
 				// SendGrid doesn't like empty arrays
