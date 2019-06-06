@@ -81,7 +81,7 @@ namespace StrongGrid.UnitTests.Resources
 		}
 
 		[Fact]
-		// Up until v0.56.1 this would cause a ArgumentNull exception. See GH-286. Fixed in v0.57.0
+		// Up until v0.57.1 this would cause a ArgumentNull exception. See GH-286. Fixed in v0.58.0
 		public async Task SendAsync_request_with_bcc_only()
 		{
 			// Arrange
