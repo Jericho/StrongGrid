@@ -1,4 +1,4 @@
-﻿using RichardSzalay.MockHttp;
+using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Resources;
@@ -13,12 +13,6 @@ namespace StrongGrid.UnitTests.Resources
 {
 	public class StatisticsTests
 	{
-		#region FIELDS
-
-		private const string ENDPOINT = "stats";
-
-		#endregion
-
 		[Fact]
 		public async Task GetGlobalStatsAsync()
 		{

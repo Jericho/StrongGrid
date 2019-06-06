@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
@@ -13,8 +13,6 @@ namespace StrongGrid.UnitTests.Resources
 	public class SettingsTests
 	{
 		#region FIELDS
-
-		private const string ENDPOINT = "alerts";
 
 		private const string SINGLE_GLOBAL_SETTING_JSON = @"{
 			'name': 'bcc',

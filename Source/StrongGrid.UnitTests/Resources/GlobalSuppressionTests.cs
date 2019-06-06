@@ -1,4 +1,4 @@
-﻿using RichardSzalay.MockHttp;
+using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Resources;
 using System.Net;
@@ -82,7 +82,6 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var email = "test1@example.com";
-
 
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, email)).Respond(HttpStatusCode.NoContent);

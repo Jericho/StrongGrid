@@ -13,7 +13,6 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string BASE_URI = "https://api.sendgrid.com";
 		private const string ENDPOINT = "mail/batch";
 
 		private const string SINGLE_BATCH_JSON = @"{
@@ -144,7 +143,6 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.VerifyNoOutstandingRequest();
 
 			result.Message.ShouldBe("an error has occurred");
-
 		}
 
 		[Fact]

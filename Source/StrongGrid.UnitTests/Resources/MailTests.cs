@@ -1,4 +1,4 @@
-﻿using RichardSzalay.MockHttp;
+using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Resources;
@@ -81,6 +81,39 @@ namespace StrongGrid.UnitTests.Resources
 		}
 
 		[Fact]
+		// Up until v0.57.1 this would cause a ArgumentNull exception. See GH-286. Fixed in v0.58.0
+		public async Task SendAsync_request_with_bcc_only()
+		{
+			// Arrange
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "send")).Respond((HttpRequestMessage request) =>
+			{
+				var response = new HttpResponseMessage(HttpStatusCode.OK);
+				response.Headers.Add("X-Message-Id", "abc123");
+				return response;
+			});
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var mail = new Mail(client);
+
+			var personalizations = new[]
+			{
+				new MailPersonalization()
+				{
+					Bcc = new[] { new MailAddress("bob@example.com", "Bob Smith"), new MailAddress("bob@example.com", "Bob Smith") }
+				}
+			};
+
+			// Act
+			var result = await mail.SendAsync(personalizations, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, CancellationToken.None).ConfigureAwait(false);
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldBe("abc123");
+		}
+
+		[Fact]
 		public async Task SendToSingleRecipientAsync()
 		{
 			// Arrange
@@ -135,7 +168,7 @@ namespace StrongGrid.UnitTests.Resources
 			for (int i = 0; i < 999; i++)
 			{
 				recipients.Add(new MailAddress($"{i}@{i}.com", $"{i} {i}"));
-			};
+			}
 			var personalizations = recipients.Select(r => new MailPersonalization { To = new[] { r } });
 			var contents = new[]
 			{

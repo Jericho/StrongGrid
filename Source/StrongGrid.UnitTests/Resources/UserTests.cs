@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
@@ -30,8 +30,6 @@ namespace StrongGrid.UnitTests.Resources
 			'website': 'http://www.sendgrid.com',
 			'zip': '92868'
 		}";
-		private const string MULTIPLE__JSON = @"[
-		]";
 
 		#endregion
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace StrongGrid.IntegrationTests
 {
@@ -23,8 +23,8 @@ namespace StrongGrid.IntegrationTests
 			var consoleWidth = consoleInfo.Right - consoleInfo.Left;
 			var consoleHeight = consoleInfo.Bottom - consoleInfo.Top;
 
-			var left = monitorInfo.Monitor.Left + (monitorWidth - consoleWidth) / 2;
-			var top = monitorInfo.Monitor.Top + (monitorHeight - consoleHeight) / 2;
+			var left = monitorInfo.Monitor.Left + ((monitorWidth - consoleWidth) / 2);
+			var top = monitorInfo.Monitor.Top + ((monitorHeight - consoleHeight) / 2);
 
 			NativeMethods.MoveWindow(hWin, left, top, consoleWidth, consoleHeight, false);
 		}
