@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Runtime.Serialization;
 
@@ -21,6 +21,12 @@ namespace StrongGrid.Models.Webhooks
 		/// </summary>
 		[EnumMember(Value = "html")]
 		Html,
+
+		/// <summary>
+		/// AMP.
+		/// </summary>
+		[EnumMember(Value = "amp")]
+		Amp,
 
 		/// <summary>
 		/// Header.
