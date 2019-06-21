@@ -213,6 +213,67 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
+		/// Send an AMP email to a single recipient without using a template (which means you must provide the subject, html content and text content).
+		/// </summary>
+		/// <param name="to">To.</param>
+		/// <param name="from">From.</param>
+		/// <param name="subject">The subject.</param>
+		/// <param name="ampContent">Content of the AMP.</param>
+		/// <param name="htmlContent">Content of the HTML.</param>
+		/// <param name="textContent">Content of the text.</param>
+		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
+		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
+		/// <param name="subscriptionTracking">The subscription tracking.</param>
+		/// <param name="replyTo">The reply to.</param>
+		/// <param name="attachments">The attachments.</param>
+		/// <param name="sections">The sections.</param>
+		/// <param name="headers">The headers.</param>
+		/// <param name="categories">The categories.</param>
+		/// <param name="customArgs">The custom arguments.</param>
+		/// <param name="sendAt">The send at.</param>
+		/// <param name="batchId">The batch identifier.</param>
+		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
+		/// <param name="ipPoolName">Name of the ip pool.</param>
+		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The message id.
+		/// </returns>
+		/// <remarks>
+		/// This overload is ideal when sending an email without using a template.
+		/// This is a convenience method with simplified parameters.
+		/// If you need more options, use the <see cref="SendAsync" /> method.
+		/// </remarks>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
+		public Task<string> SendAmpEmailToSingleRecipientAsync(
+			MailAddress to,
+			MailAddress from,
+			string subject,
+			string ampContent,
+			string htmlContent,
+			string textContent,
+			bool trackOpens = true,
+			bool trackClicks = true,
+			SubscriptionTrackingSettings subscriptionTracking = null,
+			MailAddress replyTo = null,
+			IEnumerable<Attachment> attachments = null,
+			IEnumerable<KeyValuePair<string, string>> sections = null,
+			IEnumerable<KeyValuePair<string, string>> headers = null,
+			IEnumerable<string> categories = null,
+			IEnumerable<KeyValuePair<string, string>> customArgs = null,
+			DateTime? sendAt = null,
+			string batchId = null,
+			UnsubscribeOptions unsubscribeOptions = null,
+			string ipPoolName = null,
+			MailSettings mailSettings = null,
+			CancellationToken cancellationToken = default)
+		{
+			var recipients = new[] { to };
+			return SendAmpEmailToMultipleRecipientsAsync(recipients, from, subject, ampContent, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, cancellationToken);
+		}
+
+		/// <summary>
 		/// Send the same email to multiple recipients without using a template (which means you must provide the subject, html content and text content).
 		/// </summary>
 		/// <param name="recipients">The recipients.</param>
@@ -458,6 +519,90 @@ namespace StrongGrid.Resources
 			};
 
 			return SendAsync(personalizations, null, null, from, replyTo, attachments, dynamicTemplateId, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, cancellationToken);
+		}
+
+		/// <summary>
+		/// Send the same AMP email to multiple recipients.
+		/// </summary>
+		/// <param name="recipients">The recipients.</param>
+		/// <param name="from">From.</param>
+		/// <param name="subject">The subject.</param>
+		/// <param name="ampContent">Content of the AMP.</param>
+		/// <param name="htmlContent">Content of the HTML.</param>
+		/// <param name="textContent">Content of the text.</param>
+		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
+		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
+		/// <param name="subscriptionTracking">The subscription tracking.</param>
+		/// <param name="replyTo">The reply to.</param>
+		/// <param name="attachments">The attachments.</param>
+		/// <param name="sections">The sections.</param>
+		/// <param name="headers">The headers.</param>
+		/// <param name="categories">The categories.</param>
+		/// <param name="customArgs">The custom arguments.</param>
+		/// <param name="sendAt">The send at.</param>
+		/// <param name="batchId">The batch identifier.</param>
+		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
+		/// <param name="ipPoolName">Name of the ip pool.</param>
+		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The message id.
+		/// </returns>
+		/// <remarks>
+		/// This is a convenience method with simplified parameters.
+		/// If you need more options, use the <see cref="SendAsync" /> method.
+		/// </remarks>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
+		public Task<string> SendAmpEmailToMultipleRecipientsAsync(
+			IEnumerable<MailAddress> recipients,
+			MailAddress from,
+			string subject,
+			string ampContent,
+			string htmlContent,
+			string textContent,
+			bool trackOpens = true,
+			bool trackClicks = true,
+			SubscriptionTrackingSettings subscriptionTracking = null,
+			MailAddress replyTo = null,
+			IEnumerable<Attachment> attachments = null,
+			IEnumerable<KeyValuePair<string, string>> sections = null,
+			IEnumerable<KeyValuePair<string, string>> headers = null,
+			IEnumerable<string> categories = null,
+			IEnumerable<KeyValuePair<string, string>> customArgs = null,
+			DateTime? sendAt = null,
+			string batchId = null,
+			UnsubscribeOptions unsubscribeOptions = null,
+			string ipPoolName = null,
+			MailSettings mailSettings = null,
+			CancellationToken cancellationToken = default)
+		{
+			var personalizations = new[]
+			{
+				new MailPersonalization
+				{
+					To = recipients.ToArray()
+				}
+			};
+
+			var contents = new List<MailContent>();
+			if (!string.IsNullOrEmpty(textContent)) contents.Add(new MailContent("text/plain", textContent));
+			if (!string.IsNullOrEmpty(ampContent)) contents.Add(new MailContent("text/x-amp-html", ampContent));
+			if (!string.IsNullOrEmpty(htmlContent)) contents.Add(new MailContent("text/html", htmlContent));
+
+			var trackingSettings = new TrackingSettings
+			{
+				ClickTracking = new ClickTrackingSettings
+				{
+					EnabledInHtmlContent = trackClicks,
+					EnabledInTextContent = trackClicks
+				},
+				OpenTracking = new OpenTrackingSettings { Enabled = trackOpens },
+				GoogleAnalytics = new GoogleAnalyticsSettings { Enabled = false },
+				SubscriptionTracking = subscriptionTracking
+			};
+
+			return SendAsync(personalizations, subject, contents, from, replyTo, attachments, null, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, cancellationToken);
 		}
 
 		/// <summary>
