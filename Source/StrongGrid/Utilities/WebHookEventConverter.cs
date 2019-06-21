@@ -32,6 +32,7 @@ namespace StrongGrid.Utilities
 			"reason",
 			"response",
 			"send_at",
+			"sg_content_type",
 			"sg_event_id",
 			"sg_message_id",
 			"sg_user_id",
