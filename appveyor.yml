@@ -23,4 +23,4 @@ cache:
   - tools -> build.cake, tools\packages.config
 
 # Environment configuration
-image: Visual Studio 2017
+image: Visual Studio 2019
