@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
@@ -219,14 +219,13 @@ namespace StrongGrid.Resources
 		/// <param name="htmlContent">Content of the HTML.</param>
 		/// <param name="textContent">Content of the text.</param>
 		/// <param name="isActive">The is active.</param>
-		/// <param name="editorType">The type of editor.</param>
 		/// <param name="testData">For dynamic templates only, the mock data that will be used for template preview and test sends.</param>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="TemplateVersion" />.
 		/// </returns>
-		public Task<TemplateVersion> UpdateVersionAsync(string templateId, string versionId, Parameter<string> name = default, Parameter<string> subject = default, Parameter<string> htmlContent = default, Parameter<string> textContent = default, Parameter<bool> isActive = default, Parameter<EditorType?> editorType = default, Parameter<object> testData = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<TemplateVersion> UpdateVersionAsync(string templateId, string versionId, Parameter<string> name = default, Parameter<string> subject = default, Parameter<string> htmlContent = default, Parameter<string> textContent = default, Parameter<bool> isActive = default, Parameter<object> testData = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject();
 			data.AddPropertyIfValue("name", name);
@@ -234,7 +233,6 @@ namespace StrongGrid.Resources
 			data.AddPropertyIfValue("html_content", htmlContent);
 			data.AddPropertyIfValue("plain_content", textContent);
 			data.AddPropertyIfValue("active", isActive, value => JToken.FromObject(value ? 1 : 0));
-			data.AddPropertyIfEnumValue("editor", editorType);
 			data.AddPropertyIfValue("test_data", testData);
 
 			return _client

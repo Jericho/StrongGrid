@@ -1,4 +1,4 @@
-﻿using StrongGrid.Models;
+using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System.Threading;
 using System.Threading.Tasks;
@@ -122,14 +122,13 @@ namespace StrongGrid.Resources
 		/// <param name="htmlContent">Content of the HTML.</param>
 		/// <param name="textContent">Content of the text.</param>
 		/// <param name="isActive">if set to <c>true</c> [is active].</param>
-		/// <param name="editorType">The type of editor.</param>
 		/// <param name="testData">For dynamic templates only, the mock data that will be used for template preview and test sends.</param>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="TemplateVersion" />.
 		/// </returns>
-		Task<TemplateVersion> UpdateVersionAsync(string templateId, string versionId, Parameter<string> name = default, Parameter<string> subject = default, Parameter<string> htmlContent = default, Parameter<string> textContent = default, Parameter<bool> isActive = default, Parameter<EditorType?> editorType = default, Parameter<object> testData = default, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<TemplateVersion> UpdateVersionAsync(string templateId, string versionId, Parameter<string> name = default, Parameter<string> subject = default, Parameter<string> htmlContent = default, Parameter<string> textContent = default, Parameter<bool> isActive = default, Parameter<object> testData = default, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete a template version.
