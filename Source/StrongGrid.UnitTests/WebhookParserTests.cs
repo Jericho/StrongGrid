@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Models.Webhooks;
@@ -210,7 +210,7 @@ namespace StrongGrid.UnitTests
 			'ip':'255.255.255.255'
 		}";
 
-		private string INBOUND_EMAIL_WEBHOOK = @"--xYzZY
+		private const string INBOUND_EMAIL_WEBHOOK = @"--xYzZY
 Content-Disposition: form-data; name=""dkim""
 
 {@hotmail.com : pass}
