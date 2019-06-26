@@ -33,11 +33,11 @@
 
   <ItemGroup>
     <PackageReference Include="HttpMultipartParser" Version="2.2.1" />
-    <PackageReference Include="LibLog" Version="5.0.6">
+    <PackageReference Include="LibLog" Version="5.0.7-build.575">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19270-01" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19324-01" PrivateAssets="All" />
     <PackageReference Include="MimeTypesMap" Version="1.0.7" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
     <PackageReference Include="Pathoschild.Http.FluentClient" Version="3.3.0" />
