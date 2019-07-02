@@ -24,6 +24,7 @@ namespace StrongGrid
 		private readonly bool _mustDisposeHttpClient;
 		private readonly StrongGridClientOptions _options;
 		private readonly ILogger _logger;
+		private readonly Utilities.HttpClientFactory _httpClientFactory = new Utilities.HttpClientFactory();
 
 		private HttpClient _httpClient;
 		private Pathoschild.Http.Client.IClient _fluentClient;
@@ -270,56 +271,38 @@ namespace StrongGrid
 		/// </summary>
 		/// <param name="apiKey">Your api key.</param>
 		/// <param name="httpClient">Allows you to inject your own HttpClient. This is useful, for example, to setup the HtppClient with a proxy.</param>
-		/// <param name="disposeClient">Indicates if the http client should be dispose when this instance of BaseClient is disposed.</param>
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
-		public BaseClient(string apiKey, HttpClient httpClient, bool disposeClient, StrongGridClientOptions options, ILogger logger = null)
+		public BaseClient(string apiKey, HttpClient httpClient, StrongGridClientOptions options, ILogger logger = null)
 		{
-			_mustDisposeHttpClient = disposeClient;
+			_mustDisposeHttpClient = false;
 			_httpClient = httpClient;
+			_options = options ?? throw new ArgumentNullException(nameof(options));
+			_logger = logger ?? NullLogger.Instance;
+			_fluentClient = InitFluentClient(apiKey, _httpClient);
+
+			InitResources();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="BaseClient" /> class.
+		/// </summary>
+		/// <param name="apiKey">Your api key.</param>
+		/// <param name="handler">Allows you to inject your own HttpClient. This is useful, for example, to setup the HtppClient with a proxy.</param>
+		/// <param name="options">Options for the SendGrid client.</param>
+		/// <param name="logger">Logger.</param>
+		public BaseClient(string apiKey, HttpMessageHandler handler, StrongGridClientOptions options, ILogger logger = null)
+		{
+			var httpClientName = $"StrongGrid-{apiKey}";
+			if (handler != null) _httpClientFactory.AddHandler(httpClientName, handler);
+
+			_mustDisposeHttpClient = true;
+			_httpClient = _httpClientFactory.CreateClient(httpClientName);
 			_options = options;
 			_logger = logger ?? NullLogger.Instance;
+			_fluentClient = InitFluentClient(apiKey, _httpClient);
 
-			_fluentClient = new FluentClient(new Uri(SENDGRID_V3_BASE_URI), httpClient)
-				.SetUserAgent($"StrongGrid/{Version} (+https://github.com/Jericho/StrongGrid)")
-				.SetRequestCoordinator(new SendGridRetryStrategy());
-
-			_fluentClient.Filters.Remove<DefaultErrorFilter>();
-
-			// Order is important: DiagnosticHandler must be first.
-			// Also, the list of filters must be kept in sync with the filters in Utils.GetFluentClient in the unit testing project.
-			_fluentClient.Filters.Add(new DiagnosticHandler(_options.LogLevelSuccessfulCalls, _options.LogLevelFailedCalls, _logger));
-			_fluentClient.Filters.Add(new SendGridErrorHandler());
-
-			if (string.IsNullOrEmpty(apiKey)) throw new ArgumentNullException(apiKey);
-			_fluentClient.SetBearerAuthentication(apiKey);
-
-			AccessManagement = new AccessManagement(FluentClient);
-			Alerts = new Alerts(FluentClient);
-			ApiKeys = new ApiKeys(FluentClient);
-			Batches = new Batches(FluentClient);
-			Blocks = new Blocks(FluentClient);
-			Bounces = new Bounces(FluentClient);
-			Designs = new Designs(FluentClient);
-			EmailActivities = new EmailActivities(FluentClient);
-			EmailValidation = new EmailValidation(FluentClient);
-			GlobalSuppressions = new GlobalSuppressions(FluentClient);
-			InvalidEmails = new InvalidEmails(FluentClient);
-			IpAddresses = new IpAddresses(FluentClient);
-			IpPools = new IpPools(FluentClient);
-			Mail = new Mail(FluentClient);
-			Settings = new Settings(FluentClient);
-			SpamReports = new SpamReports(FluentClient);
-			Statistics = new Statistics(FluentClient);
-			Subusers = new Subusers(FluentClient);
-			Suppressions = new Suppressions(FluentClient);
-			Teammates = new Teammates(FluentClient);
-			Templates = new Templates(FluentClient);
-			UnsubscribeGroups = new UnsubscribeGroups(FluentClient);
-			User = new User(FluentClient);
-			WebhookSettings = new WebhookSettings(FluentClient);
-			WebhookStats = new WebhookStats(FluentClient);
-			SenderAuthentication = new SenderAuthentication(FluentClient);
+			InitResources();
 		}
 
 		/// <summary>
@@ -371,6 +354,55 @@ namespace StrongGrid
 		#endregion
 
 		#region PRIVATE METHODS
+
+		private Pathoschild.Http.Client.IClient InitFluentClient(string apiKey, HttpClient httpClient)
+		{
+			var fluentClient = new FluentClient(new Uri(SENDGRID_V3_BASE_URI), httpClient)
+				.SetUserAgent($"StrongGrid/{Version} (+https://github.com/Jericho/StrongGrid)")
+				.SetRequestCoordinator(new SendGridRetryStrategy());
+
+			fluentClient.Filters.Remove<DefaultErrorFilter>();
+
+			// Order is important: DiagnosticHandler must be first.
+			// Also, the list of filters must be kept in sync with the filters in Utils.GetFluentClient in the unit testing project.
+			fluentClient.Filters.Add(new DiagnosticHandler(_options.LogLevelSuccessfulCalls, _options.LogLevelFailedCalls, _logger));
+			fluentClient.Filters.Add(new SendGridErrorHandler());
+
+			if (string.IsNullOrEmpty(apiKey)) throw new ArgumentNullException(nameof(apiKey));
+			fluentClient.SetBearerAuthentication(apiKey);
+
+			return fluentClient;
+		}
+
+		private void InitResources()
+		{
+			AccessManagement = new AccessManagement(FluentClient);
+			Alerts = new Alerts(FluentClient);
+			ApiKeys = new ApiKeys(FluentClient);
+			Batches = new Batches(FluentClient);
+			Blocks = new Blocks(FluentClient);
+			Bounces = new Bounces(FluentClient);
+			Designs = new Designs(FluentClient);
+			EmailActivities = new EmailActivities(FluentClient);
+			EmailValidation = new EmailValidation(FluentClient);
+			GlobalSuppressions = new GlobalSuppressions(FluentClient);
+			InvalidEmails = new InvalidEmails(FluentClient);
+			IpAddresses = new IpAddresses(FluentClient);
+			IpPools = new IpPools(FluentClient);
+			Mail = new Mail(FluentClient);
+			Settings = new Settings(FluentClient);
+			SpamReports = new SpamReports(FluentClient);
+			Statistics = new Statistics(FluentClient);
+			Subusers = new Subusers(FluentClient);
+			Suppressions = new Suppressions(FluentClient);
+			Teammates = new Teammates(FluentClient);
+			Templates = new Templates(FluentClient);
+			UnsubscribeGroups = new UnsubscribeGroups(FluentClient);
+			User = new User(FluentClient);
+			WebhookSettings = new WebhookSettings(FluentClient);
+			WebhookStats = new WebhookStats(FluentClient);
+			SenderAuthentication = new SenderAuthentication(FluentClient);
+		}
 
 		private void ReleaseManagedResources()
 		{
