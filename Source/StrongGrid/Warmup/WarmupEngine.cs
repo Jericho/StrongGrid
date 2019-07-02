@@ -1,4 +1,4 @@
-﻿using StrongGrid.Models;
+using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
@@ -13,10 +13,10 @@ namespace StrongGrid.Warmup
 	/// </summary>
 	public class WarmupEngine : IWarmupEngine
 	{
-		private WarmupSettings _warmupSettings;
-		private IClient _client;
-		private ISystemClock _systemClock;
-		private IWarmupProgressRepository _warmupProgressRepository;
+		private readonly WarmupSettings _warmupSettings;
+		private readonly IClient _client;
+		private readonly ISystemClock _systemClock;
+		private readonly IWarmupProgressRepository _warmupProgressRepository;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="WarmupEngine" /> class.
@@ -99,6 +99,7 @@ namespace StrongGrid.Warmup
 		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The result.
@@ -129,10 +130,11 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
-			return SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, cancellationToken);
+			return SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -158,6 +160,7 @@ namespace StrongGrid.Warmup
 		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The result.
@@ -189,10 +192,11 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
-			return SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, templateId, substitutions, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, cancellationToken);
+			return SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, templateId, substitutions, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -215,6 +219,7 @@ namespace StrongGrid.Warmup
 		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The result.
@@ -243,10 +248,11 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
-			return SendToMultipleRecipientsAsync(recipients, from, dynamicTemplateId, dynamicData, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, cancellationToken);
+			return SendToMultipleRecipientsAsync(recipients, from, dynamicTemplateId, dynamicData, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -270,6 +276,7 @@ namespace StrongGrid.Warmup
 		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The result.
@@ -299,6 +306,7 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default)
 		{
 			var personalizations = new[]
@@ -325,7 +333,7 @@ namespace StrongGrid.Warmup
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return SendAsync(personalizations, subject, contents, from, replyTo, attachments, null, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, cancellationToken);
+			return SendAsync(personalizations, subject, contents, from, replyTo, attachments, null, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -351,6 +359,7 @@ namespace StrongGrid.Warmup
 		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The result.
@@ -382,6 +391,7 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default)
 		{
 			var personalizations = new[]
@@ -409,7 +419,7 @@ namespace StrongGrid.Warmup
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return SendAsync(personalizations, subject, contents, from, replyTo, attachments, templateId, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, cancellationToken);
+			return SendAsync(personalizations, subject, contents, from, replyTo, attachments, templateId, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -432,6 +442,7 @@ namespace StrongGrid.Warmup
 		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The result.
@@ -460,6 +471,7 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default)
 		{
 			if (!Template.IsDynamic(dynamicTemplateId))
@@ -488,7 +500,7 @@ namespace StrongGrid.Warmup
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return SendAsync(personalizations, null, null, from, replyTo, attachments, dynamicTemplateId, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, cancellationToken);
+			return SendAsync(personalizations, null, null, from, replyTo, attachments, dynamicTemplateId, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -510,6 +522,7 @@ namespace StrongGrid.Warmup
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="mailSettings">The mail settings.</param>
 		/// <param name="trackingSettings">The tracking settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The result.
@@ -533,6 +546,7 @@ namespace StrongGrid.Warmup
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
 			TrackingSettings trackingSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default)
 		{
 			// Validate parameters
@@ -638,6 +652,7 @@ namespace StrongGrid.Warmup
 					_warmupSettings.PoolName,
 					mailSettings,
 					trackingSettings,
+					priority,
 					cancellationToken),
 
 				// These emails (if any) will not be sent on the pool
@@ -659,6 +674,7 @@ namespace StrongGrid.Warmup
 					null,
 					mailSettings,
 					trackingSettings,
+					priority,
 					cancellationToken)
 			};
 			await Task.WhenAll(tasks).ConfigureAwait(false);
@@ -703,6 +719,7 @@ namespace StrongGrid.Warmup
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
 			TrackingSettings trackingSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default)
 		{
 			if (personalizations == null || !personalizations.Any())
@@ -729,6 +746,7 @@ namespace StrongGrid.Warmup
 					ipPoolName,
 					mailSettings,
 					trackingSettings,
+					priority,
 					cancellationToken);
 		}
 
