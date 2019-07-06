@@ -689,23 +689,23 @@ namespace StrongGrid.Resources
 				// Avoid duplicate addresses. This is important because SendGrid does not throw any
 				// exception when a recipient is duplicated (which gives you the impression the email
 				// was sent) but it does not actually send the email
-				personalization.To = personalization.To?
+				personalization.To = personalization.To
 					.Distinct(emailAddressComparer)
 					.ToArray();
-				personalization.Cc = personalization.Cc?
+				personalization.Cc = personalization.Cc
 					.Distinct(emailAddressComparer)
 					.Except(personalization.To, emailAddressComparer)
 					.ToArray();
-				personalization.Bcc = personalization.Bcc?
+				personalization.Bcc = personalization.Bcc
 					.Distinct(emailAddressComparer)
 					.Except(personalization.To, emailAddressComparer)
 					.Except(personalization.Cc, emailAddressComparer)
 					.ToArray();
 
 				// SendGrid doesn't like empty arrays
-				if (!(personalization.To?.Any() ?? true)) personalization.To = null;
-				if (!(personalization.Cc?.Any() ?? true)) personalization.Cc = null;
-				if (!(personalization.Bcc?.Any() ?? true)) personalization.Bcc = null;
+				if (!personalization.To.Any()) personalization.To = null;
+				if (!personalization.Cc.Any()) personalization.Cc = null;
+				if (!personalization.Bcc.Any()) personalization.Bcc = null;
 
 				// Surround recipient names with double-quotes if necessary
 				personalization.To = EnsureRecipientsNamesAreQuoted(personalization.To);
