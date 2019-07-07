@@ -1,4 +1,4 @@
-﻿using StrongGrid.Models;
+using StrongGrid.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -53,6 +53,7 @@ namespace StrongGrid.Warmup
 		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The result.
@@ -83,6 +84,7 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default);
 
 		/// <summary>
@@ -108,6 +110,7 @@ namespace StrongGrid.Warmup
 		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The result.
@@ -139,6 +142,7 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default);
 
 		/// <summary>
@@ -161,6 +165,7 @@ namespace StrongGrid.Warmup
 		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The result.
@@ -189,6 +194,7 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default);
 
 		/// <summary>
@@ -212,6 +218,7 @@ namespace StrongGrid.Warmup
 		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The result.
@@ -241,6 +248,7 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default);
 
 		/// <summary>
@@ -266,6 +274,7 @@ namespace StrongGrid.Warmup
 		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The result.
@@ -297,6 +306,7 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default);
 
 		/// <summary>
@@ -319,6 +329,7 @@ namespace StrongGrid.Warmup
 		/// <param name="batchId">The batch identifier.</param>
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The result.
@@ -347,6 +358,7 @@ namespace StrongGrid.Warmup
 			string batchId = null,
 			UnsubscribeOptions unsubscribeOptions = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default);
 
 		/// <summary>
@@ -368,12 +380,31 @@ namespace StrongGrid.Warmup
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="mailSettings">The mail settings.</param>
 		/// <param name="trackingSettings">The tracking settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The result.
 		/// </returns>
 		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
 		/// <exception cref="Exception">Email exceeds the size limit.</exception>
-		Task<WarmupResult> SendAsync(IEnumerable<MailPersonalization> personalizations, string subject, IEnumerable<MailContent> contents, MailAddress from, MailAddress replyTo = null, IEnumerable<Attachment> attachments = null, string templateId = null, IEnumerable<KeyValuePair<string, string>> sections = null, IEnumerable<KeyValuePair<string, string>> headers = null, IEnumerable<string> categories = null, IEnumerable<KeyValuePair<string, string>> customArgs = null, DateTime? sendAt = null, string batchId = null, UnsubscribeOptions unsubscribeOptions = null, MailSettings mailSettings = null, TrackingSettings trackingSettings = null, CancellationToken cancellationToken = default);
+		Task<WarmupResult> SendAsync(
+			IEnumerable<MailPersonalization> personalizations,
+			string subject,
+			IEnumerable<MailContent> contents,
+			MailAddress from,
+			MailAddress replyTo = null,
+			IEnumerable<Attachment> attachments = null,
+			string templateId = null,
+			IEnumerable<KeyValuePair<string, string>> sections = null,
+			IEnumerable<KeyValuePair<string, string>> headers = null,
+			IEnumerable<string> categories = null,
+			IEnumerable<KeyValuePair<string, string>> customArgs = null,
+			DateTime? sendAt = null,
+			string batchId = null,
+			UnsubscribeOptions unsubscribeOptions = null,
+			MailSettings mailSettings = null,
+			TrackingSettings trackingSettings = null,
+			MailPriority priority = MailPriority.Normal,
+			CancellationToken cancellationToken = default);
 	}
 }

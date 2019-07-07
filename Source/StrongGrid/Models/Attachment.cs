@@ -1,4 +1,9 @@
-﻿using Newtonsoft.Json;
+using HeyRed.Mime;
+using Newtonsoft.Json;
+using System;
+using System.Buffers;
+using System.IO;
+using System.Text;
 
 namespace StrongGrid.Models
 {
@@ -7,6 +12,13 @@ namespace StrongGrid.Models
 	/// </summary>
 	public class Attachment
 	{
+		// SendGrid doesn't limit the size of an attachment, but they limit the total size of an email to 30MB
+		// Therefore it's safe to assume that a given attachment cannot be larger than 30MB
+		private const int MAX_ATTACHMENT_SIZE = 30 * 1024 * 1024;
+
+		// Reasonable 4kb buffer when reading from stream
+		private const int BUFFER_SIZE = 4096;
+
 		/// <summary>
 		/// Gets or sets the content.
 		/// </summary>
@@ -51,5 +63,134 @@ namespace StrongGrid.Models
 		/// </value>
 		[JsonProperty("content_id", NullValueHandling = NullValueHandling.Ignore)]
 		public string ContentId { get; set; }
+
+		/// <summary>
+		/// Convenience method that creates an attachment from a local file.
+		/// </summary>
+		/// <param name="filePath">The file path.</param>
+		/// <param name="mimeType">Optional: MIME type of the attachment. If this parameter is null, the MIME type will be derived from the fileName extension.</param>
+		/// <param name="contentId">Optional: the unique identifier for this attachment IF AND ONLY IF the attachment should be embedded in the body of the email. This is useful, for example, if you want to embbed an image to be displayed in the HTML content. For standard attachment, this value should be null.</param>
+		/// <returns>The attachment.</returns>
+		/// <exception cref="FileNotFoundException">Unable to find the local file.</exception>
+		/// <exception cref="Exception">File exceeds the size limit.</exception>
+		public static Attachment FromLocalFile(string filePath, string mimeType = null, string contentId = null)
+		{
+			var fileName = Path.GetFileName(filePath);
+			using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+			{
+				if (fileStream.Length > MAX_ATTACHMENT_SIZE) throw new Exception("File exceeds the size limit");
+				return FromStream(fileStream, fileName, mimeType, contentId);
+			}
+		}
+
+		/// <summary>
+		/// Convenience method that creates an attachment from a stream.
+		/// </summary>
+		/// <param name="contentStream">The stream.</param>
+		/// <param name="fileName">The name of the attachment.</param>
+		/// <param name="mimeType">Optional: MIME type of the attachment. If this parameter is null, the MIME type will be derived from the fileName extension.</param>
+		/// <param name="contentId">Optional: the unique identifier for this attachment IF AND ONLY IF the attachment should be embedded in the body of the email. This is useful, for example, if you want to embbed an image to be displayed in the HTML content. For standard attachment, this value should be null.</param>
+		/// <returns>The attachment.</returns>
+		/// <exception cref="ArgumentNullException">contentStream is null.</exception>
+		/// <exception cref="ArgumentException">The content stream is not readable.</exception>
+		/// <exception cref="ArgumentException">The content is empty.</exception>
+		/// <exception cref="Exception">Content exceeds the size limit.</exception>
+		public static Attachment FromStream(Stream contentStream, string fileName, string mimeType = null, string contentId = null)
+		{
+			if (contentStream == null) throw new ArgumentNullException(nameof(contentStream));
+			if (!contentStream.CanRead) throw new ArgumentException("The content stream is not readable", nameof(contentStream));
+
+			var content = new StringBuilder();
+			byte[] buffer = ArrayPool<byte>.Shared.Rent(BUFFER_SIZE);
+			try
+			{
+				var bytesRead = contentStream.Read(buffer, 0, BUFFER_SIZE);
+				while (bytesRead > 0)
+				{
+					content.Append(Convert.ToBase64String(buffer, 0, bytesRead));
+					if (content.Length > MAX_ATTACHMENT_SIZE) throw new Exception("Content exceeds the size limit");
+
+					bytesRead = contentStream.Read(buffer, 0, BUFFER_SIZE);
+				}
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+			finally
+			{
+				ArrayPool<byte>.Shared.Return(buffer);
+			}
+
+			return FromBase64String(content.ToString(), fileName, mimeType, contentId);
+		}
+
+		/// <summary>
+		/// Convenience method that creates an attachment from a stream.
+		/// </summary>
+		/// <param name="content">The content.</param>
+		/// <param name="fileName">The name of the attachment.</param>
+		/// <param name="mimeType">Optional: MIME type of the attachment. If this parameter is null, the MIME type will be derived from the fileName extension.</param>
+		/// <param name="contentId">Optional: the unique identifier for this attachment IF AND ONLY IF the attachment should be embedded in the body of the email. This is useful, for example, if you want to embbed an image to be displayed in the HTML content. For standard attachment, this value should be null.</param>
+		/// <returns>The attachment.</returns>
+		/// <exception cref="ArgumentNullException">content is null.</exception>
+		/// <exception cref="ArgumentException">The content is empty.</exception>
+		/// <exception cref="Exception">File exceeds the size limit.</exception>
+		public static Attachment FromBinary(byte[] content, string fileName, string mimeType = null, string contentId = null)
+		{
+			if (content == null) throw new ArgumentNullException(nameof(content));
+			if (content.Length == 0) throw new ArgumentException("The content is empty", nameof(content));
+
+			return FromBase64String(Convert.ToBase64String(content), fileName, mimeType, contentId);
+		}
+
+		/// <summary>
+		/// Convenience method that creates an attachment from a string.
+		/// </summary>
+		/// <param name="content">The content.</param>
+		/// <param name="fileName">The name of the attachment.</param>
+		/// <param name="mimeType">Optional: MIME type of the attachment. If this parameter is null, the MIME type will be derived from the fileName extension.</param>
+		/// <param name="contentId">Optional: the unique identifier for this attachment IF AND ONLY IF the attachment should be embedded in the body of the email. This is useful, for example, if you want to embbed an image to be displayed in the HTML content. For standard attachment, this value should be null.</param>
+		/// <returns>The attachment.</returns>
+		/// <exception cref="ArgumentNullException">content is null.</exception>
+		/// <exception cref="ArgumentException">The content is empty.</exception>
+		/// <exception cref="Exception">File exceeds the size limit.</exception>
+		public static Attachment FromString(string content, string fileName, string mimeType = null, string contentId = null)
+		{
+			if (content == null) throw new ArgumentNullException(nameof(content));
+			if (content.Length == 0) throw new ArgumentException("The content is empty", nameof(content));
+			return FromBase64String(Convert.ToBase64String(Encoding.UTF8.GetBytes(content)), fileName, mimeType, contentId);
+		}
+
+		/// <summary>
+		/// Convenience method that creates an attachment from a base64 encoded string.
+		/// </summary>
+		/// <param name="content">The base64 encoded content.</param>
+		/// <param name="fileName">The name of the attachment.</param>
+		/// <param name="mimeType">Optional: MIME type of the attachment. If this parameter is null, the MIME type will be derived from the fileName extension.</param>
+		/// <param name="contentId">Optional: the unique identifier for this attachment IF AND ONLY IF the attachment should be embedded in the body of the email. This is useful, for example, if you want to embbed an image to be displayed in the HTML content. For standard attachment, this value should be null.</param>
+		/// <returns>The attachment.</returns>
+		/// <exception cref="ArgumentException">The content is empty.</exception>
+		/// <exception cref="Exception">Content exceeds the size limit.</exception>
+		public static Attachment FromBase64String(string content, string fileName, string mimeType = null, string contentId = null)
+		{
+			if (content == null) throw new ArgumentNullException(nameof(content));
+			if (content.Length == 0) throw new ArgumentException("The content is empty", nameof(content));
+			if (content.Length > MAX_ATTACHMENT_SIZE) throw new Exception("Content exceeds the size limit");
+
+			if (string.IsNullOrEmpty(mimeType))
+			{
+				mimeType = MimeTypesMap.GetMimeType(fileName);
+			}
+
+			return new Attachment()
+			{
+				Content = content,
+				ContentId = contentId,
+				Disposition = string.IsNullOrEmpty(contentId) ? "attachment" : "inline",
+				FileName = fileName,
+				Type = mimeType
+			};
+		}
 	}
 }

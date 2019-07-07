@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Models.Webhooks;
@@ -19,7 +19,7 @@ namespace StrongGrid.UnitTests
 		private const string PROCESSED_JSON = @"
 		{
 			'sg_event_id':'sendgrid_internal_event_id',
-			'sg_message_id':'sendgrid_internal_message_id',
+			'sg_message_id':'sendgrid_message_id.filterxxxyyyzzz',
 			'email':'email@example.com',
 			'timestamp':1249948800,
 			'smtp-id':'<original-smtp-id@domain.com>',
@@ -39,7 +39,7 @@ namespace StrongGrid.UnitTests
 		{
 			'status':'5.0.0',
 			'sg_event_id':'sendgrid_internal_event_id',
-			'sg_message_id':'sendgrid_internal_message_id',
+			'sg_message_id':'sendgrid_message_id.filterxxxyyyzzz',
 			'event':'bounce',
 			'email':'email@example.com',
 			'timestamp':1249948800,
@@ -63,7 +63,7 @@ namespace StrongGrid.UnitTests
 		{
 			'response':'400 Try again',
 			'sg_event_id':'sendgrid_internal_event_id',
-			'sg_message_id':'sendgrid_internal_message_id',
+			'sg_message_id':'sendgrid_message_id.filterxxxyyyzzz',
 			'event':'deferred',
 			'email':'email@example.com',
 			'timestamp':1249948800,
@@ -85,7 +85,7 @@ namespace StrongGrid.UnitTests
 		private const string DROPPED_JSON = @"
 		{
 			'sg_event_id':'sendgrid_internal_event_id',
-			'sg_message_id':'sendgrid_internal_message_id',
+			'sg_message_id':'sendgrid_message_id.filterxxxyyyzzz',
 			'email':'email@example.com',
 			'timestamp':1249948800,
 			'smtp-id':'<original-smtp-id@domain.com>',
@@ -99,7 +99,7 @@ namespace StrongGrid.UnitTests
 		{
 			'response':'250 OK',
 			'sg_event_id':'sendgrid_internal_event_id',
-			'sg_message_id':'sendgrid_internal_message_id',
+			'sg_message_id':'sendgrid_message_id.filterxxxyyyzzz',
 			'event':'delivered',
 			'email':'email@example.com',
 			'timestamp':1249948800,
@@ -120,7 +120,7 @@ namespace StrongGrid.UnitTests
 		private const string CLICK_JSON = @"
 		{
 			'sg_event_id':'sendgrid_internal_event_id',
-			'sg_message_id':'sendgrid_internal_message_id',
+			'sg_message_id':'sendgrid_message_id.filterxxxyyyzzz',
 			'ip':'255.255.255.255',
 			'useragent':'Mozilla/5.0 (iPhone; CPU iPhone OS 7_1_2 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Version/7.0 Mobile/11D257 Safari/9537.53',
 			'event':'click',
@@ -147,7 +147,7 @@ namespace StrongGrid.UnitTests
 			'timestamp':1249948800,
 			'ip':'255.255.255.255',
 			'sg_event_id':'sendgrid_internal_event_id',
-			'sg_message_id':'sendgrid_internal_message_id',
+			'sg_message_id':'sendgrid_message_id.filterxxxyyyzzz',
 			'useragent':'Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)',
 			'event':'open',
 			'unique_arg_key':'unique_arg_value',
@@ -163,7 +163,7 @@ namespace StrongGrid.UnitTests
 		private const string SPAMREPORT_JSON = @"
 		{
 			'sg_event_id':'sendgrid_internal_event_id',
-			'sg_message_id':'sendgrid_internal_message_id',
+			'sg_message_id':'sendgrid_message_id.filterxxxyyyzzz',
 			'email':'email@example.com',
 			'timestamp':1249948800,
 			'unique_arg_key':'unique_arg_value',
@@ -174,7 +174,7 @@ namespace StrongGrid.UnitTests
 
 		private const string UNSUBSCRIBE_JSON = @"
 		{
-			'sg_message_id':'sendgrid_internal_message_id',
+			'sg_message_id':'sendgrid_message_id.filterxxxyyyzzz',
 			'email':'email@example.com',
 			'timestamp':1249948800,
 			'unique_arg_key':'unique_arg_value',
@@ -185,7 +185,7 @@ namespace StrongGrid.UnitTests
 
 		private const string GROUPUNSUBSCRIBE_JSON = @"
 		{
-			'sg_message_id':'sendgrid_internal_message_id',
+			'sg_message_id':'sendgrid_message_id.filterxxxyyyzzz',
 			'email':'email@example.com',
 			'timestamp':1249948800,
 			'unique_arg_key':'unique_arg_value',
@@ -198,7 +198,7 @@ namespace StrongGrid.UnitTests
 
 		private const string GROUPRESUBSCRIBE_JSON = @"
 		{
-			'sg_message_id':'sendgrid_internal_message_id',
+			'sg_message_id':'sendgrid_message_id.filterxxxyyyzzz',
 			'email':'email@example.com',
 			'timestamp':1249948800,
 			'asm_group_id': 1,
@@ -210,7 +210,7 @@ namespace StrongGrid.UnitTests
 			'ip':'255.255.255.255'
 		}";
 
-		private string INBOUND_EMAIL_WEBHOOK = @"--xYzZY
+		private const string INBOUND_EMAIL_WEBHOOK = @"--xYzZY
 Content-Disposition: form-data; name=""dkim""
 
 {@hotmail.com : pass}
@@ -457,8 +457,9 @@ Content-Disposition: form-data; name=""attachments""
 			result.Email.ShouldBe("email@example.com");
 			result.EventType.ShouldBe(EventType.Processed);
 			result.InternalEventId.ShouldBe("sendgrid_internal_event_id");
-			result.InternalMessageId.ShouldBe("sendgrid_internal_message_id");
+			result.InternalMessageId.ShouldBe("sendgrid_message_id.filterxxxyyyzzz");
 			result.IpAddress.ShouldBeNull();
+			result.MessageId.ShouldBe("sendgrid_message_id");
 			result.Newsletter.ShouldNotBeNull();
 			result.Newsletter.Id.ShouldBe("1943530");
 			result.Newsletter.SendId.ShouldBe("2308608");
@@ -489,8 +490,9 @@ Content-Disposition: form-data; name=""attachments""
 			result.Email.ShouldBe("email@example.com");
 			result.EventType.ShouldBe(EventType.Bounce);
 			result.InternalEventId.ShouldBe("sendgrid_internal_event_id");
-			result.InternalMessageId.ShouldBe("sendgrid_internal_message_id");
+			result.InternalMessageId.ShouldBe("sendgrid_message_id.filterxxxyyyzzz");
 			result.IpAddress.ShouldBe("127.0.0.1");
+			result.MessageId.ShouldBe("sendgrid_message_id");
 			result.Reason.ShouldBe("500 No Such User");
 			result.SmtpId.ShouldBe("<original-smtp-id@domain.com>");
 			result.Status.ShouldBe("5.0.0");
@@ -521,8 +523,9 @@ Content-Disposition: form-data; name=""attachments""
 			result.Email.ShouldBe("email@example.com");
 			result.EventType.ShouldBe(EventType.Deferred);
 			result.InternalEventId.ShouldBe("sendgrid_internal_event_id");
-			result.InternalMessageId.ShouldBe("sendgrid_internal_message_id");
+			result.InternalMessageId.ShouldBe("sendgrid_message_id.filterxxxyyyzzz");
 			result.IpAddress.ShouldBe("127.0.0.1");
+			result.MessageId.ShouldBe("sendgrid_message_id");
 			result.Newsletter.ShouldNotBeNull();
 			result.Newsletter.Id.ShouldBe("1943530");
 			result.Newsletter.SendId.ShouldBe("2308608");
@@ -553,8 +556,9 @@ Content-Disposition: form-data; name=""attachments""
 			result.Email.ShouldBe("email@example.com");
 			result.EventType.ShouldBe(EventType.Dropped);
 			result.InternalEventId.ShouldBe("sendgrid_internal_event_id");
-			result.InternalMessageId.ShouldBe("sendgrid_internal_message_id");
+			result.InternalMessageId.ShouldBe("sendgrid_message_id.filterxxxyyyzzz");
 			result.IpAddress.ShouldBeNull();
+			result.MessageId.ShouldBe("sendgrid_message_id");
 			result.Reason.ShouldBe("Bounced Address");
 			result.SmtpId.ShouldBe("<original-smtp-id@domain.com>");
 			result.Timestamp.ToUnixTime().ShouldBe(1249948800);
@@ -582,8 +586,9 @@ Content-Disposition: form-data; name=""attachments""
 			result.Email.ShouldBe("email@example.com");
 			result.EventType.ShouldBe(EventType.Delivered);
 			result.InternalEventId.ShouldBe("sendgrid_internal_event_id");
-			result.InternalMessageId.ShouldBe("sendgrid_internal_message_id");
+			result.InternalMessageId.ShouldBe("sendgrid_message_id.filterxxxyyyzzz");
 			result.IpAddress.ShouldBe("127.0.0.1");
+			result.MessageId.ShouldBe("sendgrid_message_id");
 			result.Newsletter.ShouldNotBeNull();
 			result.Newsletter.Id.ShouldBe("1943530");
 			result.Newsletter.SendId.ShouldBe("2308608");
@@ -614,8 +619,9 @@ Content-Disposition: form-data; name=""attachments""
 			result.Email.ShouldBe("email@example.com");
 			result.EventType.ShouldBe(EventType.Click);
 			result.InternalEventId.ShouldBe("sendgrid_internal_event_id");
-			result.InternalMessageId.ShouldBe("sendgrid_internal_message_id");
+			result.InternalMessageId.ShouldBe("sendgrid_message_id.filterxxxyyyzzz");
 			result.IpAddress.ShouldBe("255.255.255.255");
+			result.MessageId.ShouldBe("sendgrid_message_id");
 			result.Newsletter.ShouldNotBeNull();
 			result.Newsletter.Id.ShouldBe("1943530");
 			result.Newsletter.SendId.ShouldBe("2308608");
@@ -648,8 +654,9 @@ Content-Disposition: form-data; name=""attachments""
 			result.Email.ShouldBe("email@example.com");
 			result.EventType.ShouldBe(EventType.Open);
 			result.InternalEventId.ShouldBe("sendgrid_internal_event_id");
-			result.InternalMessageId.ShouldBe("sendgrid_internal_message_id");
+			result.InternalMessageId.ShouldBe("sendgrid_message_id.filterxxxyyyzzz");
 			result.IpAddress.ShouldBe("255.255.255.255");
+			result.MessageId.ShouldBe("sendgrid_message_id");
 			result.Newsletter.ShouldNotBeNull();
 			result.Newsletter.Id.ShouldBe("1943530");
 			result.Newsletter.SendId.ShouldBe("2308608");
@@ -678,8 +685,9 @@ Content-Disposition: form-data; name=""attachments""
 			result.Email.ShouldBe("email@example.com");
 			result.EventType.ShouldBe(EventType.SpamReport);
 			result.InternalEventId.ShouldBe("sendgrid_internal_event_id");
-			result.InternalMessageId.ShouldBe("sendgrid_internal_message_id");
+			result.InternalMessageId.ShouldBe("sendgrid_message_id.filterxxxyyyzzz");
 			result.IpAddress.ShouldBeNull();
+			result.MessageId.ShouldBe("sendgrid_message_id");
 			result.Timestamp.ToUnixTime().ShouldBe(1249948800);
 			result.UniqueArguments.ShouldNotBeNull();
 			result.UniqueArguments.Count.ShouldBe(1);
@@ -704,8 +712,9 @@ Content-Disposition: form-data; name=""attachments""
 			result.Email.ShouldBe("email@example.com");
 			result.EventType.ShouldBe(EventType.Unsubscribe);
 			result.InternalEventId.ShouldBeNull();
-			result.InternalMessageId.ShouldBe("sendgrid_internal_message_id");
+			result.InternalMessageId.ShouldBe("sendgrid_message_id.filterxxxyyyzzz");
 			result.IpAddress.ShouldBeNull();
+			result.MessageId.ShouldBe("sendgrid_message_id");
 			result.Timestamp.ToUnixTime().ShouldBe(1249948800);
 			result.UniqueArguments.ShouldNotBeNull();
 			result.UniqueArguments.Count.ShouldBe(1);
@@ -730,8 +739,9 @@ Content-Disposition: form-data; name=""attachments""
 			result.Email.ShouldBe("email@example.com");
 			result.EventType.ShouldBe(EventType.GroupUnsubscribe);
 			result.InternalEventId.ShouldBeNull();
-			result.InternalMessageId.ShouldBe("sendgrid_internal_message_id");
+			result.InternalMessageId.ShouldBe("sendgrid_message_id.filterxxxyyyzzz");
 			result.IpAddress.ShouldBe("255.255.255.255");
+			result.MessageId.ShouldBe("sendgrid_message_id");
 			result.Timestamp.ToUnixTime().ShouldBe(1249948800);
 			result.UniqueArguments.ShouldNotBeNull();
 			result.UniqueArguments.Count.ShouldBe(1);
@@ -756,8 +766,9 @@ Content-Disposition: form-data; name=""attachments""
 			result.Email.ShouldBe("email@example.com");
 			result.EventType.ShouldBe(EventType.GroupResubscribe);
 			result.InternalEventId.ShouldBeNull();
-			result.InternalMessageId.ShouldBe("sendgrid_internal_message_id");
+			result.InternalMessageId.ShouldBe("sendgrid_message_id.filterxxxyyyzzz");
 			result.IpAddress.ShouldBe("255.255.255.255");
+			result.MessageId.ShouldBe("sendgrid_message_id");
 			result.Timestamp.ToUnixTime().ShouldBe(1249948800);
 			result.UniqueArguments.ShouldNotBeNull();
 			result.UniqueArguments.Count.ShouldBe(1);

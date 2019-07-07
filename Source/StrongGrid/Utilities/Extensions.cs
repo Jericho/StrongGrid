@@ -182,23 +182,25 @@ namespace StrongGrid.Utilities
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="response">The response.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
+		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		public static Task<T> AsSendGridObject<T>(this IResponse response, string propertyName = null)
+		public static Task<T> AsSendGridObject<T>(this IResponse response, string propertyName = null, JsonConverter jsonConverter = null)
 		{
-			return response.Message.Content.AsSendGridObject<T>(propertyName);
+			return response.Message.Content.AsSendGridObject<T>(propertyName, jsonConverter);
 		}
 
 		/// <summary>Asynchronously retrieve the JSON encoded response body and convert it to a 'SendGrid' object of the desired type.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="request">The request.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
+		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		public static async Task<T> AsSendGridObject<T>(this IRequest request, string propertyName = null)
+		public static async Task<T> AsSendGridObject<T>(this IRequest request, string propertyName = null, JsonConverter jsonConverter = null)
 		{
 			var response = await request.AsMessage().ConfigureAwait(false);
-			return await response.Content.AsSendGridObject<T>(propertyName).ConfigureAwait(false);
+			return await response.Content.AsSendGridObject<T>(propertyName, jsonConverter).ConfigureAwait(false);
 		}
 
 		/// <summary>Set the body content of the HTTP request.</summary>
@@ -573,11 +575,15 @@ namespace StrongGrid.Utilities
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="httpContent">The content.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
+		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		internal static async Task<T> AsSendGridObject<T>(this HttpContent httpContent, string propertyName = null)
+		internal static async Task<T> AsSendGridObject<T>(this HttpContent httpContent, string propertyName = null, JsonConverter jsonConverter = null)
 		{
 			var responseContent = await httpContent.ReadAsStringAsync(null).ConfigureAwait(false);
+
+			var serializer = new JsonSerializer();
+			if (jsonConverter != null) serializer.Converters.Add(jsonConverter);
 
 			if (!string.IsNullOrEmpty(propertyName))
 			{
@@ -588,15 +594,15 @@ namespace StrongGrid.Utilities
 					throw new ArgumentException($"The response does not contain a field called '{propertyName}'", nameof(propertyName));
 				}
 
-				return jProperty.Value.ToObject<T>();
+				return jProperty.Value.ToObject<T>(serializer);
 			}
 			else if (typeof(T).IsArray)
 			{
-				return JArray.Parse(responseContent).ToObject<T>();
+				return JArray.Parse(responseContent).ToObject<T>(serializer);
 			}
 			else
 			{
-				return JObject.Parse(responseContent).ToObject<T>();
+				return JObject.Parse(responseContent).ToObject<T>(serializer);
 			}
 		}
 

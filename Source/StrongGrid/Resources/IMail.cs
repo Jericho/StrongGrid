@@ -36,6 +36,7 @@ namespace StrongGrid.Resources
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="ipPoolName">Name of the ip pool.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The message id.
@@ -67,6 +68,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default);
 
 		/// <summary>
@@ -93,6 +95,7 @@ namespace StrongGrid.Resources
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="ipPoolName">Name of the ip pool.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The message id.
@@ -125,6 +128,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default);
 
 		/// <summary>
@@ -148,6 +152,7 @@ namespace StrongGrid.Resources
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="ipPoolName">Name of the ip pool.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The message id.
@@ -177,6 +182,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default);
 
 		/// <summary>
@@ -202,6 +208,7 @@ namespace StrongGrid.Resources
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="ipPoolName">Name of the ip pool.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The message id.
@@ -234,6 +241,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default);
 
 		/// <summary>
@@ -258,6 +266,7 @@ namespace StrongGrid.Resources
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="ipPoolName">Name of the ip pool.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The message id.
@@ -288,6 +297,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default);
 
 		/// <summary>
@@ -314,6 +324,7 @@ namespace StrongGrid.Resources
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="ipPoolName">Name of the ip pool.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The message id.
@@ -346,6 +357,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default);
 
 		/// <summary>
@@ -369,6 +381,7 @@ namespace StrongGrid.Resources
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="ipPoolName">Name of the ip pool.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The message id.
@@ -398,6 +411,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default);
 
 		/// <summary>
@@ -423,6 +437,7 @@ namespace StrongGrid.Resources
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="ipPoolName">Name of the ip pool.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The message id.
@@ -454,6 +469,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default);
 
 		/// <summary>
@@ -476,6 +492,7 @@ namespace StrongGrid.Resources
 		/// <param name="ipPoolName">Name of the ip pool.</param>
 		/// <param name="mailSettings">The mail settings.</param>
 		/// <param name="trackingSettings">The tracking settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The message id.
@@ -500,6 +517,7 @@ namespace StrongGrid.Resources
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
 			TrackingSettings trackingSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default);
 	}
 }

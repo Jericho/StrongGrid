@@ -57,6 +57,7 @@ namespace StrongGrid.Resources
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="ipPoolName">Name of the ip pool.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The message id.
@@ -88,10 +89,11 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
-			return SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, cancellationToken);
+			return SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -118,6 +120,7 @@ namespace StrongGrid.Resources
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="ipPoolName">Name of the ip pool.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The message id.
@@ -150,10 +153,11 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
-			return SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, templateId, substitutions, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, cancellationToken);
+			return SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, templateId, substitutions, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -177,6 +181,7 @@ namespace StrongGrid.Resources
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="ipPoolName">Name of the ip pool.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The message id.
@@ -206,10 +211,11 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
-			return SendToMultipleRecipientsAsync(recipients, from, dynamicTemplateId, dynamicData, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, cancellationToken);
+			return SendToMultipleRecipientsAsync(recipients, from, dynamicTemplateId, dynamicData, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -235,6 +241,7 @@ namespace StrongGrid.Resources
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="ipPoolName">Name of the ip pool.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The message id.
@@ -267,10 +274,11 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
-			return SendAmpEmailToMultipleRecipientsAsync(recipients, from, subject, ampContent, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, cancellationToken);
+			return SendAmpEmailToMultipleRecipientsAsync(recipients, from, subject, ampContent, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -295,6 +303,7 @@ namespace StrongGrid.Resources
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="ipPoolName">Name of the ip pool.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The message id.
@@ -325,6 +334,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default)
 		{
 			var personalizations = new[]
@@ -351,7 +361,7 @@ namespace StrongGrid.Resources
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return SendAsync(personalizations, subject, contents, from, replyTo, attachments, null, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, cancellationToken);
+			return SendAsync(personalizations, subject, contents, from, replyTo, attachments, null, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -378,6 +388,7 @@ namespace StrongGrid.Resources
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="ipPoolName">Name of the ip pool.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The message id.
@@ -410,6 +421,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default)
 		{
 			var personalizations = new[]
@@ -437,7 +449,7 @@ namespace StrongGrid.Resources
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return SendAsync(personalizations, subject, contents, from, replyTo, attachments, templateId, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, cancellationToken);
+			return SendAsync(personalizations, subject, contents, from, replyTo, attachments, templateId, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -461,6 +473,7 @@ namespace StrongGrid.Resources
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="ipPoolName">Name of the ip pool.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The message id.
@@ -490,6 +503,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default)
 		{
 			if (!Template.IsDynamic(dynamicTemplateId))
@@ -518,7 +532,7 @@ namespace StrongGrid.Resources
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return SendAsync(personalizations, null, null, from, replyTo, attachments, dynamicTemplateId, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, cancellationToken);
+			return SendAsync(personalizations, null, null, from, replyTo, attachments, dynamicTemplateId, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -544,6 +558,7 @@ namespace StrongGrid.Resources
 		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
 		/// <param name="ipPoolName">Name of the ip pool.</param>
 		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The message id.
@@ -575,6 +590,7 @@ namespace StrongGrid.Resources
 			UnsubscribeOptions unsubscribeOptions = null,
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default)
 		{
 			var personalizations = new[]
@@ -602,7 +618,7 @@ namespace StrongGrid.Resources
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return SendAsync(personalizations, subject, contents, from, replyTo, attachments, null, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, cancellationToken);
+			return SendAsync(personalizations, subject, contents, from, replyTo, attachments, null, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -625,6 +641,7 @@ namespace StrongGrid.Resources
 		/// <param name="ipPoolName">Name of the ip pool.</param>
 		/// <param name="mailSettings">The mail settings.</param>
 		/// <param name="trackingSettings">The tracking settings.</param>
+		/// <param name="priority">The priority.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The message id.
@@ -649,6 +666,7 @@ namespace StrongGrid.Resources
 			string ipPoolName = null,
 			MailSettings mailSettings = null,
 			TrackingSettings trackingSettings = null,
+			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default)
 		{
 			if (personalizations == null || !personalizations.Any())
@@ -671,23 +689,23 @@ namespace StrongGrid.Resources
 				// Avoid duplicate addresses. This is important because SendGrid does not throw any
 				// exception when a recipient is duplicated (which gives you the impression the email
 				// was sent) but it does not actually send the email
-				personalization.To = personalization.To?
+				personalization.To = personalization.To
 					.Distinct(emailAddressComparer)
 					.ToArray();
-				personalization.Cc = personalization.Cc?
+				personalization.Cc = personalization.Cc
 					.Distinct(emailAddressComparer)
 					.Except(personalization.To, emailAddressComparer)
 					.ToArray();
-				personalization.Bcc = personalization.Bcc?
+				personalization.Bcc = personalization.Bcc
 					.Distinct(emailAddressComparer)
 					.Except(personalization.To, emailAddressComparer)
 					.Except(personalization.Cc, emailAddressComparer)
 					.ToArray();
 
 				// SendGrid doesn't like empty arrays
-				if (!(personalization.To?.Any() ?? true)) personalization.To = null;
-				if (!(personalization.Cc?.Any() ?? true)) personalization.Cc = null;
-				if (!(personalization.Bcc?.Any() ?? true)) personalization.Bcc = null;
+				if (!personalization.To.Any()) personalization.To = null;
+				if (!personalization.Cc.Any()) personalization.Cc = null;
+				if (!personalization.Bcc.Any()) personalization.Bcc = null;
 
 				// Surround recipient names with double-quotes if necessary
 				personalization.To = EnsureRecipientsNamesAreQuoted(personalization.To);
@@ -735,6 +753,27 @@ namespace StrongGrid.Resources
 				}
 
 				data.Add("sections", sctns);
+			}
+
+			if (priority == MailPriority.Low)
+			{
+				var lowPriorityHeaders = new KeyValuePair<string, string>[]
+				{
+					new KeyValuePair<string, string>("X-Priority", "5"),
+					new KeyValuePair<string, string>("Priority", "non-urgent"),
+					new KeyValuePair<string, string>("Importance", "low")
+				};
+				headers = headers == null ? lowPriorityHeaders : headers.Concat(lowPriorityHeaders);
+			}
+			else if (priority == MailPriority.High)
+			{
+				var highPriorityHeaders = new KeyValuePair<string, string>[]
+				{
+					new KeyValuePair<string, string>("X-Priority", "1"),
+					new KeyValuePair<string, string>("Priority", "urgent"),
+					new KeyValuePair<string, string>("Importance", "high")
+				};
+				headers = headers == null ? highPriorityHeaders : headers.Concat(highPriorityHeaders);
 			}
 
 			if (headers != null && headers.Any())
