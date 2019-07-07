@@ -1,5 +1,4 @@
-﻿using HeyRed.Mime;
-using StrongGrid.Models;
+﻿using StrongGrid.Models;
 using System;
 using System.IO;
 
@@ -8,12 +7,9 @@ namespace StrongGrid.Utilities
 	/// <summary>
 	/// Utility class grouping methods intendend to make interacting with email attachments easier.
 	/// </summary>
+	[Obsolete("Use the Attachment class")]
 	public static class SendGridAttachment
 	{
-		// SendGrid doesn't limit the size of an attachment, but they limit the total size of an email to 30MB
-		// Therefore it's safe to assume that a given attachment cannot be larger than 30MB
-		private const int MAX_ATTACHMENT_SIZE = 30 * 1024 * 1024;
-
 		/// <summary>
 		/// Convenience method that creates an attachment from a local file.
 		/// </summary>
@@ -23,17 +19,10 @@ namespace StrongGrid.Utilities
 		/// <returns>The attachment.</returns>
 		/// <exception cref="FileNotFoundException">Unable to find the local file.</exception>
 		/// <exception cref="Exception">File exceeds the size limit.</exception>
+		[Obsolete("Use the FromLocalFile method in the Attachment class")]
 		public static Attachment FromLocalFile(string filePath, string mimeType = null, string contentId = null)
 		{
-			using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-			{
-				if (fs.Length > MAX_ATTACHMENT_SIZE) throw new Exception("Attachment exceeds the size limit");
-
-				var content = new byte[fs.Length];
-				fs.Read(content, 0, Convert.ToInt32(fs.Length));
-
-				return FromBinary(content, Path.GetFileName(filePath), mimeType, contentId);
-			}
+			return Attachment.FromLocalFile(filePath, mimeType, contentId);
 		}
 
 		/// <summary>
@@ -45,18 +34,10 @@ namespace StrongGrid.Utilities
 		/// <param name="contentId">Optional: the unique identifier for this attachment IF AND ONLY IF the attachment should be embedded in the body of the email. This is useful, for example, if you want to embbed an image to be displayed in the HTML content. For standard attachment, this value should be null.</param>
 		/// <returns>The attachment.</returns>
 		/// <exception cref="Exception">File exceeds the size limit.</exception>
+		[Obsolete("Use the FromStream method in the Attachment class")]
 		public static Attachment FromStream(Stream contentStream, string fileName, string mimeType = null, string contentId = null)
 		{
-			if (contentStream.Length > MAX_ATTACHMENT_SIZE) throw new Exception("Attachment exceeds the size limit");
-
-			var content = (byte[])null;
-			using (var ms = new MemoryStream())
-			{
-				contentStream.CopyTo(ms);
-				content = ms.ToArray();
-			}
-
-			return FromBinary(content, fileName, mimeType, contentId);
+			return Attachment.FromStream(contentStream, fileName, mimeType, contentId);
 		}
 
 		/// <summary>
@@ -68,23 +49,10 @@ namespace StrongGrid.Utilities
 		/// <param name="contentId">Optional: the unique identifier for this attachment IF AND ONLY IF the attachment should be embedded in the body of the email. This is useful, for example, if you want to embbed an image to be displayed in the HTML content. For standard attachment, this value should be null.</param>
 		/// <returns>The attachment.</returns>
 		/// <exception cref="Exception">File exceeds the size limit.</exception>
+		[Obsolete("Use the FromBinary method in the Attachment class")]
 		public static Attachment FromBinary(byte[] content, string fileName, string mimeType = null, string contentId = null)
 		{
-			if (content.Length > MAX_ATTACHMENT_SIZE) throw new Exception("Attachment exceeds the size limit");
-
-			if (string.IsNullOrEmpty(mimeType))
-			{
-				mimeType = MimeTypesMap.GetMimeType(fileName);
-			}
-
-			return new Attachment()
-			{
-				Content = Convert.ToBase64String(content),
-				ContentId = contentId,
-				Disposition = string.IsNullOrEmpty(contentId) ? "attachment" : "inline",
-				FileName = fileName,
-				Type = mimeType
-			};
+			return Attachment.FromBinary(content, fileName, mimeType, contentId);
 		}
 	}
 }

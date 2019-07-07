@@ -1,4 +1,4 @@
-﻿using HttpMultipartParser;
+using HttpMultipartParser;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StrongGrid.Models;
@@ -202,11 +202,7 @@ namespace StrongGrid
 			// Split on commas that have an even number of double-quotes following them
 			const string SPLIT_EMAIL_ADDRESSES = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
 
-			/*
-				When we stop supporting .NET 4.5.2 we will be able to use the following:
-				if (string.IsNullOrEmpty(rawEmailAddresses)) return Array.Empty<MailAddress>();
-			*/
-			if (string.IsNullOrEmpty(rawEmailAddresses)) return Enumerable.Empty<MailAddress>().ToArray();
+			if (string.IsNullOrEmpty(rawEmailAddresses)) return Array.Empty<MailAddress>();
 
 			var rawEmails = Regex.Split(rawEmailAddresses, SPLIT_EMAIL_ADDRESSES);
 			var addresses = rawEmails

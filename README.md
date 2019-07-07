@@ -69,6 +69,25 @@ var proxy = new WebProxy("http://myproxy:1234");
 var client = new Client(apiKey, proxy);
 ```
 
+One of the most common scenarios is to send transactional emails. 
+
+Here are a few examples:
+```csharp
+// Send an email to a single recipient
+var messageId = await client.Mail.SendToSingleRecipientAsync(to, from, subject, html, text).ConfigureAwait(false);
+
+// Send an email to multiple recipients
+var messageId = await client.Mail.SendToMultipleRecipientsAsync(new[] { to1, to2, to3 }, from, subject, html, text).ConfigureAwait(false);
+
+// Include attachments when sending an email
+var attachments = new[]
+{
+	Attachment.FromLocalFile(@"C:\MyDocuments\MySpreadsheet.xlsx"),
+	Attachment.FromLocalFile(@"C:\temp\Headshot.jpg")
+};
+var messageId = await client.Mail.SendToSingleRecipientAsync(to, from, subject, html, text, attachments: attachments).ConfigureAwait(false);
+```
+
 You have access to numerous 'resources' (such as Contacts, Lists, Segments, Settings, SenderAuthentication, etc) off of the Client and each resource offers several methods to such as retrieve, create, update, delete, etc. 
 
 Here are a few example:
