@@ -149,7 +149,6 @@ Task("Restore-NuGet-Packages")
 	DotNetCoreRestore("./Source/", new DotNetCoreRestoreSettings
 	{
 		Sources = new [] {
-			"https://www.myget.org/F/xunit/api/v3/index.json",
 			"https://api.nuget.org/v3/index.json",
 		}
 	});
