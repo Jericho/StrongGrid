@@ -96,6 +96,12 @@ namespace StrongGrid
 		IEmailActivities EmailActivities { get; }
 
 		/// <summary>
+		/// Gets the validation resource.
+		/// </summary>
+		/// <value>The email validation.</value>
+		IEmailValidation EmailValidation { get; }
+
+		/// <summary>
 		/// Gets the GlobalSuppressions resource.
 		/// </summary>
 		/// <value>

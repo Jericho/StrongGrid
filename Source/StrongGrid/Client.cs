@@ -131,6 +131,11 @@ namespace StrongGrid
 		public IEmailActivities EmailActivities { get; private set; }
 
 		/// <summary>
+		/// Gets the validation resource.
+		/// </summary>
+		public IEmailValidation EmailValidation { get; private set; }
+
+		/// <summary>
 		/// Gets the GlobalSuppressions resource.
 		/// </summary>
 		/// <value>
@@ -427,6 +432,7 @@ namespace StrongGrid
 			Contacts = new Contacts(_fluentClient);
 			CustomFields = new CustomFields(_fluentClient);
 			EmailActivities = new EmailActivities(_fluentClient);
+			EmailValidation = new EmailValidation(_fluentClient);
 			GlobalSuppressions = new GlobalSuppressions(_fluentClient);
 			InvalidEmails = new InvalidEmails(_fluentClient);
 			IpAddresses = new IpAddresses(_fluentClient);

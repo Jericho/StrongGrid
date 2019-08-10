@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace StrongGrid.Models
 {
@@ -8,7 +8,7 @@ namespace StrongGrid.Models
 	public class ValidationResult
 	{
 		/// <summary>
-		/// Gets or sets a value indicating whetherthis validation is valid.
+		/// Gets or sets a value indicating whether this validation is valid.
 		/// </summary>
 		/// <value>
 		///   <c>true</c> if this instance is valid; otherwise, <c>false</c>.
