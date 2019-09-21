@@ -5,7 +5,7 @@
 #tool nuget:?package=GitVersion.CommandLine&version=5.0.1
 #tool nuget:?package=GitReleaseManager&version=0.8.0
 #tool nuget:?package=OpenCover&version=4.7.922
-#tool nuget:?package=ReportGenerator&version=4.2.19
+#tool nuget:?package=ReportGenerator&version=4.2.20
 #tool nuget:?package=coveralls.io&version=1.4.2
 #tool nuget:?package=xunit.runner.console&version=2.4.1
 
@@ -35,6 +35,7 @@ var nuGetApiKey = EnvironmentVariable("NUGET_API_KEY");
 var myGetApiUrl = EnvironmentVariable("MYGET_API_URL");
 var myGetApiKey = EnvironmentVariable("MYGET_API_KEY");
 
+var gitHubToken = EnvironmentVariable("GITHUB_TOKEN");
 var gitHubUserName = EnvironmentVariable("GITHUB_USERNAME");
 var gitHubPassword = EnvironmentVariable("GITHUB_PASSWORD");
 
@@ -95,11 +96,22 @@ Setup(context =>
 		string.IsNullOrEmpty(nuGetApiKey) ? "[NULL]" : new string('*', nuGetApiKey.Length)
 	);
 
-	Information("GitHub Info:\r\n\tRepo: {0}\r\n\tUserName: {1}\r\n\tPassword: {2}",
-		gitHubRepo,
-		gitHubUserName,
-		string.IsNullOrEmpty(gitHubPassword) ? "[NULL]" : new string('*', gitHubPassword.Length)
-	);
+	if (!string.IsNullOrEmpty(gitHubToken))
+	{
+		Information("GitHub Info:\r\n\tRepo: {0}\r\n\tUserName: {1}\r\n\tToken: {2}",
+			gitHubRepo,
+			gitHubUserName,
+			new string('*', gitHubToken.Length)
+		);
+	}
+	else
+	{
+		Information("GitHub Info:\r\n\tRepo: {0}\r\n\tUserName: {1}\r\n\tPassword: {2}",
+			gitHubRepo,
+			gitHubUserName,
+			string.IsNullOrEmpty(gitHubPassword) ? "[NULL]" : new string('*', gitHubPassword.Length)
+		);
+	}
 });
 
 Teardown(context =>
@@ -301,15 +313,25 @@ Task("Publish-MyGet")
 Task("Create-Release-Notes")
 	.Does(() =>
 {
-	if(string.IsNullOrEmpty(gitHubUserName)) throw new InvalidOperationException("Could not resolve GitHub user name.");
-	if(string.IsNullOrEmpty(gitHubPassword)) throw new InvalidOperationException("Could not resolve GitHub password.");
-
-	GitReleaseManagerCreate(gitHubUserName, gitHubPassword, gitHubUserName, gitHubRepo, new GitReleaseManagerCreateSettings {
+	var settings = new GitReleaseManagerCreateSettings
+	{
 		Name              = milestone,
 		Milestone         = milestone,
 		Prerelease        = false,
 		TargetCommitish   = "master"
-	});
+	};
+
+	if (!string.IsNullOrEmpty(gitHubToken))
+	{
+		GitReleaseManagerCreate(gitHubUserName, gitHubToken, gitHubRepo, settings);
+	}
+	else
+	{
+		if(string.IsNullOrEmpty(gitHubUserName)) throw new InvalidOperationException("Could not resolve GitHub user name.");
+		if(string.IsNullOrEmpty(gitHubPassword)) throw new InvalidOperationException("Could not resolve GitHub password.");
+	
+		GitReleaseManagerCreate(gitHubUserName, gitHubPassword, gitHubUserName, gitHubRepo, settings);
+	}
 });
 
 Task("Publish-GitHub-Release")
@@ -320,10 +342,25 @@ Task("Publish-GitHub-Release")
 	.WithCriteria(() => isTagged)
 	.Does(() =>
 {
-	if(string.IsNullOrEmpty(gitHubUserName)) throw new InvalidOperationException("Could not resolve GitHub user name.");
-	if(string.IsNullOrEmpty(gitHubPassword)) throw new InvalidOperationException("Could not resolve GitHub password.");
+	var settings = new GitReleaseManagerCreateSettings
+	{
+		Name              = milestone,
+		Milestone         = milestone,
+		Prerelease        = false,
+		TargetCommitish   = "master"
+	};
 
-	GitReleaseManagerClose(gitHubUserName, gitHubPassword, gitHubUserName, gitHubRepo, milestone);
+	if (!string.IsNullOrEmpty(gitHubToken))
+	{
+		GitReleaseManagerClose(gitHubToken, gitHubUserName, gitHubRepo, milestone);
+	}
+	else
+	{
+		if(string.IsNullOrEmpty(gitHubUserName)) throw new InvalidOperationException("Could not resolve GitHub user name.");
+		if(string.IsNullOrEmpty(gitHubPassword)) throw new InvalidOperationException("Could not resolve GitHub password.");
+	
+		GitReleaseManagerClose(gitHubUserName, gitHubPassword, gitHubUserName, gitHubRepo, milestone);
+	}
 });
 
 
