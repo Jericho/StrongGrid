@@ -1,8 +1,8 @@
 using HeyRed.Mime;
 using Newtonsoft.Json;
 using System;
-using System.Buffers;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace StrongGrid.Models
@@ -100,29 +100,11 @@ namespace StrongGrid.Models
 			if (contentStream == null) throw new ArgumentNullException(nameof(contentStream));
 			if (!contentStream.CanRead) throw new ArgumentException("The content stream is not readable", nameof(contentStream));
 
-			var content = new StringBuilder();
-			byte[] buffer = ArrayPool<byte>.Shared.Rent(BUFFER_SIZE);
-			try
+			using (var base64ContentStream = new CryptoStream(contentStream, new ToBase64Transform(), CryptoStreamMode.Read))
+			using (var reader = new StreamReader(base64ContentStream))
 			{
-				var bytesRead = contentStream.Read(buffer, 0, BUFFER_SIZE);
-				while (bytesRead > 0)
-				{
-					content.Append(Convert.ToBase64String(buffer, 0, bytesRead));
-					if (content.Length > MAX_ATTACHMENT_SIZE) throw new Exception("Content exceeds the size limit");
-
-					bytesRead = contentStream.Read(buffer, 0, BUFFER_SIZE);
-				}
+				return FromBase64String(reader.ReadToEnd(), fileName, mimeType, contentId);
 			}
-			catch (Exception)
-			{
-				throw;
-			}
-			finally
-			{
-				ArrayPool<byte>.Shared.Return(buffer);
-			}
-
-			return FromBase64String(content.ToString(), fileName, mimeType, contentId);
 		}
 
 		/// <summary>
