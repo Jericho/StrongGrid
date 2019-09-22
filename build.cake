@@ -323,7 +323,7 @@ Task("Create-Release-Notes")
 
 	if (!string.IsNullOrEmpty(gitHubToken))
 	{
-		GitReleaseManagerCreate(gitHubUserName, gitHubToken, gitHubRepo, settings);
+		GitReleaseManagerCreate(gitHubToken, gitHubUserName, gitHubRepo, settings);
 	}
 	else
 	{
