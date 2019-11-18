@@ -14,7 +14,7 @@ namespace StrongGrid.Models
 		/// The name.
 		/// </value>
 		[JsonProperty("reputation", NullValueHandling = NullValueHandling.Ignore)]
-		public float Reputation{ get; set; }
+		public float Reputation { get; set; }
 
 		/// <summary>
 		/// Gets or sets the username.
