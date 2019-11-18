@@ -57,6 +57,22 @@ namespace StrongGrid.UnitTests.Resources
 		  'email': 'test@example.com',
 		  'frequency': 500
 		}";
+		private const string SINGLE_REPUTATION_JSON = @"[
+		  {
+			'username': 'example_subuser',
+			'reputation': 99
+		  }
+		]";
+		private const string MULTIPLE_REPUTATIONS_JSON = @"[
+		  {
+			'username': 'example_subuser',
+			'reputation': 99
+		  },
+		  {
+			'username': 'example_subuser2',
+			'reputation': 95.2
+		  }
+		]";
 
 		#endregion
 
@@ -345,6 +361,50 @@ namespace StrongGrid.UnitTests.Resources
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
+		}
+
+		[Fact]
+		public async Task GetSenderReputationAsync()
+		{
+			//Arrange
+			var usernames = new[] { "example_subuser" };
+
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "reputations")).Respond("application/json", SINGLE_REPUTATION_JSON);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var subusers = new Subusers(client);
+
+			// Act
+			var result = await subusers.GetSenderReputationsAsync(usernames, CancellationToken.None).ConfigureAwait(false);
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(1);
+		}
+
+		[Fact]
+		public async Task GetSenderReputationsAsync()
+		{
+			//Arrange
+			var usernames = new[] { "example_subuser", "example_subuser2" };
+
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "reputations")).Respond("application/json", MULTIPLE_REPUTATIONS_JSON);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var subusers = new Subusers(client);
+
+			// Act
+			var result = await subusers.GetSenderReputationsAsync(usernames, CancellationToken.None).ConfigureAwait(false);
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(2);
 		}
 	}
 }
