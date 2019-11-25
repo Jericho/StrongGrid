@@ -1,11 +1,11 @@
 // Install addins.
-#addin nuget:?package=Cake.Coveralls&version=0.9.0
+#addin nuget:?package=Cake.Coveralls&version=0.10.1
 
 // Install tools.
-#tool nuget:?package=GitVersion.CommandLine&version=5.0.1
-#tool nuget:?package=GitReleaseManager&version=0.8.0
+#tool nuget:?package=GitVersion.CommandLine&version=5.1.2
+#tool nuget:?package=GitReleaseManager&version=0.9.0
 #tool nuget:?package=OpenCover&version=4.7.922
-#tool nuget:?package=ReportGenerator&version=4.2.20
+#tool nuget:?package=ReportGenerator&version=4.3.6
 #tool nuget:?package=coveralls.io&version=1.4.2
 #tool nuget:?package=xunit.runner.console&version=2.4.1
 
@@ -29,15 +29,16 @@ var testCoverageFilter = "+[StrongGrid]* -[StrongGrid]StrongGrid.Properties.* -[
 var testCoverageExcludeByAttribute = "*.ExcludeFromCodeCoverage*";
 var testCoverageExcludeByFile = "*/*Designer.cs;*/*AssemblyInfo.cs";
 
-var nuGetApiUrl = EnvironmentVariable("NUGET_API_URL");
-var nuGetApiKey = EnvironmentVariable("NUGET_API_KEY");
+var nuGetApiUrl = Argument<string>("NUGET_API_URL", EnvironmentVariable("NUGET_API_URL"));
+var nuGetApiKey = Argument<string>("NUGET_API_KEY", EnvironmentVariable("NUGET_API_KEY"));
 
-var myGetApiUrl = EnvironmentVariable("MYGET_API_URL");
-var myGetApiKey = EnvironmentVariable("MYGET_API_KEY");
+var myGetApiUrl = Argument<string>("MYGET_API_URL", EnvironmentVariable("MYGET_API_URL"));
+var myGetApiKey = Argument<string>("MYGET_API_KEY", EnvironmentVariable("MYGET_API_KEY"));
 
-var gitHubToken = EnvironmentVariable("GITHUB_TOKEN");
-var gitHubUserName = EnvironmentVariable("GITHUB_USERNAME");
-var gitHubPassword = EnvironmentVariable("GITHUB_PASSWORD");
+var gitHubToken = Argument<string>("GITHUB_TOKEN", EnvironmentVariable("GITHUB_TOKEN"));
+var gitHubUserName = Argument<string>("GITHUB_USERNAME", EnvironmentVariable("GITHUB_USERNAME"));
+var gitHubPassword = Argument<string>("GITHUB_PASSWORD", EnvironmentVariable("GITHUB_PASSWORD"));
+var gitHubRepoOwner = Argument<string>("GITHUB_REPOOWNER", EnvironmentVariable("GITHUB_REPOOWNER") ?? gitHubUserName);
 
 var sourceFolder = "./Source/";
 
@@ -46,11 +47,11 @@ var codeCoverageDir = outputDir + "CodeCoverage/";
 var unitTestsProject = sourceFolder + libraryName + ".UnitTests/" + libraryName + ".UnitTests.csproj";
 
 var versionInfo = GitVersion(new GitVersionSettings() { OutputType = GitVersionOutput.Json });
-var milestone = string.Concat("v", versionInfo.MajorMinorPatch);
+var milestone = versionInfo.MajorMinorPatch;
 var cakeVersion = typeof(ICakeContext).Assembly.GetName().Version.ToString();
 var isLocalBuild = BuildSystem.IsLocalBuild;
 var isMainBranch = StringComparer.OrdinalIgnoreCase.Equals("master", BuildSystem.AppVeyor.Environment.Repository.Branch);
-var isMainRepo = StringComparer.OrdinalIgnoreCase.Equals(gitHubUserName + "/" + gitHubRepo, BuildSystem.AppVeyor.Environment.Repository.Name);
+var isMainRepo = StringComparer.OrdinalIgnoreCase.Equals(gitHubRepoOwner + "/" + gitHubRepo, BuildSystem.AppVeyor.Environment.Repository.Name);
 var isPullRequest = BuildSystem.AppVeyor.Environment.PullRequest.IsPullRequest;
 var isTagged = (
 	BuildSystem.AppVeyor.Environment.Repository.Tag.IsTag &&
@@ -99,7 +100,7 @@ Setup(context =>
 	if (!string.IsNullOrEmpty(gitHubToken))
 	{
 		Information("GitHub Info:\r\n\tRepo: {0}\r\n\tUserName: {1}\r\n\tToken: {2}",
-			gitHubRepo,
+			gitHubRepoOwner + "/" + gitHubRepo,
 			gitHubUserName,
 			new string('*', gitHubToken.Length)
 		);
@@ -107,7 +108,7 @@ Setup(context =>
 	else
 	{
 		Information("GitHub Info:\r\n\tRepo: {0}\r\n\tUserName: {1}\r\n\tPassword: {2}",
-			gitHubRepo,
+			gitHubRepoOwner + "/" + gitHubRepo,
 			gitHubUserName,
 			string.IsNullOrEmpty(gitHubPassword) ? "[NULL]" : new string('*', gitHubPassword.Length)
 		);
@@ -323,14 +324,14 @@ Task("Create-Release-Notes")
 
 	if (!string.IsNullOrEmpty(gitHubToken))
 	{
-		GitReleaseManagerCreate(gitHubToken, gitHubUserName, gitHubRepo, settings);
+		GitReleaseManagerCreate(gitHubToken, gitHubRepoOwner, gitHubRepo, settings);
 	}
 	else
 	{
 		if(string.IsNullOrEmpty(gitHubUserName)) throw new InvalidOperationException("Could not resolve GitHub user name.");
 		if(string.IsNullOrEmpty(gitHubPassword)) throw new InvalidOperationException("Could not resolve GitHub password.");
 	
-		GitReleaseManagerCreate(gitHubUserName, gitHubPassword, gitHubUserName, gitHubRepo, settings);
+		GitReleaseManagerCreate(gitHubUserName, gitHubPassword, gitHubRepoOwner, gitHubRepo, settings);
 	}
 });
 
@@ -352,14 +353,14 @@ Task("Publish-GitHub-Release")
 
 	if (!string.IsNullOrEmpty(gitHubToken))
 	{
-		GitReleaseManagerClose(gitHubToken, gitHubUserName, gitHubRepo, milestone);
+		GitReleaseManagerClose(gitHubToken, gitHubRepoOwner, gitHubRepo, milestone);
 	}
 	else
 	{
 		if(string.IsNullOrEmpty(gitHubUserName)) throw new InvalidOperationException("Could not resolve GitHub user name.");
 		if(string.IsNullOrEmpty(gitHubPassword)) throw new InvalidOperationException("Could not resolve GitHub password.");
 	
-		GitReleaseManagerClose(gitHubUserName, gitHubPassword, gitHubUserName, gitHubRepo, milestone);
+		GitReleaseManagerClose(gitHubUserName, gitHubPassword, gitHubRepoOwner, gitHubRepo, milestone);
 	}
 });
 
