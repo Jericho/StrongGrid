@@ -62,6 +62,68 @@ namespace StrongGrid
 		}
 
 		/// <summary>
+		/// Parses the inbound email webhook asynchronously.
+		/// </summary>
+		/// <param name="stream">The stream.</param>
+		/// <returns>The <see cref="InboundEmail"/>.</returns>
+		public async Task<InboundEmail> ParseInboundEmailWebhookAsync(Stream stream)
+		{
+			// We need to be able to rewind the stream.
+			// Therefore, we must make a copy of the stream if it doesn't allow changing the position
+			if (!stream.CanSeek)
+			{
+				using (var ms = new MemoryStream())
+				{
+					await stream.CopyToAsync(ms).ConfigureAwait(false);
+					return await ParseInboundEmailWebhookAsync(ms).ConfigureAwait(false);
+				}
+			}
+
+			// It's important to rewind the stream
+			stream.Position = 0;
+
+			// Asynchronously parse the multipart content received from SendGrid
+			var parser = await MultipartFormDataParser.ParseAsync(stream, Encoding.UTF8).ConfigureAwait(false);
+
+			// Convert the 'charset' from a string into array of KeyValuePair
+			var charsetsAsJObject = JObject.Parse(parser.GetParameterValue("charsets", "{}"));
+			var charsets = charsetsAsJObject
+				.Properties()
+				.Select(prop =>
+				{
+					var key = prop.Name;
+					var value = Encoding.GetEncoding(prop.Value.ToString());
+					return new KeyValuePair<string, Encoding>(key, value);
+				}).ToArray();
+
+			// Create a dictionary of parsers, one parser for each desired encoding.
+			// This is necessary because MultipartFormDataParser can only handle one
+			// encoding and SendGrid can use different encodings for parameters such
+			// as "from", "to", "text" and "html".
+			var encodedParsers = charsets
+				.Where(c => c.Value != Encoding.UTF8)
+				.Select(c => c.Value)
+				.Distinct()
+				.Select(async encoding =>
+				{
+					stream.Position = 0; // It's important to rewind the stream
+					return new
+					{
+						Encoding = encoding,
+						Parser = await MultipartFormDataParser.ParseAsync(stream, encoding).ConfigureAwait(false)
+					};
+				})
+				.Select(r => r.Result)
+				.Union(new[]
+				{
+					new { Encoding = Encoding.UTF8, Parser = parser }
+				})
+				.ToDictionary(ep => ep.Encoding, ep => ep.Parser);
+
+			return ParseInboundEmail(encodedParsers, charsets);
+		}
+
+		/// <summary>
 		/// Parses the inbound email webhook.
 		/// </summary>
 		/// <param name="stream">The stream.</param>
@@ -83,45 +145,7 @@ namespace StrongGrid
 			stream.Position = 0;
 
 			// Parse the multipart content received from SendGrid
-			var parser = new MultipartFormDataParser(stream, Encoding.UTF8);
-
-			// Convert the 'headers' from a string into array of KeyValuePair
-			var headers = parser
-				.GetParameterValue("headers", string.Empty)
-				.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries)
-				.Select(header =>
-				{
-					var splitHeader = header.Split(new[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
-					var key = splitHeader[0];
-					var value = splitHeader.Length >= 2 ? splitHeader[1] : null;
-					return new KeyValuePair<string, string>(key, value);
-				}).ToArray();
-
-			// Raw email
-			var rawEmail = parser.GetParameterValue("email", string.Empty);
-
-			// Combine the 'attachment-info' and Files into an array of Attachments
-			var attachmentInfoAsJObject = JObject.Parse(parser.GetParameterValue("attachment-info", "{}"));
-			var attachments = attachmentInfoAsJObject
-				.Properties()
-				.Select(prop =>
-				{
-					var attachment = prop.Value.ToObject<InboundEmailAttachment>();
-					attachment.Id = prop.Name;
-
-					var file = parser.Files.FirstOrDefault(f => f.Name == prop.Name);
-					if (file != null)
-					{
-						attachment.Data = file.Data;
-						if (string.IsNullOrEmpty(attachment.ContentType)) attachment.ContentType = file.ContentType;
-						if (string.IsNullOrEmpty(attachment.FileName)) attachment.FileName = file.FileName;
-					}
-
-					return attachment;
-				}).ToArray();
-
-			// Convert the 'envelope' from a JSON string into a strongly typed object
-			var envelope = JsonConvert.DeserializeObject<InboundEmailEnvelope>(parser.GetParameterValue("envelope", "{}"));
+			var parser = MultipartFormDataParser.Parse(stream, Encoding.UTF8);
 
 			// Convert the 'charset' from a string into array of KeyValuePair
 			var charsetsAsJObject = JObject.Parse(parser.GetParameterValue("charsets", "{}"));
@@ -148,7 +172,7 @@ namespace StrongGrid
 					return new
 					{
 						Encoding = encoding,
-						Parser = new MultipartFormDataParser(stream, encoding)
+						Parser = MultipartFormDataParser.Parse(stream, encoding)
 					};
 				})
 				.Union(new[]
@@ -157,40 +181,7 @@ namespace StrongGrid
 				})
 				.ToDictionary(ep => ep.Encoding, ep => ep.Parser);
 
-			// Convert the 'from' from a string into an email address
-			var rawFrom = GetEncodedValue("from", charsets, encodedParsers, string.Empty);
-			var from = ParseEmailAddress(rawFrom);
-
-			// Convert the 'to' from a string into an array of email addresses
-			var rawTo = GetEncodedValue("to", charsets, encodedParsers, string.Empty);
-			var to = ParseEmailAddresses(rawTo);
-
-			// Convert the 'cc' from a string into an array of email addresses
-			var rawCc = GetEncodedValue("cc", charsets, encodedParsers, string.Empty);
-			var cc = ParseEmailAddresses(rawCc);
-
-			// Arrange the InboundEmail
-			var inboundEmail = new InboundEmail
-			{
-				Attachments = attachments,
-				Charsets = charsets,
-				Dkim = GetEncodedValue("dkim", charsets, encodedParsers, null),
-				Envelope = envelope,
-				From = from,
-				Headers = headers,
-				Html = GetEncodedValue("html", charsets, encodedParsers, null),
-				SenderIp = GetEncodedValue("sender_ip", charsets, encodedParsers, null),
-				SpamReport = GetEncodedValue("spam_report", charsets, encodedParsers, null),
-				SpamScore = GetEncodedValue("spam_score", charsets, encodedParsers, null),
-				Spf = GetEncodedValue("SPF", charsets, encodedParsers, null),
-				Subject = GetEncodedValue("subject", charsets, encodedParsers, null),
-				Text = GetEncodedValue("text", charsets, encodedParsers, null),
-				To = to,
-				Cc = cc,
-				RawEmail = rawEmail
-			};
-
-			return inboundEmail;
+			return ParseInboundEmail(encodedParsers, charsets);
 		}
 
 		#endregion
@@ -242,6 +233,85 @@ namespace StrongGrid
 			var parser = GetEncodedParser(parameterName, charsets, encodedParsers);
 			var value = parser.GetParameterValue(parameterName, defaultValue);
 			return value;
+		}
+
+		private static InboundEmail ParseInboundEmail(IDictionary<Encoding, MultipartFormDataParser> encodedParsers, KeyValuePair<string, Encoding>[] charsets)
+		{
+			// Get the default UTF8 parser
+			var parser = encodedParsers.Single(p => p.Key == Encoding.UTF8).Value;
+
+			// Convert the 'headers' from a string into array of KeyValuePair
+			var headers = parser
+					.GetParameterValue("headers", string.Empty)
+					.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries)
+					.Select(header =>
+					{
+						var splitHeader = header.Split(new[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
+						var key = splitHeader[0];
+						var value = splitHeader.Length >= 2 ? splitHeader[1] : null;
+						return new KeyValuePair<string, string>(key, value);
+					}).ToArray();
+
+			// Raw email
+			var rawEmail = parser.GetParameterValue("email", string.Empty);
+
+			// Combine the 'attachment-info' and Files into an array of Attachments
+			var attachmentInfoAsJObject = JObject.Parse(parser.GetParameterValue("attachment-info", "{}"));
+			var attachments = attachmentInfoAsJObject
+				.Properties()
+				.Select(prop =>
+				{
+					var attachment = prop.Value.ToObject<InboundEmailAttachment>();
+					attachment.Id = prop.Name;
+
+					var file = parser.Files.FirstOrDefault(f => f.Name == prop.Name);
+					if (file != null)
+					{
+						attachment.Data = file.Data;
+						if (string.IsNullOrEmpty(attachment.ContentType)) attachment.ContentType = file.ContentType;
+						if (string.IsNullOrEmpty(attachment.FileName)) attachment.FileName = file.FileName;
+					}
+
+					return attachment;
+				}).ToArray();
+
+			// Convert the 'envelope' from a JSON string into a strongly typed object
+			var envelope = JsonConvert.DeserializeObject<InboundEmailEnvelope>(parser.GetParameterValue("envelope", "{}"));
+
+			// Convert the 'from' from a string into an email address
+			var rawFrom = GetEncodedValue("from", charsets, encodedParsers, string.Empty);
+			var from = ParseEmailAddress(rawFrom);
+
+			// Convert the 'to' from a string into an array of email addresses
+			var rawTo = GetEncodedValue("to", charsets, encodedParsers, string.Empty);
+			var to = ParseEmailAddresses(rawTo);
+
+			// Convert the 'cc' from a string into an array of email addresses
+			var rawCc = GetEncodedValue("cc", charsets, encodedParsers, string.Empty);
+			var cc = ParseEmailAddresses(rawCc);
+
+			// Arrange the InboundEmail
+			var inboundEmail = new InboundEmail
+			{
+				Attachments = attachments,
+				Charsets = charsets,
+				Dkim = GetEncodedValue("dkim", charsets, encodedParsers, null),
+				Envelope = envelope,
+				From = from,
+				Headers = headers,
+				Html = GetEncodedValue("html", charsets, encodedParsers, null),
+				SenderIp = GetEncodedValue("sender_ip", charsets, encodedParsers, null),
+				SpamReport = GetEncodedValue("spam_report", charsets, encodedParsers, null),
+				SpamScore = GetEncodedValue("spam_score", charsets, encodedParsers, null),
+				Spf = GetEncodedValue("SPF", charsets, encodedParsers, null),
+				Subject = GetEncodedValue("subject", charsets, encodedParsers, null),
+				Text = GetEncodedValue("text", charsets, encodedParsers, null),
+				To = to,
+				Cc = cc,
+				RawEmail = rawEmail
+			};
+
+			return inboundEmail;
 		}
 
 		#endregion

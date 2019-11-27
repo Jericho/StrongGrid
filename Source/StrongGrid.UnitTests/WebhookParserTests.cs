@@ -394,50 +394,144 @@ Content-Disposition: form-data; name=""attachments""
 		}
 
 		[Fact]
-		public async void RawPayloadWithAttachments()
+		public async Task InboundEmailAsync()
+		{
+			// Arrange
+			var parser = new WebhookParser();
+			using (var stream = GetStream(INBOUND_EMAIL_WEBHOOK))
+			{
+				// Act
+				var inboundEmail = await parser.ParseInboundEmailWebhookAsync(stream).ConfigureAwait(false);
+
+				// Assert
+				inboundEmail.Attachments.ShouldNotBeNull();
+				inboundEmail.Attachments.Length.ShouldBe(0);
+				inboundEmail.Cc.ShouldNotBeNull();
+				inboundEmail.Cc.Length.ShouldBe(0);
+				inboundEmail.Charsets.ShouldNotBeNull();
+				inboundEmail.Charsets.Length.ShouldBe(5);
+				inboundEmail.Dkim.ShouldBe("{@hotmail.com : pass}");
+				inboundEmail.From.ShouldNotBeNull();
+				inboundEmail.From.Email.ShouldBe("bob@example.com");
+				inboundEmail.From.Name.ShouldBe("Bob Smith");
+				inboundEmail.Headers.ShouldNotBeNull();
+				inboundEmail.Headers.Length.ShouldBe(40);
+				inboundEmail.Html.ShouldStartWith("<html", Case.Insensitive);
+				inboundEmail.SenderIp.ShouldBe("10.43.24.23");
+				inboundEmail.SpamReport.ShouldBeNull();
+				inboundEmail.SpamScore.ShouldBeNull();
+				inboundEmail.Spf.ShouldBe("softfail");
+				inboundEmail.Subject.ShouldBe("Test #1");
+				inboundEmail.Text.ShouldBe("Test #1\r\n");
+				inboundEmail.To.ShouldNotBeNull();
+				inboundEmail.To.Length.ShouldBe(1);
+				inboundEmail.To[0].Email.ShouldBe("test@api.yourdomain.com");
+				inboundEmail.To[0].Name.ShouldBe("Test Recipient");
+			}
+		}
+
+		[Fact]
+		public void RawPayloadWithAttachments()
 		{
 			var parser = new WebhookParser();
 
-			Stream stream = new MemoryStream();
-			await File.OpenRead("InboudEmailTestData/raw_data_with_attachments.txt").CopyToAsync(stream);
-			stream.Position = 0;
+			using (Stream stream = new MemoryStream())
+			{
+				using (var fileStream = File.OpenRead("InboudEmailTestData/raw_data_with_attachments.txt"))
+				{
+					fileStream.CopyTo(stream);
+				}
+				stream.Position = 0;
 
-			InboundEmail inboundEmail = parser.ParseInboundEmailWebhook(stream);
+				InboundEmail inboundEmail = parser.ParseInboundEmailWebhook(stream);
 
-			inboundEmail.ShouldNotBeNull();
+				inboundEmail.ShouldNotBeNull();
 
-			inboundEmail.Dkim.ShouldBe("{@sendgrid.com : pass}");
+				inboundEmail.Dkim.ShouldBe("{@sendgrid.com : pass}");
 
-			var rawEmailTestData = File.ReadAllText("InboudEmailTestData/raw_email_with_attachments.txt");
-			inboundEmail.RawEmail.Trim().ShouldBe(rawEmailTestData);
+				var rawEmailTestData = File.ReadAllText("InboudEmailTestData/raw_email_with_attachments.txt");
+				inboundEmail.RawEmail.Trim().ShouldBe(rawEmailTestData);
 
-			inboundEmail.To[0].Email.ShouldBe("inbound@inbound.example.com");
-			inboundEmail.To[0].Name.ShouldBe(string.Empty);
+				inboundEmail.To[0].Email.ShouldBe("inbound@inbound.example.com");
+				inboundEmail.To[0].Name.ShouldBe(string.Empty);
 
-			inboundEmail.Cc.Length.ShouldBe(0);
+				inboundEmail.Cc.Length.ShouldBe(0);
 
-			inboundEmail.From.Email.ShouldBe("test@example.com");
-			inboundEmail.From.Name.ShouldBe("Example User");
+				inboundEmail.From.Email.ShouldBe("test@example.com");
+				inboundEmail.From.Name.ShouldBe("Example User");
 
-			inboundEmail.SenderIp.ShouldBe("0.0.0.0");
+				inboundEmail.SenderIp.ShouldBe("0.0.0.0");
 
-			inboundEmail.SpamReport.ShouldBeNull();
+				inboundEmail.SpamReport.ShouldBeNull();
 
-			inboundEmail.Envelope.From.ShouldBe("test@example.com");
-			inboundEmail.Envelope.To.Length.ShouldBe(1);
-			inboundEmail.Envelope.To.ShouldContain("inbound@inbound.example.com");
+				inboundEmail.Envelope.From.ShouldBe("test@example.com");
+				inboundEmail.Envelope.To.Length.ShouldBe(1);
+				inboundEmail.Envelope.To.ShouldContain("inbound@inbound.example.com");
 
-			inboundEmail.Subject.ShouldBe("Raw Payload");
+				inboundEmail.Subject.ShouldBe("Raw Payload");
 
-			inboundEmail.SpamScore.ShouldBeNull();
+				inboundEmail.SpamScore.ShouldBeNull();
 
-			inboundEmail.Charsets.Except(new[] {
+				inboundEmail.Charsets.Except(new[] {
 				new KeyValuePair<string, Encoding>("to", Encoding.UTF8),
 				new KeyValuePair<string, Encoding>("subject", Encoding.UTF8),
 				new KeyValuePair<string, Encoding>("from", Encoding.UTF8)
 			}).Count().ShouldBe(0);
 
-			inboundEmail.Spf.ShouldBe("pass");
+				inboundEmail.Spf.ShouldBe("pass");
+			}
+		}
+
+		[Fact]
+		public async Task RawPayloadWithAttachmentsAsync()
+		{
+			var parser = new WebhookParser();
+
+			using (Stream stream = new MemoryStream())
+			{
+				using (var fileStream = File.OpenRead("InboudEmailTestData/raw_data_with_attachments.txt"))
+				{
+					await fileStream.CopyToAsync(stream).ConfigureAwait(false);
+				}
+				stream.Position = 0;
+
+				InboundEmail inboundEmail = await parser.ParseInboundEmailWebhookAsync(stream).ConfigureAwait(false);
+
+				inboundEmail.ShouldNotBeNull();
+
+				inboundEmail.Dkim.ShouldBe("{@sendgrid.com : pass}");
+
+				var rawEmailTestData = File.ReadAllText("InboudEmailTestData/raw_email_with_attachments.txt");
+				inboundEmail.RawEmail.Trim().ShouldBe(rawEmailTestData);
+
+				inboundEmail.To[0].Email.ShouldBe("inbound@inbound.example.com");
+				inboundEmail.To[0].Name.ShouldBe(string.Empty);
+
+				inboundEmail.Cc.Length.ShouldBe(0);
+
+				inboundEmail.From.Email.ShouldBe("test@example.com");
+				inboundEmail.From.Name.ShouldBe("Example User");
+
+				inboundEmail.SenderIp.ShouldBe("0.0.0.0");
+
+				inboundEmail.SpamReport.ShouldBeNull();
+
+				inboundEmail.Envelope.From.ShouldBe("test@example.com");
+				inboundEmail.Envelope.To.Length.ShouldBe(1);
+				inboundEmail.Envelope.To.ShouldContain("inbound@inbound.example.com");
+
+				inboundEmail.Subject.ShouldBe("Raw Payload");
+
+				inboundEmail.SpamScore.ShouldBeNull();
+
+				inboundEmail.Charsets.Except(new[] {
+				new KeyValuePair<string, Encoding>("to", Encoding.UTF8),
+				new KeyValuePair<string, Encoding>("subject", Encoding.UTF8),
+				new KeyValuePair<string, Encoding>("from", Encoding.UTF8)
+			}).Count().ShouldBe(0);
+
+				inboundEmail.Spf.ShouldBe("pass");
+			}
 		}
 
 		[Fact]
