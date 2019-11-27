@@ -1,4 +1,4 @@
-﻿using StrongGrid.Models;
+using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Threading;
@@ -113,5 +113,15 @@ namespace StrongGrid.Resources
 		/// The async task.
 		/// </returns>
 		Task DeleteMonitorSettingsAsync(string username, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Gets sender reputations for up to ten Subusers.
+		/// </summary>
+		/// <param name="usernames">The subuser username.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// The <see cref="SenderReputation" />.
+		/// </returns>
+		Task<SenderReputation[]> GetSenderReputationsAsync(IEnumerable<string> usernames, CancellationToken cancellationToken = default);
 	}
 }
