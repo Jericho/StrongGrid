@@ -367,7 +367,7 @@ namespace StrongGrid.UnitTests.Resources
 		public async Task GetSenderReputationAsync()
 		{
 			//Arrange
-			var usernames = new[] { "example_subuser" };
+			var username = "example_subuser";
 
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "reputations")).Respond("application/json", SINGLE_REPUTATION_JSON);
@@ -376,13 +376,13 @@ namespace StrongGrid.UnitTests.Resources
 			var subusers = new Subusers(client);
 
 			// Act
-			var result = await subusers.GetSenderReputationsAsync(usernames, CancellationToken.None).ConfigureAwait(false);
+			var result = await subusers.GetSenderReputationAsync(username, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
-			result.Length.ShouldBe(1);
+			result.Reputation.ShouldBe(99);
 		}
 
 		[Fact]
