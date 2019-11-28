@@ -1274,6 +1274,18 @@ namespace StrongGrid.IntegrationTests
 				// RETRIEVE THE FIRST SUBUSER
 				var user = await client.Subusers.GetAsync(subusers[0].Username, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"Retrieved user '{user.Username}'").ConfigureAwait(false);
+
+				// RETRIEVE THE FIRST SUBUSER'S REPUTATION
+				var reputation = await client.Subusers.GetSenderReputationAsync(user.Username, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"{user.Username}'s reputation: {reputation.Reputation}").ConfigureAwait(false);
+
+				// RETRIEVE ALL SUBUSERS REPUTATION
+				if (subusers.Length > 1)
+				{
+					var usernames = subusers.Select(s => s.Username).ToArray();
+					var reputations = await client.Subusers.GetSenderReputationsAsync(usernames, cancellationToken).ConfigureAwait(false);
+					await log.WriteLineAsync($"Average reputation: {reputations.Average(r => r.Reputation)}").ConfigureAwait(false);
+				}
 			}
 		}
 
