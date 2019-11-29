@@ -16,9 +16,6 @@ namespace StrongGrid.Models
 		// Therefore it's safe to assume that a given attachment cannot be larger than 30MB
 		private const int MAX_ATTACHMENT_SIZE = 30 * 1024 * 1024;
 
-		// Reasonable 4kb buffer when reading from stream
-		private const int BUFFER_SIZE = 4096;
-
 		/// <summary>
 		/// Gets or sets the content.
 		/// </summary>

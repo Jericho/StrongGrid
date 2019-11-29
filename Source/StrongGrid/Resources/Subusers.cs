@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -217,6 +218,45 @@ namespace StrongGrid.Resources
 				.DeleteAsync($"{_endpoint}/{username}/monitor")
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
+		}
+
+		/// <summary>
+		/// Gets sender reputation for a Subuser.
+		/// </summary>
+		/// <param name="username">The subuser username.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// The <see cref="SenderReputation" />.
+		/// </returns>
+		public async Task<SenderReputation> GetSenderReputationAsync(string username, CancellationToken cancellationToken = default)
+		{
+			var reputations = await GetSenderReputationsAsync(new[] { username }, cancellationToken).ConfigureAwait(false);
+			return reputations.FirstOrDefault();
+		}
+
+		/// <summary>
+		/// Gets sender reputation for up to ten Subusers.
+		/// </summary>
+		/// <param name="usernames">The subuser usernames.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="SenderReputation" />.
+		/// </returns>
+		public Task<SenderReputation[]> GetSenderReputationsAsync(IEnumerable<string> usernames, CancellationToken cancellationToken = default)
+		{
+			var request = _client
+				.GetAsync($"{_endpoint}/reputations")
+				.WithCancellationToken(cancellationToken);
+
+			if (usernames != null && usernames.Any())
+			{
+				foreach (var username in usernames)
+				{
+					request.WithArgument("usernames", username);
+				}
+			}
+
+			return request.AsSendGridObject<SenderReputation[]>();
 		}
 
 		private static JObject CreateJObject(

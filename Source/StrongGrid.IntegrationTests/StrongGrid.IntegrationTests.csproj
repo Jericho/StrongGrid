@@ -1,8 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <AssemblyName>StrongGrid.IntegrationTests</AssemblyName>
     <RootNamespace>StrongGrid.IntegrationTests</RootNamespace>
   </PropertyGroup>
@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Logzio.DotNet.NLog" Version="1.0.6" />
+    <PackageReference Include="Logzio.DotNet.NLog" Version="1.0.7" />
   </ItemGroup>
 
   <ItemGroup>
