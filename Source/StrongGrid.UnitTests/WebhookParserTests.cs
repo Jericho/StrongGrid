@@ -472,11 +472,12 @@ Content-Disposition: form-data; name=""attachments""
 
 				inboundEmail.SpamScore.ShouldBeNull();
 
-				inboundEmail.Charsets.Except(new[] {
-				new KeyValuePair<string, Encoding>("to", Encoding.UTF8),
-				new KeyValuePair<string, Encoding>("subject", Encoding.UTF8),
-				new KeyValuePair<string, Encoding>("from", Encoding.UTF8)
-			}).Count().ShouldBe(0);
+				inboundEmail.Charsets.Except(new[]
+				{
+					new KeyValuePair<string, Encoding>("to", Encoding.UTF8),
+					new KeyValuePair<string, Encoding>("subject", Encoding.UTF8),
+					new KeyValuePair<string, Encoding>("from", Encoding.UTF8)
+				}).Count().ShouldBe(0);
 
 				inboundEmail.Spf.ShouldBe("pass");
 			}
@@ -524,11 +525,12 @@ Content-Disposition: form-data; name=""attachments""
 
 				inboundEmail.SpamScore.ShouldBeNull();
 
-				inboundEmail.Charsets.Except(new[] {
-				new KeyValuePair<string, Encoding>("to", Encoding.UTF8),
-				new KeyValuePair<string, Encoding>("subject", Encoding.UTF8),
-				new KeyValuePair<string, Encoding>("from", Encoding.UTF8)
-			}).Count().ShouldBe(0);
+				inboundEmail.Charsets.Except(new[]
+				{
+					new KeyValuePair<string, Encoding>("to", Encoding.UTF8),
+					new KeyValuePair<string, Encoding>("subject", Encoding.UTF8),
+					new KeyValuePair<string, Encoding>("from", Encoding.UTF8)
+				}).Count().ShouldBe(0);
 
 				inboundEmail.Spf.ShouldBe("pass");
 			}
