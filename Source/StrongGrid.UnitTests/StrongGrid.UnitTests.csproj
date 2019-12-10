@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net461;net472;netcoreapp2.1</TargetFrameworks>
@@ -31,10 +31,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="InboudEmailTestData\raw_data_with_attachments.txt">
+    <None Update="InboudEmailTestData\raw_data.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="InboudEmailTestData\raw_email_with_attachments.txt">
+    <None Update="InboudEmailTestData\raw_email.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
