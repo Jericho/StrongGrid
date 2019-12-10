@@ -50,7 +50,7 @@ using StrongGrid;
 
 ## .NET framework suport
 
-StrongGrid supports the `4.6.1` .NET framework as well as `.NET Core`.
+StrongGrid supports the `4.6.1` .NET framework as well as `.NET Core 2.0`.
 
 
 ## Usage
