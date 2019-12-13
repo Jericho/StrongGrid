@@ -2,6 +2,9 @@ using Newtonsoft.Json;
 
 namespace StrongGrid.Models
 {
+	/// <summary>
+	/// Checks performed during the validation of an email address.
+	/// </summary>
 	/// <remarks>
 	/// See <a href="https://sendgrid-email-validation.api-docs.io/v3/validate-an-email/validate-an-email">SendGrid documentation</a> for more information.
 	/// </remarks>
