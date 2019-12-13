@@ -1,7 +1,3 @@
-using Logzio.DotNet.NLog;
-using NLog;
-using NLog.Config;
-using NLog.Targets;
 using StrongGrid.Models;
 using StrongGrid.Models.Search;
 using StrongGrid.Utilities;
@@ -16,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace StrongGrid.IntegrationTests
 {
-	public class Program
+	internal class TestsRunner
 	{
 		private const int MAX_SENDGRID_API_CONCURRENCY = 5;
 
@@ -27,7 +23,11 @@ namespace StrongGrid.IntegrationTests
 			Cancelled = 1223
 		}
 
-		static async Task<int> Main()
+		public TestsRunner()
+		{
+		}
+
+		public async Task<int> RunAsync()
 		{
 			// -----------------------------------------------------------------------------
 			// Do you want to proxy requests through Fiddler? Can be useful for debugging.
@@ -40,28 +40,6 @@ namespace StrongGrid.IntegrationTests
 				LogLevelSuccessfulCalls = StrongGrid.Logging.LogLevel.Debug
 			};
 			// -----------------------------------------------------------------------------
-
-			// Configure logging
-			var nLogConfig = new LoggingConfiguration();
-
-			// Send logs to logz.io
-			var logzioToken = Environment.GetEnvironmentVariable("LOGZIO_TOKEN");
-			if (!string.IsNullOrEmpty(logzioToken))
-			{
-				var logzioTarget = new LogzioTarget { Token = logzioToken };
-				logzioTarget.ContextProperties.Add(new TargetPropertyWithContext("source", "StrongGrid_integration_tests"));
-				logzioTarget.ContextProperties.Add(new TargetPropertyWithContext("StrongGrid-Version", StrongGrid.Client.Version));
-
-				nLogConfig.AddTarget("Logzio", logzioTarget);
-				nLogConfig.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, "Logzio", "*");
-			}
-
-			// Send logs to console
-			var consoleTarget = new ColoredConsoleTarget();
-			nLogConfig.AddTarget("ColoredConsole", consoleTarget);
-			nLogConfig.AddRule(NLog.LogLevel.Warn, NLog.LogLevel.Fatal, "ColoredConsole", "*");
-
-			LogManager.Configuration = nLogConfig;
 
 			// Configure StrongGrid client
 			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
