@@ -62,6 +62,15 @@ namespace StrongGrid.Models
 		public string Suggestion { get; set; }
 
 		/// <summary>
+		/// Gets or sets the checks.
+		/// </summary>
+		/// <value>
+		/// The suggestion.
+		/// </value>
+		[JsonProperty("checks", NullValueHandling = NullValueHandling.Ignore)]
+		public EmailValidationChecks Checks { get; set; }
+
+		/// <summary>
 		/// Gets or sets the one word classifier for this validation.
 		/// </summary>
 		/// <value>
