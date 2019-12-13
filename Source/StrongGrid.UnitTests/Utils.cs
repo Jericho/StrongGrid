@@ -1,7 +1,7 @@
+using Microsoft.Extensions.Logging;
 using Pathoschild.Http.Client;
 using Pathoschild.Http.Client.Extensibility;
 using RichardSzalay.MockHttp;
-using StrongGrid.Logging;
 using StrongGrid.Utilities;
 using System.Linq;
 
