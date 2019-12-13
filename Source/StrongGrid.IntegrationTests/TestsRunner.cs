@@ -1333,17 +1333,17 @@ namespace StrongGrid.IntegrationTests
 			await log.WriteLineAsync("\n***** EMAIL VALIDATION *****\n").ConfigureAwait(false);
 
 			// VALIDATE
-			var emailAdress = "john.doe@gmial.com";
-			var validationResult = await client.EmailValidation.ValidateAsync(emailAdress, "signup", cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"{emailAdress} validation verdict: {validationResult.Verdict}").ConfigureAwait(false);
+			var emailAddress = "john.doe@gmial.com";
+			var validationResult = await client.EmailValidation.ValidateAsync(emailAddress, "signup", cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"{emailAddress} validation verdict: {validationResult.Verdict}").ConfigureAwait(false);
 
-			emailAdress = "info@microsoft.com";
-			validationResult = await client.EmailValidation.ValidateAsync(emailAdress, "signup", cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"{emailAdress} validation verdict: {validationResult.Verdict}").ConfigureAwait(false);
+			emailAddress = "info@microsoft.com";
+			validationResult = await client.EmailValidation.ValidateAsync(emailAddress, "signup", cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"{emailAddress} validation verdict: {validationResult.Verdict}").ConfigureAwait(false);
 
-			emailAdress = "this_is_a_test@mailinator.com";
-			validationResult = await client.EmailValidation.ValidateAsync(emailAdress, "signup", cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"{emailAdress} validation verdict: {validationResult.Verdict}").ConfigureAwait(false);
+			emailAddress = "this_is_a_test@mailinator.com";
+			validationResult = await client.EmailValidation.ValidateAsync(emailAddress, "signup", cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"{emailAddress} validation verdict: {validationResult.Verdict}").ConfigureAwait(false);
 		}
 
 		// to get your public IP address we loop through an array
