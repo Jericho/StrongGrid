@@ -14,7 +14,7 @@ namespace StrongGrid.IntegrationTests
 		{
 			var services = new ServiceCollection();
 			ConfigureServices(services);
-			ConfigureLibLog();
+			ConfigureNLog();
 			using var serviceProvider = services.BuildServiceProvider();
 			var app = serviceProvider.GetService<TestsRunner>();
 			return await app.RunAsync().ConfigureAwait(false);
@@ -26,7 +26,7 @@ namespace StrongGrid.IntegrationTests
 				.AddTransient<TestsRunner>();
 		}
 
-		private static void ConfigureLibLog()
+		private static void ConfigureNLog()
 		{
 			// Configure logging
 			var nLogConfig = new LoggingConfiguration();
