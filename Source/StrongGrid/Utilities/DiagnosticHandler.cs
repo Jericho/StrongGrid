@@ -1,6 +1,6 @@
+using Microsoft.Extensions.Logging;
 using Pathoschild.Http.Client;
 using Pathoschild.Http.Client.Extensibility;
-using StrongGrid.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
@@ -20,7 +20,7 @@ namespace StrongGrid.Utilities
 		#region FIELDS
 
 		internal const string DIAGNOSTIC_ID_HEADER_NAME = "StrongGrid-Diagnostic-Id";
-		private static readonly ILog _logger = LogProvider.For<DiagnosticHandler>();
+		private readonly ILogger<DiagnosticHandler> _logger;
 		private readonly LogLevel _logLevelSuccessfulCalls;
 		private readonly LogLevel _logLevelFailedCalls;
 
@@ -34,10 +34,11 @@ namespace StrongGrid.Utilities
 
 		#region CTOR
 
-		public DiagnosticHandler(LogLevel logLevelSuccessfulCalls, LogLevel logLevelFailedCalls)
+		public DiagnosticHandler(LogLevel logLevelSuccessfulCalls, LogLevel logLevelFailedCalls, ILogger<DiagnosticHandler> logger = null)
 		{
 			_logLevelSuccessfulCalls = logLevelSuccessfulCalls;
 			_logLevelFailedCalls = logLevelFailedCalls;
+			_logger = logger;
 		}
 
 		#endregion
