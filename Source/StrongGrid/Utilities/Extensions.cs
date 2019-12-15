@@ -103,7 +103,7 @@ namespace StrongGrid.Utilities
 
 				// This is important: we must make a copy of the response stream otherwise we would get an
 				// exception on subsequent attempts to read the content of the stream
-				using (var ms = new MemoryStream())
+				using (var ms = Utils.MemoryStreamManager.GetStream())
 				{
 					await contentStream.CopyToAsync(ms).ConfigureAwait(false);
 					ms.Position = 0;
