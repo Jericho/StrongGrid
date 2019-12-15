@@ -2,7 +2,7 @@ using System;
 
 namespace StrongGrid.IntegrationTests
 {
-	public static class ConsoleUtils
+	public static class Utils
 	{
 		public static void CenterConsole()
 		{
@@ -27,6 +27,17 @@ namespace StrongGrid.IntegrationTests
 			var top = monitorInfo.Monitor.Top + ((monitorHeight - consoleHeight) / 2);
 
 			NativeMethods.MoveWindow(hWin, left, top, consoleWidth, consoleHeight, false);
+		}
+
+		public static char Prompt(string prompt)
+		{
+			while (Console.KeyAvailable)
+			{
+				Console.ReadKey(false);
+			}
+			Console.Out.WriteLine(prompt);
+			var result = Console.ReadKey();
+			return result.KeyChar;
 		}
 	}
 }
