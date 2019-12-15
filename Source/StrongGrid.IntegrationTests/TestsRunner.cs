@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using StrongGrid.IntegrationTests.Tests;
 using StrongGrid.Utilities;
 using System;
