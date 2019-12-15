@@ -23,8 +23,6 @@ namespace StrongGrid.Utilities
 	/// </summary>
 	internal static class Extensions
 	{
-		private static readonly DateTime EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
 		/// <summary>
 		/// Converts a 'unix time' (which is expressed as the number of seconds since midnight on
 		/// January 1st 1970) to a .Net <see cref="DateTime" />.
@@ -35,7 +33,7 @@ namespace StrongGrid.Utilities
 		/// </returns>
 		public static DateTime FromUnixTime(this long unixTime)
 		{
-			return EPOCH.AddSeconds(unixTime);
+			return Utils.Epoch.AddSeconds(unixTime);
 		}
 
 		/// <summary>
@@ -48,7 +46,7 @@ namespace StrongGrid.Utilities
 		/// </returns>
 		public static long ToUnixTime(this DateTime date)
 		{
-			return Convert.ToInt64((date.ToUniversalTime() - EPOCH).TotalSeconds);
+			return Convert.ToInt64((date.ToUniversalTime() - Utils.Epoch).TotalSeconds);
 		}
 
 		/// <summary>
