@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Pathoschild.Http.Client;
 using Pathoschild.Http.Client.Extensibility;
 using System;
@@ -20,7 +21,7 @@ namespace StrongGrid.Utilities
 		#region FIELDS
 
 		internal const string DIAGNOSTIC_ID_HEADER_NAME = "StrongGrid-Diagnostic-Id";
-		private readonly ILogger<DiagnosticHandler> _logger;
+		private readonly ILogger _logger;
 		private readonly LogLevel _logLevelSuccessfulCalls;
 		private readonly LogLevel _logLevelFailedCalls;
 
@@ -34,11 +35,11 @@ namespace StrongGrid.Utilities
 
 		#region CTOR
 
-		public DiagnosticHandler(LogLevel logLevelSuccessfulCalls, LogLevel logLevelFailedCalls, ILogger<DiagnosticHandler> logger = null)
+		public DiagnosticHandler(LogLevel logLevelSuccessfulCalls, LogLevel logLevelFailedCalls, ILogger logger = null)
 		{
 			_logLevelSuccessfulCalls = logLevelSuccessfulCalls;
 			_logLevelFailedCalls = logLevelFailedCalls;
-			_logger = logger;
+			_logger = logger ?? NullLogger.Instance;
 		}
 
 		#endregion
@@ -100,7 +101,7 @@ namespace StrongGrid.Utilities
 					Debug.WriteLine("{0}\r\nAN EXCEPTION OCCURRED: {1}\r\n{0}", new string('=', 50), e.GetBaseException().Message);
 					updatedDiagnostic.AppendLine($"AN EXCEPTION OCCURRED: {e.GetBaseException().Message}");
 
-					if (_logger?.IsEnabled(LogLevel.Error) ?? false)
+					if (_logger.IsEnabled(LogLevel.Error))
 					{
 						_logger.LogError(e, "An exception occurred when inspecting the response from SendGrid");
 					}
@@ -108,7 +109,7 @@ namespace StrongGrid.Utilities
 				finally
 				{
 					var logLevel = response.IsSuccessStatusCode ? _logLevelSuccessfulCalls : _logLevelFailedCalls;
-					if (_logger?.IsEnabled(logLevel) ?? false)
+					if (_logger.IsEnabled(logLevel))
 					{
 						_logger.Log(logLevel, updatedDiagnostic.ToString()
 							.Replace("{", "{{")

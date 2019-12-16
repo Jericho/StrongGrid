@@ -22,6 +22,7 @@ namespace StrongGrid
 
 		private readonly bool _mustDisposeHttpClient;
 		private readonly StrongGridClientOptions _options;
+		private readonly ILogger _logger;
 
 		private HttpClient _httpClient;
 		private Pathoschild.Http.Client.IClient _fluentClient;
@@ -272,7 +273,7 @@ namespace StrongGrid
 		/// <param name="httpClient">Allows you to inject your own HttpClient. This is useful, for example, to setup the HtppClient with a proxy.</param>
 		/// <param name="disposeClient">Indicates if the http client should be dispose when this instance of BaseClient is disposed.</param>
 		/// <param name="options">Options for the SendGrid client.</param>
-		public BaseClient(string apiKey, string username, string password, HttpClient httpClient, bool disposeClient, StrongGridClientOptions options, ILoggerFactory loggerFactory = null)
+		public BaseClient(string apiKey, string username, string password, HttpClient httpClient, bool disposeClient, StrongGridClientOptions options, ILogger<Client> logger = null)
 		{
 			_mustDisposeHttpClient = disposeClient;
 			_httpClient = httpClient;
@@ -286,7 +287,7 @@ namespace StrongGrid
 
 			// Order is important: DiagnosticHandler must be first.
 			// Also, the list of filters must be kept in sync with the filters in Utils.GetFluentClient in the unit testing project.
-			_fluentClient.Filters.Add(new DiagnosticHandler(_options.LogLevelSuccessfulCalls, _options.LogLevelFailedCalls, loggerFactory?.CreateLogger<DiagnosticHandler>()));
+			_fluentClient.Filters.Add(new DiagnosticHandler(_options.LogLevelSuccessfulCalls, _options.LogLevelFailedCalls, logger));
 			_fluentClient.Filters.Add(new SendGridErrorHandler());
 
 			if (!string.IsNullOrEmpty(apiKey)) _fluentClient.SetBearerAuthentication(apiKey);
