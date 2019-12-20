@@ -26,7 +26,7 @@ namespace StrongGrid.Models
 		/// The local part checks.
 		/// </value>
 		[JsonProperty("local_part", NullValueHandling = NullValueHandling.Ignore)]
-		public EmailValidationAdditionalChecks LocalPart { get; set; }
+		public EmailValidationLocalPartChecks LocalPart { get; set; }
 
 		/// <summary>
 		/// Gets or sets the additional checks.
