@@ -12,12 +12,14 @@ namespace StrongGrid.Models
 	{
 		/// <summary>
 		/// Gets or sets a value indicating whether the address has known bounces.
+		/// If true, the email address has previously been sent to through your SendGrid account and has resulted in a bounce.
 		/// </summary>
 		[JsonProperty("has_known_bounces", NullValueHandling = NullValueHandling.Ignore)]
 		public bool HasKnownBounces { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether the address has suspected bounces.
+		/// If true, SendGrid's machine learning model suspects that the email address might bounce.
 		/// </summary>
 		[JsonProperty("has_suspected_bounces", NullValueHandling = NullValueHandling.Ignore)]
 		public bool HasSuspectedBounces { get; set; }

@@ -48,7 +48,7 @@ namespace StrongGrid.Resources
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<EmailValidationResult>();
+				.AsSendGridObject<EmailValidationResult>("result");
 		}
 	}
 }
