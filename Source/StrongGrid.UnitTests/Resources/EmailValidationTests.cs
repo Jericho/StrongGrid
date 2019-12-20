@@ -17,26 +17,27 @@ namespace StrongGrid.UnitTests.Resources
 		private const string ENDPOINT = "validations/email";
 
 		private const string VALIDATION_RESPONSE = @"{
-			'email':'cedric.fogowl@gmail.com',
-			'verdict':'Valid',
-			'score':0.98015,
-			'local':'cedric.fogowl',
-			'host':'gmail.com',
-			'checks':{
-				'domain':{
-					'has_valid_address_syntax':true,
-					'has_mx_or_a_record':true,
-					'is_suspected_disposable_address':false
+			'email': 'john.doe@gmial.com',
+			'verdict': 'Invalid',
+			'score': 0.00089,
+			'local': 'john.doe',
+			'host': 'gmial.com',
+			'suggestion': 'gmail.com',
+			'checks': {
+				'domain': {
+					'has_valid_address_syntax': true,
+					'has_mx_or_a_record': true,
+					'is_suspected_disposable_address': false
 				},
-				'local_part':{
-					'is_suspected_role_address':false
+				'local_part': {
+					'is_suspected_role_address': false
 				},
-				'additional':{
-					'has_known_bounces':false,
-					'has_suspected_bounces':false
+				'additional': {
+					'has_known_bounces': false,
+					'has_suspected_bounces': true
 				}
 			},
-			'ip_address':'65.101.243.157'
+			'ip_address': '123.45.67.89'
 		}";
 
 		#endregion
@@ -54,21 +55,21 @@ namespace StrongGrid.UnitTests.Resources
 			result.Checks.ShouldNotBeNull();
 			result.Checks.Additional.ShouldNotBeNull();
 			result.Checks.Additional.HasKnownBounces.ShouldBeFalse();
-			result.Checks.Additional.HasSuspectedBounces.ShouldBeFalse();
+			result.Checks.Additional.HasSuspectedBounces.ShouldBeTrue();
 			result.Checks.Domain.ShouldNotBeNull();
 			result.Checks.Domain.HasMxOrARecord.ShouldBeTrue();
 			result.Checks.Domain.HasValidAddressSyntax.ShouldBeTrue();
 			result.Checks.Domain.IsSuspectedDisposableAddress.ShouldBeFalse();
 			result.Checks.LocalPart.ShouldNotBeNull();
 			result.Checks.LocalPart.IsSuspectedRoleAddress.ShouldBeFalse();
-			result.Email.ShouldBe("cedric.fogowl@gmail.com");
-			result.Host.ShouldBe("gmail.com");
-			result.IpAddress.ShouldBe("65.101.243.157");
-			result.Local.ShouldBe("cedric.fogowl");
-			result.Score.ShouldBe(0.98015);
+			result.Email.ShouldBe("john.doe@gmial.com");
+			result.Host.ShouldBe("gmial.com");
+			result.IpAddress.ShouldBe("123.45.67.89");
+			result.Local.ShouldBe("john.doe");
+			result.Score.ShouldBe(0.00089);
 			result.Source.ShouldBeNull();
-			result.Suggestion.ShouldBeNull();
-			result.Verdict.ShouldBe("Valid");
+			result.Suggestion.ShouldBe("gmail.com");
+			result.Verdict.ShouldBe(EmailValidationVerdict.Invalid);
 		}
 
 		[Fact]
@@ -84,7 +85,7 @@ namespace StrongGrid.UnitTests.Resources
 			var emailValidation = new EmailValidation(client);
 
 			// Act
-			var result = await emailValidation.ValidateAsync("cedric.fogowl@gmail.com", "Signup Form", CancellationToken.None).ConfigureAwait(false);
+			var result = await emailValidation.ValidateAsync("john.doe@gmial.com", "Signup Form", CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
