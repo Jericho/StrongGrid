@@ -23,7 +23,7 @@ namespace StrongGrid.Models
 		/// The validation verdict.
 		/// </value>
 		[JsonProperty("verdict", NullValueHandling = NullValueHandling.Ignore)]
-		public string Verdict { get; set; }
+		public EmailValidationVerdict Verdict { get; set; }
 
 		/// <summary>
 		/// Gets or sets the validation score.
