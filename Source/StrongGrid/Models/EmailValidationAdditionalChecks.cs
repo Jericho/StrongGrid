@@ -19,7 +19,7 @@ namespace StrongGrid.Models
 
 		/// <summary>
 		/// Gets or sets a value indicating whether the address has suspected bounces.
-		/// If true, our machine learning model suspects that the email address might bounce.
+		/// If true, SendGrid's machine learning model suspects that the email address might bounce.
 		/// </summary>
 		[JsonProperty("has_suspected_bounces", NullValueHandling = NullValueHandling.Ignore)]
 		public bool HasSuspectedBounces { get; set; }
