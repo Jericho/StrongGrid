@@ -67,6 +67,7 @@ namespace StrongGrid.IntegrationTests
 				typeof(CampaignsAndSenderIdentities),
 				typeof(Categories),
 				typeof(ContactsAndCustomFields),
+				typeof(Designs),
 				typeof(EmailActivities),
 				typeof(EmailValidation),
 				typeof(GlobalSuppressions),
