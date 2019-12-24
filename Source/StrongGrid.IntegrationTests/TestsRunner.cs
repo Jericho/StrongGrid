@@ -1,3 +1,4 @@
+using StrongGrid.IntegrationTests.Tests;
 using StrongGrid.Utilities;
 using System;
 using System.IO;
@@ -55,59 +56,60 @@ namespace StrongGrid.IntegrationTests
 			Utils.CenterConsole();
 
 			// These are the integration tests that we will execute
-			var integrationTests = new IIntegrationTest[]
+			var integrationTests = new Type[]
 			{
-				new Tests.AccessManagement(),
-				new Tests.Alerts(),
-				new Tests.ApiKeys(),
-				new Tests.Batches(),
-				new Tests.Blocks(),
-				new Tests.Bounces(),
-				new Tests.CampaignsAndSenderIdentities(),
-				new Tests.Categories(),
-				new Tests.ContactsAndCustomFields(),
-				new Tests.EmailActivities(),
-				new Tests.EmailValidation(),
-				new Tests.GlobalSuppressions(),
-				new Tests.InvalidEmails(),
-				new Tests.IpAddresses(),
-				new Tests.IpPools(),
-				new Tests.ListsAndSegments(),
-				new Tests.Mail(),
-				new Tests.SenderAuthentication(),
-				new Tests.Settings(),
-				new Tests.SpamReports(),
-				new Tests.Statistics(),
-				new Tests.Subusers(),
-				new Tests.UnsubscribeGroupsAndSuppressions(),
-				new Tests.Teammates(),
-				new Tests.Templates(),
-				new Tests.User(),
-				new Tests.WebhookSettings(),
-				new Tests.WebhookStats()
+				typeof(AccessManagement),
+				typeof(Alerts),
+				typeof(ApiKeys),
+				typeof(Batches),
+				typeof(Blocks),
+				typeof(Bounces),
+				typeof(CampaignsAndSenderIdentities),
+				typeof(Categories),
+				typeof(ContactsAndCustomFields),
+				typeof(EmailActivities),
+				typeof(EmailValidation),
+				typeof(GlobalSuppressions),
+				typeof(InvalidEmails),
+				typeof(IpAddresses),
+				typeof(IpPools),
+				typeof(ListsAndSegments),
+				typeof(Mail),
+				typeof(SenderAuthentication),
+				typeof(Settings),
+				typeof(SpamReports),
+				typeof(Statistics),
+				typeof(Subusers),
+				typeof(UnsubscribeGroupsAndSuppressions),
+				typeof(Teammates),
+				typeof(Templates),
+				typeof(User),
+				typeof(WebhookSettings),
+				typeof(WebhookStats)
 			};
 
 			// Execute the async tests in parallel (with max degree of parallelism)
 			var results = await integrationTests.ForEachAsync(
-				async integrationTest =>
+				async testType =>
 				{
 					var log = new StringWriter();
 
 					try
 					{
+						var integrationTest = (IIntegrationTest)Activator.CreateInstance(testType);
 						await integrationTest.RunAsync(client, log, source.Token).ConfigureAwait(false);
-						return (TestName: integrationTest.GetType().Name, ResultCode: ResultCodes.Success, Message: string.Empty);
+						return (TestName: testType.Name, ResultCode: ResultCodes.Success, Message: string.Empty);
 					}
 					catch (OperationCanceledException)
 					{
 						await log.WriteLineAsync($"-----> TASK CANCELLED").ConfigureAwait(false);
-						return (TestName: integrationTest.GetType().Name, ResultCode: ResultCodes.Cancelled, Message: "Task cancelled");
+						return (TestName: testType.Name, ResultCode: ResultCodes.Cancelled, Message: "Task cancelled");
 					}
 					catch (Exception e)
 					{
 						var exceptionMessage = e.GetBaseException().Message;
 						await log.WriteLineAsync($"-----> AN EXCEPTION OCCURRED: {exceptionMessage}").ConfigureAwait(false);
-						return (TestName: integrationTest.GetType().Name, ResultCode: ResultCodes.Exception, Message: exceptionMessage);
+						return (TestName: testType.Name, ResultCode: ResultCodes.Exception, Message: exceptionMessage);
 					}
 					finally
 					{
