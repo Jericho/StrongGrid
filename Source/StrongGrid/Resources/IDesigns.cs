@@ -21,7 +21,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Alert" />.
 		/// </returns>
-		Task<Design[]> GetAllAsync(int recordsPerPage = 100, string pageToken = null, CancellationToken cancellationToken = default);
+		Task<PaginatedResponse<Design>> GetAllAsync(int recordsPerPage = 100, string pageToken = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve all pre-built designs.
@@ -32,6 +32,6 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Alert" />.
 		/// </returns>
-		Task<Design[]> GetAllPrebuiltAsync(int recordsPerPage = 100, string pageToken = null, CancellationToken cancellationToken = default);
+		Task<PaginatedResponse<Design>> GetAllPrebuiltAsync(int recordsPerPage = 100, string pageToken = null, CancellationToken cancellationToken = default);
 	}
 }

@@ -35,7 +35,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Design" />.
 		/// </returns>
-		public Task<Design[]> GetAllAsync(int recordsPerPage = 100, string pageToken = null, CancellationToken cancellationToken = default)
+		public Task<PaginatedResponse<Design>> GetAllAsync(int recordsPerPage = 100, string pageToken = null, CancellationToken cancellationToken = default)
 		{
 			var request = _client
 				.GetAsync(_endpoint)
@@ -45,7 +45,7 @@ namespace StrongGrid.Resources
 
 			if (!string.IsNullOrEmpty(pageToken)) request.WithArgument("page_token", pageToken);
 
-			return request.AsSendGridObject<Design[]>("result");
+			return request.AsPaginatedResponse<Design>("result");
 		}
 
 		/// <summary>
@@ -57,7 +57,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Alert" />.
 		/// </returns>
-		public Task<Design[]> GetAllPrebuiltAsync(int recordsPerPage = 100, string pageToken = null, CancellationToken cancellationToken = default)
+		public Task<PaginatedResponse<Design>> GetAllPrebuiltAsync(int recordsPerPage = 100, string pageToken = null, CancellationToken cancellationToken = default)
 		{
 			var request = _client
 				.GetAsync($"{_endpoint}/pre-builts")
@@ -67,7 +67,7 @@ namespace StrongGrid.Resources
 
 			if (!string.IsNullOrEmpty(pageToken)) request.WithArgument("page_token", pageToken);
 
-			return request.AsSendGridObject<Design[]>("result");
+			return request.AsPaginatedResponse<Design>("result");
 		}
 	}
 }
