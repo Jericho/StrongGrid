@@ -123,6 +123,11 @@ namespace StrongGrid
 		public ICustomFields CustomFields { get; private set; }
 
 		/// <summary>
+		/// Gets the Designs resource which allows you to manage designs.
+		/// </summary>
+		public IDesigns Designs { get; }
+
+		/// <summary>
 		/// Gets the EmailActivities resource which allows you to search and download a CSV of your recent email event activity.
 		/// </summary>
 		/// <value>
@@ -431,6 +436,7 @@ namespace StrongGrid
 			Categories = new Categories(_fluentClient);
 			Contacts = new Contacts(_fluentClient);
 			CustomFields = new CustomFields(_fluentClient);
+			Designs = new Designs(_fluentClient);
 			EmailActivities = new EmailActivities(_fluentClient);
 			EmailValidation = new EmailValidation(_fluentClient);
 			GlobalSuppressions = new GlobalSuppressions(_fluentClient);
