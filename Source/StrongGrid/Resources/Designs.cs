@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -24,6 +25,38 @@ namespace StrongGrid.Resources
 		internal Designs(Pathoschild.Http.Client.IClient client)
 		{
 			_client = client;
+		}
+
+		/// <summary>
+		/// Get an existing design.
+		/// </summary>
+		/// <param name="id">The design identifier.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// The <see cref="Design" />.
+		/// </returns>
+		public Task<Design> GetAsync(string id, CancellationToken cancellationToken = default)
+		{
+			return _client
+				.GetAsync($"{_endpoint}/{id}")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<Design>();
+		}
+
+		/// <summary>
+		/// Get a pre-built design.
+		/// </summary>
+		/// <param name="id">The design identifier.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// The <see cref="Design" />.
+		/// </returns>
+		public Task<Design> GetPrebuiltAsync(string id, CancellationToken cancellationToken = default)
+		{
+			return _client
+				.GetAsync($"{_endpoint}/pre-builts/{id}")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<Design>();
 		}
 
 		/// <summary>
@@ -68,6 +101,123 @@ namespace StrongGrid.Resources
 			if (!string.IsNullOrEmpty(pageToken)) request.WithArgument("page_token", pageToken);
 
 			return request.AsPaginatedResponse<Design>("result");
+		}
+
+		/// <summary>
+		/// Create a new design by duplicating an existing design.
+		/// </summary>
+		/// <param name="id">The identifier of the design to be duplicated.</param>
+		/// <param name="name">The name of the design that will be created.</param>
+		/// <param name="editorType">The editor used in the UI.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// The <see cref="Design" />.
+		/// </returns>
+		public Task<Design> DuplicateAsync(string id, string name = null, EditorType? editorType = null, CancellationToken cancellationToken = default)
+		{
+			var data = CreateJObject(name, editorType);
+			return _client
+				.PostAsync($"{_endpoint}/{id}")
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<Design>();
+		}
+
+		/// <summary>
+		/// Create a new design by duplicating a pre-built design.
+		/// </summary>
+		/// <param name="id">The identifier of the design to be duplicated.</param>
+		/// <param name="name">The name of the design that will be created.</param>
+		/// <param name="editorType">The editor used in the UI.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// The <see cref="Design" />.
+		/// </returns>
+		public Task<Design> DuplicatePrebuiltAsync(string id, string name = null, EditorType? editorType = null, CancellationToken cancellationToken = default)
+		{
+			var data = CreateJObject(name, editorType);
+			return _client
+				.PostAsync($"{_endpoint}/pre-builts/{id}")
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<Design>();
+		}
+
+		/// <summary>
+		/// Delete a design.
+		/// </summary>
+		/// <param name="id">The identifier of the design.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The async task.
+		/// </returns>
+		public Task DeleteAsync(string id, CancellationToken cancellationToken = default)
+		{
+			return _client
+				.DeleteAsync($"{_endpoint}/{id}")
+				.WithCancellationToken(cancellationToken)
+				.AsMessage();
+		}
+
+		/// <summary>
+		/// Create a new design.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="htmlContent">The HTML content.</param>
+		/// <param name="plainContent">The plain text content.</param>
+		/// <param name="generatePlainContent">If true, plain_content is always generated from html_content. If false, plain_content is not altered.</param>
+		/// <param name="subject">The subject.</param>
+		/// <param name="editorType">The editor used in the UI.</param>
+		/// <param name="categories">The categories.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// The <see cref="Design" />.
+		/// </returns>
+		public Task<Design> CreateAsync(string name, string htmlContent, Parameter<string> plainContent = default, Parameter<bool> generatePlainContent = default, Parameter<string> subject = default, EditorType editorType = EditorType.Code, Parameter<string[]> categories = default, CancellationToken cancellationToken = default)
+		{
+			var data = CreateJObject(name, editorType, htmlContent, plainContent, generatePlainContent, subject, categories);
+			return _client
+				.PostAsync(_endpoint)
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<Design>();
+		}
+
+		/// <summary>
+		/// Update an existing design.
+		/// </summary>
+		/// <param name="id">The identifier of the design.</param>
+		/// <param name="name">The name.</param>
+		/// <param name="htmlContent">The HTML content.</param>
+		/// <param name="plainContent">The plain text content.</param>
+		/// <param name="generatePlainContent">If true, plain_content is always generated from html_content. If false, plain_content is not altered.</param>
+		/// <param name="subject">The subject.</param>
+		/// <param name="categories">The categories.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// The <see cref="Design" />.
+		/// </returns>
+		public Task<Design> UpdateAsync(string id, Parameter<string> name = default, Parameter<string> htmlContent = default, Parameter<string> plainContent = default, Parameter<bool> generatePlainContent = default, Parameter<string> subject = default, Parameter<string[]> categories = default, CancellationToken cancellationToken = default)
+		{
+			var data = CreateJObject(name, default, htmlContent, plainContent, generatePlainContent, subject, categories);
+			return _client
+				.PatchAsync($"{_endpoint}/{id}")
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<Design>();
+		}
+
+		private static JObject CreateJObject(string name, Parameter<EditorType?> editorType = default, Parameter<string> htmlContent = default, Parameter<string> plainContent = default, Parameter<bool> generatePlainContent = default, Parameter<string> subject = default, Parameter<string[]> categories = default)
+		{
+			var result = new JObject();
+			result.AddPropertyIfValue("name", name);
+			result.AddPropertyIfValue("editor", editorType);
+			result.AddPropertyIfValue("html_content", htmlContent);
+			result.AddPropertyIfValue("plain_content", plainContent);
+			result.AddPropertyIfValue("generate_plain_content", generatePlainContent);
+			result.AddPropertyIfValue("subject", subject);
+			result.AddPropertyIfValue("categories", categories);
+			return result;
 		}
 	}
 }
