@@ -5,10 +5,10 @@
 #tool dotnet:?package=BenchmarkDotNet.Tool&version=0.12.0
 
 // Install tools.
-#tool nuget:?package=GitVersion.CommandLine&version=5.1.2
+#tool nuget:?package=GitVersion.CommandLine&version=5.1.3
 #tool nuget:?package=GitReleaseManager&version=0.9.0
 #tool nuget:?package=OpenCover&version=4.7.922
-#tool nuget:?package=ReportGenerator&version=4.3.8
+#tool nuget:?package=ReportGenerator&version=4.4.0
 #tool nuget:?package=coveralls.io&version=1.4.2
 #tool nuget:?package=xunit.runner.console&version=2.4.1
 
