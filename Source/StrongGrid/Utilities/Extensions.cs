@@ -201,6 +201,31 @@ namespace StrongGrid.Utilities
 			return await response.Content.AsSendGridObject<T>(propertyName, jsonConverter).ConfigureAwait(false);
 		}
 
+		/// <summary>Asynchronously retrieve the JSON encoded content and converts it to a 'PaginatedResponse' object.</summary>
+		/// <typeparam name="T">The response model to deserialize into.</typeparam>
+		/// <param name="response">The response.</param>
+		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
+		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
+		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
+		public static Task<PaginatedResponse<T>> AsPaginatedResponse<T>(this IResponse response, string propertyName = null, JsonConverter jsonConverter = null)
+		{
+			return response.Message.Content.AsPaginatedResponse<T>(propertyName, jsonConverter);
+		}
+
+		/// <summary>Asynchronously retrieve the JSON encoded content and converts it to a 'PaginatedResponse' object.</summary>
+		/// <typeparam name="T">The response model to deserialize into.</typeparam>
+		/// <param name="request">The request.</param>
+		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
+		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
+		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
+		public static async Task<PaginatedResponse<T>> AsPaginatedResponse<T>(this IRequest request, string propertyName = null, JsonConverter jsonConverter = null)
+		{
+			var response = await request.AsMessage().ConfigureAwait(false);
+			return await response.Content.AsPaginatedResponse<T>(propertyName, jsonConverter).ConfigureAwait(false);
+		}
+
 		/// <summary>Set the body content of the HTTP request.</summary>
 		/// <typeparam name="T">The type of object to serialize into a JSON string.</typeparam>
 		/// <param name="request">The request.</param>
@@ -573,6 +598,27 @@ namespace StrongGrid.Utilities
 			}
 		}
 
+		public static IEnumerable<KeyValuePair<string, string>> ParseQuerystring(this Uri uri)
+		{
+			var querystringParameters = uri
+				.Query.TrimStart('?')
+				.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries)
+				.Select(value => value.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries))
+				.Select(splitValue =>
+				{
+					if (splitValue.Length == 1)
+					{
+						return new KeyValuePair<string, string>(splitValue[0].Trim(), null);
+					}
+					else
+					{
+						return new KeyValuePair<string, string>(splitValue[0].Trim(), splitValue[1].Trim());
+					}
+				});
+
+			return querystringParameters;
+		}
+
 		/// <summary>Asynchronously converts the JSON encoded content and converts it to a 'SendGrid' object of the desired type.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="httpContent">The content.</param>
@@ -606,6 +652,35 @@ namespace StrongGrid.Utilities
 			{
 				return JObject.Parse(responseContent).ToObject<T>(serializer);
 			}
+		}
+
+		/// <summary>Asynchronously retrieve the JSON encoded content and converts it to a 'PaginatedResponse' object.</summary>
+		/// <typeparam name="T">The response model to deserialize into.</typeparam>
+		/// <param name="httpContent">The content.</param>
+		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
+		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
+		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
+		internal static async Task<PaginatedResponse<T>> AsPaginatedResponse<T>(this HttpContent httpContent, string propertyName, JsonConverter jsonConverter = null)
+		{
+			var responseContent = await httpContent.ReadAsStringAsync(null).ConfigureAwait(false);
+			var jObject = JObject.Parse(responseContent);
+
+			var metadata = jObject.Property("_metadata").Value.ToObject<PaginationMetadata>();
+
+			var serializer = new JsonSerializer();
+			if (jsonConverter != null) serializer.Converters.Add(jsonConverter);
+
+			var result = new PaginatedResponse<T>()
+			{
+				PreviousPageToken = metadata.PrevToken,
+				CurrentPageToken = metadata.SelfToken,
+				NextPageToken = metadata.NextToken,
+				TotalRecords = metadata.Count,
+				Records = jObject.Property(propertyName).Value.ToObject<T[]>(serializer)
+			};
+
+			return result;
 		}
 
 		private static async Task<(bool, string)> GetErrorMessage(HttpResponseMessage message)
