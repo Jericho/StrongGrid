@@ -141,6 +141,27 @@ namespace StrongGrid.UnitTests.Resources
 		}
 
 		[Fact]
+		public async Task GetPrebuiltAsync()
+		{
+			// Arrange
+			var designId = "xxxxxxxx";
+
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "pre-builts", designId)).Respond("application/json", SINGLE_DESIGN_JSON);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var designs = new Designs(client);
+
+			// Act
+			var result = await designs.GetPrebuiltAsync(designId, CancellationToken.None).ConfigureAwait(false);
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+		}
+
+		[Fact]
 		public async Task GetAllAsync()
 		{
 			// Arrange
@@ -152,6 +173,31 @@ namespace StrongGrid.UnitTests.Resources
 
 			// Act
 			var result = await designs.GetAllAsync(100, null, CancellationToken.None).ConfigureAwait(false);
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+			result.Records.ShouldNotBeNull();
+			result.Records.Length.ShouldBe(2);
+			result.PreviousPageToken.ShouldBe("prev_token");
+			result.CurrentPageToken.ShouldBe("self_token");
+			result.NextPageToken.ShouldBe("next_token");
+			result.TotalRecords.ShouldBe(5);
+		}
+
+		[Fact]
+		public async Task GetAllPrebuiltAsync()
+		{
+			// Arrange
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "pre-builts")).Respond("application/json", MULTIPLE_DESIGNS_JSON);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var designs = new Designs(client);
+
+			// Act
+			var result = await designs.GetAllPrebuiltAsync(100, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -201,6 +247,52 @@ namespace StrongGrid.UnitTests.Resources
 
 			// Act
 			var result = await designs.UpdateAsync(designId, name, htmlContent, cancellationToken: CancellationToken.None).ConfigureAwait(false);
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+		}
+
+		[Fact]
+		public async Task DuplicateAsync()
+		{
+			// Arrange
+			var designId = "xxxxxxxx";
+			var name = "Duplicated design";
+			var editorType = EditorType.Code;
+
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, designId)).Respond("application/json", SINGLE_DESIGN_JSON);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var designs = new Designs(client);
+
+			// Act
+			var result = await designs.DuplicateAsync(designId, name, editorType, CancellationToken.None).ConfigureAwait(false);
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.ShouldNotBeNull();
+		}
+
+		[Fact]
+		public async Task DuplicatePrebuiltAsync()
+		{
+			// Arrange
+			var designId = "xxxxxxxx";
+			var name = "Duplicated design";
+			var editorType = EditorType.Code;
+
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "pre-builts", designId)).Respond("application/json", SINGLE_DESIGN_JSON);
+
+			var client = Utils.GetFluentClient(mockHttp);
+			var designs = new Designs(client);
+
+			// Act
+			var result = await designs.DuplicatePrebuiltAsync(designId, name, editorType, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
