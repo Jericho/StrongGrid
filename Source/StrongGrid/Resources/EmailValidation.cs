@@ -36,7 +36,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="EmailValidationResult" />.
 		/// </returns>
-		public Task<EmailValidationResult> ValidateAsync(string emailAddress, string source, CancellationToken cancellationToken = default)
+		public Task<EmailValidationResult> ValidateAsync(string emailAddress, string source = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject
 			{
