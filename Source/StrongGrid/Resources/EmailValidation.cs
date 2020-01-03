@@ -40,9 +40,9 @@ namespace StrongGrid.Resources
 		{
 			var data = new JObject
 			{
-				{ "email", emailAddress },
-				{ "source", source }
+				{ "email", emailAddress }
 			};
+			data.AddPropertyIfValue("source", source);
 
 			return _client
 				.PostAsync(_endpoint)

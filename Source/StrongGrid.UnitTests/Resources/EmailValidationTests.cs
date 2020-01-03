@@ -16,7 +16,7 @@ namespace StrongGrid.UnitTests.Resources
 
 		private const string ENDPOINT = "validations/email";
 
-		private const string VALIDATION_RESPONSE = @"{
+		private const string INVALID_EMAIL_RESPONSE = @"{
 			'email': 'john.doe@gmial.com',
 			'verdict': 'Invalid',
 			'score': 0.00089,
@@ -40,15 +40,40 @@ namespace StrongGrid.UnitTests.Resources
 			'ip_address': '123.45.67.89'
 		}";
 
+		private const string VALID_EMAIL_RESPONSE = @"{
+			'email': 'valid_email_address@mtsg.me',
+			'verdict': 'Valid',
+			'score': 0.93357,
+			'local': 'valid_email_address',
+			'host': 'mtsg.me',
+			'checks': {
+				'domain': {
+					'has_valid_address_syntax': true,
+					'has_mx_or_a_record': true,
+					'is_suspected_disposable_address': false
+
+				},
+				'local_part': {
+					'is_suspected_role_address': false
+				},
+				'additional': {
+					'has_known_bounces': false,
+					'has_suspected_bounces': false
+				}
+			},
+			'source': 'TEST',
+			'ip_address': '123.123.123.123'
+		}";
+
 		#endregion
 
 		[Fact]
-		public void Parse_json()
+		public void Parse_invalid_email_json()
 		{
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<EmailValidationResult>(VALIDATION_RESPONSE);
+			var result = JsonConvert.DeserializeObject<EmailValidationResult>(INVALID_EMAIL_RESPONSE);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -72,11 +97,42 @@ namespace StrongGrid.UnitTests.Resources
 			result.Verdict.ShouldBe(EmailValidationVerdict.Invalid);
 		}
 
+
+		[Fact]
+		public void Parse_valid_email_json()
+		{
+			// Arrange
+
+			// Act
+			var result = JsonConvert.DeserializeObject<EmailValidationResult>(VALID_EMAIL_RESPONSE);
+
+			// Assert
+			result.ShouldNotBeNull();
+			result.Checks.ShouldNotBeNull();
+			result.Checks.Additional.ShouldNotBeNull();
+			result.Checks.Additional.HasKnownBounces.ShouldBeFalse();
+			result.Checks.Additional.HasSuspectedBounces.ShouldBeFalse();
+			result.Checks.Domain.ShouldNotBeNull();
+			result.Checks.Domain.HasMxOrARecord.ShouldBeTrue();
+			result.Checks.Domain.HasValidAddressSyntax.ShouldBeTrue();
+			result.Checks.Domain.IsSuspectedDisposableAddress.ShouldBeFalse();
+			result.Checks.LocalPart.ShouldNotBeNull();
+			result.Checks.LocalPart.IsSuspectedRoleAddress.ShouldBeFalse();
+			result.Email.ShouldBe("valid_email_address@mtsg.me");
+			result.Host.ShouldBe("mtsg.me");
+			result.IpAddress.ShouldBe("123.123.123.123");
+			result.Local.ShouldBe("valid_email_address");
+			result.Score.ShouldBe(0.93357);
+			result.Source.ShouldBe("TEST");
+			result.Suggestion.ShouldBeNull();
+			result.Verdict.ShouldBe(EmailValidationVerdict.Valid);
+		}
+
 		[Fact]
 		public async Task ValidateAsync()
 		{
 			// Arrange
-			var apiResponse = "{'result':" + VALIDATION_RESPONSE + "}";
+			var apiResponse = "{'result':" + VALID_EMAIL_RESPONSE + "}";
 
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", apiResponse);
