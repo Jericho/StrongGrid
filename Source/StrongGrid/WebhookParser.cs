@@ -72,7 +72,7 @@ namespace StrongGrid
 			// Therefore, we must make a copy of the stream if it doesn't allow changing the position
 			if (!stream.CanSeek)
 			{
-				using (var ms = new MemoryStream())
+				using (var ms = Utils.MemoryStreamManager.GetStream())
 				{
 					await stream.CopyToAsync(ms).ConfigureAwait(false);
 					return await ParseInboundEmailWebhookAsync(ms).ConfigureAwait(false);
@@ -134,7 +134,7 @@ namespace StrongGrid
 			// Therefore, we must make a copy of the stream if it doesn't allow changing the position
 			if (!stream.CanSeek)
 			{
-				using (var ms = new MemoryStream())
+				using (var ms = Utils.MemoryStreamManager.GetStream())
 				{
 					stream.CopyTo(ms);
 					return ParseInboundEmailWebhook(ms);

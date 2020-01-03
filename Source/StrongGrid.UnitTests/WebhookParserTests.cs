@@ -437,7 +437,7 @@ Content-Disposition: form-data; name=""attachments""
 
 			using (Stream stream = new MemoryStream())
 			{
-				using (var fileStream = File.OpenRead("InboudEmailTestData/raw_data_with_attachments.txt"))
+				using (var fileStream = File.OpenRead("InboudEmailTestData/raw_data.txt"))
 				{
 					fileStream.CopyTo(stream);
 				}
@@ -449,7 +449,7 @@ Content-Disposition: form-data; name=""attachments""
 
 				inboundEmail.Dkim.ShouldBe("{@sendgrid.com : pass}");
 
-				var rawEmailTestData = File.ReadAllText("InboudEmailTestData/raw_email_with_attachments.txt");
+				var rawEmailTestData = File.ReadAllText("InboudEmailTestData/raw_email.txt");
 				inboundEmail.RawEmail.Trim().ShouldBe(rawEmailTestData);
 
 				inboundEmail.To[0].Email.ShouldBe("inbound@inbound.example.com");
@@ -472,11 +472,12 @@ Content-Disposition: form-data; name=""attachments""
 
 				inboundEmail.SpamScore.ShouldBeNull();
 
-				inboundEmail.Charsets.Except(new[] {
-				new KeyValuePair<string, Encoding>("to", Encoding.UTF8),
-				new KeyValuePair<string, Encoding>("subject", Encoding.UTF8),
-				new KeyValuePair<string, Encoding>("from", Encoding.UTF8)
-			}).Count().ShouldBe(0);
+				inboundEmail.Charsets.Except(new[]
+				{
+					new KeyValuePair<string, Encoding>("to", Encoding.UTF8),
+					new KeyValuePair<string, Encoding>("subject", Encoding.UTF8),
+					new KeyValuePair<string, Encoding>("from", Encoding.UTF8)
+				}).Count().ShouldBe(0);
 
 				inboundEmail.Spf.ShouldBe("pass");
 			}
@@ -489,7 +490,7 @@ Content-Disposition: form-data; name=""attachments""
 
 			using (Stream stream = new MemoryStream())
 			{
-				using (var fileStream = File.OpenRead("InboudEmailTestData/raw_data_with_attachments.txt"))
+				using (var fileStream = File.OpenRead("InboudEmailTestData/raw_data.txt"))
 				{
 					await fileStream.CopyToAsync(stream).ConfigureAwait(false);
 				}
@@ -501,7 +502,7 @@ Content-Disposition: form-data; name=""attachments""
 
 				inboundEmail.Dkim.ShouldBe("{@sendgrid.com : pass}");
 
-				var rawEmailTestData = File.ReadAllText("InboudEmailTestData/raw_email_with_attachments.txt");
+				var rawEmailTestData = File.ReadAllText("InboudEmailTestData/raw_email.txt");
 				inboundEmail.RawEmail.Trim().ShouldBe(rawEmailTestData);
 
 				inboundEmail.To[0].Email.ShouldBe("inbound@inbound.example.com");
@@ -524,11 +525,12 @@ Content-Disposition: form-data; name=""attachments""
 
 				inboundEmail.SpamScore.ShouldBeNull();
 
-				inboundEmail.Charsets.Except(new[] {
-				new KeyValuePair<string, Encoding>("to", Encoding.UTF8),
-				new KeyValuePair<string, Encoding>("subject", Encoding.UTF8),
-				new KeyValuePair<string, Encoding>("from", Encoding.UTF8)
-			}).Count().ShouldBe(0);
+				inboundEmail.Charsets.Except(new[]
+				{
+					new KeyValuePair<string, Encoding>("to", Encoding.UTF8),
+					new KeyValuePair<string, Encoding>("subject", Encoding.UTF8),
+					new KeyValuePair<string, Encoding>("from", Encoding.UTF8)
+				}).Count().ShouldBe(0);
 
 				inboundEmail.Spf.ShouldBe("pass");
 			}

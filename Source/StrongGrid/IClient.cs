@@ -88,12 +88,23 @@ namespace StrongGrid
 		ICustomFields CustomFields { get; }
 
 		/// <summary>
+		/// Gets the Designs resource which allows you to manage designs.
+		/// </summary>
+		IDesigns Designs { get; }
+
+		/// <summary>
 		/// Gets the EmailActivities resource which allows you to search and download a CSV of your recent email event activity.
 		/// </summary>
 		/// <value>
 		/// The email activities.
 		/// </value>
 		IEmailActivities EmailActivities { get; }
+
+		/// <summary>
+		/// Gets the validation resource.
+		/// </summary>
+		/// <value>The email validation.</value>
+		IEmailValidation EmailValidation { get; }
 
 		/// <summary>
 		/// Gets the GlobalSuppressions resource.
