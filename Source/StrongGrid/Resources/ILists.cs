@@ -1,4 +1,4 @@
-﻿using StrongGrid.Models;
+using StrongGrid.Models;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -88,9 +88,9 @@ namespace StrongGrid.Resources
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// An array of <see cref="Contact" />.
+		/// An array of <see cref="Models.Legacy.Contact" />.
 		/// </returns>
-		Task<Contact[]> GetRecipientsAsync(long listId, int recordsPerPage = 100, int page = 1, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<Models.Legacy.Contact[]> GetRecipientsAsync(long listId, int recordsPerPage = 100, int page = 1, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Add a recipient to a list.

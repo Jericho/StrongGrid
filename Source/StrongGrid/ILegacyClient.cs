@@ -3,11 +3,10 @@ using StrongGrid.Resources;
 namespace StrongGrid
 {
 	/// <summary>
-	/// Interface for the SendGrid REST client for SendGrid's API.
+	/// Interface for the SendGrid REST client for SendGrid's legacy API.
 	/// </summary>
-	public interface IClient
+	public interface ILegacyClient
 	{
-		/*
 		/// <summary>
 		/// Gets the Campaigns resource which allows you to manage your campaigns.
 		/// </summary>
@@ -23,7 +22,6 @@ namespace StrongGrid
 		/// The categories.
 		/// </value>
 		ICategories Categories { get; }
-		*/
 
 		/// <summary>
 		/// Gets the Contacts resource which allows you to manage your contacts (also sometimes refered to as 'recipients').
@@ -31,9 +29,8 @@ namespace StrongGrid
 		/// <value>
 		/// The contacts.
 		/// </value>
-		IContacts Contacts { get; }
+		Resources.Legacy.IContacts Contacts { get; }
 
-		/*
 		/// <summary>
 		/// Gets the CustomFields resource which allows you to manage your custom fields.
 		/// </summary>
@@ -73,6 +70,5 @@ namespace StrongGrid
 		/// The <see cref="ISenderAuthentication"/>.
 		/// </value>
 		ISenderAuthentication SenderAuthentication { get; }
-		*/
 	}
 }

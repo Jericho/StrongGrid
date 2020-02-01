@@ -7,9 +7,9 @@ using System.Net.Http;
 namespace StrongGrid
 {
 	/// <summary>
-	/// REST client for interacting with SendGrid's API.
+	/// REST client for interacting with SendGrid's legacy API.
 	/// </summary>
-	public class Client : BaseClient, IClient
+	public class LegacyClient : BaseClient, ILegacyClient
 	{
 		#region PROPERTIES
 
@@ -35,7 +35,7 @@ namespace StrongGrid
 		/// <value>
 		/// The contacts.
 		/// </value>
-		public IContacts Contacts { get; private set; }
+		public Resources.Legacy.IContacts Contacts { get; private set; }
 
 		/// <summary>
 		/// Gets the CustomFields resource which allows you to manage your custom fields.
@@ -74,98 +74,98 @@ namespace StrongGrid
 		#region CTOR
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Client"/> class.
+		/// Initializes a new instance of the <see cref="LegacyClient"/> class.
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key.</param>
 		/// <param name="options">Options for the SendGrid client.</param>
-		public Client(string apiKey, StrongGridClientOptions options = null)
+		public LegacyClient(string apiKey, StrongGridClientOptions options = null)
 		: base(apiKey, null, null, null, false, options)
 		{
 			Init();
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Client"/> class with a specific proxy.
+		/// Initializes a new instance of the <see cref="LegacyClient"/> class with a specific proxy.
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key.</param>
 		/// <param name="proxy">Allows you to specify a proxy.</param>
 		/// <param name="options">Options for the SendGrid client.</param>
-		public Client(string apiKey, IWebProxy proxy, StrongGridClientOptions options = null)
+		public LegacyClient(string apiKey, IWebProxy proxy, StrongGridClientOptions options = null)
 			: base(apiKey, null, null, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }), true, options)
 		{
 			Init();
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Client"/> class with a specific handler.
+		/// Initializes a new instance of the <see cref="LegacyClient"/> class with a specific handler.
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key.</param>
 		/// <param name="handler">TThe HTTP handler stack to use for sending requests.</param>
 		/// <param name="options">Options for the SendGrid client.</param>
-		public Client(string apiKey, HttpMessageHandler handler, StrongGridClientOptions options = null)
+		public LegacyClient(string apiKey, HttpMessageHandler handler, StrongGridClientOptions options = null)
 			: base(apiKey, null, null, new HttpClient(handler), true, options)
 		{
 			Init();
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Client" /> class with a specific http client.
+		/// Initializes a new instance of the <see cref="LegacyClient" /> class with a specific http client.
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key.</param>
 		/// <param name="httpClient">Allows you to inject your own HttpClient. This is useful, for example, to setup the HtppClient with a proxy.</param>
 		/// <param name="options">Options for the SendGrid client.</param>
-		public Client(string apiKey, HttpClient httpClient, StrongGridClientOptions options = null)
+		public LegacyClient(string apiKey, HttpClient httpClient, StrongGridClientOptions options = null)
 			: base(apiKey, null, null, httpClient, false, options)
 		{
 			Init();
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Client"/> class.
+		/// Initializes a new instance of the <see cref="LegacyClient"/> class.
 		/// </summary>
 		/// <param name="username">Your username.</param>
 		/// <param name="password">Your password.</param>
 		/// <param name="options">Options for the SendGrid client.</param>
-		public Client(string username, string password, StrongGridClientOptions options = null)
+		public LegacyClient(string username, string password, StrongGridClientOptions options = null)
 			: base(null, username, password, null, false, options)
 		{
 			Init();
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Client"/> class.
+		/// Initializes a new instance of the <see cref="LegacyClient"/> class.
 		/// </summary>
 		/// <param name="username">Your username.</param>
 		/// <param name="password">Your password.</param>
 		/// <param name="proxy">Allows you to specify a proxy.</param>
 		/// <param name="options">Options for the SendGrid client.</param>
-		public Client(string username, string password, IWebProxy proxy, StrongGridClientOptions options = null)
+		public LegacyClient(string username, string password, IWebProxy proxy, StrongGridClientOptions options = null)
 			: base(null, username, password, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }), true, options)
 		{
 			Init();
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Client"/> class.
+		/// Initializes a new instance of the <see cref="LegacyClient"/> class.
 		/// </summary>
 		/// <param name="username">Your username.</param>
 		/// <param name="password">Your password.</param>
 		/// <param name="handler">TThe HTTP handler stack to use for sending requests.</param>
 		/// <param name="options">Options for the SendGrid client.</param>
-		public Client(string username, string password, HttpMessageHandler handler, StrongGridClientOptions options = null)
+		public LegacyClient(string username, string password, HttpMessageHandler handler, StrongGridClientOptions options = null)
 			: base(null, username, password, new HttpClient(handler), true, options)
 		{
 			Init();
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Client" /> class.
+		/// Initializes a new instance of the <see cref="LegacyClient" /> class.
 		/// </summary>
 		/// <param name="username">Your username.</param>
 		/// <param name="password">Your password.</param>
 		/// <param name="httpClient">Allows you to inject your own HttpClient. This is useful, for example, to setup the HtppClient with a proxy.</param>
 		/// <param name="options">Options for the SendGrid client.</param>
-		public Client(string username, string password, HttpClient httpClient, StrongGridClientOptions options = null)
+		public LegacyClient(string username, string password, HttpClient httpClient, StrongGridClientOptions options = null)
 			: base(null, username, password, httpClient, false, options)
 		{
 			Init();
@@ -184,7 +184,7 @@ namespace StrongGrid
 			return new StrongGridClientOptions()
 			{
 				LogLevelSuccessfulCalls = LogLevel.Debug,
-				LogLevelFailedCalls = LogLevel.Error
+				LogLevelFailedCalls = LogLevel.Debug
 			};
 		}
 
@@ -196,7 +196,7 @@ namespace StrongGrid
 		{
 			Campaigns = new Campaigns(FluentClient);
 			Categories = new Categories(FluentClient);
-			Contacts = new Contacts(FluentClient);
+			Contacts = new Resources.Legacy.Contacts(FluentClient);
 			CustomFields = new CustomFields(FluentClient);
 			Lists = new Lists(FluentClient);
 			Segments = new Segments(FluentClient);

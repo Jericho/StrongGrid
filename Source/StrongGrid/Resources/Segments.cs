@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -153,9 +153,9 @@ namespace StrongGrid.Resources
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// An array of <see cref="Contact" />.
+		/// An array of <see cref="Models.Legacy.Contact" />.
 		/// </returns>
-		public Task<Contact[]> GetRecipientsAsync(long segmentId, int recordsPerPage = 100, int page = 1, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<Models.Legacy.Contact[]> GetRecipientsAsync(long segmentId, int recordsPerPage = 100, int page = 1, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{segmentId}/recipients")
@@ -163,7 +163,7 @@ namespace StrongGrid.Resources
 				.WithArgument("page_size", recordsPerPage)
 				.WithArgument("page", page)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Contact[]>("recipients");
+				.AsSendGridObject<Models.Legacy.Contact[]>("recipients");
 		}
 	}
 }
