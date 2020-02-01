@@ -6,6 +6,6 @@ namespace StrongGrid.IntegrationTests
 {
 	public interface IIntegrationTest
 	{
-		Task RunAsync(IClient client, TextWriter log, CancellationToken cancellationToken);
+		Task RunAsync(IBaseClient baseClient, TextWriter log, CancellationToken cancellationToken);
 	}
 }

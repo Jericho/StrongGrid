@@ -12,6 +12,8 @@ namespace StrongGrid.IntegrationTests
 	internal class TestsRunner
 	{
 		private const int MAX_SENDGRID_API_CONCURRENCY = 5;
+		private const int TEST_NAME_MAX_LENGTH = 25;
+		private const string SUCCESSFUL_TEST_MESSAGE = "Completed successfully";
 
 		private enum ResultCodes
 		{
@@ -41,6 +43,8 @@ namespace StrongGrid.IntegrationTests
 			// Configure StrongGrid client
 			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
 			var proxy = useFiddler ? new WebProxy("http://localhost:8888") : null;
+
+			var legacyClient = new LegacyClient(apiKey, proxy, options);
 			var client = new Client(apiKey, proxy, options);
 
 			// Configure Console
@@ -74,6 +78,7 @@ namespace StrongGrid.IntegrationTests
 				typeof(InvalidEmails),
 				typeof(IpAddresses),
 				typeof(IpPools),
+				typeof(LegacyContactsAndCustomFields),
 				typeof(ListsAndSegments),
 				typeof(Mail),
 				typeof(SenderAuthentication),
@@ -98,8 +103,17 @@ namespace StrongGrid.IntegrationTests
 					try
 					{
 						var integrationTest = (IIntegrationTest)Activator.CreateInstance(testType);
-						await integrationTest.RunAsync(client, log, source.Token).ConfigureAwait(false);
-						return (TestName: testType.Name, ResultCode: ResultCodes.Success, Message: string.Empty);
+
+						if (testType.Name.StartsWith("Legacy"))
+						{
+							await integrationTest.RunAsync(legacyClient as IBaseClient, log, source.Token).ConfigureAwait(false);
+						}
+						else
+						{
+							await integrationTest.RunAsync(client as IBaseClient, log, source.Token).ConfigureAwait(false);
+						}
+
+						return (TestName: testType.Name, ResultCode: ResultCodes.Success, Message: SUCCESSFUL_TEST_MESSAGE);
 					}
 					catch (OperationCanceledException)
 					{
@@ -125,22 +139,10 @@ namespace StrongGrid.IntegrationTests
 			await summary.WriteLineAsync("******************** SUMMARY *********************").ConfigureAwait(false);
 			await summary.WriteLineAsync("**************************************************").ConfigureAwait(false);
 
-			var resultsWithMessage = results
-				.Where(r => !string.IsNullOrEmpty(r.Message))
-				.ToArray();
-
-			if (resultsWithMessage.Any())
+			foreach (var (TestName, ResultCode, Message) in results.OrderBy(r => r.TestName).ToArray())
 			{
-				foreach (var (TestName, ResultCode, Message) in resultsWithMessage)
-				{
-					const int TEST_NAME_MAX_LENGTH = 25;
-					var name = TestName.Length <= TEST_NAME_MAX_LENGTH ? TestName : TestName.Substring(0, TEST_NAME_MAX_LENGTH - 3) + "...";
-					await summary.WriteLineAsync($"{name.PadRight(TEST_NAME_MAX_LENGTH, ' ')} : {Message}").ConfigureAwait(false);
-				}
-			}
-			else
-			{
-				await summary.WriteLineAsync("All tests completed succesfully").ConfigureAwait(false);
+				var name = TestName.Length <= TEST_NAME_MAX_LENGTH ? TestName : TestName.Substring(0, TEST_NAME_MAX_LENGTH - 3) + "...";
+				await summary.WriteLineAsync($"{name.PadRight(TEST_NAME_MAX_LENGTH, ' ')} : {Message}").ConfigureAwait(false);
 			}
 
 			await summary.WriteLineAsync("**************************************************").ConfigureAwait(false);

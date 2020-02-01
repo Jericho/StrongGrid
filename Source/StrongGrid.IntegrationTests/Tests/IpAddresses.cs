@@ -7,7 +7,7 @@ namespace StrongGrid.IntegrationTests.Tests
 {
 	public class IpAddresses : IIntegrationTest
 	{
-		public async Task RunAsync(IClient client, TextWriter log, CancellationToken cancellationToken)
+		public async Task RunAsync(IBaseClient client, TextWriter log, CancellationToken cancellationToken)
 		{
 			await log.WriteLineAsync("\n***** IP ADDRESSES *****\n").ConfigureAwait(false);
 

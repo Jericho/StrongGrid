@@ -7,9 +7,14 @@ using System.Threading.Tasks;
 
 namespace StrongGrid.IntegrationTests.Tests
 {
-	public class CampaignsAndSenderIdentities : IIntegrationTest
+	public class LegacyCampaignsAndSenderIdentities : IIntegrationTest
 	{
-		public async Task RunAsync(IClient client, TextWriter log, CancellationToken cancellationToken)
+		public Task RunAsync(IBaseClient client, TextWriter log, CancellationToken cancellationToken)
+		{
+			return RunAsync((ILegacyClient)client, log, cancellationToken);
+		}
+
+		public async Task RunAsync(ILegacyClient client, TextWriter log, CancellationToken cancellationToken)
 		{
 			var YOUR_EMAIL = "your_email@example.com";
 
@@ -54,13 +59,13 @@ namespace StrongGrid.IntegrationTests.Tests
 				await log.WriteLineAsync("List created").ConfigureAwait(false);
 			}
 
-			var unsubscribeGroups = await client.UnsubscribeGroups.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
+			var unsubscribeGroups = await ((IBaseClient)client).UnsubscribeGroups.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All unsubscribe groups retrieved. There are {unsubscribeGroups.Length} groups").ConfigureAwait(false);
 
 			var unsubscribeGroup = unsubscribeGroups.FirstOrDefault(l => l.Name == "Integration testing group");
 			if (unsubscribeGroup == null)
 			{
-				unsubscribeGroup = await client.UnsubscribeGroups.CreateAsync("Integration testing group", "For testing purposes", false, null, cancellationToken).ConfigureAwait(false);
+				unsubscribeGroup = await ((IBaseClient)client).UnsubscribeGroups.CreateAsync("Integration testing group", "For testing purposes", false, null, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync("Unsubscribe group created").ConfigureAwait(false);
 			}
 

@@ -7,11 +7,16 @@ using System.Threading.Tasks;
 
 namespace StrongGrid.IntegrationTests.Tests
 {
-	public class ListsAndSegments : IIntegrationTest
+	public class LegacyListsAndSegments : IIntegrationTest
 	{
-		public async Task RunAsync(IClient client, TextWriter log, CancellationToken cancellationToken)
+		public Task RunAsync(IBaseClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			await log.WriteLineAsync("\n***** LISTS AND SEGMENTS *****\n").ConfigureAwait(false);
+			return RunAsync((ILegacyClient)client, log, cancellationToken);
+		}
+
+		public async Task RunAsync(ILegacyClient client, TextWriter log, CancellationToken cancellationToken)
+		{
+			await log.WriteLineAsync("\n***** LEGACY LISTS AND SEGMENTS *****\n").ConfigureAwait(false);
 
 			// GET LISTS
 			var lists = await client.Lists.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
