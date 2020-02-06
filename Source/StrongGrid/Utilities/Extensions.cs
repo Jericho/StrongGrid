@@ -180,25 +180,27 @@ namespace StrongGrid.Utilities
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="response">The response.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
+		/// <param name="throwIfPropertyIsMissing">Indicates if an exception should be thrown when the specified JSON property is missing from the response.</param>
 		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		public static Task<T> AsSendGridObject<T>(this IResponse response, string propertyName = null, JsonConverter jsonConverter = null)
+		public static Task<T> AsSendGridObject<T>(this IResponse response, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonConverter jsonConverter = null)
 		{
-			return response.Message.Content.AsSendGridObject<T>(propertyName, jsonConverter);
+			return response.Message.Content.AsSendGridObject<T>(propertyName, throwIfPropertyIsMissing, jsonConverter);
 		}
 
 		/// <summary>Asynchronously retrieve the JSON encoded response body and convert it to a 'SendGrid' object of the desired type.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="request">The request.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
+		/// <param name="throwIfPropertyIsMissing">Indicates if an exception should be thrown when the specified JSON property is missing from the response.</param>
 		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		public static async Task<T> AsSendGridObject<T>(this IRequest request, string propertyName = null, JsonConverter jsonConverter = null)
+		public static async Task<T> AsSendGridObject<T>(this IRequest request, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonConverter jsonConverter = null)
 		{
 			var response = await request.AsMessage().ConfigureAwait(false);
-			return await response.Content.AsSendGridObject<T>(propertyName, jsonConverter).ConfigureAwait(false);
+			return await response.Content.AsSendGridObject<T>(propertyName, throwIfPropertyIsMissing, jsonConverter).ConfigureAwait(false);
 		}
 
 		/// <summary>Asynchronously retrieve the JSON encoded content and converts it to a 'PaginatedResponse' object.</summary>
@@ -232,8 +234,8 @@ namespace StrongGrid.Utilities
 		/// <param name="body">The value to serialize into the HTTP body content.</param>
 		/// <param name="omitCharSet">
 		/// Indicates if the charset should be omitted from the 'Content-Type' request header.
-		/// Most endpoints in the SendGrid API require this parameter to be false but some endpoints,
-		/// such as the new marketing campaigns endpoints, require this parameter to be true.
+		/// The vast majority of SendGrid's endpoints require this parameter to be false but one
+		/// notable exception is 'Contacts.Upsert' in the new marketing campaigns API.
 		/// SendGrid has not documented when it should be true/false, I only figured it out when
 		/// getting a "invalid content-type: application/json; charset=utf-8" exception which was
 		/// solved by omitting the "charset".
@@ -641,10 +643,11 @@ namespace StrongGrid.Utilities
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="httpContent">The content.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
+		/// <param name="throwIfPropertyIsMissing">Indicates if an exception should be thrown when the specified JSON property is missing from the response.</param>
 		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		internal static async Task<T> AsSendGridObject<T>(this HttpContent httpContent, string propertyName = null, JsonConverter jsonConverter = null)
+		internal static async Task<T> AsSendGridObject<T>(this HttpContent httpContent, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonConverter jsonConverter = null)
 		{
 			var responseContent = await httpContent.ReadAsStringAsync(null).ConfigureAwait(false);
 
@@ -657,7 +660,14 @@ namespace StrongGrid.Utilities
 				var jProperty = jObject.Property(propertyName);
 				if (jProperty == null)
 				{
-					throw new ArgumentException($"The response does not contain a field called '{propertyName}'", nameof(propertyName));
+					if (throwIfPropertyIsMissing)
+					{
+						throw new ArgumentException($"The response does not contain a field called '{propertyName}'", nameof(propertyName));
+					}
+					else
+					{
+						return default(T);
+					}
 				}
 
 				return jProperty.Value.ToObject<T>(serializer);
