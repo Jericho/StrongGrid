@@ -1,8 +1,7 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace StrongGrid.Utilities
 {
@@ -94,11 +93,7 @@ namespace StrongGrid.Utilities
 				return pairs.ToArray();
 			}
 
-			/*
-				When we stop supporting .NET 4.5.2 we will be able to use the following:
-				return Array.Empty<KeyValuePair<string, string>>();
-			*/
-			return Enumerable.Empty<KeyValuePair<string, string>>().ToArray();
+			return Array.Empty<KeyValuePair<string, string>>();
 		}
 	}
 }
