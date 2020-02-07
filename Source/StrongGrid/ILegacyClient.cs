@@ -62,13 +62,5 @@ namespace StrongGrid
 		/// The sender identities.
 		/// </value>
 		ISenderIdentities SenderIdentities { get; }
-
-		/// <summary>
-		/// Gets the SenderAuthentication resource.
-		/// </summary>
-		/// <value>
-		/// The <see cref="ISenderAuthentication"/>.
-		/// </value>
-		ISenderAuthentication SenderAuthentication { get; }
 	}
 }

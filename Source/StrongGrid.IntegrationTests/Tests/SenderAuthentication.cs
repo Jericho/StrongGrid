@@ -5,14 +5,9 @@ using System.Threading.Tasks;
 
 namespace StrongGrid.IntegrationTests.Tests
 {
-	public class LegacySenderAuthentication : IIntegrationTest
+	public class SenderAuthentication : IIntegrationTest
 	{
-		public Task RunAsync(IBaseClient client, TextWriter log, CancellationToken cancellationToken)
-		{
-			return RunAsync((ILegacyClient)client, log, cancellationToken);
-		}
-
-		public async Task RunAsync(ILegacyClient client, TextWriter log, CancellationToken cancellationToken)
+		public async Task RunAsync(IBaseClient client, TextWriter log, CancellationToken cancellationToken)
 		{
 			if (cancellationToken.IsCancellationRequested) return;
 

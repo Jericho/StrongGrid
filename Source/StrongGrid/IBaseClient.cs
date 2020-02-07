@@ -115,6 +115,14 @@ namespace StrongGrid
 		IMail Mail { get; }
 
 		/// <summary>
+		/// Gets the SenderAuthentication resource.
+		/// </summary>
+		/// <value>
+		/// The <see cref="ISenderAuthentication"/>.
+		/// </value>
+		ISenderAuthentication SenderAuthentication { get; }
+
+		/// <summary>
 		/// Gets the Settings resource.
 		/// </summary>
 		/// <value>

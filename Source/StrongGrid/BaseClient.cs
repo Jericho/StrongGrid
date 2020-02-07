@@ -158,6 +158,14 @@ namespace StrongGrid
 		public IMail Mail { get; private set; }
 
 		/// <summary>
+		/// Gets the SenderAuthentication resource.
+		/// </summary>
+		/// <value>
+		/// The <see cref="ISenderAuthentication"/>.
+		/// </value>
+		public ISenderAuthentication SenderAuthentication { get; private set; }
+
+		/// <summary>
 		/// Gets the Settings resource.
 		/// </summary>
 		/// <value>
@@ -228,14 +236,6 @@ namespace StrongGrid
 		/// The user.
 		/// </value>
 		public IUser User { get; private set; }
-
-		/// <summary>
-		/// Gets the SenderAuthentication resource.
-		/// </summary>
-		/// <value>
-		/// The <see cref="ISenderAuthentication"/>.
-		/// </value>
-		public ISenderAuthentication SenderAuthentication { get; private set; }
 
 		/// <summary>
 		/// Gets the webhook settings resource.
