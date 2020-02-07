@@ -1,6 +1,5 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using StrongGrid.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +7,7 @@ using System.Linq;
 namespace StrongGrid.Utilities
 {
 	/// <summary>
-	/// Converts a <see cref="Field"/> to and from JSON.
+	/// Converts a <see cref="Models.Legacy.Field"/> to and from JSON.
 	/// This converter is intended to be used with SendGrid's legacy API.
 	/// See <seealso cref="CustomFieldsConverter"/> for the converter for the new API.
 	/// </summary>
@@ -38,27 +37,27 @@ namespace StrongGrid.Utilities
 			if (value == null) return;
 
 			writer.WriteStartArray();
-			foreach (var customField in ((Field[])value).OfType<Field<string>>())
+			foreach (var customField in ((Models.Legacy.Field[])value).OfType<Models.Legacy.Field<string>>())
 			{
 				serializer.Serialize(writer, customField);
 			}
 
-			foreach (var customField in ((Field[])value).OfType<Field<long>>())
+			foreach (var customField in ((Models.Legacy.Field[])value).OfType<Models.Legacy.Field<long>>())
 			{
 				serializer.Serialize(writer, customField);
 			}
 
-			foreach (var customField in ((Field[])value).OfType<Field<long?>>())
+			foreach (var customField in ((Models.Legacy.Field[])value).OfType<Models.Legacy.Field<long?>>())
 			{
 				serializer.Serialize(writer, customField);
 			}
 
-			foreach (var customField in ((Field[])value).OfType<Field<DateTime>>())
+			foreach (var customField in ((Models.Legacy.Field[])value).OfType<Models.Legacy.Field<DateTime>>())
 			{
 				serializer.Serialize(writer, customField);
 			}
 
-			foreach (var customField in ((Field[])value).OfType<Field<DateTime?>>())
+			foreach (var customField in ((Models.Legacy.Field[])value).OfType<Models.Legacy.Field<DateTime?>>())
 			{
 				serializer.Serialize(writer, customField);
 			}
@@ -117,7 +116,7 @@ namespace StrongGrid.Utilities
 				return fields.ToArray();
 			}
 
-			return Array.Empty<Field>();
+			return Array.Empty<Models.Legacy.Field>();
 		}
 	}
 }
