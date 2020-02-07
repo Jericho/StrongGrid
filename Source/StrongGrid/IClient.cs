@@ -57,6 +57,7 @@ namespace StrongGrid
 		/// The segments.
 		/// </value>
 		ISegments Segments { get; }
+		*/
 
 		/// <summary>
 		/// Gets the SenderIdentities resource.
@@ -66,6 +67,7 @@ namespace StrongGrid
 		/// </value>
 		ISenderIdentities SenderIdentities { get; }
 
+		/*
 		/// <summary>
 		/// Gets the SenderAuthentication resource.
 		/// </summary>
