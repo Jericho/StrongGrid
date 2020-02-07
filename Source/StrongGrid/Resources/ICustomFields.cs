@@ -8,7 +8,7 @@ namespace StrongGrid.Resources
 	/// Allows you to manage custom fields.
 	/// </summary>
 	/// <remarks>
-	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/contactdb.html">SendGrid documentation</a> for more information.
+	/// See <a href="https://sendgrid.api-docs.io/v3.0/custom-fields">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public interface ICustomFields
 	{
@@ -50,15 +50,5 @@ namespace StrongGrid.Resources
 		/// The async task.
 		/// </returns>
 		Task DeleteAsync(string fieldId, CancellationToken cancellationToken = default);
-
-		///// <summary>
-		///// Retrieve the reserved fields.
-		///// </summary>
-		///// <param name="onBehalfOf">The user to impersonate.</param>
-		///// <param name="cancellationToken">The cancellation token.</param>
-		///// <returns>
-		///// An array of <see cref="Field" />.
-		///// </returns>
-		//Task<Field[]> GetReservedFieldsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 	}
 }

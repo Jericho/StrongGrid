@@ -58,7 +58,7 @@ namespace StrongGrid.Resources.Legacy
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// An array of <see cref="CustomFieldMetadata">metadata</see> about the fields.
+		/// An array of <see cref="Models.Legacy.CustomFieldMetadata">metadata</see> about the fields.
 		/// </returns>
 		public Task<Models.Legacy.CustomFieldMetadata[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
@@ -76,7 +76,7 @@ namespace StrongGrid.Resources.Legacy
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The <see cref="CustomFieldMetadata">metadata</see> about the field.
+		/// The <see cref="Models.Legacy.CustomFieldMetadata">metadata</see> about the field.
 		/// </returns>
 		public Task<Models.Legacy.CustomFieldMetadata> GetAsync(long fieldId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{

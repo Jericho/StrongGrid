@@ -13,9 +13,9 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows you to manage custom fields.
 	/// </summary>
-	/// <seealso cref="StrongGrid.Resources.Legacy.ICustomFields" />
+	/// <seealso cref="StrongGrid.Resources.ICustomFields" />
 	/// <remarks>
-	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/contactdb.html">SendGrid documentation</a> for more information.
+	/// See <a href="https://sendgrid.api-docs.io/v3.0/custom-fields">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public class CustomFields : ICustomFields
 	{
