@@ -42,27 +42,20 @@ namespace StrongGrid.Utilities
 			writer.WriteStartObject();
 			foreach (var customField in fields.OfType<Field<string>>())
 			{
-				serializer.Serialize(writer, customField);
+				writer.WritePropertyName(customField.Id);
+				writer.WriteValue(customField.Value);
 			}
 
 			foreach (var customField in fields.OfType<Field<long>>())
 			{
-				serializer.Serialize(writer, customField);
-			}
-
-			foreach (var customField in fields.OfType<Field<long?>>())
-			{
-				serializer.Serialize(writer, customField);
+				writer.WritePropertyName(customField.Id);
+				writer.WriteValue(customField.Value);
 			}
 
 			foreach (var customField in fields.OfType<Field<DateTime>>())
 			{
-				serializer.Serialize(writer, customField);
-			}
-
-			foreach (var customField in fields.OfType<Field<DateTime?>>())
-			{
-				serializer.Serialize(writer, customField);
+				writer.WritePropertyName(customField.Id);
+				writer.WriteValue(customField.Value.ToUniversalTime().ToString("o"));
 			}
 
 			writer.WriteEndObject();
