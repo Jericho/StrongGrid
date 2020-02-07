@@ -8,6 +8,8 @@ namespace StrongGrid.IntegrationTests.Tests
 	{
 		public async Task RunAsync(IBaseClient client, TextWriter log, CancellationToken cancellationToken)
 		{
+			if (cancellationToken.IsCancellationRequested) return;
+
 			await log.WriteLineAsync("\n***** USER *****\n").ConfigureAwait(false);
 
 			// RETRIEVE YOUR ACCOUNT INFORMATION

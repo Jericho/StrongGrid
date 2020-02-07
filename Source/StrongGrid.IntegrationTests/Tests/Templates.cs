@@ -10,6 +10,8 @@ namespace StrongGrid.IntegrationTests.Tests
 	{
 		public async Task RunAsync(IBaseClient client, TextWriter log, CancellationToken cancellationToken)
 		{
+			if (cancellationToken.IsCancellationRequested) return;
+
 			await log.WriteLineAsync("\n***** TEMPLATES *****\n").ConfigureAwait(false);
 
 			// GET TEMPLATES

@@ -9,6 +9,8 @@ namespace StrongGrid.IntegrationTests.Tests
 {
 	public class LegacyCampaignsAndSenderIdentities : IIntegrationTest
 	{
+		private const string YOUR_EMAIL = "your_email@example.com";
+
 		public Task RunAsync(IBaseClient client, TextWriter log, CancellationToken cancellationToken)
 		{
 			return RunAsync((ILegacyClient)client, log, cancellationToken);
@@ -16,7 +18,7 @@ namespace StrongGrid.IntegrationTests.Tests
 
 		public async Task RunAsync(ILegacyClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			var YOUR_EMAIL = "your_email@example.com";
+			if (cancellationToken.IsCancellationRequested) return;
 
 			await log.WriteLineAsync("\n***** CAMPAIGNS *****\n").ConfigureAwait(false);
 

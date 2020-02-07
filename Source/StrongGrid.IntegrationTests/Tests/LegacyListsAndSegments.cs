@@ -16,6 +16,8 @@ namespace StrongGrid.IntegrationTests.Tests
 
 		public async Task RunAsync(ILegacyClient client, TextWriter log, CancellationToken cancellationToken)
 		{
+			if (cancellationToken.IsCancellationRequested) return;
+
 			await log.WriteLineAsync("\n***** LEGACY LISTS AND SEGMENTS *****\n").ConfigureAwait(false);
 
 			// GET LISTS

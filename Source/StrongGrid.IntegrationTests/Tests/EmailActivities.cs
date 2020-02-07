@@ -9,9 +9,11 @@ namespace StrongGrid.IntegrationTests.Tests
 {
 	public class EmailActivities : IIntegrationTest
 	{
+		private const int maxNumberOfActivities = 100;
+
 		public async Task RunAsync(IBaseClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			const int maxNumberOfActivities = 100;
+			if (cancellationToken.IsCancellationRequested) return;
 
 			await log.WriteLineAsync("\n***** EMAIL ACTIVITIES *****\n").ConfigureAwait(false);
 

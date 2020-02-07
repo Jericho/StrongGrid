@@ -13,6 +13,8 @@ namespace StrongGrid.IntegrationTests.Tests
 
 		public async Task RunAsync(ILegacyClient client, TextWriter log, CancellationToken cancellationToken)
 		{
+			if (cancellationToken.IsCancellationRequested) return;
+
 			await log.WriteLineAsync("\n***** CATEGORIES *****\n").ConfigureAwait(false);
 
 			var categories = await client.Categories.GetAsync(null, 50, 0, null, cancellationToken).ConfigureAwait(false);

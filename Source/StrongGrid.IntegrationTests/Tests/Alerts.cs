@@ -9,6 +9,8 @@ namespace StrongGrid.IntegrationTests.Tests
 	{
 		public async Task RunAsync(IBaseClient client, TextWriter log, CancellationToken cancellationToken)
 		{
+			if (cancellationToken.IsCancellationRequested) return;
+
 			await log.WriteLineAsync("\n***** ALERTS *****\n").ConfigureAwait(false);
 
 			var newAlert = await client.Alerts.CreateAsync(AlertType.UsageLimit, "test@example.com", Frequency.Weekly, 75, null, cancellationToken).ConfigureAwait(false);

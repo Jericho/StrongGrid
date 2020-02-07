@@ -8,6 +8,8 @@ namespace StrongGrid.IntegrationTests.Tests
 	{
 		public async Task RunAsync(IBaseClient client, TextWriter log, CancellationToken cancellationToken)
 		{
+			if (cancellationToken.IsCancellationRequested) return;
+
 			await log.WriteLineAsync("\n***** TEAMMATES *****\n").ConfigureAwait(false);
 
 			// GET ALL THE PENDING INVITATIONS

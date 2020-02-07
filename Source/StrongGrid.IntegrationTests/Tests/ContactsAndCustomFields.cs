@@ -17,6 +17,8 @@ namespace StrongGrid.IntegrationTests.Tests
 
 		public async Task RunAsync(IClient client, TextWriter log, CancellationToken cancellationToken)
 		{
+			if (cancellationToken.IsCancellationRequested) return;
+
 			await log.WriteLineAsync("\n***** CONTACTS AND CUSTOM FIELDS *****\n").ConfigureAwait(false);
 
 			// GET ALL FIELDS

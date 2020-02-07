@@ -16,6 +16,8 @@ namespace StrongGrid.IntegrationTests.Tests
 
 		public async Task RunAsync(ILegacyClient client, TextWriter log, CancellationToken cancellationToken)
 		{
+			if (cancellationToken.IsCancellationRequested) return;
+
 			await log.WriteLineAsync("\n***** LEGACY CONTACTS AND CUSTOM FIELDS *****\n").ConfigureAwait(false);
 
 			// GET ALL FIELDS
