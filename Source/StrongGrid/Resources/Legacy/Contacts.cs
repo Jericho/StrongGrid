@@ -49,7 +49,7 @@ namespace StrongGrid.Resources.Legacy
 			string email,
 			Parameter<string> firstName = default,
 			Parameter<string> lastName = default,
-			Parameter<IEnumerable<Field>> customFields = default,
+			Parameter<IEnumerable<Models.Legacy.Field>> customFields = default,
 			string onBehalfOf = null,
 			CancellationToken cancellationToken = default)
 		{
@@ -66,7 +66,7 @@ namespace StrongGrid.Resources.Legacy
 
 			response.CheckForSendGridErrors();
 
-			var importResult = await response.Message.Content.AsSendGridObject<ImportResult>().ConfigureAwait(false);
+			var importResult = await response.AsSendGridObject<Models.Legacy.ImportResult>().ConfigureAwait(false);
 			return importResult.PersistedRecipients.Single();
 		}
 
@@ -87,7 +87,7 @@ namespace StrongGrid.Resources.Legacy
 			string email,
 			Parameter<string> firstName = default,
 			Parameter<string> lastName = default,
-			Parameter<IEnumerable<Field>> customFields = default,
+			Parameter<IEnumerable<Models.Legacy.Field>> customFields = default,
 			string onBehalfOf = null,
 			CancellationToken cancellationToken = default)
 		{
@@ -112,9 +112,9 @@ namespace StrongGrid.Resources.Legacy
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The <see cref="ImportResult">result</see> of the operation.
+		/// The <see cref="ImportResults">result</see> of the operation.
 		/// </returns>
-		public Task<ImportResult> ImportAsync(IEnumerable<Models.Legacy.Contact> contacts, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<Models.Legacy.ImportResult> ImportAsync(IEnumerable<Models.Legacy.Contact> contacts, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JArray();
 			foreach (var contact in contacts)
@@ -127,7 +127,7 @@ namespace StrongGrid.Resources.Legacy
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<ImportResult>();
+				.AsSendGridObject<Models.Legacy.ImportResult>();
 		}
 
 		/// <summary>
@@ -283,7 +283,7 @@ namespace StrongGrid.Resources.Legacy
 			Parameter<string> email,
 			Parameter<string> firstName,
 			Parameter<string> lastName,
-			Parameter<IEnumerable<Field>> customFields)
+			Parameter<IEnumerable<Models.Legacy.Field>> customFields)
 		{
 			var result = new JObject();
 			result.AddPropertyIfValue("email", email);
@@ -292,27 +292,27 @@ namespace StrongGrid.Resources.Legacy
 
 			if (customFields.HasValue && customFields.Value != null)
 			{
-				foreach (var customField in customFields.Value.OfType<Field<string>>())
+				foreach (var customField in customFields.Value.OfType<Models.Legacy.Field<string>>())
 				{
 					result.AddPropertyIfValue(customField.Name, customField.Value);
 				}
 
-				foreach (var customField in customFields.Value.OfType<Field<long>>())
+				foreach (var customField in customFields.Value.OfType<Models.Legacy.Field<long>>())
 				{
 					result.AddPropertyIfValue(customField.Name, customField.Value);
 				}
 
-				foreach (var customField in customFields.Value.OfType<Field<long?>>())
+				foreach (var customField in customFields.Value.OfType<Models.Legacy.Field<long?>>())
 				{
 					result.AddPropertyIfValue(customField.Name, customField.Value);
 				}
 
-				foreach (var customField in customFields.Value.OfType<Field<DateTime>>())
+				foreach (var customField in customFields.Value.OfType<Models.Legacy.Field<DateTime>>())
 				{
 					result.AddPropertyIfValue(customField.Name, customField.Value.ToUnixTime());
 				}
 
-				foreach (var customField in customFields.Value.OfType<Field<DateTime?>>())
+				foreach (var customField in customFields.Value.OfType<Models.Legacy.Field<DateTime?>>())
 				{
 					result.AddPropertyIfValue(customField.Name, customField.Value?.ToUnixTime());
 				}

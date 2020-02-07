@@ -30,7 +30,7 @@ namespace StrongGrid.IntegrationTests
 		{
 			// -----------------------------------------------------------------------------
 			// Do you want to proxy requests through Fiddler? Can be useful for debugging.
-			var useFiddler = false;
+			var useFiddler = true;
 
 			// Logging options.
 			var options = new StrongGridClientOptions()
@@ -62,36 +62,36 @@ namespace StrongGrid.IntegrationTests
 			// These are the integration tests that we will execute
 			var integrationTests = new Type[]
 			{
-				typeof(AccessManagement),
-				typeof(Alerts),
-				typeof(ApiKeys),
-				typeof(Batches),
-				typeof(Blocks),
-				typeof(Bounces),
-				typeof(CampaignsAndSenderIdentities),
-				typeof(Categories),
+				//typeof(AccessManagement),
+				//typeof(Alerts),
+				//typeof(ApiKeys),
+				//typeof(Batches),
+				//typeof(Blocks),
+				//typeof(Bounces),
 				typeof(ContactsAndCustomFields),
-				typeof(Designs),
-				typeof(EmailActivities),
-				typeof(EmailValidation),
-				typeof(GlobalSuppressions),
-				typeof(InvalidEmails),
-				typeof(IpAddresses),
-				typeof(IpPools),
-				typeof(LegacyContactsAndCustomFields),
-				typeof(ListsAndSegments),
-				typeof(Mail),
-				typeof(SenderAuthentication),
-				typeof(Settings),
-				typeof(SpamReports),
-				typeof(Statistics),
-				typeof(Subusers),
-				typeof(UnsubscribeGroupsAndSuppressions),
-				typeof(Teammates),
-				typeof(Templates),
-				typeof(User),
-				typeof(WebhookSettings),
-				typeof(WebhookStats)
+				//typeof(Designs),
+				//typeof(EmailActivities),
+				//typeof(EmailValidation),
+				//typeof(GlobalSuppressions),
+				//typeof(InvalidEmails),
+				//typeof(IpAddresses),
+				//typeof(IpPools),
+				//typeof(LegacyCampaignsAndSenderIdentities),
+				//typeof(LegacyCategories),
+				//typeof(LegacyContactsAndCustomFields),
+				//typeof(LegacyListsAndSegments),
+				//typeof(LegacySenderAuthentication),
+				//typeof(Mail),
+				//typeof(Settings),
+				//typeof(SpamReports),
+				//typeof(Statistics),
+				//typeof(Subusers),
+				//typeof(UnsubscribeGroupsAndSuppressions),
+				//typeof(Teammates),
+				//typeof(Templates),
+				//typeof(User),
+				//typeof(WebhookSettings),
+				//typeof(WebhookStats)
 			};
 
 			// Execute the async tests in parallel (with max degree of parallelism)

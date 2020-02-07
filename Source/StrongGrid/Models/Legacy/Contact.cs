@@ -30,7 +30,7 @@ namespace StrongGrid.Models.Legacy
 			Email = email;
 			FirstName = firstName;
 			LastName = lastName;
-			CustomFields = (customFields ?? Enumerable.Empty<Field>()).ToArray();
+			CustomFields = customFields.ToArray() ?? Array.Empty<Field>();
 		}
 
 		/// <summary>
@@ -126,7 +126,7 @@ namespace StrongGrid.Models.Legacy
 		/// The custom fields.
 		/// </value>
 		[JsonProperty("custom_fields", NullValueHandling = NullValueHandling.Ignore)]
-		[JsonConverter(typeof(CustomFieldsConverter))]
+		[JsonConverter(typeof(LegacyCustomFieldsConverter))]
 		public Field[] CustomFields { get; set; }
 	}
 }

@@ -31,7 +31,7 @@ namespace StrongGrid.Resources.Legacy
 			string email,
 			Parameter<string> firstName = default,
 			Parameter<string> lastName = default,
-			Parameter<IEnumerable<Field>> customFields = default,
+			Parameter<IEnumerable<Models.Legacy.Field>> customFields = default,
 			string onBehalfOf = null,
 			CancellationToken cancellationToken = default);
 
@@ -52,7 +52,7 @@ namespace StrongGrid.Resources.Legacy
 			string email,
 			Parameter<string> firstName = default,
 			Parameter<string> lastName = default,
-			Parameter<IEnumerable<Field>> customFields = default,
+			Parameter<IEnumerable<Models.Legacy.Field>> customFields = default,
 			string onBehalfOf = null,
 			CancellationToken cancellationToken = default);
 
@@ -63,9 +63,9 @@ namespace StrongGrid.Resources.Legacy
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The <see cref="ImportResult">result</see> of the operation.
+		/// The <see cref="ImportResults">result</see> of the operation.
 		/// </returns>
-		Task<ImportResult> ImportAsync(IEnumerable<Models.Legacy.Contact> contacts, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<Models.Legacy.ImportResult> ImportAsync(IEnumerable<Models.Legacy.Contact> contacts, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete a contact.

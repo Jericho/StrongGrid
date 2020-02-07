@@ -4,7 +4,9 @@ using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -157,6 +159,56 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
+		/// Gets the total number of contacts as well as the number of billable contacts.
+		/// </summary>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The total number and the number of billable contacts.
+		/// </returns>
+		public async Task<(long TotalCount, long BillableCount)> GetCountAsync(CancellationToken cancellationToken = default)
+		{
+			var response = await _client
+				.GetAsync($"{_endpoint}/count")
+				.WithCancellationToken(cancellationToken)
+				.AsResponse()
+				.ConfigureAwait(false);
+
+			var totalCount = await response.AsSendGridObject<long>("contact_count").ConfigureAwait(false);
+			var billableCount = await response.AsSendGridObject<long>("billable_count").ConfigureAwait(false);
+
+			return (totalCount, billableCount);
+		}
+
+		/// <summary>
+		/// Request all contacts to be exported.
+		///
+		/// Use the "job id" returned by this method with the CheckExportJobStatusAsync
+		/// method to verify if the export job is completed.
+		/// </summary>
+		/// <param name="fileType">File type for export file. Choose from json or csv.</param>
+		/// <param name="listIds">Ids of the contact lists you want to export.</param>
+		/// <param name="segmentIds">Ids of the contact segments you want to export.</param>
+		/// <param name="maxFileSize">The maximum size of an export file in MB. Note that when this option is specified, multiple output files will be returned from the export.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The job id.
+		/// </returns>
+		public Task<string> ExportAsync(FileType fileType = FileType.Csv, IEnumerable<string> listIds = null, IEnumerable<string> segmentIds = null, Parameter<long> maxFileSize = default, CancellationToken cancellationToken = default)
+		{
+			var data = new JObject();
+			data.AddPropertyIfValue("list_ids", listIds);
+			data.AddPropertyIfValue("segment_ids", segmentIds);
+			data.AddPropertyIfValue("file_type", fileType);
+			data.AddPropertyIfValue("max_file_size", maxFileSize);
+
+			return _client
+				.PostAsync($"{_endpoint}/exports")
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<string>("id");
+		}
+
+		/// <summary>
 		/// Retrieve a contact.
 		/// </summary>
 		/// <param name="contactId">The contact identifier.</param>
@@ -171,6 +223,32 @@ namespace StrongGrid.Resources
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Contact>();
 		}
+
+		/*
+	/// <summary>
+	/// Searches for contacts matching the specified conditions.
+	/// </summary>
+	/// <param name="conditions">The conditions.</param>
+	/// <param name="listId">The list identifier.</param>
+	/// <param name="onBehalfOf">The user to impersonate.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <returns>
+	/// An array of <see cref="Contact" />.
+	/// </returns>
+	public Task<Contact[]> SearchAsync(IEnumerable<SearchCondition> conditions, long? listId = null, CancellationToken cancellationToken = default)
+	{
+		var data = new JObject();
+		data.AddPropertyIfValue("list_id", listId);
+		data.AddPropertyIfValue("conditions", conditions);
+
+		return _client
+			.PostAsync($"{_oldEndpoint}/search")
+			.OnBehalfOf(onBehalfOf)
+			.WithJsonBody(data)
+			.WithCancellationToken(cancellationToken)
+			.AsSendGridObject<Contact[]>("recipients");
+	}
+	*/
 
 		/// <summary>
 		/// Retrieve up to fifty of the most recent contacts uploaded or attached to a list.
@@ -217,137 +295,171 @@ namespace StrongGrid.Resources
 				.AsResponse()
 				.ConfigureAwait(false);
 
-			var httpContent = response.Message.Content;
-			var contacts = await httpContent.AsSendGridObject<Contact[]>("result").ConfigureAwait(false);
-			var totalCount = await httpContent.AsSendGridObject<long>("contact_count").ConfigureAwait(false);
+			var contacts = await response.AsSendGridObject<Contact[]>("result").ConfigureAwait(false);
+			var totalCount = await response.AsSendGridObject<long>("contact_count").ConfigureAwait(false);
 
 			return (contacts, totalCount);
 		}
 
 		/// <summary>
-		/// Gets the total number of contacts as well as the number of billable contacts.
+		/// Request all contacts to be exported.
+		///
+		/// Use the "job id" returned by this method with the CheckExportJobStatusAsync
+		/// method to verify if the export job is completed.
+		/// </summary>
+		/// <param name="stream">The stream containing the data to import.</param>
+		/// <param name="fileType">File type for export file. Choose from json or csv.</param>
+		/// <param name="fieldsMapping">List of field_definition IDs to map the uploaded CSV columns to. For example, [null, "w1", "_rf1"] means to skip Col[0], map Col[1] => CustomField w1, map Col[2] => ReservedField _rf1.</param>
+		/// <param name="listIds">Ids of the contact lists you want to export.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The job id.
+		/// </returns>
+		public async Task<string> ImportFromStreamAsync(Stream stream, FileType fileType, IEnumerable<string> fieldsMapping = null, IEnumerable<string> listIds = null, CancellationToken cancellationToken = default)
+		{
+			var data = new JObject();
+			data.AddPropertyIfValue("list_ids", listIds);
+			data.AddPropertyIfValue("file_type", fileType);
+			data.AddPropertyIfValue("field_mappings", fieldsMapping);
+
+			var importRequest = await _client
+				.PutAsync($"{_endpoint}/imports")
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsRawJsonObject()
+				.ConfigureAwait(false);
+
+			var importJobId = importRequest["id"].Value<string>();
+			var uploadUrl = importRequest["upload_url"].Value<string>();
+			var uploadHeaders = importRequest["upload_headers"].Value<KeyValuePair<string, string>[]>();
+
+			var request = new HttpRequestMessage(HttpMethod.Post, uploadUrl);
+			request.Content = new StreamContent(stream);
+			request.Headers.Clear();
+			foreach (var header in uploadHeaders)
+			{
+				request.Headers.Add(header.Key, header.Value);
+			}
+
+			using (var client = new HttpClient())
+			{
+				await client.SendAsync(request).ConfigureAwait(false);
+			}
+
+			return importJobId;
+		}
+
+		/// <summary>
+		/// Retrieve an import job.
+		/// </summary>
+		/// <param name="jobId">The job identifier.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="ImportJob" />.
+		/// </returns>
+		public Task<ImportJob> GetImportJobAsync(string jobId, CancellationToken cancellationToken = default)
+		{
+			return _client
+				.GetAsync($"{_endpoint}/imports/{jobId}")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<ImportJob>();
+		}
+
+		/// <summary>
+		/// Get all the existing export jobs.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The total number and the number of billable contacts.
+		/// An array of <see cref="ExportJob" />.
 		/// </returns>
-		public async Task<(long TotalCount, long BillableCount)> GetCountAsync(CancellationToken cancellationToken = default)
+		public Task<ExportJob[]> GetExportJobsAsync(CancellationToken cancellationToken = default)
 		{
-			var response = await _client
-				.GetAsync($"{_endpoint}/count")
+			return _client
+				.GetAsync($"{_endpoint}/exports")
 				.WithCancellationToken(cancellationToken)
-				.AsResponse()
-				.ConfigureAwait(false);
-
-			var httpContent = response.Message.Content;
-			var totalCount = await httpContent.AsSendGridObject<long>("contact_count").ConfigureAwait(false);
-			var billableCount = await httpContent.AsSendGridObject<long>("billable_count").ConfigureAwait(false);
-
-			return (totalCount, billableCount);
+				.AsSendGridObject<ExportJob[]>("result");
 		}
 
-		/*
-/// <summary>
-	/// Gets the total count.
-	/// </summary>
-	/// <param name="onBehalfOf">The user to impersonate.</param>
-	/// <param name="cancellationToken">The cancellation token.</param>
-	/// <returns>
-	/// The total number of contacts.
-	/// </returns>
-	public Task<long> GetTotalCountAsync(CancellationToken cancellationToken = default)
-	{
-		return _client
-			.GetAsync($"{_oldEndpoint}/count")
-			.OnBehalfOf(onBehalfOf)
-			.WithCancellationToken(cancellationToken)
-			.AsSendGridObject<long>("recipient_count");
-	}
-
-	/// <summary>
-	/// Searches for contacts matching the specified conditions.
-	/// </summary>
-	/// <param name="conditions">The conditions.</param>
-	/// <param name="listId">The list identifier.</param>
-	/// <param name="onBehalfOf">The user to impersonate.</param>
-	/// <param name="cancellationToken">The cancellation token.</param>
-	/// <returns>
-	/// An array of <see cref="Contact" />.
-	/// </returns>
-	public Task<Contact[]> SearchAsync(IEnumerable<SearchCondition> conditions, long? listId = null, CancellationToken cancellationToken = default)
-	{
-		var data = new JObject();
-		data.AddPropertyIfValue("list_id", listId);
-		data.AddPropertyIfValue("conditions", conditions);
-
-		return _client
-			.PostAsync($"{_oldEndpoint}/search")
-			.OnBehalfOf(onBehalfOf)
-			.WithJsonBody(data)
-			.WithCancellationToken(cancellationToken)
-			.AsSendGridObject<Contact[]>("recipients");
-	}
-
-	/// <summary>
-	/// Retrieve the lists that a recipient is on.
-	/// </summary>
-	/// <param name="contactId">The contact identifier.</param>
-	/// <param name="onBehalfOf">The user to impersonate.</param>
-	/// <param name="cancellationToken">The cancellation token.</param>
-	/// <returns>
-	/// An array of <see cref="List" />.
-	/// </returns>
-	public Task<List[]> GetListsAsync(string contactId, CancellationToken cancellationToken = default)
-	{
-		return _client
-			.GetAsync($"{_oldEndpoint}/{contactId}/lists")
-			.OnBehalfOf(onBehalfOf)
-			.WithCancellationToken(cancellationToken)
-			.AsSendGridObject<List[]>("lists");
-	}
-
-	private static JObject ConvertToJObject(
-		Parameter<string> email,
-		Parameter<string> firstName,
-		Parameter<string> lastName,
-		Parameter<IEnumerable<Field>> customFields)
-	{
-		var result = new JObject();
-		result.AddPropertyIfValue("email", email);
-		result.AddPropertyIfValue("first_name", firstName);
-		result.AddPropertyIfValue("last_name", lastName);
-
-		if (customFields.HasValue && customFields.Value != null)
+		/// <summary>
+		/// Retrieve an export job.
+		/// </summary>
+		/// <param name="jobId">The job identifier.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="ExportJob" />.
+		/// </returns>
+		public Task<ExportJob> GetExportJobAsync(string jobId, CancellationToken cancellationToken = default)
 		{
-			foreach (var customField in customFields.Value.OfType<Field<string>>())
-			{
-				result.AddPropertyIfValue(customField.Name, customField.Value);
-			}
+			return _client
+				.GetAsync($"{_endpoint}/exports/{jobId}")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<ExportJob>();
+		}
 
-			foreach (var customField in customFields.Value.OfType<Field<long>>())
-			{
-				result.AddPropertyIfValue(customField.Name, customField.Value);
-			}
+		/// <summary>
+		/// Download the files generated by an export job as streams.
+		/// </summary>
+		/// <param name="jobId">The job identifier.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="Stream"/>.
+		/// </returns>
+		public async Task<Stream[]> DownloadExportFilesAsync(string jobId, CancellationToken cancellationToken = default)
+		{
+			var job = await GetExportJobAsync(jobId, cancellationToken);
 
-			foreach (var customField in customFields.Value.OfType<Field<long?>>())
-			{
-				result.AddPropertyIfValue(customField.Name, customField.Value);
-			}
+			if (job.Status != JobStatus.Ready) throw new Exception("The job is not ready");
 
-			foreach (var customField in customFields.Value.OfType<Field<DateTime>>())
+			var streams = new Stream[job.FileUrls.Length];
+			using (var client = new HttpClient())
 			{
-				result.AddPropertyIfValue(customField.Name, customField.Value.ToUnixTime());
-			}
+				for (int i = 0; i < job.FileUrls.Length; i++)
+				{
+					streams[i] = await client.GetStreamAsync(job.FileUrls[i]).ConfigureAwait(false);
+				}
 
-			foreach (var customField in customFields.Value.OfType<Field<DateTime?>>())
-			{
-				result.AddPropertyIfValue(customField.Name, customField.Value?.ToUnixTime());
+				return streams;
 			}
 		}
 
-		return result;
-	}
-	*/
+		/// <summary>
+		/// Download the files generated by an export job and save them to files.
+		/// </summary>
+		/// <param name="jobId">The job identifier.</param>
+		/// <param name="destinationFolder">The folder where the files will be saved.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// The async task.
+		/// </returns>
+		public async Task DownloadExportFilesAsync(string jobId, string destinationFolder, CancellationToken cancellationToken = default)
+		{
+			var job = await GetExportJobAsync(jobId, cancellationToken);
+
+			if (job.Status != JobStatus.Ready) throw new Exception("The job is not ready");
+
+			var handler = new HttpClientHandler()
+			{
+				AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+			};
+
+			using (var client = new HttpClient(handler))
+			{
+				var folder = Path.GetDirectoryName(destinationFolder);
+				for (int i = 0; i < job.FileUrls.Length; i++)
+				{
+					var fileUri = new Uri(job.FileUrls[i]);
+					var fileName = Path.GetFileName(fileUri.AbsolutePath);
+					var destinationPath = Path.Combine(folder, fileName);
+					using (var fileStream = await client.GetStreamAsync(job.FileUrls[i]).ConfigureAwait(false))
+					{
+						using (Stream output = File.OpenWrite(destinationPath))
+						{
+							fileStream.CopyTo(output);
+						}
+					}
+				}
+			}
+		}
 
 		private static JObject ConvertToJObject(
 			Parameter<string> email,
@@ -374,32 +486,36 @@ namespace StrongGrid.Resources
 			result.AddPropertyIfValue("postal_code", postalCode);
 			result.AddPropertyIfValue("alternate_emails", alternateEmails);
 
-			if (customFields.HasValue && customFields.Value != null)
+			if (customFields.HasValue && customFields.Value != null && customFields.Value.Any())
 			{
+				var fields = new JObject();
+
 				foreach (var customField in customFields.Value.OfType<Field<string>>())
 				{
-					result.AddPropertyIfValue(customField.Name, customField.Value);
+					fields.Add(customField.Id, customField.Value);
 				}
 
 				foreach (var customField in customFields.Value.OfType<Field<long>>())
 				{
-					result.AddPropertyIfValue(customField.Name, customField.Value);
+					fields.Add(customField.Id, customField.Value);
 				}
 
 				foreach (var customField in customFields.Value.OfType<Field<long?>>())
 				{
-					result.AddPropertyIfValue(customField.Name, customField.Value);
+					fields.Add(customField.Id, customField.Value);
 				}
 
 				foreach (var customField in customFields.Value.OfType<Field<DateTime>>())
 				{
-					result.AddPropertyIfValue(customField.Name, customField.Value.ToUnixTime());
+					fields.Add(customField.Id, customField.Value.ToUniversalTime().ToString("o"));
 				}
 
 				foreach (var customField in customFields.Value.OfType<Field<DateTime?>>())
 				{
-					result.AddPropertyIfValue(customField.Name, customField.Value?.ToUnixTime());
+					fields.Add(customField.Id, customField.Value?.ToUniversalTime().ToString("o"));
 				}
+
+				result.Add("custom_fields", fields);
 			}
 
 			return result;
@@ -407,7 +523,7 @@ namespace StrongGrid.Resources
 
 		private static JObject ConvertToJObject(Contact contact)
 		{
-			var result = ConvertToJObject(contact.Email, contact.FirstName, contact.LastName, contact.AddressLine1, contact.AddressLine2, contact.City, contact.StateOrProvice, contact.Country, contact.PostalCode, contact.AlternateEmails, null);
+			var result = ConvertToJObject(contact.Email, contact.FirstName, contact.LastName, contact.AddressLine1, contact.AddressLine2, contact.City, contact.StateOrProvice, contact.Country, contact.PostalCode, contact.AlternateEmails, contact.CustomFields);
 			result.AddPropertyIfValue("id", contact.Id);
 			return result;
 		}

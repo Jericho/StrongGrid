@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace StrongGrid.Models
+namespace StrongGrid.Models.Legacy
 {
 	/// <summary>
 	/// A field.
@@ -14,7 +14,7 @@ namespace StrongGrid.Models
 		/// The identifier.
 		/// </value>
 		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-		public string Id { get; set; }
+		public long Id { get; set; }
 
 		/// <summary>
 		/// Gets or sets the name.
@@ -46,19 +46,6 @@ namespace StrongGrid.Models
 		/// <param name="value">The value.</param>
 		public Field(string name, T value)
 		{
-			Name = name;
-			Value = value;
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Field{T}"/> class.
-		/// </summary>
-		/// <param name="id">The identifier.</param>
-		/// <param name="name">The name.</param>
-		/// <param name="value">The value.</param>
-		public Field(string id, string name, T value)
-		{
-			Id = id;
 			Name = name;
 			Value = value;
 		}

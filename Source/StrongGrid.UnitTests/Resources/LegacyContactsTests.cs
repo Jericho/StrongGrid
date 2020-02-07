@@ -81,8 +81,8 @@ namespace StrongGrid.UnitTests.Resources
 			result.CreatedOn.ShouldBe(new DateTime(2015, 1, 26, 23, 6, 47, DateTimeKind.Utc));
 			result.CustomFields.ShouldNotBeNull();
 			result.CustomFields.Length.ShouldBe(1);
-			result.CustomFields[0].GetType().ShouldBe(typeof(Field<string>));
-			var stringField = result.CustomFields[0] as Field<string>;
+			result.CustomFields[0].GetType().ShouldBe(typeof(StrongGrid.Models.Legacy.Field<string>));
+			var stringField = result.CustomFields[0] as StrongGrid.Models.Legacy.Field<string>;
 			stringField.Id.ShouldBe(23);
 			stringField.Name.ShouldBe("pet");
 			stringField.Value.ShouldBe("Indiana");
@@ -177,9 +177,9 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 			var records = new[]
 			{
-				new StrongGrid.Models.Legacy.Contact("jones@example.com", null, "Jones", new Field[] { new Field<string>("pet", "Fluffy"), new Field<long>("age", 25) }),
-				new StrongGrid.Models.Legacy.Contact("miller@example.com", null, "Miller", new Field[] { new Field<string>("pet", "FrouFrou"), new Field<long>("age", 32) }),
-				new StrongGrid.Models.Legacy.Contact("invalid email", null, "Smith", new Field[] { new Field<string>("pet", "Spot"), new Field<long>("age", 17) })
+				new StrongGrid.Models.Legacy.Contact("jones@example.com", null, "Jones", new StrongGrid.Models.Legacy.Field[] { new StrongGrid.Models.Legacy.Field<string>("pet", "Fluffy"), new StrongGrid.Models.Legacy.Field<long>("age", 25) }),
+				new StrongGrid.Models.Legacy.Contact("miller@example.com", null, "Miller", new StrongGrid.Models.Legacy.Field[] { new StrongGrid.Models.Legacy.Field<string>("pet", "FrouFrou"), new StrongGrid.Models.Legacy.Field<long>("age", 32) }),
+				new StrongGrid.Models.Legacy.Contact("invalid email", null, "Smith", new StrongGrid.Models.Legacy.Field[] { new StrongGrid.Models.Legacy.Field<string>("pet", "Spot"), new StrongGrid.Models.Legacy.Field<long>("age", 17) })
 			};
 
 			var apiResponse = @"{
@@ -256,13 +256,13 @@ namespace StrongGrid.UnitTests.Resources
 			var client = Utils.GetFluentClient(mockHttp);
 			var contacts = new StrongGrid.Resources.Legacy.Contacts(client);
 
-			var customFields = new Field[]
+			var customFields = new StrongGrid.Models.Legacy.Field[]
 			{
-				new Field<string>("nickname", "Bob"),
-				new Field<long>("age", 55),
-				new Field<long?>("net_worth", 1000000),
-				new Field<DateTime>("anniversary", new DateTime(2000, 1, 1)),
-				new Field<DateTime?>("customer_since", new DateTime(2000, 1, 1))
+				new StrongGrid.Models.Legacy.Field<string>("nickname", "Bob"),
+				new StrongGrid.Models.Legacy.Field<long>("age", 55),
+				new StrongGrid.Models.Legacy.Field<long?>("net_worth", 1000000),
+				new StrongGrid.Models.Legacy.Field<DateTime>("anniversary", new DateTime(2000, 1, 1)),
+				new StrongGrid.Models.Legacy.Field<DateTime?>("customer_since", new DateTime(2000, 1, 1))
 			};
 
 			// Act
@@ -334,7 +334,7 @@ namespace StrongGrid.UnitTests.Resources
 			result.Email.ShouldBe("jones@example.com");
 			result.CustomFields.Length.ShouldBe(1);
 			result.CustomFields[0].Name.ShouldBe("pet");
-			((Field<string>)result.CustomFields[0]).Value.ShouldBe("Indiana");
+			((StrongGrid.Models.Legacy.Field<string>)result.CustomFields[0]).Value.ShouldBe("Indiana");
 		}
 
 		[Fact]
@@ -361,9 +361,9 @@ namespace StrongGrid.UnitTests.Resources
 			result[0].Email.ShouldBe("jones@example.com");
 			result[0].CustomFields.Length.ShouldBe(2);
 			result[0].CustomFields[0].Name.ShouldBe("pet");
-			((Field<string>)result[0].CustomFields[0]).Value.ShouldBe("Indiana");
+			((StrongGrid.Models.Legacy.Field<string>)result[0].CustomFields[0]).Value.ShouldBe("Indiana");
 			result[0].CustomFields[1].Name.ShouldBe("age");
-			((Field<long>)result[0].CustomFields[1]).Value.ShouldBe(43);
+			((StrongGrid.Models.Legacy.Field<long>)result[0].CustomFields[1]).Value.ShouldBe(43);
 		}
 
 		[Fact]
@@ -528,9 +528,9 @@ namespace StrongGrid.UnitTests.Resources
 			result[0].Email.ShouldBe("jones@example.com");
 			result[0].CustomFields.Length.ShouldBe(2);
 			result[0].CustomFields[0].Name.ShouldBe("pet");
-			((Field<string>)result[0].CustomFields[0]).Value.ShouldBe("Indiana");
+			((StrongGrid.Models.Legacy.Field<string>)result[0].CustomFields[0]).Value.ShouldBe("Indiana");
 			result[0].CustomFields[1].Name.ShouldBe("age");
-			((Field<long>)result[0].CustomFields[1]).Value.ShouldBe(43);
+			((StrongGrid.Models.Legacy.Field<long>)result[0].CustomFields[1]).Value.ShouldBe(43);
 		}
 
 		[Fact]
@@ -586,9 +586,9 @@ namespace StrongGrid.UnitTests.Resources
 			result[0].Email.ShouldBe("jones@example.com");
 			result[0].CustomFields.Length.ShouldBe(2);
 			result[0].CustomFields[0].Name.ShouldBe("pet");
-			((Field<string>)result[0].CustomFields[0]).Value.ShouldBe("Indiana");
+			((StrongGrid.Models.Legacy.Field<string>)result[0].CustomFields[0]).Value.ShouldBe("Indiana");
 			result[0].CustomFields[1].Name.ShouldBe("age");
-			((Field<long>)result[0].CustomFields[1]).Value.ShouldBe(43);
+			((StrongGrid.Models.Legacy.Field<long>)result[0].CustomFields[1]).Value.ShouldBe(43);
 		}
 
 		[Fact]

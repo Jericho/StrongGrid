@@ -5,27 +5,21 @@ using System.Runtime.Serialization;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Enumeration to indicate the type of a field.
+	/// Enumeration to indicate the type of export file.
 	/// </summary>
 	[JsonConverter(typeof(StringEnumConverter))]
-	public enum FieldType
+	public enum FileType
 	{
 		/// <summary>
-		/// Date.
+		/// CSV.
 		/// </summary>
-		[EnumMember(Value = "Date")]
-		Date,
+		[EnumMember(Value = "csv")]
+		Csv,
 
 		/// <summary>
-		/// Text.
+		/// JSON.
 		/// </summary>
-		[EnumMember(Value = "Text")]
-		Text,
-
-		/// <summary>
-		/// Number.
-		/// </summary>
-		[EnumMember(Value = "Number")]
-		Number
+		[EnumMember(Value = "json")]
+		Json
 	}
 }

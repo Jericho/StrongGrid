@@ -5,27 +5,21 @@ using System.Runtime.Serialization;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Enumeration to indicate the type of a field.
+	/// Enumeration to indicate the type of import job.
 	/// </summary>
 	[JsonConverter(typeof(StringEnumConverter))]
-	public enum FieldType
+	public enum ImportType
 	{
 		/// <summary>
-		/// Date.
+		/// Update/insert import.
 		/// </summary>
-		[EnumMember(Value = "Date")]
-		Date,
+		[EnumMember(Value = "upsert")]
+		Upsert,
 
 		/// <summary>
-		/// Text.
+		/// Delete import.
 		/// </summary>
-		[EnumMember(Value = "Text")]
-		Text,
-
-		/// <summary>
-		/// Number.
-		/// </summary>
-		[EnumMember(Value = "Number")]
-		Number
+		[EnumMember(Value = "delete")]
+		Delete
 	}
 }

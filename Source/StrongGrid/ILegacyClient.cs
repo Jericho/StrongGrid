@@ -37,7 +37,7 @@ namespace StrongGrid
 		/// <value>
 		/// The custom fields.
 		/// </value>
-		ICustomFields CustomFields { get; }
+		Resources.Legacy.ICustomFields CustomFields { get; }
 
 		/// <summary>
 		/// Gets the Lists resource.

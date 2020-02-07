@@ -9,11 +9,11 @@ namespace StrongGrid.Utilities
 {
 	/// <summary>
 	/// Converts a <see cref="Field"/> to and from JSON.
-	/// This converter is intended to be used with SendGrid's new API.
-	/// See <seealso cref="LegacyCustomFieldsConverter"/> for the converter for the legacy API.
+	/// This converter is intended to be used with SendGrid's legacy API.
+	/// See <seealso cref="CustomFieldsConverter"/> for the converter for the new API.
 	/// </summary>
 	/// <seealso cref="Newtonsoft.Json.JsonConverter" />
-	internal class CustomFieldsConverter : JsonConverter
+	internal class LegacyCustomFieldsConverter : JsonConverter
 	{
 		/// <summary>
 		/// Determines whether this instance can convert the specified object type.
@@ -37,35 +37,33 @@ namespace StrongGrid.Utilities
 		{
 			if (value == null) return;
 
-			var fields = (Field[])value;
-
-			writer.WriteStartObject();
-			foreach (var customField in fields.OfType<Field<string>>())
+			writer.WriteStartArray();
+			foreach (var customField in ((Field[])value).OfType<Field<string>>())
 			{
 				serializer.Serialize(writer, customField);
 			}
 
-			foreach (var customField in fields.OfType<Field<long>>())
+			foreach (var customField in ((Field[])value).OfType<Field<long>>())
 			{
 				serializer.Serialize(writer, customField);
 			}
 
-			foreach (var customField in fields.OfType<Field<long?>>())
+			foreach (var customField in ((Field[])value).OfType<Field<long?>>())
 			{
 				serializer.Serialize(writer, customField);
 			}
 
-			foreach (var customField in fields.OfType<Field<DateTime>>())
+			foreach (var customField in ((Field[])value).OfType<Field<DateTime>>())
 			{
 				serializer.Serialize(writer, customField);
 			}
 
-			foreach (var customField in fields.OfType<Field<DateTime?>>())
+			foreach (var customField in ((Field[])value).OfType<Field<DateTime?>>())
 			{
 				serializer.Serialize(writer, customField);
 			}
 
-			writer.WriteEndObject();
+			writer.WriteEndArray();
 		}
 
 		/// <summary>
@@ -81,31 +79,38 @@ namespace StrongGrid.Utilities
 		/// <exception cref="System.Exception">Unable to determine the field type.</exception>
 		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 		{
-			if (reader.TokenType == JsonToken.StartObject)
+			if (reader.TokenType == JsonToken.StartArray)
 			{
-				var fields = new List<Field>();
-				var jObject = JObject.Load(reader);
-				foreach (var property in jObject.Properties())
-				{
-					var propertyType = property.Value.Type;
-					var propertyName = property.Name;
-					var field = (Field)null;
+				var fields = new List<Models.Legacy.Field>();
+				var jArray = JArray.Load(reader);
 
-					switch (propertyType)
+				foreach (var item in jArray)
+				{
+					var id = item.GetPropertyValue<int?>("id");
+					var name = item.GetPropertyValue<string>("name");
+					var type = item.GetPropertyValue<string>("type");
+					var field = (Models.Legacy.Field)null;
+
+					switch (type)
 					{
-						case JTokenType.Date:
-							field = new Field<DateTime>(propertyName, property.Value.Value<DateTime>());
+						case "date":
+							var unixTime = item.GetPropertyValue<long?>("value");
+							if (unixTime.HasValue) field = new Models.Legacy.Field<DateTime>(name, unixTime.Value.FromUnixTime());
+							else field = new Models.Legacy.Field<DateTime?>(name, null);
 							break;
-						case JTokenType.String:
-							field = new Field<string>(propertyName, property.Value.Value<string>());
+						case "text":
+							field = new Models.Legacy.Field<string>(name, item.GetPropertyValue<string>("value"));
 							break;
-						case JTokenType.Integer:
-							field = new Field<long>(propertyName, property.Value.Value<long>());
+						case "number":
+							var numericValue = item.GetPropertyValue<long?>("value");
+							if (numericValue.HasValue) field = new Models.Legacy.Field<long>(name, numericValue.Value);
+							else field = new Models.Legacy.Field<long?>(name, null);
 							break;
 						default:
-							throw new Exception($"{propertyType} is an unknown field type");
+							throw new Exception($"{type} is an unknown field type");
 					}
 
+					if (id.HasValue) field.Id = id.Value;
 					fields.Add(field);
 				}
 

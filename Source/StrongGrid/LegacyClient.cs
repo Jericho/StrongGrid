@@ -43,7 +43,7 @@ namespace StrongGrid
 		/// <value>
 		/// The custom fields.
 		/// </value>
-		public ICustomFields CustomFields { get; private set; }
+		public Resources.Legacy.ICustomFields CustomFields { get; private set; }
 
 		/// <summary>
 		/// Gets the Lists resource.
@@ -197,7 +197,7 @@ namespace StrongGrid
 			Campaigns = new Campaigns(FluentClient);
 			Categories = new Categories(FluentClient);
 			Contacts = new Resources.Legacy.Contacts(FluentClient);
-			CustomFields = new CustomFields(FluentClient);
+			CustomFields = new Resources.Legacy.CustomFields(FluentClient);
 			Lists = new Lists(FluentClient);
 			Segments = new Segments(FluentClient);
 			SenderIdentities = new SenderIdentities(FluentClient);

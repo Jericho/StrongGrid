@@ -5,27 +5,27 @@ using System.Runtime.Serialization;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Enumeration to indicate the type of a field.
+	/// Enumeration to indicate the type of export job.
 	/// </summary>
 	[JsonConverter(typeof(StringEnumConverter))]
-	public enum FieldType
+	public enum ExportType
 	{
 		/// <summary>
-		/// Date.
+		/// Contacts export.
 		/// </summary>
-		[EnumMember(Value = "Date")]
-		Date,
+		[EnumMember(Value = "contacts_export")]
+		Contacts,
 
 		/// <summary>
-		/// Text.
+		/// Lists export.
 		/// </summary>
-		[EnumMember(Value = "Text")]
-		Text,
+		[EnumMember(Value = "list_export")]
+		Lists,
 
 		/// <summary>
-		/// Number.
+		/// Segments export.
 		/// </summary>
-		[EnumMember(Value = "Number")]
-		Number
+		[EnumMember(Value = "segment_export")]
+		Segments,
 	}
 }

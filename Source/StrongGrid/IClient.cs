@@ -33,7 +33,6 @@ namespace StrongGrid
 		/// </value>
 		IContacts Contacts { get; }
 
-		/*
 		/// <summary>
 		/// Gets the CustomFields resource which allows you to manage your custom fields.
 		/// </summary>
@@ -42,6 +41,7 @@ namespace StrongGrid
 		/// </value>
 		ICustomFields CustomFields { get; }
 
+		/*
 		/// <summary>
 		/// Gets the Lists resource.
 		/// </summary>

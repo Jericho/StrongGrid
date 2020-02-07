@@ -48,11 +48,11 @@ namespace StrongGrid.IntegrationTests.Tests
 			var email = "111@example.com";
 			var firstName = "Robert";
 			var lastName = "Unknown";
-			var customFields = new Field[]
+			var customFields = new Models.Legacy.Field[]
 			{
-				new Field<string>("stronggrid_nickname", "Bob"),
-				new Field<long?>("stronggrid_age", 42),
-				new Field<DateTime>("stronggrid_customer_since", new DateTime(2000, 12, 1))
+				new Models.Legacy.Field<string>("stronggrid_nickname", "Bob"),
+				new Models.Legacy.Field<long?>("stronggrid_age", 42),
+				new Models.Legacy.Field<DateTime>("stronggrid_customer_since", new DateTime(2000, 12, 1))
 			};
 			var contactId = await client.Contacts.CreateAsync(email, firstName, lastName, customFields, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Contact {contactId} created: {firstName} {lastName}").ConfigureAwait(false);

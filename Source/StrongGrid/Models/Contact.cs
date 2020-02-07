@@ -1,6 +1,8 @@
 using Newtonsoft.Json;
+using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace StrongGrid.Models
 {
@@ -28,8 +30,7 @@ namespace StrongGrid.Models
 			Email = email;
 			FirstName = firstName;
 			LastName = lastName;
-
-			// CustomFields = (customFields ?? Enumerable.Empty<Field>()).ToArray();
+			CustomFields = customFields?.ToArray() ?? Array.Empty<Field>();
 		}
 
 		/// <summary>
@@ -159,15 +160,15 @@ namespace StrongGrid.Models
 		[JsonProperty("updated_at", NullValueHandling = NullValueHandling.Ignore)]
 		public DateTime ModifiedOn { get; set; }
 
-		///// <summary>
-		///// Gets or sets the custom fields.
-		///// </summary>
-		///// <value>
-		///// The custom fields.
-		///// </value>
-		////[JsonProperty("custom_fields", NullValueHandling = NullValueHandling.Ignore)]
-		////[JsonConverter(typeof(CustomFieldsConverter))]
-		////public Field[] CustomFields { get; set; }
+		/// <summary>
+		/// Gets or sets the custom fields.
+		/// </summary>
+		/// <value>
+		/// The custom fields.
+		/// </value>
+		[JsonProperty("custom_fields", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonConverter(typeof(CustomFieldsConverter))]
+		public Field[] CustomFields { get; set; }
 
 		/// <summary>
 		/// Gets or sets the phone number.
@@ -213,5 +214,32 @@ namespace StrongGrid.Models
 		/// </value>
 		[JsonProperty("unique_name", NullValueHandling = NullValueHandling.Ignore)]
 		public string UniqueName { get; set; }
+
+		/// <summary>
+		/// Gets or sets the last clicked on.
+		/// </summary>
+		/// <value>
+		/// The last clicked on.
+		/// </value>
+		[JsonProperty("last_clicked", NullValueHandling = NullValueHandling.Ignore)]
+		public DateTime? LastClickedOn { get; set; }
+
+		/// <summary>
+		/// Gets or sets the last emailed on.
+		/// </summary>
+		/// <value>
+		/// The last emailed on.
+		/// </value>
+		[JsonProperty("last_emailed", NullValueHandling = NullValueHandling.Ignore)]
+		public DateTime? LastEmailedOn { get; set; }
+
+		/// <summary>
+		/// Gets or sets the last opened on.
+		/// </summary>
+		/// <value>
+		/// The last opened on.
+		/// </value>
+		[JsonProperty("last_opened", NullValueHandling = NullValueHandling.Ignore)]
+		public DateTime? LastOpenedOn { get; set; }
 	}
 }

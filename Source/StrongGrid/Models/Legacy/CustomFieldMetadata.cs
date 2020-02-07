@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
-namespace StrongGrid.Models
+namespace StrongGrid.Models.Legacy
 {
 	/// <summary>
 	/// Metadata about a custom field.
 	/// </summary>
-	/// <seealso cref="StrongGrid.Models.FieldMetadata" />
+	/// <seealso cref="StrongGrid.Models.Legacy.FieldMetadata" />
 	public class CustomFieldMetadata : FieldMetadata
 	{
 		/// <summary>
