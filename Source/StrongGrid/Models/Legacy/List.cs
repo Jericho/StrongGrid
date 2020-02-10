@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace StrongGrid.Models
+namespace StrongGrid.Models.Legacy
 {
 	/// <summary>
 	/// A list of contacts.
@@ -14,7 +14,7 @@ namespace StrongGrid.Models
 		/// The identifier.
 		/// </value>
 		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-		public string Id { get; set; }
+		public long Id { get; set; }
 
 		/// <summary>
 		/// Gets or sets the name.
@@ -26,12 +26,12 @@ namespace StrongGrid.Models
 		public string Name { get; set; }
 
 		/// <summary>
-		/// Gets or sets the contact count.
+		/// Gets or sets the recipient count.
 		/// </summary>
 		/// <value>
-		/// The contact count.
+		/// The recipient count.
 		/// </value>
-		[JsonProperty("contact_count", NullValueHandling = NullValueHandling.Ignore)]
-		public long ContactCount { get; set; }
+		[JsonProperty("recipient_count", NullValueHandling = NullValueHandling.Ignore)]
+		public long RecipientCount { get; set; }
 	}
 }

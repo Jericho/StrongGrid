@@ -45,7 +45,7 @@ namespace StrongGrid
 		/// <value>
 		/// The lists.
 		/// </value>
-		ILists Lists { get; }
+		Resources.Legacy.ILists Lists { get; }
 
 		/// <summary>
 		/// Gets the Segments resource.
@@ -61,6 +61,6 @@ namespace StrongGrid
 		/// <value>
 		/// The sender identities.
 		/// </value>
-		ISenderIdentities SenderIdentities { get; }
+		Resources.Legacy.ISenderIdentities SenderIdentities { get; }
 	}
 }

@@ -41,7 +41,6 @@ namespace StrongGrid
 		/// </value>
 		ICustomFields CustomFields { get; }
 
-		/*
 		/// <summary>
 		/// Gets the Lists resource.
 		/// </summary>
@@ -50,6 +49,7 @@ namespace StrongGrid
 		/// </value>
 		ILists Lists { get; }
 
+		/*
 		/// <summary>
 		/// Gets the Segments resource.
 		/// </summary>

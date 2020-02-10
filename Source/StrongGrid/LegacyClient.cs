@@ -51,7 +51,7 @@ namespace StrongGrid
 		/// <value>
 		/// The lists.
 		/// </value>
-		public ILists Lists { get; private set; }
+		public Resources.Legacy.ILists Lists { get; private set; }
 
 		/// <summary>
 		/// Gets the Segments resource.
@@ -67,7 +67,7 @@ namespace StrongGrid
 		/// <value>
 		/// The sender identities.
 		/// </value>
-		public ISenderIdentities SenderIdentities { get; private set; }
+		public Resources.Legacy.ISenderIdentities SenderIdentities { get; private set; }
 
 		#endregion
 
@@ -198,9 +198,9 @@ namespace StrongGrid
 			Categories = new Categories(FluentClient);
 			Contacts = new Resources.Legacy.Contacts(FluentClient);
 			CustomFields = new Resources.Legacy.CustomFields(FluentClient);
-			Lists = new Lists(FluentClient);
+			Lists = new Resources.Legacy.Lists(FluentClient);
 			Segments = new Segments(FluentClient);
-			SenderIdentities = new SenderIdentities(FluentClient);
+			SenderIdentities = new Resources.Legacy.SenderIdentities(FluentClient);
 		}
 
 		#endregion
