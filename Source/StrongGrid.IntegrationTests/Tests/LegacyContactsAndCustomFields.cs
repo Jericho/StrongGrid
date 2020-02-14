@@ -94,19 +94,19 @@ namespace StrongGrid.IntegrationTests.Tests
 				await log.WriteLineAsync($"\t{record.FirstName} {record.LastName}").ConfigureAwait(false);
 			}
 
-			var firstNameCondition = new SearchCondition
+			var firstNameCondition = new Models.Legacy.SearchCondition
 			{
 				Field = "first_name",
 				Value = "Robert",
-				Operator = ConditionOperator.Equal,
-				LogicalOperator = LogicalOperator.None
+				Operator = Models.Legacy.ConditionOperator.Equal,
+				LogicalOperator = Models.Legacy.LogicalOperator.None
 			};
-			var LastNameCondition = new SearchCondition
+			var LastNameCondition = new Models.Legacy.SearchCondition
 			{
 				Field = "last_name",
 				Value = "Smith",
-				Operator = ConditionOperator.Equal,
-				LogicalOperator = LogicalOperator.And
+				Operator = Models.Legacy.ConditionOperator.Equal,
+				LogicalOperator = Models.Legacy.LogicalOperator.And
 			};
 			var searchResult = await client.Contacts.SearchAsync(new[] { firstNameCondition, LastNameCondition }, null, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Found {searchResult.Length} contacts named Robert Smith").ConfigureAwait(false);

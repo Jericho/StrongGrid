@@ -1,8 +1,6 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
-using StrongGrid.Models;
-using StrongGrid.Resources;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -11,7 +9,7 @@ using Xunit;
 
 namespace StrongGrid.UnitTests.Resources
 {
-	public class SegmentsTests
+	public class LegacySegmentsTests
 	{
 		#region FIELDS
 
@@ -69,7 +67,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<Segment>(SINGLE_SEGMENT_JSON);
+			var result = JsonConvert.DeserializeObject<StrongGrid.Models.Legacy.Segment>(SINGLE_SEGMENT_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -77,18 +75,18 @@ namespace StrongGrid.UnitTests.Resources
 			result.Conditions.Length.ShouldBe(3);
 
 			result.Conditions[0].Field.ShouldBe("last_name");
-			result.Conditions[0].LogicalOperator.ShouldBe(LogicalOperator.None);
-			result.Conditions[0].Operator.ShouldBe(ConditionOperator.Equal);
+			result.Conditions[0].LogicalOperator.ShouldBe(StrongGrid.Models.Legacy.LogicalOperator.None);
+			result.Conditions[0].Operator.ShouldBe(StrongGrid.Models.Legacy.ConditionOperator.Equal);
 			result.Conditions[0].Value.ShouldBe("Miller");
 
 			result.Conditions[1].Field.ShouldBe("last_clicked");
-			result.Conditions[1].LogicalOperator.ShouldBe(LogicalOperator.And);
-			result.Conditions[1].Operator.ShouldBe(ConditionOperator.GreatherThan);
+			result.Conditions[1].LogicalOperator.ShouldBe(StrongGrid.Models.Legacy.LogicalOperator.And);
+			result.Conditions[1].Operator.ShouldBe(StrongGrid.Models.Legacy.ConditionOperator.GreatherThan);
 			result.Conditions[1].Value.ShouldBe("01/02/2015");
 
 			result.Conditions[2].Field.ShouldBe("clicks.campaign_identifier");
-			result.Conditions[2].LogicalOperator.ShouldBe(LogicalOperator.Or);
-			result.Conditions[2].Operator.ShouldBe(ConditionOperator.Equal);
+			result.Conditions[2].LogicalOperator.ShouldBe(StrongGrid.Models.Legacy.LogicalOperator.Or);
+			result.Conditions[2].Operator.ShouldBe(StrongGrid.Models.Legacy.ConditionOperator.Equal);
 			result.Conditions[2].Value.ShouldBe("513");
 
 			result.Id.ShouldBe(1);
@@ -104,26 +102,26 @@ namespace StrongGrid.UnitTests.Resources
 			var listId = 4;
 			var conditions = new[]
 			{
-				new SearchCondition
+				new StrongGrid.Models.Legacy.SearchCondition
 				{
 					Field = "last_name",
 					Value= "Miller",
-					Operator = ConditionOperator.Equal,
-					LogicalOperator = LogicalOperator.None
+					Operator = StrongGrid.Models.Legacy.ConditionOperator.Equal,
+					LogicalOperator = StrongGrid.Models.Legacy.LogicalOperator.None
 				},
-				new SearchCondition
+				new StrongGrid.Models.Legacy.SearchCondition
 				{
 					Field = "last_clicked",
 					Value = "01/02/2015",
-					Operator = ConditionOperator.GreatherThan,
-					LogicalOperator = LogicalOperator.And
+					Operator = StrongGrid.Models.Legacy.ConditionOperator.GreatherThan,
+					LogicalOperator = StrongGrid.Models.Legacy.LogicalOperator.And
 				},
-				new SearchCondition
+				new StrongGrid.Models.Legacy.SearchCondition
 				{
 					Field = "clicks.campaign_identifier",
 					Value = "513",
-					Operator = ConditionOperator.Equal,
-					LogicalOperator = LogicalOperator.Or
+					Operator = StrongGrid.Models.Legacy.ConditionOperator.Equal,
+					LogicalOperator = StrongGrid.Models.Legacy.LogicalOperator.Or
 				}
 			};
 
@@ -131,7 +129,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", SINGLE_SEGMENT_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var segments = new Segments(client);
+			var segments = new StrongGrid.Resources.Legacy.Segments(client);
 
 			// Act
 			var result = await segments.CreateAsync(name, conditions, listId, null, CancellationToken.None).ConfigureAwait(false);
@@ -150,7 +148,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", MULTIPLE_SEGMENTS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var segments = new Segments(client);
+			var segments = new StrongGrid.Resources.Legacy.Segments(client);
 
 			// Act
 			var result = await segments.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
@@ -172,7 +170,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, segmentId)).Respond("application/json", SINGLE_SEGMENT_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var segments = new Segments(client);
+			var segments = new StrongGrid.Resources.Legacy.Segments(client);
 
 			// Act
 			var result = await segments.GetAsync(segmentId, null, CancellationToken.None).ConfigureAwait(false);
@@ -192,12 +190,12 @@ namespace StrongGrid.UnitTests.Resources
 			var listId = 5;
 			var conditions = new[]
 			{
-				new SearchCondition
+				new StrongGrid.Models.Legacy.SearchCondition
 				{
 					Field = "last_name",
 					Value= "Miller",
-					Operator = ConditionOperator.Equal,
-					LogicalOperator = LogicalOperator.None
+					Operator = StrongGrid.Models.Legacy.ConditionOperator.Equal,
+					LogicalOperator = StrongGrid.Models.Legacy.LogicalOperator.None
 				}
 			};
 
@@ -205,7 +203,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(ENDPOINT, segmentId)).Respond("application/json", SINGLE_SEGMENT_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var segments = new Segments(client);
+			var segments = new StrongGrid.Resources.Legacy.Segments(client);
 
 			// Act
 			var result = await segments.UpdateAsync(segmentId, name, listId, conditions, null, CancellationToken.None).ConfigureAwait(false);
@@ -227,7 +225,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, segmentId) + "?delete_contacts=false").Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var segments = new Segments(client);
+			var segments = new StrongGrid.Resources.Legacy.Segments(client);
 
 			// Act
 			await segments.DeleteAsync(segmentId, deleteContacts, null, CancellationToken.None).ConfigureAwait(false);
@@ -248,7 +246,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, segmentId) + "?delete_contacts=true").Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var segments = new Segments(client);
+			var segments = new StrongGrid.Resources.Legacy.Segments(client);
 
 			// Act
 			await segments.DeleteAsync(segmentId, deleteContacts, null, CancellationToken.None).ConfigureAwait(false);
@@ -294,7 +292,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, $"{segmentId}/recipients?page_size={recordsPerPage}&page={page}")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var segments = new Segments(client);
+			var segments = new StrongGrid.Resources.Legacy.Segments(client);
 
 			// Act
 			var result = await segments.GetRecipientsAsync(segmentId, recordsPerPage, page, null, CancellationToken.None).ConfigureAwait(false);

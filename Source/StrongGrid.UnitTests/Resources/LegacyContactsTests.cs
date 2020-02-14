@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
-using StrongGrid.Models;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -459,26 +458,26 @@ namespace StrongGrid.UnitTests.Resources
 			var listId = 4;
 			var conditions = new[]
 			{
-				new SearchCondition
+				new StrongGrid.Models.Legacy.SearchCondition
 				{
 					Field = "last_name",
 					Value = "Miller",
-					Operator = ConditionOperator.Equal,
-					LogicalOperator = LogicalOperator.None
+					Operator = StrongGrid.Models.Legacy.ConditionOperator.Equal,
+					LogicalOperator = StrongGrid.Models.Legacy.LogicalOperator.None
 				},
-				new SearchCondition
+				new StrongGrid.Models.Legacy.SearchCondition
 				{
 					Field = "last_click",
 					Value = "01/02/2015",
-					Operator = ConditionOperator.GreatherThan,
-					LogicalOperator = LogicalOperator.And
+					Operator = StrongGrid.Models.Legacy.ConditionOperator.GreatherThan,
+					LogicalOperator = StrongGrid.Models.Legacy.LogicalOperator.And
 				},
-				new SearchCondition
+				new StrongGrid.Models.Legacy.SearchCondition
 				{
 					Field = "clicks.campaign_identifier",
 					Value = "513",
-					Operator = ConditionOperator.GreatherThan,
-					LogicalOperator = LogicalOperator.Or
+					Operator = StrongGrid.Models.Legacy.ConditionOperator.GreatherThan,
+					LogicalOperator = StrongGrid.Models.Legacy.LogicalOperator.Or
 				}
 			};
 			var apiResponse = @"{
@@ -538,7 +537,7 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var listId = (int?)null;
-			var conditions = (SearchCondition[])null;
+			var conditions = (StrongGrid.Models.Legacy.SearchCondition[])null;
 			var apiResponse = @"{
 				'recipients': [
 					{

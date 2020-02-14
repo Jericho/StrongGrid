@@ -59,7 +59,7 @@ namespace StrongGrid
 		/// <value>
 		/// The segments.
 		/// </value>
-		public ISegments Segments { get; private set; }
+		public Resources.Legacy.ISegments Segments { get; private set; }
 
 		/// <summary>
 		/// Gets the SenderIdentities resource.
@@ -199,7 +199,7 @@ namespace StrongGrid
 			Contacts = new Resources.Legacy.Contacts(FluentClient);
 			CustomFields = new Resources.Legacy.CustomFields(FluentClient);
 			Lists = new Resources.Legacy.Lists(FluentClient);
-			Segments = new Segments(FluentClient);
+			Segments = new Resources.Legacy.Segments(FluentClient);
 			SenderIdentities = new Resources.Legacy.SenderIdentities(FluentClient);
 		}
 

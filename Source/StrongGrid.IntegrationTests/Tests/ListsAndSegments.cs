@@ -23,8 +23,8 @@ namespace StrongGrid.IntegrationTests.Tests
 			await log.WriteLineAsync($"Retrieved {paginatedLists.Records.Length} lists").ConfigureAwait(false);
 
 			// GET SEGMENTS
-			//var segments = await client.Segments.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
-			//await log.WriteLineAsync($"All segements retrieved. There are {segments.Length} segments").ConfigureAwait(false);
+			var segments = await client.Segments.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All segements retrieved. There are {segments.Length} segments").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
 			var cleanUpTasks = paginatedLists.Records
@@ -34,14 +34,15 @@ namespace StrongGrid.IntegrationTests.Tests
 					await client.Lists.DeleteAsync(oldList.Id, false, cancellationToken).ConfigureAwait(false);
 					await log.WriteLineAsync($"List {oldList.Id} deleted").ConfigureAwait(false);
 					await Task.Delay(250).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
-				});
-			//.Union(segments.Where(s => s.Name.StartsWith("StrongGrid Integration Testing:"))
-			//	.Select(async oldSegment =>
-			//	{
-			//		await client.Segments.DeleteAsync(oldSegment.Id, false, null, cancellationToken).ConfigureAwait(false);
-			//		await log.WriteLineAsync($"Segment {oldSegment.Id} deleted").ConfigureAwait(false);
-			//		await Task.Delay(250).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
-			//	}));
+				})
+				.Union(segments
+					.Where(s => s.Name.StartsWith("StrongGrid Integration Testing:"))
+					.Select(async oldSegment =>
+					{
+						await client.Segments.DeleteAsync(oldSegment.Id, false, cancellationToken).ConfigureAwait(false);
+						await log.WriteLineAsync($"Segment {oldSegment.Id} deleted").ConfigureAwait(false);
+						await Task.Delay(250).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
+					}));
 			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
 			// CREATE A LIST
@@ -53,10 +54,9 @@ namespace StrongGrid.IntegrationTests.Tests
 			await log.WriteLineAsync($"List '{list.Id}' updated").ConfigureAwait(false);
 
 			// CREATE A SEGMENT
-			//var millerLastNameCondition = new SearchCondition { Field = "last_name", Operator = ConditionOperator.Equal, Value = "Miller", LogicalOperator = LogicalOperator.None };
-			//var clickedRecentlyCondition = new SearchCondition { Field = "last_clicked", Operator = ConditionOperator.GreatherThan, Value = DateTime.UtcNow.AddDays(-30).ToString("MM/dd/yyyy"), LogicalOperator = LogicalOperator.And };
-			//var segment = await client.Segments.CreateAsync("StrongGrid Integration Testing: Last Name is Miller and clicked recently", new[] { millerLastNameCondition, clickedRecentlyCondition }, list.Id, null, cancellationToken).ConfigureAwait(false);
-			//await log.WriteLineAsync($"Segment '{segment.Name}' created. Id: {segment.Id}").ConfigureAwait(false);
+			var queryDsl = "???";
+			var segment = await client.Segments.CreateAsync("StrongGrid Integration Testing: Last Name is Miller and clicked recently", queryDsl, list.Id, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Segment '{segment.Name}' created. Id: {segment.Id}").ConfigureAwait(false);
 
 			// UPDATE THE SEGMENT
 			//var hotmailCondition = new SearchCondition { Field = "email", Operator = ConditionOperator.Contains, Value = "hotmail.com", LogicalOperator = LogicalOperator.None };
@@ -68,10 +68,6 @@ namespace StrongGrid.IntegrationTests.Tests
 			var contactId2 = await client.Contacts.UpsertAsync("dummy2@hotmail.com", "Bob", "Dummy2", listIds: new[] { list.Id }, cancellationToken: cancellationToken).ConfigureAwait(false);
 			var contactId3 = await client.Contacts.UpsertAsync("dummy3@hotmail.com", "Bob", "Dummy3", listIds: new[] { list.Id }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-			// ADD THE CONTACTS TO THE LIST (THEY WILL AUTOMATICALLY BE INCLUDED IN THE HOTMAIL SEGMENT)
-			//await client.Lists.AddRecipientAsync(list.Id, contactId1, null, CancellationToken.None).ConfigureAwait(false);
-			//await client.Lists.AddRecipientsAsync(list.Id, new[] { contactId2, contactId3 }, null, CancellationToken.None).ConfigureAwait(false);
-
 			// REMOVE THE CONTACTS FROM THE LIST (THEY WILL AUTOMATICALLY BE REMOVED FROM THE HOTMAIL SEGMENT)
 			await client.Lists.RemoveContactAsync(list.Id, contactId3, cancellationToken).ConfigureAwait(false);
 			await client.Lists.RemoveContactsAsync(list.Id, new[] { contactId1, contactId2 }, cancellationToken).ConfigureAwait(false);
@@ -81,8 +77,8 @@ namespace StrongGrid.IntegrationTests.Tests
 			await client.Contacts.DeleteAsync(new[] { contactId1, contactId3 }, cancellationToken).ConfigureAwait(false);
 
 			// DELETE THE SEGMENT
-			//await client.Segments.DeleteAsync(segment.Id, false, null, cancellationToken).ConfigureAwait(false);
-			//await log.WriteLineAsync($"Segment {segment.Id} deleted").ConfigureAwait(false);
+			await client.Segments.DeleteAsync(segment.Id, false, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Segment {segment.Id} deleted").ConfigureAwait(false);
 
 			// DELETE THE LIST
 			await client.Lists.DeleteAsync(list.Id, false, cancellationToken).ConfigureAwait(false);

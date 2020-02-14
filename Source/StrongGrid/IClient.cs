@@ -49,7 +49,6 @@ namespace StrongGrid
 		/// </value>
 		ILists Lists { get; }
 
-		/*
 		/// <summary>
 		/// Gets the Segments resource.
 		/// </summary>
@@ -57,7 +56,6 @@ namespace StrongGrid
 		/// The segments.
 		/// </value>
 		ISegments Segments { get; }
-		*/
 
 		/// <summary>
 		/// Gets the SenderIdentities resource.

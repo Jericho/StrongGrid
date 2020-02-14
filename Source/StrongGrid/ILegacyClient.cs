@@ -53,7 +53,7 @@ namespace StrongGrid
 		/// <value>
 		/// The segments.
 		/// </value>
-		ISegments Segments { get; }
+		Resources.Legacy.ISegments Segments { get; }
 
 		/// <summary>
 		/// Gets the SenderIdentities resource.

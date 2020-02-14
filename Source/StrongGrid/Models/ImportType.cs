@@ -20,6 +20,12 @@ namespace StrongGrid.Models
 		/// Delete import.
 		/// </summary>
 		[EnumMember(Value = "delete")]
-		Delete
+		Delete,
+
+		/// <summary>
+		/// Update/insert contacts.
+		/// </summary>
+		[EnumMember(Value = "upsert_contacts")]
+		UpsertContacts
 	}
 }

@@ -14,11 +14,11 @@ namespace StrongGrid.Resources
 	/// </summary>
 	/// <seealso cref="StrongGrid.Resources.ISegments" />
 	/// <remarks>
-	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/campaigns.html">SendGrid documentation</a> for more information.
+	/// See <a href="https://sendgrid.api-docs.io/v3.0/segmenting-contacts">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public class Segments : ISegments
 	{
-		private const string _endpoint = "contactdb/segments";
+		private const string _endpoint = "marketing/segments";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
@@ -34,28 +34,41 @@ namespace StrongGrid.Resources
 		/// Create a segment.
 		/// </summary>
 		/// <param name="name">The name.</param>
-		/// <param name="conditions">The conditions.</param>
-		/// <param name="listId">The list identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="queryDsl">The query.</param>
+		/// <param name="listId">The id of the list if this segment is a child of a list. This implies the query is rewritten as (${query_dsl}) AND CONTAINS(list_ids, ${parent_list_id}).</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Segment" />.
 		/// </returns>
-		public Task<Segment> CreateAsync(string name, IEnumerable<SearchCondition> conditions, long? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<Segment> CreateAsync(string name, string queryDsl, string listId = null, CancellationToken cancellationToken = default)
 		{
-			conditions = conditions ?? Enumerable.Empty<SearchCondition>();
-
 			var data = new JObject
 			{
 				{ "name", name },
-				{ "conditions", JArray.FromObject(conditions.ToArray()) }
+				{ "query_dsl", queryDsl }
 			};
-			data.AddPropertyIfValue("list_id", listId);
+			data.AddPropertyIfValue("parent_list_id", listId);
 
 			return _client
 				.PostAsync(_endpoint)
-				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<Segment>();
+		}
+
+		/// <summary>
+		/// Retrieve a segment.
+		/// </summary>
+		/// <param name="segmentId">The segment identifier.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="Segment" />.
+		/// </returns>
+		public Task<Segment> GetAsync(string segmentId, CancellationToken cancellationToken = default)
+		{
+			return _client
+				.GetAsync($"{_endpoint}/{segmentId}")
+				.WithArgument("query_json", "false")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Segment>();
 		}
@@ -63,36 +76,27 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Retrieve all segments.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="listIds">An enumeration of lists ids to be used when searching for segments with the specified parent_list_id, no more than 50 is allowed.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Segment" />.
 		/// </returns>
-		public Task<Segment[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<Segment[]> GetAllAsync(IEnumerable<string> listIds = null, CancellationToken cancellationToken = default)
 		{
-			return _client
+			var request = _client
 				.GetAsync(_endpoint)
-				.OnBehalfOf(onBehalfOf)
-				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Segment[]>("segments");
-		}
+				.WithCancellationToken(cancellationToken);
 
-		/// <summary>
-		/// Retrieve a segment.
-		/// </summary>
-		/// <param name="segmentId">The segment identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// The <see cref="Segment" />.
-		/// </returns>
-		public Task<Segment> GetAsync(long segmentId, string onBehalfOf = null, CancellationToken cancellationToken = default)
-		{
-			return _client
-				.GetAsync($"{_endpoint}/{segmentId}")
-				.OnBehalfOf(onBehalfOf)
-				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Segment>();
+			if (listIds == null || !listIds.Any())
+			{
+				request = request.WithArgument("no_parent_list_id", "true");
+			}
+			else
+			{
+				request = request.WithArgument("parent_list_ids", string.Join(",", listIds));
+			}
+
+			return request.AsSendGridObject<Segment[]>("results");
 		}
 
 		/// <summary>
@@ -100,25 +104,19 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="segmentId">The segment identifier.</param>
 		/// <param name="name">The name.</param>
-		/// <param name="listId">The list identifier.</param>
-		/// <param name="conditions">The conditions.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="queryDsl">The query DSL.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Segment" />.
 		/// </returns>
-		public Task<Segment> UpdateAsync(long segmentId, string name = null, long? listId = null, IEnumerable<SearchCondition> conditions = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<Segment> UpdateAsync(string segmentId, Parameter<string> name = default, Parameter<string> queryDsl = default, CancellationToken cancellationToken = default)
 		{
-			conditions = conditions ?? Enumerable.Empty<SearchCondition>();
-
 			var data = new JObject();
 			data.AddPropertyIfValue("name", name);
-			data.AddPropertyIfValue("list_id", listId);
-			data.AddPropertyIfValue("conditions", conditions);
+			data.AddPropertyIfValue("query_dsl", queryDsl);
 
 			return _client
 				.PatchAsync($"{_endpoint}/{segmentId}")
-				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<Segment>();
@@ -129,41 +127,17 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="segmentId">The segment identifier.</param>
 		/// <param name="deleteMatchingContacts">if set to <c>true</c> [delete matching contacts].</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(long segmentId, bool deleteMatchingContacts = false, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task DeleteAsync(string segmentId, bool deleteMatchingContacts = false, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{segmentId}")
-				.OnBehalfOf(onBehalfOf)
 				.WithArgument("delete_contacts", deleteMatchingContacts ? "true" : "false")
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
-		}
-
-		/// <summary>
-		/// Retrieve the recipients on a segment.
-		/// </summary>
-		/// <param name="segmentId">The segment identifier.</param>
-		/// <param name="recordsPerPage">The records per page.</param>
-		/// <param name="page">The page.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// An array of <see cref="Models.Legacy.Contact" />.
-		/// </returns>
-		public Task<Models.Legacy.Contact[]> GetRecipientsAsync(long segmentId, int recordsPerPage = 100, int page = 1, string onBehalfOf = null, CancellationToken cancellationToken = default)
-		{
-			return _client
-				.GetAsync($"{_endpoint}/{segmentId}/recipients")
-				.OnBehalfOf(onBehalfOf)
-				.WithArgument("page_size", recordsPerPage)
-				.WithArgument("page", page)
-				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Models.Legacy.Contact[]>("recipients");
 		}
 	}
 }
