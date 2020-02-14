@@ -37,18 +37,18 @@ namespace StrongGrid.IntegrationTests.Tests
 			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
 			var nicknameField = await client.CustomFields.CreateAsync("stronggrid_nickname", FieldType.Text, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Field {nicknameField.Name} created").ConfigureAwait(false);
+			await log.WriteLineAsync($"Field {nicknameField.Name} created. The Id of this new field is {nicknameField.Id}").ConfigureAwait(false);
 
 			var ageField = await client.CustomFields.CreateAsync("stronggrid_age", FieldType.Number, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Field {ageField.Name} created").ConfigureAwait(false);
+			await log.WriteLineAsync($"Field {ageField.Name} created. The Id of this new field is {ageField.Id}").ConfigureAwait(false);
 
 			var customerSinceField = await client.CustomFields.CreateAsync("stronggrid_customer_since", FieldType.Date, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Field {customerSinceField.Name} created").ConfigureAwait(false);
+			await log.WriteLineAsync($"Field {customerSinceField.Name} created. The Id of this new field is {customerSinceField.Id}").ConfigureAwait(false);
 
 			//--------------------------------------------------
 			// We must wait for the custom fields to be ready.
 			// I don't know exactly how long we should wait, but after a lot of trial/error I have settled on 5 seconds.
-			// If we don't wait long enough, we get an 'invalid custom field ids supplied' exception when upsert'ing a contact.
+			// If we don't wait long enough, we get an 'invalid custom field ids supplied' exception when inserting a new contact.
 			await Task.Delay(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
 			//--------------------------------------------------
 
@@ -71,7 +71,7 @@ namespace StrongGrid.IntegrationTests.Tests
 				new Field<long>(ageField.Id, ageField.Name, 42),
 				new Field<DateTime>(customerSinceField.Id, customerSinceField.Name, new DateTime(2015, 2, 5))
 			};
-			var jobId = await client.Contacts.UpsertAsync(email, firstName, lastName, addressLine1, addressLine2, city, stateOrProvince, country, postalCode, alternateEmails, customFields, null, cancellationToken).ConfigureAwait(false);
+			await client.Contacts.UpsertAsync(email, firstName, lastName, addressLine1, addressLine2, city, stateOrProvince, country, postalCode, alternateEmails, customFields, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Contact {email} created: {firstName} {lastName}").ConfigureAwait(false);
 
 			var newLastName = "Smith";
