@@ -1,6 +1,5 @@
 using RichardSzalay.MockHttp;
 using Shouldly;
-using StrongGrid.Resources;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,7 +7,7 @@ using Xunit;
 
 namespace StrongGrid.UnitTests.Resources
 {
-	public class CategoriesTests
+	public class LegacyCategoriesTests
 	{
 		#region FIELDS
 
@@ -35,7 +34,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?category=&limit={limit}&offset={offset}").Respond("application/json", MULTIPLE_CATEGORIES_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var categories = new Categories(client);
+			var categories = new StrongGrid.Resources.Legacy.Categories(client);
 
 			// Act
 			var result = await categories.GetAsync(null, limit, offset, null, CancellationToken.None).ConfigureAwait(false);

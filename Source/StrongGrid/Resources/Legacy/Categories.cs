@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Utilities;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StrongGrid.Resources
+namespace StrongGrid.Resources.Legacy
 {
 	/// <summary>
 	/// Allows you to manage categories.

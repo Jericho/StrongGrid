@@ -22,14 +22,6 @@ namespace StrongGrid
 		public ICampaigns Campaigns { get; private set; }
 
 		/// <summary>
-		/// Gets the Categories resource which allows you to manages your categories.
-		/// </summary>
-		/// <value>
-		/// The categories.
-		/// </value>
-		public ICategories Categories { get; private set; }
-
-		/// <summary>
 		/// Gets the Contacts resource which allows you to manage your contacts (also sometimes refered to as 'recipients').
 		/// </summary>
 		/// <value>
@@ -195,7 +187,6 @@ namespace StrongGrid
 		private void Init()
 		{
 			Campaigns = new Campaigns(FluentClient);
-			Categories = new Categories(FluentClient);
 			Contacts = new Contacts(FluentClient);
 			CustomFields = new CustomFields(FluentClient);
 			Lists = new Lists(FluentClient);

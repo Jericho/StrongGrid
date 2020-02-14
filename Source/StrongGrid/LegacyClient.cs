@@ -195,7 +195,7 @@ namespace StrongGrid
 		private void Init()
 		{
 			Campaigns = new Campaigns(FluentClient);
-			Categories = new Categories(FluentClient);
+			Categories = new Resources.Legacy.Categories(FluentClient);
 			Contacts = new Resources.Legacy.Contacts(FluentClient);
 			CustomFields = new Resources.Legacy.CustomFields(FluentClient);
 			Lists = new Resources.Legacy.Lists(FluentClient);
