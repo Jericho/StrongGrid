@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
+using StrongGrid.Resources.Legacy;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -69,7 +70,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", SINGLE_CUSTOM_FIELD_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var customFields = new StrongGrid.Resources.Legacy.CustomFields(client);
+			var customFields = new CustomFields(client);
 
 			// Act
 			var result = await customFields.CreateAsync(name, type, null, CancellationToken.None).ConfigureAwait(false);
@@ -90,7 +91,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, fieldId)).Respond("application/json", SINGLE_CUSTOM_FIELD_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var customFields = new StrongGrid.Resources.Legacy.CustomFields(client);
+			var customFields = new CustomFields(client);
 
 			// Act
 			var result = await customFields.GetAsync(fieldId, null, CancellationToken.None).ConfigureAwait(false);
@@ -109,7 +110,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", MULTIPLE_CUSTOM_FIELDS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var customFields = new StrongGrid.Resources.Legacy.CustomFields(client);
+			var customFields = new CustomFields(client);
 
 			// Act
 			var result = await customFields.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
@@ -131,7 +132,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, fieldId)).Respond(HttpStatusCode.Accepted);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var customFields = new StrongGrid.Resources.Legacy.CustomFields(client);
+			var customFields = new CustomFields(client);
 
 			// Act
 			await customFields.DeleteAsync(fieldId, null, CancellationToken.None).ConfigureAwait(false);
@@ -190,7 +191,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("contactdb/reserved_fields")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var customFields = new StrongGrid.Resources.Legacy.CustomFields(client);
+			var customFields = new CustomFields(client);
 
 			// Act
 			var result = await customFields.GetReservedFieldsAsync(null, CancellationToken.None).ConfigureAwait(false);

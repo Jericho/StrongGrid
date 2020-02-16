@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
+using StrongGrid.Resources.Legacy;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -57,7 +58,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", SINGLE_LIST_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var lists = new StrongGrid.Resources.Legacy.Lists(client);
+			var lists = new Lists(client);
 
 			// Act
 			var result = await lists.CreateAsync(name, null, CancellationToken.None).ConfigureAwait(false);
@@ -76,7 +77,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", MULTIPLE_LISTS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var lists = new StrongGrid.Resources.Legacy.Lists(client);
+			var lists = new Lists(client);
 
 			// Act
 			var result = await lists.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
@@ -98,7 +99,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, listId)).Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var lists = new StrongGrid.Resources.Legacy.Lists(client);
+			var lists = new Lists(client);
 
 			// Act
 			await lists.DeleteAsync(listId, null, CancellationToken.None).ConfigureAwait(false);
@@ -118,7 +119,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT)).Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var lists = new StrongGrid.Resources.Legacy.Lists(client);
+			var lists = new Lists(client);
 
 			// Act
 			await lists.DeleteAsync(listIds, null, CancellationToken.None).ConfigureAwait(false);
@@ -138,7 +139,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, listId)).Respond("application/json", SINGLE_LIST_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var lists = new StrongGrid.Resources.Legacy.Lists(client);
+			var lists = new Lists(client);
 
 			// Act
 			var result = await lists.GetAsync(listId, null, CancellationToken.None).ConfigureAwait(false);
@@ -160,7 +161,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(ENDPOINT, listId)).Respond(HttpStatusCode.OK);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var lists = new StrongGrid.Resources.Legacy.Lists(client);
+			var lists = new Lists(client);
 
 			// Act
 			await lists.UpdateAsync(listId, name, null, CancellationToken.None).ConfigureAwait(false);
@@ -198,7 +199,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, listId, $"recipients?page_size={recordsPerPage}&page={page}")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var lists = new StrongGrid.Resources.Legacy.Lists(client);
+			var lists = new Lists(client);
 
 			// Act
 			var result = await lists.GetRecipientsAsync(listId, recordsPerPage, page, null, CancellationToken.None).ConfigureAwait(false);
@@ -222,7 +223,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, listId, "recipients", contactId)).Respond(HttpStatusCode.Created);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var lists = new StrongGrid.Resources.Legacy.Lists(client);
+			var lists = new Lists(client);
 
 			// Act
 			await lists.AddRecipientAsync(listId, contactId, null, CancellationToken.None).ConfigureAwait(false);
@@ -243,7 +244,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, listId, "recipients", contactId)).Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var lists = new StrongGrid.Resources.Legacy.Lists(client);
+			var lists = new Lists(client);
 
 			// Act
 			await lists.RemoveRecipientAsync(listId, contactId, null, CancellationToken.None).ConfigureAwait(false);
@@ -264,7 +265,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, listId, "recipients")).Respond(HttpStatusCode.Created);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var lists = new StrongGrid.Resources.Legacy.Lists(client);
+			var lists = new Lists(client);
 
 			// Act
 			await lists.AddRecipientsAsync(listId, contactIds, null, CancellationToken.None).ConfigureAwait(false);
@@ -285,7 +286,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, listId, "recipients")).Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var lists = new StrongGrid.Resources.Legacy.Lists(client);
+			var lists = new Lists(client);
 
 			// Act
 			await lists.RemoveRecipientsAsync(listId, contactIds, null, CancellationToken.None).ConfigureAwait(false);

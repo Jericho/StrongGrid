@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
+using StrongGrid.Resources.Legacy;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -120,7 +121,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var contacts = new StrongGrid.Resources.Legacy.Contacts(client);
+			var contacts = new Contacts(client);
 
 			// Act
 			var result = await contacts.CreateAsync(email, firstName, lastName, null, null, CancellationToken.None).ConfigureAwait(false);
@@ -158,7 +159,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var contacts = new StrongGrid.Resources.Legacy.Contacts(client);
+			var contacts = new Contacts(client);
 
 			// Act
 			var result = await Should.ThrowAsync<Exception>(async () => await contacts.CreateAsync(email, firstName, lastName, null, null, CancellationToken.None).ConfigureAwait(false));
@@ -209,7 +210,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var contacts = new StrongGrid.Resources.Legacy.Contacts(client);
+			var contacts = new Contacts(client);
 
 			// Act
 			var result = await contacts.ImportAsync(records, null, CancellationToken.None).ConfigureAwait(false);
@@ -253,7 +254,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var contacts = new StrongGrid.Resources.Legacy.Contacts(client);
+			var contacts = new Contacts(client);
 
 			var customFields = new StrongGrid.Models.Legacy.Field[]
 			{
@@ -298,7 +299,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var contacts = new StrongGrid.Resources.Legacy.Contacts(client);
+			var contacts = new Contacts(client);
 
 			// Act
 			var result = await Should.ThrowAsync<Exception>(async () => await contacts.UpdateAsync(email, null, lastName, null, null, CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
@@ -320,7 +321,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, contactId)).Respond("application/json", SINGLE_RECIPIENT_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var contacts = new StrongGrid.Resources.Legacy.Contacts(client);
+			var contacts = new Contacts(client);
 
 			// Act
 			var result = await contacts.GetAsync(contactId, null, CancellationToken.None).ConfigureAwait(false);
@@ -347,7 +348,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?page_size={recordsPerPage}&page={page}").Respond("application/json", MULTIPLE_RECIPIENTS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var contacts = new StrongGrid.Resources.Legacy.Contacts(client);
+			var contacts = new Contacts(client);
 
 			// Act
 			var result = await contacts.GetAsync(recordsPerPage, page, null, CancellationToken.None).ConfigureAwait(false);
@@ -375,7 +376,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT)).Respond(HttpStatusCode.OK);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var contacts = new StrongGrid.Resources.Legacy.Contacts(client);
+			var contacts = new Contacts(client);
 
 			// Act
 			await contacts.DeleteAsync(contactId, null, CancellationToken.None).ConfigureAwait(false);
@@ -395,7 +396,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT)).Respond(HttpStatusCode.OK);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var contacts = new StrongGrid.Resources.Legacy.Contacts(client);
+			var contacts = new Contacts(client);
 
 			// Act
 			await contacts.DeleteAsync(contactIds, null, CancellationToken.None).ConfigureAwait(false);
@@ -417,7 +418,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "billable_count")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var contacts = new StrongGrid.Resources.Legacy.Contacts(client);
+			var contacts = new Contacts(client);
 
 			// Act
 			var result = await contacts.GetBillableCountAsync(null, CancellationToken.None).ConfigureAwait(false);
@@ -440,7 +441,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "count")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var contacts = new StrongGrid.Resources.Legacy.Contacts(client);
+			var contacts = new Contacts(client);
 
 			// Act
 			var result = await contacts.GetTotalCountAsync(null, CancellationToken.None).ConfigureAwait(false);
@@ -514,7 +515,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "search")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var contacts = new StrongGrid.Resources.Legacy.Contacts(client);
+			var contacts = new Contacts(client);
 
 			// Act
 			var result = await contacts.SearchAsync(conditions, listId, null, CancellationToken.None).ConfigureAwait(false);
@@ -572,7 +573,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "search")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var contacts = new StrongGrid.Resources.Legacy.Contacts(client);
+			var contacts = new Contacts(client);
 
 			// Act
 			var result = await contacts.SearchAsync(conditions, listId, null, CancellationToken.None).ConfigureAwait(false);
@@ -614,7 +615,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, contactId, "lists")).Respond("application/json", listsJson);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var contacts = new StrongGrid.Resources.Legacy.Contacts(client);
+			var contacts = new Contacts(client);
 
 			// Act
 			var result = await contacts.GetListsAsync(contactId, null, CancellationToken.None).ConfigureAwait(false);

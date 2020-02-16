@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
+using StrongGrid.Resources.Legacy;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -116,7 +117,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", SINGLE_SENDER_IDENTITY_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var senderIdentities = new StrongGrid.Resources.Legacy.SenderIdentities(client);
+			var senderIdentities = new SenderIdentities(client);
 
 			// Act
 			var result = await senderIdentities.CreateAsync(nickname, from, replyTo, address, address2, city, state, zip, country, null, CancellationToken.None).ConfigureAwait(false);
@@ -136,7 +137,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", MULTIPLE_SENDER_IDENTITIES_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var senderIdentities = new StrongGrid.Resources.Legacy.SenderIdentities(client);
+			var senderIdentities = new SenderIdentities(client);
 
 			// Act
 			var result = await senderIdentities.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
@@ -160,7 +161,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(ENDPOINT, identityId)).Respond("application/json", SINGLE_SENDER_IDENTITY_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var senderIdentities = new StrongGrid.Resources.Legacy.SenderIdentities(client);
+			var senderIdentities = new SenderIdentities(client);
 
 			// Act
 			var result = await senderIdentities.UpdateAsync(identityId, nickname, null, null, null, null, null, null, null, null, null, CancellationToken.None).ConfigureAwait(false);
@@ -181,7 +182,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, identityId)).Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var senderIdentities = new StrongGrid.Resources.Legacy.SenderIdentities(client);
+			var senderIdentities = new SenderIdentities(client);
 
 			// Act
 			await senderIdentities.DeleteAsync(identityId, null, CancellationToken.None).ConfigureAwait(false);
@@ -201,7 +202,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, identityId, "resend_verification")).Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var senderIdentities = new StrongGrid.Resources.Legacy.SenderIdentities(client);
+			var senderIdentities = new SenderIdentities(client);
 
 			// Act
 			await senderIdentities.ResendVerification(identityId, null, CancellationToken.None).ConfigureAwait(false);
@@ -221,7 +222,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, identityId)).Respond("application/json", SINGLE_SENDER_IDENTITY_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var senderIdentities = new StrongGrid.Resources.Legacy.SenderIdentities(client);
+			var senderIdentities = new SenderIdentities(client);
 
 			// Act
 			var result = await senderIdentities.GetAsync(identityId, null, CancellationToken.None).ConfigureAwait(false);

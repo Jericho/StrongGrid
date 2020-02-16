@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
+using StrongGrid.Resources.Legacy;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -129,7 +130,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", SINGLE_SEGMENT_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var segments = new StrongGrid.Resources.Legacy.Segments(client);
+			var segments = new Segments(client);
 
 			// Act
 			var result = await segments.CreateAsync(name, conditions, listId, null, CancellationToken.None).ConfigureAwait(false);
@@ -148,7 +149,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", MULTIPLE_SEGMENTS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var segments = new StrongGrid.Resources.Legacy.Segments(client);
+			var segments = new Segments(client);
 
 			// Act
 			var result = await segments.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
@@ -170,7 +171,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, segmentId)).Respond("application/json", SINGLE_SEGMENT_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var segments = new StrongGrid.Resources.Legacy.Segments(client);
+			var segments = new Segments(client);
 
 			// Act
 			var result = await segments.GetAsync(segmentId, null, CancellationToken.None).ConfigureAwait(false);
@@ -203,7 +204,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(ENDPOINT, segmentId)).Respond("application/json", SINGLE_SEGMENT_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var segments = new StrongGrid.Resources.Legacy.Segments(client);
+			var segments = new Segments(client);
 
 			// Act
 			var result = await segments.UpdateAsync(segmentId, name, listId, conditions, null, CancellationToken.None).ConfigureAwait(false);
@@ -225,7 +226,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, segmentId) + "?delete_contacts=false").Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var segments = new StrongGrid.Resources.Legacy.Segments(client);
+			var segments = new Segments(client);
 
 			// Act
 			await segments.DeleteAsync(segmentId, deleteContacts, null, CancellationToken.None).ConfigureAwait(false);
@@ -246,7 +247,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, segmentId) + "?delete_contacts=true").Respond(HttpStatusCode.NoContent);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var segments = new StrongGrid.Resources.Legacy.Segments(client);
+			var segments = new Segments(client);
 
 			// Act
 			await segments.DeleteAsync(segmentId, deleteContacts, null, CancellationToken.None).ConfigureAwait(false);
@@ -292,7 +293,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, $"{segmentId}/recipients?page_size={recordsPerPage}&page={page}")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
-			var segments = new StrongGrid.Resources.Legacy.Segments(client);
+			var segments = new Segments(client);
 
 			// Act
 			var result = await segments.GetRecipientsAsync(segmentId, recordsPerPage, page, null, CancellationToken.None).ConfigureAwait(false);
