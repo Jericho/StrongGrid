@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StrongGrid.Resources
+namespace StrongGrid.Resources.Legacy
 {
 	/// <summary>
 	/// Allows you to manage <see cref="Campaign">campaigns</see>.
@@ -51,9 +51,9 @@ namespace StrongGrid.Resources
 		/// Note: In order to send or schedule the campaign, you will be required to provide a subject, sender ID, content (we suggest both html and plain text), and at least one list or segment ID. This information is not required when you create a campaign.
 		/// </remarks>
 		/// <returns>
-		/// The <see cref="Campaign" />.
+		/// The <see cref="Models.Legacy.Campaign" />.
 		/// </returns>
-		public Task<Campaign> CreateAsync(
+		public Task<Models.Legacy.Campaign> CreateAsync(
 			string title,
 			long senderId,
 			Parameter<string> subject = default,
@@ -73,7 +73,7 @@ namespace StrongGrid.Resources
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Campaign>();
+				.AsSendGridObject<Models.Legacy.Campaign>();
 		}
 
 		/// <summary>
@@ -83,16 +83,16 @@ namespace StrongGrid.Resources
 		/// <param name="offset">The offset.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
-		/// An array of <see cref="Campaign" />.
+		/// An array of <see cref="Models.Legacy.Campaign" />.
 		/// </returns>
-		public Task<Campaign[]> GetAllAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default)
+		public Task<Models.Legacy.Campaign[]> GetAllAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync(_endpoint)
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Campaign[]>("result");
+				.AsSendGridObject<Models.Legacy.Campaign[]>("result");
 		}
 
 		/// <summary>
@@ -101,14 +101,14 @@ namespace StrongGrid.Resources
 		/// <param name="campaignId">The id of the campaign.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
-		/// The <see cref="Campaign" />.
+		/// The <see cref="Models.Legacy.Campaign" />.
 		/// </returns>
-		public Task<Campaign> GetAsync(long campaignId, CancellationToken cancellationToken = default)
+		public Task<Models.Legacy.Campaign> GetAsync(long campaignId, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{campaignId}")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Campaign>();
+				.AsSendGridObject<Models.Legacy.Campaign>();
 		}
 
 		/// <summary>
@@ -145,9 +145,9 @@ namespace StrongGrid.Resources
 		/// <param name="editor">The editor used in the UI. Allowed values: code, design.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
-		/// The <see cref="Campaign" />.
+		/// The <see cref="Models.Legacy.Campaign" />.
 		/// </returns>
-		public Task<Campaign> UpdateAsync(
+		public Task<Models.Legacy.Campaign> UpdateAsync(
 			long campaignId,
 			Parameter<string> title = default,
 			Parameter<long?> senderId = default,
@@ -168,7 +168,7 @@ namespace StrongGrid.Resources
 				.PatchAsync($"{_endpoint}/{campaignId}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Campaign>();
+				.AsSendGridObject<Models.Legacy.Campaign>();
 		}
 
 		/// <summary>
@@ -190,7 +190,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Schedule a campaign to be sewnt at a later time.
+		/// Schedule a campaign to be sent at a later time.
 		/// </summary>
 		/// <param name="campaignId">The id of the campaign.</param>
 		/// <param name="sendOn">The send on.</param>

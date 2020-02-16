@@ -85,6 +85,7 @@ namespace StrongGrid.IntegrationTests
 				typeof(SenderAuthentication),
 				typeof(SenderIdentities),
 				typeof(Settings),
+				typeof(SingleSendsAndSenderIdentities),
 				typeof(SpamReports),
 				typeof(Statistics),
 				typeof(Subusers),

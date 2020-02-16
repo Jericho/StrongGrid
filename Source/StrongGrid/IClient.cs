@@ -7,24 +7,6 @@ namespace StrongGrid
 	/// </summary>
 	public interface IClient
 	{
-		/*
-		/// <summary>
-		/// Gets the Campaigns resource which allows you to manage your campaigns.
-		/// </summary>
-		/// <value>
-		/// The campaigns.
-		/// </value>
-		ICampaigns Campaigns { get; }
-
-		/// <summary>
-		/// Gets the Categories resource which allows you to manages your categories.
-		/// </summary>
-		/// <value>
-		/// The categories.
-		/// </value>
-		ICategories Categories { get; }
-		*/
-
 		/// <summary>
 		/// Gets the Contacts resource which allows you to manage your contacts (also sometimes refered to as 'recipients').
 		/// </summary>
@@ -65,14 +47,12 @@ namespace StrongGrid
 		/// </value>
 		ISenderIdentities SenderIdentities { get; }
 
-		/*
 		/// <summary>
-		/// Gets the SenderAuthentication resource.
+		/// Gets the SingleSends resource which allows you to manage your single sends (AKA campaigns).
 		/// </summary>
 		/// <value>
-		/// The <see cref="ISenderAuthentication"/>.
+		/// The single sends.
 		/// </value>
-		ISenderAuthentication SenderAuthentication { get; }
-		*/
+		ISingleSends SingleSends { get; }
 	}
 }

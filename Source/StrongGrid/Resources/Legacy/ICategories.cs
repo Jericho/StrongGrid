@@ -1,7 +1,7 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace StrongGrid.Resources
+namespace StrongGrid.Resources.Legacy
 {
 	/// <summary>
 	/// Allows you to manage categories.

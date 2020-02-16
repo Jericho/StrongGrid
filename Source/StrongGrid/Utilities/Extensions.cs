@@ -379,7 +379,7 @@ namespace StrongGrid.Utilities
 		public static void AddPropertyIfValue(this JObject jsonObject, string propertyName, string value)
 		{
 			if (string.IsNullOrEmpty(value)) return;
-			jsonObject.Add(propertyName, value);
+			jsonObject.AddDeepProperty(propertyName, value);
 		}
 
 		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, T value, JsonConverter converter = null)
@@ -392,7 +392,7 @@ namespace StrongGrid.Utilities
 				jsonSerializer.Converters.Add(converter);
 			}
 
-			jsonObject.Add(propertyName, JToken.FromObject(value, jsonSerializer));
+			jsonObject.AddDeepProperty(propertyName, JToken.FromObject(value, jsonSerializer));
 		}
 
 		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, IEnumerable<T> value, JsonConverter converter = null)
@@ -405,7 +405,7 @@ namespace StrongGrid.Utilities
 				jsonSerializer.Converters.Add(converter);
 			}
 
-			jsonObject.Add(propertyName, JArray.FromObject(value.ToArray(), jsonSerializer));
+			jsonObject.AddDeepProperty(propertyName, JArray.FromObject(value.ToArray(), jsonSerializer));
 		}
 
 		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, Parameter<T> parameter, JsonConverter converter = null)
@@ -448,11 +448,11 @@ namespace StrongGrid.Utilities
 
 			if (parameter.Value == null)
 			{
-				jsonObject.Add(propertyName, null);
+				jsonObject.AddDeepProperty(propertyName, null);
 			}
 			else
 			{
-				jsonObject.Add(propertyName, convertValueToJsonToken(parameter.Value));
+				jsonObject.AddDeepProperty(propertyName, convertValueToJsonToken(parameter.Value));
 			}
 		}
 
@@ -637,6 +637,25 @@ namespace StrongGrid.Utilities
 				});
 
 			return querystringParameters;
+		}
+
+		public static void AddDeepProperty(this JObject jsonObject, string propertyName, JToken value)
+		{
+			var separatorLocation = propertyName.IndexOf('/');
+
+			if (separatorLocation == -1)
+			{
+				jsonObject.Add(propertyName, value);
+			}
+			else
+			{
+				var name = propertyName.Substring(0, separatorLocation);
+				var childrenName = propertyName.Substring(separatorLocation + 1);
+
+				var obj = new JObject();
+				obj.AddDeepProperty(childrenName, value);
+				jsonObject.Add(name, obj);
+			}
 		}
 
 		/// <summary>Asynchronously converts the JSON encoded content and converts it to a 'SendGrid' object of the desired type.</summary>

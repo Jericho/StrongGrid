@@ -15,7 +15,7 @@ namespace StrongGrid.IntegrationTests.Tests
 		{
 			if (cancellationToken.IsCancellationRequested) return;
 
-			await log.WriteLineAsync("\n***** CATEGORIES *****\n").ConfigureAwait(false);
+			await log.WriteLineAsync("\n***** LEGACY CATEGORIES *****\n").ConfigureAwait(false);
 
 			var categories = await client.Categories.GetAsync(null, 50, 0, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Number of categories: {categories.Length}").ConfigureAwait(false);

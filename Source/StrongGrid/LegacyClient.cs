@@ -1,5 +1,4 @@
 using StrongGrid.Logging;
-using StrongGrid.Resources;
 using StrongGrid.Utilities;
 using System.Net;
 using System.Net.Http;
@@ -19,7 +18,7 @@ namespace StrongGrid
 		/// <value>
 		/// The campaigns.
 		/// </value>
-		public ICampaigns Campaigns { get; private set; }
+		public Resources.Legacy.ICampaigns Campaigns { get; private set; }
 
 		/// <summary>
 		/// Gets the Categories resource which allows you to manages your categories.
@@ -27,7 +26,7 @@ namespace StrongGrid
 		/// <value>
 		/// The categories.
 		/// </value>
-		public ICategories Categories { get; private set; }
+		public Resources.Legacy.ICategories Categories { get; private set; }
 
 		/// <summary>
 		/// Gets the Contacts resource which allows you to manage your contacts (also sometimes refered to as 'recipients').
@@ -194,7 +193,7 @@ namespace StrongGrid
 
 		private void Init()
 		{
-			Campaigns = new Campaigns(FluentClient);
+			Campaigns = new Resources.Legacy.Campaigns(FluentClient);
 			Categories = new Resources.Legacy.Categories(FluentClient);
 			Contacts = new Resources.Legacy.Contacts(FluentClient);
 			CustomFields = new Resources.Legacy.CustomFields(FluentClient);

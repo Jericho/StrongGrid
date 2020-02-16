@@ -14,14 +14,6 @@ namespace StrongGrid
 		#region PROPERTIES
 
 		/// <summary>
-		/// Gets the Campaigns resource which allows you to manage your campaigns.
-		/// </summary>
-		/// <value>
-		/// The campaigns.
-		/// </value>
-		public ICampaigns Campaigns { get; private set; }
-
-		/// <summary>
 		/// Gets the Contacts resource which allows you to manage your contacts (also sometimes refered to as 'recipients').
 		/// </summary>
 		/// <value>
@@ -60,6 +52,14 @@ namespace StrongGrid
 		/// The sender identities.
 		/// </value>
 		public ISenderIdentities SenderIdentities { get; private set; }
+
+		/// <summary>
+		/// Gets the SingleSends resource which allows you to manage your single sends (AKA campaigns).
+		/// </summary>
+		/// <value>
+		/// The single sends.
+		/// </value>
+		public ISingleSends SingleSends { get; private set; }
 
 		#endregion
 
@@ -186,12 +186,12 @@ namespace StrongGrid
 
 		private void Init()
 		{
-			Campaigns = new Campaigns(FluentClient);
 			Contacts = new Contacts(FluentClient);
 			CustomFields = new CustomFields(FluentClient);
 			Lists = new Lists(FluentClient);
 			Segments = new Segments(FluentClient);
 			SenderIdentities = new SenderIdentities(FluentClient);
+			SingleSends = new SingleSends(FluentClient);
 		}
 
 		#endregion

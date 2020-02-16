@@ -1,5 +1,3 @@
-using StrongGrid.Resources;
-
 namespace StrongGrid
 {
 	/// <summary>
@@ -13,7 +11,7 @@ namespace StrongGrid
 		/// <value>
 		/// The campaigns.
 		/// </value>
-		ICampaigns Campaigns { get; }
+		Resources.Legacy.ICampaigns Campaigns { get; }
 
 		/// <summary>
 		/// Gets the Categories resource which allows you to manages your categories.
@@ -21,7 +19,7 @@ namespace StrongGrid
 		/// <value>
 		/// The categories.
 		/// </value>
-		ICategories Categories { get; }
+		Resources.Legacy.ICategories Categories { get; }
 
 		/// <summary>
 		/// Gets the Contacts resource which allows you to manage your contacts (also sometimes refered to as 'recipients').

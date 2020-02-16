@@ -18,8 +18,11 @@ namespace StrongGrid.IntegrationTests.Tests
 			await log.WriteLineAsync($"There are {groups.Length} unsubscribe groups").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
+			// Please note: typically I use the 'StrongGrid Integration Testing:' prefix to clearly identify data created during integration tests.
+			// However, SendGrid quietly truncates unsubscribe groups name to 30 characters. That's why I am making an exception and sinply using
+			// `StrongGrid:` as the prefix in this test.
 			var cleanUpTasks = groups
-				.Where(g => g.Name.StartsWith("StrongGrid Integration Testing:"))
+				.Where(g => g.Name.StartsWith("StrongGrid:"))
 				.Select(async oldGroup =>
 				{
 					await client.UnsubscribeGroups.DeleteAsync(oldGroup.Id, null, cancellationToken).ConfigureAwait(false);
@@ -29,11 +32,11 @@ namespace StrongGrid.IntegrationTests.Tests
 			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
 			// CREATE A NEW SUPPRESSION GROUP
-			var newGroup = await client.UnsubscribeGroups.CreateAsync("StrongGrid Integration Testing: new group", "This is a new group for testing purposes", false, null, cancellationToken).ConfigureAwait(false);
+			var newGroup = await client.UnsubscribeGroups.CreateAsync("StrongGrid: new group", "This is a new group for testing purposes", false, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Unique ID of the new unsubscribe group: {newGroup.Id}").ConfigureAwait(false);
 
 			// UPDATE A SUPPRESSION GROUP
-			var updatedGroup = await client.UnsubscribeGroups.UpdateAsync(newGroup.Id, "StrongGrid Integration Testing: updated name", cancellationToken: cancellationToken).ConfigureAwait(false);
+			var updatedGroup = await client.UnsubscribeGroups.UpdateAsync(newGroup.Id, "StrongGrid: updated name", cancellationToken: cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Unsubscribe group {updatedGroup.Id} updated").ConfigureAwait(false);
 
 			// GET A PARTICULAR UNSUBSCRIBE GROUP

@@ -1,11 +1,11 @@
-﻿using StrongGrid.Models;
+using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StrongGrid.Resources
+namespace StrongGrid.Resources.Legacy
 {
 	/// <summary>
 	/// Allows you to manage <see cref="Campaign">campaigns</see>.
@@ -33,9 +33,9 @@ namespace StrongGrid.Resources
 		/// <param name="editor">The editor used in the UI. Allowed values: code, design.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
-		/// The <see cref="Campaign" />.
+		/// The <see cref="Models.Legacy.Campaign" />.
 		/// </returns>
-		Task<Campaign> CreateAsync(
+		Task<Models.Legacy.Campaign> CreateAsync(
 			string title,
 			long senderId,
 			Parameter<string> subject = default,
@@ -57,9 +57,9 @@ namespace StrongGrid.Resources
 		/// <param name="offset">The offset.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
-		/// An array of <see cref="Campaign" />.
+		/// An array of <see cref="Models.Legacy.Campaign" />.
 		/// </returns>
-		Task<Campaign[]> GetAllAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default);
+		Task<Models.Legacy.Campaign[]> GetAllAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve a campaign.
@@ -67,9 +67,9 @@ namespace StrongGrid.Resources
 		/// <param name="campaignId">The id of the campaign.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
-		/// The <see cref="Campaign" />.
+		/// The <see cref="Models.Legacy.Campaign" />.
 		/// </returns>
-		Task<Campaign> GetAsync(long campaignId, CancellationToken cancellationToken = default);
+		Task<Models.Legacy.Campaign> GetAsync(long campaignId, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete a campaign.
@@ -99,9 +99,9 @@ namespace StrongGrid.Resources
 		/// <param name="editor">The editor used in the UI. Allowed values: code, design.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
-		/// The <see cref="Campaign" />.
+		/// The <see cref="Models.Legacy.Campaign" />.
 		/// </returns>
-		Task<Campaign> UpdateAsync(
+		Task<Models.Legacy.Campaign> UpdateAsync(
 			long campaignId,
 			Parameter<string> title = default,
 			Parameter<long?> senderId = default,
@@ -128,7 +128,7 @@ namespace StrongGrid.Resources
 		Task SendNowAsync(long campaignId, CancellationToken cancellationToken = default);
 
 		/// <summary>
-		/// Schedule a campaign to be sewnt at a later time.
+		/// Schedule a campaign to be sent at a later time.
 		/// </summary>
 		/// <param name="campaignId">The id of the campaign.</param>
 		/// <param name="sendOn">The send on.</param>

@@ -20,7 +20,7 @@ namespace StrongGrid.IntegrationTests.Tests
 		{
 			if (cancellationToken.IsCancellationRequested) return;
 
-			await log.WriteLineAsync("\n***** CAMPAIGNS *****\n").ConfigureAwait(false);
+			await log.WriteLineAsync("\n***** LEGACY CAMPAIGNS *****\n").ConfigureAwait(false);
 
 			// GET CAMPAIGNS
 			var campaigns = await client.Campaigns.GetAllAsync(100, 0, cancellationToken).ConfigureAwait(false);
