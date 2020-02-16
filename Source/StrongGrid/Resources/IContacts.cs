@@ -127,6 +127,16 @@ namespace StrongGrid.Resources
 		Task<Contact> GetAsync(string contactId, CancellationToken cancellationToken = default);
 
 		/// <summary>
+		/// Searches for contacts matching the specified conditions.
+		/// </summary>
+		/// <param name="query">The query.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="Contact" />.
+		/// </returns>
+		Task<Contact[]> SearchAsync(string query, CancellationToken cancellationToken = default);
+
+		/// <summary>
 		/// Retrieve up to fifty of the most recent contacts uploaded or attached to a list.
 		/// This list will then be sorted by email address.
 		/// </summary>

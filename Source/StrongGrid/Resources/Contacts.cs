@@ -224,31 +224,27 @@ namespace StrongGrid.Resources
 				.AsSendGridObject<Contact>();
 		}
 
-		/*
-	/// <summary>
-	/// Searches for contacts matching the specified conditions.
-	/// </summary>
-	/// <param name="conditions">The conditions.</param>
-	/// <param name="listId">The list identifier.</param>
-	/// <param name="onBehalfOf">The user to impersonate.</param>
-	/// <param name="cancellationToken">The cancellation token.</param>
-	/// <returns>
-	/// An array of <see cref="Contact" />.
-	/// </returns>
-	public Task<Contact[]> SearchAsync(IEnumerable<SearchCondition> conditions, long? listId = null, CancellationToken cancellationToken = default)
-	{
-		var data = new JObject();
-		data.AddPropertyIfValue("list_id", listId);
-		data.AddPropertyIfValue("conditions", conditions);
+		/// <summary>
+		/// Searches for contacts matching the specified conditions.
+		/// </summary>
+		/// <param name="query">The query.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="Contact" />.
+		/// </returns>
+		public Task<Contact[]> SearchAsync(string query, CancellationToken cancellationToken = default)
+		{
+			var data = new JObject()
+			{
+				{ "query", query }
+			};
 
-		return _client
-			.PostAsync($"{_oldEndpoint}/search")
-			.OnBehalfOf(onBehalfOf)
-			.WithJsonBody(data)
-			.WithCancellationToken(cancellationToken)
-			.AsSendGridObject<Contact[]>("recipients");
-	}
-	*/
+			return _client
+				.PostAsync($"{_endpoint}/search")
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<Contact[]>("result");
+		}
 
 		/// <summary>
 		/// Retrieve up to fifty of the most recent contacts uploaded or attached to a list.
