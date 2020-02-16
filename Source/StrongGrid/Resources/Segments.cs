@@ -104,16 +104,16 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="segmentId">The segment identifier.</param>
 		/// <param name="name">The name.</param>
-		/// <param name="queryDsl">The query DSL.</param>
+		/// <param name="query">The query.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Segment" />.
 		/// </returns>
-		public Task<Segment> UpdateAsync(string segmentId, Parameter<string> name = default, Parameter<string> queryDsl = default, CancellationToken cancellationToken = default)
+		public Task<Segment> UpdateAsync(string segmentId, Parameter<string> name = default, Parameter<string> query = default, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject();
 			data.AddPropertyIfValue("name", name);
-			data.AddPropertyIfValue("query_dsl", queryDsl);
+			data.AddPropertyIfValue("query_dsl", query);
 
 			return _client
 				.PatchAsync($"{_endpoint}/{segmentId}")

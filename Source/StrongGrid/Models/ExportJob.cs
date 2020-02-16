@@ -105,8 +105,8 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The lists.
 		/// </value>
-		//[JsonProperty("segments", NullValueHandling = NullValueHandling.Ignore)]
-		//public Segment[] Segments { get; set; }
+		[JsonProperty("segments", NullValueHandling = NullValueHandling.Ignore)]
+		public Segment[] Segments { get; set; }
 
 		/// <summary>
 		/// Gets or sets the count of exported contacts.

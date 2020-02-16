@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 namespace StrongGrid.Resources.Legacy
 {
 	/// <summary>
-	/// Allows you to manage <see cref="Campaign">campaigns</see>.
+	/// Allows you to manage <see cref="Models.Legacy.Campaign">campaigns</see>.
 	/// </summary>
-	/// <seealso cref="StrongGrid.Resources.ICampaigns" />
+	/// <seealso cref="ICampaigns" />
 	/// <remarks>
 	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/campaigns.html">SendGrid documentation</a> for more information.
 	/// </remarks>
