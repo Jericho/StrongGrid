@@ -57,6 +57,37 @@ namespace StrongGrid.Resources
 				.AsSendGridObject<SenderIdentity>();
 		}
 
+		/// <summary>
+		/// Retrieve a sender identity.
+		/// </summary>
+		/// <param name="senderIdentityId">The sender identity identifier.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="SenderIdentity" />.
+		/// </returns>
+		public Task<SenderIdentity> GetAsync(long senderIdentityId, CancellationToken cancellationToken = default)
+		{
+			return _client
+				.GetAsync($"{_endpoint}/{senderIdentityId}")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<SenderIdentity>();
+		}
+
+		/// <summary>
+		/// Retrieve all sender identities.
+		/// </summary>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="SenderIdentity" />.
+		/// </returns>
+		public Task<SenderIdentity[]> GetAllAsync(CancellationToken cancellationToken = default)
+		{
+			return _client
+				.GetAsync(_endpoint)
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<SenderIdentity[]>();
+		}
+
 		private static JObject CreateJObject(
 			Parameter<string> nickname,
 			Parameter<MailAddress> from,

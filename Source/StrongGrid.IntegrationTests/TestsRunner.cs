@@ -83,7 +83,6 @@ namespace StrongGrid.IntegrationTests
 				typeof(ListsAndSegments),
 				typeof(Mail),
 				typeof(SenderAuthentication),
-				typeof(SenderIdentities),
 				typeof(Settings),
 				typeof(SingleSendsAndSenderIdentities),
 				typeof(SpamReports),

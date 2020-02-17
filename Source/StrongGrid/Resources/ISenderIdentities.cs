@@ -30,5 +30,24 @@ namespace StrongGrid.Resources
 		/// The <see cref="SenderIdentity" />.
 		/// </returns>
 		Task<SenderIdentity> CreateAsync(string nickname, MailAddress from, MailAddress replyTo, string address1, string address2, string city, string state, string zip, string country, string onBehalfOf = null, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Retrieve a sender identity.
+		/// </summary>
+		/// <param name="senderIdentityId">The sender identity identifier.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="SenderIdentity" />.
+		/// </returns>
+		Task<SenderIdentity> GetAsync(long senderIdentityId, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Retrieve all sender identities.
+		/// </summary>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="SenderIdentity" />.
+		/// </returns>
+		Task<SenderIdentity[]> GetAllAsync(CancellationToken cancellationToken = default);
 	}
 }
