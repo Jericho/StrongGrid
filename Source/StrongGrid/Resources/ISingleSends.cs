@@ -24,6 +24,7 @@ namespace StrongGrid.Resources
 		/// <param name="customUnsubscribeUrl">The custom unsubscribe URL.</param>
 		/// <param name="suppressionGroupId">The suppression group identifier.</param>
 		/// <param name="listIds">The list ids.</param>
+		/// <param name="segmentIds">The segment ids.</param>
 		/// <param name="templateId">The template id.</param>
 		/// <param name="ipPool">The ip pool.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
@@ -37,6 +38,7 @@ namespace StrongGrid.Resources
 			Parameter<string> customUnsubscribeUrl = default,
 			Parameter<long?> suppressionGroupId = default,
 			Parameter<IEnumerable<string>> listIds = default,
+			Parameter<IEnumerable<string>> segmentIds = default,
 			Parameter<string> templateId = default,
 			Parameter<string> ipPool = default,
 			CancellationToken cancellationToken = default);
@@ -51,6 +53,7 @@ namespace StrongGrid.Resources
 		/// <param name="customUnsubscribeUrl">The custom unsubscribe URL.</param>
 		/// <param name="suppressionGroupId">The suppression group identifier.</param>
 		/// <param name="listIds">The list ids.</param>
+		/// <param name="segmentIds">The segment ids.</param>
 		/// <param name="templateId">The template id.</param>
 		/// <param name="ipPool">The ip pool.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
@@ -65,6 +68,7 @@ namespace StrongGrid.Resources
 			Parameter<string> customUnsubscribeUrl = default,
 			Parameter<long?> suppressionGroupId = default,
 			Parameter<IEnumerable<string>> listIds = default,
+			Parameter<IEnumerable<string>> segmentIds = default,
 			Parameter<string> templateId = default,
 			Parameter<string> ipPool = default,
 			CancellationToken cancellationToken = default);

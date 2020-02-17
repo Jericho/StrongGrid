@@ -40,6 +40,7 @@ namespace StrongGrid.Resources
 		/// <param name="customUnsubscribeUrl">The custom unsubscribe URL.</param>
 		/// <param name="suppressionGroupId">The suppression group identifier.</param>
 		/// <param name="listIds">The list ids.</param>
+		/// <param name="segmentIds">The segment ids.</param>
 		/// <param name="templateId">The template id.</param>
 		/// <param name="ipPool">The ip pool.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
@@ -53,11 +54,12 @@ namespace StrongGrid.Resources
 			Parameter<string> customUnsubscribeUrl = default,
 			Parameter<long?> suppressionGroupId = default,
 			Parameter<IEnumerable<string>> listIds = default,
+			Parameter<IEnumerable<string>> segmentIds = default,
 			Parameter<string> templateId = default,
 			Parameter<string> ipPool = default,
 			CancellationToken cancellationToken = default)
 		{
-			var data = CreateJObject(name, senderId, categories, customUnsubscribeUrl, suppressionGroupId, listIds, default, templateId, ipPool);
+			var data = CreateJObject(name, senderId, SingleSendStatus.Draft, categories, customUnsubscribeUrl, suppressionGroupId, listIds, segmentIds, default, templateId, ipPool);
 			return _client
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
@@ -75,6 +77,7 @@ namespace StrongGrid.Resources
 		/// <param name="customUnsubscribeUrl">The custom unsubscribe URL.</param>
 		/// <param name="suppressionGroupId">The suppression group identifier.</param>
 		/// <param name="listIds">The list ids.</param>
+		/// <param name="segmentIds">The segment ids.</param>
 		/// <param name="templateId">The template id.</param>
 		/// <param name="ipPool">The ip pool.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
@@ -89,11 +92,12 @@ namespace StrongGrid.Resources
 			Parameter<string> customUnsubscribeUrl = default,
 			Parameter<long?> suppressionGroupId = default,
 			Parameter<IEnumerable<string>> listIds = default,
+			Parameter<IEnumerable<string>> segmentIds = default,
 			Parameter<string> templateId = default,
 			Parameter<string> ipPool = default,
 			CancellationToken cancellationToken = default)
 		{
-			var data = CreateJObject(name, senderId, categories, customUnsubscribeUrl, suppressionGroupId, listIds, default, templateId, ipPool);
+			var data = CreateJObject(name, senderId, default, categories, customUnsubscribeUrl, suppressionGroupId, listIds, segmentIds, default, templateId, ipPool);
 			return _client
 				.PatchAsync($"{_endpoint}/{singleSendId}")
 				.WithJsonBody(data)
@@ -230,13 +234,13 @@ namespace StrongGrid.Resources
 				.AsMessage();
 		}
 
-		private static JObject CreateJObject(string name, long senderId, Parameter<IEnumerable<string>> categories, Parameter<string> customUnsubscribeUrl, Parameter<long?> suppressionGroupId, Parameter<IEnumerable<string>> listIds, Parameter<DateTime?> sendOn, Parameter<string> templateId, Parameter<string> ipPool)
+		private static JObject CreateJObject(string name, long senderId, Parameter<SingleSendStatus> status, Parameter<IEnumerable<string>> categories, Parameter<string> customUnsubscribeUrl, Parameter<long?> suppressionGroupId, Parameter<IEnumerable<string>> listIds, Parameter<IEnumerable<string>> segmentIds, Parameter<DateTime?> sendOn, Parameter<string> templateId, Parameter<string> ipPool)
 		{
 			var result = new JObject();
 			result.AddPropertyIfValue("name", name);
 			result.AddPropertyIfValue("categories", categories);
 			result.AddPropertyIfValue("sender_id", senderId);
-			result.AddPropertyIfValue("status", SingleSendStatus.Draft);
+			result.AddPropertyIfEnumValue("status", status);
 			result.AddPropertyIfValue("custom_unsubscribe_url", customUnsubscribeUrl);
 			result.AddPropertyIfValue("suppression_group_id", suppressionGroupId);
 			result.AddPropertyIfValue("send_at", sendOn);
@@ -247,9 +251,10 @@ namespace StrongGrid.Resources
 			{
 				result.AddPropertyIfValue("filter/list_ids", listIds);
 			}
-			else
+
+			if (segmentIds.HasValue && segmentIds.Value != null && segmentIds.Value.Any())
 			{
-				result.AddPropertyIfValue("filter/send_to_all", "true");
+				result.AddPropertyIfValue("filter/segment_ids", segmentIds);
 			}
 
 			return result;
