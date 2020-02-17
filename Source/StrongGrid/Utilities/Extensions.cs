@@ -652,9 +652,14 @@ namespace StrongGrid.Utilities
 				var name = propertyName.Substring(0, separatorLocation);
 				var childrenName = propertyName.Substring(separatorLocation + 1);
 
-				var obj = new JObject();
-				obj.AddDeepProperty(childrenName, value);
-				jsonObject.Add(name, obj);
+				var property = jsonObject.Value<JObject>(name);
+				if (property == null)
+				{
+					property = new JObject();
+					jsonObject.Add(name, property);
+				}
+
+				property.AddDeepProperty(childrenName, value);
 			}
 		}
 
