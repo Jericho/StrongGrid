@@ -24,12 +24,11 @@ namespace StrongGrid.Resources
 		/// <param name="state">The state.</param>
 		/// <param name="zip">The zip.</param>
 		/// <param name="country">The country.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="SenderIdentity" />.
 		/// </returns>
-		Task<SenderIdentity> CreateAsync(string nickname, MailAddress from, MailAddress replyTo, string address1, string address2, string city, string state, string zip, string country, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<SenderIdentity> CreateAsync(string nickname, MailAddress from, MailAddress replyTo, string address1, string address2, string city, string state, string zip, string country, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve a sender identity.
