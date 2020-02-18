@@ -77,8 +77,25 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The lists.
 		/// </value>
-		[JsonProperty("list_ids", NullValueHandling = NullValueHandling.Ignore)]
-		public string[] Lists { get; set; }
+		[JsonIgnore]
+		public string[] Lists
+		{
+			get { return Filter.Lists; }
+			set { Filter.Lists = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the segments.
+		/// </summary>
+		/// <value>
+		/// The segments.
+		/// </value>
+		[JsonIgnore]
+		public string[] Segments
+		{
+			get { return Filter.Segments; }
+			set { Filter.Segments = value; }
+		}
 
 		/// <summary>
 		/// Gets or sets the date and time when the single send will be sent.
@@ -124,5 +141,8 @@ namespace StrongGrid.Models
 		/// </value>
 		[JsonProperty("ip_pool", NullValueHandling = NullValueHandling.Ignore)]
 		public string IpPool { get; set; }
+
+		[JsonProperty("filter", NullValueHandling = NullValueHandling.Ignore)]
+		private SingleSendFilter Filter { get; set; }
 	}
 }
