@@ -1,3 +1,4 @@
+using StrongGrid.Models;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace StrongGrid.Resources.Legacy
 		/// <returns>
 		/// The <see cref="Models.Legacy.Segment" />.
 		/// </returns>
-		Task<Models.Legacy.Segment> CreateAsync(string name, IEnumerable<Models.Legacy.SearchCondition> conditions, long? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<Models.Legacy.Segment> CreateAsync(string name, IEnumerable<SearchCondition> conditions, long? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve all segments.
@@ -58,7 +59,7 @@ namespace StrongGrid.Resources.Legacy
 		/// <returns>
 		/// The <see cref="Models.Legacy.Segment" />.
 		/// </returns>
-		Task<Models.Legacy.Segment> UpdateAsync(long segmentId, string name = null, long? listId = null, IEnumerable<Models.Legacy.SearchCondition> conditions = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<Models.Legacy.Segment> UpdateAsync(long segmentId, string name = null, long? listId = null, IEnumerable<SearchCondition> conditions = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete a segment.

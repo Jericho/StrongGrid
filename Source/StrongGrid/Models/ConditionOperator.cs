@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Runtime.Serialization;
 
-namespace StrongGrid.Models.Legacy
+namespace StrongGrid.Models
 {
 	/// <summary>
 	/// Enumeration to indicate a condition operator.

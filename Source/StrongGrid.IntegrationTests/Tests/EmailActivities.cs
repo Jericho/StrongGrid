@@ -30,7 +30,7 @@ namespace StrongGrid.IntegrationTests.Tests
 
 			// REQUEST THE ACTIVITIES OF A GIVEN STATUS
 			var activityStatus = recentActivities.First().Status;
-			var activities = await client.EmailActivities.SearchAsync(new SearchCriteriaEqual(FilterField.ActivityType, activityStatus), maxNumberOfActivities, cancellationToken).ConfigureAwait(false);
+			var activities = await client.EmailActivities.SearchAsync(new SearchCriteriaEqual<EmailActivitiesFilterField>(EmailActivitiesFilterField.ActivityType, activityStatus), maxNumberOfActivities, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"There are {activities.Count()} '{activityStatus}' email activities.").ConfigureAwait(false);
 
 			// REQUEST THE ACTIVITIES WITH A GIVEN 'UNIQUE ARG'

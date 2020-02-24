@@ -37,7 +37,7 @@ namespace StrongGrid.Models
 		public ImportType Type { get; set; }
 
 		/// <summary>
-		/// Gets or sets the information about the nu,ber of records created, deleted, updated, etc.
+		/// Gets or sets the information about the number of records created, deleted, updated, etc.
 		/// </summary>
 		/// <value>
 		/// The results.

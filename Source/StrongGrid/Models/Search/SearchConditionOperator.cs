@@ -1,9 +1,9 @@
-﻿using System.Runtime.Serialization;
+using System.Runtime.Serialization;
 
 namespace StrongGrid.Models.Search
 {
 	/// <summary>
-	/// Enumeration to indicate the filtering operator when searching email activities.
+	/// Enumeration to indicate the filtering operator when searching.
 	/// </summary>
 	public enum SearchConditionOperator
 	{

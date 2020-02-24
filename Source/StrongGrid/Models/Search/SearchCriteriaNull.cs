@@ -1,15 +1,19 @@
-﻿namespace StrongGrid.Models.Search
+using System;
+
+namespace StrongGrid.Models.Search
 {
 	/// <summary>
 	/// Filter the result of a search for the value of a field to be NULL.
 	/// </summary>
-	public class SearchCriteriaNull : SearchCriteria
+	/// <typeparam name="TEnum">The type containing an enum of fields that can used for searching/segmenting.</typeparam>
+	public class SearchCriteriaNull<TEnum> : SearchCriteria<TEnum>
+		where TEnum : Enum
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaNull"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteriaNull{TEnum}"/> class.
 		/// </summary>
 		/// <param name="filterField">The filter field.</param>
-		public SearchCriteriaNull(FilterField filterField)
+		public SearchCriteriaNull(TEnum filterField)
 			: base(filterField, SearchConditionOperator.Null, null)
 		{
 		}

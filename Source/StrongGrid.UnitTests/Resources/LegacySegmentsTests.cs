@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
+using StrongGrid.Models;
 using StrongGrid.Resources.Legacy;
 using System.Net;
 using System.Net.Http;
@@ -76,18 +77,18 @@ namespace StrongGrid.UnitTests.Resources
 			result.Conditions.Length.ShouldBe(3);
 
 			result.Conditions[0].Field.ShouldBe("last_name");
-			result.Conditions[0].LogicalOperator.ShouldBe(StrongGrid.Models.Legacy.LogicalOperator.None);
-			result.Conditions[0].Operator.ShouldBe(StrongGrid.Models.Legacy.ConditionOperator.Equal);
+			result.Conditions[0].LogicalOperator.ShouldBe(LogicalOperator.None);
+			result.Conditions[0].Operator.ShouldBe(ConditionOperator.Equal);
 			result.Conditions[0].Value.ShouldBe("Miller");
 
 			result.Conditions[1].Field.ShouldBe("last_clicked");
-			result.Conditions[1].LogicalOperator.ShouldBe(StrongGrid.Models.Legacy.LogicalOperator.And);
-			result.Conditions[1].Operator.ShouldBe(StrongGrid.Models.Legacy.ConditionOperator.GreatherThan);
+			result.Conditions[1].LogicalOperator.ShouldBe(LogicalOperator.And);
+			result.Conditions[1].Operator.ShouldBe(ConditionOperator.GreatherThan);
 			result.Conditions[1].Value.ShouldBe("01/02/2015");
 
 			result.Conditions[2].Field.ShouldBe("clicks.campaign_identifier");
-			result.Conditions[2].LogicalOperator.ShouldBe(StrongGrid.Models.Legacy.LogicalOperator.Or);
-			result.Conditions[2].Operator.ShouldBe(StrongGrid.Models.Legacy.ConditionOperator.Equal);
+			result.Conditions[2].LogicalOperator.ShouldBe(LogicalOperator.Or);
+			result.Conditions[2].Operator.ShouldBe(ConditionOperator.Equal);
 			result.Conditions[2].Value.ShouldBe("513");
 
 			result.Id.ShouldBe(1);
@@ -103,26 +104,26 @@ namespace StrongGrid.UnitTests.Resources
 			var listId = 4;
 			var conditions = new[]
 			{
-				new StrongGrid.Models.Legacy.SearchCondition
+				new SearchCondition
 				{
 					Field = "last_name",
 					Value= "Miller",
-					Operator = StrongGrid.Models.Legacy.ConditionOperator.Equal,
-					LogicalOperator = StrongGrid.Models.Legacy.LogicalOperator.None
+					Operator = ConditionOperator.Equal,
+					LogicalOperator = LogicalOperator.None
 				},
-				new StrongGrid.Models.Legacy.SearchCondition
+				new SearchCondition
 				{
 					Field = "last_clicked",
 					Value = "01/02/2015",
-					Operator = StrongGrid.Models.Legacy.ConditionOperator.GreatherThan,
-					LogicalOperator = StrongGrid.Models.Legacy.LogicalOperator.And
+					Operator = ConditionOperator.GreatherThan,
+					LogicalOperator = LogicalOperator.And
 				},
-				new StrongGrid.Models.Legacy.SearchCondition
+				new SearchCondition
 				{
 					Field = "clicks.campaign_identifier",
 					Value = "513",
-					Operator = StrongGrid.Models.Legacy.ConditionOperator.Equal,
-					LogicalOperator = StrongGrid.Models.Legacy.LogicalOperator.Or
+					Operator = ConditionOperator.Equal,
+					LogicalOperator = LogicalOperator.Or
 				}
 			};
 
@@ -191,12 +192,12 @@ namespace StrongGrid.UnitTests.Resources
 			var listId = 5;
 			var conditions = new[]
 			{
-				new StrongGrid.Models.Legacy.SearchCondition
+				new SearchCondition
 				{
 					Field = "last_name",
 					Value= "Miller",
-					Operator = StrongGrid.Models.Legacy.ConditionOperator.Equal,
-					LogicalOperator = StrongGrid.Models.Legacy.LogicalOperator.None
+					Operator = ConditionOperator.Equal,
+					LogicalOperator = LogicalOperator.None
 				}
 			};
 

@@ -1,5 +1,6 @@
 using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
+using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,9 +41,9 @@ namespace StrongGrid.Resources.Legacy
 		/// <returns>
 		/// The <see cref="Models.Legacy.Segment" />.
 		/// </returns>
-		public Task<Models.Legacy.Segment> CreateAsync(string name, IEnumerable<Models.Legacy.SearchCondition> conditions, long? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<Models.Legacy.Segment> CreateAsync(string name, IEnumerable<SearchCondition> conditions, long? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			conditions = conditions ?? Enumerable.Empty<Models.Legacy.SearchCondition>();
+			conditions = conditions ?? Enumerable.Empty<SearchCondition>();
 
 			var data = new JObject
 			{
@@ -106,9 +107,9 @@ namespace StrongGrid.Resources.Legacy
 		/// <returns>
 		/// The <see cref="Models.Legacy.Segment" />.
 		/// </returns>
-		public Task<Models.Legacy.Segment> UpdateAsync(long segmentId, string name = null, long? listId = null, IEnumerable<Models.Legacy.SearchCondition> conditions = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<Models.Legacy.Segment> UpdateAsync(long segmentId, string name = null, long? listId = null, IEnumerable<SearchCondition> conditions = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			conditions = conditions ?? Enumerable.Empty<Models.Legacy.SearchCondition>();
+			conditions = conditions ?? Enumerable.Empty<SearchCondition>();
 
 			var data = new JObject();
 			data.AddPropertyIfValue("name", name);

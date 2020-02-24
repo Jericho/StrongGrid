@@ -1,3 +1,4 @@
+using StrongGrid.Models;
 using System;
 using System.IO;
 using System.Linq;
@@ -54,13 +55,13 @@ namespace StrongGrid.IntegrationTests.Tests
 			await log.WriteLineAsync($"List '{list.Id}' updated").ConfigureAwait(false);
 
 			// CREATE A SEGMENT
-			var millerLastNameCondition = new Models.Legacy.SearchCondition { Field = "last_name", Operator = Models.Legacy.ConditionOperator.Equal, Value = "Miller", LogicalOperator = Models.Legacy.LogicalOperator.None };
-			var clickedRecentlyCondition = new Models.Legacy.SearchCondition { Field = "last_clicked", Operator = Models.Legacy.ConditionOperator.GreatherThan, Value = DateTime.UtcNow.AddDays(-30).ToString("MM/dd/yyyy"), LogicalOperator = Models.Legacy.LogicalOperator.And };
+			var millerLastNameCondition = new SearchCondition { Field = "last_name", Operator = ConditionOperator.Equal, Value = "Miller", LogicalOperator = LogicalOperator.None };
+			var clickedRecentlyCondition = new SearchCondition { Field = "last_clicked", Operator = ConditionOperator.GreatherThan, Value = DateTime.UtcNow.AddDays(-30).ToString("MM/dd/yyyy"), LogicalOperator = LogicalOperator.And };
 			var segment = await client.Segments.CreateAsync("StrongGrid Integration Testing: Last Name is Miller and clicked recently", new[] { millerLastNameCondition, clickedRecentlyCondition }, list.Id, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Segment '{segment.Name}' created. Id: {segment.Id}").ConfigureAwait(false);
 
 			// UPDATE THE SEGMENT
-			var hotmailCondition = new Models.Legacy.SearchCondition { Field = "email", Operator = Models.Legacy.ConditionOperator.Contains, Value = "hotmail.com", LogicalOperator = Models.Legacy.LogicalOperator.None };
+			var hotmailCondition = new SearchCondition { Field = "email", Operator = ConditionOperator.Contains, Value = "hotmail.com", LogicalOperator = LogicalOperator.None };
 			segment = await client.Segments.UpdateAsync(segment.Id, "StrongGrid Integration Testing: Recipients @ Hotmail", null, new[] { hotmailCondition }, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Segment {segment.Id} updated. The new name is: '{segment.Name}'").ConfigureAwait(false);
 

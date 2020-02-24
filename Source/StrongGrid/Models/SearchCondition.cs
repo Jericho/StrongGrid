@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace StrongGrid.Models.Legacy
+namespace StrongGrid.Models
 {
 	/// <summary>
 	/// Search condition.

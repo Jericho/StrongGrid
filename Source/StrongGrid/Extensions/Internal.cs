@@ -3,8 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
-using StrongGrid.Models.Search;
-using StrongGrid.Resources;
+using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,12 +15,12 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StrongGrid.Utilities
+namespace StrongGrid
 {
 	/// <summary>
-	/// Extension methods.
+	/// Internal extension methods.
 	/// </summary>
-	internal static class Extensions
+	internal static class Internal
 	{
 		/// <summary>
 		/// Converts a 'unix time' (which is expressed as the number of seconds since midnight on
@@ -516,39 +515,6 @@ namespace StrongGrid.Utilities
 		}
 
 		/// <summary>
-		/// Get all of the details about the messages matching the criteria.
-		/// </summary>
-		/// <param name="emailActivities">The email activities resource.</param>
-		/// <param name="criteria">Filtering criteria.</param>
-		/// <param name="limit">Number of IP activity entries to return.</param>
-		/// <param name="cancellationToken">Cancellation token.</param>
-		/// <returns>
-		/// An array of <see cref="EmailMessageActivity" />.
-		/// </returns>
-		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, ISearchCriteria criteria, int limit = 20, CancellationToken cancellationToken = default)
-		{
-			var filterCriteria = criteria == null ? Enumerable.Empty<ISearchCriteria>() : new[] { criteria };
-			return emailActivities.SearchAsync(filterCriteria, limit, cancellationToken);
-		}
-
-		/// <summary>
-		/// Get all of the details about the messages matching the criteria.
-		/// </summary>
-		/// <param name="emailActivities">The email activities resource.</param>
-		/// <param name="filterConditions">Filtering conditions.</param>
-		/// <param name="limit">Number of IP activity entries to return.</param>
-		/// <param name="cancellationToken">Cancellation token.</param>
-		/// <returns>
-		/// An array of <see cref="EmailMessageActivity" />.
-		/// </returns>
-		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, IEnumerable<ISearchCriteria> filterConditions, int limit = 20, CancellationToken cancellationToken = default)
-		{
-			var filters = new List<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>>();
-			if (filterConditions != null && filterConditions.Any()) filters.Add(new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.And, filterConditions));
-			return emailActivities.SearchAsync(filters, limit, cancellationToken);
-		}
-
-		/// <summary>
 		/// Gets the attribute of the specified type.
 		/// </summary>
 		/// <typeparam name="T">The type of the desired attribute.</typeparam>
@@ -690,7 +656,7 @@ namespace StrongGrid.Utilities
 					}
 					else
 					{
-						return default(T);
+						return default;
 					}
 				}
 

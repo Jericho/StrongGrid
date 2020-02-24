@@ -95,7 +95,7 @@ namespace StrongGrid.UnitTests.Resources
 			var client = Utils.GetFluentClient(mockHttp);
 			var emailActivities = (IEmailActivities)new EmailActivities(client);
 
-			var criteria = new SearchCriteriaEqual(FilterField.Subject, "thevalue");
+			var criteria = new SearchCriteriaEqual<EmailActivitiesFilterField>(EmailActivitiesFilterField.Subject, "thevalue");
 
 			// Act
 			var result = await emailActivities.SearchAsync(criteria, limit, CancellationToken.None).ConfigureAwait(false);
@@ -121,8 +121,8 @@ namespace StrongGrid.UnitTests.Resources
 
 			var filterConditions = new[]
 			{
-				new SearchCriteriaEqual(FilterField.CampaignName, "value1"),
-				new SearchCriteriaEqual(FilterField.ActivityType, EmailActivityStatus.Processed),
+				new SearchCriteriaEqual<EmailActivitiesFilterField>(EmailActivitiesFilterField.CampaignName, "value1"),
+				new SearchCriteriaEqual<EmailActivitiesFilterField>(EmailActivitiesFilterField.ActivityType, EmailActivityStatus.Processed),
 			};
 			// Act
 			var result = await emailActivities.SearchAsync(filterConditions, limit, CancellationToken.None).ConfigureAwait(false);
@@ -148,8 +148,8 @@ namespace StrongGrid.UnitTests.Resources
 
 			var filterConditions = new[]
 			{
-				new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.Or, new[] { new SearchCriteriaEqual(FilterField.CampaignName, "value1"), new SearchCriteriaEqual(FilterField.MessageId, "value2") }),
-				new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.And, new[] { new SearchCriteriaEqual(FilterField.Subject, "value3"), new SearchCriteriaEqual(FilterField.Teammate, "value4") }),
+				new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.Or, new[] { new SearchCriteriaEqual<EmailActivitiesFilterField>(EmailActivitiesFilterField.CampaignName, "value1"), new SearchCriteriaEqual<EmailActivitiesFilterField>(EmailActivitiesFilterField.MessageId, "value2") }),
+				new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.And, new[] { new SearchCriteriaEqual<EmailActivitiesFilterField>(EmailActivitiesFilterField.Subject, "value3"), new SearchCriteriaEqual<EmailActivitiesFilterField>(EmailActivitiesFilterField.Teammate, "value4") }),
 			};
 
 			// Act

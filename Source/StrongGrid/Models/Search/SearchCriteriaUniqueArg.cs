@@ -1,4 +1,4 @@
-﻿using StrongGrid.Utilities;
+using StrongGrid.Utilities;
 using System.Runtime.Serialization;
 
 namespace StrongGrid.Models.Search
@@ -50,7 +50,7 @@ namespace StrongGrid.Models.Search
 		/// <returns>The string representation of the value.</returns>
 		public virtual string ConvertValueToString()
 		{
-			return SearchCriteria.ConvertToString(FilterValue);
+			return Utils.ConvertValueToStringForSearching(FilterValue);
 		}
 
 		/// <summary>

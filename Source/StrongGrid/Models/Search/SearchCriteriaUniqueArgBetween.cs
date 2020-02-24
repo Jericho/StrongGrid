@@ -1,4 +1,6 @@
-﻿namespace StrongGrid.Models.Search
+using StrongGrid.Utilities;
+
+namespace StrongGrid.Models.Search
 {
 	/// <summary>
 	/// Filter the result of a search on the value of a custom tracking argument to be between a lower value and an upper value.
@@ -28,7 +30,7 @@
 		/// <returns>The string representation of the value.</returns>
 		public override string ConvertValueToString()
 		{
-			return $"{SearchCriteria.ConvertToString(FilterValue)} AND {SearchCriteria.ConvertToString(UpperValue)}";
+			return $"{Utils.ConvertValueToStringForSearching(FilterValue)} AND {Utils.ConvertValueToStringForSearching(UpperValue)}";
 		}
 
 		/// <summary>

@@ -1,18 +1,21 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 
 namespace StrongGrid.Models.Search
 {
 	/// <summary>
 	/// Filter the result of a search for the value of a field to be present in an enumeration of values.
 	/// </summary>
-	public class SearchCriteriaIn : SearchCriteria
+	/// <typeparam name="TEnum">The type containing an enum of fields that can used for searching/segmenting.</typeparam>
+	public class SearchCriteriaIn<TEnum> : SearchCriteria<TEnum>
+		where TEnum : Enum
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaIn"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteriaIn{TEnum}"/> class.
 		/// </summary>
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValues">The filter values.</param>
-		public SearchCriteriaIn(FilterField filterField, IEnumerable<object> filterValues)
+		public SearchCriteriaIn(TEnum filterField, IEnumerable<object> filterValues)
 			: base(filterField, SearchConditionOperator.In, filterValues)
 		{
 		}

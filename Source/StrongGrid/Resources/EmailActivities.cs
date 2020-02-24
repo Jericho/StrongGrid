@@ -1,7 +1,6 @@
-﻿using Pathoschild.Http.Client;
+using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Models.Search;
-using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

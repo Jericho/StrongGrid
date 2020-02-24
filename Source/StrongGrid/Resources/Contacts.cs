@@ -1,6 +1,7 @@
 using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
+using StrongGrid.Models.Search;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -227,13 +229,26 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Searches for contacts matching the specified conditions.
 		/// </summary>
-		/// <param name="query">The query.</param>
+		/// <param name="filterConditions">Filtering conditions.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Contact" />.
 		/// </returns>
-		public Task<Contact[]> SearchAsync(string query, CancellationToken cancellationToken = default)
+		public Task<Contact[]> SearchAsync(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>> filterConditions, CancellationToken cancellationToken = default)
 		{
+			var conditions = new List<string>(filterConditions?.Count() ?? 0);
+			if (filterConditions != null)
+			{
+				foreach (var criteria in filterConditions)
+				{
+					var logicalOperator = criteria.Key.GetAttributeOfType<EnumMemberAttribute>().Value;
+					var values = criteria.Value.Select(criteriaValue => criteriaValue.ToString());
+					conditions.Add(string.Join($" {logicalOperator} ", values));
+				}
+			}
+
+			var query = string.Join(" AND ", conditions);
+
 			var data = new JObject()
 			{
 				{ "query", query }
@@ -329,8 +344,10 @@ namespace StrongGrid.Resources
 			var uploadUrl = importRequest["upload_url"].Value<string>();
 			var uploadHeaders = importRequest["upload_headers"].Value<KeyValuePair<string, string>[]>();
 
-			var request = new HttpRequestMessage(HttpMethod.Post, uploadUrl);
-			request.Content = new StreamContent(stream);
+			var request = new HttpRequestMessage(HttpMethod.Post, uploadUrl)
+			{
+				Content = new StreamContent(stream)
+			};
 			request.Headers.Clear();
 			foreach (var header in uploadHeaders)
 			{

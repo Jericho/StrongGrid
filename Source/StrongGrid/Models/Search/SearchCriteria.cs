@@ -1,4 +1,4 @@
-﻿using StrongGrid.Utilities;
+using StrongGrid.Utilities;
 using System;
 using System.Collections;
 using System.Linq;
@@ -9,12 +9,14 @@ namespace StrongGrid.Models.Search
 	/// <summary>
 	/// Base class for search criteria classes.
 	/// </summary>
-	public abstract class SearchCriteria : ISearchCriteria
+	/// <typeparam name="TEnum">The type containing an enum of fields that can used for searching/segmenting.</typeparam>
+	public abstract class SearchCriteria<TEnum> : ISearchCriteria
+		where TEnum : Enum
 	{
 		/// <summary>
 		/// Gets or sets the filter used to filter the result.
 		/// </summary>
-		public FilterField FilterField { get; protected set; }
+		public TEnum FilterField { get; protected set; }
 
 		/// <summary>
 		/// Gets or sets the operator used to filter the result.
@@ -27,12 +29,12 @@ namespace StrongGrid.Models.Search
 		public object FilterValue { get; protected set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteria"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteria{TEnum}"/> class.
 		/// </summary>
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SearchCriteria(FilterField filterField, SearchConditionOperator filterOperator, object filterValue)
+		public SearchCriteria(TEnum filterField, SearchConditionOperator filterOperator, object filterValue)
 		{
 			this.FilterField = filterField;
 			this.FilterOperator = filterOperator;
@@ -40,7 +42,7 @@ namespace StrongGrid.Models.Search
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteria"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteria{TEnum}"/> class.
 		/// </summary>
 		protected SearchCriteria()
 		{

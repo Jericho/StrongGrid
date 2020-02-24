@@ -1,11 +1,11 @@
-﻿using System.Runtime.Serialization;
+using System.Runtime.Serialization;
 
 namespace StrongGrid.Models.Search
 {
 	/// <summary>
 	/// Enumeration to indicate the filter field when searching for email activities.
 	/// </summary>
-	public enum FilterField
+	public enum EmailActivitiesFilterField
 	{
 		/// <summary>
 		/// The identifier of the message.
@@ -16,7 +16,7 @@ namespace StrongGrid.Models.Search
 		/// <summary>
 		/// The email address of the sender.
 		/// </summary>
-		[EnumMember(Value = "from_email	")]
+		[EnumMember(Value = "from_email")]
 		From,
 
 		/// <summary>

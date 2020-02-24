@@ -142,7 +142,7 @@ namespace StrongGrid.Resources.Legacy
 		/// <returns>
 		/// An array of <see cref="Contact" />.
 		/// </returns>
-		Task<Models.Legacy.Contact[]> SearchAsync(IEnumerable<Models.Legacy.SearchCondition> conditions, long? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<Models.Legacy.Contact[]> SearchAsync(IEnumerable<SearchCondition> conditions, long? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve the lists that a recipient is on.

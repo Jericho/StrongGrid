@@ -1,4 +1,5 @@
 using StrongGrid.Models;
+using StrongGrid.Models.Search;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -65,18 +66,14 @@ namespace StrongGrid.IntegrationTests.Tests
 			var country = "USA";
 			var postalCode = "12345";
 			var alternateEmails = new[] { "222@example.com", "333@example.com" };
-			var customFields = new Field[]
+			var customFields = new Models.Field[]
 			{
-				new Field<string>(nicknameField.Id, nicknameField.Name, "Joe"),
-				new Field<long>(ageField.Id, ageField.Name, 42),
-				new Field<DateTime>(customerSinceField.Id, customerSinceField.Name, new DateTime(2015, 2, 5))
+				new Models.Field<string>(nicknameField.Id, nicknameField.Name, "Joe"),
+				new Models.Field<long>(ageField.Id, ageField.Name, 42),
+				new Models.Field<DateTime>(customerSinceField.Id, customerSinceField.Name, new DateTime(2015, 2, 5))
 			};
 			await client.Contacts.UpsertAsync(email, firstName, lastName, addressLine1, addressLine2, city, stateOrProvince, country, postalCode, alternateEmails, customFields, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Contact {email} created: {firstName} {lastName}").ConfigureAwait(false);
-
-			var newLastName = "Smith";
-			await client.Contacts.UpsertAsync(email, lastName: newLastName, cancellationToken: cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Contact {email} updated: {firstName} {newLastName}").ConfigureAwait(false);
 
 			var (contacts, contactsCount) = await client.Contacts.GetAllAsync(cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Retrieved the first {contacts.Length} contacts out of a total of {contactsCount}.").ConfigureAwait(false);
@@ -94,36 +91,24 @@ namespace StrongGrid.IntegrationTests.Tests
 				await log.WriteLineAsync($"\tLast Name: {contact.LastName}").ConfigureAwait(false);
 				await log.WriteLineAsync($"\tCreated On:{contact.CreatedOn}").ConfigureAwait(false);
 				await log.WriteLineAsync($"\tModified On: {contact.ModifiedOn}").ConfigureAwait(false);
-				foreach (var customField in contact.CustomFields.OfType<Field<string>>())
+				foreach (var customField in contact.CustomFields.OfType<Models.Field<string>>())
 				{
 					await log.WriteLineAsync($"\t{customField.Name}: {customField.Value}").ConfigureAwait(false);
 				}
-				foreach (var customField in contact.CustomFields.OfType<Field<long>>())
+				foreach (var customField in contact.CustomFields.OfType<Models.Field<long>>())
 				{
 					await log.WriteLineAsync($"\t{customField.Name}: {customField.Value}").ConfigureAwait(false);
 				}
-				foreach (var customField in contact.CustomFields.OfType<Field<DateTime>>())
+				foreach (var customField in contact.CustomFields.OfType<Models.Field<DateTime>>())
 				{
 					await log.WriteLineAsync($"\t{customField.Name}: {customField.Value}").ConfigureAwait(false);
 				}
 			}
 
-			//var firstNameCondition = new SearchCondition
-			//{
-			//	Field = "first_name",
-			//	Value = "Robert",
-			//	Operator = ConditionOperator.Equal,
-			//	LogicalOperator = LogicalOperator.None
-			//};
-			//var LastNameCondition = new SearchCondition
-			//{
-			//	Field = "last_name",
-			//	Value = "Smith",
-			//	Operator = ConditionOperator.Equal,
-			//	LogicalOperator = LogicalOperator.And
-			//};
-			//var searchResult = await client.Contacts.SearchAsync(new[] { firstNameCondition, LastNameCondition }, null, null, cancellationToken).ConfigureAwait(false);
-			//await log.WriteLineAsync($"Found {searchResult.Length} contacts named Robert Smith").ConfigureAwait(false);
+			var firstNameCriteria = new SearchCriteriaEqual<ContactsFilterField>(ContactsFilterField.FirstName, "John");
+			var LastNameCriteria = new SearchCriteriaEqual<ContactsFilterField>(ContactsFilterField.LastName, "Doe");
+			var searchResult = await client.Contacts.SearchAsync(new[] { firstNameCriteria, LastNameCriteria }, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Found {searchResult.Length} contacts named John Doe").ConfigureAwait(false);
 
 			var (totalCount, billableCount) = await client.Contacts.GetCountAsync(cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("Record counts").ConfigureAwait(false);
