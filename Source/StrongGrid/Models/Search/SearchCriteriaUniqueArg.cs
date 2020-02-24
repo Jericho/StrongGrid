@@ -6,22 +6,16 @@ namespace StrongGrid.Models.Search
 	/// <summary>
 	/// Base class for search criteria classes on the value of a custom tracking argument.
 	/// </summary>
-	public abstract class SearchCriteriaUniqueArg : ISearchCriteria
+	/// <remarks>
+	/// UniqueArgs are only supported when searching for email activities.
+	/// That's why this class derives from SearchCriteria&lt;EmailActivitiesFilterField&gt; instead of ISearchCriteria.
+	/// </remarks>
+	public abstract class SearchCriteriaUniqueArg : SearchCriteria<EmailActivitiesFilterField>
 	{
 		/// <summary>
 		/// Gets or sets the name of the unique argument.
 		/// </summary>
 		public string UniqueArgName { get; protected set; }
-
-		/// <summary>
-		/// Gets or sets the operator used to filter the result.
-		/// </summary>
-		public SearchConditionOperator FilterOperator { get; protected set; }
-
-		/// <summary>
-		/// Gets or sets the value used to filter the result.
-		/// </summary>
-		public object FilterValue { get; protected set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SearchCriteriaUniqueArg"/> class.
@@ -48,7 +42,7 @@ namespace StrongGrid.Models.Search
 		/// Can be overridden in subclasses if the value needs special formatting.
 		/// </summary>
 		/// <returns>The string representation of the value.</returns>
-		public virtual string ConvertValueToString()
+		public override string ConvertValueToString()
 		{
 			return Utils.ConvertValueToStringForSearching(FilterValue);
 		}
@@ -58,7 +52,7 @@ namespace StrongGrid.Models.Search
 		/// Can be overridden in subclasses if the operator needs special formatting.
 		/// </summary>
 		/// <returns>The string representation of the operator.</returns>
-		public virtual string ConvertOperatorToString()
+		public override string ConvertOperatorToString()
 		{
 			return FilterOperator.GetAttributeOfType<EnumMemberAttribute>()?.Value ?? FilterOperator.ToString();
 		}
