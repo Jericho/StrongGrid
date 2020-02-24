@@ -66,11 +66,11 @@ namespace StrongGrid.IntegrationTests.Tests
 			var country = "USA";
 			var postalCode = "12345";
 			var alternateEmails = new[] { "222@example.com", "333@example.com" };
-			var customFields = new Models.Field[]
+			var customFields = new Field[]
 			{
-				new Models.Field<string>(nicknameField.Id, nicknameField.Name, "Joe"),
-				new Models.Field<long>(ageField.Id, ageField.Name, 42),
-				new Models.Field<DateTime>(customerSinceField.Id, customerSinceField.Name, new DateTime(2015, 2, 5))
+				new Field<string>(nicknameField.Id, nicknameField.Name, "Joe"),
+				new Field<long>(ageField.Id, ageField.Name, 42),
+				new Field<DateTime>(customerSinceField.Id, customerSinceField.Name, new DateTime(2015, 2, 5))
 			};
 			await client.Contacts.UpsertAsync(email, firstName, lastName, addressLine1, addressLine2, city, stateOrProvince, country, postalCode, alternateEmails, customFields, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Contact {email} created: {firstName} {lastName}").ConfigureAwait(false);
@@ -91,15 +91,15 @@ namespace StrongGrid.IntegrationTests.Tests
 				await log.WriteLineAsync($"\tLast Name: {contact.LastName}").ConfigureAwait(false);
 				await log.WriteLineAsync($"\tCreated On:{contact.CreatedOn}").ConfigureAwait(false);
 				await log.WriteLineAsync($"\tModified On: {contact.ModifiedOn}").ConfigureAwait(false);
-				foreach (var customField in contact.CustomFields.OfType<Models.Field<string>>())
+				foreach (var customField in contact.CustomFields.OfType<Field<string>>())
 				{
 					await log.WriteLineAsync($"\t{customField.Name}: {customField.Value}").ConfigureAwait(false);
 				}
-				foreach (var customField in contact.CustomFields.OfType<Models.Field<long>>())
+				foreach (var customField in contact.CustomFields.OfType<Field<long>>())
 				{
 					await log.WriteLineAsync($"\t{customField.Name}: {customField.Value}").ConfigureAwait(false);
 				}
-				foreach (var customField in contact.CustomFields.OfType<Models.Field<DateTime>>())
+				foreach (var customField in contact.CustomFields.OfType<Field<DateTime>>())
 				{
 					await log.WriteLineAsync($"\t{customField.Name}: {customField.Value}").ConfigureAwait(false);
 				}
