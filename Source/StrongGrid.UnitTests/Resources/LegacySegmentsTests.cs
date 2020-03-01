@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
+using StrongGrid.Models.Legacy;
 using StrongGrid.Resources.Legacy;
 using System.Net;
 using System.Net.Http;

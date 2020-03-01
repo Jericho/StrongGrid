@@ -1,4 +1,5 @@
 using StrongGrid.Models;
+using StrongGrid.Models.Legacy;
 using System;
 using System.IO;
 using System.Linq;

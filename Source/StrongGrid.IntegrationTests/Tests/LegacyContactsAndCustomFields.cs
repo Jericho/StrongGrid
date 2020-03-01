@@ -1,4 +1,5 @@
 using StrongGrid.Models;
+using StrongGrid.Models.Legacy;
 using System;
 using System.IO;
 using System.Linq;
@@ -73,15 +74,15 @@ namespace StrongGrid.IntegrationTests.Tests
 			await log.WriteLineAsync($"\tLast Clicked On: {contact.LastClickedOn}").ConfigureAwait(false);
 			await log.WriteLineAsync($"\tLast Emailed On: {contact.LastEmailedOn}").ConfigureAwait(false);
 			await log.WriteLineAsync($"\tLast Opened On: {contact.LastOpenedOn}").ConfigureAwait(false);
-			foreach (var customField in contact.CustomFields.OfType<Field<string>>())
+			foreach (var customField in contact.CustomFields.OfType<Models.Legacy.Field<string>>())
 			{
 				await log.WriteLineAsync($"\t{customField.Name}: {customField.Value}").ConfigureAwait(false);
 			}
-			foreach (var customField in contact.CustomFields.OfType<Field<long?>>())
+			foreach (var customField in contact.CustomFields.OfType<Models.Legacy.Field<long?>>())
 			{
 				await log.WriteLineAsync($"\t{customField.Name}: {customField.Value}").ConfigureAwait(false);
 			}
-			foreach (var customField in contact.CustomFields.OfType<Field<DateTime?>>())
+			foreach (var customField in contact.CustomFields.OfType<Models.Legacy.Field<DateTime?>>())
 			{
 				await log.WriteLineAsync($"\t{customField.Name}: {customField.Value}").ConfigureAwait(false);
 			}

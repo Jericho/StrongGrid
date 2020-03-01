@@ -247,7 +247,7 @@ namespace StrongGrid.Resources.Legacy
 		/// <returns>
 		/// An array of <see cref="Contact" />.
 		/// </returns>
-		public Task<Models.Legacy.Contact[]> SearchAsync(IEnumerable<SearchCondition> conditions, long? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<Models.Legacy.Contact[]> SearchAsync(IEnumerable<Models.Legacy.SearchCondition> conditions, long? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject();
 			data.AddPropertyIfValue("list_id", listId);

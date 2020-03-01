@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Runtime.Serialization;
 
-namespace StrongGrid.Models
+namespace StrongGrid.Models.Legacy
 {
 	/// <summary>
 	/// Enumeration to indicate a logical operator.
