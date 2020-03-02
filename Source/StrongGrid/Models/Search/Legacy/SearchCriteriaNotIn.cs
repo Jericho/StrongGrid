@@ -1,22 +1,19 @@
-using System;
 using System.Collections.Generic;
 
-namespace StrongGrid.Models.Search
+namespace StrongGrid.Models.Search.Legacy
 {
 	/// <summary>
 	/// Filter the result of a search for the value of a field to be absent from an enumeration of values.
 	/// </summary>
-	/// <typeparam name="TEnum">The type containing an enum of fields that can used for searching/segmenting.</typeparam>
-	public class SearchCriteriaNotIn<TEnum> : SearchCriteria<TEnum>
-		where TEnum : Enum
+	public class SearchCriteriaNotIn : SearchCriteria
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaNotIn{TEnum}"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteriaNotIn"/> class.
 		/// </summary>
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValues">The filter values.</param>
-		public SearchCriteriaNotIn(TEnum filterField, IEnumerable<object> filterValues)
-			: base(filterField, SearchComparisonOperator.NotIn, filterValues)
+		public SearchCriteriaNotIn(EmailActivitiesFilterField filterField, IEnumerable<object> filterValues)
+			: base(filterField, SearchConditionOperator.NotIn, filterValues)
 		{
 		}
 

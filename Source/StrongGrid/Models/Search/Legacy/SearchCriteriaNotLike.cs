@@ -1,21 +1,17 @@
-using System;
-
-namespace StrongGrid.Models.Search
+namespace StrongGrid.Models.Search.Legacy
 {
 	/// <summary>
 	/// Filter the result of a search for the value of a field to not be like a value.
 	/// </summary>
-	/// <typeparam name="TEnum">The type containing an enum of fields that can used for searching/segmenting.</typeparam>
-	public class SearchCriteriaNotLike<TEnum> : SearchCriteria<TEnum>
-		where TEnum : Enum
+	public class SearchCriteriaNotLike : SearchCriteria
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaNotLike{TEnum}"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteriaNotLike"/> class.
 		/// </summary>
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SearchCriteriaNotLike(TEnum filterField, object filterValue)
-			: base(filterField, SearchComparisonOperator.NotLike, filterValue)
+		public SearchCriteriaNotLike(EmailActivitiesFilterField filterField, object filterValue)
+			: base(filterField, SearchConditionOperator.NotLike, filterValue)
 		{
 		}
 

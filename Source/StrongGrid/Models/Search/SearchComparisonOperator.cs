@@ -5,7 +5,7 @@ namespace StrongGrid.Models.Search
 	/// <summary>
 	/// Enumeration to indicate the filtering operator when searching.
 	/// </summary>
-	public enum SearchConditionOperator
+	public enum SearchComparisonOperator
 	{
 		/// <summary>
 		/// Equal.
@@ -68,18 +68,6 @@ namespace StrongGrid.Models.Search
 		NotIn,
 
 		/// <summary>
-		/// Is.
-		/// </summary>
-		[EnumMember(Value = "IS")]
-		Is,
-
-		/// <summary>
-		/// Is not.
-		/// </summary>
-		[EnumMember(Value = "IS NOT")]
-		IsNot,
-
-		/// <summary>
 		/// Like.
 		/// </summary>
 		[EnumMember(Value = "LIKE")]
@@ -94,13 +82,13 @@ namespace StrongGrid.Models.Search
 		/// <summary>
 		/// Null.
 		/// </summary>
-		[EnumMember(Value = "NULL")]
-		Null,
+		[EnumMember(Value = "IS NULL")]
+		IsNull,
 
 		/// <summary>
 		/// Not Null.
 		/// </summary>
-		[EnumMember(Value = "NOT NULL")]
-		NotNull
+		[EnumMember(Value = "IS NOT NULL")]
+		IsNotNull
 	}
 }

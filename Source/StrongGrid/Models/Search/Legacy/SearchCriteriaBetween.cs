@@ -1,13 +1,9 @@
-using System;
-
-namespace StrongGrid.Models.Search
+namespace StrongGrid.Models.Search.Legacy
 {
 	/// <summary>
-	/// Filter the result of a search for the value of a field to be less than a lower value or greater than an upper value.
+	/// Filter the result of a search for the value of a field to be between a lower value and an upper value.
 	/// </summary>
-	/// <typeparam name="TEnum">The type containing an enum of fields that can used for searching/segmenting.</typeparam>
-	public class SearchCriteriaNotBetween<TEnum> : SearchCriteria<TEnum>
-		where TEnum : Enum
+	public class SearchCriteriaBetween : SearchCriteria
 	{
 		/// <summary>
 		/// Gets the upper value.
@@ -15,13 +11,13 @@ namespace StrongGrid.Models.Search
 		public object UpperValue { get; private set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaNotBetween{TEnum}"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteriaBetween"/> class.
 		/// </summary>
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="lowerValue">The lower value.</param>
 		/// <param name="upperValue">The upper value.</param>
-		public SearchCriteriaNotBetween(TEnum filterField, object lowerValue, object upperValue)
-			: base(filterField, SearchComparisonOperator.NotBetween, lowerValue)
+		public SearchCriteriaBetween(EmailActivitiesFilterField filterField, object lowerValue, object upperValue)
+			: base(filterField, SearchConditionOperator.Between, lowerValue)
 		{
 			UpperValue = upperValue;
 		}

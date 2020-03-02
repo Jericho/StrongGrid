@@ -3,7 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace StrongGrid.Models.Search
+namespace StrongGrid.Models.Search.Legacy
 {
 	/// <summary>
 	/// Base class for search criteria classes.
@@ -13,12 +13,12 @@ namespace StrongGrid.Models.Search
 		/// <summary>
 		/// Gets or sets the filter used to filter the result.
 		/// </summary>
-		public string FilterField { get; protected set; }
+		public EmailActivitiesFilterField FilterField { get; protected set; }
 
 		/// <summary>
 		/// Gets or sets the operator used to filter the result.
 		/// </summary>
-		public SearchComparisonOperator FilterOperator { get; protected set; }
+		public SearchConditionOperator FilterOperator { get; protected set; }
 
 		/// <summary>
 		/// Gets or sets the value used to filter the result.
@@ -31,7 +31,7 @@ namespace StrongGrid.Models.Search
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SearchCriteria(string filterField, SearchComparisonOperator filterOperator, object filterValue)
+		public SearchCriteria(EmailActivitiesFilterField filterField, SearchConditionOperator filterOperator, object filterValue)
 		{
 			this.FilterField = filterField;
 			this.FilterOperator = filterOperator;
@@ -54,7 +54,7 @@ namespace StrongGrid.Models.Search
 		{
 			if (value is DateTime dateValue)
 			{
-				return $"\"{dateValue.ToUniversalTime():yyyy-MM-ddTHH:mm:ssZ}\"";
+				return $"TIMESTAMP \"{dateValue.ToUniversalTime():u}\"";
 			}
 			else if (value is string stringValue)
 			{
@@ -71,24 +71,6 @@ namespace StrongGrid.Models.Search
 			else if (value.IsNumber())
 			{
 				return value.ToString();
-			}
-			else if (value is bool boolValue)
-			{
-				return boolValue ? "true" : "false";
-			}
-			else if (value is TimeSpan timespanValue)
-			{
-				if (timespanValue.TotalMinutes == 0) return $"{timespanValue.TotalSeconds} second";
-				else if (timespanValue.TotalHours == 0) return $"{timespanValue.TotalMinutes} minute";
-				else if (timespanValue.TotalDays == 0) return $"{timespanValue.TotalHours} hour";
-				else return $"{timespanValue.TotalDays} day";
-
-				// .NET Timespan does not support 'TotalMonth' and 'TotalYear'
-				/*
-					else if (timespanValue.TotalMonth == 0) return $"{timespanValue.TotalDays} day";
-					else if (timespanValue.TotalYear == 0) return $"{timespanValue.TotalMonth} month";
-					else return $"{timespanValue.TotalYear} year";
-				*/
 			}
 
 			return $"\"{value}\"";
@@ -120,28 +102,10 @@ namespace StrongGrid.Models.Search
 		/// <returns>A <see cref="string"/> representation of the search criteria.</returns>
 		public override string ToString()
 		{
+			var fieldName = FilterField.GetAttributeOfType<EnumMemberAttribute>().Value;
 			var filterOperator = ConvertOperatorToString();
 			var filterValue = ConvertValueToString();
-			return $"{FilterField}{filterOperator}{filterValue}";
-		}
-	}
-
-	/// <summary>
-	/// Base class for search criteria classes.
-	/// </summary>
-	/// <typeparam name="TEnum">The type containing an enum of fields that can used for searching/segmenting.</typeparam>
-	public abstract class SearchCriteria<TEnum> : SearchCriteria
-		where TEnum : Enum
-	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteria{TEnum}"/> class.
-		/// </summary>
-		/// <param name="filterField">The filter field.</param>
-		/// <param name="filterOperator">The filter operator.</param>
-		/// <param name="filterValue">The filter value.</param>
-		public SearchCriteria(TEnum filterField, SearchComparisonOperator filterOperator, object filterValue)
-			: base(filterField.GetAttributeOfType<EnumMemberAttribute>().Value, filterOperator, filterValue)
-		{
+			return $"{fieldName}{filterOperator}{filterValue}";
 		}
 	}
 }

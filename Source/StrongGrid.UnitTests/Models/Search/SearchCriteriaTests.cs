@@ -1,5 +1,5 @@
 using Shouldly;
-using StrongGrid.Models.Search;
+using StrongGrid.Models.Search.Legacy;
 using Xunit;
 
 namespace StrongGrid.UnitTests.Models.Search
@@ -10,7 +10,7 @@ namespace StrongGrid.UnitTests.Models.Search
 		public void SearchCriteriaBetween()
 		{
 			// Arrange
-			var searchCriteria = new SearchCriteriaBetween<EmailActivitiesFilterField>(EmailActivitiesFilterField.Clicks, 1, 5);
+			var searchCriteria = new SearchCriteriaBetween(EmailActivitiesFilterField.Clicks, 1, 5);
 
 			// Act
 			var result = searchCriteria.ToString();
@@ -24,7 +24,7 @@ namespace StrongGrid.UnitTests.Models.Search
 		public void SearchCriteriaIn()
 		{
 			// Arrange
-			var searchCriteria = new SearchCriteriaIn<EmailActivitiesFilterField>(EmailActivitiesFilterField.Subject, new[] { "Subject1", "Subject2" });
+			var searchCriteria = new SearchCriteriaIn(EmailActivitiesFilterField.Subject, new[] { "Subject1", "Subject2" });
 
 			// Act
 			var result = searchCriteria.ToString();
@@ -38,7 +38,7 @@ namespace StrongGrid.UnitTests.Models.Search
 		public void SearchCriteriaEqual()
 		{
 			// Arrange
-			var searchCriteria = new SearchCriteriaEqual<EmailActivitiesFilterField>(EmailActivitiesFilterField.CampaignName, "abc123");
+			var searchCriteria = new SearchCriteriaEqual(EmailActivitiesFilterField.CampaignName, "abc123");
 
 			// Act
 			var result = searchCriteria.ToString();

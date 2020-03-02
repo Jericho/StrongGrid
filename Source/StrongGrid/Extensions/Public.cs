@@ -24,9 +24,9 @@ namespace StrongGrid
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
-		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, SearchCriteria<EmailActivitiesFilterField> criteria, int limit = 20, CancellationToken cancellationToken = default)
+		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, Models.Search.Legacy.ISearchCriteria criteria, int limit = 20, CancellationToken cancellationToken = default)
 		{
-			var filterCriteria = criteria == null ? Enumerable.Empty<SearchCriteria<EmailActivitiesFilterField>>() : new[] { criteria };
+			var filterCriteria = criteria == null ? Enumerable.Empty<Models.Search.Legacy.ISearchCriteria>() : new[] { criteria };
 			return emailActivities.SearchAsync(filterCriteria, limit, cancellationToken);
 		}
 
@@ -40,10 +40,10 @@ namespace StrongGrid
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
-		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, IEnumerable<SearchCriteria<EmailActivitiesFilterField>> filterConditions, int limit = 20, CancellationToken cancellationToken = default)
+		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, IEnumerable<Models.Search.Legacy.ISearchCriteria> filterConditions, int limit = 20, CancellationToken cancellationToken = default)
 		{
-			var filters = new List<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>>();
-			if (filterConditions != null && filterConditions.Any()) filters.Add(new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.And, filterConditions));
+			var filters = new List<KeyValuePair<SearchLogicalOperator, IEnumerable<Models.Search.Legacy.ISearchCriteria>>>();
+			if (filterConditions != null && filterConditions.Any()) filters.Add(new KeyValuePair<SearchLogicalOperator, IEnumerable<Models.Search.Legacy.ISearchCriteria>>(SearchLogicalOperator.And, filterConditions));
 			return emailActivities.SearchAsync(filters, limit, cancellationToken);
 		}
 

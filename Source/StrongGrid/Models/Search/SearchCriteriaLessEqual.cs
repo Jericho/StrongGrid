@@ -15,7 +15,7 @@ namespace StrongGrid.Models.Search
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValue">The filter value.</param>
 		public SearchCriteriaLessEqual(TEnum filterField, object filterValue)
-			: base(filterField, SearchConditionOperator.LessEqual, filterValue)
+			: base(filterField, SearchComparisonOperator.LessEqual, filterValue)
 		{
 		}
 	}

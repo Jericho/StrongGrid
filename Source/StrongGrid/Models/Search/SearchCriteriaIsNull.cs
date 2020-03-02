@@ -1,22 +1,20 @@
 using System;
-using System.Collections.Generic;
 
 namespace StrongGrid.Models.Search
 {
 	/// <summary>
-	/// Filter the result of a search for the value of a field to be a value.
+	/// Filter the result of a search for the value of a field to be NULL.
 	/// </summary>
 	/// <typeparam name="TEnum">The type containing an enum of fields that can used for searching/segmenting.</typeparam>
-	public class SearchCriteriaIs<TEnum> : SearchCriteria<TEnum>
+	public class SearchCriteriaIsNull<TEnum> : SearchCriteria<TEnum>
 		where TEnum : Enum
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaIs{TEnum}"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteriaIsNull{TEnum}"/> class.
 		/// </summary>
 		/// <param name="filterField">The filter field.</param>
-		/// <param name="filterValues">The filter values.</param>
-		public SearchCriteriaIs(TEnum filterField, IEnumerable<object> filterValues)
-			: base(filterField, SearchConditionOperator.Is, filterValues)
+		public SearchCriteriaIsNull(TEnum filterField)
+			: base(filterField, SearchComparisonOperator.IsNull, null)
 		{
 		}
 

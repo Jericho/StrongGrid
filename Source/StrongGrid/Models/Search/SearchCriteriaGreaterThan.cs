@@ -15,7 +15,7 @@ namespace StrongGrid.Models.Search
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValue">The filter value.</param>
 		public SearchCriteriaGreaterThan(TEnum filterField, object filterValue)
-			: base(filterField, SearchConditionOperator.GreaterThan, filterValue)
+			: base(filterField, SearchComparisonOperator.GreaterThan, filterValue)
 		{
 		}
 	}

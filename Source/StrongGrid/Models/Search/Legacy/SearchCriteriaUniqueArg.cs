@@ -1,21 +1,26 @@
-using StrongGrid.Utilities;
 using System.Runtime.Serialization;
 
-namespace StrongGrid.Models.Search
+namespace StrongGrid.Models.Search.Legacy
 {
 	/// <summary>
 	/// Base class for search criteria classes on the value of a custom tracking argument.
 	/// </summary>
-	/// <remarks>
-	/// UniqueArgs are only supported when searching for email activities.
-	/// That's why this class derives from SearchCriteria&lt;EmailActivitiesFilterField&gt; instead of ISearchCriteria.
-	/// </remarks>
-	public abstract class SearchCriteriaUniqueArg : SearchCriteria<EmailActivitiesFilterField>
+	public abstract class SearchCriteriaUniqueArg : ISearchCriteria
 	{
 		/// <summary>
 		/// Gets or sets the name of the unique argument.
 		/// </summary>
 		public string UniqueArgName { get; protected set; }
+
+		/// <summary>
+		/// Gets or sets the operator used to filter the result.
+		/// </summary>
+		public SearchConditionOperator FilterOperator { get; protected set; }
+
+		/// <summary>
+		/// Gets or sets the value used to filter the result.
+		/// </summary>
+		public object FilterValue { get; protected set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SearchCriteriaUniqueArg"/> class.
@@ -42,9 +47,9 @@ namespace StrongGrid.Models.Search
 		/// Can be overridden in subclasses if the value needs special formatting.
 		/// </summary>
 		/// <returns>The string representation of the value.</returns>
-		public override string ConvertValueToString()
+		public virtual string ConvertValueToString()
 		{
-			return Utils.ConvertValueToStringForSearching(FilterValue);
+			return SearchCriteria.ConvertToString(FilterValue);
 		}
 
 		/// <summary>
@@ -52,7 +57,7 @@ namespace StrongGrid.Models.Search
 		/// Can be overridden in subclasses if the operator needs special formatting.
 		/// </summary>
 		/// <returns>The string representation of the operator.</returns>
-		public override string ConvertOperatorToString()
+		public virtual string ConvertOperatorToString()
 		{
 			return FilterOperator.GetAttributeOfType<EnumMemberAttribute>()?.Value ?? FilterOperator.ToString();
 		}

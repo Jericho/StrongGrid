@@ -21,7 +21,7 @@ namespace StrongGrid.Models.Search
 		/// <param name="lowerValue">The lower value.</param>
 		/// <param name="upperValue">The upper value.</param>
 		public SearchCriteriaBetween(TEnum filterField, object lowerValue, object upperValue)
-			: base(filterField, SearchConditionOperator.Between, lowerValue)
+			: base(filterField, SearchComparisonOperator.Between, lowerValue)
 		{
 			UpperValue = upperValue;
 		}

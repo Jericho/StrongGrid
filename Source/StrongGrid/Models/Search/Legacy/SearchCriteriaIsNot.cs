@@ -1,20 +1,16 @@
-using System;
-
-namespace StrongGrid.Models.Search
+namespace StrongGrid.Models.Search.Legacy
 {
 	/// <summary>
 	/// Filter the result of a search for the value of a field to not be a value.
 	/// </summary>
-	/// <typeparam name="TEnum">The type containing an enum of fields that can used for searching/segmenting.</typeparam>
-	public class SearchCriteriaIsNot<TEnum> : SearchCriteria<TEnum>
-		where TEnum : Enum
+	public class SearchCriteriaIsNot : SearchCriteria
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaIsNot{TEnum}"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteriaIsNot"/> class.
 		/// </summary>
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SearchCriteriaIsNot(TEnum filterField, object filterValue)
+		public SearchCriteriaIsNot(EmailActivitiesFilterField filterField, object filterValue)
 			: base(filterField, SearchConditionOperator.IsNot, filterValue)
 		{
 		}

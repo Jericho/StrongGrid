@@ -1,4 +1,4 @@
-﻿namespace StrongGrid.Models.Search
+namespace StrongGrid.Models.Search.Legacy
 {
 	/// <summary>
 	/// Filter the result of a search on the value of a custom tracking argument to be less than or equal to a value.

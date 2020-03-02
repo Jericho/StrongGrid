@@ -1,19 +1,19 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace StrongGrid.Models.Search
+namespace StrongGrid.Models.Search.Legacy
 {
 	/// <summary>
-	/// Filter the result of a search on the value of a custom tracking argument to be present in an enumeration of values.
+	/// Filter the result of a search on the value of a custom tracking argument to be absent from an enumeration of values.
 	/// </summary>
-	public class SearchCriteriaUniqueArgIn : SearchCriteriaUniqueArg
+	public class SearchCriteriaUniqueArgNotIn : SearchCriteriaUniqueArg
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaUniqueArgIn"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteriaUniqueArgNotIn"/> class.
 		/// </summary>
 		/// <param name="uniqueArgName">The name of the unique arg.</param>
 		/// <param name="filterValues">The filter values.</param>
-		public SearchCriteriaUniqueArgIn(string uniqueArgName, IEnumerable<object> filterValues)
-			: base(uniqueArgName, SearchConditionOperator.In, filterValues)
+		public SearchCriteriaUniqueArgNotIn(string uniqueArgName, IEnumerable<object> filterValues)
+			: base(uniqueArgName, SearchConditionOperator.NotIn, filterValues)
 		{
 		}
 

@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace StrongGrid.Models.Search
+namespace StrongGrid.Models.Search.Legacy
 {
 	/// <summary>
 	/// Enumeration to indicate the filter field when searching for email activities.
