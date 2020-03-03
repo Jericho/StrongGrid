@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using StrongGrid.Utilities;
 using System;
 
@@ -37,5 +37,14 @@ namespace StrongGrid.Models.Webhooks
 		[JsonProperty("send_at", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(EpochConverter))]
 		public DateTime ProcessedOn { get; set; }
+
+		/// <summary>
+		/// Gets or sets the IP Pool (if specified when the email was sent).
+		/// </summary>
+		/// <value>
+		/// The IP pool use when the email was sent.
+		/// </value>
+		[JsonProperty("pool", NullValueHandling = NullValueHandling.Ignore)]
+		public IpPool IpPool { get; set; }
 	}
 }
