@@ -80,12 +80,6 @@ namespace StrongGrid.Models.Search.Legacy
 		Events,
 
 		/// <summary>
-		/// IP address of the person who sent the message.
-		/// </summary>
-		[EnumMember(Value = "originating_ip")]
-		OriginatingIpAddress,
-
-		/// <summary>
 		/// Custom tags that you create.
 		/// </summary>
 		[EnumMember(Value = "categories")]
