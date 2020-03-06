@@ -1,9 +1,11 @@
 using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
+using StrongGrid.Models.Search;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -34,18 +36,18 @@ namespace StrongGrid.Resources
 		/// Create a segment.
 		/// </summary>
 		/// <param name="name">The name.</param>
-		/// <param name="queryDsl">The query.</param>
+		/// <param name="filterConditions">The query.</param>
 		/// <param name="listId">The id of the list if this segment is a child of a list. This implies the query is rewritten as (${query_dsl}) AND CONTAINS(list_ids, ${parent_list_id}).</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Segment" />.
 		/// </returns>
-		public Task<Segment> CreateAsync(string name, string queryDsl, string listId = null, CancellationToken cancellationToken = default)
+		public Task<Segment> CreateAsync(string name, IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>> filterConditions, string listId = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject
 			{
 				{ "name", name },
-				{ "query_dsl", queryDsl }
+				{ "query_dsl",  ToQueryDsl(filterConditions) }
 			};
 			data.AddPropertyIfValue("parent_list_id", listId);
 
@@ -104,16 +106,19 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="segmentId">The segment identifier.</param>
 		/// <param name="name">The name.</param>
-		/// <param name="query">The query.</param>
+		/// <param name="filterConditions">The query.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Segment" />.
 		/// </returns>
-		public Task<Segment> UpdateAsync(string segmentId, Parameter<string> name = default, Parameter<string> query = default, CancellationToken cancellationToken = default)
+		public Task<Segment> UpdateAsync(string segmentId, Parameter<string> name = default, Parameter<IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>>> filterConditions = default, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject();
 			data.AddPropertyIfValue("name", name);
-			data.AddPropertyIfValue("query_dsl", query);
+			if (filterConditions.HasValue)
+			{
+				data.AddPropertyIfValue("query_dsl", ToQueryDsl(filterConditions.Value));
+			}
 
 			return _client
 				.PatchAsync($"{_endpoint}/{segmentId}")
@@ -138,6 +143,22 @@ namespace StrongGrid.Resources
 				.WithArgument("delete_contacts", deleteMatchingContacts ? "true" : "false")
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
+		}
+
+		private string ToQueryDsl(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>> filterConditions)
+		{
+			if (filterConditions == null) return null;
+
+			var conditions = new List<string>(filterConditions.Count());
+			foreach (var criteria in filterConditions)
+			{
+				var logicalOperator = criteria.Key.GetAttributeOfType<EnumMemberAttribute>().Value;
+				var values = criteria.Value.Select(criteriaValue => criteriaValue.ToString());
+				conditions.Add(string.Join($" {logicalOperator} ", values));
+			}
+
+			var query = string.Join(" AND ", conditions);
+			return query;
 		}
 	}
 }

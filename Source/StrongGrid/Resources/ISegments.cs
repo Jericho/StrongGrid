@@ -1,4 +1,5 @@
 using StrongGrid.Models;
+using StrongGrid.Models.Search;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Threading;
@@ -18,13 +19,13 @@ namespace StrongGrid.Resources
 		/// Create a segment.
 		/// </summary>
 		/// <param name="name">The name.</param>
-		/// <param name="queryDsl">The query.</param>
+		/// <param name="filterConditions">The query.</param>
 		/// <param name="listId">The id of the list if this segment is a child of a list. This implies the query is rewritten as (${query_dsl}) AND CONTAINS(list_ids, ${parent_list_id}).</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Segment" />.
 		/// </returns>
-		Task<Segment> CreateAsync(string name, string queryDsl, string listId = null, CancellationToken cancellationToken = default);
+		Task<Segment> CreateAsync(string name, IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>> filterConditions, string listId = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve a segment.
@@ -51,12 +52,12 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="segmentId">The segment identifier.</param>
 		/// <param name="name">The name.</param>
-		/// <param name="query">The query.</param>
+		/// <param name="filterConditions">The query.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Segment" />.
 		/// </returns>
-		Task<Segment> UpdateAsync(string segmentId, Parameter<string> name = default, Parameter<string> query = default, CancellationToken cancellationToken = default);
+		Task<Segment> UpdateAsync(string segmentId, Parameter<string> name = default, Parameter<IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>>> filterConditions = default, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete a segment.

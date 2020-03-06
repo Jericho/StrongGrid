@@ -1,3 +1,5 @@
+using StrongGrid.Models.Search;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -54,8 +56,13 @@ namespace StrongGrid.IntegrationTests.Tests
 			await log.WriteLineAsync($"List '{list.Id}' updated").ConfigureAwait(false);
 
 			// CREATE A SEGMENT
-			var queryDsl = "???";
-			var segment = await client.Segments.CreateAsync("StrongGrid Integration Testing: Last Name is Miller and clicked recently", queryDsl, list.Id, cancellationToken).ConfigureAwait(false);
+			var firstNameCriteria = new SearchCriteriaEqual<ContactsFilterField>(ContactsFilterField.FirstName, "John");
+			var LastNameCriteria = new SearchCriteriaEqual<ContactsFilterField>(ContactsFilterField.LastName, "Doe");
+			var filterConditions = new[]
+			{
+				new KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>(SearchLogicalOperator.And, new[] { firstNameCriteria, LastNameCriteria})
+			};
+			var segment = await client.Segments.CreateAsync("StrongGrid Integration Testing: First Name is John and last name is Doe", filterConditions, list.Id, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Segment '{segment.Name}' created. Id: {segment.Id}").ConfigureAwait(false);
 
 			// UPDATE THE SEGMENT
