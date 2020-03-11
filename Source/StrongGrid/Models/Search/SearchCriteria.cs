@@ -55,7 +55,7 @@ namespace StrongGrid.Models.Search
 		{
 			if (value is DateTime dateValue)
 			{
-				return $"TIMESTAMP \"{dateValue.ToUniversalTime():u}\"";
+				return $"TIMESTAMP \"{dateValue.ToUniversalTime():yyyy-MM-ddTHH:mm:ssZ}\"";
 			}
 			else if (value is string stringValue)
 			{
