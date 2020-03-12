@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Runtime.Serialization;
 
@@ -13,19 +13,19 @@ namespace StrongGrid.Models
 		/// <summary>
 		/// Date.
 		/// </summary>
-		[EnumMember(Value = "date")]
+		[EnumMember(Value = "Date")]
 		Date,
 
 		/// <summary>
 		/// Text.
 		/// </summary>
-		[EnumMember(Value = "text")]
+		[EnumMember(Value = "Text")]
 		Text,
 
 		/// <summary>
 		/// Number.
 		/// </summary>
-		[EnumMember(Value = "number")]
+		[EnumMember(Value = "Number")]
 		Number
 	}
 }

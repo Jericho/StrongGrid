@@ -1,7 +1,6 @@
-﻿using Pathoschild.Http.Client;
+using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Models.Search;
-using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -42,7 +41,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
-		public Task<EmailMessageActivity[]> SearchAsync(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions, int limit = 20, CancellationToken cancellationToken = default)
+		public Task<EmailMessageActivity[]> SearchAsync(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<Models.Search.Legacy.ISearchCriteria>>> filterConditions, int limit = 20, CancellationToken cancellationToken = default)
 		{
 			var conditions = new List<string>(filterConditions?.Count() ?? 0);
 			if (filterConditions != null)

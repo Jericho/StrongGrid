@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
+using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,11 +15,11 @@ namespace StrongGrid.Resources
 	/// </summary>
 	/// <seealso cref="StrongGrid.Resources.ICustomFields" />
 	/// <remarks>
-	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/contactdb.html">SendGrid documentation</a> for more information.
+	/// See <a href="https://sendgrid.api-docs.io/v3.0/custom-fields">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public class CustomFields : ICustomFields
 	{
-		private const string _endpoint = "contactdb/custom_fields";
+		private const string _endpoint = "marketing/field_definitions";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
@@ -34,92 +36,84 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <param name="type">The type.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>The <see cref="CustomFieldMetadata">metadata</see> about the new field.</returns>
-		public Task<CustomFieldMetadata> CreateAsync(string name, FieldType type, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		/// <returns>The <see cref="FieldMetadata">metadata</see> about the new field.</returns>
+		public Task<FieldMetadata> CreateAsync(string name, FieldType type, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject
 			{
 				{ "name", name },
-				{ "type", JToken.Parse(JsonConvert.SerializeObject(type)).ToString() }
+				{ "field_type", JToken.Parse(JsonConvert.SerializeObject(type)).ToString() }
 			};
 			return _client
 				.PostAsync(_endpoint)
-				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<CustomFieldMetadata>();
+				.AsSendGridObject<FieldMetadata>();
 		}
 
 		/// <summary>
-		/// Retrieve all custom fields.
+		/// Retrieve all custom and reserved fields.
 		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// An array of <see cref="CustomFieldMetadata">metadata</see> about the fields.
+		/// An array of <see cref="FieldMetadata">metadata</see> about the fields.
 		/// </returns>
-		public Task<CustomFieldMetadata[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public async Task<FieldMetadata[]> GetAllAsync(CancellationToken cancellationToken = default)
 		{
-			return _client
+			var response = await _client
 				.GetAsync(_endpoint)
-				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<CustomFieldMetadata[]>("custom_fields");
+				.AsResponse()
+				.ConfigureAwait(false);
+
+			var reservedFields = await response.AsSendGridObject<FieldMetadata[]>("reserved_fields").ConfigureAwait(false);
+
+			// The 'custom_fields' property is omitted when there are no custom fields.
+			// Therefore it's important NOT to throw an exception if this property is missing.
+			// That's why the `throwIfPropertyIsMissing' parameter is set to false
+			var customFields = await response.AsSendGridObject<FieldMetadata[]>("custom_fields", false).ConfigureAwait(false);
+
+			return reservedFields.Union(customFields ?? Array.Empty<FieldMetadata>()).ToArray();
 		}
 
 		/// <summary>
-		/// Retrieve a custom field.
+		/// Update the name of a custom field.
 		/// </summary>
 		/// <param name="fieldId">The field identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="name">The new name.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The <see cref="CustomFieldMetadata">metadata</see> about the field.
+		/// The <see cref="FieldMetadata">metadata</see> about the field.
 		/// </returns>
-		public Task<CustomFieldMetadata> GetAsync(long fieldId, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<FieldMetadata> UpdateAsync(string fieldId, string name = null, CancellationToken cancellationToken = default)
 		{
+			var data = new JObject
+			{
+				{ "id", fieldId },
+				{ "name", name }
+			};
 			return _client
-				.GetAsync($"{_endpoint}/{fieldId}")
-				.OnBehalfOf(onBehalfOf)
+				.PatchAsync($"{_endpoint}/{fieldId}")
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<CustomFieldMetadata>();
+				.AsSendGridObject<FieldMetadata>();
 		}
 
 		/// <summary>
 		/// Delete a custom field.
 		/// </summary>
 		/// <param name="fieldId">The field identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(long fieldId, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task DeleteAsync(string fieldId, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{fieldId}")
-				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
-		}
-
-		/// <summary>
-		/// Retrieve the reserved fields.
-		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// An array of <see cref="Field" />.
-		/// </returns>
-		public Task<Field[]> GetReservedFieldsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
-		{
-			return _client
-				.GetAsync("contactdb/reserved_fields")
-				.OnBehalfOf(onBehalfOf)
-				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Field[]>("reserved_fields");
 		}
 	}
 }
