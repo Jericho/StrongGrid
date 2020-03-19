@@ -1,19 +1,10 @@
-﻿using Newtonsoft.Json;
-
 namespace StrongGrid.Models.Webhooks
 {
 	/// <summary>
-	/// User account details.
+	/// An event related to an interaction with a message.
 	/// </summary>
+	/// <seealso cref="StrongGrid.Models.Webhooks.Event" />
 	public class EngagementEvent : Event
 	{
-		/// <summary>
-		/// Gets or sets the user agent.
-		/// </summary>
-		/// <value>
-		/// The user agent.
-		/// </value>
-		[JsonProperty("useragent", NullValueHandling = NullValueHandling.Ignore)]
-		public string UserAgent { get; set; }
 	}
 }

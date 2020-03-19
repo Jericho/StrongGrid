@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace StrongGrid.Models.Webhooks
 {
@@ -9,6 +9,24 @@ namespace StrongGrid.Models.Webhooks
 	/// <seealso cref="StrongGrid.Models.Webhooks.EngagementEvent" />
 	public class ClickEvent : EngagementEvent
 	{
+		/// <summary>
+		/// Gets or sets the user agent.
+		/// </summary>
+		/// <value>
+		/// The user agent.
+		/// </value>
+		[JsonProperty("useragent", NullValueHandling = NullValueHandling.Ignore)]
+		public string UserAgent { get; set; }
+
+		/// <summary>
+		/// Gets or sets the ip address of the recipient who engaged with the email.
+		/// </summary>
+		/// <value>
+		/// The ip address.
+		/// </value>
+		[JsonProperty("ip", NullValueHandling = NullValueHandling.Ignore)]
+		public string IpAddress { get; set; }
+
 		/// <summary>
 		/// Gets or sets the URL.
 		/// </summary>
@@ -21,28 +39,13 @@ namespace StrongGrid.Models.Webhooks
 		/// <summary>
 		/// Gets or sets the URL offset.
 		/// </summary>
+		/// <remarks>
+		/// If there is more than one of the same links in an email, this tells you which of those identical links was clicked.
+		/// </remarks>
 		/// <value>
 		/// The URL offset.
 		/// </value>
 		[JsonProperty("url_offset", NullValueHandling = NullValueHandling.Ignore)]
 		public UrlOffset UrlOffset { get; set; }
-
-		/// <summary>
-		/// Gets or sets the asm group identifier.
-		/// </summary>
-		/// <value>
-		/// The asm group identifier.
-		/// </value>
-		[JsonProperty("asm_group_id", NullValueHandling = NullValueHandling.Ignore)]
-		public long AsmGroupId { get; set; }
-
-		/// <summary>
-		/// Gets or sets the newsletter.
-		/// </summary>
-		/// <value>
-		/// The newsletter.
-		/// </value>
-		[JsonProperty("newsletter", NullValueHandling = NullValueHandling.Ignore)]
-		public Newsletter Newsletter { get; set; }
 	}
 }

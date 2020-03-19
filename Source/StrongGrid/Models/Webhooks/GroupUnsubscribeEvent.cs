@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace StrongGrid.Models.Webhooks
 {
@@ -10,12 +10,21 @@ namespace StrongGrid.Models.Webhooks
 	public class GroupUnsubscribeEvent : EngagementEvent
 	{
 		/// <summary>
-		/// Gets or sets the asm group identifier.
+		/// Gets or sets the user agent.
 		/// </summary>
 		/// <value>
-		/// The asm group identifier.
+		/// The user agent.
 		/// </value>
-		[JsonProperty("asm_group_id", NullValueHandling = NullValueHandling.Ignore)]
-		public long AsmGroupId { get; set; }
+		[JsonProperty("useragent", NullValueHandling = NullValueHandling.Ignore)]
+		public string UserAgent { get; set; }
+
+		/// <summary>
+		/// Gets or sets the ip address that was used to send the email.
+		/// </summary>
+		/// <value>
+		/// The ip address.
+		/// </value>
+		[JsonProperty("ip", NullValueHandling = NullValueHandling.Ignore)]
+		public string IpAddress { get; set; }
 	}
 }

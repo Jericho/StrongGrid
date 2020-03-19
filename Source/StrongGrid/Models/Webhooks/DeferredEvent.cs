@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace StrongGrid.Models.Webhooks
 {
@@ -9,39 +9,32 @@ namespace StrongGrid.Models.Webhooks
 	public class DeferredEvent : DeliveryEvent
 	{
 		/// <summary>
-		/// Gets or sets the response.
+		/// Gets or sets the reason that describes why this event was triggered.
 		/// </summary>
+		/// <remarks>
+		/// This value is returned by the receiving server.
+		/// You may see the following drop reasons:
+		/// - Invalid SMTPAPI header.
+		/// - Spam Content (if spam checker app enabled).
+		/// - Unsubscribed Address.
+		/// - Bounced Address.
+		/// - Spam Reporting Address.
+		/// - Invalid.
+		/// - Recipient List over Package Quota.
+		/// </remarks>
 		/// <value>
-		/// The response.
+		/// The reason.
 		/// </value>
-		[JsonProperty("response", NullValueHandling = NullValueHandling.Ignore)]
-		public string Response { get; set; }
+		[JsonProperty("reason", NullValueHandling = NullValueHandling.Ignore)]
+		public string Reason { get; set; }
 
 		/// <summary>
-		/// Gets or sets the attempt.
+		/// Gets or sets the number of times SendGrid has attempted to deliver this message.
 		/// </summary>
 		/// <value>
-		/// The attempt.
+		/// The number of attempts.
 		/// </value>
 		[JsonProperty("attempt", NullValueHandling = NullValueHandling.Ignore)]
 		public int Attempt { get; set; }
-
-		/// <summary>
-		/// Gets or sets the asm group identifier.
-		/// </summary>
-		/// <value>
-		/// The asm group identifier.
-		/// </value>
-		[JsonProperty("asm_group_id", NullValueHandling = NullValueHandling.Ignore)]
-		public long AsmGroupId { get; set; }
-
-		/// <summary>
-		/// Gets or sets the newsletter.
-		/// </summary>
-		/// <value>
-		/// The newsletter.
-		/// </value>
-		[JsonProperty("newsletter", NullValueHandling = NullValueHandling.Ignore)]
-		public Newsletter Newsletter { get; set; }
 	}
 }

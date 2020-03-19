@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace StrongGrid.Models.Webhooks
 {
@@ -9,9 +9,10 @@ namespace StrongGrid.Models.Webhooks
 	public class DroppedEvent : DeliveryEvent
 	{
 		/// <summary>
-		/// Gets or sets the reason.
+		/// Gets or sets the reason that describes why this event was triggered.
 		/// </summary>
 		/// <remarks>
+		/// This value is returned by the receiving server.
 		/// You may see the following drop reasons:
 		/// - Invalid SMTPAPI header.
 		/// - Spam Content (if spam checker app enabled).

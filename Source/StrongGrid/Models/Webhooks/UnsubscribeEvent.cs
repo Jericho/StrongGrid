@@ -1,5 +1,3 @@
-﻿using Newtonsoft.Json;
-
 namespace StrongGrid.Models.Webhooks
 {
 	/// <summary>
@@ -9,13 +7,5 @@ namespace StrongGrid.Models.Webhooks
 	/// <seealso cref="StrongGrid.Models.Webhooks.EngagementEvent" />
 	public class UnsubscribeEvent : EngagementEvent
 	{
-		/// <summary>
-		/// Gets or sets the asm group identifier.
-		/// </summary>
-		/// <value>
-		/// The asm group identifier.
-		/// </value>
-		[JsonProperty("asm_group_id", NullValueHandling = NullValueHandling.Ignore)]
-		public long AsmGroupId { get; set; }
 	}
 }

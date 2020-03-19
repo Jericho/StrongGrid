@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace StrongGrid.Models.Webhooks
 {
@@ -9,9 +9,11 @@ namespace StrongGrid.Models.Webhooks
 	{
 		/// <summary>
 		/// Gets or sets the index.
+		/// </summary>
+		/// <remarks>
 		/// Links are indexed beginning at 0.
 		/// Index indicates which link was clicked based on that index.
-		/// </summary>
+		/// </remarks>
 		/// <value>
 		/// The index.
 		/// </value>

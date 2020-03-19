@@ -20,10 +20,10 @@ namespace StrongGrid.Models.Webhooks
 		public EventType EventType { get; set; }
 
 		/// <summary>
-		/// Gets or sets the email addres of the intended recipient.
+		/// Gets or sets the email address of the intended recipient.
 		/// </summary>
 		/// <value>
-		/// The email.
+		/// The email address.
 		/// </value>
 		[JsonProperty("email", NullValueHandling = NullValueHandling.Ignore)]
 		public string Email { get; set; }
@@ -37,68 +37,6 @@ namespace StrongGrid.Models.Webhooks
 		[JsonProperty("timestamp", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(EpochConverter))]
 		public DateTime Timestamp { get; set; }
-
-		/// <summary>
-		/// Gets or sets the ip address that was used to send the email.
-		/// </summary>
-		/// <value>
-		/// The ip address.
-		/// </value>
-		[JsonProperty("ip", NullValueHandling = NullValueHandling.Ignore)]
-		public string IpAddress { get; set; }
-
-		/// <summary>
-		/// Gets or sets the categories.
-		/// </summary>
-		/// <value>
-		/// The categories.
-		/// </value>
-		[JsonProperty("category", NullValueHandling = NullValueHandling.Ignore)]
-		[JsonConverter(typeof(CategoryConverter))]
-		public string[] Categories { get; set; }
-
-		/// <summary>
-		/// Gets or sets the internal event identifier.
-		/// </summary>
-		/// <value>
-		/// The internal event identifier.
-		/// </value>
-		[JsonProperty("sg_event_id", NullValueHandling = NullValueHandling.Ignore)]
-		public string InternalEventId { get; set; }
-
-		/// <summary>
-		/// Gets or sets the internal message identifier.
-		/// </summary>
-		/// <value>
-		/// The internal message identifier.
-		/// </value>
-		/// <remarks>
-		/// This value in this property is useful to SendGrid support.
-		/// It contains the message Id and information about where the
-		/// mail was processed concatenated together. Having this data
-		/// available is helpful for troubleshooting purposes.
-		/// Developers should use the 'MessageId' property to get the
-		/// message's unique identifier.
-		/// </remarks>
-		[JsonProperty("sg_message_id", NullValueHandling = NullValueHandling.Ignore)]
-		public string InternalMessageId { get; set; }
-
-		/// <summary>
-		/// Gets the message identifier.
-		/// </summary>
-		/// <value>
-		/// The message identifier.
-		/// </value>
-		public string MessageId
-		{
-			get
-			{
-				if (InternalMessageId == null) return null;
-				var filterIndex = InternalMessageId.IndexOf(".filter", StringComparison.OrdinalIgnoreCase);
-				if (filterIndex <= 0) return InternalMessageId;
-				return InternalMessageId.Substring(0, filterIndex);
-			}
-		}
 
 		/// <summary>
 		/// Gets or sets the marketing campaign identifier.

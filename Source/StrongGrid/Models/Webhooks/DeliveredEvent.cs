@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
+using StrongGrid.Utilities;
 
 namespace StrongGrid.Models.Webhooks
 {
@@ -9,6 +10,15 @@ namespace StrongGrid.Models.Webhooks
 	public class DeliveredEvent : DeliveryEvent
 	{
 		/// <summary>
+		/// Gets or sets the ip address that was used to send the email.
+		/// </summary>
+		/// <value>
+		/// The ip address.
+		/// </value>
+		[JsonProperty("ip", NullValueHandling = NullValueHandling.Ignore)]
+		public string IpAddress { get; set; }
+
+		/// <summary>
 		/// Gets or sets the response.
 		/// </summary>
 		/// <value>
@@ -18,21 +28,13 @@ namespace StrongGrid.Models.Webhooks
 		public string Response { get; set; }
 
 		/// <summary>
-		/// Gets or sets the asm group identifier.
+		/// Gets or sets a value indicating whether or not TLS was used when sending the email.
 		/// </summary>
 		/// <value>
-		/// The asm group identifier.
+		///   <c>true</c> if TLS was used; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("asm_group_id", NullValueHandling = NullValueHandling.Ignore)]
-		public long AsmGroupId { get; set; }
-
-		/// <summary>
-		/// Gets or sets the newsletter.
-		/// </summary>
-		/// <value>
-		/// The newsletter.
-		/// </value>
-		[JsonProperty("newsletter", NullValueHandling = NullValueHandling.Ignore)]
-		public Newsletter Newsletter { get; set; }
+		[JsonProperty("tls", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonConverter(typeof(IntegerBooleanConverter))]
+		public bool Tls { get; set; }
 	}
 }
