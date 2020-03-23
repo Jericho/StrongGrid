@@ -148,7 +148,7 @@ namespace StrongGrid.Utilities
 					webHookEvent = jsonObject.ToObject<UnsubscribeEvent>(serializer);
 					break;
 				default:
-					throw new Exception($"{eventTypeJsonProperty.ToString()} is an unknown event type");
+					throw new Exception($"{eventTypeJsonProperty} is an unknown event type");
 			}
 
 			var properties = jsonObject
