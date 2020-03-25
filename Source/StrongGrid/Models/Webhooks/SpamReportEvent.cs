@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace StrongGrid.Models.Webhooks
 {
 	/// <summary>
@@ -6,5 +8,14 @@ namespace StrongGrid.Models.Webhooks
 	/// <seealso cref="StrongGrid.Models.Webhooks.EngagementEvent" />
 	public class SpamReportEvent : EngagementEvent
 	{
+		/// <summary>
+		/// Gets or sets the categories.
+		/// </summary>
+		/// <value>
+		/// The categories.
+		/// </value>
+		[JsonProperty("category", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonConverter(typeof(CategoryConverter))]
+		public string[] Categories { get; set; }
 	}
 }
