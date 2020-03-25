@@ -7,7 +7,7 @@ namespace StrongGrid.Models.Webhooks
 	/// You need to enable Open Tracking for getting this type of event.
 	/// </summary>
 	/// <seealso cref="StrongGrid.Models.Webhooks.EngagementEvent" />
-	public class OpenEvent : EngagementEvent
+	public class OpenedEvent : EngagementEvent
 	{
 		/// <summary>
 		/// Gets or sets the user agent.
