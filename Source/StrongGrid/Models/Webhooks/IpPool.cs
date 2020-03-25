@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace StrongGrid.Models.Webhooks
 {
@@ -23,6 +23,6 @@ namespace StrongGrid.Models.Webhooks
 		/// The identifier.
 		/// </value>
 		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-		public string Id { get; set; }
+		public long Id { get; set; }
 	}
 }
