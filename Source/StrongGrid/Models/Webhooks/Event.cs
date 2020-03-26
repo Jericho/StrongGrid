@@ -122,7 +122,7 @@ namespace StrongGrid.Models.Webhooks
 		/// The newsletter.
 		/// </value>
 		[JsonProperty("newsletter", NullValueHandling = NullValueHandling.Ignore)]
-		public string Newsletter { get; set; }
+		public Newsletter Newsletter { get; set; }
 
 		/// <summary>
 		/// Gets or sets the marketing campaign version.
