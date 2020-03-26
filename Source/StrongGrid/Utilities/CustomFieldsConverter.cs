@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StrongGrid.Models;
 using System;
@@ -9,6 +9,8 @@ namespace StrongGrid.Utilities
 {
 	/// <summary>
 	/// Converts a <see cref="Field"/> to and from JSON.
+	/// This converter is intended to be used with SendGrid's new API.
+	/// See <seealso cref="LegacyCustomFieldsConverter"/> for the converter for the legacy API.
 	/// </summary>
 	/// <seealso cref="Newtonsoft.Json.JsonConverter" />
 	internal class CustomFieldsConverter : JsonConverter
@@ -35,33 +37,28 @@ namespace StrongGrid.Utilities
 		{
 			if (value == null) return;
 
-			writer.WriteStartArray();
-			foreach (var customField in ((Field[])value).OfType<Field<string>>())
+			var fields = (Field[])value;
+
+			writer.WriteStartObject();
+			foreach (var customField in fields.OfType<Field<string>>())
 			{
-				serializer.Serialize(writer, customField);
+				writer.WritePropertyName(customField.Id);
+				writer.WriteValue(customField.Value);
 			}
 
-			foreach (var customField in ((Field[])value).OfType<Field<long>>())
+			foreach (var customField in fields.OfType<Field<long>>())
 			{
-				serializer.Serialize(writer, customField);
+				writer.WritePropertyName(customField.Id);
+				writer.WriteValue(customField.Value);
 			}
 
-			foreach (var customField in ((Field[])value).OfType<Field<long?>>())
+			foreach (var customField in fields.OfType<Field<DateTime>>())
 			{
-				serializer.Serialize(writer, customField);
+				writer.WritePropertyName(customField.Id);
+				writer.WriteValue(customField.Value.ToUniversalTime().ToString("o"));
 			}
 
-			foreach (var customField in ((Field[])value).OfType<Field<DateTime>>())
-			{
-				serializer.Serialize(writer, customField);
-			}
-
-			foreach (var customField in ((Field[])value).OfType<Field<DateTime?>>())
-			{
-				serializer.Serialize(writer, customField);
-			}
-
-			writer.WriteEndArray();
+			writer.WriteEndObject();
 		}
 
 		/// <summary>
@@ -77,49 +74,38 @@ namespace StrongGrid.Utilities
 		/// <exception cref="System.Exception">Unable to determine the field type.</exception>
 		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 		{
-			if (reader.TokenType == JsonToken.StartArray)
+			if (reader.TokenType == JsonToken.StartObject)
 			{
 				var fields = new List<Field>();
-				var jArray = JArray.Load(reader);
-
-				foreach (var item in jArray)
+				var jObject = JObject.Load(reader);
+				foreach (var property in jObject.Properties())
 				{
-					var id = item.GetPropertyValue<int?>("id");
-					var name = item.GetPropertyValue<string>("name");
-					var type = item.GetPropertyValue<string>("type");
+					var propertyType = property.Value.Type;
+					var propertyName = property.Name;
 					var field = (Field)null;
 
-					switch (type)
+					switch (propertyType)
 					{
-						case "date":
-							var unixTime = item.GetPropertyValue<long?>("value");
-							if (unixTime.HasValue) field = new Field<DateTime>(name, unixTime.Value.FromUnixTime());
-							else field = new Field<DateTime?>(name, null);
+						case JTokenType.Date:
+							field = new Field<DateTime>(propertyName, property.Value.Value<DateTime>());
 							break;
-						case "text":
-							field = new Field<string>(name, item.GetPropertyValue<string>("value"));
+						case JTokenType.String:
+							field = new Field<string>(propertyName, property.Value.Value<string>());
 							break;
-						case "number":
-							var numericValue = item.GetPropertyValue<long?>("value");
-							if (numericValue.HasValue) field = new Field<long>(name, numericValue.Value);
-							else field = new Field<long?>(name, null);
+						case JTokenType.Integer:
+							field = new Field<long>(propertyName, property.Value.Value<long>());
 							break;
 						default:
-							throw new Exception($"{type} is an unknown field type");
+							throw new Exception($"{propertyType} is an unknown field type");
 					}
 
-					if (id.HasValue) field.Id = id.Value;
 					fields.Add(field);
 				}
 
 				return fields.ToArray();
 			}
 
-			/*
-				When we stop supporting .NET 4.5.2 we will be able to use the following:
-				return Array.Empty<Field>();
-			*/
-			return Enumerable.Empty<Field>().ToArray();
+			return Array.Empty<Field>();
 		}
 	}
 }

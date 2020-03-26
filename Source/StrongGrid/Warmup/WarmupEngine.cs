@@ -14,7 +14,7 @@ namespace StrongGrid.Warmup
 	public class WarmupEngine : IWarmupEngine
 	{
 		private readonly WarmupSettings _warmupSettings;
-		private readonly IClient _client;
+		private readonly IBaseClient _client;
 		private readonly ISystemClock _systemClock;
 		private readonly IWarmupProgressRepository _warmupProgressRepository;
 
@@ -25,7 +25,7 @@ namespace StrongGrid.Warmup
 		/// <param name="client">The StrongGrid client.</param>
 		/// <param name="warmupProgressRepository">The repository where progress information is stored.</param>
 		[StrongGrid.Utilities.ExcludeFromCodeCoverage]
-		public WarmupEngine(WarmupSettings warmupSettings, IClient client, IWarmupProgressRepository warmupProgressRepository = null)
+		public WarmupEngine(WarmupSettings warmupSettings, IBaseClient client, IWarmupProgressRepository warmupProgressRepository = null)
 			: this(warmupSettings, client, warmupProgressRepository, null)
 		{
 		}
@@ -37,7 +37,7 @@ namespace StrongGrid.Warmup
 		/// <param name="client">The StrongGrid client.</param>
 		/// <param name="warmupProgressRepository">The repository where progress information is stored.</param>
 		/// <param name="systemClock">The system clock. This is for unit testing only.</param>
-		internal WarmupEngine(WarmupSettings warmupSettings, IClient client, IWarmupProgressRepository warmupProgressRepository, ISystemClock systemClock)
+		internal WarmupEngine(WarmupSettings warmupSettings, IBaseClient client, IWarmupProgressRepository warmupProgressRepository, ISystemClock systemClock)
 		{
 			_warmupSettings = warmupSettings ?? throw new ArgumentNullException(nameof(warmupSettings));
 			_client = client ?? throw new ArgumentNullException(nameof(client));

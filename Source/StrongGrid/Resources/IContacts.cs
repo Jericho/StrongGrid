@@ -1,6 +1,8 @@
 using StrongGrid.Models;
+using StrongGrid.Models.Search;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,144 +17,201 @@ namespace StrongGrid.Resources
 	public interface IContacts
 	{
 		/// <summary>
-		/// Creates a contact.
+		/// Add or Update a Contact.
 		/// </summary>
 		/// <param name="email">The email.</param>
 		/// <param name="firstName">The first name.</param>
 		/// <param name="lastName">The last name.</param>
+		/// <param name="addressLine1">The first line of the address.</param>
+		/// <param name="addressLine2">The second line of the address.</param>
+		/// <param name="city">The city.</param>
+		/// <param name="stateOrProvince">The state or province.</param>
+		/// <param name="country">The country.</param>
+		/// <param name="postalCode">The postal code.</param>
+		/// <param name="alternateEmails">The additional emails associated with the contact.</param>
 		/// <param name="customFields">The custom fields.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="listIds">The identifiers of the lists where the contacts will be added to.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The identifier of the new contact.
+		/// The job id.
 		/// </returns>
-		/// <exception cref="SendGridException">Thrown when an exception occurred while creating the contact.</exception>
-		Task<string> CreateAsync(
+		/// <exception cref="SendGridException">Thrown when an exception occurred while adding or updating the contact.</exception>
+		Task<string> UpsertAsync(
 			string email,
 			Parameter<string> firstName = default,
 			Parameter<string> lastName = default,
+			Parameter<string> addressLine1 = default,
+			Parameter<string> addressLine2 = default,
+			Parameter<string> city = default,
+			Parameter<string> stateOrProvince = default,
+			Parameter<string> country = default,
+			Parameter<string> postalCode = default,
+			Parameter<IEnumerable<string>> alternateEmails = default,
 			Parameter<IEnumerable<Field>> customFields = default,
-			string onBehalfOf = null,
+			IEnumerable<string> listIds = null,
 			CancellationToken cancellationToken = default);
 
 		/// <summary>
-		/// Updates the contact.
-		/// </summary>
-		/// <param name="email">The email.</param>
-		/// <param name="firstName">The first name.</param>
-		/// <param name="lastName">The last name.</param>
-		/// <param name="customFields">The custom fields.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// The async task.
-		/// </returns>
-		/// <exception cref="SendGridException">Thrown when an exception occurred while updating the contact.</exception>
-		Task UpdateAsync(
-			string email,
-			Parameter<string> firstName = default,
-			Parameter<string> lastName = default,
-			Parameter<IEnumerable<Field>> customFields = default,
-			string onBehalfOf = null,
-			CancellationToken cancellationToken = default);
-
-		/// <summary>
-		/// Import contacts.
+		/// Add or Update multiple contacts.
 		/// </summary>
 		/// <param name="contacts">The contacts.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="listIds">The identifiers of the lists where the contacts will be added to.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The <see cref="ImportResult">result</see> of the operation.
+		/// The job id.
 		/// </returns>
-		Task<ImportResult> ImportAsync(IEnumerable<Contact> contacts, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		/// <exception cref="SendGridException">Thrown when an exception occurred while adding or updating the contact.</exception>
+		Task<string> UpsertAsync(IEnumerable<Contact> contacts, IEnumerable<string> listIds, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete a contact.
 		/// </summary>
 		/// <param name="contactId">The contact identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The async task.
+		/// The job id.
 		/// </returns>
-		Task DeleteAsync(string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<string> DeleteAsync(string contactId, CancellationToken cancellationToken = default);
 
 		/// <summary>
-		/// Delete contacts.
+		/// Delete multiple contacts.
 		/// </summary>
-		/// <param name="contactId">The contact identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="contactIds">The identifiers of the contacts to be deleted.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The async task.
+		/// The job id.
 		/// </returns>
-		Task DeleteAsync(IEnumerable<string> contactId, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<string> DeleteAsync(IEnumerable<string> contactIds, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Delete all contacts.
+		/// </summary>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The job id.
+		/// </returns>
+		Task<string> DeleteAllAsync(CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Gets the total number of contacts as well as the number of billable contacts.
+		/// </summary>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The total number and the number of billable contacts.
+		/// </returns>
+		Task<(long TotalCount, long BillableCount)> GetCountAsync(CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Request all contacts to be exported.
+		///
+		/// Use the "job id" returned by this method with the CheckExportJobStatusAsync
+		/// method to verify if the export job is completed.
+		/// </summary>
+		/// <param name="fileType">File type for export file. Choose from json or csv.</param>
+		/// <param name="listIds">Ids of the contact lists you want to export.</param>
+		/// <param name="segmentIds">Ids of the contact segments you want to export.</param>
+		/// <param name="maxFileSize">The maximum size of an export file in MB. Note that when this option is specified, multiple output files will be returned from the export.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The job id.
+		/// </returns>
+		Task<string> ExportAsync(FileType fileType = FileType.Csv, IEnumerable<string> listIds = null, IEnumerable<string> segmentIds = null, Parameter<long> maxFileSize = default, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve a contact.
 		/// </summary>
 		/// <param name="contactId">The contact identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The <see cref="Contact" />.
+		/// The <see cref="Contact"/>.
 		/// </returns>
-		Task<Contact> GetAsync(string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default);
-
-		/// <summary>
-		/// Retrieve multiple contacts.
-		/// </summary>
-		/// <param name="recordsPerPage">The records per page.</param>
-		/// <param name="page">The page.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// An array of <see cref="Contact" />.
-		/// </returns>
-		Task<Contact[]> GetAsync(int recordsPerPage = 100, int page = 1, string onBehalfOf = null, CancellationToken cancellationToken = default);
-
-		/// <summary>
-		/// Gets the billable count.
-		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// The number of billable contacts.
-		/// </returns>
-		Task<long> GetBillableCountAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
-
-		/// <summary>
-		/// Gets the total count.
-		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// The total number of contacts.
-		/// </returns>
-		Task<long> GetTotalCountAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<Contact> GetAsync(string contactId, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Searches for contacts matching the specified conditions.
 		/// </summary>
-		/// <param name="conditions">The conditions.</param>
-		/// <param name="listId">The list identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="filterConditions">Filtering conditions.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Contact" />.
 		/// </returns>
-		Task<Contact[]> SearchAsync(IEnumerable<SearchCondition> conditions, long? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<Contact[]> SearchAsync(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>> filterConditions, CancellationToken cancellationToken = default);
 
 		/// <summary>
-		/// Retrieve the lists that a recipient is on.
+		/// Retrieve up to fifty of the most recent contacts uploaded or attached to a list.
+		/// This list will then be sorted by email address.
 		/// </summary>
-		/// <param name="contactId">The contact identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// An array of <see cref="List" />.
+		/// An array of <see cref="Contact" /> as well as the full contact count.
 		/// </returns>
-		Task<List[]> GetListsAsync(string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		/// <remarks>Pagination of the contacts has been deprecated.</remarks>
+		Task<(Contact[] Contacts, long TotalCount)> GetAllAsync(CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Request all contacts to be exported.
+		///
+		/// Use the "job id" returned by this method with the CheckExportJobStatusAsync
+		/// method to verify if the export job is completed.
+		/// </summary>
+		/// <param name="stream">The stream containing the data to import.</param>
+		/// <param name="fileType">File type for export file. Choose from json or csv.</param>
+		/// <param name="fieldsMapping">List of field_definition IDs to map the uploaded CSV columns to. For example, [null, "w1", "_rf1"] means to skip Col[0], map Col[1] => CustomField w1, map Col[2] => ReservedField _rf1.</param>
+		/// <param name="listIds">Ids of the contact lists you want to export.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The job id.
+		/// </returns>
+		Task<string> ImportFromStreamAsync(Stream stream, FileType fileType, IEnumerable<string> fieldsMapping = null, IEnumerable<string> listIds = null, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Retrieve an import job.
+		/// </summary>
+		/// <param name="jobId">The job identifier.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="ImportJob" />.
+		/// </returns>
+		Task<ImportJob> GetImportJobAsync(string jobId, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Get all the existing export jobs.
+		/// </summary>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="ExportJob" />.
+		/// </returns>
+		Task<ExportJob[]> GetExportJobsAsync(CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Retrieve an export job.
+		/// </summary>
+		/// <param name="jobId">The job identifier.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="ExportJob" />.
+		/// </returns>
+		Task<ExportJob> GetExportJobAsync(string jobId, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Download the files generated by an export job as streams.
+		/// </summary>
+		/// <param name="jobId">The job identifier.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="Stream"/>.
+		/// </returns>
+		Task<Stream[]> DownloadExportFilesAsync(string jobId, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Download the files generated by an export job and save them to files.
+		/// </summary>
+		/// <param name="jobId">The job identifier.</param>
+		/// <param name="destinationFolder">The folder where the files will be saved.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// The async task.
+		/// </returns>
+		Task DownloadExportFilesAsync(string jobId, string destinationFolder, CancellationToken cancellationToken = default);
 	}
 }

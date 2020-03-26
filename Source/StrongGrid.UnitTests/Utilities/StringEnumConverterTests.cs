@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 using Shouldly;
-using StrongGrid.Models;
+using StrongGrid.Models.Legacy;
 using Xunit;
 
 namespace StrongGrid.UnitTests.Utilities

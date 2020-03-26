@@ -1,4 +1,6 @@
-﻿using StrongGrid.Models;
+using StrongGrid.Models;
+using StrongGrid.Models.Search;
+using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,7 +11,7 @@ namespace StrongGrid.Resources
 	/// Allows you to create and manage segments.
 	/// </summary>
 	/// <remarks>
-	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/campaigns.html">SendGrid documentation</a> for more information.
+	/// See <a href="https://sendgrid.api-docs.io/v3.0/segmenting-contacts">SendGrid documentation</a> for more information.
 	/// </remarks>
 	public interface ISegments
 	{
@@ -17,73 +19,55 @@ namespace StrongGrid.Resources
 		/// Create a segment.
 		/// </summary>
 		/// <param name="name">The name.</param>
-		/// <param name="conditions">The conditions.</param>
-		/// <param name="listId">The list identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="filterConditions">The query.</param>
+		/// <param name="listId">The id of the list if this segment is a child of a list. This implies the query is rewritten as (${query_dsl}) AND CONTAINS(list_ids, ${parent_list_id}).</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Segment" />.
 		/// </returns>
-		Task<Segment> CreateAsync(string name, IEnumerable<SearchCondition> conditions, long? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
-
-		/// <summary>
-		/// Retrieve all segments.
-		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// An array of <see cref="Segment" />.
-		/// </returns>
-		Task<Segment[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<Segment> CreateAsync(string name, IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>> filterConditions, string listId = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve a segment.
 		/// </summary>
 		/// <param name="segmentId">The segment identifier.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Segment" />.
 		/// </returns>
-		Task<Segment> GetAsync(long segmentId, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<Segment> GetAsync(string segmentId, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Retrieve all segments.
+		/// </summary>
+		/// <param name="listIds">An enumeration of lists ids to be used when searching for segments with the specified parent_list_id, no more than 50 is allowed.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="Segment" />.
+		/// </returns>
+		Task<Segment[]> GetAllAsync(IEnumerable<string> listIds = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Update a segment.
 		/// </summary>
 		/// <param name="segmentId">The segment identifier.</param>
 		/// <param name="name">The name.</param>
-		/// <param name="listId">The list identifier.</param>
-		/// <param name="conditions">The conditions.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="filterConditions">The query.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="Segment" />.
 		/// </returns>
-		Task<Segment> UpdateAsync(long segmentId, string name = null, long? listId = null, IEnumerable<SearchCondition> conditions = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<Segment> UpdateAsync(string segmentId, Parameter<string> name = default, Parameter<IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>>> filterConditions = default, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete a segment.
 		/// </summary>
 		/// <param name="segmentId">The segment identifier.</param>
 		/// <param name="deleteMatchingContacts">if set to <c>true</c> [delete matching contacts].</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteAsync(long segmentId, bool deleteMatchingContacts = false, string onBehalfOf = null, CancellationToken cancellationToken = default);
-
-		/// <summary>
-		/// Retrieve the recipients on a segment.
-		/// </summary>
-		/// <param name="segmentId">The segment identifier.</param>
-		/// <param name="recordsPerPage">The records per page.</param>
-		/// <param name="page">The page.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// An array of <see cref="Contact" />.
-		/// </returns>
-		Task<Contact[]> GetRecipientsAsync(long segmentId, int recordsPerPage = 100, int page = 1, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task DeleteAsync(string segmentId, bool deleteMatchingContacts = false, CancellationToken cancellationToken = default);
 	}
 }

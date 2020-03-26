@@ -6,8 +6,10 @@ namespace StrongGrid.IntegrationTests.Tests
 {
 	public class EmailValidation : IIntegrationTest
 	{
-		public async Task RunAsync(IClient client, TextWriter log, CancellationToken cancellationToken)
+		public async Task RunAsync(IBaseClient client, TextWriter log, CancellationToken cancellationToken)
 		{
+			if (cancellationToken.IsCancellationRequested) return;
+
 			await log.WriteLineAsync("\n***** EMAIL VALIDATION *****\n").ConfigureAwait(false);
 
 			// VALIDATE

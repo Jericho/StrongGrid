@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using StrongGrid.Models.EmailActivities;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
@@ -90,15 +90,6 @@ namespace StrongGrid.Models
 		/// </value>
 		[JsonProperty("api_key_id", NullValueHandling = NullValueHandling.Ignore)]
 		public string ApiKeyId { get; set; }
-
-		/// <summary>
-		/// Gets or sets the IP of the user who sent the message.
-		/// </summary>
-		/// <value>
-		/// The IP address.
-		/// </value>
-		[JsonProperty("originating_ip", NullValueHandling = NullValueHandling.Ignore)]
-		public string OriginatingIpAddress { get; set; }
 
 		/// <summary>
 		/// Gets or sets the IP used to send to the remote MTA.

@@ -20,6 +20,10 @@ namespace StrongGrid
 	/// </summary>
 	public class WebhookParser
 	{
+		// Split on commas that have an even number of double-quotes following them
+		private const string SPLIT_EMAIL_ADDRESSES = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
+		private static readonly Regex _splitEmailAddresses = new Regex(SPLIT_EMAIL_ADDRESSES, RegexOptions.Compiled);
+
 		#region CTOR
 
 #if NETSTANDARD
@@ -190,12 +194,9 @@ namespace StrongGrid
 
 		private static MailAddress[] ParseEmailAddresses(string rawEmailAddresses)
 		{
-			// Split on commas that have an even number of double-quotes following them
-			const string SPLIT_EMAIL_ADDRESSES = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
-
 			if (string.IsNullOrEmpty(rawEmailAddresses)) return Array.Empty<MailAddress>();
 
-			var rawEmails = Regex.Split(rawEmailAddresses, SPLIT_EMAIL_ADDRESSES);
+			var rawEmails = _splitEmailAddresses.Split(rawEmailAddresses);
 			var addresses = rawEmails
 				.Select(rawEmail => ParseEmailAddress(rawEmail))
 				.Where(address => address != null)

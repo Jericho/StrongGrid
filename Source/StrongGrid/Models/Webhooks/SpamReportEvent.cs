@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
+using StrongGrid.Utilities;
 
 namespace StrongGrid.Models.Webhooks
 {
@@ -9,12 +10,13 @@ namespace StrongGrid.Models.Webhooks
 	public class SpamReportEvent : EngagementEvent
 	{
 		/// <summary>
-		/// Gets or sets the asm group identifier.
+		/// Gets or sets the categories.
 		/// </summary>
 		/// <value>
-		/// The asm group identifier.
+		/// The categories.
 		/// </value>
-		[JsonProperty("asm_group_id", NullValueHandling = NullValueHandling.Ignore)]
-		public long AsmGroupId { get; set; }
+		[JsonProperty("category", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonConverter(typeof(CategoryConverter))]
+		public string[] Categories { get; set; }
 	}
 }

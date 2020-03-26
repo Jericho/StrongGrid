@@ -9,8 +9,10 @@ namespace StrongGrid.IntegrationTests.Tests
 {
 	public class WebhookStats : IIntegrationTest
 	{
-		public async Task RunAsync(IClient client, TextWriter log, CancellationToken cancellationToken)
+		public async Task RunAsync(IBaseClient client, TextWriter log, CancellationToken cancellationToken)
 		{
+			if (cancellationToken.IsCancellationRequested) return;
+
 			await log.WriteLineAsync("\n***** WEBHOOK STATS *****\n").ConfigureAwait(false);
 
 			var thisYear = DateTime.UtcNow.Year;

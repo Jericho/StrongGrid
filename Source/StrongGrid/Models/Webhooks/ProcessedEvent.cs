@@ -1,6 +1,4 @@
 using Newtonsoft.Json;
-using StrongGrid.Utilities;
-using System;
 
 namespace StrongGrid.Models.Webhooks
 {
@@ -11,38 +9,10 @@ namespace StrongGrid.Models.Webhooks
 	public class ProcessedEvent : DeliveryEvent
 	{
 		/// <summary>
-		/// Gets or sets the asm group identifier.
-		/// </summary>
-		/// <value>
-		/// The asm group identifier.
-		/// </value>
-		[JsonProperty("asm_group_id", NullValueHandling = NullValueHandling.Ignore)]
-		public long AsmGroupId { get; set; }
-
-		/// <summary>
-		/// Gets or sets the newsletter.
-		/// </summary>
-		/// <value>
-		/// The newsletter.
-		/// </value>
-		[JsonProperty("newsletter", NullValueHandling = NullValueHandling.Ignore)]
-		public Newsletter Newsletter { get; set; }
-
-		/// <summary>
-		/// Gets or sets the date the message was processed.
-		/// </summary>
-		/// <value>
-		/// The date the message was processed.
-		/// </value>
-		[JsonProperty("send_at", NullValueHandling = NullValueHandling.Ignore)]
-		[JsonConverter(typeof(EpochConverter))]
-		public DateTime ProcessedOn { get; set; }
-
-		/// <summary>
 		/// Gets or sets the IP Pool (if specified when the email was sent).
 		/// </summary>
 		/// <value>
-		/// The IP pool use when the email was sent.
+		/// The IP pool used when the email was sent.
 		/// </value>
 		[JsonProperty("pool", NullValueHandling = NullValueHandling.Ignore)]
 		public IpPool IpPool { get; set; }

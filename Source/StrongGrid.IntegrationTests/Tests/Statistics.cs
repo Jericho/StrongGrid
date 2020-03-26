@@ -9,8 +9,10 @@ namespace StrongGrid.IntegrationTests.Tests
 {
 	public class Statistics : IIntegrationTest
 	{
-		public async Task RunAsync(IClient client, TextWriter log, CancellationToken cancellationToken)
+		public async Task RunAsync(IBaseClient client, TextWriter log, CancellationToken cancellationToken)
 		{
+			if (cancellationToken.IsCancellationRequested) return;
+
 			await log.WriteLineAsync("\n***** STATISTICS *****\n").ConfigureAwait(false);
 
 			// There is a bug in the SendGrid API when grouping by week and start date is January 1st.

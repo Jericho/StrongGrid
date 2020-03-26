@@ -1,17 +1,21 @@
-﻿namespace StrongGrid.Models.Search
+using System;
+
+namespace StrongGrid.Models.Search
 {
 	/// <summary>
 	/// Filter the result of a search for the value of a field to be like a value.
 	/// </summary>
-	public class SearchCriteriaLike : SearchCriteria
+	/// <typeparam name="TEnum">The type containing an enum of fields that can used for searching/segmenting.</typeparam>
+	public class SearchCriteriaLike<TEnum> : SearchCriteria<TEnum>
+		where TEnum : Enum
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaLike"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteriaLike{TEnum}"/> class.
 		/// </summary>
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SearchCriteriaLike(FilterField filterField, object filterValue)
-			: base(filterField, SearchConditionOperator.Like, filterValue)
+		public SearchCriteriaLike(TEnum filterField, object filterValue)
+			: base(filterField, SearchComparisonOperator.Like, filterValue)
 		{
 		}
 

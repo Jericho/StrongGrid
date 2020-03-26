@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using StrongGrid.Utilities;
 
 namespace StrongGrid.Models.Webhooks
 {
 	/// <summary>
-	/// An event  related to the delivery of a message.
+	/// An event related to the delivery of a message.
 	/// </summary>
 	/// <seealso cref="StrongGrid.Models.Webhooks.Event" />
 	public class DeliveryEvent : Event
@@ -19,23 +19,25 @@ namespace StrongGrid.Models.Webhooks
 		public string SmtpId { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating whether or not TLS was used when sending the email.
+		/// Gets or sets the categories.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if TLS was used; otherwise, <c>false</c>.
+		/// The categories.
 		/// </value>
-		[JsonProperty("tls", NullValueHandling = NullValueHandling.Ignore)]
-		[JsonConverter(typeof(IntegerBooleanConverter))]
-		public bool Tls { get; set; }
+		[JsonProperty("category", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonConverter(typeof(CategoryConverter))]
+		public string[] Categories { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating whether there was a certificate error on the receiving side.
+		/// Gets or sets the ID of the unsubscribe group the recipient's email address is included in.
 		/// </summary>
+		/// <remarks>
+		/// ASM IDs correspond to the Id that is returned when you create an unsubscribe group.
+		/// </remarks>
 		/// <value>
-		/// <c>true</c> if there was a certificate error on the receiving side; otherwise, <c>false</c>.
+		/// The asm group identifier.
 		/// </value>
-		[JsonProperty("cert_err", NullValueHandling = NullValueHandling.Ignore)]
-		[JsonConverter(typeof(IntegerBooleanConverter))]
-		public bool CertificateValidationError { get; set; }
+		[JsonProperty("asm_group_id", NullValueHandling = NullValueHandling.Ignore)]
+		public long? AsmGroupId { get; set; }
 	}
 }
