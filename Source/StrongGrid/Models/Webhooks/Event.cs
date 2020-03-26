@@ -63,6 +63,23 @@ namespace StrongGrid.Models.Webhooks
 		public string InternalMessageId { get; set; }
 
 		/// <summary>
+		/// Gets the message identifier.
+		/// </summary>
+		/// <value>
+		/// The message identifier.
+		/// </value>
+		public string MessageId
+		{
+			get
+			{
+				if (InternalMessageId == null) return null;
+				var filterIndex = InternalMessageId.IndexOf(".filter", StringComparison.OrdinalIgnoreCase);
+				if (filterIndex <= 0) return InternalMessageId;
+				return InternalMessageId.Substring(0, filterIndex);
+			}
+		}
+
+		/// <summary>
 		/// Gets the unique arguments.
 		/// </summary>
 		/// <value>
