@@ -118,7 +118,7 @@ namespace StrongGrid.Utilities
 					webHookEvent = jsonObject.ToObject<BouncedEvent>(serializer);
 					break;
 				case EventType.Click:
-					webHookEvent = jsonObject.ToObject<ClickEvent>(serializer);
+					webHookEvent = jsonObject.ToObject<ClickedEvent>(serializer);
 					break;
 				case EventType.Deferred:
 					webHookEvent = jsonObject.ToObject<DeferredEvent>(serializer);
@@ -136,7 +136,7 @@ namespace StrongGrid.Utilities
 					webHookEvent = jsonObject.ToObject<GroupUnsubscribeEvent>(serializer);
 					break;
 				case EventType.Open:
-					webHookEvent = jsonObject.ToObject<OpenEvent>(serializer);
+					webHookEvent = jsonObject.ToObject<OpenedEvent>(serializer);
 					break;
 				case EventType.Processed:
 					webHookEvent = jsonObject.ToObject<ProcessedEvent>(serializer);

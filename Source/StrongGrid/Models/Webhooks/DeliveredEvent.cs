@@ -13,7 +13,7 @@ namespace StrongGrid.Models.Webhooks
 		/// Gets or sets the ip address that was used to send the email.
 		/// </summary>
 		/// <value>
-		/// The ip address.
+		/// The IP address.
 		/// </value>
 		[JsonProperty("ip", NullValueHandling = NullValueHandling.Ignore)]
 		public string IpAddress { get; set; }

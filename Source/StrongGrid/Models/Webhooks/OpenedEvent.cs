@@ -1,13 +1,14 @@
 using Newtonsoft.Json;
+using StrongGrid.Utilities;
 
 namespace StrongGrid.Models.Webhooks
 {
 	/// <summary>
-	/// Recipient resubscribes to specific group by updating preferences.
-	/// You need to enable Subscription Tracking for getting this type of event.
+	/// Recipient has opened the HTML message.
+	/// You need to enable Open Tracking for getting this type of event.
 	/// </summary>
 	/// <seealso cref="StrongGrid.Models.Webhooks.EngagementEvent" />
-	public class GroupResubscribeEvent : EngagementEvent
+	public class OpenedEvent : EngagementEvent
 	{
 		/// <summary>
 		/// Gets or sets the user agent.
@@ -19,13 +20,23 @@ namespace StrongGrid.Models.Webhooks
 		public string UserAgent { get; set; }
 
 		/// <summary>
-		/// Gets or sets the ip address that was used to send the email.
+		/// Gets or sets the ip address of the recipient who engaged with the email.
 		/// </summary>
 		/// <value>
 		/// The IP address.
 		/// </value>
 		[JsonProperty("ip", NullValueHandling = NullValueHandling.Ignore)]
 		public string IpAddress { get; set; }
+
+		/// <summary>
+		/// Gets or sets the categories.
+		/// </summary>
+		/// <value>
+		/// The categories.
+		/// </value>
+		[JsonProperty("category", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonConverter(typeof(CategoryConverter))]
+		public string[] Categories { get; set; }
 
 		/// <summary>
 		/// Gets or sets the ID of the unsubscribe group the recipient's email address is included in.
@@ -38,5 +49,14 @@ namespace StrongGrid.Models.Webhooks
 		/// </value>
 		[JsonProperty("asm_group_id", NullValueHandling = NullValueHandling.Ignore)]
 		public long AsmGroupId { get; set; }
+
+		/// <summary>
+		/// Gets or sets the content type.
+		/// </summary>
+		/// <value>
+		/// The content type.
+		/// </value>
+		[JsonProperty("sg_content_type", NullValueHandling = NullValueHandling.Ignore)]
+		public string ContentType { get; set; }
 	}
 }

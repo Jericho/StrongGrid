@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 namespace StrongGrid.Models.Webhooks
 {
 	/// <summary>
-	/// Recipientâ€™s email server temporarily rejected message.
+	/// Recipient’s email server temporarily rejected message.
 	/// </summary>
 	/// <seealso cref="StrongGrid.Models.Webhooks.DeliveryEvent" />
 	public class DeferredEvent : DeliveryEvent
@@ -35,6 +35,6 @@ namespace StrongGrid.Models.Webhooks
 		/// The number of attempts.
 		/// </value>
 		[JsonProperty("attempt", NullValueHandling = NullValueHandling.Ignore)]
-		public int Attempt { get; set; }
+		public int Attempts { get; set; }
 	}
 }
