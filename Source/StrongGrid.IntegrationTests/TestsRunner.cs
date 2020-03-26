@@ -36,8 +36,8 @@ namespace StrongGrid.IntegrationTests
 			// Do you want to proxy requests through Fiddler? Can be useful for debugging.
 			var useFiddler = true;
 
-			// Logging options.
-			var options = new StrongGridClientOptions()
+			// Change the default values in the legacy client.
+			var optionsToCorrectLegacyDefaultValues = new StrongGridClientOptions()
 			{
 				LogLevelFailedCalls = LogLevel.Error,
 				LogLevelSuccessfulCalls = LogLevel.Debug
@@ -48,8 +48,8 @@ namespace StrongGrid.IntegrationTests
 			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
 			var proxy = useFiddler ? new WebProxy("http://localhost:8888") : null;
 
-			var legacyClient = new LegacyClient(apiKey, proxy, options, _loggerFactory.CreateLogger<LegacyClient>());
-			var client = new Client(apiKey, proxy, options, _loggerFactory.CreateLogger<Client>());
+			var legacyClient = new LegacyClient(apiKey, proxy, optionsToCorrectLegacyDefaultValues, _loggerFactory.CreateLogger<LegacyClient>());
+			var client = new Client(apiKey, proxy, null, _loggerFactory.CreateLogger<Client>());
 
 			// Configure Console
 			var source = new CancellationTokenSource();
