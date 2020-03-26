@@ -1,8 +1,6 @@
-﻿using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: CLSCompliant(true)]
 [assembly: InternalsVisibleTo("StrongGrid.UnitTests")]
 [assembly: InternalsVisibleTo("StrongGrid.IntegrationTests")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
