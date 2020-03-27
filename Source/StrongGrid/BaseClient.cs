@@ -288,7 +288,7 @@ namespace StrongGrid
 		/// Initializes a new instance of the <see cref="BaseClient" /> class.
 		/// </summary>
 		/// <param name="apiKey">Your api key.</param>
-		/// <param name="handler">Allows you to inject your own HttpClient. This is useful, for example, to setup the HtppClient with a proxy.</param>
+		/// <param name="handler">Allows you to inject your own Http message handler.</param>
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
 		public BaseClient(string apiKey, HttpMessageHandler handler, StrongGridClientOptions options, ILogger logger = null)
