@@ -1,6 +1,7 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Models.Search;
+using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -130,7 +131,7 @@ namespace StrongGrid.Resources
 		{
 			var url = await GetCsvDownloadUrlAsync(downloadUUID, cancellationToken);
 
-			using (var client = new HttpClient())
+			using (var client = Utils.HttpClientFactory.CreateClient("StrongGrid-helper-httpclient"))
 			{
 				var responseStream = await client.GetStreamAsync(url).ConfigureAwait(false);
 				return responseStream;

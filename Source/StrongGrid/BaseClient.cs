@@ -24,7 +24,6 @@ namespace StrongGrid
 		private readonly bool _mustDisposeHttpClient;
 		private readonly StrongGridClientOptions _options;
 		private readonly ILogger _logger;
-		private readonly Utilities.HttpClientFactory _httpClientFactory = new Utilities.HttpClientFactory();
 
 		private HttpClient _httpClient;
 		private Pathoschild.Http.Client.IClient _fluentClient;
@@ -294,10 +293,10 @@ namespace StrongGrid
 		public BaseClient(string apiKey, HttpMessageHandler handler, StrongGridClientOptions options, ILogger logger = null)
 		{
 			var httpClientName = $"StrongGrid-{apiKey}";
-			if (handler != null) _httpClientFactory.AddHandler(httpClientName, handler);
+			if (handler != null) Utils.HttpClientFactory.AddHandler(httpClientName, handler);
 
 			_mustDisposeHttpClient = true;
-			_httpClient = _httpClientFactory.CreateClient(httpClientName);
+			_httpClient = Utils.HttpClientFactory.CreateClient(httpClientName);
 			_options = options;
 			_logger = logger ?? NullLogger.Instance;
 			_fluentClient = InitFluentClient(apiKey, _httpClient);

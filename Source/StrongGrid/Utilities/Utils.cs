@@ -13,6 +13,7 @@ namespace StrongGrid.Utilities
 		private static readonly byte[] CngBlobPrefix = { 0x45, 0x43, 0x53, 0x31, 0x20, 0, 0, 0 };
 
 		public static RecyclableMemoryStreamManager MemoryStreamManager { get; } = new RecyclableMemoryStreamManager();
+		public static HttpClientFactory HttpClientFactory { get; } = new HttpClientFactory();
 
 		/// <summary>
 		/// Converts a secp256r1/NIST P-256 public key.

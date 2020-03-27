@@ -431,7 +431,7 @@ namespace StrongGrid.Resources
 				request.Headers.Add(header.Key, header.Value);
 			}
 
-			using (var client = new HttpClient())
+			using (var client = Utils.HttpClientFactory.CreateClient("StrongGrid-helper-httpclient"))
 			{
 				var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
 				if (!response.IsSuccessStatusCode) throw new SendGridException($"File upload failed: {response.ReasonPhrase}", response, "Diagnostic log unavailable");
@@ -502,7 +502,7 @@ namespace StrongGrid.Resources
 			if (job.Status != JobStatus.Ready) throw new Exception("The job is not ready");
 
 			var streams = new Stream[job.FileUrls.Length];
-			using (var client = new HttpClient())
+			using (var client = Utils.HttpClientFactory.CreateClient("StrongGrid-helper-httpclient"))
 			{
 				for (int i = 0; i < job.FileUrls.Length; i++)
 				{
