@@ -11,7 +11,7 @@ namespace StrongGrid.Models.Search
 		/// The email address.
 		/// </summary>
 		[EnumMember(Value = "email")]
-		Contact,
+		EmailAddress,
 
 		/// <summary>
 		/// The email domains.
