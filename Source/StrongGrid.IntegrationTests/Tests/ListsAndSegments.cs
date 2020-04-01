@@ -55,7 +55,12 @@ namespace StrongGrid.IntegrationTests.Tests
 			await client.Lists.UpdateAsync(list.Id, "StrongGrid Integration Testing: new name", cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"List '{list.Id}' updated").ConfigureAwait(false);
 
-			// CREATE A SEGMENT
+			// CREATE 3 CONTACTS AND ADD THEM TO THE TO THE LIST
+			var contactId1 = await client.Contacts.UpsertAsync("dummy1@hotmail.com", "John", "Doe", listIds: new[] { list.Id }, cancellationToken: cancellationToken).ConfigureAwait(false);
+			var contactId2 = await client.Contacts.UpsertAsync("dummy2@hotmail.com", "John", "Smith", listIds: new[] { list.Id }, cancellationToken: cancellationToken).ConfigureAwait(false);
+			var contactId3 = await client.Contacts.UpsertAsync("dummy3@hotmail.com", "Bob", "Smith", listIds: new[] { list.Id }, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+			// CREATE A SEGMENT (one contact matches the criteria)
 			var firstNameCriteria = new SearchCriteriaEqual<ContactsFilterField>(ContactsFilterField.FirstName, "John");
 			var LastNameCriteria = new SearchCriteriaEqual<ContactsFilterField>(ContactsFilterField.LastName, "Doe");
 			var filterConditions = new[]
@@ -65,15 +70,14 @@ namespace StrongGrid.IntegrationTests.Tests
 			var segment = await client.Segments.CreateAsync("StrongGrid Integration Testing: First Name is John and last name is Doe", filterConditions, list.Id, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Segment '{segment.Name}' created. Id: {segment.Id}").ConfigureAwait(false);
 
-			// UPDATE THE SEGMENT
-			//var hotmailCondition = new SearchCondition { Field = "email", Operator = ConditionOperator.Contains, Value = "hotmail.com", LogicalOperator = LogicalOperator.None };
-			//segment = await client.Segments.UpdateAsync(segment.Id, "StrongGrid Integration Testing: Recipients @ Hotmail", null, new[] { hotmailCondition }, null, cancellationToken).ConfigureAwait(false);
-			//await log.WriteLineAsync($"Segment {segment.Id} updated. The new name is: '{segment.Name}'").ConfigureAwait(false);
+			// UPDATE THE SEGMENT (three contacts match the criteria) 
+			var hotmailCriteria = new SearchCriteriaLike<ContactsFilterField>(ContactsFilterField.EmailAddress, "%hotmail.com");
+			segment = await client.Segments.UpdateAsync(segment.Id, "StrongGrid Integration Testing: Recipients @ Hotmail", hotmailCriteria, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Segment {segment.Id} updated. The new name is: '{segment.Name}'").ConfigureAwait(false);
 
-			// CREATE 3 CONTACTS AND ADD THE TO THE LIST
-			var contactId1 = await client.Contacts.UpsertAsync("dummy1@hotmail.com", "Bob", "Dummy1", listIds: new[] { list.Id }, cancellationToken: cancellationToken).ConfigureAwait(false);
-			var contactId2 = await client.Contacts.UpsertAsync("dummy2@hotmail.com", "Bob", "Dummy2", listIds: new[] { list.Id }, cancellationToken: cancellationToken).ConfigureAwait(false);
-			var contactId3 = await client.Contacts.UpsertAsync("dummy3@hotmail.com", "Bob", "Dummy3", listIds: new[] { list.Id }, cancellationToken: cancellationToken).ConfigureAwait(false);
+			// GET THE SEGMENT
+			segment = await client.Segments.GetAsync(segment.Id, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Segment {segment.Id} retrieved.").ConfigureAwait(false);
 
 			// REMOVE THE CONTACTS FROM THE LIST (THEY WILL AUTOMATICALLY BE REMOVED FROM THE HOTMAIL SEGMENT)
 			await client.Lists.RemoveContactAsync(list.Id, contactId3, cancellationToken).ConfigureAwait(false);
