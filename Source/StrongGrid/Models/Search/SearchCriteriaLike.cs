@@ -5,6 +5,9 @@ namespace StrongGrid.Models.Search
 	/// <summary>
 	/// Filter the result of a search for the value of a field to be like a value.
 	/// </summary>
+	/// <remarks>
+	/// The percentage symbol, %, is the wildcard character.
+	/// </remarks>
 	/// <typeparam name="TEnum">The type containing an enum of fields that can used for searching/segmenting.</typeparam>
 	public class SearchCriteriaLike<TEnum> : SearchCriteria<TEnum>
 		where TEnum : Enum
