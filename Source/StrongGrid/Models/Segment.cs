@@ -82,5 +82,14 @@ namespace StrongGrid.Models
 		/// </value>
 		[JsonProperty("sample_updated_at", NullValueHandling = NullValueHandling.Ignore)]
 		public DateTime SampleRefreshedOn { get; set; }
+
+		/// <summary>
+		/// Gets or sets the sample contacts.
+		/// </summary>
+		/// <value>
+		/// An array of <see cref="Contact">Contacts</see> that match the segmenting criteria.
+		/// </value>
+		[JsonProperty("contacts_sample", NullValueHandling = NullValueHandling.Ignore)]
+		public Contact[] SampleContacts { get; set; }
 	}
 }
