@@ -70,5 +70,17 @@ namespace StrongGrid.Models
 		/// </value>
 		[JsonProperty("updated_at", NullValueHandling = NullValueHandling.Ignore)]
 		public DateTime UpdatedOn { get; set; }
+
+		/// <summary>
+		/// Gets or sets the date the sample data was updated on.
+		/// </summary>
+		/// <remarks>
+		/// There is delay between when you create or update a segment and when the sample data is refreshed.
+		/// </remarks>
+		/// <value>
+		/// The date the sample data was most recently updated.
+		/// </value>
+		[JsonProperty("sample_updated_at", NullValueHandling = NullValueHandling.Ignore)]
+		public DateTime SampleRefreshedOn { get; set; }
 	}
 }
