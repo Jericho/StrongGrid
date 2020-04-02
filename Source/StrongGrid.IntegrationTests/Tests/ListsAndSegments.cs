@@ -26,7 +26,7 @@ namespace StrongGrid.IntegrationTests.Tests
 
 			// GET SEGMENTS
 			var segments = await client.Segments.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"All segements retrieved. There are {segments.Length} segments").ConfigureAwait(false);
+			await log.WriteLineAsync($"All segments retrieved. There are {segments.Length} segments").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
 			var cleanUpTasks = paginatedLists.Records

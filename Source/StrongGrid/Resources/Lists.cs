@@ -111,7 +111,7 @@ namespace StrongGrid.Resources
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{listId}")
-				.WithArgument("contacts_sample", "true")
+				.WithArgument("contact_sample", "true")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<List>();
 		}

@@ -50,7 +50,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The recipient count.
 		/// </value>
-		[JsonProperty("countacts_count", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("contacts_count", NullValueHandling = NullValueHandling.Ignore)]
 		public long ContactsCount { get; set; }
 
 		/// <summary>

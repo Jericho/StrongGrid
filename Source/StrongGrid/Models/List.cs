@@ -40,7 +40,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// An array of <see cref="Contact">Contacts</see>.
 		/// </value>
-		[JsonProperty("contacts_sample", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("contact_sample", NullValueHandling = NullValueHandling.Ignore)]
 		public Contact[] SampleContacts { get; set; }
 	}
 }
