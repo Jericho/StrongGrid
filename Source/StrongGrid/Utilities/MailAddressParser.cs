@@ -27,11 +27,10 @@ namespace StrongGrid.Utilities
 		{
 			if (string.IsNullOrEmpty(rawEmailAddress)) return null;
 
-			var pieces = rawEmailAddress.Split(new[] { '<', '>' }, StringSplitOptions.RemoveEmptyEntries);
-			if (pieces.Length == 0) return null;
-			var email = pieces.Length == 2 ? pieces[1].Trim() : pieces[0].Trim();
-			var name = pieces.Length == 2 ? pieces[0].Replace("\"", string.Empty).Trim() : string.Empty;
-			return new MailAddress(email, name);
+			// Delegate parsing to .net MailAddress
+			var parsedAddress = new System.Net.Mail.MailAddress(rawEmailAddress);
+
+			return new MailAddress(parsedAddress.Address, parsedAddress.DisplayName);
 		}
 	}
 }
