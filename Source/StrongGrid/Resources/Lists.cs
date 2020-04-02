@@ -1,7 +1,6 @@
 using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
-using StrongGrid.Utilities;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -112,6 +111,7 @@ namespace StrongGrid.Resources
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{listId}")
+				.WithArgument("contacts_sample", "true")
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<List>();
 		}
