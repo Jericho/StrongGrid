@@ -1,7 +1,6 @@
 using HttpMultipartParser;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using StrongGrid.Models;
 using StrongGrid.Models.Webhooks;
 using StrongGrid.Utilities;
 using System;
@@ -9,7 +8,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace StrongGrid
@@ -20,10 +18,6 @@ namespace StrongGrid
 	/// </summary>
 	public class WebhookParser
 	{
-		// Split on commas that have an even number of double-quotes following them
-		private const string SPLIT_EMAIL_ADDRESSES = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
-		private static readonly Regex _splitEmailAddresses = new Regex(SPLIT_EMAIL_ADDRESSES, RegexOptions.Compiled);
-
 		#region CTOR
 
 #if NETSTANDARD
@@ -192,29 +186,6 @@ namespace StrongGrid
 
 		#region PRIVATE METHODS
 
-		private static MailAddress[] ParseEmailAddresses(string rawEmailAddresses)
-		{
-			if (string.IsNullOrEmpty(rawEmailAddresses)) return Array.Empty<MailAddress>();
-
-			var rawEmails = _splitEmailAddresses.Split(rawEmailAddresses);
-			var addresses = rawEmails
-				.Select(rawEmail => ParseEmailAddress(rawEmail))
-				.Where(address => address != null)
-				.ToArray();
-			return addresses;
-		}
-
-		private static MailAddress ParseEmailAddress(string rawEmailAddress)
-		{
-			if (string.IsNullOrEmpty(rawEmailAddress)) return null;
-
-			var pieces = rawEmailAddress.Split(new[] { '<', '>' }, StringSplitOptions.RemoveEmptyEntries);
-			if (pieces.Length == 0) return null;
-			var email = pieces.Length == 2 ? pieces[1].Trim() : pieces[0].Trim();
-			var name = pieces.Length == 2 ? pieces[0].Replace("\"", string.Empty).Trim() : string.Empty;
-			return new MailAddress(email, name);
-		}
-
 		private static Encoding GetEncoding(string parameterName, IEnumerable<KeyValuePair<string, Encoding>> charsets)
 		{
 			var encoding = charsets.Where(c => c.Key == parameterName);
@@ -281,15 +252,15 @@ namespace StrongGrid
 
 			// Convert the 'from' from a string into an email address
 			var rawFrom = GetEncodedValue("from", charsets, encodedParsers, string.Empty);
-			var from = ParseEmailAddress(rawFrom);
+			var from = MailAddressParser.ParseEmailAddress(rawFrom);
 
 			// Convert the 'to' from a string into an array of email addresses
 			var rawTo = GetEncodedValue("to", charsets, encodedParsers, string.Empty);
-			var to = ParseEmailAddresses(rawTo);
+			var to = MailAddressParser.ParseEmailAddresses(rawTo);
 
 			// Convert the 'cc' from a string into an array of email addresses
 			var rawCc = GetEncodedValue("cc", charsets, encodedParsers, string.Empty);
-			var cc = ParseEmailAddresses(rawCc);
+			var cc = MailAddressParser.ParseEmailAddresses(rawCc);
 
 			// Arrange the InboundEmail
 			var inboundEmail = new InboundEmail
