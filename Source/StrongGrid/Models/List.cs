@@ -33,5 +33,14 @@ namespace StrongGrid.Models
 		/// </value>
 		[JsonProperty("contact_count", NullValueHandling = NullValueHandling.Ignore)]
 		public long ContactCount { get; set; }
+
+		/// <summary>
+		/// Gets or sets the sample contacts.
+		/// </summary>
+		/// <value>
+		/// An array of <see cref="Contact">Contacts</see>.
+		/// </value>
+		[JsonProperty("contact_sample", NullValueHandling = NullValueHandling.Ignore)]
+		public Contact[] SampleContacts { get; set; }
 	}
 }

@@ -229,6 +229,9 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Searches for contacts matching the specified conditions.
 		/// </summary>
+		/// <remarks>
+		/// SendGrid returns a maximum of 50 contacts.
+		/// </remarks>
 		/// <param name="filterConditions">Filtering conditions.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>

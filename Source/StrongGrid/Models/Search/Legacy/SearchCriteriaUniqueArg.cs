@@ -43,7 +43,7 @@ namespace StrongGrid.Models.Search.Legacy
 		}
 
 		/// <summary>
-		/// Converts the filter value into a string as expected by the SendGrid Email Activities API.
+		/// Converts the filter value into a string as expected by the SendGrid segmenting API.
 		/// Can be overridden in subclasses if the value needs special formatting.
 		/// </summary>
 		/// <returns>The string representation of the value.</returns>
@@ -53,7 +53,7 @@ namespace StrongGrid.Models.Search.Legacy
 		}
 
 		/// <summary>
-		/// Converts the filter operator into a string as expected by the SendGrid Email Activities API.
+		/// Converts the filter operator into a string as expected by the SendGrid segmenting API.
 		/// Can be overridden in subclasses if the operator needs special formatting.
 		/// </summary>
 		/// <returns>The string representation of the operator.</returns>

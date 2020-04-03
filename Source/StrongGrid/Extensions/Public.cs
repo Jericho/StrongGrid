@@ -1,6 +1,7 @@
 using StrongGrid.Models;
 using StrongGrid.Models.Search;
 using StrongGrid.Resources;
+using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,6 +77,41 @@ namespace StrongGrid
 			var filters = new List<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>>();
 			if (filterConditions != null && filterConditions.Any()) filters.Add(new KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>(SearchLogicalOperator.And, filterConditions));
 			return contacts.SearchAsync(filters, cancellationToken);
+		}
+
+		/// <summary>
+		/// Update a segment.
+		/// </summary>
+		/// <param name="segments">The segments resource.</param>
+		/// <param name="segmentId">The segment identifier.</param>
+		/// <param name="name">The name.</param>
+		/// <param name="criteria">The criteria.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="Segment" />.
+		/// </returns>
+		public static Task<Segment> UpdateAsync(this ISegments segments, string segmentId, Parameter<string> name = default, Parameter<SearchCriteria<ContactsFilterField>> criteria = default, CancellationToken cancellationToken = default)
+		{
+			var filterCriteria = criteria.HasValue && criteria.Value != null ? new[] { criteria.Value } : Array.Empty<SearchCriteria<ContactsFilterField>>();
+			return segments.UpdateAsync(segmentId, name, filterCriteria, cancellationToken);
+		}
+
+		/// <summary>
+		/// Update a segment.
+		/// </summary>
+		/// <param name="segments">The segments resource.</param>
+		/// <param name="segmentId">The segment identifier.</param>
+		/// <param name="name">The name.</param>
+		/// <param name="filterConditions">The enumeration of criteria.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="Segment" />.
+		/// </returns>
+		public static Task<Segment> UpdateAsync(this ISegments segments, string segmentId, Parameter<string> name = default, Parameter<IEnumerable<SearchCriteria<ContactsFilterField>>> filterConditions = default, CancellationToken cancellationToken = default)
+		{
+			var filters = new List<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>>();
+			if (filterConditions.HasValue && filterConditions.Value != null && filterConditions.Value.Any()) filters.Add(new KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>(SearchLogicalOperator.And, filterConditions.Value));
+			return segments.UpdateAsync(segmentId, name, filters, cancellationToken);
 		}
 	}
 }

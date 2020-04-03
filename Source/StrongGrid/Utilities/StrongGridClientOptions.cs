@@ -1,4 +1,4 @@
-using StrongGrid.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace StrongGrid.Utilities
 {

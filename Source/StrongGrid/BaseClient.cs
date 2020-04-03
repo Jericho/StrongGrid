@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Pathoschild.Http.Client;
 using Pathoschild.Http.Client.Extensibility;
 using StrongGrid.Resources;
@@ -21,6 +23,7 @@ namespace StrongGrid
 
 		private readonly bool _mustDisposeHttpClient;
 		private readonly StrongGridClientOptions _options;
+		private readonly ILogger _logger;
 
 		private HttpClient _httpClient;
 		private Pathoschild.Http.Client.IClient _fluentClient;
@@ -271,11 +274,13 @@ namespace StrongGrid
 		/// <param name="httpClient">Allows you to inject your own HttpClient. This is useful, for example, to setup the HtppClient with a proxy.</param>
 		/// <param name="disposeClient">Indicates if the http client should be dispose when this instance of BaseClient is disposed.</param>
 		/// <param name="options">Options for the SendGrid client.</param>
-		public BaseClient(string apiKey, string username, string password, HttpClient httpClient, bool disposeClient, StrongGridClientOptions options)
+		/// <param name="logger">Logger.</param>
+		public BaseClient(string apiKey, string username, string password, HttpClient httpClient, bool disposeClient, StrongGridClientOptions options, ILogger logger = null)
 		{
 			_mustDisposeHttpClient = disposeClient;
 			_httpClient = httpClient;
 			_options = options ?? GetDefaultOptions();
+			_logger = logger ?? NullLogger.Instance;
 
 			_fluentClient = new FluentClient(new Uri(SENDGRID_V3_BASE_URI), httpClient)
 				.SetUserAgent($"StrongGrid/{Version} (+https://github.com/Jericho/StrongGrid)")
@@ -285,7 +290,7 @@ namespace StrongGrid
 
 			// Order is important: DiagnosticHandler must be first.
 			// Also, the list of filters must be kept in sync with the filters in Utils.GetFluentClient in the unit testing project.
-			_fluentClient.Filters.Add(new DiagnosticHandler(_options.LogLevelSuccessfulCalls, _options.LogLevelFailedCalls));
+			_fluentClient.Filters.Add(new DiagnosticHandler(_options.LogLevelSuccessfulCalls, _options.LogLevelFailedCalls, _logger));
 			_fluentClient.Filters.Add(new SendGridErrorHandler());
 
 			if (!string.IsNullOrEmpty(apiKey)) _fluentClient.SetBearerAuthentication(apiKey);

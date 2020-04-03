@@ -1,7 +1,7 @@
 using Logzio.DotNet.NLog;
 using Microsoft.Extensions.DependencyInjection;
-using NLog;
 using NLog.Config;
+using NLog.Extensions.Logging;
 using NLog.Targets;
 using System;
 using System.Threading.Tasks;
@@ -14,7 +14,6 @@ namespace StrongGrid.IntegrationTests
 		{
 			var services = new ServiceCollection();
 			ConfigureServices(services);
-			ConfigureNLog();
 			using var serviceProvider = services.BuildServiceProvider();
 			var app = serviceProvider.GetService<TestsRunner>();
 			return await app.RunAsync().ConfigureAwait(false);
@@ -23,10 +22,11 @@ namespace StrongGrid.IntegrationTests
 		private static void ConfigureServices(ServiceCollection services)
 		{
 			services
+				.AddLogging(loggingBuilder => loggingBuilder.AddNLog(GetNLogConfiguration()))
 				.AddTransient<TestsRunner>();
 		}
 
-		private static void ConfigureNLog()
+		private static LoggingConfiguration GetNLogConfiguration()
 		{
 			// Configure logging
 			var nLogConfig = new LoggingConfiguration();
@@ -48,7 +48,7 @@ namespace StrongGrid.IntegrationTests
 			nLogConfig.AddTarget("ColoredConsole", consoleTarget);
 			nLogConfig.AddRule(NLog.LogLevel.Warn, NLog.LogLevel.Fatal, "ColoredConsole", "*");
 
-			LogManager.Configuration = nLogConfig;
+			return nLogConfig;
 		}
 	}
 }

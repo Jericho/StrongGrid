@@ -50,7 +50,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The recipient count.
 		/// </value>
-		[JsonProperty("countacts_count", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("contacts_count", NullValueHandling = NullValueHandling.Ignore)]
 		public long ContactsCount { get; set; }
 
 		/// <summary>
@@ -70,5 +70,26 @@ namespace StrongGrid.Models
 		/// </value>
 		[JsonProperty("updated_at", NullValueHandling = NullValueHandling.Ignore)]
 		public DateTime UpdatedOn { get; set; }
+
+		/// <summary>
+		/// Gets or sets the date the sample data was updated on.
+		/// </summary>
+		/// <remarks>
+		/// There is delay between when you create or update a segment and when the sample data is refreshed.
+		/// </remarks>
+		/// <value>
+		/// The date the sample data was most recently updated.
+		/// </value>
+		[JsonProperty("sample_updated_at", NullValueHandling = NullValueHandling.Ignore)]
+		public DateTime SampleRefreshedOn { get; set; }
+
+		/// <summary>
+		/// Gets or sets the sample contacts.
+		/// </summary>
+		/// <value>
+		/// An array of <see cref="Contact">Contacts</see> that match the segmenting criteria.
+		/// </value>
+		[JsonProperty("contacts_sample", NullValueHandling = NullValueHandling.Ignore)]
+		public Contact[] SampleContacts { get; set; }
 	}
 }
