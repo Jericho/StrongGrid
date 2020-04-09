@@ -181,7 +181,7 @@ namespace StrongGrid.UnitTests.Resources
 			var mail = new Mail(null);
 
 			// Act
-			var result = await Should.ThrowAsync<Exception>(async () => await mail.SendAsync(personalizations, subject, contents, from).ConfigureAwait(false));
+			var result = await Should.ThrowAsync<Exception>(mail.SendAsync(personalizations, subject, contents, from)).ConfigureAwait(false);
 
 			// Assert
 		}
@@ -202,6 +202,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
+
 			result.Message.StartsWith("SendGrid does not support Basic authentication");
 			result.DiagnosticLog.StartsWith("The request was not dispatched");
 		}
