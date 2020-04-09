@@ -79,7 +79,7 @@ namespace StrongGrid
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
 		public LegacyClient(string apiKey, StrongGridClientOptions options = null, ILogger logger = null)
-			: base(apiKey, null, null, null, false, options, logger)
+			: base(apiKey, default, null, null, false, options, logger)
 		{
 			Init();
 		}
@@ -92,7 +92,7 @@ namespace StrongGrid
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
 		public LegacyClient(string apiKey, IWebProxy proxy, StrongGridClientOptions options = null, ILogger logger = null)
-			: base(apiKey, null, null, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }), true, options, logger)
+			: base(apiKey, default, null, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }), true, options, logger)
 		{
 			Init();
 		}
@@ -105,7 +105,7 @@ namespace StrongGrid
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
 		public LegacyClient(string apiKey, HttpMessageHandler handler, StrongGridClientOptions options = null, ILogger logger = null)
-			: base(apiKey, null, null, new HttpClient(handler), true, options, logger)
+			: base(apiKey, default, null, new HttpClient(handler), true, options, logger)
 		{
 			Init();
 		}
@@ -118,7 +118,7 @@ namespace StrongGrid
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
 		public LegacyClient(string apiKey, HttpClient httpClient, StrongGridClientOptions options = null, ILogger logger = null)
-			: base(apiKey, null, null, httpClient, false, options, logger)
+			: base(apiKey, default, null, httpClient, false, options, logger)
 		{
 			Init();
 		}
@@ -131,7 +131,7 @@ namespace StrongGrid
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
 		public LegacyClient(string username, string password, StrongGridClientOptions options = null, ILogger logger = null)
-			: base(null, username, password, null, false, options, logger)
+			: base(default, username, password, null, false, options, logger)
 		{
 			Init();
 		}
@@ -145,7 +145,7 @@ namespace StrongGrid
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
 		public LegacyClient(string username, string password, IWebProxy proxy, StrongGridClientOptions options = null, ILogger logger = null)
-			: base(null, username, password, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }), true, options, logger)
+			: base(default, username, password, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }), true, options, logger)
 		{
 			Init();
 		}
@@ -159,7 +159,7 @@ namespace StrongGrid
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
 		public LegacyClient(string username, string password, HttpMessageHandler handler, StrongGridClientOptions options = null, ILogger logger = null)
-			: base(null, username, password, new HttpClient(handler), true, options, logger)
+			: base(default, username, password, new HttpClient(handler), true, options, logger)
 		{
 			Init();
 		}
@@ -173,7 +173,7 @@ namespace StrongGrid
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
 		public LegacyClient(string username, string password, HttpClient httpClient, StrongGridClientOptions options = null, ILogger logger = null)
-			: base(null, username, password, httpClient, false, options, logger)
+			: base(default, username, password, httpClient, false, options, logger)
 		{
 			Init();
 		}
