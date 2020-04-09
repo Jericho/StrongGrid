@@ -1,7 +1,9 @@
+using Pathoschild.Http.Client;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Resources;
+using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -182,6 +184,26 @@ namespace StrongGrid.UnitTests.Resources
 			var result = await Should.ThrowAsync<Exception>(async () => await mail.SendAsync(personalizations, subject, contents, from).ConfigureAwait(false));
 
 			// Assert
+		}
+
+		[Fact]
+		// We throw a meaningful exception since 0.68.0
+		public async Task MeaningfulErrorWhenSendingWithBasicAuthenticationAsync()
+		{
+			// Arrange
+			var mockHttp = new MockHttpMessageHandler();
+			var client = Utils.GetFluentClient(mockHttp)
+				.SetBasicAuthentication("myUsername", "myPassword");
+			var mail = new Mail(client);
+
+			// Act
+			var result = await Should.ThrowAsync<SendGridException>(mail.SendToSingleRecipientAsync(null, null, null, null, null)).ConfigureAwait(false);
+
+			// Assert
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
+			result.Message.StartsWith("SendGrid does not support Basic authentication");
+			result.DiagnosticLog.StartsWith("The request was not dispatched");
 		}
 	}
 }
