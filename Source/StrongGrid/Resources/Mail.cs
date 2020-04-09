@@ -669,7 +669,7 @@ namespace StrongGrid.Resources
 			MailPriority priority = MailPriority.Normal,
 			CancellationToken cancellationToken = default)
 		{
-			if (_client.BaseClient.DefaultRequestHeaders.Authorization.Scheme.Equals("Basic", StringComparison.OrdinalIgnoreCase))
+			if (_client.BaseClient.DefaultRequestHeaders.Authorization?.Scheme?.Equals("Basic", StringComparison.OrdinalIgnoreCase) ?? false)
 			{
 				const string errorMessage = "SendGrid does not support Basic authentication when sending transactional emails.";
 				const string diagnosticLog = "This request was not dispatched to SendGrid because the exception returned by their API in this scenario is not clear: 'Permission denied, wrong credentials'.";
