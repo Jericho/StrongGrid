@@ -275,7 +275,7 @@ namespace StrongGrid
 		/// <param name="disposeClient">Indicates if the http client should be dispose when this instance of BaseClient is disposed.</param>
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
-		public BaseClient(Parameter<string> apiKey, Parameter<string> username, string password, HttpClient httpClient, bool disposeClient, StrongGridClientOptions options, ILogger logger = null)
+		public BaseClient(Parameter<string> apiKey, Parameter<string> username, Parameter<string> password, HttpClient httpClient, bool disposeClient, StrongGridClientOptions options, ILogger logger = null)
 		{
 			_mustDisposeHttpClient = disposeClient;
 			_httpClient = httpClient;
