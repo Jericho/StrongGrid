@@ -80,8 +80,8 @@ namespace StrongGrid.Models
 		[JsonIgnore]
 		public string[] Lists
 		{
-			get { return Filter.Lists; }
-			set { Filter.Lists = value; }
+			get { return SendTo.Lists; }
+			set { SendTo.Lists = value; }
 		}
 
 		/// <summary>
@@ -93,8 +93,8 @@ namespace StrongGrid.Models
 		[JsonIgnore]
 		public string[] Segments
 		{
-			get { return Filter.Segments; }
-			set { Filter.Segments = value; }
+			get { return SendTo.Segments; }
+			set { SendTo.Segments = value; }
 		}
 
 		/// <summary>
@@ -142,7 +142,10 @@ namespace StrongGrid.Models
 		[JsonProperty("ip_pool", NullValueHandling = NullValueHandling.Ignore)]
 		public string IpPool { get; set; }
 
-		[JsonProperty("filter", NullValueHandling = NullValueHandling.Ignore)]
-		private SingleSendFilter Filter { get; set; }
+		[JsonProperty("email_config", NullValueHandling = NullValueHandling.Ignore)]
+		private SingleSendEmailConfig EmailConfig { get; set; }
+
+		[JsonProperty("send_to", NullValueHandling = NullValueHandling.Ignore)]
+		private SingleSendSendTo SendTo { get; set; }
 	}
 }
