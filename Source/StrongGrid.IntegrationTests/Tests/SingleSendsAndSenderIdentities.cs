@@ -80,7 +80,9 @@ namespace StrongGrid.IntegrationTests.Tests
 				await log.WriteLineAsync("Unsubscribe group created").ConfigureAwait(false);
 			}
 
-			var singleSend = await client.SingleSends.CreateAsync("StrongGrid Integration Testing: new single send", sender.Id, default, default, unsubscribeGroup.Id, new[] { list.Id }, default, default, default, cancellationToken).ConfigureAwait(false);
+			var subject = "This is a test";
+			var htmlContent = "<html><body><b>This is a test</b></body></html>";
+			var singleSend = await client.SingleSends.CreateAsync("StrongGrid Integration Testing: new single send", sender.Id, subject, htmlContent, default, default, EditorType.Code, default, default, unsubscribeGroup.Id, new[] { list.Id }, default, default, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Single Send '{singleSend.Name}' created. Id: {singleSend.Id}").ConfigureAwait(false);
 
 			singleSend = await client.SingleSends.UpdateAsync(singleSend.Id, categories: new[] { "category1", "category2" }, cancellationToken: cancellationToken).ConfigureAwait(false);
