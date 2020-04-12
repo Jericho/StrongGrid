@@ -19,7 +19,7 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class SingleSends : ISingleSends
 	{
-		private const string _endpoint = "marketing/campaigns";
+		private const string _endpoint = "marketing/singlesends";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
@@ -36,12 +36,16 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <param name="senderId">The sender identifier.</param>
+		/// <param name="subject">The subject.</param>
+		/// <param name="htmlContent">The HTML content.</param>
+		/// <param name="textContent">The plain text content.</param>
+		/// <param name="designId">The design identifier.</param>
+		/// <param name="editor">The type of editor.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customUnsubscribeUrl">The custom unsubscribe URL.</param>
 		/// <param name="suppressionGroupId">The suppression group identifier.</param>
 		/// <param name="listIds">The list ids.</param>
 		/// <param name="segmentIds">The segment ids.</param>
-		/// <param name="templateId">The template id.</param>
 		/// <param name="ipPool">The ip pool.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
@@ -50,16 +54,20 @@ namespace StrongGrid.Resources
 		public Task<SingleSend> CreateAsync(
 			string name,
 			long senderId,
+			Parameter<string> subject = default,
+			Parameter<string> htmlContent = default,
+			Parameter<string> textContent = default,
+			Parameter<string> designId = default,
+			Parameter<EditorType> editor = default,
 			Parameter<IEnumerable<string>> categories = default,
 			Parameter<string> customUnsubscribeUrl = default,
 			Parameter<long?> suppressionGroupId = default,
 			Parameter<IEnumerable<string>> listIds = default,
 			Parameter<IEnumerable<string>> segmentIds = default,
-			Parameter<string> templateId = default,
 			Parameter<string> ipPool = default,
 			CancellationToken cancellationToken = default)
 		{
-			var data = CreateJObject(name, senderId, SingleSendStatus.Draft, categories, customUnsubscribeUrl, suppressionGroupId, listIds, segmentIds, default, templateId, ipPool);
+			var data = CreateJObject(name, senderId, categories, customUnsubscribeUrl, suppressionGroupId, listIds, segmentIds, default, ipPool, subject, htmlContent, textContent, string.IsNullOrEmpty(textContent), designId, editor);
 			return _client
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
@@ -73,12 +81,16 @@ namespace StrongGrid.Resources
 		/// <param name="singleSendId">The id of the single send.</param>
 		/// <param name="name">The name.</param>
 		/// <param name="senderId">The sender identifier.</param>
+		/// <param name="subject">The subject.</param>
+		/// <param name="htmlContent">The HTML content.</param>
+		/// <param name="textContent">The plain text content.</param>
+		/// <param name="designId">The design identifier.</param>
+		/// <param name="editor">The type of editor.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customUnsubscribeUrl">The custom unsubscribe URL.</param>
 		/// <param name="suppressionGroupId">The suppression group identifier.</param>
 		/// <param name="listIds">The list ids.</param>
 		/// <param name="segmentIds">The segment ids.</param>
-		/// <param name="templateId">The template id.</param>
 		/// <param name="ipPool">The ip pool.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
@@ -88,16 +100,20 @@ namespace StrongGrid.Resources
 			string singleSendId,
 			Parameter<string> name = default,
 			Parameter<long> senderId = default,
+			Parameter<string> subject = default,
+			Parameter<string> htmlContent = default,
+			Parameter<string> textContent = default,
+			Parameter<string> designId = default,
+			Parameter<EditorType> editor = default,
 			Parameter<IEnumerable<string>> categories = default,
 			Parameter<string> customUnsubscribeUrl = default,
 			Parameter<long?> suppressionGroupId = default,
 			Parameter<IEnumerable<string>> listIds = default,
 			Parameter<IEnumerable<string>> segmentIds = default,
-			Parameter<string> templateId = default,
 			Parameter<string> ipPool = default,
 			CancellationToken cancellationToken = default)
 		{
-			var data = CreateJObject(name, senderId, default, categories, customUnsubscribeUrl, suppressionGroupId, listIds, segmentIds, default, templateId, ipPool);
+			var data = CreateJObject(name, senderId, categories, customUnsubscribeUrl, suppressionGroupId, listIds, segmentIds, default, ipPool, subject, htmlContent, textContent, string.IsNullOrEmpty(textContent), designId, editor);
 			return _client
 				.PatchAsync($"{_endpoint}/{singleSendId}")
 				.WithJsonBody(data)
@@ -234,27 +250,31 @@ namespace StrongGrid.Resources
 				.AsMessage();
 		}
 
-		private static JObject CreateJObject(string name, long senderId, Parameter<SingleSendStatus> status, Parameter<IEnumerable<string>> categories, Parameter<string> customUnsubscribeUrl, Parameter<long?> suppressionGroupId, Parameter<IEnumerable<string>> listIds, Parameter<IEnumerable<string>> segmentIds, Parameter<DateTime?> sendOn, Parameter<string> templateId, Parameter<string> ipPool)
+		private static JObject CreateJObject(string name, long senderId, Parameter<IEnumerable<string>> categories, Parameter<string> customUnsubscribeUrl, Parameter<long?> suppressionGroupId, Parameter<IEnumerable<string>> listIds, Parameter<IEnumerable<string>> segmentIds, Parameter<DateTime?> sendOn, Parameter<string> ipPool, Parameter<string> subject, Parameter<string> htmlContent, Parameter<string> textContent, Parameter<bool> generateTextContent, Parameter<string> designId, Parameter<EditorType> editor)
 		{
 			var result = new JObject();
 			result.AddPropertyIfValue("name", name);
 			result.AddPropertyIfValue("categories", categories);
-			result.AddPropertyIfValue("sender_id", senderId);
-			result.AddPropertyIfEnumValue("status", status);
-			result.AddPropertyIfValue("custom_unsubscribe_url", customUnsubscribeUrl);
-			result.AddPropertyIfValue("suppression_group_id", suppressionGroupId);
 			result.AddPropertyIfValue("send_at", sendOn);
-			result.AddPropertyIfValue("template_id", templateId);
-			result.AddPropertyIfValue("ip_pool", ipPool);
+			result.AddPropertyIfValue("email_config/sender_id", senderId);
+			result.AddPropertyIfValue("email_config/custom_unsubscribe_url", customUnsubscribeUrl);
+			result.AddPropertyIfValue("email_config/suppression_group_id", suppressionGroupId);
+			result.AddPropertyIfValue("email_config/ip_pool", ipPool);
+			result.AddPropertyIfValue("email_config/subject", subject);
+			result.AddPropertyIfValue("email_config/html_content", htmlContent);
+			result.AddPropertyIfValue("email_config/plain_content", textContent);
+			result.AddPropertyIfValue("email_config/generate_plain_content", generateTextContent);
+			result.AddPropertyIfValue("email_config/design_id", designId);
+			result.AddPropertyIfEnumValue("email_config/editor", editor);
 
 			if (listIds.HasValue && listIds.Value != null && listIds.Value.Any())
 			{
-				result.AddPropertyIfValue("filter/list_ids", listIds);
+				result.AddPropertyIfValue("send_to/list_ids", listIds);
 			}
 
 			if (segmentIds.HasValue && segmentIds.Value != null && segmentIds.Value.Any())
 			{
-				result.AddPropertyIfValue("filter/segment_ids", segmentIds);
+				result.AddPropertyIfValue("send_to/segment_ids", segmentIds);
 			}
 
 			return result;
