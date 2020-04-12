@@ -40,7 +40,12 @@ namespace StrongGrid.IntegrationTests.Tests
 			var senderIdentities = await client.SenderIdentities.GetAllAsync(cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All sender identities retrieved. There are {senderIdentities.Length} identities").ConfigureAwait(false);
 
-			var sender = senderIdentities.FirstOrDefault(s => s.NickName == "Integration Testing identity");
+			var sender = senderIdentities.FirstOrDefault(s => s.Verification.IsCompleted);
+			if (sender == null)
+			{
+				sender = senderIdentities.FirstOrDefault(s => s.NickName == "Integration Testing identity");
+			}
+
 			if (sender == null)
 			{
 				sender = await client.SenderIdentities.CreateAsync("Integration Testing identity", new MailAddress(YOUR_EMAIL, "John Doe"), new MailAddress(YOUR_EMAIL, "John Doe"), "123 Main Street", null, "Small Town", "ZZ", "12345", "USA", cancellationToken).ConfigureAwait(false);
@@ -81,8 +86,8 @@ namespace StrongGrid.IntegrationTests.Tests
 			await client.SingleSends.UpdateAsync(singleSend.Id, categories: new[] { "category1", "category2" }, cancellationToken: cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Single Send '{singleSend.Id}' updated").ConfigureAwait(false);
 
-			singleSends = await client.SingleSends.GetAllAsync(100, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"All single sends retrieved. There are {singleSends.TotalRecords} single sends").ConfigureAwait(false);
+			singleSend = await client.SingleSends.GetAsync(singleSend.Id, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Single Send '{singleSend.Id}' retrieved").ConfigureAwait(false);
 
 			await client.Lists.DeleteAsync(list.Id, false, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("List deleted").ConfigureAwait(false);
