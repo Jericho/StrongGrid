@@ -1,4 +1,5 @@
-﻿using Shouldly;
+using Shouldly;
+using System;
 using System.Net;
 using Xunit;
 
@@ -31,6 +32,20 @@ namespace StrongGrid.UnitTests
 
 			// Assert
 			// Nothing to assert. We just want to confirm that 'Dispose' did not throw any exception
+		}
+
+		[Fact]
+		public void Throws_if_apikey_and_username_are_null()
+		{
+			string apiKey = null;
+			string username = null;
+			string password = "myPassword";
+
+			Should.Throw<ArgumentNullException>(() => new Client(apiKey));
+			Should.Throw<ArgumentNullException>(() => new Client(username, password));
+
+			Should.Throw<ArgumentNullException>(() => new LegacyClient(apiKey));
+			Should.Throw<ArgumentNullException>(() => new LegacyClient(username, password));
 		}
 	}
 }

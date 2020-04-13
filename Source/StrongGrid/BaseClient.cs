@@ -275,7 +275,7 @@ namespace StrongGrid
 		/// <param name="disposeClient">Indicates if the http client should be dispose when this instance of BaseClient is disposed.</param>
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
-		public BaseClient(string apiKey, string username, string password, HttpClient httpClient, bool disposeClient, StrongGridClientOptions options, ILogger logger = null)
+		public BaseClient(Parameter<string> apiKey, Parameter<string> username, Parameter<string> password, HttpClient httpClient, bool disposeClient, StrongGridClientOptions options, ILogger logger = null)
 		{
 			_mustDisposeHttpClient = disposeClient;
 			_httpClient = httpClient;
@@ -293,8 +293,20 @@ namespace StrongGrid
 			_fluentClient.Filters.Add(new DiagnosticHandler(_options.LogLevelSuccessfulCalls, _options.LogLevelFailedCalls, _logger));
 			_fluentClient.Filters.Add(new SendGridErrorHandler());
 
-			if (!string.IsNullOrEmpty(apiKey)) _fluentClient.SetBearerAuthentication(apiKey);
-			if (!string.IsNullOrEmpty(username)) _fluentClient.SetBasicAuthentication(username, password);
+			if (apiKey.HasValue)
+			{
+				if (string.IsNullOrEmpty(apiKey)) throw new ArgumentNullException(apiKey);
+				else _fluentClient.SetBearerAuthentication(apiKey);
+			}
+			else if (username.HasValue)
+			{
+				if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(username);
+				else _fluentClient.SetBasicAuthentication(username, password);
+			}
+			else
+			{
+				throw new ArgumentException("You must provide either an API key or a username and a password.");
+			}
 
 			AccessManagement = new AccessManagement(FluentClient);
 			Alerts = new Alerts(FluentClient);
