@@ -136,7 +136,7 @@ namespace StrongGrid.UnitTests.Resources
 			var batches = new Batches(client);
 
 			// Act
-			var result = await Should.ThrowAsync<Exception>(async () => await batches.ValidateBatchIdAsync(batchId).ConfigureAwait(false)).ConfigureAwait(false);
+			var result = await Should.ThrowAsync<Exception>(batches.ValidateBatchIdAsync(batchId)).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

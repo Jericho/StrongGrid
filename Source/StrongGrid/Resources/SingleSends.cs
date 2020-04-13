@@ -19,7 +19,7 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class SingleSends : ISingleSends
 	{
-		private const string _endpoint = "marketing/singlesends";
+		private const string _endpoint = "marketing/campaigns";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>

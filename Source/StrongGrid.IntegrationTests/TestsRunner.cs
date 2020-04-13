@@ -134,7 +134,10 @@ namespace StrongGrid.IntegrationTests
 					}
 					finally
 					{
-						await Console.Out.WriteLineAsync(log.ToString()).ConfigureAwait(false);
+						lock (Console.Out)
+						{
+							Console.Out.WriteLine(log.ToString());
+						}
 					}
 				}, MAX_SENDGRID_API_CONCURRENCY)
 			.ConfigureAwait(false);
