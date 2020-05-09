@@ -5,7 +5,7 @@ namespace StrongGrid.Models
 	/// <summary>
 	/// Single Send send to.
 	/// </summary>
-	public class SingleSendSendTo
+	internal class SingleSendSendTo
 	{
 		/// <summary>
 		/// Gets or sets the lists.
