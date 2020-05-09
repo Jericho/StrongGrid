@@ -4,7 +4,6 @@ using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -266,16 +265,8 @@ namespace StrongGrid.Resources
 			result.AddPropertyIfValue("email_config/generate_plain_content", generateTextContent);
 			result.AddPropertyIfValue("email_config/design_id", designId);
 			result.AddPropertyIfEnumValue("email_config/editor", editor);
-
-			if (listIds.HasValue && listIds.Value != null && listIds.Value.Any())
-			{
-				result.AddPropertyIfValue("send_to/list_ids", listIds);
-			}
-
-			if (segmentIds.HasValue && segmentIds.Value != null && segmentIds.Value.Any())
-			{
-				result.AddPropertyIfValue("send_to/segment_ids", segmentIds);
-			}
+			result.AddPropertyIfValue("send_to/list_ids", listIds);
+			result.AddPropertyIfValue("send_to/segment_ids", segmentIds);
 
 			return result;
 		}
