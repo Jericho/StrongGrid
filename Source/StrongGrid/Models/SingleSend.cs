@@ -54,15 +54,6 @@ namespace StrongGrid.Models
 		public DateTime? SendOn { get; set; }
 
 		/// <summary>
-		/// Gets or sets the template.
-		/// </summary>
-		/// <value>
-		/// The template identifier.
-		/// </value>
-		[JsonProperty("template_id", NullValueHandling = NullValueHandling.Ignore)]
-		public string TemplateId { get; set; }
-
-		/// <summary>
 		/// Gets or sets the date and time when the single send was modified.
 		/// </summary>
 		/// <value>
