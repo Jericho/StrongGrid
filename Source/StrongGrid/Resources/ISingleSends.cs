@@ -20,12 +20,16 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <param name="senderId">The sender identifier.</param>
+		/// <param name="subject">The subject.</param>
+		/// <param name="htmlContent">The HTML content.</param>
+		/// <param name="textContent">The plain text content.</param>
+		/// <param name="designId">The design identifier.</param>
+		/// <param name="editor">The type of editor.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customUnsubscribeUrl">The custom unsubscribe URL.</param>
 		/// <param name="suppressionGroupId">The suppression group identifier.</param>
 		/// <param name="listIds">The list ids.</param>
 		/// <param name="segmentIds">The segment ids.</param>
-		/// <param name="templateId">The template id.</param>
 		/// <param name="ipPool">The ip pool.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
@@ -34,12 +38,16 @@ namespace StrongGrid.Resources
 		Task<SingleSend> CreateAsync(
 			string name,
 			long senderId,
+			Parameter<string> subject = default,
+			Parameter<string> htmlContent = default,
+			Parameter<string> textContent = default,
+			Parameter<string> designId = default,
+			Parameter<EditorType> editor = default,
 			Parameter<IEnumerable<string>> categories = default,
 			Parameter<string> customUnsubscribeUrl = default,
 			Parameter<long?> suppressionGroupId = default,
 			Parameter<IEnumerable<string>> listIds = default,
 			Parameter<IEnumerable<string>> segmentIds = default,
-			Parameter<string> templateId = default,
 			Parameter<string> ipPool = default,
 			CancellationToken cancellationToken = default);
 
@@ -49,12 +57,16 @@ namespace StrongGrid.Resources
 		/// <param name="singleSendId">The id of the single send.</param>
 		/// <param name="name">The name.</param>
 		/// <param name="senderId">The sender identifier.</param>
+		/// <param name="subject">The subject.</param>
+		/// <param name="htmlContent">The HTML content.</param>
+		/// <param name="textContent">The plain text content.</param>
+		/// <param name="designId">The design identifier.</param>
+		/// <param name="editor">The type of editor.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customUnsubscribeUrl">The custom unsubscribe URL.</param>
 		/// <param name="suppressionGroupId">The suppression group identifier.</param>
 		/// <param name="listIds">The list ids.</param>
 		/// <param name="segmentIds">The segment ids.</param>
-		/// <param name="templateId">The template id.</param>
 		/// <param name="ipPool">The ip pool.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
@@ -64,12 +76,16 @@ namespace StrongGrid.Resources
 			string singleSendId,
 			Parameter<string> name = default,
 			Parameter<long> senderId = default,
+			Parameter<string> subject = default,
+			Parameter<string> htmlContent = default,
+			Parameter<string> textContent = default,
+			Parameter<string> designId = default,
+			Parameter<EditorType> editor = default,
 			Parameter<IEnumerable<string>> categories = default,
 			Parameter<string> customUnsubscribeUrl = default,
 			Parameter<long?> suppressionGroupId = default,
 			Parameter<IEnumerable<string>> listIds = default,
 			Parameter<IEnumerable<string>> segmentIds = default,
-			Parameter<string> templateId = default,
 			Parameter<string> ipPool = default,
 			CancellationToken cancellationToken = default);
 
