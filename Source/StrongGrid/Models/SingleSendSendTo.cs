@@ -3,9 +3,9 @@ using Newtonsoft.Json;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Single Send filter.
+	/// Single Send send to.
 	/// </summary>
-	public class SingleSendFilter
+	internal class SingleSendSendTo
 	{
 		/// <summary>
 		/// Gets or sets the lists.

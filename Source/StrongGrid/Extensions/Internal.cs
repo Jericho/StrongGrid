@@ -721,6 +721,29 @@ namespace StrongGrid
 					]
 				}
 
+				The documentation says that it should look like this:
+				{
+					"errors": [
+						{
+							"message": <string>,
+							"field": <string>,
+							"error_id": <string>
+						}
+					]
+				}
+
+				The documentation for "Add or Update a Contact" under the "New Marketing Campaigns" section says that it looks like this:
+				{
+					"errors": [
+						{
+							"message": <string>,
+							"field": <string>,
+							"error_id": <string>,
+							"parameter": <string>
+						}
+					]
+				}
+
 				I have also seen cases where the JSON string looks like this:
 				{
 					"error": "Name already exists"
