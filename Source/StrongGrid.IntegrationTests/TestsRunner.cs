@@ -35,6 +35,7 @@ namespace StrongGrid.IntegrationTests
 			// -----------------------------------------------------------------------------
 			// Do you want to proxy requests through Fiddler? Can be useful for debugging.
 			var useFiddler = true;
+			var fiddlerPort = 8866; // By default Fiddler4 uses port 8888 and Fiddler Everywhere uses port 8866
 
 			// Change the default values in the legacy client.
 			var optionsToCorrectLegacyDefaultValues = new StrongGridClientOptions()
@@ -46,7 +47,7 @@ namespace StrongGrid.IntegrationTests
 
 			// Configure StrongGrid client
 			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
-			var proxy = useFiddler ? new WebProxy("http://localhost:8888") : null;
+			var proxy = useFiddler ? new WebProxy($"http://localhost:{fiddlerPort}") : null;
 
 			var legacyClient = new LegacyClient(apiKey, proxy, optionsToCorrectLegacyDefaultValues, _loggerFactory.CreateLogger<LegacyClient>());
 			var client = new Client(apiKey, proxy, null, _loggerFactory.CreateLogger<Client>());

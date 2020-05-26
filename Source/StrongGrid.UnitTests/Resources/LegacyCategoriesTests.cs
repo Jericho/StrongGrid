@@ -32,7 +32,7 @@ namespace StrongGrid.UnitTests.Resources
 			var offset = 0;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?category=&limit={limit}&offset={offset}").Respond("application/json", MULTIPLE_CATEGORIES_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&offset={offset}").Respond("application/json", MULTIPLE_CATEGORIES_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var categories = new Categories(client);

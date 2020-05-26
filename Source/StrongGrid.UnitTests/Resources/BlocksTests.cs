@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
@@ -55,7 +55,7 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?start_time=&end_time=&limit=25&offset=0").Respond("application/json", MULTIPLE_BLOCKS_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit=25&offset=0").Respond("application/json", MULTIPLE_BLOCKS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var blocks = new Blocks(client);

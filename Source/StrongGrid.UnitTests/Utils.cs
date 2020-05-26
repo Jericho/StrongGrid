@@ -3,6 +3,7 @@ using Pathoschild.Http.Client;
 using Pathoschild.Http.Client.Extensibility;
 using RichardSzalay.MockHttp;
 using StrongGrid.Utilities;
+using System;
 using System.Linq;
 
 namespace StrongGrid.UnitTests
@@ -14,7 +15,7 @@ namespace StrongGrid.UnitTests
 		public static Pathoschild.Http.Client.IClient GetFluentClient(MockHttpMessageHandler httpMessageHandler)
 		{
 			var httpClient = httpMessageHandler.ToHttpClient();
-			var client = new FluentClient(SENDGRID_API_BASE_URI, httpClient);
+			var client = new FluentClient(new Uri(SENDGRID_API_BASE_URI), httpClient);
 			client.SetRequestCoordinator(new SendGridRetryStrategy());
 			client.Filters.Remove<DefaultErrorFilter>();
 			client.Filters.Add(new DiagnosticHandler(LogLevel.Debug, LogLevel.Error));
