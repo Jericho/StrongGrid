@@ -455,9 +455,9 @@ namespace StrongGrid
 			}
 		}
 
-		public static T GetPropertyValue<T>(this JToken item, string name)
+		public static T GetPropertyValue<T>(this JToken item, string name, T defaultValue = default)
 		{
-			if (item[name] == null) return default;
+			if (item[name] == null) return defaultValue;
 			return item[name].Value<T>();
 		}
 
