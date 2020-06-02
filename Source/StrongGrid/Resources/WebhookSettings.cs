@@ -234,6 +234,21 @@ namespace StrongGrid.Resources
 				.AsMessage();
 		}
 
+		/// <summary>
+		/// Get the signed event webhook public key.
+		/// </summary>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The public key.
+		/// </returns>
+		public Task<string> GetSignedEventWebhookPublicKeyAsync(CancellationToken cancellationToken = default)
+		{
+			return _client
+				.GetAsync($"{_eventWebhookEndpoint}/settings/signed")
+				.WithCancellationToken(cancellationToken)
+				.AsSendGridObject<string>("public_key");
+		}
+
 		private static JObject CreateJObject(string hostname, Parameter<string> url, Parameter<bool> spamCheck, Parameter<bool> sendRaw)
 		{
 			var result = new JObject
