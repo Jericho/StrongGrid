@@ -17,7 +17,7 @@ namespace StrongGrid.IntegrationTests.Tests
 			await log.WriteLineAsync("The event webhooks settings have been retrieved.").ConfigureAwait(false);
 
 			// GET THE INBOUND PARSE SETTINGS
-			var inboundParseWebhookSettings = await client.WebhookSettings.GetAllInboundParseWebhookSettings(null, cancellationToken).ConfigureAwait(false);
+			var inboundParseWebhookSettings = await client.WebhookSettings.GetAllInboundParseWebhookSettingsAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("The inbound parse webhooks settings have been retrieved.").ConfigureAwait(false);
 		}
 	}

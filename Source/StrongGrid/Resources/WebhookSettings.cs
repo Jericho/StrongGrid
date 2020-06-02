@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -32,7 +32,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get the current Event Webhook settings.
+		/// Get the current event webhook settings.
 		/// </summary>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
@@ -49,7 +49,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Change the Event Webhook settings.
+		/// Change the event webhook settings.
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
 		/// <param name="url">the webhook endpoint url.</param>
@@ -138,7 +138,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Create inbound parse settings for a hostname.
 		/// </summary>
-		/// <param name="hostname">A specific and unique domain or subdomain that you have created to use exclusively to parse your incoming email. For example, parse.yourdomain.com.</param>
+		/// <param name="hostname">A specific and unique domain or sub-domain that you have created to use exclusively to parse your incoming email. For example, parse.yourdomain.com.</param>
 		/// <param name="url">The public URL where you would like SendGrid to POST the data parsed from your email. Any emails sent with the given hostname provided (whose MX records have been updated to point to SendGrid) will be parsed and POSTed to this URL.</param>
 		/// <param name="spamCheck">Indicates if you would like SendGrid to check the content parsed from your emails for spam before POSTing them to your domain.</param>
 		/// <param name="sendRaw">Indicates if you would like SendGrid to post the original MIME-type content of your parsed email. When this parameter is set to "false", SendGrid will send a JSON payload of the content of your email.</param>
@@ -147,7 +147,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="InboundParseWebhookSettings" />.
 		/// </returns>
-		public Task<InboundParseWebhookSettings> CreateInboundParseWebhookSettings(string hostname, string url, bool spamCheck = false, bool sendRaw = false, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<InboundParseWebhookSettings> CreateInboundParseWebhookSettingsAsync(string hostname, string url, bool spamCheck = false, bool sendRaw = false, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = CreateJObject(hostname, url, spamCheck, sendRaw);
 			return _client
@@ -166,7 +166,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="InboundParseWebhookSettings" />.
 		/// </returns>
-		public Task<InboundParseWebhookSettings[]> GetAllInboundParseWebhookSettings(string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<InboundParseWebhookSettings[]> GetAllInboundParseWebhookSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_inboundParseWebhookEndpoint}/settings")
@@ -184,7 +184,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="InboundParseWebhookSettings" />.
 		/// </returns>
-		public Task<InboundParseWebhookSettings> GetInboundParseWebhookSettings(string hostname, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<InboundParseWebhookSettings> GetInboundParseWebhookSettingsAsync(string hostname, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_inboundParseWebhookEndpoint}/settings/{hostname}")
@@ -196,7 +196,7 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Update the inbound parse settings for a specific hostname.
 		/// </summary>
-		/// <param name="hostname">A specific and unique domain or subdomain that you have created to use exclusively to parse your incoming email. For example, parse.yourdomain.com.</param>
+		/// <param name="hostname">A specific and unique domain or sub-domain that you have created to use exclusively to parse your incoming email. For example, parse.yourdomain.com.</param>
 		/// <param name="url">The public URL where you would like SendGrid to POST the data parsed from your email. Any emails sent with the given hostname provided (whose MX records have been updated to point to SendGrid) will be parsed and POSTed to this URL.</param>
 		/// <param name="spamCheck">Indicates if you would like SendGrid to check the content parsed from your emails for spam before POSTing them to your domain.</param>
 		/// <param name="sendRaw">Indicates if you would like SendGrid to post the original MIME-type content of your parsed email. When this parameter is set to "false", SendGrid will send a JSON payload of the content of your email.</param>
@@ -205,7 +205,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="InboundParseWebhookSettings" />.
 		/// </returns>
-		public Task UpdateInboundParseWebhookSettings(string hostname, Parameter<string> url = default, Parameter<bool> spamCheck = default, Parameter<bool> sendRaw = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task UpdateInboundParseWebhookSettingsAsync(string hostname, Parameter<string> url = default, Parameter<bool> spamCheck = default, Parameter<bool> sendRaw = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = CreateJObject(hostname, url, spamCheck, sendRaw);
 			return _client
@@ -217,7 +217,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Delete the inbound parse webhook settings for a specvific hostname.
+		/// Delete the inbound parse webhook settings for a specific hostname.
 		/// </summary>
 		/// <param name="hostname">The hostname associated with the inbound parse setting that you want to delete.</param>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
@@ -225,7 +225,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteInboundParseWebhookSettings(string hostname, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task DeleteInboundParseWebhookSettingsAsync(string hostname, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.DeleteAsync($"{_inboundParseWebhookEndpoint}/settings/{hostname}")
