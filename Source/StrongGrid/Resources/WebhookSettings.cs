@@ -235,13 +235,13 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Get the signed event webhook public key.
+		/// Get the signed events public key.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The public key.
 		/// </returns>
-		public Task<string> GetSignedEventWebhookPublicKeyAsync(CancellationToken cancellationToken = default)
+		public Task<string> GetSignedEventsPublicKeyAsync(CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_eventWebhookEndpoint}/settings/signed")
