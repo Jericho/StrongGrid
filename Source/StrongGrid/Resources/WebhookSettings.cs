@@ -236,8 +236,10 @@ namespace StrongGrid.Resources
 
 		private static JObject CreateJObject(string hostname, Parameter<string> url, Parameter<bool> spamCheck, Parameter<bool> sendRaw)
 		{
-			var result = new JObject();
-			result.Add("hostname", hostname);
+			var result = new JObject
+			{
+				{ "hostname", hostname }
+			};
 			result.AddPropertyIfValue("url", url);
 			result.AddPropertyIfValue("spam_check", spamCheck);
 			result.AddPropertyIfValue("send_raw", sendRaw);
