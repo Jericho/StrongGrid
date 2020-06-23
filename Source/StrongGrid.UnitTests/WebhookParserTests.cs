@@ -370,6 +370,33 @@ Content-Disposition: form-data; name=""attachments""
 0
 --xYzZY--";
 
+		// SendGrid uses a very simplistic payload in several of their client libraries to test event webhook signing.
+		// The JSON string in the payload is simplistic and does not represent a typical event you would get in a webhook.
+		// For reference, here's where you can find this simplistic payload in the various client libraries:
+		//   - JAVA: https://github.com/sendgrid/sendgrid-java/blob/2104e0e10021107b76f7d2638e2a74d6f6e1c228/examples/helpers/eventwebhook/Example.java
+		//   - GO: https://github.com/sendgrid/sendgrid-go/blob/640cd9b866da50f245322a051c66aacc519dcaf1/helpers/eventwebhook/eventwebhook_test.go
+		//   - NODEJS: https://github.com/sendgrid/sendgrid-nodejs/blob/f0951298f3f545fd253857d6824ec3e63b37d17d/test/typescript/eventwebhook.ts
+		//   - PHP: https://github.com/sendgrid/sendgrid-php/blob/eb22165d7f/test/unit/EventWebhookTest.php
+		//   - RUBY: https://github.com/sendgrid/sendgrid-ruby/blob/53c6c05fe7e3cd42f0ba3b5f436f3aef94a7e70b/spec/sendgrid/helpers/eventwebhook/eventwebhook_spec.rb
+		private const string SENDGRID_PUBLIC_KEY = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEEDr2LjtURuePQzplybdC+u4CwrqDqBaWjcMMsTbhdbcwHBcepxo7yAQGhHPTnlvFYPAZFceEu/1FwCM/QmGUhA==";
+		private const string SENDGRID_PAYLOAD = "{\"category\":\"example_payload\",\"event\":\"test_event\",\"message_id\":\"message_id\"}";
+		private const string SENDGRID_SIGNATURE = "MEUCIQCtIHJeH93Y+qpYeWrySphQgpNGNr/U+UyUlBkU6n7RAwIgJTz2C+8a8xonZGi6BpSzoQsbVRamr2nlxFDWYNH2j/0=";
+		private const string SENDGRID_TIMESTAMP = "1588788367";
+
+		// This is a more realistic payload which contains an array of events.
+		// I obtained the sample payload, signature and timestamp by POST'ing a request to https://api.sendgrid.com/v3/user/webhooks/event/test
+		private const string MY_PUBLIC_KEY = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE2is1eViXeZ9NwNbYKD/b51+WBZQVf+mLT0QCLiD6+HgWlNkrldvci/3m/o72GgCr3ilINxo9FpHElSHNnlYA7A==";
+		private const string MY_PAYLOAD = "[{\"email\":\"example@test.com\",\"timestamp\":1592925285,\"smtp-id\":\"\u003c14c5d75ce93.dfd.64b469@ismtpd-555\u003e\",\"event\":\"processed\",\"category\":\"cat facts\",\"sg_event_id\":\"-w3n3K8nBCtORXZVD9wxWQ==\",\"sg_message_id\":\"14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0\"},{\"email\":\"example@test.com\",\"timestamp\":1592925285,\"smtp-id\":\"\u003c14c5d75ce93.dfd.64b469@ismtpd-555\u003e\",\"event\":\"deferred\",\"category\":\"cat facts\",\"sg_event_id\":\"27_-LKWAeSzRe_JdEA8N8g==\",\"sg_message_id\":\"14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0\",\"response\":\"400 try again later\",\"attempt\":\"5\"},{\"email\":\"example@test.com\",\"timestamp\":1592925285,\"smtp-id\":\"\u003c14c5d75ce93.dfd.64b469@ismtpd-555\u003e\",\"event\":\"delivered\",\"category\":\"cat facts\",\"sg_event_id\":\"Vx4gXYiwyWNyGDRtSn-RWQ==\",\"sg_message_id\":\"14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0\",\"response\":\"250 OK\"},{\"email\":\"example@test.com\",\"timestamp\":1592925285,\"smtp-id\":\"\u003c14c5d75ce93.dfd.64b469@ismtpd-555\u003e\",\"event\":\"open\",\"category\":\"cat facts\",\"sg_event_id\":\"hdB0Dxh27lTQDmSsN9-3zg==\",\"sg_message_id\":\"14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0\",\"useragent\":\"Mozilla/4.0 (compatible; MSIE 6.1; Windows XP; .NET CLR 1.1.4322; .NET CLR 2.0.50727)\",\"ip\":\"255.255.255.255\"},{\"email\":\"example@test.com\",\"timestamp\":1592925285,\"smtp-id\":\"\u003c14c5d75ce93.dfd.64b469@ismtpd-555\u003e\",\"event\":\"click\",\"category\":\"cat facts\",\"sg_event_id\":\"eQbgQ_Aff12HIhnwf3aN_A==\",\"sg_message_id\":\"14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0\",\"useragent\":\"Mozilla/4.0 (compatible; MSIE 6.1; Windows XP; .NET CLR 1.1.4322; .NET CLR 2.0.50727)\",\"ip\":\"255.255.255.255\",\"url\":\"http://www.sendgrid.com/\"},{\"email\":\"example@test.com\",\"timestamp\":1592925285,\"smtp-id\":\"\u003c14c5d75ce93.dfd.64b469@ismtpd-555\u003e\",\"event\":\"bounce\",\"category\":\"cat facts\",\"sg_event_id\":\"mPsgXgr8qq1cWHFirZCoSA==\",\"sg_message_id\":\"14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0\",\"reason\":\"500 unknown recipient\",\"status\":\"5.0.0\"},{\"email\":\"example@test.com\",\"timestamp\":1592925285,\"smtp-id\":\"\u003c14c5d75ce93.dfd.64b469@ismtpd-555\u003e\",\"event\":\"dropped\",\"category\":\"cat facts\",\"sg_event_id\":\"K1pmJN0j0TrvQ8VJza5mxg==\",\"sg_message_id\":\"14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0\",\"reason\":\"Bounced Address\",\"status\":\"5.0.0\"},{\"email\":\"example@test.com\",\"timestamp\":1592925285,\"smtp-id\":\"\u003c14c5d75ce93.dfd.64b469@ismtpd-555\u003e\",\"event\":\"spamreport\",\"category\":\"cat facts\",\"sg_event_id\":\"k0y94nBNOaWkc0XTiTB53g==\",\"sg_message_id\":\"14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0\"},{\"email\":\"example@test.com\",\"timestamp\":1592925285,\"smtp-id\":\"\u003c14c5d75ce93.dfd.64b469@ismtpd-555\u003e\",\"event\":\"unsubscribe\",\"category\":\"cat facts\",\"sg_event_id\":\"LgPxePMfafBIVUv_HLF0ZQ==\",\"sg_message_id\":\"14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0\"},{\"email\":\"example@test.com\",\"timestamp\":1592925285,\"smtp-id\":\"\u003c14c5d75ce93.dfd.64b469@ismtpd-555\u003e\",\"event\":\"group_unsubscribe\",\"category\":\"cat facts\",\"sg_event_id\":\"GPB7vO-DgotTjSxE7Odpew==\",\"sg_message_id\":\"14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0\",\"useragent\":\"Mozilla/4.0 (compatible; MSIE 6.1; Windows XP; .NET CLR 1.1.4322; .NET CLR 2.0.50727)\",\"ip\":\"255.255.255.255\",\"url\":\"http://www.sendgrid.com/\",\"asm_group_id\":10},{\"email\":\"example@test.com\",\"timestamp\":1592925285,\"smtp-id\":\"\u003c14c5d75ce93.dfd.64b469@ismtpd-555\u003e\",\"event\":\"group_resubscribe\",\"category\":\"cat facts\",\"sg_event_id\":\"W5Bm2KOpz0eNjj1qX7Yl6A==\",\"sg_message_id\":\"14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0\",\"useragent\":\"Mozilla/4.0 (compatible; MSIE 6.1; Windows XP; .NET CLR 1.1.4322; .NET CLR 2.0.50727)\",\"ip\":\"255.255.255.255\",\"url\":\"http://www.sendgrid.com/\",\"asm_group_id\":10}]";
+		private const string MY_SIGNATURE = "MEUCIQCkVB8ZeiGaWA6o3/PGnqNQgdqzOCERs6w999YTquAiDQIgdTAvHUk6+HMzLI//7NHWfIROPg//P+ZAo17QISy8Y1U=";
+		private const string MY_TIMESTAMP = "1592925285";
+
+		// This public key, payload ans signature was taken from a StackOverflow article 
+		// FROM https://stackoverflow.com/questions/59078889/ecdsa-verify-signature-in-c-sharp-using-public-key-and-signature-from-java
+		private const string STACKOVERFLOW_PUBLIC_KEY = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAExeg15CVOUcspdO0Pm27hPVx50thn0CGk3/3NLl08qcK+0U7cesOUUwxQetMgtUHrh0lNao5XRAAurhcBtZpo6w==";
+		private const string STACKOVERFLOW_PAYLOAD = "ABCDEFGH";
+		private const string STACKOVERFLOW_SIGNATURE = "MEQCIFNEZQRzIrvr6dtJ4j4HP8nXHSts3w3qsRt8cFXBaOGAAiAJO/EjzCZlNLQSvKBinVHfSvTEmor0dc3YX7FPMnnYCg==";
+		private const string STACKOVERFLOW_TIMESTAMP = "";
+
 		#endregion
 
 		[Fact]
@@ -967,6 +994,28 @@ Content-Disposition: form-data; name=""attachments""
 				result.Length.ShouldBe(1);
 				result[0].GetType().ShouldBe(typeof(GroupResubscribeEvent));
 			}
+		}
+
+		[Theory]
+		[InlineData(SENDGRID_PUBLIC_KEY, SENDGRID_PAYLOAD, SENDGRID_SIGNATURE, SENDGRID_TIMESTAMP)]
+		[InlineData(MY_PUBLIC_KEY, MY_PAYLOAD, MY_SIGNATURE, MY_TIMESTAMP)]
+		[InlineData(STACKOVERFLOW_PUBLIC_KEY, STACKOVERFLOW_PAYLOAD, STACKOVERFLOW_SIGNATURE, STACKOVERFLOW_TIMESTAMP)]
+		public void ValidateWebhookSignature(string publicKey, string payload, string signature, string timestamp)
+		{
+			// Arrange
+			var parser = new WebhookParser();
+			var headers = new Dictionary<string, string>
+			{
+				{ "X-Twilio-Email-Event-Webhook-Signature", signature },
+				{ "X-Twilio-Email-Event-Webhook-Timestamp", timestamp }
+			};
+
+			// Act
+			var result = parser.ParseSignedEventsWebhook(payload, headers, publicKey);
+
+			// Assert
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(11); // The sample payload contains 11 events
 		}
 
 		private Stream GetStream(string responseContent)
