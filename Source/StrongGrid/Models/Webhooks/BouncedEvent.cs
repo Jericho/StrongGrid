@@ -10,6 +10,14 @@ namespace StrongGrid.Models.Webhooks
 	public class BouncedEvent : DeliveryEvent
 	{
 		/// <summary>
+		/// Initializes a new instance of the <see cref="BouncedEvent"/> class.
+		/// </summary>
+		public BouncedEvent()
+		{
+			EventType = EventType.Bounce;
+		}
+
+		/// <summary>
 		/// Gets or sets the ip address that was used to send the email.
 		/// </summary>
 		/// <value>

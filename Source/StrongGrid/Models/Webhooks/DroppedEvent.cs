@@ -9,6 +9,14 @@ namespace StrongGrid.Models.Webhooks
 	public class DroppedEvent : DeliveryEvent
 	{
 		/// <summary>
+		/// Initializes a new instance of the <see cref="DroppedEvent"/> class.
+		/// </summary>
+		public DroppedEvent()
+		{
+			EventType = EventType.Dropped;
+		}
+
+		/// <summary>
 		/// Gets or sets the reason that describes why this event was triggered.
 		/// </summary>
 		/// <remarks>

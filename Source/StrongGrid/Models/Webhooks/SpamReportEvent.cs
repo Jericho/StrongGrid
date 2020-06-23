@@ -10,6 +10,14 @@ namespace StrongGrid.Models.Webhooks
 	public class SpamReportEvent : EngagementEvent
 	{
 		/// <summary>
+		/// Initializes a new instance of the <see cref="SpamReportEvent"/> class.
+		/// </summary>
+		public SpamReportEvent()
+		{
+			EventType = EventType.SpamReport;
+		}
+
+		/// <summary>
 		/// Gets or sets the categories.
 		/// </summary>
 		/// <value>

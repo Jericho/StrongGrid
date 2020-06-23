@@ -3,11 +3,19 @@ using Newtonsoft.Json;
 namespace StrongGrid.Models.Webhooks
 {
 	/// <summary>
-	/// Recipient’s email server temporarily rejected message.
+	/// Recipientâ€™s email server temporarily rejected message.
 	/// </summary>
 	/// <seealso cref="StrongGrid.Models.Webhooks.DeliveryEvent" />
 	public class DeferredEvent : DeliveryEvent
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DeferredEvent"/> class.
+		/// </summary>
+		public DeferredEvent()
+		{
+			EventType = EventType.Deferred;
+		}
+
 		/// <summary>
 		/// Gets or sets the reason that describes why this event was triggered.
 		/// </summary>

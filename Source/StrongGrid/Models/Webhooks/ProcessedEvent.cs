@@ -9,6 +9,14 @@ namespace StrongGrid.Models.Webhooks
 	public class ProcessedEvent : DeliveryEvent
 	{
 		/// <summary>
+		/// Initializes a new instance of the <see cref="ProcessedEvent"/> class.
+		/// </summary>
+		public ProcessedEvent()
+		{
+			EventType = EventType.Processed;
+		}
+
+		/// <summary>
 		/// Gets or sets the IP Pool (if specified when the email was sent).
 		/// </summary>
 		/// <value>

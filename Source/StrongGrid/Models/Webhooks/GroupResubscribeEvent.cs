@@ -10,6 +10,14 @@ namespace StrongGrid.Models.Webhooks
 	public class GroupResubscribeEvent : EngagementEvent
 	{
 		/// <summary>
+		/// Initializes a new instance of the <see cref="GroupResubscribeEvent"/> class.
+		/// </summary>
+		public GroupResubscribeEvent()
+		{
+			EventType = EventType.GroupResubscribe;
+		}
+
+		/// <summary>
 		/// Gets or sets the user agent.
 		/// </summary>
 		/// <value>

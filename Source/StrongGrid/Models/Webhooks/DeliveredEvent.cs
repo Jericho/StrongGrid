@@ -10,6 +10,14 @@ namespace StrongGrid.Models.Webhooks
 	public class DeliveredEvent : DeliveryEvent
 	{
 		/// <summary>
+		/// Initializes a new instance of the <see cref="DeliveredEvent"/> class.
+		/// </summary>
+		public DeliveredEvent()
+		{
+			EventType = EventType.Delivered;
+		}
+
+		/// <summary>
 		/// Gets or sets the ip address that was used to send the email.
 		/// </summary>
 		/// <value>

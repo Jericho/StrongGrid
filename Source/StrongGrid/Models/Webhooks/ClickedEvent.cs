@@ -10,6 +10,14 @@ namespace StrongGrid.Models.Webhooks
 	public class ClickedEvent : EngagementEvent
 	{
 		/// <summary>
+		/// Initializes a new instance of the <see cref="ClickedEvent"/> class.
+		/// </summary>
+		public ClickedEvent()
+		{
+			EventType = EventType.Click;
+		}
+
+		/// <summary>
 		/// Gets or sets the user agent.
 		/// </summary>
 		/// <value>
