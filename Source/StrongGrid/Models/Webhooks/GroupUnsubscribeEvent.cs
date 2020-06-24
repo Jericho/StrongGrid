@@ -10,6 +10,14 @@ namespace StrongGrid.Models.Webhooks
 	public class GroupUnsubscribeEvent : EngagementEvent
 	{
 		/// <summary>
+		/// Initializes a new instance of the <see cref="GroupUnsubscribeEvent"/> class.
+		/// </summary>
+		public GroupUnsubscribeEvent()
+		{
+			EventType = EventType.GroupUnsubscribe;
+		}
+
+		/// <summary>
 		/// Gets or sets the user agent.
 		/// </summary>
 		/// <value>

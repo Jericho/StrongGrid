@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
@@ -213,7 +213,7 @@ namespace StrongGrid.UnitTests.Resources
 			var webhooks = new WebhookSettings(client);
 
 			// Act
-			var result = await webhooks.GetInboundParseWebhookSettings(hostname, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await webhooks.GetInboundParseWebhookSettingsAsync(hostname, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -237,7 +237,7 @@ namespace StrongGrid.UnitTests.Resources
 			var webhooks = new WebhookSettings(client);
 
 			// Act
-			var result = await webhooks.GetAllInboundParseWebhookSettings(null, CancellationToken.None).ConfigureAwait(false);
+			var result = await webhooks.GetAllInboundParseWebhookSettingsAsync(null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

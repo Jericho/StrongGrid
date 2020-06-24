@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
@@ -342,7 +342,7 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "domains?exclude_subusers=false&limit=50&offset=0&username=&domain=")).Respond("application/json", MULTIPLE_DOMAINS_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "domains?exclude_subusers=false&limit=50&offset=0")).Respond("application/json", MULTIPLE_DOMAINS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var senderAuthentication = new SenderAuthentication(client);
@@ -362,7 +362,7 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "domains?exclude_subusers=true&limit=50&offset=0&username=&domain=")).Respond("application/json", MULTIPLE_DOMAINS_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "domains?exclude_subusers=true&limit=50&offset=0")).Respond("application/json", MULTIPLE_DOMAINS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var senderAuthentication = new SenderAuthentication(client);
@@ -632,7 +632,7 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "ips?limit=50&offset=0&ip=")).Respond("application/json", MULTIPLE_IPS_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "ips?limit=50&offset=0")).Respond("application/json", MULTIPLE_IPS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var senderAuthentication = new SenderAuthentication(client);
@@ -964,7 +964,7 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "links?limit=50&offset=0&ip=")).Respond("application/json", MULTIPLE_LINKS_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "links?limit=50&offset=0")).Respond("application/json", MULTIPLE_LINKS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var senderAuthentication = new SenderAuthentication(client);

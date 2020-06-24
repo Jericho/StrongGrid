@@ -743,7 +743,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var stream = GetStream(responseContent))
 			{
 				// Act
-				var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
+				var result = await parser.ParseEventsWebhookAsync(stream).ConfigureAwait(false);
 
 				// Assert
 				result.ShouldNotBeNull();
@@ -761,7 +761,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var stream = GetStream(responseContent))
 			{
 				// Act
-				var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
+				var result = await parser.ParseEventsWebhookAsync(stream).ConfigureAwait(false);
 
 				// Assert
 				result.ShouldNotBeNull();
@@ -779,7 +779,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var stream = GetStream(responseContent))
 			{
 				// Act
-				var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
+				var result = await parser.ParseEventsWebhookAsync(stream).ConfigureAwait(false);
 
 				// Assert
 				result.ShouldNotBeNull();
@@ -797,7 +797,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var stream = GetStream(responseContent))
 			{
 				// Act
-				var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
+				var result = await parser.ParseEventsWebhookAsync(stream).ConfigureAwait(false);
 
 				// Assert
 				result.ShouldNotBeNull();
@@ -815,7 +815,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var stream = GetStream(responseContent))
 			{
 				// Act
-				var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
+				var result = await parser.ParseEventsWebhookAsync(stream).ConfigureAwait(false);
 
 				// Assert
 				result.ShouldNotBeNull();
@@ -833,7 +833,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var stream = GetStream(responseContent))
 			{
 				// Act
-				var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
+				var result = await parser.ParseEventsWebhookAsync(stream).ConfigureAwait(false);
 
 				// Assert
 				result.ShouldNotBeNull();
@@ -851,7 +851,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var stream = GetStream(responseContent))
 			{
 				// Act
-				var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
+				var result = await parser.ParseEventsWebhookAsync(stream).ConfigureAwait(false);
 
 				// Assert
 				result.ShouldNotBeNull();
@@ -869,7 +869,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var stream = GetStream(responseContent))
 			{
 				// Act
-				var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
+				var result = await parser.ParseEventsWebhookAsync(stream).ConfigureAwait(false);
 
 				// Assert
 				result.ShouldNotBeNull();
@@ -887,7 +887,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var stream = GetStream(responseContent))
 			{
 				// Act
-				var result = await parser.ParseWebhookEventsAsync(stream).ConfigureAwait(false);
+				var result = await parser.ParseEventsWebhookAsync(stream).ConfigureAwait(false);
 
 				// Assert
 				result.ShouldNotBeNull();

@@ -63,7 +63,7 @@ namespace StrongGrid.Utilities
 			LogHeaders(diagnostic, httpRequest.Headers);
 			LogContent(diagnostic, httpRequest.Content);
 
-			// Add the diagnotic info to our cache
+			// Add the diagnostic info to our cache
 			DiagnosticsInfo.TryAdd(diagnosticId, (new WeakReference<HttpRequestMessage>(request.Message), diagnostic.ToString(), Stopwatch.GetTimestamp(), long.MinValue));
 		}
 

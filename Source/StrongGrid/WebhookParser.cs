@@ -32,11 +32,11 @@ namespace StrongGrid
 		#region PUBLIC METHODS
 
 		/// <summary>
-		/// Parses the webhook events asynchronously.
+		/// Parses the events webhook asynchronously.
 		/// </summary>
 		/// <param name="stream">The stream.</param>
 		/// <returns>An array of <see cref="Event">events</see>.</returns>
-		public async Task<Event[]> ParseWebhookEventsAsync(Stream stream)
+		public async Task<Event[]> ParseEventsWebhookAsync(Stream stream)
 		{
 			string requestBody;
 			using (var streamReader = new StreamReader(stream))
@@ -44,16 +44,16 @@ namespace StrongGrid
 				requestBody = await streamReader.ReadToEndAsync().ConfigureAwait(false);
 			}
 
-			var webHookEvents = ParseWebhookEvents(requestBody);
+			var webHookEvents = ParseEventsWebhook(requestBody);
 			return webHookEvents;
 		}
 
 		/// <summary>
-		/// Parses the webhook events.
+		/// Parses the events webhook.
 		/// </summary>
-		/// <param name="requestBody">The content submitted by Sendgrid's WebHook.</param>
+		/// <param name="requestBody">The content submitted by SendGrid's WebHook.</param>
 		/// <returns>An array of <see cref="Event">events</see>.</returns>
-		public Event[] ParseWebhookEvents(string requestBody)
+		public Event[] ParseEventsWebhook(string requestBody)
 		{
 			var webHookEvents = JsonConvert.DeserializeObject<List<Event>>(requestBody, new WebHookEventConverter());
 			return webHookEvents.ToArray();

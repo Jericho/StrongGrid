@@ -445,19 +445,12 @@ namespace StrongGrid
 			if (convertValueToJsonToken == null) throw new ArgumentNullException(nameof(convertValueToJsonToken));
 			if (!parameter.HasValue) return;
 
-			if (parameter.Value == null)
-			{
-				jsonObject.AddDeepProperty(propertyName, null);
-			}
-			else
-			{
-				jsonObject.AddDeepProperty(propertyName, convertValueToJsonToken(parameter.Value));
-			}
+			jsonObject.AddDeepProperty(propertyName, parameter.Value == null ? null : convertValueToJsonToken(parameter.Value));
 		}
 
-		public static T GetPropertyValue<T>(this JToken item, string name)
+		public static T GetPropertyValue<T>(this JToken item, string name, T defaultValue = default)
 		{
-			if (item[name] == null) return default;
+			if (item[name] == null) return defaultValue;
 			return item[name].Value<T>();
 		}
 
