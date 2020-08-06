@@ -11,6 +11,12 @@ namespace StrongGrid.Models
 	public enum EmailActivityStatus
 	{
 		/// <summary>
+		/// Message is processing.
+		/// </summary>
+		[EnumMember(Value = "processing")]
+		Processing,
+		
+		/// <summary>
 		/// Message has been received and is ready to be delivered.
 		/// </summary>
 		[EnumMember(Value = "processed")]
