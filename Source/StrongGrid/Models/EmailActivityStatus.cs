@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Runtime.Serialization;
 
@@ -15,7 +15,7 @@ namespace StrongGrid.Models
 		/// </summary>
 		[EnumMember(Value = "processing")]
 		Processing,
-		
+
 		/// <summary>
 		/// Message has been received and is ready to be delivered.
 		/// </summary>
