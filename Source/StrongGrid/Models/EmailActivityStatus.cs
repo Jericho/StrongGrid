@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Runtime.Serialization;
 
@@ -10,6 +10,12 @@ namespace StrongGrid.Models
 	[JsonConverter(typeof(StringEnumConverter))]
 	public enum EmailActivityStatus
 	{
+		/// <summary>
+		/// Message is processing.
+		/// </summary>
+		[EnumMember(Value = "processing")]
+		Processing,
+
 		/// <summary>
 		/// Message has been received and is ready to be delivered.
 		/// </summary>
