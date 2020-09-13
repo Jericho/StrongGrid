@@ -90,8 +90,24 @@ namespace StrongGrid
 				.Select(prop =>
 				{
 					var key = prop.Name;
-					var value = Encoding.GetEncoding(prop.Value.ToString());
-					return new KeyValuePair<string, Encoding>(key, value);
+					var encodingName = prop.Value.ToString();
+
+					try
+					{
+						var encoding = Encoding.GetEncoding(encodingName);
+						return new KeyValuePair<string, Encoding>(key, encoding);
+					}
+					catch (ArgumentException)
+					{
+						// ArgumentException is thrown when an "unusual" code page was used to encode a section of the email
+						// For example: {"to":"UTF-8","subject":"UTF-8","from":"UTF-8","text":"iso-8859-10"}
+						// We can see that 'iso-8859-10' was used to encode the "Text" but this encoding is not supported in
+						// .net (neither dotnet full nor dotnet core). Therefore we fallback on UTF-8. This is obviously not
+						// perfect because UTF-8 may or may not be able to handle all the encoded characters, but it's better
+						// than simply erroring out.
+						// See https://github.com/Jericho/StrongGrid/issues/341 for discussion.
+						return new KeyValuePair<string, Encoding>(key, Encoding.UTF8);
+					}
 				}).ToArray();
 
 			// Create a dictionary of parsers, one parser for each desired encoding.
@@ -99,7 +115,7 @@ namespace StrongGrid
 			// encoding and SendGrid can use different encodings for parameters such
 			// as "from", "to", "text" and "html".
 			var encodedParsers = charsets
-				.Where(c => c.Value != Encoding.UTF8)
+				.Where(c => !c.Value.Equals(Encoding.UTF8))
 				.Select(c => c.Value)
 				.Distinct()
 				.Select(async encoding =>
@@ -152,8 +168,24 @@ namespace StrongGrid
 				.Select(prop =>
 				{
 					var key = prop.Name;
-					var value = Encoding.GetEncoding(prop.Value.ToString());
-					return new KeyValuePair<string, Encoding>(key, value);
+					var encodingName = prop.Value.ToString();
+
+					try
+					{
+						var encoding = Encoding.GetEncoding(encodingName);
+						return new KeyValuePair<string, Encoding>(key, encoding);
+					}
+					catch (ArgumentException)
+					{
+						// ArgumentException is thrown when an "unusual" code page was used to encode a section of the email
+						// For example: {"to":"UTF-8","subject":"UTF-8","from":"UTF-8","text":"iso-8859-10"}
+						// We can see that 'iso-8859-10' was used to encode the "Text" but this encoding is not supported in
+						// .net (neither dotnet full nor dotnet core). Therefore we fallback on UTF-8. This is obviously not
+						// perfect because UTF-8 may or may not be able to handle all the encoded characters, but it's better
+						// than simply erroring out.
+						// See https://github.com/Jericho/StrongGrid/issues/341 for discussion.
+						return new KeyValuePair<string, Encoding>(key, Encoding.UTF8);
+					}
 				}).ToArray();
 
 			// Create a dictionary of parsers, one parser for each desired encoding.
@@ -161,7 +193,7 @@ namespace StrongGrid
 			// encoding and SendGrid can use different encodings for parameters such
 			// as "from", "to", "text" and "html".
 			var encodedParsers = charsets
-				.Where(c => c.Value != Encoding.UTF8)
+				.Where(c => !c.Value.Equals(Encoding.UTF8))
 				.Select(c => c.Value)
 				.Distinct()
 				.Select(encoding =>
@@ -210,7 +242,7 @@ namespace StrongGrid
 		private static InboundEmail ParseInboundEmail(IDictionary<Encoding, MultipartFormDataParser> encodedParsers, KeyValuePair<string, Encoding>[] charsets)
 		{
 			// Get the default UTF8 parser
-			var parser = encodedParsers.Single(p => p.Key == Encoding.UTF8).Value;
+			var parser = encodedParsers.Single(p => p.Key.Equals(Encoding.UTF8)).Value;
 
 			// Convert the 'headers' from a string into array of KeyValuePair
 			var headers = parser

@@ -10,7 +10,7 @@ namespace StrongGrid.IntegrationTests
 {
 	public class Program
 	{
-		public static async Task<int> Main(string[] args)
+		public static async Task<int> Main()
 		{
 			var services = new ServiceCollection();
 			ConfigureServices(services);
