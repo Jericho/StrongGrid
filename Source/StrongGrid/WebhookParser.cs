@@ -193,7 +193,7 @@ namespace StrongGrid
 			// encoding and SendGrid can use different encodings for parameters such
 			// as "from", "to", "text" and "html".
 			var encodedParsers = charsets
-				.Where(c => c.Value != Encoding.UTF8)
+				.Where(c => !c.Value.Equals(Encoding.UTF8))
 				.Select(c => c.Value)
 				.Distinct()
 				.Select(encoding =>
@@ -242,7 +242,7 @@ namespace StrongGrid
 		private static InboundEmail ParseInboundEmail(IDictionary<Encoding, MultipartFormDataParser> encodedParsers, KeyValuePair<string, Encoding>[] charsets)
 		{
 			// Get the default UTF8 parser
-			var parser = encodedParsers.Single(p => p.Key == Encoding.UTF8).Value;
+			var parser = encodedParsers.Single(p => p.Key.Equals(Encoding.UTF8)).Value;
 
 			// Convert the 'headers' from a string into array of KeyValuePair
 			var headers = parser
