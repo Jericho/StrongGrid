@@ -115,7 +115,7 @@ namespace StrongGrid
 			// encoding and SendGrid can use different encodings for parameters such
 			// as "from", "to", "text" and "html".
 			var encodedParsers = charsets
-				.Where(c => c.Value != Encoding.UTF8)
+				.Where(c => !c.Value.Equals(Encoding.UTF8))
 				.Select(c => c.Value)
 				.Distinct()
 				.Select(async encoding =>
