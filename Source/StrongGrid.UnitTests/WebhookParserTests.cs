@@ -321,6 +321,55 @@ Content-Disposition: form-data; name=""attachments""
 0
 --xYzZY--";
 
+		private const string INBOUND_EMAIL_UNUSUAL_ENCODING_WEBHOOK = @"--xYzZY
+Content-Disposition: form-data; name=""dkim""
+
+{@hotmail.com : pass}
+--xYzZY
+Content-Disposition: form-data; name=""envelope""
+
+{""to"":[""test@api.yourdomain.com""],""from"":""bob@example.com""}
+--xYzZY
+Content-Disposition: form-data; name=""subject""
+
+Test #1
+--xYzZY
+Content-Disposition: form-data; name=""charsets""
+
+{""to"":""UTF-8"",""html"":""us-ascii"",""subject"":""UTF-8"",""from"":""UTF-8"",""text"":""iso-8859-10""}
+--xYzZY
+Content-Disposition: form-data; name=""SPF""
+
+softfail
+
+--xYzZY
+Content-Disposition: form-data; name=""to""
+
+""Test Recipient"" <test@api.yourdomain.com>
+--xYzZY
+Content-Disposition: form-data; name=""html""
+
+<html><body><strong>Hello SendGrid!</body></html>
+
+--xYzZY
+Content-Disposition: form-data; name=""from""
+
+Bob Smith<bob@example.com>
+--xYzZY
+Content-Disposition: form-data; name=""text""
+
+Hello SendGrid!
+
+--xYzZY
+Content-Disposition: form-data; name=""sender_ip""
+
+10.43.24.23
+--xYzZY
+Content-Disposition: form-data; name=""attachments""
+
+0
+--xYzZY--";
+
 		#endregion
 
 		[Fact]
@@ -500,6 +549,30 @@ Content-Disposition: form-data; name=""attachments""
 				}).Count().ShouldBe(0);
 
 				inboundEmail.Spf.ShouldBe("pass");
+			}
+		}
+
+		[Fact]
+		public void InboundEmail_with_unusual_encoding()
+		{
+			// Arrange
+			var parser = new WebhookParser();
+			using (var stream = GetStream(INBOUND_EMAIL_UNUSUAL_ENCODING_WEBHOOK))
+			{
+				// Act
+				var inboundEmail = parser.ParseInboundEmailWebhook(stream);
+
+				// Assert
+				inboundEmail.Charsets.ShouldNotBeNull();
+				inboundEmail.Charsets.Except(new[]
+				{
+					new KeyValuePair<string, Encoding>("to", Encoding.UTF8),
+					new KeyValuePair<string, Encoding>("subject", Encoding.UTF8),
+					new KeyValuePair<string, Encoding>("from", Encoding.UTF8),
+					new KeyValuePair<string, Encoding>("html", Encoding.ASCII),
+					new KeyValuePair<string, Encoding>("text", Encoding.UTF8)	// The original encoding is iso-8859-10 but we fallback on UTF-8
+				}).Count().ShouldBe(0);
+				inboundEmail.Text.ShouldBe("Hello SendGrid!\r\n");
 			}
 		}
 

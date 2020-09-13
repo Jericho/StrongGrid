@@ -23,10 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="InboudEmailTestData\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="InboudEmailTestData\raw_data.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
