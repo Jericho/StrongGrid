@@ -26,6 +26,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/Jericho/StrongGrid</PackageProjectUrl>
     <PackageIconUrl>https://github.com/identicons/jericho.png</PackageIconUrl>
+    <PackageIcon>PackageIcon.png</PackageIcon>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>StrongGrid SendGrid email</PackageTags>
     <PackageReleaseNotes></PackageReleaseNotes>
@@ -66,6 +67,10 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Release' ">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\PackageIcon.png" Pack="true" PackagePath="" />
+  </ItemGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="$(SolutionDir)stylecop.json" Link="stylecop.json" />
