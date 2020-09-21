@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System;
 
 namespace StrongGrid.Models.Webhooks
 {
@@ -34,6 +35,7 @@ namespace StrongGrid.Models.Webhooks
 		/// The reason.
 		/// </value>
 		[JsonProperty("reason", NullValueHandling = NullValueHandling.Ignore)]
+		[Obsolete("We believe this field is not included in the webhook data posted by SendGrid (despite what their documentation says). Use the 'Response' field instead.")]
 		public string Reason { get; set; }
 
 		/// <summary>
