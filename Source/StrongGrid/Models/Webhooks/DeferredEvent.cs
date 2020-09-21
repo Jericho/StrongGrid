@@ -39,6 +39,15 @@ namespace StrongGrid.Models.Webhooks
 		public string Reason { get; set; }
 
 		/// <summary>
+		/// Gets or sets the full text of the HTTP response error returned from the receiving server.
+		/// </summary>
+		/// <value>
+		/// The response.
+		/// </value>
+		[JsonProperty("response", NullValueHandling = NullValueHandling.Ignore)]
+		public string Response { get; set; }
+
+		/// <summary>
 		/// Gets or sets the number of times SendGrid has attempted to deliver this message.
 		/// </summary>
 		/// <value>
