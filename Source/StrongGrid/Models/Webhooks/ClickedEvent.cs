@@ -64,7 +64,7 @@ namespace StrongGrid.Models.Webhooks
 		/// The asm group identifier.
 		/// </value>
 		[JsonProperty("asm_group_id", NullValueHandling = NullValueHandling.Ignore)]
-		public long AsmGroupId { get; set; }
+		public long? AsmGroupId { get; set; }
 
 		/// <summary>
 		/// Gets or sets the URL offset.

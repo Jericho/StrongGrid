@@ -27,10 +27,17 @@ namespace StrongGrid.Utilities
 		{
 			if (string.IsNullOrEmpty(rawEmailAddress)) return null;
 
-			// Delegate parsing to .net MailAddress
-			var parsedAddress = new System.Net.Mail.MailAddress(rawEmailAddress);
-
-			return new MailAddress(parsedAddress.Address, parsedAddress.DisplayName);
+			try
+			{
+				// Delegate parsing to System.Net.Mail.MailAddress
+				var parsedAddress = new System.Net.Mail.MailAddress(rawEmailAddress);
+				return new MailAddress(parsedAddress.Address, parsedAddress.DisplayName);
+			}
+			catch
+			{
+				// Ignore all exceptions thrown by System.Net.Mail.MailAddress
+				return new MailAddress(null, rawEmailAddress);
+			}
 		}
 	}
 }
