@@ -201,6 +201,8 @@ namespace StrongGrid
 			// Therefore, we must make a copy of the stream if it doesn't allow changing the position
 			if (!stream.CanSeek)
 			{
+				_logger.LogDebug("The stream provided to ParseInboundEmailWebhookAsync is not seekable. Therefore, we must make a copy of this stream.");
+
 				using (var ms = Utils.MemoryStreamManager.GetStream())
 				{
 					await stream.CopyToAsync(ms).ConfigureAwait(false);
@@ -230,6 +232,8 @@ namespace StrongGrid
 					}
 					catch (ArgumentException)
 					{
+						_logger.LogDebug($"The {key} section was encoded with {encodingName} which is an unknown or unsupported encoding. Therefore, we will fallback on UTF-8 to decode the content of this section.");
+
 						// ArgumentException is thrown when an "unusual" code page was used to encode a section of the email
 						// For example: {"to":"UTF-8","subject":"UTF-8","from":"UTF-8","text":"iso-8859-10"}
 						// We can see that 'iso-8859-10' was used to encode the "Text" but this encoding is not supported in
@@ -279,6 +283,8 @@ namespace StrongGrid
 			// Therefore, we must make a copy of the stream if it doesn't allow changing the position
 			if (!stream.CanSeek)
 			{
+				_logger.LogDebug("The stream provided to ParseInboundEmailWebhook is not seekable. Therefore, we must make a copy of this stream.");
+
 				using (var ms = Utils.MemoryStreamManager.GetStream())
 				{
 					stream.CopyTo(ms);
@@ -308,6 +314,8 @@ namespace StrongGrid
 					}
 					catch (ArgumentException)
 					{
+						_logger.LogDebug($"The {key} section was encoded with {encodingName} which is an unknown or unsupported encoding. Therefore, we will fallback on UTF-8 to decode the content of this section.");
+
 						// ArgumentException is thrown when an "unusual" code page was used to encode a section of the email
 						// For example: {"to":"UTF-8","subject":"UTF-8","from":"UTF-8","text":"iso-8859-10"}
 						// We can see that 'iso-8859-10' was used to encode the "Text" but this encoding is not supported in
@@ -370,7 +378,7 @@ namespace StrongGrid
 			return value;
 		}
 
-		private static InboundEmail ParseInboundEmail(IDictionary<Encoding, MultipartFormDataParser> encodedParsers, KeyValuePair<string, Encoding>[] charsets)
+		private InboundEmail ParseInboundEmail(IDictionary<Encoding, MultipartFormDataParser> encodedParsers, KeyValuePair<string, Encoding>[] charsets)
 		{
 			// Get the default UTF8 parser
 			var parser = encodedParsers.Single(p => p.Key.Equals(Encoding.UTF8)).Value;
@@ -424,6 +432,19 @@ namespace StrongGrid
 			// Convert the 'cc' from a string into an array of email addresses
 			var rawCc = GetEncodedValue("cc", charsets, encodedParsers, string.Empty);
 			var cc = MailAddressParser.ParseEmailAddresses(rawCc);
+
+			// Log addresses that appear to be invalid
+			if (string.IsNullOrEmpty(from.Email)) _logger.LogDebug($"The email address of the sender appears to be invalid: {rawFrom}");
+
+			foreach (var invalidAddress in to.Where(t => string.IsNullOrEmpty(t.Email)))
+			{
+				_logger.LogDebug($"The following 'to' email address appears to be invalid: {invalidAddress.Name}");
+			}
+
+			foreach (var invalidAddress in cc.Where(t => string.IsNullOrEmpty(t.Email)))
+			{
+				_logger.LogDebug($"The following 'cc' email address appears to be invalid: {invalidAddress.Name}");
+			}
 
 			// Arrange the InboundEmail
 			var inboundEmail = new InboundEmail
