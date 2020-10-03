@@ -1,4 +1,6 @@
 using HttpMultipartParser;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StrongGrid.Models.Webhooks;
@@ -20,6 +22,12 @@ namespace StrongGrid
 	/// </summary>
 	public class WebhookParser
 	{
+		#region FIELDS
+
+		private readonly ILogger _logger;
+
+		#endregion
+
 		#region PROPERTIES
 
 		/// <summary>
@@ -42,6 +50,23 @@ namespace StrongGrid
 			Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 		}
 #endif
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="WebhookParser" /> class.
+		/// </summary>
+		public WebhookParser()
+			: this(null)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="WebhookParser" /> class.
+		/// </summary>
+		/// <param name="logger">Logger.</param>
+		public WebhookParser(ILogger logger)
+		{
+			_logger = logger ?? NullLogger.Instance;
+		}
 
 		#endregion
 
