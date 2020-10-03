@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System;
 
 namespace StrongGrid.Models.Webhooks
 {
@@ -34,7 +35,17 @@ namespace StrongGrid.Models.Webhooks
 		/// The reason.
 		/// </value>
 		[JsonProperty("reason", NullValueHandling = NullValueHandling.Ignore)]
+		[Obsolete("We believe this field is not included in the webhook data posted by SendGrid (despite what their documentation says). Use the 'Response' field instead.")]
 		public string Reason { get; set; }
+
+		/// <summary>
+		/// Gets or sets the full text of the HTTP response error returned from the receiving server.
+		/// </summary>
+		/// <value>
+		/// The response.
+		/// </value>
+		[JsonProperty("response", NullValueHandling = NullValueHandling.Ignore)]
+		public string Response { get; set; }
 
 		/// <summary>
 		/// Gets or sets the number of times SendGrid has attempted to deliver this message.
