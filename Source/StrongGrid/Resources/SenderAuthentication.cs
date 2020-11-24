@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -115,13 +116,12 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="AuthenticatedDomain" />.
 		/// </returns>
-		public Task<AuthenticatedDomain> UpdateDomainAsync(long domainId, bool isDefault = false, bool customSpf = false, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<AuthenticatedDomain> UpdateDomainAsync(long domainId, Parameter<bool> isDefault = default, Parameter<bool> customSpf = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "custom_spf", customSpf },
-				{ "default", isDefault }
-			};
+			var data = new JObject();
+			data.AddPropertyIfValue("custom_spf", customSpf);
+			data.AddPropertyIfValue("default", isDefault);
+
 			return _client
 				.PatchAsync($"{_endpoint}/domains/{domainId}")
 				.OnBehalfOf(onBehalfOf)

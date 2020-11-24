@@ -1,4 +1,6 @@
-﻿using StrongGrid.Models;
+using StrongGrid.Models;
+using StrongGrid.Utilities;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -64,7 +66,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="AuthenticatedDomain" />.
 		/// </returns>
-		Task<AuthenticatedDomain> UpdateDomainAsync(long domainId, bool isDefault = false, bool customSpf = false, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<AuthenticatedDomain> UpdateDomainAsync(long domainId, Parameter<bool> isDefault = default, Parameter<bool> customSpf = default, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete an authenticated whitelabel.
