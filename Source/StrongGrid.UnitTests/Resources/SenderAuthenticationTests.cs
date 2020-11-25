@@ -3,6 +3,7 @@ using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Resources;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -404,9 +405,12 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 			var domain = "";
 			var subdomain = "";
+			var username = "";
+			var ips = Array.Empty<string>();
 			var automaticSecurity = true;
 			var customSpf = false;
 			var isDefault = true;
+			var customDkimSelector = "";
 
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "domains")).Respond("application/json", SINGLE_DOMAIN_JSON);
@@ -415,7 +419,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.CreateDomainAsync(domain, subdomain, automaticSecurity, customSpf, isDefault, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderAuthentication.CreateDomainAsync(domain, subdomain, username, ips, automaticSecurity, customSpf, isDefault, customDkimSelector, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

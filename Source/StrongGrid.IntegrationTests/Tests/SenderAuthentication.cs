@@ -27,7 +27,7 @@ namespace StrongGrid.IntegrationTests.Tests
 				});
 			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
-			var domain = await client.SenderAuthentication.CreateDomainAsync(fictitiousDomain, "email", false, false, false, null, cancellationToken).ConfigureAwait(false);
+			var domain = await client.SenderAuthentication.CreateDomainAsync(fictitiousDomain, "email", null, null, false, false, false, null, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"AuthenticatedSender domain created. Id: {domain.Id}").ConfigureAwait(false);
 
 			var domainValidation = await client.SenderAuthentication.ValidateDomainAsync(domain.Id, null, cancellationToken).ConfigureAwait(false);

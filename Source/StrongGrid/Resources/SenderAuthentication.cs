@@ -77,26 +77,33 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Create a new authenticated domain.
 		/// </summary>
-		/// <param name="domain">The domain.</param>
-		/// <param name="subdomain">The subdomain.</param>
-		/// <param name="automaticSecurity">if set to <c>true</c> [automatic security].</param>
-		/// <param name="customSpf">if set to <c>true</c> [custom SPF].</param>
-		/// <param name="isDefault">if set to <c>true</c> [is default].</param>
+		/// <param name="domain">The domain being authenticated..</param>
+		/// <param name="subdomain">The subdomain to use for this authenticated domain.</param>
+		/// <param name="username">The username associated with this domain.</param>
+		/// <param name="ips">The IP addresses that will be included in the custom SPF record for this authenticated domain.</param>
+		/// <param name="automaticSecurity">Whether to allow SendGrid to manage your SPF records, DKIM keys, and DKIM key rotation.</param>
+		/// <param name="customSpf">Specify whether to use a custom SPF or allow SendGrid to manage your SPF. This option is only available to authenticated domains set up for manual security.</param>
+		/// <param name="isDefault">Whether to use this authenticated domain as the fallback if no authenticated domains match the sender's domain.</param>
+		/// <param name="customDkimSelector">Add a custom DKIM selector. Accepts three letters or numbers. </param>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The <see cref="AuthenticatedDomain" />.
 		/// </returns>
-		public Task<AuthenticatedDomain> CreateDomainAsync(string domain, string subdomain, bool automaticSecurity = false, bool customSpf = false, bool isDefault = false, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<AuthenticatedDomain> CreateDomainAsync(string domain, string subdomain = null, string username = null, IEnumerable<string> ips = null, bool automaticSecurity = false, bool customSpf = false, bool isDefault = false, string customDkimSelector = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject
 			{
-				{ "domain", domain },
-				{ "subdomain", subdomain },
-				{ "automatic_security", automaticSecurity },
-				{ "custom_spf", customSpf },
-				{ "default", isDefault }
+				{"domain", domain}
 			};
+			data.AddPropertyIfValue("subdomain", subdomain);
+			data.AddPropertyIfValue("username", username);
+			data.AddPropertyIfValue("ips", ips);
+			data.AddPropertyIfValue("custom_spf", customSpf);
+			data.AddPropertyIfValue("default", isDefault);
+			data.AddPropertyIfValue("automatic_security", automaticSecurity);
+			data.AddPropertyIfValue("custom_dkim_selector", customDkimSelector);
+
 			return _client
 				.PostAsync($"{_endpoint}/domains")
 				.OnBehalfOf(onBehalfOf)
