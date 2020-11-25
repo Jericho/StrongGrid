@@ -94,7 +94,7 @@ namespace StrongGrid.Resources
 		{
 			var data = new JObject
 			{
-				{"domain", domain}
+				{ "domain", domain }
 			};
 			data.AddPropertyIfValue("subdomain", subdomain);
 			data.AddPropertyIfValue("username", username);
