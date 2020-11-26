@@ -35,17 +35,12 @@ namespace StrongGrid.UnitTests
 		}
 
 		[Fact]
-		public void Throws_if_apikey_and_username_are_null()
+		public void Throws_if_apikey_is_null()
 		{
 			string apiKey = null;
-			string username = null;
-			string password = "myPassword";
 
 			Should.Throw<ArgumentNullException>(() => new Client(apiKey));
-			Should.Throw<ArgumentNullException>(() => new Client(username, password));
-
 			Should.Throw<ArgumentNullException>(() => new LegacyClient(apiKey));
-			Should.Throw<ArgumentNullException>(() => new LegacyClient(username, password));
 		}
 	}
 }

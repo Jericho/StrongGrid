@@ -269,13 +269,11 @@ namespace StrongGrid
 		/// Initializes a new instance of the <see cref="BaseClient" /> class.
 		/// </summary>
 		/// <param name="apiKey">Your api key.</param>
-		/// <param name="username">Your username. Ignored if the api key is specified.</param>
-		/// <param name="password">Your password. Ignored if the api key is specified.</param>
 		/// <param name="httpClient">Allows you to inject your own HttpClient. This is useful, for example, to setup the HtppClient with a proxy.</param>
 		/// <param name="disposeClient">Indicates if the http client should be dispose when this instance of BaseClient is disposed.</param>
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
-		public BaseClient(Parameter<string> apiKey, Parameter<string> username, Parameter<string> password, HttpClient httpClient, bool disposeClient, StrongGridClientOptions options, ILogger logger = null)
+		public BaseClient(string apiKey, HttpClient httpClient, bool disposeClient, StrongGridClientOptions options, ILogger logger = null)
 		{
 			_mustDisposeHttpClient = disposeClient;
 			_httpClient = httpClient;
@@ -293,20 +291,8 @@ namespace StrongGrid
 			_fluentClient.Filters.Add(new DiagnosticHandler(_options.LogLevelSuccessfulCalls, _options.LogLevelFailedCalls, _logger));
 			_fluentClient.Filters.Add(new SendGridErrorHandler());
 
-			if (apiKey.HasValue)
-			{
-				if (string.IsNullOrEmpty(apiKey)) throw new ArgumentNullException(apiKey);
-				else _fluentClient.SetBearerAuthentication(apiKey);
-			}
-			else if (username.HasValue)
-			{
-				if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(username);
-				else _fluentClient.SetBasicAuthentication(username, password);
-			}
-			else
-			{
-				throw new ArgumentException("You must provide either an API key or a username and a password.");
-			}
+			if (string.IsNullOrEmpty(apiKey)) throw new ArgumentNullException(apiKey);
+			_fluentClient.SetBearerAuthentication(apiKey);
 
 			AccessManagement = new AccessManagement(FluentClient);
 			Alerts = new Alerts(FluentClient);

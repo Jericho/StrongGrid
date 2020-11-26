@@ -72,7 +72,7 @@ namespace StrongGrid
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
 		public Client(string apiKey, StrongGridClientOptions options = null, ILogger logger = null)
-			: base(apiKey, default, default, null, false, options, logger)
+			: base(apiKey, null, false, options, logger)
 		{
 			Init();
 		}
@@ -85,7 +85,7 @@ namespace StrongGrid
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
 		public Client(string apiKey, IWebProxy proxy, StrongGridClientOptions options = null, ILogger logger = null)
-			: base(apiKey, default, default, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }), true, options, logger)
+			: base(apiKey, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }), true, options, logger)
 		{
 			Init();
 		}
@@ -98,7 +98,7 @@ namespace StrongGrid
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
 		public Client(string apiKey, HttpMessageHandler handler, StrongGridClientOptions options = null, ILogger logger = null)
-			: base(apiKey, default, default, new HttpClient(handler), true, options, logger)
+			: base(apiKey, new HttpClient(handler), true, options, logger)
 		{
 			Init();
 		}
@@ -111,62 +111,7 @@ namespace StrongGrid
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
 		public Client(string apiKey, HttpClient httpClient, StrongGridClientOptions options = null, ILogger logger = null)
-			: base(apiKey, default, default, httpClient, false, options, logger)
-		{
-			Init();
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Client"/> class.
-		/// </summary>
-		/// <param name="username">Your username.</param>
-		/// <param name="password">Your password.</param>
-		/// <param name="options">Options for the SendGrid client.</param>
-		/// <param name="logger">Logger.</param>
-		public Client(string username, string password, StrongGridClientOptions options = null, ILogger logger = null)
-			: base(default, username, password, null, false, options, logger)
-		{
-			Init();
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Client"/> class.
-		/// </summary>
-		/// <param name="username">Your username.</param>
-		/// <param name="password">Your password.</param>
-		/// <param name="proxy">Allows you to specify a proxy.</param>
-		/// <param name="options">Options for the SendGrid client.</param>
-		/// <param name="logger">Logger.</param>
-		public Client(string username, string password, IWebProxy proxy, StrongGridClientOptions options = null, ILogger logger = null)
-			: base(default, username, password, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }), true, options, logger)
-		{
-			Init();
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Client"/> class.
-		/// </summary>
-		/// <param name="username">Your username.</param>
-		/// <param name="password">Your password.</param>
-		/// <param name="handler">TThe HTTP handler stack to use for sending requests.</param>
-		/// <param name="options">Options for the SendGrid client.</param>
-		/// <param name="logger">Logger.</param>
-		public Client(string username, string password, HttpMessageHandler handler, StrongGridClientOptions options = null, ILogger logger = null)
-			: base(default, username, password, new HttpClient(handler), true, options, logger)
-		{
-			Init();
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Client" /> class.
-		/// </summary>
-		/// <param name="username">Your username.</param>
-		/// <param name="password">Your password.</param>
-		/// <param name="httpClient">Allows you to inject your own HttpClient. This is useful, for example, to setup the HtppClient with a proxy.</param>
-		/// <param name="options">Options for the SendGrid client.</param>
-		/// <param name="logger">Logger.</param>
-		public Client(string username, string password, HttpClient httpClient, StrongGridClientOptions options = null, ILogger logger = null)
-			: base(default, username, password, httpClient, false, options, logger)
+			: base(apiKey, httpClient, false, options, logger)
 		{
 			Init();
 		}
