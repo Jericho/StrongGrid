@@ -269,8 +269,6 @@ namespace StrongGrid
 		/// Initializes a new instance of the <see cref="BaseClient" /> class.
 		/// </summary>
 		/// <param name="apiKey">Your api key.</param>
-		/// <param name="username">Your username. Ignored if the api key is specified.</param>
-		/// <param name="password">Your password. Ignored if the api key is specified.</param>
 		/// <param name="httpClient">Allows you to inject your own HttpClient. This is useful, for example, to setup the HtppClient with a proxy.</param>
 		/// <param name="disposeClient">Indicates if the http client should be dispose when this instance of BaseClient is disposed.</param>
 		/// <param name="options">Options for the SendGrid client.</param>
