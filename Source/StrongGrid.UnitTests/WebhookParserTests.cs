@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Models.Webhooks;
+using StrongGrid.UnitTests.Utilities;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.IO;
@@ -991,11 +992,9 @@ Content-Disposition: form-data; name=""attachments""
 		{
 			// Arrange
 			var parser = new WebhookParser();
-			var headers = new Dictionary<string, string>
-			{
-				{ "X-Twilio-Email-Event-Webhook-Signature", SAMPLE_SIGNATURE },
-				{ "X-Twilio-Email-Event-Webhook-Timestamp", SAMPLE_TIMESTAMP }
-			};
+			var headers = new UnitTestingRequestHeaders();
+			headers.Add("X-Twilio-Email-Event-Webhook-Signature", SAMPLE_SIGNATURE);
+			headers.Add("X-Twilio-Email-Event-Webhook-Timestamp", SAMPLE_TIMESTAMP);
 
 			// Act
 			var result = parser.ParseSignedEventsWebhook(SAMPLE_PAYLOAD, headers, SAMPLE_PUBLIC_KEY);

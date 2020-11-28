@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
@@ -40,7 +41,7 @@ namespace StrongGrid
 		/// <param name="headers">The request headers.</param>
 		/// <param name="publicKey">Your public key. To obtain this value, <see cref="StrongGrid.Resources.WebhookSettings.GetSignedEventsPublicKeyAsync"/>.</param>
 		/// <returns>An array of <see cref="Event">events</see>.</returns>
-		public async Task<Event[]> ParseSignedEventsWebhookAsync(Stream stream, IDictionary<string, string> headers, string publicKey)
+		public async Task<Event[]> ParseSignedEventsWebhookAsync(Stream stream, HttpHeaders headers, string publicKey)
 		{
 			string requestBody;
 			using (var streamReader = new StreamReader(stream))
@@ -76,13 +77,13 @@ namespace StrongGrid
 		/// <param name="headers">The request headers.</param>
 		/// <param name="publicKey">Your public key. To obtain this value, <see cref="StrongGrid.Resources.WebhookSettings.GetSignedEventsPublicKeyAsync"/>.</param>
 		/// <returns>An array of <see cref="Event">events</see>.</returns>
-		public Event[] ParseSignedEventsWebhook(string requestBody, IDictionary<string, string> headers, string publicKey)
+		public Event[] ParseSignedEventsWebhook(string requestBody, HttpHeaders headers, string publicKey)
 		{
 			if (headers == null) throw new ArgumentNullException(nameof(headers));
 			if (string.IsNullOrEmpty(publicKey)) throw new ArgumentNullException(nameof(publicKey));
 
-			headers.TryGetValue("X-Twilio-Email-Event-Webhook-Signature", out string signature);
-			headers.TryGetValue("X-Twilio-Email-Event-Webhook-Timestamp", out string timestamp);
+			var signature = headers.GetValue("X-Twilio-Email-Event-Webhook-Signature");
+			var timestamp = headers.GetValue("X-Twilio-Email-Event-Webhook-Timestamp");
 
 			if (string.IsNullOrEmpty(signature)) throw new ArgumentException("The Twilio signature is missing from the request headers");
 			if (string.IsNullOrEmpty(timestamp)) throw new ArgumentException("The Twilio timestamp is missing from the request headers");
