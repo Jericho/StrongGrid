@@ -63,7 +63,7 @@ namespace StrongGrid
 				requestBody = await streamReader.ReadToEndAsync().ConfigureAwait(false);
 			}
 
-			var webHookEvents = ParseSignedEventsWebhook(requestBody, signature, timestamp, publicKey);
+			var webHookEvents = ParseSignedEventsWebhook(requestBody, publicKey, signature, timestamp);
 			return webHookEvents;
 		}
 
@@ -95,8 +95,8 @@ namespace StrongGrid
 		public Event[] ParseSignedEventsWebhook(string requestBody, string publicKey, string signature, string timestamp)
 		{
 			if (string.IsNullOrEmpty(publicKey)) throw new ArgumentNullException(nameof(publicKey));
-			if (string.IsNullOrEmpty(signature)) throw new ArgumentException("The Twilio signature is missing from the request headers");
-			if (string.IsNullOrEmpty(timestamp)) throw new ArgumentException("The Twilio timestamp is missing from the request headers");
+			if (string.IsNullOrEmpty(signature)) throw new ArgumentNullException(nameof(signature));
+			if (string.IsNullOrEmpty(timestamp)) throw new ArgumentNullException(nameof(timestamp));
 
 			// Convert the signature and public key provided by SendGrid into formats usable by the .net crypto classes
 			var sig = ConvertECDSASignature.LightweightConvertSignatureFromX9_62ToISO7816_8(256, Convert.FromBase64String(signature));
