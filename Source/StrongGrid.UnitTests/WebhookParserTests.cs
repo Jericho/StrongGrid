@@ -370,6 +370,23 @@ Content-Disposition: form-data; name=""attachments""
 0
 --xYzZY--";
 
+		// I obtained the sample payload, signature and timestamp by invoking
+		// await strongGridClient.WebhookSettings.SendEventTestAsync("... my url ...").ConfigureAwait(false);
+		private const string SAMPLE_PUBLIC_KEY = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE2is1eViXeZ9NwNbYKD/b51+WBZQVf+mLT0QCLiD6+HgWlNkrldvci/3m/o72GgCr3ilINxo9FpHElSHNnlYA7A==";
+		private const string SAMPLE_PAYLOAD = "[{\"email\":\"example@test.com\",\"timestamp\":1606575333,\"smtp-id\":\"\\u003c14c5d75ce93.dfd.64b469@ismtpd-555\\u003e\",\"event\":\"processed\",\"category\":[\"cat facts\"],\"sg_event_id\":\"m-8gndi_kLAVOUXWX79vdg==\",\"sg_message_id\":\"14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0\"},\r\n" +
+			"{\"email\":\"example@test.com\",\"timestamp\":1606575333,\"smtp-id\":\"\\u003c14c5d75ce93.dfd.64b469@ismtpd-555\\u003e\",\"event\":\"deferred\",\"category\":[\"cat facts\"],\"sg_event_id\":\"Xkjq_rPYT2IV1ZTNPx2gGQ==\",\"sg_message_id\":\"14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0\",\"response\":\"400 try again later\",\"attempt\":\"5\"},\r\n" +
+			"{\"email\":\"example@test.com\",\"timestamp\":1606575333,\"smtp-id\":\"\\u003c14c5d75ce93.dfd.64b469@ismtpd-555\\u003e\",\"event\":\"delivered\",\"category\":[\"cat facts\"],\"sg_event_id\":\"lNsPF9LUYT70RfvIabpolA==\",\"sg_message_id\":\"14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0\",\"response\":\"250 OK\"},\r\n" +
+			"{\"email\":\"example@test.com\",\"timestamp\":1606575333,\"smtp-id\":\"\\u003c14c5d75ce93.dfd.64b469@ismtpd-555\\u003e\",\"event\":\"open\",\"category\":[\"cat facts\"],\"sg_event_id\":\"WElX21DXbk0bn2S1p_E_gA==\",\"sg_message_id\":\"14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0\",\"useragent\":\"Mozilla/4.0 (compatible; MSIE 6.1; Windows XP; .NET CLR 1.1.4322; .NET CLR 2.0.50727)\",\"ip\":\"255.255.255.255\"},\r\n" +
+			"{\"email\":\"example@test.com\",\"timestamp\":1606575333,\"smtp-id\":\"\\u003c14c5d75ce93.dfd.64b469@ismtpd-555\\u003e\",\"event\":\"click\",\"category\":[\"cat facts\"],\"sg_event_id\":\"BC5Jcj5IdtB5JzctXdF7jQ==\",\"sg_message_id\":\"14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0\",\"useragent\":\"Mozilla/4.0 (compatible; MSIE 6.1; Windows XP; .NET CLR 1.1.4322; .NET CLR 2.0.50727)\",\"ip\":\"255.255.255.255\",\"url\":\"http://www.sendgrid.com/\"},\r\n" +
+			"{\"email\":\"example@test.com\",\"timestamp\":1606575333,\"smtp-id\":\"\\u003c14c5d75ce93.dfd.64b469@ismtpd-555\\u003e\",\"event\":\"bounce\",\"category\":[\"cat facts\"],\"sg_event_id\":\"1jABOEVCpBNStQg2Ji-Pvw==\",\"sg_message_id\":\"14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0\",\"reason\":\"500 unknown recipient\",\"status\":\"5.0.0\"},\r\n" +
+			"{\"email\":\"example@test.com\",\"timestamp\":1606575333,\"smtp-id\":\"\\u003c14c5d75ce93.dfd.64b469@ismtpd-555\\u003e\",\"event\":\"dropped\",\"category\":[\"cat facts\"],\"sg_event_id\":\"N0_KKSkckt9hUtasadYffA==\",\"sg_message_id\":\"14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0\",\"reason\":\"Bounced Address\",\"status\":\"5.0.0\"},\r\n" +
+			"{\"email\":\"example@test.com\",\"timestamp\":1606575333,\"smtp-id\":\"\\u003c14c5d75ce93.dfd.64b469@ismtpd-555\\u003e\",\"event\":\"spamreport\",\"category\":[\"cat facts\"],\"sg_event_id\":\"ZvWbMhp8tWTEFUqe4J4FHg==\",\"sg_message_id\":\"14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0\"},\r\n" +
+			"{\"email\":\"example@test.com\",\"timestamp\":1606575333,\"smtp-id\":\"\\u003c14c5d75ce93.dfd.64b469@ismtpd-555\\u003e\",\"event\":\"unsubscribe\",\"category\":[\"cat facts\"],\"sg_event_id\":\"CWoMUe_SCatUCphHVjbLUw==\",\"sg_message_id\":\"14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0\"},\r\n" +
+			"{\"email\":\"example@test.com\",\"timestamp\":1606575333,\"smtp-id\":\"\\u003c14c5d75ce93.dfd.64b469@ismtpd-555\\u003e\",\"event\":\"group_unsubscribe\",\"category\":[\"cat facts\"],\"sg_event_id\":\"oGga2Bjm_hPpr7Ws7U6z7Q==\",\"sg_message_id\":\"14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0\",\"useragent\":\"Mozilla/4.0 (compatible; MSIE 6.1; Windows XP; .NET CLR 1.1.4322; .NET CLR 2.0.50727)\",\"ip\":\"255.255.255.255\",\"url\":\"http://www.sendgrid.com/\",\"asm_group_id\":10},\r\n" +
+			"{\"email\":\"example@test.com\",\"timestamp\":1606575333,\"smtp-id\":\"\\u003c14c5d75ce93.dfd.64b469@ismtpd-555\\u003e\",\"event\":\"group_resubscribe\",\"category\":[\"cat facts\"],\"sg_event_id\":\"h5eCKbTzFfA7vy8L1teZIg==\",\"sg_message_id\":\"14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0\",\"useragent\":\"Mozilla/4.0 (compatible; MSIE 6.1; Windows XP; .NET CLR 1.1.4322; .NET CLR 2.0.50727)\",\"ip\":\"255.255.255.255\",\"url\":\"http://www.sendgrid.com/\",\"asm_group_id\":10}]\r\n";
+		private const string SAMPLE_SIGNATURE = "MEYCIQC7zQwrnBHCHxGZOkh70LJ144tIuSOxru0YGCn/bSE0/QIhAJ22PAa8HdZZQ+wrK+9sgeWF8BDdd1t+zbmCLO33RcyA";
+		private const string SAMPLE_TIMESTAMP = "1606575372";
+
 		#endregion
 
 		[Fact]
@@ -967,6 +984,25 @@ Content-Disposition: form-data; name=""attachments""
 				result.Length.ShouldBe(1);
 				result[0].GetType().ShouldBe(typeof(GroupResubscribeEvent));
 			}
+		}
+
+		[Fact]
+		public void ValidateWebhookSignature()
+		{
+			// Arrange
+			var parser = new WebhookParser();
+			var headers = new Dictionary<string, string>
+			{
+				{ "X-Twilio-Email-Event-Webhook-Signature", SAMPLE_SIGNATURE },
+				{ "X-Twilio-Email-Event-Webhook-Timestamp", SAMPLE_TIMESTAMP }
+			};
+
+			// Act
+			var result = parser.ParseSignedEventsWebhook(SAMPLE_PAYLOAD, headers, SAMPLE_PUBLIC_KEY);
+
+			// Assert
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(11); // The sample payload contains 11 events
 		}
 
 		private Stream GetStream(string responseContent)

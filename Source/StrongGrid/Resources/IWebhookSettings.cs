@@ -133,5 +133,14 @@ namespace StrongGrid.Resources
 		/// The async task.
 		/// </returns>
 		Task DeleteInboundParseWebhookSettingsAsync(string hostname, string onBehalfOf = null, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Get the signed events public key.
+		/// </summary>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The public key.
+		/// </returns>
+		Task<string> GetSignedEventsPublicKeyAsync(CancellationToken cancellationToken = default);
 	}
 }
