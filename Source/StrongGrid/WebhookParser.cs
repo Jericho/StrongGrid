@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,6 +20,20 @@ namespace StrongGrid
 	/// </summary>
 	public class WebhookParser
 	{
+		#region PROPERTIES
+
+		/// <summary>
+		/// The name of the HTTP header where SendGrid stores the webhook signature value.
+		/// </summary>
+		public const string SIGNATURE_HEADER_NAME = "X-Twilio-Email-Event-Webhook-Signature";
+
+		/// <summary>
+		/// The name of the HTTP header where SendGrid stores the webhook timestamp value.
+		/// </summary>
+		public const string TIMESTAMP_HEADER_NAME = "X-Twilio-Email-Event-Webhook-Timestamp";
+
+		#endregion
+
 		#region CTOR
 
 #if NETSTANDARD
@@ -32,6 +48,26 @@ namespace StrongGrid
 		#region PUBLIC METHODS
 
 		/// <summary>
+		/// Parses the signed events webhook asynchronously.
+		/// </summary>
+		/// <param name="stream">The stream.</param>
+		/// <param name="publicKey">Your public key. To obtain this value, see <see cref="StrongGrid.Resources.WebhookSettings.GetSignedEventsPublicKeyAsync"/>.</param>
+		/// <param name="signature">The signature.</param>
+		/// <param name="timestamp">The timestamp.</param>
+		/// <returns>An array of <see cref="Event">events</see>.</returns>
+		public async Task<Event[]> ParseSignedEventsWebhookAsync(Stream stream, string publicKey, string signature, string timestamp)
+		{
+			string requestBody;
+			using (var streamReader = new StreamReader(stream))
+			{
+				requestBody = await streamReader.ReadToEndAsync().ConfigureAwait(false);
+			}
+
+			var webHookEvents = ParseSignedEventsWebhook(requestBody, publicKey, signature, timestamp);
+			return webHookEvents;
+		}
+
+		/// <summary>
 		/// Parses the events webhook asynchronously.
 		/// </summary>
 		/// <param name="stream">The stream.</param>
@@ -42,6 +78,41 @@ namespace StrongGrid
 			using (var streamReader = new StreamReader(stream))
 			{
 				requestBody = await streamReader.ReadToEndAsync().ConfigureAwait(false);
+			}
+
+			var webHookEvents = ParseEventsWebhook(requestBody);
+			return webHookEvents;
+		}
+
+		/// <summary>
+		/// Parses the signed events webhook.
+		/// </summary>
+		/// <param name="requestBody">The content submitted by SendGrid's WebHook.</param>
+		/// <param name="publicKey">Your public key. To obtain this value, <see cref="StrongGrid.Resources.WebhookSettings.GetSignedEventsPublicKeyAsync"/>.</param>
+		/// <param name="signature">The signature.</param>
+		/// <param name="timestamp">The timestamp.</param>
+		/// <returns>An array of <see cref="Event">events</see>.</returns>
+		public Event[] ParseSignedEventsWebhook(string requestBody, string publicKey, string signature, string timestamp)
+		{
+			if (string.IsNullOrEmpty(publicKey)) throw new ArgumentNullException(nameof(publicKey));
+			if (string.IsNullOrEmpty(signature)) throw new ArgumentNullException(nameof(signature));
+			if (string.IsNullOrEmpty(timestamp)) throw new ArgumentNullException(nameof(timestamp));
+
+			// Convert the signature and public key provided by SendGrid into formats usable by the .net crypto classes
+			var sig = ConvertECDSASignature.LightweightConvertSignatureFromX9_62ToISO7816_8(256, Convert.FromBase64String(signature));
+			var cngBlob = Utils.ConvertSecp256R1PublicKeyToEccPublicBlob(publicKey);
+
+			// Must combine the timestamp and the payload
+			var data = Encoding.UTF8.GetBytes(timestamp + requestBody);
+
+			// Verify the signature
+			var cngKey = CngKey.Import(cngBlob, CngKeyBlobFormat.EccPublicBlob);
+			var eCDsaCng = new ECDsaCng(cngKey);
+			var verified = eCDsaCng.VerifyData(data, sig);
+
+			if (!verified)
+			{
+				throw new SecurityException("Webhook signature validation failed.");
 			}
 
 			var webHookEvents = ParseEventsWebhook(requestBody);
