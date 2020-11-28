@@ -41,7 +41,7 @@ namespace StrongGrid
 		/// <param name="headers">The request headers.</param>
 		/// <param name="publicKey">Your public key. To obtain this value, <see cref="StrongGrid.Resources.WebhookSettings.GetSignedEventsPublicKeyAsync"/>.</param>
 		/// <returns>An array of <see cref="Event">events</see>.</returns>
-		public async Task<Event[]> ParseSignedEventsWebhookAsync(Stream stream, HttpHeaders headers, string publicKey)
+		public async Task<Event[]> ParseSignedEventsWebhookAsync(Stream stream, HttpRequestHeaders headers, string publicKey)
 		{
 			string requestBody;
 			using (var streamReader = new StreamReader(stream))
@@ -77,7 +77,7 @@ namespace StrongGrid
 		/// <param name="headers">The request headers.</param>
 		/// <param name="publicKey">Your public key. To obtain this value, <see cref="StrongGrid.Resources.WebhookSettings.GetSignedEventsPublicKeyAsync"/>.</param>
 		/// <returns>An array of <see cref="Event">events</see>.</returns>
-		public Event[] ParseSignedEventsWebhook(string requestBody, HttpHeaders headers, string publicKey)
+		public Event[] ParseSignedEventsWebhook(string requestBody, HttpRequestHeaders headers, string publicKey)
 		{
 			if (headers == null) throw new ArgumentNullException(nameof(headers));
 			if (string.IsNullOrEmpty(publicKey)) throw new ArgumentNullException(nameof(publicKey));
