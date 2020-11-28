@@ -991,14 +991,9 @@ Content-Disposition: form-data; name=""attachments""
 		{
 			// Arrange
 			var parser = new WebhookParser();
-			var headers = new Dictionary<string, string>
-			{
-				{ "X-Twilio-Email-Event-Webhook-Signature", SAMPLE_SIGNATURE },
-				{ "X-Twilio-Email-Event-Webhook-Timestamp", SAMPLE_TIMESTAMP }
-			};
 
 			// Act
-			var result = parser.ParseSignedEventsWebhook(SAMPLE_PAYLOAD, headers, SAMPLE_PUBLIC_KEY);
+			var result = parser.ParseSignedEventsWebhook(SAMPLE_PAYLOAD, SAMPLE_PUBLIC_KEY, SAMPLE_SIGNATURE, SAMPLE_TIMESTAMP);
 
 			// Assert
 			result.ShouldNotBeNull();

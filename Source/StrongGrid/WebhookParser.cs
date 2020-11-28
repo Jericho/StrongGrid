@@ -20,6 +20,20 @@ namespace StrongGrid
 	/// </summary>
 	public class WebhookParser
 	{
+		#region PROPERTIES
+
+		/// <summary>
+		/// The name of the HTTP header where SendGrid stores the webhook signature value.
+		/// </summary>
+		public const string SIGNATURE_HEADER_NAME = "X-Twilio-Email-Event-Webhook-Signature";
+
+		/// <summary>
+		/// The name of the HTTP header where SendGrid stores the webhook timestamp value.
+		/// </summary>
+		public const string TIMESTAMP_HEADER_NAME = "X-Twilio-Email-Event-Webhook-Timestamp";
+
+		#endregion
+
 		#region CTOR
 
 #if NETSTANDARD
@@ -37,10 +51,11 @@ namespace StrongGrid
 		/// Parses the signed events webhook asynchronously.
 		/// </summary>
 		/// <param name="stream">The stream.</param>
-		/// <param name="headers">The request headers.</param>
-		/// <param name="publicKey">Your public key. To obtain this value, <see cref="StrongGrid.Resources.WebhookSettings.GetSignedEventsPublicKeyAsync"/>.</param>
+		/// <param name="publicKey">Your public key. To obtain this value, see <see cref="StrongGrid.Resources.WebhookSettings.GetSignedEventsPublicKeyAsync"/>.</param>
+		/// <param name="signature">The signature.</param>
+		/// <param name="timestamp">The timestamp.</param>
 		/// <returns>An array of <see cref="Event">events</see>.</returns>
-		public async Task<Event[]> ParseSignedEventsWebhookAsync(Stream stream, IDictionary<string, string> headers, string publicKey)
+		public async Task<Event[]> ParseSignedEventsWebhookAsync(Stream stream, string publicKey, string signature, string timestamp)
 		{
 			string requestBody;
 			using (var streamReader = new StreamReader(stream))
@@ -48,7 +63,7 @@ namespace StrongGrid
 				requestBody = await streamReader.ReadToEndAsync().ConfigureAwait(false);
 			}
 
-			var webHookEvents = ParseSignedEventsWebhook(requestBody, headers, publicKey);
+			var webHookEvents = ParseSignedEventsWebhook(requestBody, publicKey, signature, timestamp);
 			return webHookEvents;
 		}
 
@@ -73,19 +88,15 @@ namespace StrongGrid
 		/// Parses the signed events webhook.
 		/// </summary>
 		/// <param name="requestBody">The content submitted by SendGrid's WebHook.</param>
-		/// <param name="headers">The request headers.</param>
 		/// <param name="publicKey">Your public key. To obtain this value, <see cref="StrongGrid.Resources.WebhookSettings.GetSignedEventsPublicKeyAsync"/>.</param>
+		/// <param name="signature">The signature.</param>
+		/// <param name="timestamp">The timestamp.</param>
 		/// <returns>An array of <see cref="Event">events</see>.</returns>
-		public Event[] ParseSignedEventsWebhook(string requestBody, IDictionary<string, string> headers, string publicKey)
+		public Event[] ParseSignedEventsWebhook(string requestBody, string publicKey, string signature, string timestamp)
 		{
-			if (headers == null) throw new ArgumentNullException(nameof(headers));
 			if (string.IsNullOrEmpty(publicKey)) throw new ArgumentNullException(nameof(publicKey));
-
-			headers.TryGetValue("X-Twilio-Email-Event-Webhook-Signature", out string signature);
-			headers.TryGetValue("X-Twilio-Email-Event-Webhook-Timestamp", out string timestamp);
-
-			if (string.IsNullOrEmpty(signature)) throw new ArgumentException("The Twilio signature is missing from the request headers");
-			if (string.IsNullOrEmpty(timestamp)) throw new ArgumentException("The Twilio timestamp is missing from the request headers");
+			if (string.IsNullOrEmpty(signature)) throw new ArgumentNullException(nameof(signature));
+			if (string.IsNullOrEmpty(timestamp)) throw new ArgumentNullException(nameof(timestamp));
 
 			// Convert the signature and public key provided by SendGrid into formats usable by the .net crypto classes
 			var sig = ConvertECDSASignature.LightweightConvertSignatureFromX9_62ToISO7816_8(256, Convert.FromBase64String(signature));

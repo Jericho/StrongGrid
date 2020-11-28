@@ -225,6 +225,50 @@ namespace WebApplication1.Controllers
 }
 ```
 
+### Parsing a signed webhook
+
+SendGrid has a feature called `Signed Event Webhook Requests` which you can enable under `Settings > Mail Settings > Event Settings` when logged in your SendGrid account. When this feature is enabled, SendGrid includes additional information with each webhook that allow you to verify that this webhook indeed originated from SendGrid and therefore can be trusted. Specifically, the webhook will include a "signature" and a "timestamp" and you must use these two value along with a public key that SendGrid generated when you enabled the feature to validate the data being submited to you. Please note that SendGrid sometimes refers to this value as a "verification key". In case you are curious and want to know more about the inticacies of validating the data, I invite you to read SendGrid's [documentation on this topic](https://sendgrid.com/docs/for-developers/tracking-events/getting-started-event-webhook-security-features/).
+
+However, if you want to avoid learning how to perform the validation and you simply want this validation to be conveniently performed for you, StrongGrid can help! The `WebhookParser` class has a method called `ParseSignedEventsWebhookAsync`which will automatically validate the data and throw a security exception if validation fails. If the validation fails, you should consider the webhook data to be invalid. Here's how it works:
+
+```csharp
+namespace WebApplication1.Controllers
+{
+    [Route("api/SendGridWebhooks")]
+    public class SendGridController : Controller
+    {
+        [HttpPost]
+        [Route("InboundEmail")]
+        public IActionResult ReceiveInboundEmail()
+        {
+            // Get your public key
+            var apiKey = "... your api key...";
+            var strongGridClient = new StrongGrid.Client(apiKey);
+            var publicKey = await strongGridClient.WebhookSettings.GetSignedEventsPublicKeyAsync().ConfigureAwait(false);
+
+            // Get the signature and the timestamp from the request headers
+            var signature = Request.Headers[WebhookParser.SIGNATURE_HEADER_NAME]; // SIGNATURE_HEADER_NAME is a convenient constant provided so you don't have to remember the name of the header
+            var timestamp = Request.Headers[WebhookParser.TIMESTAMP_HEADER_NAME]; // TIMESTAMP_HEADER_NAME is a convenient constant provided so you don't have to remember the name of the header
+
+            // Parse the events. The signature will be automatically validated and a security exception thrown if unable to validate
+            try
+            {
+                var parser = new WebhookParser();
+                var events = await parser.ParseSignedEventsWebhookAsync(Request.Body, publicKey, signature, timestamp).ConfigureAwait(false);
+
+                ... do something with the events ...
+            }
+            catch (SecurityException e)
+            {
+                ... unable to validate the data ...
+            }
+
+            return Ok();
+        }
+    }
+}
+```
+
 ### Warmup Engine
 
 SendGrid already provides a way to warm up ip addresses but you have no control over this process. StrongGrid solves this issue by providing you a warmup engine that you can tailor to your needs.
