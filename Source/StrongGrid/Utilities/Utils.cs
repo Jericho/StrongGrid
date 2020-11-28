@@ -17,10 +17,10 @@ namespace StrongGrid.Utilities
 		public static RecyclableMemoryStreamManager MemoryStreamManager { get; } = new RecyclableMemoryStreamManager();
 
 		/// <summary>
-		/// Converts a base64 encoded secp256r1/NIST P-256 public key 
+		/// Converts a base64 encoded secp256r1/NIST P-256 public key.
 		/// </summary>
 		/// <param name="base64EncodedPublicKey">The base64 encoded public key.</param>
-		/// <returns></returns>
+		/// <returns>The converted public key.</returns>
 		/// <remarks>
 		/// From https://stackoverflow.com/questions/44502331/c-sharp-get-cngkey-object-from-public-key-in-text-file/44527439#44527439 .
 		/// </remarks>

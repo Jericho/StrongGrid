@@ -78,13 +78,6 @@ namespace StrongGrid.Utilities
 			Array.Copy(sint, sintOffset, iso7816_8, iso7816_8Offset + nBytes - sintSize, sintSize);
 		}
 
-		/// <summary>
-		/// Standalone BER decoding of length value, up to 2^31 -1.
-		/// </summary>
-		/// <param name="input"></param>
-		/// <param name="startOffset"></param>
-		/// <param name="offset"></param>
-		/// <returns></returns>
 		private static int ParseLength(byte[] input, int startOffset, out int offset)
 		{
 			offset = startOffset;

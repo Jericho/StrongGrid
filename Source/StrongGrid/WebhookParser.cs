@@ -37,6 +37,8 @@ namespace StrongGrid
 		/// Parses the signed events webhook asynchronously.
 		/// </summary>
 		/// <param name="stream">The stream.</param>
+		/// <param name="headers">The request headers.</param>
+		/// <param name="publicKey">Your public key. To obtain this value, <see cref="StrongGrid.Resources.WebhookSettings.GetSignedEventsPublicKeyAsync"/>.</param>
 		/// <returns>An array of <see cref="Event">events</see>.</returns>
 		public async Task<Event[]> ParseSignedEventsWebhookAsync(Stream stream, IDictionary<string, string> headers, string publicKey)
 		{
@@ -71,6 +73,8 @@ namespace StrongGrid
 		/// Parses the signed events webhook.
 		/// </summary>
 		/// <param name="requestBody">The content submitted by SendGrid's WebHook.</param>
+		/// <param name="headers">The request headers.</param>
+		/// <param name="publicKey">Your public key. To obtain this value, <see cref="StrongGrid.Resources.WebhookSettings.GetSignedEventsPublicKeyAsync"/>.</param>
 		/// <returns>An array of <see cref="Event">events</see>.</returns>
 		public Event[] ParseSignedEventsWebhook(string requestBody, IDictionary<string, string> headers, string publicKey)
 		{
