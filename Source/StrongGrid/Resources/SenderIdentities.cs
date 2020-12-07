@@ -100,7 +100,7 @@ namespace StrongGrid.Resources
 			var result = new JObject();
 			result.AddPropertyIfValue("nickname", nickname);
 			result.AddPropertyIfValue("from", from);
-			result.AddPropertyIfValue("reply_to", from);
+			result.AddPropertyIfValue("reply_to", replyTo);
 			result.AddPropertyIfValue("address", address1);
 			result.AddPropertyIfValue("address2", address2);
 			result.AddPropertyIfValue("city", city);
