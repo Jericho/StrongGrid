@@ -32,7 +32,7 @@ namespace StrongGrid.IntegrationTests.Tests
 					}
 					await client.Templates.DeleteAsync(oldTemplate.Id, null, cancellationToken).ConfigureAwait(false);
 					await log.WriteLineAsync($"Template {oldTemplate.Id} deleted").ConfigureAwait(false);
-					await Task.Delay(250).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
+					await Task.Delay(250, cancellationToken).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
 				});
 			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 

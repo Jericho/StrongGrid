@@ -25,7 +25,7 @@ namespace StrongGrid.IntegrationTests.Tests
 				{
 					await client.ApiKeys.DeleteAsync(oldApiKey.KeyId, null, cancellationToken).ConfigureAwait(false);
 					await log.WriteLineAsync($"Api Key {oldApiKey.KeyId} deleted").ConfigureAwait(false);
-					await Task.Delay(250).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
+					await Task.Delay(250, cancellationToken).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
 				});
 			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 

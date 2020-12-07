@@ -23,7 +23,7 @@ namespace StrongGrid.IntegrationTests.Tests
 				{
 					await client.SenderAuthentication.DeleteDomainAsync(oldDomain.Id, null, cancellationToken).ConfigureAwait(false);
 					await log.WriteLineAsync($"Domain {oldDomain.Id} deleted").ConfigureAwait(false);
-					await Task.Delay(250).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
+					await Task.Delay(250, cancellationToken).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
 				});
 			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
@@ -57,7 +57,7 @@ namespace StrongGrid.IntegrationTests.Tests
 				{
 					await client.SenderAuthentication.DeleteDomainAsync(oldDomain.Id, null, cancellationToken).ConfigureAwait(false);
 					await log.WriteLineAsync($"Domain {oldDomain.Id} deleted").ConfigureAwait(false);
-					await Task.Delay(250).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
+					await Task.Delay(250, cancellationToken).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
 				});
 			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 

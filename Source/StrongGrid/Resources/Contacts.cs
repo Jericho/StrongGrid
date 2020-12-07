@@ -359,7 +359,7 @@ namespace StrongGrid.Resources
 
 			using (var client = new HttpClient())
 			{
-				await client.SendAsync(request).ConfigureAwait(false);
+				await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
 			}
 
 			return importJobId;
