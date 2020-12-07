@@ -129,6 +129,7 @@ namespace StrongGrid.Resources.Legacy
 			return _client
 				.PatchAsync($"{_endpoint}/{senderId}")
 				.OnBehalfOf(onBehalfOf)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsSendGridObject<SenderIdentity>();
 		}
