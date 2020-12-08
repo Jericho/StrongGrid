@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace StrongGrid.Models
+namespace StrongGrid.Models.Legacy
 {
 	/// <summary>
 	/// Verification status.

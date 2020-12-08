@@ -76,7 +76,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonSerializer.Deserialize<SenderIdentity>(SINGLE_SENDER_IDENTITY_JSON, JsonFormatter.DeserializerOptions);
+			var result = JsonSerializer.Deserialize<StrongGrid.Models.Legacy.SenderIdentity>(SINGLE_SENDER_IDENTITY_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.ShouldNotBeNull();
