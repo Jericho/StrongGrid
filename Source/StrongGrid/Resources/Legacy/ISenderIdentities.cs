@@ -30,7 +30,7 @@ namespace StrongGrid.Resources.Legacy
 		/// <returns>
 		/// The <see cref="SenderIdentity" />.
 		/// </returns>
-		Task<SenderIdentity> CreateAsync(string nickname, MailAddress from, MailAddress replyTo, string address1, string address2, string city, string state, string zip, string country, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<Models.Legacy.SenderIdentity> CreateAsync(string nickname, MailAddress from, MailAddress replyTo, string address1, string address2, string city, string state, string zip, string country, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve all sender identities.
@@ -40,7 +40,7 @@ namespace StrongGrid.Resources.Legacy
 		/// <returns>
 		/// An array of <see cref="SenderIdentity" />.
 		/// </returns>
-		Task<SenderIdentity[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<Models.Legacy.SenderIdentity[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve a sender identity.
@@ -51,7 +51,7 @@ namespace StrongGrid.Resources.Legacy
 		/// <returns>
 		/// The <see cref="SenderIdentity" />.
 		/// </returns>
-		Task<SenderIdentity> GetAsync(long senderId, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<Models.Legacy.SenderIdentity> GetAsync(long senderId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Update a sender identity.
@@ -71,7 +71,7 @@ namespace StrongGrid.Resources.Legacy
 		/// <returns>
 		/// The <see cref="SenderIdentity" />.
 		/// </returns>
-		Task<SenderIdentity> UpdateAsync(
+		Task<Models.Legacy.SenderIdentity> UpdateAsync(
 			long senderId,
 			Parameter<string> nickname = default,
 			Parameter<MailAddress> from = default,
