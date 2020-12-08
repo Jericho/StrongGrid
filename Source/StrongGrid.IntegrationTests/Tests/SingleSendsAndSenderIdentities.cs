@@ -33,7 +33,7 @@ namespace StrongGrid.IntegrationTests.Tests
 			var senderIdentities = await client.SenderIdentities.GetAllAsync(cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All sender identities retrieved. There are {senderIdentities.Length} identities").ConfigureAwait(false);
 
-			var sender = senderIdentities.FirstOrDefault(s => s.Verification.IsCompleted);
+			var sender = senderIdentities.FirstOrDefault(s => s.IsVerified);
 			if (sender == null)
 			{
 				sender = senderIdentities.FirstOrDefault(s => s.NickName == "Integration Testing identity");
@@ -44,13 +44,9 @@ namespace StrongGrid.IntegrationTests.Tests
 				sender = await client.SenderIdentities.CreateAsync("Integration Testing identity", new MailAddress(YOUR_EMAIL, "John Doe"), new MailAddress(YOUR_EMAIL, "John Doe"), "123 Main Street", null, "Small Town", "ZZ", "12345", "USA", cancellationToken).ConfigureAwait(false);
 				throw new Exception($"A new sender identity was created and a verification email was sent to {sender.From.Email}. You must complete the verification process before proceeding.");
 			}
-			else if (!sender.Verification.IsCompleted)
+			else if (!sender.IsVerified)
 			{
 				throw new Exception($"A verification email was previously sent to {sender.From.Email} but the process hasn't been completed yet (hint: there is a link in the email that you must click on).");
-			}
-			else
-			{
-				sender = await client.SenderIdentities.GetAsync(sender.Id, cancellationToken).ConfigureAwait(false);
 			}
 
 			var lists = await client.Lists.GetAllAsync(100, null, cancellationToken).ConfigureAwait(false);

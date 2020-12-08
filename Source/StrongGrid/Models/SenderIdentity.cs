@@ -33,8 +33,17 @@ namespace StrongGrid.Models
 		/// <value>
 		/// From.
 		/// </value>
-		[JsonPropertyName("from")]
-		public MailAddress From { get; set; }
+		[JsonIgnore]
+		public MailAddress From
+		{
+			get => new MailAddress(this.FromEmail, this.FromName);
+
+			set
+			{
+				this.FromEmail = value?.Email;
+				this.FromName = value?.Name;
+			}
+		}
 
 		/// <summary>
 		/// Gets or sets the reply to.
@@ -42,8 +51,17 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The reply to.
 		/// </value>
-		[JsonPropertyName("reply_to")]
-		public MailAddress ReplyTo { get; set; }
+		[JsonIgnore]
+		public MailAddress ReplyTo
+		{
+			get => new MailAddress(this.ReplyToEmail, this.ReplyToName);
+
+			set
+			{
+				this.ReplyToEmail = value?.Email;
+				this.ReplyToName = value?.Name;
+			}
+		}
 
 		/// <summary>
 		/// Gets or sets the address1.
@@ -100,13 +118,13 @@ namespace StrongGrid.Models
 		public string Country { get; set; }
 
 		/// <summary>
-		/// Gets or sets the verification.
+		/// Gets or sets a value indicating whether this <see cref="SenderIdentity"/> is verified.
 		/// </summary>
 		/// <value>
 		/// The verification.
 		/// </value>
 		[JsonPropertyName("verified")]
-		public VerificationStatus Verification { get; set; }
+		public bool IsVerified { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="SenderIdentity"/> is locked.
@@ -115,7 +133,7 @@ namespace StrongGrid.Models
 		///   <c>true</c> if locked; otherwise, <c>false</c>.
 		/// </value>
 		[JsonPropertyName("locked")]
-		public bool Locked { get; set; }
+		public bool IsLocked { get; set; }
 
 		/// <summary>
 		/// Gets or sets the created on.
@@ -136,5 +154,17 @@ namespace StrongGrid.Models
 		[JsonPropertyName("updated_at")]
 		[JsonConverter(typeof(EpochConverter))]
 		public DateTime ModifiedOn { get; set; }
+
+		[JsonProperty("from_email", NullValueHandling = NullValueHandling.Ignore)]
+		private string FromEmail { get; set; }
+
+		[JsonProperty("from_name", NullValueHandling = NullValueHandling.Ignore)]
+		private string FromName { get; set; }
+
+		[JsonProperty("reply_to", NullValueHandling = NullValueHandling.Ignore)]
+		private string ReplyToEmail { get; set; }
+
+		[JsonProperty("reply_to_name", NullValueHandling = NullValueHandling.Ignore)]
+		private string ReplyToName { get; set; }
 	}
 }
