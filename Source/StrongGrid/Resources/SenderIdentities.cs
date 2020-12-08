@@ -16,7 +16,7 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class SenderIdentities : ISenderIdentities
 	{
-		private const string _endpoint = "marketing/senders";
+		private const string _endpoint = "verified_senders";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
@@ -83,7 +83,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync(_endpoint)
 				.WithCancellationToken(cancellationToken)
-				.AsObject<SenderIdentity[]>();
+				.AsObject<SenderIdentity[]>("results");
 		}
 
 		private static JObject CreateJObject(
@@ -99,8 +99,10 @@ namespace StrongGrid.Resources
 		{
 			var result = new JObject();
 			result.AddPropertyIfValue("nickname", nickname);
-			result.AddPropertyIfValue("from", from);
-			result.AddPropertyIfValue("reply_to", replyTo);
+			result.AddPropertyIfValue("from_email", from.Value?.Email);
+			result.AddPropertyIfValue("from_name", from.Value?.Name);
+			result.AddPropertyIfValue("reply_to", replyTo.Value?.Email);
+			result.AddPropertyIfValue("reply_to_name", replyTo.Value?.Name);
 			result.AddPropertyIfValue("address", address1);
 			result.AddPropertyIfValue("address2", address2);
 			result.AddPropertyIfValue("city", city);
