@@ -47,7 +47,7 @@ namespace StrongGrid.Resources.Legacy
 		/// <returns>
 		/// The <see cref="SenderIdentity" />.
 		/// </returns>
-		public Task<SenderIdentity> CreateAsync(string nickname, MailAddress from, MailAddress replyTo, string address1, string address2, string city, string state, string zip, string country, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<Models.Legacy.SenderIdentity> CreateAsync(string nickname, MailAddress from, MailAddress replyTo, string address1, string address2, string city, string state, string zip, string country, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = ConvertToJson(nickname, from, replyTo, address1, address2, city, state, zip, country);
 
@@ -56,7 +56,7 @@ namespace StrongGrid.Resources.Legacy
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsObject<SenderIdentity>();
+				.AsObject<Models.Legacy.SenderIdentity>();
 		}
 
 		/// <summary>
@@ -67,13 +67,13 @@ namespace StrongGrid.Resources.Legacy
 		/// <returns>
 		/// An array of <see cref="SenderIdentity" />.
 		/// </returns>
-		public Task<SenderIdentity[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<Models.Legacy.SenderIdentity[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsObject<SenderIdentity[]>();
+				.AsObject<Models.Legacy.SenderIdentity[]>();
 		}
 
 		/// <summary>
@@ -85,13 +85,13 @@ namespace StrongGrid.Resources.Legacy
 		/// <returns>
 		/// The <see cref="SenderIdentity" />.
 		/// </returns>
-		public Task<SenderIdentity> GetAsync(long senderId, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<Models.Legacy.SenderIdentity> GetAsync(long senderId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{senderId}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsObject<SenderIdentity>();
+				.AsObject<Models.Legacy.SenderIdentity>();
 		}
 
 		/// <summary>
@@ -112,7 +112,7 @@ namespace StrongGrid.Resources.Legacy
 		/// <returns>
 		/// The <see cref="SenderIdentity" />.
 		/// </returns>
-		public Task<SenderIdentity> UpdateAsync(
+		public Task<Models.Legacy.SenderIdentity> UpdateAsync(
 			long senderId,
 			Parameter<string> nickname = default,
 			Parameter<MailAddress> from = default,
@@ -133,7 +133,7 @@ namespace StrongGrid.Resources.Legacy
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsObject<SenderIdentity>();
+				.AsObject<Models.Legacy.SenderIdentity>();
 		}
 
 		/// <summary>
