@@ -61,7 +61,7 @@ namespace StrongGrid
 		/// This method is an improvement over the built-in ReadAsStringAsync method
 		/// because it can handle invalid charset returned in the response. For example
 		/// you may be sending a request to an API that returns a blank charset or a
-		/// mispelled one like 'utf8' instead of the correctly spelled 'utf-8'. The
+		/// misspelled one like 'utf8' instead of the correctly spelled 'utf-8'. The
 		/// built-in method throws an exception if an invalid charset is specified
 		/// while this method uses the UTF-8 encoding in that situation.
 		///
