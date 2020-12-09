@@ -227,6 +227,21 @@ namespace StrongGrid
 			return await response.Content.AsPaginatedResponse<T>(propertyName, jsonConverter).ConfigureAwait(false);
 		}
 
+		/// <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
+		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
+		public static Task<JObject> AsRawJsonObject(this IResponse response, string propertyName = null, bool throwIfPropertyIsMissing = true)
+		{
+			return response.Message.Content.AsRawJsonObject(propertyName, throwIfPropertyIsMissing);
+		}
+
+		/// <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
+		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
+		public static async Task<JObject> AsRawJsonObject(this IRequest request, string propertyName = null, bool throwIfPropertyIsMissing = true)
+		{
+			var response = await request.AsMessage().ConfigureAwait(false);
+			return await response.Content.AsRawJsonObject(propertyName, throwIfPropertyIsMissing).ConfigureAwait(false);
+		}
+
 		/// <summary>Set the body content of the HTTP request.</summary>
 		/// <typeparam name="T">The type of object to serialize into a JSON string.</typeparam>
 		/// <param name="request">The request.</param>
@@ -682,16 +697,57 @@ namespace StrongGrid
 			var serializer = new JsonSerializer();
 			if (jsonConverter != null) serializer.Converters.Add(jsonConverter);
 
+			var jProperty = jObject.Property(propertyName);
+			if (jProperty == null)
+			{
+				throw new ArgumentException($"The response does not contain a field called '{propertyName}'", nameof(propertyName));
+			}
+
 			var result = new PaginatedResponse<T>()
 			{
 				PreviousPageToken = metadata.PrevToken,
 				CurrentPageToken = metadata.SelfToken,
 				NextPageToken = metadata.NextToken,
 				TotalRecords = metadata.Count,
-				Records = jObject.Property(propertyName).Value.ToObject<T[]>(serializer)
+				Records = jProperty.Value.ToObject<T[]>(serializer)
 			};
 
 			return result;
+		}
+
+		/// <summary>Asynchronously retrieve the JSON encoded content and converts it to a 'PaginatedResponse' object.</summary>
+		/// <typeparam name="T">The response model to deserialize into.</typeparam>
+		/// <param name="httpContent">The content.</param>
+		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
+		/// <param name="throwIfPropertyIsMissing">Indicates if an exception should be thrown when the specified JSON property is missing from the response.</param>
+		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
+		internal static async Task<JObject> AsRawJsonObject(this HttpContent httpContent, string propertyName = null, bool throwIfPropertyIsMissing = true)
+		{
+			var responseContent = await httpContent.ReadAsStringAsync(null).ConfigureAwait(false);
+
+			if (!string.IsNullOrEmpty(propertyName))
+			{
+				var jObject = JObject.Parse(responseContent);
+				var jProperty = jObject.Property(propertyName);
+				if (jProperty == null)
+				{
+					if (throwIfPropertyIsMissing)
+					{
+						throw new ArgumentException($"The response does not contain a field called '{propertyName}'", nameof(propertyName));
+					}
+					else
+					{
+						return default;
+					}
+				}
+
+				return (JObject)jProperty.Value;
+			}
+			else
+			{
+				return JObject.Parse(responseContent);
+			}
 		}
 
 		private static async Task<(bool, string)> GetErrorMessage(HttpResponseMessage message)
@@ -767,10 +823,8 @@ namespace StrongGrid
 							isError = true;
 						}
 					}
-#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
 				}
 				catch
-#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
 				{
 					// Intentionally ignore parsing errors
 				}
