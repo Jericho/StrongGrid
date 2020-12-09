@@ -715,8 +715,7 @@ namespace StrongGrid
 			return result;
 		}
 
-		/// <summary>Asynchronously retrieve the JSON encoded content and converts it to a 'PaginatedResponse' object.</summary>
-		/// <typeparam name="T">The response model to deserialize into.</typeparam>
+		/// <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
 		/// <param name="httpContent">The content.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
 		/// <param name="throwIfPropertyIsMissing">Indicates if an exception should be thrown when the specified JSON property is missing from the response.</param>
