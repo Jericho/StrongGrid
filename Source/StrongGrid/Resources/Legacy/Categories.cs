@@ -1,6 +1,4 @@
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
-using StrongGrid.Utilities;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,18 +35,18 @@ namespace StrongGrid.Resources.Legacy
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
-		/// An array of strings representing the catgories.
+		/// An array of strings representing the categories.
 		/// </returns>
 		public async Task<string[]> GetAsync(string searchPrefix = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var responseContent = await _client
+			var jArray = await _client
 				.GetAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
 				.WithArgument("category", searchPrefix)
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
-				.AsString(null)
+				.AsRawJsonArray()
 				.ConfigureAwait(false);
 
 			// Response looks like this:
@@ -59,8 +57,7 @@ namespace StrongGrid.Resources.Legacy
 			//  {"category": "cat4"},
 			//  {"category": "cat5"}
 			// ]
-			// We use a dynamic object to get rid of the 'category' property and simply return an array of strings
-			var jArray = JArray.Parse(responseContent);
+			// We use a JArray to get rid of the 'category' property and simply return an array of strings
 			var categories = jArray.Select(x => x["category"].ToString()).ToArray();
 			return categories;
 		}

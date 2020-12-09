@@ -172,11 +172,11 @@ namespace StrongGrid.Resources
 			var response = await _client
 				.GetAsync($"{_endpoint}/count")
 				.WithCancellationToken(cancellationToken)
-				.AsResponse()
+				.AsRawJsonObject()
 				.ConfigureAwait(false);
 
-			var totalCount = await response.AsSendGridObject<long>("contact_count").ConfigureAwait(false);
-			var billableCount = await response.AsSendGridObject<long>("billable_count").ConfigureAwait(false);
+			var totalCount = response["contact_count"].Value<long>();
+			var billableCount = response["billable_count"].Value<long>();
 
 			return (totalCount, billableCount);
 		}

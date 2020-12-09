@@ -1,7 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
-using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,7 +56,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Check if a recipient address is in the global suppressions group.
+		/// Check if a recipient address is in the global suppression group.
 		/// </summary>
 		/// <param name="email">email address to check.</param>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
@@ -67,11 +66,11 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<bool> IsUnsubscribedAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var responseContent = await _client
+			var response = await _client
 				.GetAsync($"{_endpoint}/{email}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsString(null)
+				.AsRawJsonObject()
 				.ConfigureAwait(false);
 
 			// If the email address is on the global suppression list, the response will look like this:
@@ -79,11 +78,7 @@ namespace StrongGrid.Resources
 			//      "recipient_email": "{email}"
 			//  }
 			// If the email address is not on the global suppression list, the response will be empty
-			//
-			// Therefore, we check for the presence of the 'recipient_email' to indicate if the email
-			// address is on the global suppression list or not.
-			var dynamicObject = JObject.Parse(responseContent);
-			var propertyDictionary = (IDictionary<string, JToken>)dynamicObject;
+			var propertyDictionary = (IDictionary<string, JToken>)response;
 			return propertyDictionary.ContainsKey("recipient_email");
 		}
 

@@ -1,7 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
-using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -168,25 +167,18 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<bool> GetClickTrackingSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var responseContent = await _client
+			var clickSettings = await _client
 				.GetAsync("tracking_settings/click")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsString(null).
-				ConfigureAwait(false);
+				.AsRawJsonObject()
+				.ConfigureAwait(false);
 
 			// Response looks like this:
 			// {
-			//   "result": [
-			//     {
-			//       "enabled": true
-			//     }
-			//   ]
+			//   "enabled": false
 			// }
-			// We use a dynamic object to get rid of the 'enabled' property and simply return a boolean
-			dynamic dynamicObject = JObject.Parse(responseContent);
-
-			var isEnabled = (bool)dynamicObject.enabled;
+			var isEnabled = clickSettings["enabled"].Value<bool>();
 			return isEnabled;
 		}
 
