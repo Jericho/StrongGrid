@@ -261,6 +261,7 @@ namespace StrongGrid.UnitTests.Resources
 			var apiResponse = @"{
 				'enable_text': true,
 				'enabled': false,
+				'enable_text': true
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -289,6 +290,7 @@ namespace StrongGrid.UnitTests.Resources
 			var apiResponse = @"{
 				'enable_text': false,
 				'enabled': true,
+				'enable_text': true
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
