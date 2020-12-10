@@ -109,7 +109,7 @@ namespace StrongGrid.Resources
 		public async Task<(bool SenderVerified, bool DomainVerified)> GetCompletedStepsAsync(CancellationToken cancellationToken = default)
 		{
 			var completedSteps = await _client
-				.GetAsync("verified_senders/steps_completed")
+				.GetAsync($"{_endpoint}/steps_completed")
 				.WithCancellationToken(cancellationToken)
 				.AsRawJsonDocument()
 				.ConfigureAwait(false);
@@ -120,6 +120,21 @@ namespace StrongGrid.Resources
 			var domainVerified = results.GetProperty("domain_verified").GetBoolean();
 
 			return (senderVerified, domainVerified);
+		}
+
+		/// <summary>
+		/// Get the list of domains known to implement DMARC and categorize them by failure type — hard failure or soft failure.
+		/// </summary>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// The list of domains known to implement DMARC.
+		/// </returns>
+		public Task<DomainsDmarc> GetDmarcDomains(CancellationToken cancellationToken = default)
+		{
+			return _client
+				.GetAsync($"{_endpoint}/domains")
+				.WithCancellationToken(cancellationToken)
+				.AsObject<DomainsDmarc>("results");
 		}
 
 		private static StrongGridJsonObject ConvertToJson(
