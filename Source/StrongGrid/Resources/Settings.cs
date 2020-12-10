@@ -1,6 +1,7 @@
 using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
+using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -165,44 +166,37 @@ namespace StrongGrid.Resources
 		/// <returns>
 		///   <c>true</c> if the setting is set; otherwise, <c>false</c>.
 		/// </returns>
-		public async Task<bool> GetClickTrackingSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<ClickTrackingSettings> GetClickTrackingSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var clickSettings = await _client
+			return _client
 				.GetAsync("tracking_settings/click")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsRawJsonObject()
-				.ConfigureAwait(false);
-
-			// Response looks like this:
-			// {
-			//   "enabled": false
-			// }
-			var isEnabled = clickSettings["enabled"].Value<bool>();
-			return isEnabled;
+				.AsSendGridObject<ClickTrackingSettings>();
 		}
 
 		/// <summary>
 		/// Change the click tracking settings.
 		/// </summary>
-		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
+		/// <param name="enabledInText">if set to <c>true</c>, enables click tracking in text content.</param>
+		/// <param name="enabledInHtml">if set to <c>true</c>, enables click tracking in HTML content.</param>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		///   <c>true</c> if the setting is set; otherwise, <c>false</c>.
+		/// The <see cref="ClickTrackingSettings" />.
 		/// </returns>
-		public Task<bool> UpdateClickTrackingSettingsAsync(bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<ClickTrackingSettings> UpdateClickTrackingSettingsAsync(Parameter<bool> enabledInText = default, Parameter<bool> enabledInHtml = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "enabled", enabled }
-			};
+			var data = new JObject();
+			data.AddPropertyIfValue("enable_text", enabledInText);
+			data.AddPropertyIfValue("enabled", enabledInHtml);
+
 			return _client
 				.PatchAsync("tracking_settings/click")
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<bool>("enabled");
+				.AsSendGridObject<ClickTrackingSettings>();
 		}
 
 		/// <summary>
