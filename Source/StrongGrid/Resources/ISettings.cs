@@ -1,4 +1,5 @@
-﻿using StrongGrid.Models;
+using StrongGrid.Models;
+using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -87,20 +88,21 @@ namespace StrongGrid.Resources
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		///   <c>true</c> if the setting is set; otherwise, <c>false</c>.
+		/// The <see cref="ClickTrackingSettings" />.
 		/// </returns>
-		Task<bool> GetClickTrackingSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<ClickTrackingSettings> GetClickTrackingSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Change the click tracking settings.
 		/// </summary>
-		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
+		/// <param name="enabledInText">if set to <c>true</c>, enables click tracking in text content.</param>
+		/// <param name="enabledInHtml">if set to <c>true</c>, enables click tracking in HTML content.</param>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		///   <c>true</c> if the setting is set; otherwise, <c>false</c>.
+		/// The <see cref="ClickTrackingSettings" />.
 		/// </returns>
-		Task<bool> UpdateClickTrackingSettingsAsync(bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<ClickTrackingSettings> UpdateClickTrackingSettingsAsync(Parameter<bool> enabledInText = default, Parameter<bool> enabledInHtml = default, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get Google Analytics Settings.
