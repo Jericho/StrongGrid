@@ -18,9 +18,9 @@ namespace StrongGrid.IntegrationTests.Tests
 			var from = new MailAddress("test@example.com", "John Smith");
 			var to1 = new MailAddress("recipient1@mailinator.com", "Recipient1");
 			var to2 = new MailAddress("recipient2@mailinator.com", "Recipient2");
-			var subject = "Dear {{customer_type}}";
-			var text = "Hello world!";
-			var html = "<html><body>Hello <b><i>{{first_name}}!</i></b><br/></body></html>";
+			const string subject = "Dear {{customer_type}}";
+			const string text = "Hello world!";
+			const string html = "<html><body>Hello <b><i>{{first_name}}!</i></b><br/>Check out <a href=\"http://youtube.com\">YouTube</a></body></html>";
 			var textContent = new MailContent("text/plain", text);
 			var htmlContent = new MailContent("text/html", html);
 			var personalizations = new[]
@@ -65,7 +65,7 @@ namespace StrongGrid.IntegrationTests.Tests
 				Bcc = new BccSettings
 				{
 					Enabled = true,
-					EmailAddress = "myemail@example.com"
+					EmailAddress = "recipient3@mailinator.com"
 				},
 				BypassListManagement = new BypassListManagementSettings
 				{
