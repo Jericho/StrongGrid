@@ -32,6 +32,21 @@ namespace StrongGrid.IntegrationTests.Tests
 			{
 				await log.WriteLineAsync($"  - {mailSetting.Title}: {(mailSetting.Enabled ? "Enabled" : "Not enabled")}").ConfigureAwait(false);
 			}
+
+			var clickTrackingSettings = await client.Settings.GetClickTrackingSettingsAsync(null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("Click tracking settings retrieved:").ConfigureAwait(false);
+			await log.WriteLineAsync($"  - Enabled in text content: {clickTrackingSettings.EnabledInTextContent}").ConfigureAwait(false);
+			await log.WriteLineAsync($"  - Enabled in HTML content: {clickTrackingSettings.EnabledInHtmlContent}").ConfigureAwait(false);
+
+			var updatedClickTrackingSettings = await client.Settings.UpdateClickTrackingSettingsAsync(!clickTrackingSettings.EnabledInTextContent, !clickTrackingSettings.EnabledInHtmlContent, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("Click tracking settings have been updated:").ConfigureAwait(false);
+			await log.WriteLineAsync($"  - Enabled in text content: {updatedClickTrackingSettings.EnabledInTextContent}").ConfigureAwait(false);
+			await log.WriteLineAsync($"  - Enabled in HTML content: {updatedClickTrackingSettings.EnabledInHtmlContent}").ConfigureAwait(false);
+
+			var restoredClickTrackingSettings = await client.Settings.UpdateClickTrackingSettingsAsync(clickTrackingSettings.EnabledInTextContent, clickTrackingSettings.EnabledInHtmlContent, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("Click tracking settings have been restored to original values:").ConfigureAwait(false);
+			await log.WriteLineAsync($"  - Enabled in text content: {restoredClickTrackingSettings.EnabledInTextContent}").ConfigureAwait(false);
+			await log.WriteLineAsync($"  - Enabled in HTML content: {restoredClickTrackingSettings.EnabledInHtmlContent}").ConfigureAwait(false);
 		}
 	}
 }
