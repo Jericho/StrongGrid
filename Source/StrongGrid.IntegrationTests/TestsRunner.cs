@@ -37,6 +37,10 @@ namespace StrongGrid.IntegrationTests
 			var useFiddler = true;
 			var fiddlerPort = 8866; // By default Fiddler4 uses port 8888 and Fiddler Everywhere uses port 8866
 
+			// -----------------------------------------------------------------------------
+			// Do you want to log the details of each exception? Can be overwhelming is there are a lot of exceptions.
+			var logExceptionDetails = false;
+
 			// Change the default values in the legacy client.
 			var optionsToCorrectLegacyDefaultValues = new StrongGridClientOptions()
 			{
@@ -49,8 +53,8 @@ namespace StrongGrid.IntegrationTests
 			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
 			var proxy = useFiddler ? new WebProxy($"http://localhost:{fiddlerPort}") : null;
 
-			var legacyClient = new LegacyClient(apiKey, proxy, optionsToCorrectLegacyDefaultValues, _loggerFactory.CreateLogger<LegacyClient>());
-			var client = new Client(apiKey, proxy, null, _loggerFactory.CreateLogger<Client>());
+			var legacyClient = new LegacyClient(apiKey, proxy, optionsToCorrectLegacyDefaultValues, logExceptionDetails ? _loggerFactory.CreateLogger<LegacyClient>() : null);
+			var client = new Client(apiKey, proxy, null, logExceptionDetails ? _loggerFactory.CreateLogger<Client>() : null);
 
 			// Configure Console
 			var source = new CancellationTokenSource();
