@@ -47,5 +47,14 @@ namespace StrongGrid.Resources
 		/// Two boolean values: the first value indicates whether a sender had been verified and the second value indicates whether a domain has been verified.
 		/// </returns>
 		Task<(bool SenderVerified, bool DomainVerified)> GetCompletedStepsAsync(CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Get the list of domains known to implement DMARC and categorize them by failure type — hard failure or soft failure.
+		/// </summary>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// The list of domains known to implement DMARC.
+		/// </returns>
+		Task<DomainsDmarc> GetDmarcDomains(CancellationToken cancellationToken = default);
 	}
 }

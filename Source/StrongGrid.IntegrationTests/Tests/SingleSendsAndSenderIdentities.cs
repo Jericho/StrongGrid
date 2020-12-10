@@ -30,6 +30,9 @@ namespace StrongGrid.IntegrationTests.Tests
 				});
 			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
+			var dmarcDomains = await client.SenderIdentities.GetDmarcDomains(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {dmarcDomains.HardFailures.Length + dmarcDomains.SoftFailures.Length} domains that are known to implement DMARC").ConfigureAwait(false);
+
 			var completedSteps = await client.SenderIdentities.GetCompletedStepsAsync(cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync(completedSteps.SenderVerified ? "At least one sender is verified" : "No sender has been verified").ConfigureAwait(false);
 			await log.WriteLineAsync(completedSteps.DomainVerified ? "At least one domain is verified" : "No domain has been verified").ConfigureAwait(false);
