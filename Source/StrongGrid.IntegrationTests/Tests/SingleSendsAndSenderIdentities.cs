@@ -30,6 +30,10 @@ namespace StrongGrid.IntegrationTests.Tests
 				});
 			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
+			var completedSteps = await client.SenderIdentities.GetCompletedStepsAsync(cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync(completedSteps.SenderVerified ? "At least one sender is verified" : "No sender has been verified").ConfigureAwait(false);
+			await log.WriteLineAsync(completedSteps.DomainVerified ? "At least one domain is verified" : "No domain has been verified").ConfigureAwait(false);
+
 			var senderIdentities = await client.SenderIdentities.GetAllAsync(cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All sender identities retrieved. There are {senderIdentities.Length} identities").ConfigureAwait(false);
 

@@ -38,5 +38,14 @@ namespace StrongGrid.Resources
 		/// An array of <see cref="SenderIdentity" />.
 		/// </returns>
 		Task<SenderIdentity[]> GetAllAsync(CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Determine which of SendGrid's verification processes have been completed for an account.
+		/// </summary>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// Two boolean values: the first value indicates whether a sender had been verified and the second value indicates whether a domain has been verified.
+		/// </returns>
+		Task<(bool SenderVerified, bool DomainVerified)> GetCompletedStepsAsync(CancellationToken cancellationToken = default);
 	}
 }

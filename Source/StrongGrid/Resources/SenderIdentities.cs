@@ -99,6 +99,29 @@ namespace StrongGrid.Resources
 				.AsObject<SenderIdentity[]>("results");
 		}
 
+		/// <summary>
+		/// Determine which of SendGrid's verification processes have been completed for an account.
+		/// </summary>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// Two boolean values: the first value indicates whether a sender had been verified and the second value indicates whether a domain has been verified.
+		/// </returns>
+		public async Task<(bool SenderVerified, bool DomainVerified)> GetCompletedStepsAsync(CancellationToken cancellationToken = default)
+		{
+			var completedSteps = await _client
+				.GetAsync("verified_senders/steps_completed")
+				.WithCancellationToken(cancellationToken)
+				.AsRawJsonDocument()
+				.ConfigureAwait(false);
+
+			var results = completedSteps.RootElement.GetProperty("results");
+
+			var senderVerified = results.GetProperty("sender_verified").GetBoolean();
+			var domainVerified = results.GetProperty("domain_verified").GetBoolean();
+
+			return (senderVerified, domainVerified);
+		}
+
 		private static StrongGridJsonObject ConvertToJson(
 			Parameter<string> nickname,
 			Parameter<MailAddress> from,
