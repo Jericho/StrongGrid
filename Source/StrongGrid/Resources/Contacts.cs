@@ -120,7 +120,7 @@ namespace StrongGrid.Resources
 		/// <param name="contactId">The contact identifier.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The async task.
+		/// The job id.
 		/// </returns>
 		public Task<string> DeleteAsync(string contactId, CancellationToken cancellationToken = default)
 		{
@@ -133,7 +133,7 @@ namespace StrongGrid.Resources
 		/// <param name="contactIds">The identifiers of the contacts to be deleted.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The async task.
+		/// The job id.
 		/// </returns>
 		public Task<string> DeleteAsync(IEnumerable<string> contactIds, CancellationToken cancellationToken = default)
 		{
