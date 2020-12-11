@@ -212,10 +212,10 @@ namespace WebApplication1.Controllers
 	{
 		[HttpPost]
 		[Route("InboundEmail")]
-		public IActionResult ReceiveInboundEmail()
+		public async Task<IActionResult> ReceiveInboundEmail()
 		{
 			var parser = new WebhookParser();
-			var inboundEmail = parser.ParseInboundEmailWebhook(Request.Body);
+			var inboundEmail = await parser.ParseInboundEmailWebhookAsync(Request.Body).ConfigureAwait(false);
 
 			... do something with the inbound email ...
 
