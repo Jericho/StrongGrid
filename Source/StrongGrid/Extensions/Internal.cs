@@ -463,6 +463,30 @@ namespace StrongGrid
 			jsonObject.AddDeepProperty(propertyName, parameter.Value == null ? null : convertValueToJsonToken(parameter.Value));
 		}
 
+		internal static void AddDeepProperty(this JObject jsonObject, string propertyName, JToken value)
+		{
+			var separatorLocation = propertyName.IndexOf('/');
+
+			if (separatorLocation == -1)
+			{
+				jsonObject.Add(propertyName, value);
+			}
+			else
+			{
+				var name = propertyName.Substring(0, separatorLocation);
+				var childrenName = propertyName.Substring(separatorLocation + 1);
+
+				var property = jsonObject.Value<JObject>(name);
+				if (property == null)
+				{
+					property = new JObject();
+					jsonObject.Add(name, property);
+				}
+
+				property.AddDeepProperty(childrenName, value);
+			}
+		}
+
 		internal static T GetPropertyValue<T>(this JToken item, string name, T defaultValue = default)
 		{
 			if (item[name] == null) return defaultValue;
@@ -592,6 +616,89 @@ namespace StrongGrid
 			}
 		}
 
+		private static async Task<(bool, string)> GetErrorMessage(HttpResponseMessage message)
+		{
+			// Assume there is no error
+			var isError = false;
+
+			// Default error message
+			var errorMessage = $"{(int)message.StatusCode}: {message.ReasonPhrase}";
+
+			/*
+				In case of an error, the SendGrid API returns a JSON string that looks like this:
+				{
+					"errors": [
+						{
+							"message": "An error has occurred",
+							"field": null,
+							"help": null
+						}
+					]
+				}
+
+				The documentation says that it should look like this:
+			{
+					"errors": [
+						{
+							"message": <string>,
+							"field": <string>,
+							"error_id": <string>
+						}
+					]
+				}
+
+				The documentation for "Add or Update a Contact" under the "New Marketing Campaigns" section says that it looks like this:
+				{
+					"errors": [
+						{
+							"message": <string>,
+							"field": <string>,
+							"error_id": <string>,
+							"parameter": <string>
+						}
+					]
+		}
+
+				I have also seen cases where the JSON string looks like this:
+		{
+					"error": "Name already exists"
+				}
+			*/
+
+			var responseContent = await message.Content.ReadAsStringAsync(null).ConfigureAwait(false);
+
+			if (!string.IsNullOrEmpty(responseContent))
+			{
+				try
+				{
+					// Check for the presence of property called 'errors'
+					var jObject = JObject.Parse(responseContent);
+					var errorsArray = (JArray)jObject["errors"];
+					if (errorsArray != null && errorsArray.Count > 0)
+					{
+						errorMessage = string.Join(Environment.NewLine, errorsArray.Select(error => error["message"].Value<string>()));
+						isError = true;
+					}
+					else
+					{
+						// Check for the presence of property called 'error'
+						var errorProperty = jObject["error"];
+						if (errorProperty != null)
+						{
+							errorMessage = errorProperty.Value<string>();
+							isError = true;
+						}
+					}
+				}
+				catch
+				{
+					// Intentionally ignore parsing errors
+				}
+			}
+
+			return (isError, errorMessage);
+		}
+
 		internal static IEnumerable<KeyValuePair<string, string>> ParseQuerystring(this Uri uri)
 		{
 			var querystringParameters = uri
@@ -611,30 +718,6 @@ namespace StrongGrid
 				});
 
 			return querystringParameters;
-		}
-
-		internal static void AddDeepProperty(this JObject jsonObject, string propertyName, JToken value)
-		{
-			var separatorLocation = propertyName.IndexOf('/');
-
-			if (separatorLocation == -1)
-			{
-				jsonObject.Add(propertyName, value);
-			}
-			else
-			{
-				var name = propertyName.Substring(0, separatorLocation);
-				var childrenName = propertyName.Substring(separatorLocation + 1);
-
-				var property = jsonObject.Value<JObject>(name);
-				if (property == null)
-				{
-					property = new JObject();
-					jsonObject.Add(name, property);
-				}
-
-				property.AddDeepProperty(childrenName, value);
-			}
 		}
 
 		/// <summary>Asynchronously converts the JSON encoded content and convert it to an object of the desired type.</summary>
@@ -747,89 +830,6 @@ namespace StrongGrid
 			{
 				return JObject.Parse(responseContent);
 			}
-		}
-
-		private static async Task<(bool, string)> GetErrorMessage(HttpResponseMessage message)
-		{
-			// Assume there is no error
-			var isError = false;
-
-			// Default error message
-			var errorMessage = $"{(int)message.StatusCode}: {message.ReasonPhrase}";
-
-			/*
-				In case of an error, the SendGrid API returns a JSON string that looks like this:
-				{
-					"errors": [
-						{
-							"message": "An error has occurred",
-							"field": null,
-							"help": null
-						}
-					]
-				}
-
-				The documentation says that it should look like this:
-			{
-					"errors": [
-						{
-							"message": <string>,
-							"field": <string>,
-							"error_id": <string>
-						}
-					]
-				}
-
-				The documentation for "Add or Update a Contact" under the "New Marketing Campaigns" section says that it looks like this:
-				{
-					"errors": [
-						{
-							"message": <string>,
-							"field": <string>,
-							"error_id": <string>,
-							"parameter": <string>
-						}
-					]
-		}
-
-				I have also seen cases where the JSON string looks like this:
-		{
-					"error": "Name already exists"
-				}
-			*/
-
-			var responseContent = await message.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-
-			if (!string.IsNullOrEmpty(responseContent))
-			{
-				try
-				{
-					// Check for the presence of property called 'errors'
-					var jObject = JObject.Parse(responseContent);
-					var errorsArray = (JArray)jObject["errors"];
-					if (errorsArray != null && errorsArray.Count > 0)
-					{
-						errorMessage = string.Join(Environment.NewLine, errorsArray.Select(error => error["message"].Value<string>()));
-						isError = true;
-					}
-					else
-					{
-						// Check for the presence of property called 'error'
-						var errorProperty = jObject["error"];
-						if (errorProperty != null)
-						{
-							errorMessage = errorProperty.Value<string>();
-							isError = true;
-						}
-					}
-				}
-				catch
-				{
-					// Intentionally ignore parsing errors
-				}
-			}
-
-			return (isError, errorMessage);
 		}
 	}
 }
