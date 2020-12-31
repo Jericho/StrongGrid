@@ -645,7 +645,7 @@ namespace StrongGrid
 		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
 		/// <returns>Returns the strongly typed object.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		internal static async Task<T> AsSendGridObject<T>(this HttpContent httpContent, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonConverter jsonConverter = null)
+		private static async Task<T> AsSendGridObject<T>(this HttpContent httpContent, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonConverter jsonConverter = null)
 		{
 			var responseContent = await httpContent.ReadAsStringAsync(null).ConfigureAwait(false);
 
@@ -687,7 +687,7 @@ namespace StrongGrid
 		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		internal static async Task<PaginatedResponse<T>> AsPaginatedResponse<T>(this HttpContent httpContent, string propertyName, JsonConverter jsonConverter = null)
+		private static async Task<PaginatedResponse<T>> AsPaginatedResponse<T>(this HttpContent httpContent, string propertyName, JsonConverter jsonConverter = null)
 		{
 			var responseContent = await httpContent.ReadAsStringAsync(null).ConfigureAwait(false);
 			var jObject = JObject.Parse(responseContent);
@@ -721,7 +721,7 @@ namespace StrongGrid
 		/// <param name="throwIfPropertyIsMissing">Indicates if an exception should be thrown when the specified JSON property is missing from the response.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		internal static async Task<JObject> AsRawJsonObject(this HttpContent httpContent, string propertyName = null, bool throwIfPropertyIsMissing = true)
+		private static async Task<JObject> AsRawJsonObject(this HttpContent httpContent, string propertyName = null, bool throwIfPropertyIsMissing = true)
 		{
 			var responseContent = await httpContent.ReadAsStringAsync(null).ConfigureAwait(false);
 
