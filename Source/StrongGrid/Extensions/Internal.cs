@@ -30,7 +30,7 @@ namespace StrongGrid
 		/// <returns>
 		/// The <see cref="DateTime" />.
 		/// </returns>
-		public static DateTime FromUnixTime(this long unixTime)
+		internal static DateTime FromUnixTime(this long unixTime)
 		{
 			return Utils.Epoch.AddSeconds(unixTime);
 		}
@@ -43,7 +43,7 @@ namespace StrongGrid
 		/// <returns>
 		/// The numer of seconds since midnight on January 1st 1970.
 		/// </returns>
-		public static long ToUnixTime(this DateTime date)
+		internal static long ToUnixTime(this DateTime date)
 		{
 			return Convert.ToInt64((date.ToUniversalTime() - Utils.Epoch).TotalSeconds);
 		}
@@ -90,7 +90,7 @@ namespace StrongGrid
 		/// var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 		/// </code>
 		/// </example>
-		public static async Task<string> ReadAsStringAsync(this HttpContent httpContent, Encoding encoding)
+		internal static async Task<string> ReadAsStringAsync(this HttpContent httpContent, Encoding encoding)
 		{
 			var content = string.Empty;
 
@@ -143,7 +143,7 @@ namespace StrongGrid
 		/// var encoding = response.Content.GetEncoding(Encoding.UTF8);
 		/// </code>
 		/// </example>
-		public static Encoding GetEncoding(this HttpContent content, Encoding defaultEncoding)
+		internal static Encoding GetEncoding(this HttpContent content, Encoding defaultEncoding)
 		{
 			var encoding = defaultEncoding;
 			try
@@ -169,7 +169,7 @@ namespace StrongGrid
 		/// <param name="name">The name of the parameter.</param>
 		/// <param name="defaultValue">The default value.</param>
 		/// <returns>The value of the parameter.</returns>
-		public static string GetParameterValue(this MultipartFormDataParser parser, string name, string defaultValue)
+		internal static string GetParameterValue(this MultipartFormDataParser parser, string name, string defaultValue)
 		{
 			if (parser.HasParameter(name)) return parser.GetParameterValue(name);
 			else return defaultValue;
@@ -183,7 +183,7 @@ namespace StrongGrid
 		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		public static Task<T> AsSendGridObject<T>(this IResponse response, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonConverter jsonConverter = null)
+		internal static Task<T> AsSendGridObject<T>(this IResponse response, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonConverter jsonConverter = null)
 		{
 			return response.Message.Content.AsSendGridObject<T>(propertyName, throwIfPropertyIsMissing, jsonConverter);
 		}
@@ -196,7 +196,7 @@ namespace StrongGrid
 		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		public static async Task<T> AsSendGridObject<T>(this IRequest request, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonConverter jsonConverter = null)
+		internal static async Task<T> AsSendGridObject<T>(this IRequest request, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonConverter jsonConverter = null)
 		{
 			var response = await request.AsMessage().ConfigureAwait(false);
 			return await response.Content.AsSendGridObject<T>(propertyName, throwIfPropertyIsMissing, jsonConverter).ConfigureAwait(false);
@@ -209,7 +209,7 @@ namespace StrongGrid
 		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		public static Task<PaginatedResponse<T>> AsPaginatedResponse<T>(this IResponse response, string propertyName = null, JsonConverter jsonConverter = null)
+		internal static Task<PaginatedResponse<T>> AsPaginatedResponse<T>(this IResponse response, string propertyName = null, JsonConverter jsonConverter = null)
 		{
 			return response.Message.Content.AsPaginatedResponse<T>(propertyName, jsonConverter);
 		}
@@ -221,7 +221,7 @@ namespace StrongGrid
 		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		public static async Task<PaginatedResponse<T>> AsPaginatedResponse<T>(this IRequest request, string propertyName = null, JsonConverter jsonConverter = null)
+		internal static async Task<PaginatedResponse<T>> AsPaginatedResponse<T>(this IRequest request, string propertyName = null, JsonConverter jsonConverter = null)
 		{
 			var response = await request.AsMessage().ConfigureAwait(false);
 			return await response.Content.AsPaginatedResponse<T>(propertyName, jsonConverter).ConfigureAwait(false);
@@ -229,14 +229,14 @@ namespace StrongGrid
 
 		/// <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		public static Task<JObject> AsRawJsonObject(this IResponse response, string propertyName = null, bool throwIfPropertyIsMissing = true)
+		internal static Task<JObject> AsRawJsonObject(this IResponse response, string propertyName = null, bool throwIfPropertyIsMissing = true)
 		{
 			return response.Message.Content.AsRawJsonObject(propertyName, throwIfPropertyIsMissing);
 		}
 
 		/// <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		public static async Task<JObject> AsRawJsonObject(this IRequest request, string propertyName = null, bool throwIfPropertyIsMissing = true)
+		internal static async Task<JObject> AsRawJsonObject(this IRequest request, string propertyName = null, bool throwIfPropertyIsMissing = true)
 		{
 			var response = await request.AsMessage().ConfigureAwait(false);
 			return await response.Content.AsRawJsonObject(propertyName, throwIfPropertyIsMissing).ConfigureAwait(false);
@@ -261,7 +261,7 @@ namespace StrongGrid
 		/// formatter happens to be the JSON formatter. However, I don't feel good about relying on the
 		/// default ordering of the items in the MediaTypeFormatterCollection.
 		/// </remarks>
-		public static IRequest WithJsonBody<T>(this IRequest request, T body, bool omitCharSet = false)
+		internal static IRequest WithJsonBody<T>(this IRequest request, T body, bool omitCharSet = false)
 		{
 			return request.WithBody(bodyBuilder =>
 			{
@@ -282,7 +282,7 @@ namespace StrongGrid
 		/// <param name="request">The request.</param>
 		/// <param name="username">The user to impersonate.</param>
 		/// <returns>Returns the request builder for chaining.</returns>
-		public static IRequest OnBehalfOf(this IRequest request, string username)
+		internal static IRequest OnBehalfOf(this IRequest request, string username)
 		{
 			return string.IsNullOrEmpty(username) ? request : request.WithHeader("on-behalf-of", username);
 		}
@@ -295,7 +295,7 @@ namespace StrongGrid
 		/// or contains an invalid value.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		public static Task<string> AsString(this IResponse response, Encoding encoding)
+		internal static Task<string> AsString(this IResponse response, Encoding encoding)
 		{
 			return response.Message.Content.ReadAsStringAsync(encoding);
 		}
@@ -308,7 +308,7 @@ namespace StrongGrid
 		/// or contains an invalid value.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		public static async Task<string> AsString(this IRequest request, Encoding encoding)
+		internal static async Task<string> AsString(this IRequest request, Encoding encoding)
 		{
 			IResponse response = await request.AsResponse().ConfigureAwait(false);
 			return await response.AsString(encoding).ConfigureAwait(false);
@@ -320,7 +320,7 @@ namespace StrongGrid
 		/// </summary>
 		/// <param name="timeSpan">The time span.</param>
 		/// <returns>Returns the human readable representation of the TimeSpan.</returns>
-		public static string ToDurationString(this TimeSpan timeSpan)
+		internal static string ToDurationString(this TimeSpan timeSpan)
 		{
 			void AppendFormatIfNecessary(StringBuilder stringBuilder, string timePart, int value)
 			{
@@ -346,7 +346,7 @@ namespace StrongGrid
 		/// <param name="value">The value.</param>
 		/// <param name="prefix">The prefix.</param>
 		/// <returns>The value including the prefix.</returns>
-		public static string EnsureStartsWith(this string value, string prefix)
+		internal static string EnsureStartsWith(this string value, string prefix)
 		{
 			return !string.IsNullOrEmpty(value) && value.StartsWith(prefix) ? value : string.Concat(prefix, value);
 		}
@@ -357,7 +357,7 @@ namespace StrongGrid
 		/// <param name="value">The value.</param>
 		/// <param name="suffix">The sufix.</param>
 		/// <returns>The value including the suffix.</returns>
-		public static string EnsureEndsWith(this string value, string suffix)
+		internal static string EnsureEndsWith(this string value, string suffix)
 		{
 			return !string.IsNullOrEmpty(value) && value.EndsWith(suffix) ? value : string.Concat(value, suffix);
 		}
@@ -369,7 +369,7 @@ namespace StrongGrid
 		/// <param name="excludeBillingScopes">Indicates if billing permissions should be excluded from the result.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>An array of permisisons assigned to the current user.</returns>
-		public static async Task<string[]> GetCurrentScopes(this Pathoschild.Http.Client.IClient client, bool excludeBillingScopes, CancellationToken cancellationToken = default)
+		internal static async Task<string[]> GetCurrentScopes(this Pathoschild.Http.Client.IClient client, bool excludeBillingScopes, CancellationToken cancellationToken = default)
 		{
 			// Get the current user's permissions
 			var scopes = await client
@@ -390,13 +390,13 @@ namespace StrongGrid
 			return scopes;
 		}
 
-		public static void AddPropertyIfValue(this JObject jsonObject, string propertyName, string value)
+		internal static void AddPropertyIfValue(this JObject jsonObject, string propertyName, string value)
 		{
 			if (string.IsNullOrEmpty(value)) return;
 			jsonObject.AddDeepProperty(propertyName, value);
 		}
 
-		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, T value, JsonConverter converter = null)
+		internal static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, T value, JsonConverter converter = null)
 		{
 			if (EqualityComparer<T>.Default.Equals(value, default)) return;
 
@@ -409,7 +409,7 @@ namespace StrongGrid
 			jsonObject.AddDeepProperty(propertyName, JToken.FromObject(value, jsonSerializer));
 		}
 
-		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, IEnumerable<T> value, JsonConverter converter = null)
+		internal static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, IEnumerable<T> value, JsonConverter converter = null)
 		{
 			if (value == null || !value.Any()) return;
 
@@ -422,7 +422,7 @@ namespace StrongGrid
 			jsonObject.AddDeepProperty(propertyName, JArray.FromObject(value.ToArray(), jsonSerializer));
 		}
 
-		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, Parameter<T> parameter, JsonConverter converter = null)
+		internal static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, Parameter<T> parameter, JsonConverter converter = null)
 		{
 			var jsonSerializer = new JsonSerializer();
 			if (converter != null)
@@ -433,7 +433,7 @@ namespace StrongGrid
 			AddPropertyIfValue(jsonObject, propertyName, parameter, value => JToken.FromObject(value, jsonSerializer));
 		}
 
-		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, Parameter<IEnumerable<T>> parameter, JsonConverter converter = null)
+		internal static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, Parameter<IEnumerable<T>> parameter, JsonConverter converter = null)
 		{
 			var jsonSerializer = new JsonSerializer();
 			if (converter != null)
@@ -444,7 +444,7 @@ namespace StrongGrid
 			AddPropertyIfValue(jsonObject, propertyName, parameter, value => JArray.FromObject(value.ToArray()));
 		}
 
-		public static void AddPropertyIfEnumValue<T>(this JObject jsonObject, string propertyName, Parameter<T> parameter, JsonConverter converter = null)
+		internal static void AddPropertyIfEnumValue<T>(this JObject jsonObject, string propertyName, Parameter<T> parameter, JsonConverter converter = null)
 		{
 			var jsonSerializer = new JsonSerializer();
 			if (converter != null)
@@ -455,7 +455,7 @@ namespace StrongGrid
 			AddPropertyIfValue(jsonObject, propertyName, parameter, value => JToken.Parse(JsonConvert.SerializeObject(value)).ToString());
 		}
 
-		public static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, Parameter<T> parameter, Func<T, JToken> convertValueToJsonToken)
+		internal static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, Parameter<T> parameter, Func<T, JToken> convertValueToJsonToken)
 		{
 			if (convertValueToJsonToken == null) throw new ArgumentNullException(nameof(convertValueToJsonToken));
 			if (!parameter.HasValue) return;
@@ -463,13 +463,13 @@ namespace StrongGrid
 			jsonObject.AddDeepProperty(propertyName, parameter.Value == null ? null : convertValueToJsonToken(parameter.Value));
 		}
 
-		public static T GetPropertyValue<T>(this JToken item, string name, T defaultValue = default)
+		internal static T GetPropertyValue<T>(this JToken item, string name, T defaultValue = default)
 		{
 			if (item[name] == null) return defaultValue;
 			return item[name].Value<T>();
 		}
 
-		public static async Task<TResult[]> ForEachAsync<T, TResult>(this IEnumerable<T> items, Func<T, Task<TResult>> action, int maxDegreeOfParalellism)
+		internal static async Task<TResult[]> ForEachAsync<T, TResult>(this IEnumerable<T> items, Func<T, Task<TResult>> action, int maxDegreeOfParalellism)
 		{
 			var allTasks = new List<Task<TResult>>();
 			using (var throttler = new SemaphoreSlim(initialCount: maxDegreeOfParalellism))
@@ -496,7 +496,7 @@ namespace StrongGrid
 			}
 		}
 
-		public static async Task ForEachAsync<T>(this IEnumerable<T> items, Func<T, Task> action, int maxDegreeOfParalellism)
+		internal static async Task ForEachAsync<T>(this IEnumerable<T> items, Func<T, Task> action, int maxDegreeOfParalellism)
 		{
 			var allTasks = new List<Task>();
 			using (var throttler = new SemaphoreSlim(initialCount: maxDegreeOfParalellism))
@@ -528,7 +528,7 @@ namespace StrongGrid
 		/// <typeparam name="T">The type of the desired attribute.</typeparam>
 		/// <param name="enumVal">The enum value.</param>
 		/// <returns>The attribute.</returns>
-		public static T GetAttributeOfType<T>(this Enum enumVal)
+		internal static T GetAttributeOfType<T>(this Enum enumVal)
 			where T : Attribute
 		{
 			return enumVal.GetType()
@@ -543,7 +543,7 @@ namespace StrongGrid
 		/// </summary>
 		/// <param name="value">The object.</param>
 		/// <returns>A boolean indicating if the object contains a numerical value.</returns>
-		public static bool IsNumber(this object value)
+		internal static bool IsNumber(this object value)
 		{
 			return value is sbyte
 					|| value is byte
@@ -564,7 +564,7 @@ namespace StrongGrid
 		/// <param name="headers">The HTTP headers.</param>
 		/// <param name="name">The specified header to return value for.</param>
 		/// <returns>A string.</returns>
-		public static string GetValue(this HttpHeaders headers, string name)
+		internal static string GetValue(this HttpHeaders headers, string name)
 		{
 			if (headers == null) return null;
 
@@ -576,7 +576,7 @@ namespace StrongGrid
 			return null;
 		}
 
-		public static void CheckForSendGridErrors(this IResponse response)
+		internal static void CheckForSendGridErrors(this IResponse response)
 		{
 			var (isError, errorMessage) = GetErrorMessage(response.Message).GetAwaiter().GetResult();
 			if (!isError) return;
@@ -592,7 +592,7 @@ namespace StrongGrid
 			}
 		}
 
-		public static IEnumerable<KeyValuePair<string, string>> ParseQuerystring(this Uri uri)
+		internal static IEnumerable<KeyValuePair<string, string>> ParseQuerystring(this Uri uri)
 		{
 			var querystringParameters = uri
 				.Query.TrimStart('?')
@@ -613,7 +613,7 @@ namespace StrongGrid
 			return querystringParameters;
 		}
 
-		public static void AddDeepProperty(this JObject jsonObject, string propertyName, JToken value)
+		internal static void AddDeepProperty(this JObject jsonObject, string propertyName, JToken value)
 		{
 			var separatorLocation = propertyName.IndexOf('/');
 
@@ -790,7 +790,7 @@ namespace StrongGrid
 							"parameter": <string>
 						}
 					]
-				}
+		}
 
 				I have also seen cases where the JSON string looks like this:
 				{
