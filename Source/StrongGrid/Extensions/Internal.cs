@@ -175,26 +175,26 @@ namespace StrongGrid
 			else return defaultValue;
 		}
 
-		/// <summary>Asynchronously retrieve the JSON encoded response body and convert it to a 'SendGrid' object of the desired type.</summary>
+		/// <summary>Asynchronously retrieve the JSON encoded response body and convert it to an object of the desired type.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="response">The response.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
 		/// <param name="throwIfPropertyIsMissing">Indicates if an exception should be thrown when the specified JSON property is missing from the response.</param>
 		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
-		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+		/// <returns>Returns the strongly typed object.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
 		internal static Task<T> AsSendGridObject<T>(this IResponse response, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonConverter jsonConverter = null)
 		{
 			return response.Message.Content.AsSendGridObject<T>(propertyName, throwIfPropertyIsMissing, jsonConverter);
 		}
 
-		/// <summary>Asynchronously retrieve the JSON encoded response body and convert it to a 'SendGrid' object of the desired type.</summary>
+		/// <summary>Asynchronously retrieve the JSON encoded response body and convert it to an object of the desired type.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="request">The request.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
 		/// <param name="throwIfPropertyIsMissing">Indicates if an exception should be thrown when the specified JSON property is missing from the response.</param>
 		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
-		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+		/// <returns>Returns the strongly typed object.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
 		internal static async Task<T> AsSendGridObject<T>(this IRequest request, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonConverter jsonConverter = null)
 		{
@@ -207,7 +207,7 @@ namespace StrongGrid
 		/// <param name="response">The response.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
 		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
-		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+		/// <returns>Returns the paginated response.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
 		internal static Task<PaginatedResponse<T>> AsPaginatedResponse<T>(this IResponse response, string propertyName = null, JsonConverter jsonConverter = null)
 		{
@@ -219,7 +219,7 @@ namespace StrongGrid
 		/// <param name="request">The request.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
 		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
-		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+		/// <returns>Returns the paginated response.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
 		internal static async Task<PaginatedResponse<T>> AsPaginatedResponse<T>(this IRequest request, string propertyName = null, JsonConverter jsonConverter = null)
 		{
@@ -546,16 +546,16 @@ namespace StrongGrid
 		internal static bool IsNumber(this object value)
 		{
 			return value is sbyte
-					|| value is byte
-					|| value is short
-					|| value is ushort
-					|| value is int
-					|| value is uint
-					|| value is long
-					|| value is ulong
-					|| value is float
-					|| value is double
-					|| value is decimal;
+				   || value is byte
+				   || value is short
+				   || value is ushort
+				   || value is int
+				   || value is uint
+				   || value is long
+				   || value is ulong
+				   || value is float
+				   || value is double
+				   || value is decimal;
 		}
 
 		/// <summary>
@@ -637,13 +637,13 @@ namespace StrongGrid
 			}
 		}
 
-		/// <summary>Asynchronously converts the JSON encoded content and converts it to a 'SendGrid' object of the desired type.</summary>
+		/// <summary>Asynchronously converts the JSON encoded content and converts it to an object of the desired type.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="httpContent">The content.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
 		/// <param name="throwIfPropertyIsMissing">Indicates if an exception should be thrown when the specified JSON property is missing from the response.</param>
 		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
-		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+		/// <returns>Returns the strongly typed object.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
 		internal static async Task<T> AsSendGridObject<T>(this HttpContent httpContent, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonConverter jsonConverter = null)
 		{
