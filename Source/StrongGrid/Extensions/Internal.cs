@@ -202,6 +202,21 @@ namespace StrongGrid
 			return await response.Content.AsSendGridObject<T>(propertyName, throwIfPropertyIsMissing, jsonConverter).ConfigureAwait(false);
 		}
 
+		/// <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
+		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
+		internal static Task<JObject> AsRawJsonObject(this IResponse response, string propertyName = null, bool throwIfPropertyIsMissing = true)
+		{
+			return response.Message.Content.AsRawJsonObject(propertyName, throwIfPropertyIsMissing);
+		}
+
+		/// <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
+		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
+		internal static async Task<JObject> AsRawJsonObject(this IRequest request, string propertyName = null, bool throwIfPropertyIsMissing = true)
+		{
+			var response = await request.AsMessage().ConfigureAwait(false);
+			return await response.Content.AsRawJsonObject(propertyName, throwIfPropertyIsMissing).ConfigureAwait(false);
+		}
+
 		/// <summary>Asynchronously retrieve the JSON encoded content and converts it to a 'PaginatedResponse' object.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="response">The response.</param>
@@ -225,21 +240,6 @@ namespace StrongGrid
 		{
 			var response = await request.AsMessage().ConfigureAwait(false);
 			return await response.Content.AsPaginatedResponse<T>(propertyName, jsonConverter).ConfigureAwait(false);
-		}
-
-		/// <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
-		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		internal static Task<JObject> AsRawJsonObject(this IResponse response, string propertyName = null, bool throwIfPropertyIsMissing = true)
-		{
-			return response.Message.Content.AsRawJsonObject(propertyName, throwIfPropertyIsMissing);
-		}
-
-		/// <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
-		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		internal static async Task<JObject> AsRawJsonObject(this IRequest request, string propertyName = null, bool throwIfPropertyIsMissing = true)
-		{
-			var response = await request.AsMessage().ConfigureAwait(false);
-			return await response.Content.AsRawJsonObject(propertyName, throwIfPropertyIsMissing).ConfigureAwait(false);
 		}
 
 		/// <summary>Set the body content of the HTTP request.</summary>
@@ -770,7 +770,7 @@ namespace StrongGrid
 				}
 
 				The documentation says that it should look like this:
-				{
+			{
 					"errors": [
 						{
 							"message": <string>,
@@ -793,7 +793,7 @@ namespace StrongGrid
 		}
 
 				I have also seen cases where the JSON string looks like this:
-				{
+		{
 					"error": "Name already exists"
 				}
 			*/
