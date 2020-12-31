@@ -217,7 +217,7 @@ namespace StrongGrid
 			return await response.Content.AsRawJsonObject(propertyName, throwIfPropertyIsMissing).ConfigureAwait(false);
 		}
 
-		/// <summary>Asynchronously retrieve the JSON encoded content and converts it to a 'PaginatedResponse' object.</summary>
+		/// <summary>Asynchronously retrieve the JSON encoded content and convert it to a 'PaginatedResponse' object.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="response">The response.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
@@ -229,7 +229,7 @@ namespace StrongGrid
 			return response.Message.Content.AsPaginatedResponse<T>(propertyName, jsonConverter);
 		}
 
-		/// <summary>Asynchronously retrieve the JSON encoded content and converts it to a 'PaginatedResponse' object.</summary>
+		/// <summary>Asynchronously retrieve the JSON encoded content and convert it to a 'PaginatedResponse' object.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="request">The request.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
@@ -637,7 +637,7 @@ namespace StrongGrid
 			}
 		}
 
-		/// <summary>Asynchronously converts the JSON encoded content and converts it to an object of the desired type.</summary>
+		/// <summary>Asynchronously converts the JSON encoded content and convert it to an object of the desired type.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="httpContent">The content.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
@@ -680,7 +680,7 @@ namespace StrongGrid
 			}
 		}
 
-		/// <summary>Asynchronously retrieve the JSON encoded content and converts it to a 'PaginatedResponse' object.</summary>
+		/// <summary>Asynchronously retrieve the JSON encoded content and convert it to a 'PaginatedResponse' object.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="httpContent">The content.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
