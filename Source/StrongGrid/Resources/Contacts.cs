@@ -82,7 +82,7 @@ namespace StrongGrid.Resources
 				.PutAsync(_endpoint)
 				.WithJsonBody(data, true)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<string>("job_id");
+				.AsObject<string>("job_id");
 		}
 
 		/// <summary>
@@ -111,7 +111,7 @@ namespace StrongGrid.Resources
 				.PutAsync(_endpoint)
 				.WithJsonBody(data, true)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<string>("job_id");
+				.AsObject<string>("job_id");
 		}
 
 		/// <summary>
@@ -141,7 +141,7 @@ namespace StrongGrid.Resources
 				.DeleteAsync(_endpoint)
 				.WithArgument("ids", string.Join(",", contactIds))
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<string>("job_id");
+				.AsObject<string>("job_id");
 		}
 
 		/// <summary>
@@ -157,7 +157,7 @@ namespace StrongGrid.Resources
 				.DeleteAsync(_endpoint)
 				.WithArgument("delete_all_contacts", "true")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<string>("job_id");
+				.AsObject<string>("job_id");
 		}
 
 		/// <summary>
@@ -207,7 +207,7 @@ namespace StrongGrid.Resources
 				.PostAsync($"{_endpoint}/exports")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<string>("id");
+				.AsObject<string>("id");
 		}
 
 		/// <summary>
@@ -223,7 +223,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync($"{_endpoint}/{contactId}")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Contact>();
+				.AsObject<Contact>();
 		}
 
 		/// <summary>
@@ -261,7 +261,7 @@ namespace StrongGrid.Resources
 				.PostAsync($"{_endpoint}/search")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Contact[]>("result");
+				.AsObject<Contact[]>("result");
 		}
 
 		/// <summary>
@@ -309,8 +309,8 @@ namespace StrongGrid.Resources
 				.AsResponse()
 				.ConfigureAwait(false);
 
-			var contacts = await response.AsSendGridObject<Contact[]>("result").ConfigureAwait(false);
-			var totalCount = await response.AsSendGridObject<long>("contact_count").ConfigureAwait(false);
+			var contacts = await response.AsObject<Contact[]>("result").ConfigureAwait(false);
+			var totalCount = await response.AsObject<long>("contact_count").ConfigureAwait(false);
 
 			return (contacts, totalCount);
 		}
@@ -378,7 +378,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync($"{_endpoint}/imports/{jobId}")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<ImportJob>();
+				.AsObject<ImportJob>();
 		}
 
 		/// <summary>
@@ -393,7 +393,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync($"{_endpoint}/exports")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<ExportJob[]>("result");
+				.AsObject<ExportJob[]>("result");
 		}
 
 		/// <summary>
@@ -409,7 +409,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync($"{_endpoint}/exports/{jobId}")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<ExportJob>();
+				.AsObject<ExportJob>();
 		}
 
 		/// <summary>

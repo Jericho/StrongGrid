@@ -55,7 +55,7 @@ namespace StrongGrid.Resources
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Segment>();
+				.AsObject<Segment>();
 		}
 
 		/// <summary>
@@ -72,7 +72,7 @@ namespace StrongGrid.Resources
 				.GetAsync($"{_endpoint}/{segmentId}")
 				.WithArgument("query_json", "false")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Segment>();
+				.AsObject<Segment>();
 		}
 
 		/// <summary>
@@ -98,7 +98,7 @@ namespace StrongGrid.Resources
 				request = request.WithArgument("parent_list_ids", string.Join(",", listIds));
 			}
 
-			return request.AsSendGridObject<Segment[]>("results");
+			return request.AsObject<Segment[]>("results");
 		}
 
 		/// <summary>
@@ -124,7 +124,7 @@ namespace StrongGrid.Resources
 				.PatchAsync($"{_endpoint}/{segmentId}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Segment>();
+				.AsObject<Segment>();
 		}
 
 		/// <summary>

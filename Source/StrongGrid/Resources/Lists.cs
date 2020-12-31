@@ -58,7 +58,7 @@ namespace StrongGrid.Resources
 				.DeleteAsync($"{_endpoint}/{listId}/contacts")
 				.WithArgument("contact_ids", string.Join(",", contactIds))
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<string>("job_id");
+				.AsObject<string>("job_id");
 		}
 
 		/// <summary>
@@ -74,7 +74,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync($"{_endpoint}/{listId}/contacts/count")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<long>("contact_count");
+				.AsObject<long>("contact_count");
 		}
 
 		/// <summary>
@@ -96,7 +96,7 @@ namespace StrongGrid.Resources
 				.PatchAsync($"{_endpoint}/{listId}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<List>();
+				.AsObject<List>();
 		}
 
 		/// <summary>
@@ -113,7 +113,7 @@ namespace StrongGrid.Resources
 				.GetAsync($"{_endpoint}/{listId}")
 				.WithArgument("contact_sample", "true")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<List>();
+				.AsObject<List>();
 		}
 
 		/// <summary>
@@ -155,7 +155,7 @@ namespace StrongGrid.Resources
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<List>();
+				.AsObject<List>();
 		}
 
 		/// <summary>

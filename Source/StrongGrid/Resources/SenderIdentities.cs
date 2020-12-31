@@ -52,7 +52,7 @@ namespace StrongGrid.Resources
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SenderIdentity>();
+				.AsObject<SenderIdentity>();
 		}
 
 		/// <summary>
@@ -68,7 +68,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync($"{_endpoint}/{senderIdentityId}")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SenderIdentity>();
+				.AsObject<SenderIdentity>();
 		}
 
 		/// <summary>
@@ -83,7 +83,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync(_endpoint)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SenderIdentity[]>();
+				.AsObject<SenderIdentity[]>();
 		}
 
 		private static JObject CreateJObject(

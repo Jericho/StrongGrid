@@ -44,7 +44,7 @@ namespace StrongGrid.Resources
 				.GetAsync("user/settings/enforced_tls")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<EnforcedTlsSettings>();
+				.AsObject<EnforcedTlsSettings>();
 		}
 
 		/// <summary>
@@ -70,7 +70,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<EnforcedTlsSettings>();
+				.AsObject<EnforcedTlsSettings>();
 		}
 
 		/// <summary>
@@ -91,7 +91,7 @@ namespace StrongGrid.Resources
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<GlobalSetting[]>("result");
+				.AsObject<GlobalSetting[]>("result");
 		}
 
 		/// <summary>
@@ -108,7 +108,7 @@ namespace StrongGrid.Resources
 				.GetAsync("partner_settings/new_relic")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<NewRelicSettings>();
+				.AsObject<NewRelicSettings>();
 		}
 
 		/// <summary>
@@ -134,7 +134,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<NewRelicSettings>();
+				.AsObject<NewRelicSettings>();
 		}
 
 		/// <summary>
@@ -155,7 +155,7 @@ namespace StrongGrid.Resources
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<GlobalSetting[]>("result");
+				.AsObject<GlobalSetting[]>("result");
 		}
 
 		/// <summary>
@@ -172,7 +172,7 @@ namespace StrongGrid.Resources
 				.GetAsync("tracking_settings/click")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<ClickTrackingSettings>();
+				.AsObject<ClickTrackingSettings>();
 		}
 
 		/// <summary>
@@ -196,7 +196,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<ClickTrackingSettings>();
+				.AsObject<ClickTrackingSettings>();
 		}
 
 		/// <summary>
@@ -213,7 +213,7 @@ namespace StrongGrid.Resources
 				.GetAsync("tracking_settings/google_analytics")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<GoogleAnalyticsGlobalSettings>();
+				.AsObject<GoogleAnalyticsGlobalSettings>();
 		}
 
 		/// <summary>
@@ -247,7 +247,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<GoogleAnalyticsGlobalSettings>();
+				.AsObject<GoogleAnalyticsGlobalSettings>();
 		}
 
 		/// <summary>
@@ -264,7 +264,7 @@ namespace StrongGrid.Resources
 				.GetAsync("tracking_settings/open")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<bool>("enabled");
+				.AsObject<bool>("enabled");
 		}
 
 		/// <summary>
@@ -287,7 +287,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<bool>("enabled");
+				.AsObject<bool>("enabled");
 		}
 
 		/// <summary>
@@ -304,7 +304,7 @@ namespace StrongGrid.Resources
 				.GetAsync("tracking_settings/subscription")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SubscriptionSettings>();
+				.AsObject<SubscriptionSettings>();
 		}
 
 		/// <summary>
@@ -338,7 +338,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SubscriptionSettings>();
+				.AsObject<SubscriptionSettings>();
 		}
 
 		/// <summary>
@@ -359,7 +359,7 @@ namespace StrongGrid.Resources
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<GlobalSetting[]>("result");
+				.AsObject<GlobalSetting[]>("result");
 		}
 
 		/// <summary>
@@ -376,7 +376,7 @@ namespace StrongGrid.Resources
 				.GetAsync("mail_settings/bcc")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<EmailAddressSetting>();
+				.AsObject<EmailAddressSetting>();
 		}
 
 		/// <summary>
@@ -402,7 +402,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<EmailAddressSetting>();
+				.AsObject<EmailAddressSetting>();
 		}
 
 		/// <summary>
@@ -419,7 +419,7 @@ namespace StrongGrid.Resources
 				.GetAsync("mail_settings/address_whitelist")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<AddressWhitelistSettings>();
+				.AsObject<AddressWhitelistSettings>();
 		}
 
 		/// <summary>
@@ -445,7 +445,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<AddressWhitelistSettings>();
+				.AsObject<AddressWhitelistSettings>();
 		}
 
 		/// <summary>
@@ -462,7 +462,7 @@ namespace StrongGrid.Resources
 				.GetAsync("mail_settings/footer")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<FooterGlobalSettings>();
+				.AsObject<FooterGlobalSettings>();
 		}
 
 		/// <summary>
@@ -490,7 +490,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<FooterGlobalSettings>();
+				.AsObject<FooterGlobalSettings>();
 		}
 
 		/// <summary>
@@ -507,7 +507,7 @@ namespace StrongGrid.Resources
 				.GetAsync("mail_settings/forward_spam")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<EmailAddressSetting>();
+				.AsObject<EmailAddressSetting>();
 		}
 
 		/// <summary>
@@ -533,7 +533,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<EmailAddressSetting>();
+				.AsObject<EmailAddressSetting>();
 		}
 
 		/// <summary>
@@ -550,7 +550,7 @@ namespace StrongGrid.Resources
 				.GetAsync("mail_settings/plain_content")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<bool>("enabled");
+				.AsObject<bool>("enabled");
 		}
 
 		/// <summary>
@@ -573,7 +573,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<bool>("enabled");
+				.AsObject<bool>("enabled");
 		}
 
 		/// <summary>
@@ -590,7 +590,7 @@ namespace StrongGrid.Resources
 				.GetAsync("mail_settings/spam_check")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SpamCheckSettings>();
+				.AsObject<SpamCheckSettings>();
 		}
 
 		/// <summary>
@@ -618,7 +618,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SpamCheckSettings>();
+				.AsObject<SpamCheckSettings>();
 		}
 
 		/// <summary>
@@ -635,7 +635,7 @@ namespace StrongGrid.Resources
 				.GetAsync("mail_settings/template")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<TemplateSettings>();
+				.AsObject<TemplateSettings>();
 		}
 
 		/// <summary>
@@ -661,7 +661,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<TemplateSettings>();
+				.AsObject<TemplateSettings>();
 		}
 
 		/// <summary>
@@ -678,7 +678,7 @@ namespace StrongGrid.Resources
 				.GetAsync("mail_settings/bounce_purge")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<BouncePurgeSettings>();
+				.AsObject<BouncePurgeSettings>();
 		}
 
 		/// <summary>
@@ -706,7 +706,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<BouncePurgeSettings>();
+				.AsObject<BouncePurgeSettings>();
 		}
 
 		/// <summary>
@@ -723,7 +723,7 @@ namespace StrongGrid.Resources
 				.GetAsync("mail_settings/forward_bounce")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<EmailAddressSetting>();
+				.AsObject<EmailAddressSetting>();
 		}
 
 		/// <summary>
@@ -749,7 +749,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<EmailAddressSetting>();
+				.AsObject<EmailAddressSetting>();
 		}
 	}
 }

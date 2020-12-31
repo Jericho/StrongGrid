@@ -46,7 +46,7 @@ namespace StrongGrid.Resources
 				.GetAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SuppressionGroup[]>();
+				.AsObject<SuppressionGroup[]>();
 		}
 
 		/// <summary>
@@ -72,7 +72,7 @@ namespace StrongGrid.Resources
 				request.WithArgument("id", id);
 			}
 
-			return request.AsSendGridObject<SuppressionGroup[]>();
+			return request.AsObject<SuppressionGroup[]>();
 		}
 
 		/// <summary>
@@ -90,7 +90,7 @@ namespace StrongGrid.Resources
 				.GetAsync($"{_endpoint}/{groupId}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SuppressionGroup>();
+				.AsObject<SuppressionGroup>();
 		}
 
 		/// <summary>
@@ -117,7 +117,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SuppressionGroup>();
+				.AsObject<SuppressionGroup>();
 		}
 
 		/// <summary>
@@ -142,7 +142,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SuppressionGroup>();
+				.AsObject<SuppressionGroup>();
 		}
 
 		/// <summary>

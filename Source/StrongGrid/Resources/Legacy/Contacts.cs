@@ -66,7 +66,7 @@ namespace StrongGrid.Resources.Legacy
 
 			response.CheckForSendGridErrors();
 
-			var importResult = await response.AsSendGridObject<Models.Legacy.ImportResult>().ConfigureAwait(false);
+			var importResult = await response.AsObject<Models.Legacy.ImportResult>().ConfigureAwait(false);
 			return importResult.PersistedRecipients.Single();
 		}
 
@@ -127,7 +127,7 @@ namespace StrongGrid.Resources.Legacy
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Models.Legacy.ImportResult>();
+				.AsObject<Models.Legacy.ImportResult>();
 		}
 
 		/// <summary>
@@ -179,7 +179,7 @@ namespace StrongGrid.Resources.Legacy
 				.GetAsync($"{_endpoint}/{contactId}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Models.Legacy.Contact>();
+				.AsObject<Models.Legacy.Contact>();
 		}
 
 		/// <summary>
@@ -200,7 +200,7 @@ namespace StrongGrid.Resources.Legacy
 				.WithArgument("page_size", recordsPerPage)
 				.WithArgument("page", page)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Models.Legacy.Contact[]>("recipients");
+				.AsObject<Models.Legacy.Contact[]>("recipients");
 		}
 
 		/// <summary>
@@ -217,7 +217,7 @@ namespace StrongGrid.Resources.Legacy
 				.GetAsync($"{_endpoint}/billable_count")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<long>("recipient_count");
+				.AsObject<long>("recipient_count");
 		}
 
 		/// <summary>
@@ -234,7 +234,7 @@ namespace StrongGrid.Resources.Legacy
 				.GetAsync($"{_endpoint}/count")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<long>("recipient_count");
+				.AsObject<long>("recipient_count");
 		}
 
 		/// <summary>
@@ -258,7 +258,7 @@ namespace StrongGrid.Resources.Legacy
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Models.Legacy.Contact[]>("recipients");
+				.AsObject<Models.Legacy.Contact[]>("recipients");
 		}
 
 		/// <summary>
@@ -276,7 +276,7 @@ namespace StrongGrid.Resources.Legacy
 				.GetAsync($"{_endpoint}/{contactId}/lists")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<List[]>("lists");
+				.AsObject<List[]>("lists");
 		}
 
 		private static JObject ConvertToJObject(

@@ -71,7 +71,7 @@ namespace StrongGrid.Resources
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SingleSend>();
+				.AsObject<SingleSend>();
 		}
 
 		/// <summary>
@@ -117,7 +117,7 @@ namespace StrongGrid.Resources
 				.PatchAsync($"{_endpoint}/{singleSendId}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SingleSend>();
+				.AsObject<SingleSend>();
 		}
 
 		/// <summary>
@@ -166,7 +166,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync($"{_endpoint}/{singleSendId}")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SingleSend>();
+				.AsObject<SingleSend>();
 		}
 
 		/// <summary>

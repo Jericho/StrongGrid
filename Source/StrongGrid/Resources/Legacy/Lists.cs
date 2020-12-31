@@ -49,7 +49,7 @@ namespace StrongGrid.Resources.Legacy
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Models.Legacy.List>()
+				.AsObject<Models.Legacy.List>()
 				.ConfigureAwait(false);
 			return list;
 		}
@@ -68,7 +68,7 @@ namespace StrongGrid.Resources.Legacy
 				.GetAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Models.Legacy.List[]>("lists")
+				.AsObject<Models.Legacy.List[]>("lists")
 				.ConfigureAwait(false);
 			return lists;
 		}
@@ -126,7 +126,7 @@ namespace StrongGrid.Resources.Legacy
 				.GetAsync($"{_endpoint}/{listId}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Models.Legacy.List>()
+				.AsObject<Models.Legacy.List>()
 				.ConfigureAwait(false);
 			return list;
 		}
@@ -174,7 +174,7 @@ namespace StrongGrid.Resources.Legacy
 				.WithArgument("page_size", recordsPerPage)
 				.WithArgument("page", page)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Models.Legacy.Contact[]>("recipients")
+				.AsObject<Models.Legacy.Contact[]>("recipients")
 				.ConfigureAwait(false);
 			return recipients;
 		}

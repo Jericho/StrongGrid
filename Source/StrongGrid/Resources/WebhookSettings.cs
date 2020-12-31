@@ -45,7 +45,7 @@ namespace StrongGrid.Resources
 				.GetAsync($"{_eventWebhookEndpoint}/settings")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<EventWebhookSettings>();
+				.AsObject<EventWebhookSettings>();
 		}
 
 		/// <summary>
@@ -108,7 +108,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<EventWebhookSettings>();
+				.AsObject<EventWebhookSettings>();
 		}
 
 		/// <summary>
@@ -155,7 +155,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<InboundParseWebhookSettings>();
+				.AsObject<InboundParseWebhookSettings>();
 		}
 
 		/// <summary>
@@ -172,7 +172,7 @@ namespace StrongGrid.Resources
 				.GetAsync($"{_inboundParseWebhookEndpoint}/settings")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<InboundParseWebhookSettings[]>("result");
+				.AsObject<InboundParseWebhookSettings[]>("result");
 		}
 
 		/// <summary>
@@ -190,7 +190,7 @@ namespace StrongGrid.Resources
 				.GetAsync($"{_inboundParseWebhookEndpoint}/settings/{hostname}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<InboundParseWebhookSettings>();
+				.AsObject<InboundParseWebhookSettings>();
 		}
 
 		/// <summary>
@@ -213,7 +213,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<InboundParseWebhookSettings>();
+				.AsObject<InboundParseWebhookSettings>();
 		}
 
 		/// <summary>
@@ -246,7 +246,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync($"{_eventWebhookEndpoint}/settings/signed")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<string>("public_key");
+				.AsObject<string>("public_key");
 		}
 
 		private static JObject CreateJObject(string hostname, Parameter<string> url, Parameter<bool> spamCheck, Parameter<bool> sendRaw)

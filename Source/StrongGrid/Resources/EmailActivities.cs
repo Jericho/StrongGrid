@@ -61,7 +61,7 @@ namespace StrongGrid.Resources
 				.WithArgument("limit", limit)
 				.WithArgument("query", query)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<EmailMessageActivity[]>("messages");
+				.AsObject<EmailMessageActivity[]>("messages");
 		}
 
 		/// <summary>
@@ -77,7 +77,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync($"{_endpoint}/{messageId}")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<EmailMessageSummary>();
+				.AsObject<EmailMessageSummary>();
 		}
 
 		/// <summary>
@@ -115,7 +115,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync($"{_endpoint}/download/{downloadUUID}")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<string>("presigned_url");
+				.AsObject<string>("presigned_url");
 		}
 
 		/// <summary>

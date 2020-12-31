@@ -39,7 +39,7 @@ namespace StrongGrid.Resources
 			return _client
 				.PostAsync(_endpoint)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<string>("batch_id");
+				.AsObject<string>("batch_id");
 		}
 
 		/// <summary>
@@ -57,7 +57,7 @@ namespace StrongGrid.Resources
 				var batch_id = await _client
 					.GetAsync($"{_endpoint}/{batchId}")
 					.WithCancellationToken(cancellationToken)
-					.AsSendGridObject<string>("batch_id")
+					.AsObject<string>("batch_id")
 					.ConfigureAwait(false);
 				return !string.IsNullOrEmpty(batch_id);
 			}
@@ -125,7 +125,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync("user/scheduled_sends")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<BatchInfo[]>();
+				.AsObject<BatchInfo[]>();
 		}
 
 		/// <summary>
@@ -141,7 +141,7 @@ namespace StrongGrid.Resources
 			var result = await _client
 				.GetAsync($"user/scheduled_sends/{batchId}")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<BatchInfo[]>()
+				.AsObject<BatchInfo[]>()
 				.ConfigureAwait(false);
 
 			// SendGrid returns an array containing a single item

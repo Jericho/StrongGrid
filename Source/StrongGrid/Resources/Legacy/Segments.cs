@@ -55,7 +55,7 @@ namespace StrongGrid.Resources.Legacy
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Models.Legacy.Segment>();
+				.AsObject<Models.Legacy.Segment>();
 		}
 
 		/// <summary>
@@ -72,7 +72,7 @@ namespace StrongGrid.Resources.Legacy
 				.GetAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Models.Legacy.Segment[]>("segments");
+				.AsObject<Models.Legacy.Segment[]>("segments");
 		}
 
 		/// <summary>
@@ -90,7 +90,7 @@ namespace StrongGrid.Resources.Legacy
 				.GetAsync($"{_endpoint}/{segmentId}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Models.Legacy.Segment>();
+				.AsObject<Models.Legacy.Segment>();
 		}
 
 		/// <summary>
@@ -119,7 +119,7 @@ namespace StrongGrid.Resources.Legacy
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Models.Legacy.Segment>();
+				.AsObject<Models.Legacy.Segment>();
 		}
 
 		/// <summary>
@@ -161,7 +161,7 @@ namespace StrongGrid.Resources.Legacy
 				.WithArgument("page_size", recordsPerPage)
 				.WithArgument("page", page)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Models.Legacy.Contact[]>("recipients");
+				.AsObject<Models.Legacy.Contact[]>("recipients");
 		}
 	}
 }

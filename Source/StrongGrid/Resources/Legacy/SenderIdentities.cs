@@ -54,7 +54,7 @@ namespace StrongGrid.Resources.Legacy
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SenderIdentity>();
+				.AsObject<SenderIdentity>();
 		}
 
 		/// <summary>
@@ -71,7 +71,7 @@ namespace StrongGrid.Resources.Legacy
 				.GetAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SenderIdentity[]>();
+				.AsObject<SenderIdentity[]>();
 		}
 
 		/// <summary>
@@ -89,7 +89,7 @@ namespace StrongGrid.Resources.Legacy
 				.GetAsync($"{_endpoint}/{senderId}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SenderIdentity>();
+				.AsObject<SenderIdentity>();
 		}
 
 		/// <summary>
@@ -131,7 +131,7 @@ namespace StrongGrid.Resources.Legacy
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SenderIdentity>();
+				.AsObject<SenderIdentity>();
 		}
 
 		/// <summary>

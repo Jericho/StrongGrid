@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -44,7 +44,7 @@ namespace StrongGrid.Resources
 				.GetAsync($"{_endpoint}/{alertId}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Alert>();
+				.AsObject<Alert>();
 		}
 
 		/// <summary>
@@ -61,7 +61,7 @@ namespace StrongGrid.Resources
 				.GetAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Alert[]>();
+				.AsObject<Alert[]>();
 		}
 
 		/// <summary>
@@ -84,7 +84,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Alert>();
+				.AsObject<Alert>();
 		}
 
 		/// <summary>
@@ -125,7 +125,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Alert>();
+				.AsObject<Alert>();
 		}
 
 		private static JObject CreateJObject(Parameter<AlertType?> type, Parameter<string> emailTo, Parameter<Frequency?> frequency, Parameter<int?> percentage)

@@ -183,9 +183,9 @@ namespace StrongGrid
 		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
 		/// <returns>Returns the strongly typed object.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		internal static Task<T> AsSendGridObject<T>(this IResponse response, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonConverter jsonConverter = null)
+		internal static Task<T> AsObject<T>(this IResponse response, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonConverter jsonConverter = null)
 		{
-			return response.Message.Content.AsSendGridObject<T>(propertyName, throwIfPropertyIsMissing, jsonConverter);
+			return response.Message.Content.AsObject<T>(propertyName, throwIfPropertyIsMissing, jsonConverter);
 		}
 
 		/// <summary>Asynchronously retrieve the JSON encoded response body and convert it to an object of the desired type.</summary>
@@ -196,10 +196,10 @@ namespace StrongGrid
 		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
 		/// <returns>Returns the strongly typed object.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		internal static async Task<T> AsSendGridObject<T>(this IRequest request, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonConverter jsonConverter = null)
+		internal static async Task<T> AsObject<T>(this IRequest request, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonConverter jsonConverter = null)
 		{
 			var response = await request.AsMessage().ConfigureAwait(false);
-			return await response.Content.AsSendGridObject<T>(propertyName, throwIfPropertyIsMissing, jsonConverter).ConfigureAwait(false);
+			return await response.Content.AsObject<T>(propertyName, throwIfPropertyIsMissing, jsonConverter).ConfigureAwait(false);
 		}
 
 		/// <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
@@ -375,7 +375,7 @@ namespace StrongGrid
 			var scopes = await client
 				.GetAsync("scopes")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<string[]>("scopes")
+				.AsObject<string[]>("scopes")
 				.ConfigureAwait(false);
 
 			if (excludeBillingScopes)
@@ -728,7 +728,7 @@ namespace StrongGrid
 		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
 		/// <returns>Returns the strongly typed object.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		private static async Task<T> AsSendGridObject<T>(this HttpContent httpContent, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonConverter jsonConverter = null)
+		private static async Task<T> AsObject<T>(this HttpContent httpContent, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonConverter jsonConverter = null)
 		{
 			var responseContent = await httpContent.ReadAsStringAsync(null).ConfigureAwait(false);
 

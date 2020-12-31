@@ -49,7 +49,7 @@ namespace StrongGrid.Resources
 				.WithArgument("start_time", start?.ToUnixTime())
 				.WithArgument("end_time", end?.ToUnixTime())
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Bounce[]>();
+				.AsObject<Bounce[]>();
 		}
 
 		/// <summary>
@@ -67,7 +67,7 @@ namespace StrongGrid.Resources
 				.GetAsync($"{_endpoint}/{email}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Bounce[]>();
+				.AsObject<Bounce[]>();
 		}
 
 		/// <summary>

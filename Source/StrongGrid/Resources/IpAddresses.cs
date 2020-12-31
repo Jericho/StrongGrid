@@ -51,7 +51,7 @@ namespace StrongGrid.Resources
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<AddIpAddressResult>();
+				.AsObject<AddIpAddressResult>();
 		}
 
 		/// <summary>
@@ -64,7 +64,7 @@ namespace StrongGrid.Resources
 			var remainingInfo = await _client
 				.GetAsync($"{_endpoint}/remaining")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<JArray>("results")
+				.AsObject<JArray>("results")
 				.ConfigureAwait(false);
 
 			return remainingInfo.First().ToObject<IpAddressesRemaining>();
@@ -83,7 +83,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync($"{_endpoint}/{address}")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<IpAddress>();
+				.AsObject<IpAddress>();
 		}
 
 		/// <summary>
@@ -109,7 +109,7 @@ namespace StrongGrid.Resources
 
 			if (!string.IsNullOrEmpty(subuser)) request.WithArgument("subuser", subuser);
 
-			return request.AsSendGridObject<IpAddress[]>();
+			return request.AsObject<IpAddress[]>();
 		}
 
 		/// <summary>
@@ -124,7 +124,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync($"{_endpoint}/assigned")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<IpAddress[]>();
+				.AsObject<IpAddress[]>();
 		}
 
 		/// <summary>
@@ -157,7 +157,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync($"{_endpoint}/warmup")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<IpAddress[]>();
+				.AsObject<IpAddress[]>();
 		}
 
 		/// <summary>
@@ -173,7 +173,7 @@ namespace StrongGrid.Resources
 			var addresses = await _client
 				.GetAsync($"{_endpoint}/warmup/{address}")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<IpAddress[]>()
+				.AsObject<IpAddress[]>()
 				.ConfigureAwait(false);
 
 			return addresses?.First();

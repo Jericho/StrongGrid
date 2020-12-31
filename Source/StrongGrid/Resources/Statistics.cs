@@ -55,7 +55,7 @@ namespace StrongGrid.Resources
 			if (endDate.HasValue) request.WithArgument("end_date", endDate.Value.ToString("yyyy-MM-dd"));
 			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString());
 
-			return request.AsSendGridObject<Statistic[]>();
+			return request.AsObject<Statistic[]>();
 		}
 
 		/// <summary>
@@ -87,7 +87,7 @@ namespace StrongGrid.Resources
 				}
 			}
 
-			return request.AsSendGridObject<Statistic[]>();
+			return request.AsObject<Statistic[]>();
 		}
 
 		/// <summary>
@@ -121,7 +121,7 @@ namespace StrongGrid.Resources
 				}
 			}
 
-			return request.AsSendGridObject<Statistic[]>();
+			return request.AsObject<Statistic[]>();
 		}
 
 		/// <summary>
@@ -149,7 +149,7 @@ namespace StrongGrid.Resources
 			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString());
 			if (!string.IsNullOrEmpty(country)) request.WithArgument("country", country);
 
-			return request.AsSendGridObject<Statistic[]>();
+			return request.AsObject<Statistic[]>();
 		}
 
 		/// <summary>
@@ -175,7 +175,7 @@ namespace StrongGrid.Resources
 			if (endDate.HasValue) request.WithArgument("end_date", endDate.Value.ToString("yyyy-MM-dd"));
 			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString());
 
-			return request.AsSendGridObject<Statistic[]>();
+			return request.AsObject<Statistic[]>();
 		}
 
 		/// <summary>
@@ -201,7 +201,7 @@ namespace StrongGrid.Resources
 			if (endDate.HasValue) request.WithArgument("end_date", endDate.Value.ToString("yyyy-MM-dd"));
 			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString());
 
-			return request.AsSendGridObject<Statistic[]>();
+			return request.AsObject<Statistic[]>();
 		}
 
 		/// <summary>
@@ -236,7 +236,7 @@ namespace StrongGrid.Resources
 				}
 			}
 
-			return request.AsSendGridObject<Statistic[]>();
+			return request.AsObject<Statistic[]>();
 		}
 
 		/// <summary>
@@ -271,7 +271,7 @@ namespace StrongGrid.Resources
 				}
 			}
 
-			return request.AsSendGridObject<Statistic[]>();
+			return request.AsObject<Statistic[]>();
 		}
 	}
 }

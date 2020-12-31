@@ -73,7 +73,7 @@ namespace StrongGrid.Resources.Legacy
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Models.Legacy.Campaign>();
+				.AsObject<Models.Legacy.Campaign>();
 		}
 
 		/// <summary>
@@ -92,7 +92,7 @@ namespace StrongGrid.Resources.Legacy
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Models.Legacy.Campaign[]>("result");
+				.AsObject<Models.Legacy.Campaign[]>("result");
 		}
 
 		/// <summary>
@@ -108,7 +108,7 @@ namespace StrongGrid.Resources.Legacy
 			return _client
 				.GetAsync($"{_endpoint}/{campaignId}")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Models.Legacy.Campaign>();
+				.AsObject<Models.Legacy.Campaign>();
 		}
 
 		/// <summary>
@@ -168,7 +168,7 @@ namespace StrongGrid.Resources.Legacy
 				.PatchAsync($"{_endpoint}/{campaignId}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Models.Legacy.Campaign>();
+				.AsObject<Models.Legacy.Campaign>();
 		}
 
 		/// <summary>
@@ -247,7 +247,7 @@ namespace StrongGrid.Resources.Legacy
 			var unixTime = await _client
 				.GetAsync($"{_endpoint}/{campaignId}/schedules")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<long>("send_at")
+				.AsObject<long>("send_at")
 				.ConfigureAwait(false);
 
 			if (unixTime == 0) return null;

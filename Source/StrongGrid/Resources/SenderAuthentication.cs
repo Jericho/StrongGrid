@@ -53,7 +53,7 @@ namespace StrongGrid.Resources
 				.WithArgument("username", username)
 				.WithArgument("domain", domain)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<AuthenticatedDomain[]>();
+				.AsObject<AuthenticatedDomain[]>();
 		}
 
 		/// <summary>
@@ -71,7 +71,7 @@ namespace StrongGrid.Resources
 				.GetAsync($"{_endpoint}/domains/{domainId}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<AuthenticatedDomain>();
+				.AsObject<AuthenticatedDomain>();
 		}
 
 		/// <summary>
@@ -109,7 +109,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<AuthenticatedDomain>();
+				.AsObject<AuthenticatedDomain>();
 		}
 
 		/// <summary>
@@ -134,7 +134,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<AuthenticatedDomain>();
+				.AsObject<AuthenticatedDomain>();
 		}
 
 		/// <summary>
@@ -176,7 +176,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<AuthenticatedDomain>();
+				.AsObject<AuthenticatedDomain>();
 		}
 
 		/// <summary>
@@ -195,7 +195,7 @@ namespace StrongGrid.Resources
 				.DeleteAsync($"{_endpoint}/domains/{domainId}/ips/{ipAddress}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<AuthenticatedDomain>();
+				.AsObject<AuthenticatedDomain>();
 		}
 
 		/// <summary>
@@ -213,7 +213,7 @@ namespace StrongGrid.Resources
 				.PostAsync($"{_endpoint}/domains/{domainId}/validate")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<DomainValidation>();
+				.AsObject<DomainValidation>();
 		}
 
 		/// <summary>
@@ -238,7 +238,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithArgument("username", username)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<AuthenticatedDomain>();
+				.AsObject<AuthenticatedDomain>();
 		}
 
 		/// <summary>
@@ -281,7 +281,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<AuthenticatedDomain>();
+				.AsObject<AuthenticatedDomain>();
 		}
 
 		/// <summary>
@@ -304,7 +304,7 @@ namespace StrongGrid.Resources
 				.WithArgument("offset", offset)
 				.WithArgument("ip", segmentPrefix)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<ReverseDns[]>();
+				.AsObject<ReverseDns[]>();
 		}
 
 		/// <summary>
@@ -322,7 +322,7 @@ namespace StrongGrid.Resources
 				.GetAsync($"{_endpoint}/ips/{ipId}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<ReverseDns>();
+				.AsObject<ReverseDns>();
 		}
 
 		/// <summary>
@@ -352,7 +352,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<ReverseDns>();
+				.AsObject<ReverseDns>();
 		}
 
 		/// <summary>
@@ -388,7 +388,7 @@ namespace StrongGrid.Resources
 				.PostAsync($"{_endpoint}/ips/{ipId}/validate")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<ReverseDnsValidation>();
+				.AsObject<ReverseDnsValidation>();
 		}
 
 		/// <summary>
@@ -416,7 +416,7 @@ namespace StrongGrid.Resources
 				.WithArgument("offset", offset)
 				.WithArgument("ip", segmentPrefix)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<BrandedLink[]>();
+				.AsObject<BrandedLink[]>();
 		}
 
 		/// <summary>
@@ -434,7 +434,7 @@ namespace StrongGrid.Resources
 				.GetAsync($"{_endpoint}/links/{linkId}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<BrandedLink>();
+				.AsObject<BrandedLink>();
 		}
 
 		/// <summary>
@@ -461,7 +461,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<BrandedLink>();
+				.AsObject<BrandedLink>();
 		}
 
 		/// <summary>
@@ -485,7 +485,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<BrandedLink>();
+				.AsObject<BrandedLink>();
 		}
 
 		/// <summary>
@@ -522,7 +522,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithArgument("domain", domain)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<BrandedLink>();
+				.AsObject<BrandedLink>();
 		}
 
 		/// <summary>
@@ -540,7 +540,7 @@ namespace StrongGrid.Resources
 				.PostAsync($"{_endpoint}/links/{linkId}/validate")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<LinkValidation>();
+				.AsObject<LinkValidation>();
 		}
 
 		/// <summary>
@@ -565,7 +565,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithArgument("username", username)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<BrandedLink>();
+				.AsObject<BrandedLink>();
 		}
 
 		/// <summary>
@@ -608,7 +608,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<BrandedLink>();
+				.AsObject<BrandedLink>();
 		}
 	}
 }

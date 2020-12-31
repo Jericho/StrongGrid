@@ -52,7 +52,7 @@ namespace StrongGrid.Resources
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<GlobalSuppression[]>();
+				.AsObject<GlobalSuppression[]>();
 		}
 
 		/// <summary>

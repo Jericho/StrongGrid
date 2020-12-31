@@ -52,7 +52,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Template>();
+				.AsObject<Template>();
 		}
 
 		/// <summary>
@@ -71,7 +71,7 @@ namespace StrongGrid.Resources
 				.WithArgument("generations", JToken.Parse(JsonConvert.SerializeObject(type)).ToString())
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Template[]>("templates");
+				.AsObject<Template[]>("templates");
 		}
 
 		/// <summary>
@@ -89,7 +89,7 @@ namespace StrongGrid.Resources
 				.GetAsync($"{_endpoint}/{templateId}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Template>();
+				.AsObject<Template>();
 		}
 
 		/// <summary>
@@ -113,7 +113,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Template>();
+				.AsObject<Template>();
 		}
 
 		/// <summary>
@@ -168,7 +168,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<TemplateVersion>();
+				.AsObject<TemplateVersion>();
 		}
 
 		/// <summary>
@@ -187,7 +187,7 @@ namespace StrongGrid.Resources
 				.PostAsync($"{_endpoint}/{templateId}/versions/{versionId}/activate")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<TemplateVersion>();
+				.AsObject<TemplateVersion>();
 		}
 
 		/// <summary>
@@ -206,7 +206,7 @@ namespace StrongGrid.Resources
 				.GetAsync($"{_endpoint}/{templateId}/versions/{versionId}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<TemplateVersion>();
+				.AsObject<TemplateVersion>();
 		}
 
 		/// <summary>
@@ -240,7 +240,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<TemplateVersion>();
+				.AsObject<TemplateVersion>();
 		}
 
 		/// <summary>

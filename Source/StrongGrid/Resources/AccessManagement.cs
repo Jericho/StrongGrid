@@ -1,7 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
-using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -47,7 +46,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithArgument("limit", limit)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<AccessEntry[]>("result");
+				.AsObject<AccessEntry[]>("result");
 		}
 
 		/// <summary>
@@ -64,7 +63,7 @@ namespace StrongGrid.Resources
 				.GetAsync($"{_endpoint}/whitelist")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<WhitelistedIp[]>("result");
+				.AsObject<WhitelistedIp[]>("result");
 		}
 
 		/// <summary>
@@ -88,7 +87,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<WhitelistedIp[]>("result")
+				.AsObject<WhitelistedIp[]>("result")
 				.ConfigureAwait(false);
 
 			// SendGrid returns an array containing a single element.
@@ -122,7 +121,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<WhitelistedIp[]>("result");
+				.AsObject<WhitelistedIp[]>("result");
 		}
 
 		/// <summary>
@@ -182,7 +181,7 @@ namespace StrongGrid.Resources
 				.GetAsync($"{_endpoint}/whitelist/{id}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<WhitelistedIp>("result");
+				.AsObject<WhitelistedIp>("result");
 		}
 	}
 }
