@@ -20,7 +20,7 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class Mail : IMail
 	{
-		// SendGrid doesn't alow emails that exceed 30MB
+		// SendGrid doesn't allow emails that exceed 30MB
 		private const int MAX_EMAIL_SIZE = 30 * 1024 * 1024;
 
 		private const string _endpoint = "mail";
@@ -805,7 +805,7 @@ namespace StrongGrid.Resources
 				data.Add("custom_args", args);
 			}
 
-			// Sendgrid does not allow emails that exceed 30MB
+			// SendGrid does not allow emails that exceed 30MB
 			var contentSize = JsonConvert.SerializeObject(data, Formatting.None).Length;
 			if (contentSize > MAX_EMAIL_SIZE) throw new Exception("Email exceeds the size limit");
 
