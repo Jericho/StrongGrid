@@ -217,6 +217,21 @@ namespace StrongGrid
 			return await response.Content.AsRawJsonObject(propertyName, throwIfPropertyIsMissing).ConfigureAwait(false);
 		}
 
+		/// <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
+		/// <exception cref="ApiException">An error occurred processing the response.</exception>
+		internal static Task<JArray> AsRawJsonArray(this IResponse response, string propertyName = null, bool throwIfPropertyIsMissing = true)
+		{
+			return response.Message.Content.AsRawJsonArray(propertyName, throwIfPropertyIsMissing);
+		}
+
+		/// <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
+		/// <exception cref="ApiException">An error occurred processing the response.</exception>
+		internal static async Task<JArray> AsRawJsonArray(this IRequest request, string propertyName = null, bool throwIfPropertyIsMissing = true)
+		{
+			var response = await request.AsMessage().ConfigureAwait(false);
+			return await response.Content.AsRawJsonArray(propertyName, throwIfPropertyIsMissing).ConfigureAwait(false);
+		}
+
 		/// <summary>Asynchronously retrieve the JSON encoded content and convert it to a 'PaginatedResponse' object.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="response">The response.</param>
@@ -763,6 +778,74 @@ namespace StrongGrid
 			}
 		}
 
+		/// <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
+		/// <param name="httpContent">The content.</param>
+		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
+		/// <param name="throwIfPropertyIsMissing">Indicates if an exception should be thrown when the specified JSON property is missing from the response.</param>
+		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
+		private static async Task<JObject> AsRawJsonObject(this HttpContent httpContent, string propertyName = null, bool throwIfPropertyIsMissing = true)
+		{
+			var responseContent = await httpContent.ReadAsStringAsync(null).ConfigureAwait(false);
+
+			if (!string.IsNullOrEmpty(propertyName))
+			{
+				var jObject = JObject.Parse(responseContent);
+				var jProperty = jObject.Property(propertyName);
+				if (jProperty == null)
+				{
+					if (throwIfPropertyIsMissing)
+					{
+						throw new ArgumentException($"The response does not contain a field called '{propertyName}'", nameof(propertyName));
+					}
+					else
+					{
+						return default;
+					}
+				}
+
+				return (JObject)jProperty.Value;
+			}
+			else
+			{
+				return JObject.Parse(responseContent);
+			}
+		}
+
+		/// <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
+		/// <param name="httpContent">The content.</param>
+		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
+		/// <param name="throwIfPropertyIsMissing">Indicates if an exception should be thrown when the specified JSON property is missing from the response.</param>
+		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+		/// <exception cref="ApiException">An error occurred processing the response.</exception>
+		private static async Task<JArray> AsRawJsonArray(this HttpContent httpContent, string propertyName = null, bool throwIfPropertyIsMissing = true)
+		{
+			var responseContent = await httpContent.ReadAsStringAsync(null).ConfigureAwait(false);
+
+			if (!string.IsNullOrEmpty(propertyName))
+			{
+				var jObject = JObject.Parse(responseContent);
+				var jProperty = jObject.Property(propertyName);
+				if (jProperty == null)
+				{
+					if (throwIfPropertyIsMissing)
+					{
+						throw new ArgumentException($"The response does not contain a field called '{propertyName}'", nameof(propertyName));
+					}
+					else
+					{
+						return default;
+					}
+				}
+
+				return (JArray)jProperty.Value;
+			}
+			else
+			{
+				return JArray.Parse(responseContent);
+			}
+		}
+
 		/// <summary>Asynchronously retrieve the JSON encoded content and convert it to a 'PaginatedResponse' object.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="httpContent">The content.</param>
@@ -796,40 +879,6 @@ namespace StrongGrid
 			};
 
 			return result;
-		}
-
-		/// <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
-		/// <param name="httpContent">The content.</param>
-		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
-		/// <param name="throwIfPropertyIsMissing">Indicates if an exception should be thrown when the specified JSON property is missing from the response.</param>
-		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
-		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		private static async Task<JObject> AsRawJsonObject(this HttpContent httpContent, string propertyName = null, bool throwIfPropertyIsMissing = true)
-		{
-			var responseContent = await httpContent.ReadAsStringAsync(null).ConfigureAwait(false);
-
-			if (!string.IsNullOrEmpty(propertyName))
-			{
-				var jObject = JObject.Parse(responseContent);
-				var jProperty = jObject.Property(propertyName);
-				if (jProperty == null)
-				{
-					if (throwIfPropertyIsMissing)
-					{
-						throw new ArgumentException($"The response does not contain a field called '{propertyName}'", nameof(propertyName));
-					}
-					else
-					{
-						return default;
-					}
-				}
-
-				return (JObject)jProperty.Value;
-			}
-			else
-			{
-				return JObject.Parse(responseContent);
-			}
 		}
 	}
 }
