@@ -286,6 +286,37 @@ namespace StrongGrid
 			return await response.AsRawJsonDocument(propertyName, throwIfPropertyIsMissing).ConfigureAwait(false);
 		}
 
+		/// <summary>Asynchronously retrieve the JSON encoded content and convert it to a 'AsPaginatedResponseWithLinks' object.</summary>
+		/// <typeparam name="T">The response model to deserialize into.</typeparam>
+		/// <param name="response">The response.</param>
+		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
+		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
+		/// <returns>Returns the paginated response.</returns>
+		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
+		internal static Task<PaginatedResponseWithLinks<T>> AsPaginatedResponseWithLinks<T>(this IResponse response, string propertyName = null, JsonConverter jsonConverter = null)
+		{
+			var link = response.Message.Headers.GetValue("Link");
+			if (string.IsNullOrEmpty(link))
+			{
+				throw new Exception("The 'Link' header is missing form the response");
+			}
+
+			return response.Message.Content.AsPaginatedResponseWithLinks<T>(link, propertyName, jsonConverter);
+		}
+
+		/// <summary>Asynchronously retrieve the JSON encoded content and convert it to a 'AsPaginatedResponseWithLinks' object.</summary>
+		/// <typeparam name="T">The response model to deserialize into.</typeparam>
+		/// <param name="request">The request.</param>
+		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
+		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
+		/// <returns>Returns the paginated response.</returns>
+		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
+		internal static async Task<PaginatedResponseWithLinks<T>> AsPaginatedResponseWithLinks<T>(this IRequest request, string propertyName = null, JsonConverter jsonConverter = null)
+		{
+			var response = await request.AsResponse().ConfigureAwait(false);
+			return await response.AsPaginatedResponseWithLinks<T>(propertyName, jsonConverter).ConfigureAwait(false);
+		}
+
 		/// <summary>Set the body content of the HTTP request.</summary>
 		/// <typeparam name="T">The type of object to serialize into a JSON string.</typeparam>
 		/// <param name="request">The request.</param>
@@ -1005,6 +1036,77 @@ namespace StrongGrid
 				NextPageToken = metadata.NextToken,
 				TotalRecords = metadata.Count,
 				Records = jProperty.ToObject<T[]>(options) ?? Array.Empty<T>()
+			};
+
+			return result;
+		}
+
+		/// <summary>Asynchronously retrieve the JSON encoded content and convert it to a 'PaginatedResponseWithLinks' object.</summary>
+		/// <typeparam name="T">The response model to deserialize into.</typeparam>
+		/// <param name="httpContent">The content.</param>
+		/// <param name="linkHeaderValue">The content of the 'Link' header.</param>
+		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
+		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
+		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
+		private static async Task<PaginatedResponseWithLinks<T>> AsPaginatedResponseWithLinks<T>(this HttpContent httpContent, string linkHeaderValue, string propertyName, JsonConverter jsonConverter = null)
+		{
+			var responseContent = await httpContent.ReadAsStringAsync(null).ConfigureAwait(false);
+
+			var serializer = new JsonSerializer();
+			if (jsonConverter != null) serializer.Converters.Add(jsonConverter);
+
+			T[] records;
+
+			if (!string.IsNullOrEmpty(propertyName))
+			{
+				var jObject = JObject.Parse(responseContent);
+				var jProperty = jObject.Property(propertyName);
+				if (jProperty == null)
+				{
+					throw new ArgumentException($"The response does not contain a field called '{propertyName}'", nameof(propertyName));
+				}
+
+				records = jProperty.Value?.ToObject<T[]>(serializer) ?? Array.Empty<T>();
+			}
+			else
+			{
+				records = JArray.Parse(responseContent).ToObject<T[]>(serializer);
+			}
+
+			var links = linkHeaderValue
+				.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+				.Select(link => link.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+				.Select(linkParts =>
+				{
+					var link = linkParts[0]
+						.Trim()
+						.TrimStart(new[] { '<' })
+						.TrimEnd(new[] { '>' });
+
+					var rel = linkParts[1]
+						.Split(new[] { '=' }, StringSplitOptions.RemoveEmptyEntries)[1]
+						.Trim(new[] { ' ', '"' });
+
+					var pageNum = linkParts[2]
+						.Split(new[] { '=' }, StringSplitOptions.RemoveEmptyEntries)[1]
+						.Trim(new[] { ' ', '"' });
+
+					return new PaginationLink()
+					{
+						Link = link,
+						Rel = rel,
+						PageNumber = int.Parse(pageNum)
+					};
+				});
+
+			var result = new PaginatedResponseWithLinks<T>()
+			{
+				First = links.Single(l => l.Rel == "first"),
+				Previous = links.Single(l => l.Rel == "prev"),
+				Next = links.Single(l => l.Rel == "next"),
+				Last = links.Single(l => l.Rel == "last"),
+				Records = records
 			};
 
 			return result;

@@ -36,7 +36,7 @@ namespace StrongGrid.Resources
 		///
 		/// Also note that SendGrid requires that your search term contain at least three characters.
 		/// </remarks>
-		Task<GlobalSuppression[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, string searchTerm = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<PaginatedResponseWithLinks<GlobalSuppression>> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, string searchTerm = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Check if a recipient address is in the global suppressions group.
