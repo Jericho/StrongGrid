@@ -53,7 +53,7 @@ namespace StrongGrid.Resources
 		///
 		/// Also note that SendGrid requires that your search term contain at least three characters.
 		/// </remarks>
-		public Task<GlobalSuppression[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, string searchTerm = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<PaginatedResponseWithLinks<GlobalSuppression>> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, string searchTerm = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync("suppression/unsubscribes")
@@ -64,7 +64,7 @@ namespace StrongGrid.Resources
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
-				.AsObject<GlobalSuppression[]>();
+				.AsPaginatedResponseWithLinks<GlobalSuppression>();
 		}
 
 		/// <summary>
