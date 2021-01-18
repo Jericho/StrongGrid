@@ -905,7 +905,7 @@ namespace StrongGrid.UnitTests.Resources
 		}
 
 		[Fact]
-		public async Task UpdatBouncePurgeMailSettingsAsync()
+		public async Task UpdateBouncePurgeMailSettingsAsync()
 		{
 			// Arrange
 			var enabled = true;
@@ -925,7 +925,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.UpdatBouncePurgeMailSettingsAsync(enabled, hardBounces, softBounces, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await settings.UpdateBouncePurgeMailSettingsAsync(enabled, hardBounces, softBounces, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

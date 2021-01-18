@@ -692,7 +692,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="BouncePurgeSettings" />.
 		/// </returns>
-		public Task<BouncePurgeSettings> UpdatBouncePurgeMailSettingsAsync(bool enabled, int hardBounces, int softBounces, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<BouncePurgeSettings> UpdateBouncePurgeMailSettingsAsync(bool enabled, int hardBounces, int softBounces, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var bouncePurgeSettings = new BouncePurgeSettings
 			{
