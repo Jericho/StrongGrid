@@ -456,7 +456,7 @@ namespace StrongGrid
 				jsonSerializer.Converters.Add(converter);
 			}
 
-			AddPropertyIfValue(jsonObject, propertyName, parameter, value => JArray.FromObject(value.ToArray()));
+			AddPropertyIfValue(jsonObject, propertyName, parameter, value => JArray.FromObject(value.ToArray(), jsonSerializer));
 		}
 
 		internal static void AddPropertyIfEnumValue<T>(this JObject jsonObject, string propertyName, Parameter<T> parameter, JsonConverter converter = null)
