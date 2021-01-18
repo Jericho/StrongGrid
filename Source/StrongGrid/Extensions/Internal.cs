@@ -253,8 +253,8 @@ namespace StrongGrid
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
 		internal static async Task<PaginatedResponse<T>> AsPaginatedResponse<T>(this IRequest request, string propertyName = null, JsonConverter jsonConverter = null)
 		{
-			var response = await request.AsMessage().ConfigureAwait(false);
-			return await response.Content.AsPaginatedResponse<T>(propertyName, jsonConverter).ConfigureAwait(false);
+			var response = await request.AsResponse().ConfigureAwait(false);
+			return await response.AsPaginatedResponse<T>(propertyName, jsonConverter).ConfigureAwait(false);
 		}
 
 		/// <summary>Set the body content of the HTTP request.</summary>
@@ -875,7 +875,7 @@ namespace StrongGrid
 				CurrentPageToken = metadata.SelfToken,
 				NextPageToken = metadata.NextToken,
 				TotalRecords = metadata.Count,
-				Records = jProperty.Value.ToObject<T[]>(serializer)
+				Records = jProperty.Value?.ToObject<T[]>(serializer) ?? Array.Empty<T>()
 			};
 
 			return result;
