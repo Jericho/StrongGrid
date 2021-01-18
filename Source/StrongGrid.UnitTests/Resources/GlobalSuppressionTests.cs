@@ -38,7 +38,13 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("suppression/unsubscribes")).Respond("application/json", GLOBALLY_UNSUBSCRIBED);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("suppression/unsubscribes")).Respond((HttpRequestMessage request) =>
+			{
+				var response = new HttpResponseMessage(HttpStatusCode.OK);
+				response.Headers.Add("link", "<https://api.sendgrid.com/v3/suppression/unsubscribes?limit=50&offset=0>; rel=\"next\"; title=\"1\", <https://api.sendgrid.com/v3/suppression/unsubscribes?limit=50&offset=0>; rel=\"prev\"; title=\"1\", <https://api.sendgrid.com/v3/suppression/unsubscribes?limit=50&offset=0>; rel=\"last\"; title=\"1\", <https://api.sendgrid.com/v3/suppression/unsubscribes?limit=50&offset=0>; rel=\"first\"; title=\"1\"");
+				response.Content = new StringContent(GLOBALLY_UNSUBSCRIBED);
+				return response;
+			});
 
 			var logger = _outputHelper.ToLogger<IClient>();
 			var client = Utils.GetFluentClient(mockHttp, logger);
