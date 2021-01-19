@@ -22,7 +22,7 @@ namespace StrongGrid.IntegrationTests.Tests
 			await log.WriteLineAsync($"Is {emails[1]} unsubscribed (should be true): {isUnsubscribed1}").ConfigureAwait(false);
 
 			// GET ALL ADDRESSES ON THE SUPPRESSION LIST
-			var paginatedResult = await client.GlobalSuppressions.GetAllAsync(null, null, 1, 0, null, CancellationToken.None).ConfigureAwait(false);
+			var paginatedResult = await client.GlobalSuppressions.GetAllAsync(null, null, null, 1, 0, null, CancellationToken.None).ConfigureAwait(false);
 			await log.WriteLineAsync($"There are {int.Parse(paginatedResult.Last.Title)} addresses on the global suppression list").ConfigureAwait(false);
 
 			// SEARCH SUPPRESSED EMAIL ADDRESSES
