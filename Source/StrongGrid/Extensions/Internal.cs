@@ -298,10 +298,12 @@ namespace StrongGrid
 			var link = response.Message.Headers.GetValue("Link");
 			if (string.IsNullOrEmpty(link))
 			{
-				throw new Exception("The 'Link' header is missing form the response");
+				throw new Exception("The 'Link' header is missing from the response");
 			}
 
-			return response.Message.Content.AsPaginatedResponseWithLinks<T>(link, propertyName, jsonConverter);
+			var paginationLinks = PaginationLinksParser.Parse(link);
+
+			return response.Message.Content.AsPaginatedResponseWithLinks<T>(paginationLinks, propertyName, jsonConverter);
 		}
 
 		/// <summary>Asynchronously retrieve the JSON encoded content and convert it to a 'AsPaginatedResponseWithLinks' object.</summary>
@@ -1044,12 +1046,12 @@ namespace StrongGrid
 		/// <summary>Asynchronously retrieve the JSON encoded content and convert it to a 'PaginatedResponseWithLinks' object.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="httpContent">The content.</param>
-		/// <param name="linkHeaderValue">The content of the 'Link' header.</param>
+		/// <param name="paginationLinks">The pagination links.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
 		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		private static async Task<PaginatedResponseWithLinks<T>> AsPaginatedResponseWithLinks<T>(this HttpContent httpContent, string linkHeaderValue, string propertyName, JsonConverter jsonConverter = null)
+		private static async Task<PaginatedResponseWithLinks<T>> AsPaginatedResponseWithLinks<T>(this HttpContent httpContent, IEnumerable<PaginationLink> paginationLinks, string propertyName, JsonConverter jsonConverter = null)
 		{
 			var responseContent = await httpContent.ReadAsStringAsync(null).ConfigureAwait(false);
 
@@ -1074,38 +1076,12 @@ namespace StrongGrid
 				records = JArray.Parse(responseContent).ToObject<T[]>(serializer);
 			}
 
-			var links = linkHeaderValue
-				.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-				.Select(link => link.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
-				.Select(linkParts =>
-				{
-					var link = linkParts[0]
-						.Trim()
-						.TrimStart(new[] { '<' })
-						.TrimEnd(new[] { '>' });
-
-					var rel = linkParts[1]
-						.Split(new[] { '=' }, StringSplitOptions.RemoveEmptyEntries)[1]
-						.Trim(new[] { ' ', '"' });
-
-					var pageNum = linkParts[2]
-						.Split(new[] { '=' }, StringSplitOptions.RemoveEmptyEntries)[1]
-						.Trim(new[] { ' ', '"' });
-
-					return new PaginationLink()
-					{
-						Link = link,
-						Rel = rel,
-						PageNumber = int.Parse(pageNum)
-					};
-				});
-
 			var result = new PaginatedResponseWithLinks<T>()
 			{
-				First = links.Single(l => l.Rel == "first"),
-				Previous = links.Single(l => l.Rel == "prev"),
-				Next = links.Single(l => l.Rel == "next"),
-				Last = links.Single(l => l.Rel == "last"),
+				First = paginationLinks.SingleOrDefault(l => l.Relationship == "first"),
+				Previous = paginationLinks.SingleOrDefault(l => l.Relationship == "prev"),
+				Next = paginationLinks.SingleOrDefault(l => l.Relationship == "next"),
+				Last = paginationLinks.SingleOrDefault(l => l.Relationship == "last"),
 				Records = records
 			};
 
