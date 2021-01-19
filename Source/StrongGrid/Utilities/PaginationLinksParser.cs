@@ -9,7 +9,7 @@ namespace StrongGrid.Utilities
 	/// Parser for pagination links.
 	/// </summary>
 	/// <remarks>
-	/// This parser attempts to respect the HTTP 1.1 'Link' rules defined in <see cref="https://tools.ietf.org/html/rfc2068#section-19.6.2.4">RFC 2068</see>.
+	/// This parser attempts to respect the HTTP 1.1 'Link' rules defined in <a href="https://tools.ietf.org/html/rfc2068#section-19.6.2.4">RFC 2068</a>.
 	/// </remarks>
 	public static class PaginationLinksParser
 	{
