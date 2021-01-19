@@ -27,7 +27,7 @@ namespace StrongGrid.IntegrationTests.Tests
 
 			// SEARCH SUPPRESSED EMAIL ADDRESSES
 			var suppressed = await client.GlobalSuppressions.GetAllAsync(null, null, "user", 50, 0, null, CancellationToken.None).ConfigureAwait(false);
-			await log.WriteLineAsync($"There are {suppressed.Length} suppressed email addresses that begin with 'user'").ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {suppressed.Records.Length} suppressed email addresses that begin with 'user'").ConfigureAwait(false);
 
 			// DELETE EMAILS FROM THE GLOBAL SUPPRESSION GROUP
 			await client.GlobalSuppressions.RemoveAsync(emails[0], null, cancellationToken).ConfigureAwait(false);
