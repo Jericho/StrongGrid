@@ -8,9 +8,11 @@ namespace StrongGrid.UnitTests.Utilities
 	{
 		[Theory]
 		[InlineData("bob@example.com", "", "bob@example.com")]
-		[InlineData("Doe, John <johndoe@mail.com>", "Doe, John", "johndoe@mail.com")]
+		[InlineData("Doe, John <johndoe@mail.com>", "Doe, John", "johndoe@mail.com")] // https://github.com/Jericho/StrongGrid/issues/323
 		[InlineData("\"Doe, John\" <johndoe@mail.com>", "Doe, John", "johndoe@mail.com")]
 		[InlineData("\"Doe, John <johndoe@mail.com>\" <johndoe@mail.com>", "Doe, John <johndoe@mail.com>", "johndoe@mail.com")]
+		[InlineData("\"Some text.\" \"more text\" <email@test.no>", "Some text. more text", "email@test.no")] // https://github.com/Jericho/StrongGrid/issues/360
+		[InlineData("\"John <johndoe@mail.com> Doe", "John Doe", "johndoe@mail.com")]
 		public void Can_parse_single_address(string input, string expectedName, string expectedEmail)
 		{
 			// Act
