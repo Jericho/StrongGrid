@@ -1,7 +1,6 @@
 using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
-using StrongGrid.Utilities;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -101,7 +100,7 @@ namespace StrongGrid.Resources
 		{
 			var request = _client
 				.GetAsync(_endpoint)
-				.WithArgument("exclude_whitelabels", excludeWhitelabels)
+				.WithArgument("exclude_whitelabels", excludeWhitelabels ? "true" : "false")
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithArgument("sort_by_direction", "asc")
