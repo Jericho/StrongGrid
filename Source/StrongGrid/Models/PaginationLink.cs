@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace StrongGrid.Models
 {
 	/// <summary>
@@ -6,21 +9,36 @@ namespace StrongGrid.Models
 	public class PaginationLink
 	{
 		/// <summary>
-		/// Gets or sets the uri to the page.
+		/// Gets or sets the uri.
 		/// </summary>
-		public string Link { get; set; }
+		public Uri Link { get; set; }
 
 		/// <summary>
-		/// Gets or sets the value describing the pagination link.
+		/// Gets or sets the relationship.
+		/// </summary>
+		public string Relationship { get; set; }
+
+		/// <summary>
+		/// Gets or sets the relationship.
 		/// </summary>
 		/// <remarks>
-		/// There are 4 possible values: first, prev, next and last.
+		/// 'Rev' is obviously short for something but I can't figure out what it stands for????
 		/// </remarks>
-		public string Rel { get; set; }
+		public string Rev { get; set; }
 
 		/// <summary>
-		/// Gets or sets the page number.
+		/// Gets or sets the title.
 		/// </summary>
-		public int PageNumber { get; set; }
+		public string Title { get; set; }
+
+		/// <summary>
+		/// Gets or sets the anchor.
+		/// </summary>
+		public Uri Anchor { get; set; }
+
+		/// <summary>
+		/// Gets or sets the extensions.
+		/// </summary>
+		public IEnumerable<KeyValuePair<string, string>> Extensions { get; set; }
 	}
 }
