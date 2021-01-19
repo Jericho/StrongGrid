@@ -19,6 +19,7 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="startDate">The start date.</param>
 		/// <param name="endDate">The end date.</param>
+		/// <param name="searchTerm">The search term.</param>
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
@@ -26,7 +27,16 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="GlobalSuppression"/>.
 		/// </returns>
-		Task<GlobalSuppression[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		/// <remarks>
+		/// After much trial and error, we came to the conclusion that SendGrid allows you to search
+		/// for addresses that "begin with" your search term. So, if you have two email addresses on
+		/// your global suppression list such as user1@hotmail.com and user2@gmail.com for exmaple,
+		/// you will be able to search for 'user1', or 'user2' or even 'user' but you cannot search
+		/// for 'hotmail' or 'gmail'.
+		///
+		/// Also note that SendGrid requires that your search term contain at least three characters.
+		/// </remarks>
+		Task<GlobalSuppression[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, string searchTerm = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Check if a recipient address is in the global suppressions group.
