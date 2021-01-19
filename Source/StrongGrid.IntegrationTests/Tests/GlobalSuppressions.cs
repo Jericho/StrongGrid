@@ -13,7 +13,7 @@ namespace StrongGrid.IntegrationTests.Tests
 			await log.WriteLineAsync("\n***** GLOBAL SUPPRESSION *****\n").ConfigureAwait(false);
 
 			// ADD EMAILS TO THE GLOBAL SUPPRESSION LIST
-			var emails = new[] { "example@example.com", "example2@example.com" };
+			var emails = new[] { "user1@example.com", "user2@example.com" };
 			await client.GlobalSuppressions.AddAsync(emails, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"The following emails have been added to the global suppression list: {string.Join(", ", emails)}").ConfigureAwait(false);
 
@@ -22,6 +22,10 @@ namespace StrongGrid.IntegrationTests.Tests
 
 			await log.WriteLineAsync($"Is {emails[0]} unsubscribed (should be true): {isUnsubscribed0}").ConfigureAwait(false);
 			await log.WriteLineAsync($"Is {emails[1]} unsubscribed (should be true): {isUnsubscribed1}").ConfigureAwait(false);
+
+			// SEARCH SUPPRESSED EMAIL ADDRESSES
+			var suppressed = await client.GlobalSuppressions.GetAllAsync(null, null, "user", 50, 0, null, CancellationToken.None).ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {suppressed.Length} suppressed email addresses that begin with 'user'").ConfigureAwait(false);
 
 			// DELETE EMAILS FROM THE GLOBAL SUPPRESSION GROUP
 			await client.GlobalSuppressions.RemoveAsync(emails[0], null, cancellationToken).ConfigureAwait(false);
