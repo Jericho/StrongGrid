@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// Gets or sets the relationship.
 		/// </summary>
 		/// <remarks>
-		/// 'Rev' is obviously short for something but I can't figure out what it stands for????
+		/// 'Rev' is obviously short for something but I can't figure out what it stands for.
 		/// </remarks>
 		public string Rev { get; set; }
 
