@@ -1,10 +1,12 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
+using StrongGrid.Utilities;
 
 namespace StrongGrid.Models
 {
 	/// <summary>
 	/// Allows you to track whether a recipient clicked a link in your email.
 	/// </summary>
+	[JsonConverter(typeof(ClickTrackingSettingsConverter))]
 	public class ClickTrackingSettings
 	{
 		/// <summary>

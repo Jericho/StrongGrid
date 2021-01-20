@@ -54,7 +54,7 @@ namespace StrongGrid.Resources.Legacy
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SenderIdentity>();
+				.AsObject<SenderIdentity>();
 		}
 
 		/// <summary>
@@ -71,7 +71,7 @@ namespace StrongGrid.Resources.Legacy
 				.GetAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SenderIdentity[]>();
+				.AsObject<SenderIdentity[]>();
 		}
 
 		/// <summary>
@@ -89,7 +89,7 @@ namespace StrongGrid.Resources.Legacy
 				.GetAsync($"{_endpoint}/{senderId}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SenderIdentity>();
+				.AsObject<SenderIdentity>();
 		}
 
 		/// <summary>
@@ -129,8 +129,9 @@ namespace StrongGrid.Resources.Legacy
 			return _client
 				.PatchAsync($"{_endpoint}/{senderId}")
 				.OnBehalfOf(onBehalfOf)
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SenderIdentity>();
+				.AsObject<SenderIdentity>();
 		}
 
 		/// <summary>
@@ -183,7 +184,7 @@ namespace StrongGrid.Resources.Legacy
 			var result = new JObject();
 			result.AddPropertyIfValue("nickname", nickname);
 			result.AddPropertyIfValue("from", from);
-			result.AddPropertyIfValue("reply_to", from);
+			result.AddPropertyIfValue("reply_to", replyTo);
 			result.AddPropertyIfValue("address", address1);
 			result.AddPropertyIfValue("address2", address2);
 			result.AddPropertyIfValue("city", city);

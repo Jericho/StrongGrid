@@ -40,7 +40,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync($"{_endpoint}/{id}")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Design>();
+				.AsObject<Design>();
 		}
 
 		/// <summary>
@@ -56,7 +56,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync($"{_endpoint}/pre-builts/{id}")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Design>();
+				.AsObject<Design>();
 		}
 
 		/// <summary>
@@ -120,7 +120,7 @@ namespace StrongGrid.Resources
 				.PostAsync($"{_endpoint}/{id}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Design>();
+				.AsObject<Design>();
 		}
 
 		/// <summary>
@@ -140,7 +140,7 @@ namespace StrongGrid.Resources
 				.PostAsync($"{_endpoint}/pre-builts/{id}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Design>();
+				.AsObject<Design>();
 		}
 
 		/// <summary>
@@ -180,7 +180,7 @@ namespace StrongGrid.Resources
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Design>();
+				.AsObject<Design>();
 		}
 
 		/// <summary>
@@ -204,7 +204,7 @@ namespace StrongGrid.Resources
 				.PatchAsync($"{_endpoint}/{id}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Design>();
+				.AsObject<Design>();
 		}
 
 		private static JObject CreateJObject(string name, Parameter<EditorType?> editorType = default, Parameter<string> htmlContent = default, Parameter<string> plainContent = default, Parameter<bool> generatePlainContent = default, Parameter<string> subject = default, Parameter<string[]> categories = default)

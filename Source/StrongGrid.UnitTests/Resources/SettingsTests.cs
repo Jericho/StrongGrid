@@ -259,7 +259,8 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'enabled': true,
+				'enable_text': true,
+				'enabled': false,
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -274,16 +275,19 @@ namespace StrongGrid.UnitTests.Resources
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			result.ShouldBeTrue();
+			result.EnabledInTextContent.ShouldBeTrue();
+			result.EnabledInHtmlContent.ShouldBeFalse();
 		}
 
 		[Fact]
 		public async Task UpdateClickTrackingSettingsAsync()
 		{
 			// Arrange
-			var enabled = true;
+			var enabledInText = false;
+			var enabledInHtml = true;
 
 			var apiResponse = @"{
+				'enable_text': false,
 				'enabled': true,
 			}";
 
@@ -294,12 +298,13 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.UpdateClickTrackingSettingsAsync(enabled, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await settings.UpdateClickTrackingSettingsAsync(enabledInText, enabledInHtml, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
-			result.ShouldBeTrue();
+			result.EnabledInTextContent.ShouldBeFalse();
+			result.EnabledInHtmlContent.ShouldBeTrue();
 		}
 
 		[Fact]
@@ -900,7 +905,7 @@ namespace StrongGrid.UnitTests.Resources
 		}
 
 		[Fact]
-		public async Task UpdatBouncePurgeMailSettingsAsync()
+		public async Task UpdateBouncePurgeMailSettingsAsync()
 		{
 			// Arrange
 			var enabled = true;
@@ -920,7 +925,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.UpdatBouncePurgeMailSettingsAsync(enabled, hardBounces, softBounces, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await settings.UpdateBouncePurgeMailSettingsAsync(enabled, hardBounces, softBounces, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

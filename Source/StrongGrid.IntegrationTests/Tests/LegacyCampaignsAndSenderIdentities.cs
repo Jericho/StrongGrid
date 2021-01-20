@@ -33,7 +33,7 @@ namespace StrongGrid.IntegrationTests.Tests
 				{
 					await client.Campaigns.DeleteAsync(oldCampaign.Id, cancellationToken).ConfigureAwait(false);
 					await log.WriteLineAsync($"Campaign {oldCampaign.Id} deleted").ConfigureAwait(false);
-					await Task.Delay(250).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
+					await Task.Delay(250, cancellationToken).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
 				});
 			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 

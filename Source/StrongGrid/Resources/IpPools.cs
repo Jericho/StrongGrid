@@ -51,7 +51,7 @@ namespace StrongGrid.Resources
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<string>("name");
+				.AsObject<string>("name");
 		}
 
 		/// <summary>
@@ -90,7 +90,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync($"{_endpoint}/{name}")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<IpPool>();
+				.AsObject<IpPool>();
 		}
 
 		/// <summary>
@@ -112,7 +112,7 @@ namespace StrongGrid.Resources
 				.PutAsync($"{_endpoint}/{name}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<string>("name");
+				.AsObject<string>("name");
 		}
 
 		/// <summary>
@@ -150,7 +150,7 @@ namespace StrongGrid.Resources
 				.PostAsync($"{_endpoint}/{name}/ips")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<IpPoolAddress>();
+				.AsObject<IpPoolAddress>();
 		}
 
 		/// <summary>

@@ -42,7 +42,7 @@ namespace StrongGrid.Resources
 				.GetAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<UserProfile>();
+				.AsObject<UserProfile>();
 		}
 
 		/// <summary>
@@ -83,7 +83,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<UserProfile>();
+				.AsObject<UserProfile>();
 		}
 
 		/// <summary>
@@ -100,7 +100,7 @@ namespace StrongGrid.Resources
 				.GetAsync("user/account")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Account>();
+				.AsObject<Account>();
 		}
 
 		/// <summary>
@@ -117,7 +117,7 @@ namespace StrongGrid.Resources
 				.GetAsync("user/email")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<string>("email");
+				.AsObject<string>("email");
 		}
 
 		/// <summary>
@@ -139,7 +139,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<string>("email");
+				.AsObject<string>("email");
 		}
 
 		/// <summary>
@@ -156,7 +156,7 @@ namespace StrongGrid.Resources
 				.GetAsync("user/username")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<string>("username");
+				.AsObject<string>("username");
 		}
 
 		/// <summary>
@@ -178,7 +178,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<string>("username");
+				.AsObject<string>("username");
 		}
 
 		/// <summary>
@@ -195,7 +195,7 @@ namespace StrongGrid.Resources
 				.GetAsync("user/credits")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<UserCredits>();
+				.AsObject<UserCredits>();
 		}
 
 		/// <summary>
@@ -236,7 +236,7 @@ namespace StrongGrid.Resources
 				.GetAsync("scopes")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<string[]>("scopes");
+				.AsObject<string[]>("scopes");
 		}
 
 		private static JObject CreateJObject(

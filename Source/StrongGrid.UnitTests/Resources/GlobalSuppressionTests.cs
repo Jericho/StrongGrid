@@ -42,7 +42,7 @@ namespace StrongGrid.UnitTests.Resources
 			var globalSuppressions = new GlobalSuppressions(client);
 
 			// Act
-			var result = await globalSuppressions.GetAllAsync(null, null, 50, 0, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await globalSuppressions.GetAllAsync(null, null, null, 50, 0, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

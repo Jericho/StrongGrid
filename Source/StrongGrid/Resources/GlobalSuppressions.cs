@@ -1,7 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
-using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +35,7 @@ namespace StrongGrid.Resources
 		/// </summary>
 		/// <param name="startDate">The start date.</param>
 		/// <param name="endDate">The end date.</param>
+		/// <param name="searchTerm">The search term.</param>
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
@@ -43,21 +43,31 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="GlobalSuppression"/>.
 		/// </returns>
-		public Task<GlobalSuppression[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		/// <remarks>
+		/// After much trial and error, we came to the conclusion that SendGrid allows you to search
+		/// for addresses that "begin with" your search term. So, if you have two email addresses on
+		/// your global suppression list such as user1@hotmail.com and user2@gmail.com for exmaple,
+		/// you will be able to search for 'user1', or 'user2' or even 'user' but you cannot search
+		/// for 'hotmail' or 'gmail'.
+		///
+		/// Also note that SendGrid requires that your search term contain at least three characters.
+		/// </remarks>
+		public Task<GlobalSuppression[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, string searchTerm = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync("suppression/unsubscribes")
 				.OnBehalfOf(onBehalfOf)
+				.WithArgument("email", searchTerm)
 				.WithArgument("start_time", startDate?.ToUnixTime())
 				.WithArgument("end_time", endDate?.ToUnixTime())
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<GlobalSuppression[]>();
+				.AsObject<GlobalSuppression[]>();
 		}
 
 		/// <summary>
-		/// Check if a recipient address is in the global suppressions group.
+		/// Check if a recipient address is in the global suppression group.
 		/// </summary>
 		/// <param name="email">email address to check.</param>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
@@ -67,11 +77,11 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<bool> IsUnsubscribedAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var responseContent = await _client
+			var response = await _client
 				.GetAsync($"{_endpoint}/{email}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsString(null)
+				.AsRawJsonObject()
 				.ConfigureAwait(false);
 
 			// If the email address is on the global suppression list, the response will look like this:
@@ -79,11 +89,7 @@ namespace StrongGrid.Resources
 			//      "recipient_email": "{email}"
 			//  }
 			// If the email address is not on the global suppression list, the response will be empty
-			//
-			// Therefore, we check for the presence of the 'recipient_email' to indicate if the email
-			// address is on the global suppression list or not.
-			var dynamicObject = JObject.Parse(responseContent);
-			var propertyDictionary = (IDictionary<string, JToken>)dynamicObject;
+			var propertyDictionary = (IDictionary<string, JToken>)response;
 			return propertyDictionary.ContainsKey("recipient_email");
 		}
 

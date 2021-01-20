@@ -2,7 +2,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
-using StrongGrid.Utilities;
 using System;
 using System.Linq;
 using System.Threading;
@@ -49,7 +48,7 @@ namespace StrongGrid.Resources
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<FieldMetadata>();
+				.AsObject<FieldMetadata>();
 		}
 
 		/// <summary>
@@ -67,12 +66,12 @@ namespace StrongGrid.Resources
 				.AsResponse()
 				.ConfigureAwait(false);
 
-			var reservedFields = await response.AsSendGridObject<FieldMetadata[]>("reserved_fields").ConfigureAwait(false);
+			var reservedFields = await response.AsObject<FieldMetadata[]>("reserved_fields").ConfigureAwait(false);
 
 			// The 'custom_fields' property is omitted when there are no custom fields.
 			// Therefore it's important NOT to throw an exception if this property is missing.
 			// That's why the `throwIfPropertyIsMissing' parameter is set to false
-			var customFields = await response.AsSendGridObject<FieldMetadata[]>("custom_fields", false).ConfigureAwait(false);
+			var customFields = await response.AsObject<FieldMetadata[]>("custom_fields", false).ConfigureAwait(false);
 
 			return reservedFields.Union(customFields ?? Array.Empty<FieldMetadata>()).ToArray();
 		}
@@ -97,7 +96,7 @@ namespace StrongGrid.Resources
 				.PatchAsync($"{_endpoint}/{fieldId}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<FieldMetadata>();
+				.AsObject<FieldMetadata>();
 		}
 
 		/// <summary>

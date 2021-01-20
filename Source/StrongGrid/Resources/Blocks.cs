@@ -54,7 +54,7 @@ namespace StrongGrid.Resources
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Block[]>();
+				.AsObject<Block[]>();
 		}
 
 		/// <summary>
@@ -72,7 +72,7 @@ namespace StrongGrid.Resources
 				.GetAsync($"{_endpoint}/{emailAddress}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Block[]>();
+				.AsObject<Block[]>();
 		}
 
 		/// <summary>

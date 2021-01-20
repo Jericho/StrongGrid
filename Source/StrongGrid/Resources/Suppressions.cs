@@ -45,7 +45,7 @@ namespace StrongGrid.Resources
 				.GetAsync($"{_endpoint}/suppressions")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Suppression[]>();
+				.AsObject<Suppression[]>();
 		}
 
 		/// <summary>
@@ -63,7 +63,7 @@ namespace StrongGrid.Resources
 				.GetAsync($"{_endpoint}/suppressions/{email}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<JObject[]>("suppressions")
+				.AsObject<JObject[]>("suppressions")
 				.ConfigureAwait(false);
 
 			// SendGrid returns all the groups with a boolean property called "suppressed" indicating
@@ -92,7 +92,7 @@ namespace StrongGrid.Resources
 				.GetAsync($"{_endpoint}/groups/{groupId}/suppressions")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<string[]>();
+				.AsObject<string[]>();
 		}
 
 		/// <summary>
@@ -173,7 +173,7 @@ namespace StrongGrid.Resources
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<string[]>()
+				.AsObject<string[]>()
 				.ConfigureAwait(false);
 
 			// The response contains an array with the email addresses found to be in the suppression group.

@@ -52,7 +52,7 @@ namespace StrongGrid.Resources
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SenderIdentity>();
+				.AsObject<SenderIdentity>();
 		}
 
 		/// <summary>
@@ -68,7 +68,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync($"{_endpoint}/{senderIdentityId}")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SenderIdentity>();
+				.AsObject<SenderIdentity>();
 		}
 
 		/// <summary>
@@ -83,7 +83,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync(_endpoint)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SenderIdentity[]>();
+				.AsObject<SenderIdentity[]>();
 		}
 
 		private static JObject CreateJObject(
@@ -100,7 +100,7 @@ namespace StrongGrid.Resources
 			var result = new JObject();
 			result.AddPropertyIfValue("nickname", nickname);
 			result.AddPropertyIfValue("from", from);
-			result.AddPropertyIfValue("reply_to", from);
+			result.AddPropertyIfValue("reply_to", replyTo);
 			result.AddPropertyIfValue("address", address1);
 			result.AddPropertyIfValue("address2", address2);
 			result.AddPropertyIfValue("city", city);

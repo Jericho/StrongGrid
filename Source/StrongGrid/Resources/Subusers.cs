@@ -43,7 +43,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync($"{_endpoint}/{username}")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Subuser>();
+				.AsObject<Subuser>();
 		}
 
 		/// <summary>
@@ -62,7 +62,7 @@ namespace StrongGrid.Resources
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Subuser[]>();
+				.AsObject<Subuser[]>();
 		}
 
 		/// <summary>
@@ -83,7 +83,7 @@ namespace StrongGrid.Resources
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Subuser>();
+				.AsObject<Subuser>();
 		}
 
 		/// <summary>
@@ -154,7 +154,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync($"{_endpoint}/{username}/monitor")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<MonitorSettings>();
+				.AsObject<MonitorSettings>();
 		}
 
 		/// <summary>
@@ -178,7 +178,7 @@ namespace StrongGrid.Resources
 				.PostAsync($"{_endpoint}/{username}/monitor")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<MonitorSettings>();
+				.AsObject<MonitorSettings>();
 		}
 
 		/// <summary>
@@ -201,7 +201,7 @@ namespace StrongGrid.Resources
 				.PutAsync($"{_endpoint}/{username}/monitor")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<MonitorSettings>();
+				.AsObject<MonitorSettings>();
 		}
 
 		/// <summary>
@@ -256,7 +256,7 @@ namespace StrongGrid.Resources
 				}
 			}
 
-			return request.AsSendGridObject<SenderReputation[]>();
+			return request.AsObject<SenderReputation[]>();
 		}
 
 		private static JObject CreateJObject(

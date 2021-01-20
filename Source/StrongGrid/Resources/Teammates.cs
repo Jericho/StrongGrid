@@ -47,7 +47,7 @@ namespace StrongGrid.Resources
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<AccessRequest[]>();
+				.AsObject<AccessRequest[]>();
 		}
 
 		/// <summary>
@@ -116,7 +116,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync($"{_endpoint}/pending")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<TeammateInvitation[]>("result");
+				.AsObject<TeammateInvitation[]>("result");
 		}
 
 		/// <summary>
@@ -166,7 +166,7 @@ namespace StrongGrid.Resources
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<TeammateInvitation>();
+				.AsObject<TeammateInvitation>();
 		}
 
 		/// <summary>
@@ -198,7 +198,7 @@ namespace StrongGrid.Resources
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<TeammateInvitation>()
+				.AsObject<TeammateInvitation>()
 				.ConfigureAwait(false);
 		}
 
@@ -227,7 +227,7 @@ namespace StrongGrid.Resources
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<TeammateInvitation>();
+				.AsObject<TeammateInvitation>();
 		}
 
 		/// <summary>
@@ -244,7 +244,7 @@ namespace StrongGrid.Resources
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Teammate[]>("result");
+				.AsObject<Teammate[]>("result");
 		}
 
 		/// <summary>
@@ -258,7 +258,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync($"{_endpoint}/{username}")
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Teammate>();
+				.AsObject<Teammate>();
 		}
 
 		/// <summary>
@@ -279,7 +279,7 @@ namespace StrongGrid.Resources
 				.PatchAsync($"{_endpoint}/{username}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Teammate>();
+				.AsObject<Teammate>();
 		}
 
 		/// <summary>

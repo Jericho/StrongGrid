@@ -33,7 +33,7 @@ namespace StrongGrid.IntegrationTests.Tests
 				{
 					await client.CustomFields.DeleteAsync(oldField.Id, cancellationToken).ConfigureAwait(false);
 					await log.WriteLineAsync($"Field {oldField.Name} deleted").ConfigureAwait(false);
-					await Task.Delay(250).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
+					await Task.Delay(250, cancellationToken).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
 				});
 			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
@@ -50,7 +50,7 @@ namespace StrongGrid.IntegrationTests.Tests
 			// We must wait for the custom fields to be ready.
 			// I don't know exactly how long we should wait, but after a lot of trial/error I have settled on 5 seconds.
 			// If we don't wait long enough, we get an 'invalid custom field ids supplied' exception when inserting a new contact.
-			await Task.Delay(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
+			await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken).ConfigureAwait(false);
 			//--------------------------------------------------
 
 			fields = await client.CustomFields.GetAllAsync(cancellationToken).ConfigureAwait(false);
@@ -138,7 +138,7 @@ namespace StrongGrid.IntegrationTests.Tests
 				else if (job.Status == JobStatus.Pending)
 				{
 					await log.WriteLineAsync("\tJob is pending. We will wait a few milliseconds and check again.").ConfigureAwait(false);
-					await Task.Delay(500).ConfigureAwait(false);
+					await Task.Delay(500, cancellationToken).ConfigureAwait(false);
 				}
 				else if (job.Status == JobStatus.Ready)
 				{

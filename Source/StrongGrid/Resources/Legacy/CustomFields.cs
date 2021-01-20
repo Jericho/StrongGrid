@@ -49,7 +49,7 @@ namespace StrongGrid.Resources.Legacy
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Models.Legacy.CustomFieldMetadata>();
+				.AsObject<Models.Legacy.CustomFieldMetadata>();
 		}
 
 		/// <summary>
@@ -66,7 +66,7 @@ namespace StrongGrid.Resources.Legacy
 				.GetAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Models.Legacy.CustomFieldMetadata[]>("custom_fields");
+				.AsObject<Models.Legacy.CustomFieldMetadata[]>("custom_fields");
 		}
 
 		/// <summary>
@@ -84,7 +84,7 @@ namespace StrongGrid.Resources.Legacy
 				.GetAsync($"{_endpoint}/{fieldId}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Models.Legacy.CustomFieldMetadata>();
+				.AsObject<Models.Legacy.CustomFieldMetadata>();
 		}
 
 		/// <summary>
@@ -119,7 +119,7 @@ namespace StrongGrid.Resources.Legacy
 				.GetAsync("contactdb/reserved_fields")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<Field[]>("reserved_fields");
+				.AsObject<Field[]>("reserved_fields");
 		}
 	}
 }
