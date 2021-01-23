@@ -13,12 +13,12 @@ namespace StrongGrid.IntegrationTests.Tests
 
 			// GET ALL THE IP ADDRESSES
 			var allIpAddresses = await client.IpAddresses.GetAllAsync(false, null, 10, 0, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"There are {allIpAddresses.Length} IP addresses on your account").ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {allIpAddresses.Records.Length} IP addresses on your account").ConfigureAwait(false);
 
 			// GET A SPECIFIC IP ADDRESS
-			if (allIpAddresses != null && allIpAddresses.Any())
+			if (allIpAddresses != null && allIpAddresses.Records.Any())
 			{
-				var firstAddress = await client.IpAddresses.GetAsync(allIpAddresses.First().Address, cancellationToken).ConfigureAwait(false);
+				var firstAddress = await client.IpAddresses.GetAsync(allIpAddresses.Records.First().Address, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"IP address {firstAddress.Address} was retrieved").ConfigureAwait(false);
 			}
 
