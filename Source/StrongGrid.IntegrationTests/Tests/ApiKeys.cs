@@ -14,10 +14,10 @@ namespace StrongGrid.IntegrationTests.Tests
 
 			// GET ALL THE API KEYS
 			var apiKeys = await client.ApiKeys.GetAllAsync(50, 0, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"There are {apiKeys.Length} Api Keys").ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {apiKeys.Records.Length} Api Keys").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			var cleanUpTasks = apiKeys
+			var cleanUpTasks = apiKeys.Records
 				.Where(k => k.Name.StartsWith("StrongGrid Integration Testing:"))
 				.Select(async oldApiKey =>
 				{
