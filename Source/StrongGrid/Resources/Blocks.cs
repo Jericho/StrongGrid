@@ -41,9 +41,9 @@ namespace StrongGrid.Resources
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
-		/// An array of <see cref="Block">Blocks</see>.
+		/// The <see cref="PaginatedResponseWithLinks{Block}">Blocks</see>.
 		/// </returns>
-		public Task<Block[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 25, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<PaginatedResponseWithLinks<Block>> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 25, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync(_endpoint)
@@ -53,7 +53,7 @@ namespace StrongGrid.Resources
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
-				.AsObject<Block[]>();
+				.AsPaginatedResponseWithLinks<Block>();
 		}
 
 		/// <summary>
