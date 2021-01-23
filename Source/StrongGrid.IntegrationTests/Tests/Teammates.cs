@@ -16,12 +16,12 @@ namespace StrongGrid.IntegrationTests.Tests
 
 			// GET ALL THE TEAMMATES
 			var allTeammates = await client.Teammates.GetAllTeammatesAsync(50, 0, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"There are {allTeammates.Length} teammates").ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {allTeammates.Records.Length} teammates").ConfigureAwait(false);
 
-			if (allTeammates.Length > 0)
+			if (allTeammates.Records.Length > 0)
 			{
 				// RETRIEVE THE FIRST TEAMMATE
-				var teammate = await client.Teammates.GetTeammateAsync(allTeammates[0].Username, cancellationToken).ConfigureAwait(false);
+				var teammate = await client.Teammates.GetTeammateAsync(allTeammates.Records[0].Username, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"Retrieved teammate '{teammate.Username}'").ConfigureAwait(false);
 			}
 		}

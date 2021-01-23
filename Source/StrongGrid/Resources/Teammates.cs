@@ -195,15 +195,15 @@ namespace StrongGrid.Resources
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>An array of <see cref="Teammate" />.</returns>
-		public Task<Teammate[]> GetAllTeammatesAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default)
+		/// <returns>The <see cref="PaginatedResponseWithLinks{Teammate}" />.</returns>
+		public Task<PaginatedResponseWithLinks<Teammate>> GetAllTeammatesAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync(_endpoint)
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
-				.AsObject<Teammate[]>("result");
+				.AsPaginatedResponseWithLinks<Teammate>("result");
 		}
 
 		/// <summary>

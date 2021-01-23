@@ -125,8 +125,8 @@ namespace StrongGrid.Resources
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>An array of <see cref="Teammate" />.</returns>
-		Task<Teammate[]> GetAllTeammatesAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default);
+		/// <returns>The <see cref="PaginatedResponseWithLinks{Teammate}" />.</returns>
+		Task<PaginatedResponseWithLinks<Teammate>> GetAllTeammatesAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve a specific teammate by username.
