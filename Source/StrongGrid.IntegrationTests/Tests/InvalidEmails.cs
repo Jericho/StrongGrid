@@ -17,7 +17,7 @@ namespace StrongGrid.IntegrationTests.Tests
 			var endDate = new DateTime(thisYear, 12, 31, 23, 59, 59);
 
 			var invalidEmails = await client.InvalidEmails.GetAllAsync(startDate, endDate, 25, 0, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"All invalid emails retrieved. There are {invalidEmails.Length} invalid email addresses in {lastYear} and {thisYear}").ConfigureAwait(false);
+			await log.WriteLineAsync($"All invalid emails retrieved. There are {invalidEmails.Records.Length} invalid email addresses in {lastYear} and {thisYear}").ConfigureAwait(false);
 		}
 	}
 }
