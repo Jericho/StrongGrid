@@ -405,14 +405,14 @@ namespace StrongGrid.Resources
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
-		/// An array of <see cref="BrandedLink" />.
+		/// The <see cref="PaginatedResponseWithLinks{BrandedLink}" />.
 		/// </returns>
 		/// <remarks>
 		/// A link whitelabel consists of a subdomain and domain that will be used to rewrite links in mail
 		/// messages. Our customer will be asked to create a couple CNAME records for the links to be
 		/// rewritten to and for us to verify that they are the domain owners.
 		/// </remarks>
-		public Task<BrandedLink[]> GetAllLinksAsync(string segmentPrefix = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<PaginatedResponseWithLinks<BrandedLink>> GetAllLinksAsync(string segmentPrefix = null, int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/links")
@@ -421,7 +421,7 @@ namespace StrongGrid.Resources
 				.WithArgument("offset", offset)
 				.WithArgument("ip", segmentPrefix)
 				.WithCancellationToken(cancellationToken)
-				.AsObject<BrandedLink[]>();
+				.AsPaginatedResponseWithLinks<BrandedLink>();
 		}
 
 		/// <summary>
