@@ -12,7 +12,7 @@ namespace StrongGrid.IntegrationTests.Tests
 
 			// GET ALL THE PENDING INVITATIONS
 			var pendingInvitation = await client.Teammates.GetAllPendingInvitationsAsync(50, 0, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"There are {pendingInvitation.Length} pending invitations").ConfigureAwait(false);
+			await log.WriteLineAsync($"There are {pendingInvitation.Records.Length} pending invitations").ConfigureAwait(false);
 
 			// GET ALL THE TEAMMATES
 			var allTeammates = await client.Teammates.GetAllTeammatesAsync(50, 0, cancellationToken).ConfigureAwait(false);

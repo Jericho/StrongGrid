@@ -113,19 +113,19 @@ namespace StrongGrid.Resources
 		/// <param name="limit">The limit.</param>
 		/// <param name="offset">The offset.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>An array of <see cref="TeammateInvitation" />.</returns>
+		/// <returns>The <see cref="PaginatedResponseWithLinks{TeammateInvitation}" />.</returns>
 		/// <remarks>
 		/// Each teammate invitation is valid for 7 days.
 		/// Users may resend the invite to refresh the expiration date.
 		/// </remarks>
-		public Task<TeammateInvitation[]> GetAllPendingInvitationsAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default)
+		public Task<PaginatedResponseWithLinks<TeammateInvitation>> GetAllPendingInvitationsAsync(int limit = 10, int offset = 0, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/pending")
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
-				.AsObject<TeammateInvitation[]>("result");
+				.AsPaginatedResponseWithLinks<TeammateInvitation>("result");
 		}
 
 		/// <summary>
