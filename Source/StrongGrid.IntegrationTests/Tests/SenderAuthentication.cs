@@ -48,9 +48,9 @@ namespace StrongGrid.IntegrationTests.Tests
 			await log.WriteLineAsync("\n***** SENDER AUTHENTICATION: LINKS *****").ConfigureAwait(false);
 
 			var links = await client.SenderAuthentication.GetAllLinksAsync(null, 50, 0, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"All AuthenticatedSender links retrieved. There are {links.Length} links").ConfigureAwait(false);
+			await log.WriteLineAsync($"All AuthenticatedSender links retrieved. There are {links.Records.Length} links").ConfigureAwait(false);
 
-			cleanUpTasks = links.Where(d => d.Domain == fictitiousDomain)
+			cleanUpTasks = links.Records.Where(d => d.Domain == fictitiousDomain)
 				.Select(async oldDomain =>
 				{
 					await client.SenderAuthentication.DeleteDomainAsync(oldDomain.Id, null, cancellationToken).ConfigureAwait(false);
