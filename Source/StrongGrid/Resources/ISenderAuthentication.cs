@@ -25,9 +25,9 @@ namespace StrongGrid.Resources
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// An array of <see cref="AuthenticatedDomain" />.
+		/// The <see cref="PaginatedResponseWithLinks{AuthenticatedDomain}" />.
 		/// </returns>
-		Task<AuthenticatedDomain[]> GetAllDomainsAsync(int limit = 50, int offset = 0, bool excludeSubusers = false, string username = null, string domain = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<PaginatedResponseWithLinks<AuthenticatedDomain>> GetAllDomainsAsync(int limit = 50, int offset = 0, bool excludeSubusers = false, string username = null, string domain = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get a specific authenticated domain.

@@ -12,10 +12,10 @@ namespace StrongGrid.IntegrationTests.Tests
 			await log.WriteLineAsync("\n***** SENDER AUTHENTICATION: DOMAINS *****\n").ConfigureAwait(false);
 
 			var domains = await client.SenderAuthentication.GetAllDomainsAsync(50, 0, false, null, null, null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"All AuthenticatedSender domains retrieved. There are {domains.Length} domains").ConfigureAwait(false);
+			await log.WriteLineAsync($"All AuthenticatedSender domains retrieved. There are {domains.Records.Length} domains").ConfigureAwait(false);
 
 			var fictitiousDomain = "StrongGridIntegrationTesting.com";
-			var cleanUpTasks = domains
+			var cleanUpTasks = domains.Records
 				.Where(d => d.Domain == fictitiousDomain)
 				.Select(async oldDomain =>
 				{
