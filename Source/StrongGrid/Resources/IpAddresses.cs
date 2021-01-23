@@ -99,9 +99,9 @@ namespace StrongGrid.Resources
 		/// <param name="offset">The offset for the number of IPs that you are requesting.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
-		/// An array of <see cref="IpAddress">IP addresses</see>.
+		/// The <see cref="PaginatedResponseWithLinks{IpAddress}">IP addresses</see>.
 		/// </returns>
-		public Task<IpAddress[]> GetAllAsync(bool excludeWhitelabels = false, string subuser = null, int limit = 10, int offset = 0, CancellationToken cancellationToken = default)
+		public Task<PaginatedResponseWithLinks<IpAddress>> GetAllAsync(bool excludeWhitelabels = false, string subuser = null, int limit = 10, int offset = 0, CancellationToken cancellationToken = default)
 		{
 			var request = _client
 				.GetAsync(_endpoint)
@@ -113,7 +113,7 @@ namespace StrongGrid.Resources
 
 			if (!string.IsNullOrEmpty(subuser)) request.WithArgument("subuser", subuser);
 
-			return request.AsObject<IpAddress[]>();
+			return request.AsPaginatedResponseWithLinks<IpAddress>();
 		}
 
 		/// <summary>
