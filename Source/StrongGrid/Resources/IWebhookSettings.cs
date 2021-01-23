@@ -94,9 +94,9 @@ namespace StrongGrid.Resources
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The <see cref="InboundParseWebhookSettings" />.
+		/// The <see cref="PaginatedResponseWithLinks{InboundParseWebhookSettings}" />.
 		/// </returns>
-		Task<InboundParseWebhookSettings[]> GetAllInboundParseWebhookSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<PaginatedResponseWithLinks<InboundParseWebhookSettings>> GetAllInboundParseWebhookSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get the inbound parse webhook settings for a specific hostname.
