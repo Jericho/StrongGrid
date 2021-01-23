@@ -1,7 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
-using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,9 +39,9 @@ namespace StrongGrid.Resources
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
-		/// An array of <see cref="InvalidEmail" />.
+		/// The <see cref="PaginatedResponseWithLinks{InvalidEmail}" />.
 		/// </returns>
-		public Task<InvalidEmail[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 25, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<PaginatedResponseWithLinks<InvalidEmail>> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 25, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync(_endpoint)
@@ -52,7 +51,7 @@ namespace StrongGrid.Resources
 				.WithArgument("limit", limit)
 				.WithArgument("offset", offset)
 				.WithCancellationToken(cancellationToken)
-				.AsObject<InvalidEmail[]>();
+				.AsPaginatedResponseWithLinks<InvalidEmail>();
 		}
 
 		/// <summary>
