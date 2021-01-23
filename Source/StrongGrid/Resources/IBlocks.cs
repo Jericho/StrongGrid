@@ -1,4 +1,4 @@
-﻿using StrongGrid.Models;
+using StrongGrid.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -24,9 +24,9 @@ namespace StrongGrid.Resources
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
-		/// An array of <see cref="Block">Blocks</see>.
+		/// The <see cref="PaginatedResponseWithLinks{Block}">Blocks</see>.
 		/// </returns>
-		Task<Block[]> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 25, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<PaginatedResponseWithLinks<Block>> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, int limit = 25, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve the blocks for a specific email address.
