@@ -1,7 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
-using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -106,17 +105,17 @@ namespace StrongGrid.Resources
 		/// Retrieve a list of all pending teammate invitations.
 		/// </summary>
 		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>An array of <see cref="TeammateInvitation" />.</returns>
+		/// <returns>The <see cref="PaginatedResponseWithLinks{TeammateInvitation}" />.</returns>
 		/// <remarks>
 		/// Each teammate invitation is valid for 7 days.
 		/// Users may resend the invite to refresh the expiration date.
 		/// </remarks>
-		public Task<TeammateInvitation[]> GetAllPendingInvitationsAsync(CancellationToken cancellationToken = default)
+		public Task<PaginatedResponseWithLinks<TeammateInvitation>> GetAllPendingInvitationsAsync(CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/pending")
 				.WithCancellationToken(cancellationToken)
-				.AsObject<TeammateInvitation[]>("result");
+				.AsPaginatedResponseWithLinks<TeammateInvitation>("result");
 		}
 
 		/// <summary>
