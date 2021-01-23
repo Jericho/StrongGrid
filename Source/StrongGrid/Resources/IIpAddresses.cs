@@ -1,4 +1,4 @@
-﻿using StrongGrid.Models;
+using StrongGrid.Models;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -50,9 +50,9 @@ namespace StrongGrid.Resources
 		/// <param name="offset">The offset for the number of IPs that you are requesting.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
-		/// An array of <see cref="IpAddress">IP addresses</see>.
+		/// The <see cref="PaginatedResponseWithLinks{IpAddress}">IP addresses</see>.
 		/// </returns>
-		Task<IpAddress[]> GetAllAsync(bool excludeWhitelabels = false, string subuser = null, int limit = 10, int offset = 0, CancellationToken cancellationToken = default);
+		Task<PaginatedResponseWithLinks<IpAddress>> GetAllAsync(bool excludeWhitelabels = false, string subuser = null, int limit = 10, int offset = 0, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve assigned IP addresses.
