@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
@@ -191,7 +191,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
-			result.Length.ShouldBe(2);
+			result.Records.Length.ShouldBe(2);
 		}
 
 		[Fact]
