@@ -71,8 +71,8 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
-			result.Length.ShouldBe(1);
-			result[0].Email.ShouldBe("user1@example.com");
+			result.Records.Length.ShouldBe(1);
+			result.Records[0].Email.ShouldBe("user1@example.com");
 		}
 
 		[Fact]
