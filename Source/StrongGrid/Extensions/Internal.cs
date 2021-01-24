@@ -214,8 +214,8 @@ namespace StrongGrid
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
 		internal static async Task<T> AsObject<T>(this IRequest request, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonConverter jsonConverter = null)
 		{
-			var response = await request.AsMessage().ConfigureAwait(false);
-			return await response.Content.AsObject<T>(propertyName, throwIfPropertyIsMissing, jsonConverter).ConfigureAwait(false);
+			var response = await request.AsResponse().ConfigureAwait(false);
+			return await response.AsObject<T>(propertyName, throwIfPropertyIsMissing, jsonConverter).ConfigureAwait(false);
 		}
 
 		/// <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
@@ -229,8 +229,8 @@ namespace StrongGrid
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
 		internal static async Task<JObject> AsRawJsonObject(this IRequest request, string propertyName = null, bool throwIfPropertyIsMissing = true)
 		{
-			var response = await request.AsMessage().ConfigureAwait(false);
-			return await response.Content.AsRawJsonObject(propertyName, throwIfPropertyIsMissing).ConfigureAwait(false);
+			var response = await request.AsResponse().ConfigureAwait(false);
+			return await response.AsRawJsonObject(propertyName, throwIfPropertyIsMissing).ConfigureAwait(false);
 		}
 
 		/// <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
@@ -244,8 +244,8 @@ namespace StrongGrid
 		/// <exception cref="ApiException">An error occurred processing the response.</exception>
 		internal static async Task<JArray> AsRawJsonArray(this IRequest request, string propertyName = null, bool throwIfPropertyIsMissing = true)
 		{
-			var response = await request.AsMessage().ConfigureAwait(false);
-			return await response.Content.AsRawJsonArray(propertyName, throwIfPropertyIsMissing).ConfigureAwait(false);
+			var response = await request.AsResponse().ConfigureAwait(false);
+			return await response.AsRawJsonArray(propertyName, throwIfPropertyIsMissing).ConfigureAwait(false);
 		}
 
 		/// <summary>Asynchronously retrieve the JSON encoded content and convert it to a 'PaginatedResponse' object.</summary>
