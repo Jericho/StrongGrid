@@ -229,6 +229,17 @@ namespace StrongGrid
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
 		internal static Task<T> AsObject<T>(this IResponse response, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonSerializerOptions options = null)
 		{
+#if DEBUG
+			// This is debugging code to help me figure out which SendGrid endpoints return paging information in the 'Link' response header
+			var link = response.Message.Headers.GetValue("Link");
+			if (!string.IsNullOrEmpty(link))
+			{
+				var verb = response.Message.RequestMessage.Method;
+				var path = response.Message.RequestMessage.RequestUri.AbsolutePath.Replace("/v3/", string.Empty);
+				var request = $"{verb} {path}";
+				throw new Exception($"The 'Link' header has been found in the response when making a request to: {request}");
+			}
+#endif
 			return response.Message.Content.AsObject<T>(propertyName, throwIfPropertyIsMissing, options);
 		}
 
@@ -255,6 +266,17 @@ namespace StrongGrid
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
 		internal static Task<PaginatedResponse<T>> AsPaginatedResponse<T>(this IResponse response, string propertyName = null, JsonSerializerOptions options = null)
 		{
+#if DEBUG
+			// This is debugging code to help me figure out which SendGrid endpoints return paging information in the 'Link' response header
+			var link = response.Message.Headers.GetValue("Link");
+			if (!string.IsNullOrEmpty(link))
+			{
+				var verb = response.Message.RequestMessage.Method;
+				var path = response.Message.RequestMessage.RequestUri.AbsolutePath.Replace("/v3/", string.Empty);
+				var request = $"{verb} {path}";
+				throw new Exception($"The 'Link' header has been found in the response when making a request to: {request}");
+			}
+#endif
 			return response.Message.Content.AsPaginatedResponse<T>(propertyName, options);
 		}
 
