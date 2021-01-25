@@ -62,9 +62,16 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 			var limit = 25;
 			var offset = 0;
+			var endpoint = Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&offset={offset}";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&offset={offset}").Respond("application/json", MULTIPLE_INVALID_EMAILS_JSON);
+			mockHttp.Expect(HttpMethod.Get, endpoint).Respond((HttpRequestMessage request) =>
+			{
+				var response = new HttpResponseMessage(HttpStatusCode.OK);
+				response.Headers.Add("Link", $"<{endpoint}>; rel=\"next\"; title=\"1\", <{endpoint}>; rel=\"prev\"; title=\"1\", <{endpoint}>; rel=\"last\"; title=\"1\", <{endpoint}>; rel=\"first\"; title=\"1\"");
+				response.Content = new StringContent(MULTIPLE_INVALID_EMAILS_JSON);
+				return response;
+			});
 
 			var logger = _outputHelper.ToLogger<IClient>();
 			var client = Utils.GetFluentClient(mockHttp, logger);
