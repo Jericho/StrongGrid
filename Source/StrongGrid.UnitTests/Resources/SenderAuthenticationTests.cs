@@ -345,8 +345,17 @@ namespace StrongGrid.UnitTests.Resources
 		public async Task GetAllDomainsAsync_include_subusers()
 		{
 			// Arrange
+			var limit = 50;
+			var endpoint = Utils.GetSendGridApiUri(ENDPOINT, "domains") + $"?exclude_subusers=false&limit={limit}&offset=0";
+
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "domains?exclude_subusers=false&limit=50&offset=0")).Respond("application/json", MULTIPLE_DOMAINS_JSON);
+			mockHttp.Expect(HttpMethod.Get, endpoint).Respond((HttpRequestMessage request) =>
+			{
+				var response = new HttpResponseMessage(HttpStatusCode.OK);
+				response.Headers.Add("Link", $"<{endpoint}>; rel=\"next\"; title=\"1\", <{endpoint}>; rel=\"prev\"; title=\"1\", <{endpoint}>; rel=\"last\"; title=\"1\", <{endpoint}>; rel=\"first\"; title=\"1\"");
+				response.Content = new StringContent(MULTIPLE_DOMAINS_JSON);
+				return response;
+			});
 
 			var logger = _outputHelper.ToLogger<IClient>();
 			var client = Utils.GetFluentClient(mockHttp, logger);
@@ -366,8 +375,17 @@ namespace StrongGrid.UnitTests.Resources
 		public async Task GetAllDomainsAsync_exclude_subusers()
 		{
 			// Arrange
+			var limit = 50;
+			var endpoint = Utils.GetSendGridApiUri(ENDPOINT, "domains") + $"?exclude_subusers=true&limit={limit}&offset=0";
+
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "domains?exclude_subusers=true&limit=50&offset=0")).Respond("application/json", MULTIPLE_DOMAINS_JSON);
+			mockHttp.Expect(HttpMethod.Get, endpoint).Respond((HttpRequestMessage request) =>
+		   {
+			   var response = new HttpResponseMessage(HttpStatusCode.OK);
+			   response.Headers.Add("Link", $"<{endpoint}>; rel=\"next\"; title=\"1\", <{endpoint}>; rel=\"prev\"; title=\"1\", <{endpoint}>; rel=\"last\"; title=\"1\", <{endpoint}>; rel=\"first\"; title=\"1\"");
+			   response.Content = new StringContent(MULTIPLE_DOMAINS_JSON);
+			   return response;
+		   });
 
 			var logger = _outputHelper.ToLogger<IClient>();
 			var client = Utils.GetFluentClient(mockHttp, logger);
@@ -650,8 +668,17 @@ namespace StrongGrid.UnitTests.Resources
 		public async Task GetAllReverseDnsAsync()
 		{
 			// Arrange
+			var limit = 50;
+			var endpoint = Utils.GetSendGridApiUri(ENDPOINT, "ips") + $"?limit={limit}&offset=0";
+
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "ips?limit=50&offset=0")).Respond("application/json", MULTIPLE_IPS_JSON);
+			mockHttp.Expect(HttpMethod.Get, endpoint).Respond((HttpRequestMessage request) =>
+			{
+				var response = new HttpResponseMessage(HttpStatusCode.OK);
+				response.Headers.Add("Link", $"<{endpoint}>; rel=\"next\"; title=\"1\", <{endpoint}>; rel=\"prev\"; title=\"1\", <{endpoint}>; rel=\"last\"; title=\"1\", <{endpoint}>; rel=\"first\"; title=\"1\"");
+				response.Content = new StringContent(MULTIPLE_IPS_JSON);
+				return response;
+			});
 
 			var logger = _outputHelper.ToLogger<IClient>();
 			var client = Utils.GetFluentClient(mockHttp, logger);
@@ -996,8 +1023,17 @@ namespace StrongGrid.UnitTests.Resources
 		public async Task GetAllLinksAsync()
 		{
 			// Arrange
+			var limit = 50;
+			var endpoint = Utils.GetSendGridApiUri(ENDPOINT, "links") + $"?limit={limit}&offset=0";
+
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "links?limit=50&offset=0")).Respond("application/json", MULTIPLE_LINKS_JSON);
+			mockHttp.Expect(HttpMethod.Get, endpoint).Respond((HttpRequestMessage request) =>
+			{
+				var response = new HttpResponseMessage(HttpStatusCode.OK);
+				response.Headers.Add("Link", $"<{endpoint}>; rel=\"next\"; title=\"1\", <{endpoint}>; rel=\"prev\"; title=\"1\", <{endpoint}>; rel=\"last\"; title=\"1\", <{endpoint}>; rel=\"first\"; title=\"1\"");
+				response.Content = new StringContent(MULTIPLE_LINKS_JSON);
+				return response;
+			});
 
 			var logger = _outputHelper.ToLogger<IClient>();
 			var client = Utils.GetFluentClient(mockHttp, logger);

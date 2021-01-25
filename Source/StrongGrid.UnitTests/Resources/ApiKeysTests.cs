@@ -110,8 +110,21 @@ namespace StrongGrid.UnitTests.Resources
 		public async Task GetAllAsync()
 		{
 			// Arrange
+			var limit = 50;
+			var endpoint = Utils.GetSendGridApiUri(ENDPOINT);
+
+			// This is what the endpoint URL should be but we don't support limit and offset yet.
+			// See: https://github.com/Jericho/StrongGrid/issues/368
+			// var endpoint = Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&offset=0";
+
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", MULTIPLE_API_KEY_JSON);
+			mockHttp.Expect(HttpMethod.Get, endpoint).Respond((HttpRequestMessage request) =>
+			{
+				var response = new HttpResponseMessage(HttpStatusCode.OK);
+				response.Headers.Add("Link", $"<{endpoint}>; rel=\"next\"; title=\"1\", <{endpoint}>; rel=\"prev\"; title=\"1\", <{endpoint}>; rel=\"last\"; title=\"1\", <{endpoint}>; rel=\"first\"; title=\"1\"");
+				response.Content = new StringContent(MULTIPLE_API_KEY_JSON);
+				return response;
+			});
 
 			var logger = _outputHelper.ToLogger<IClient>();
 			var client = Utils.GetFluentClient(mockHttp, logger);

@@ -57,8 +57,17 @@ namespace StrongGrid.UnitTests.Resources
 		public async Task GetAllAsync()
 		{
 			// Arrange
+			var limit = 25;
+			var endpoint = Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&offset=0";
+
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit=25&offset=0").Respond("application/json", MULTIPLE_BLOCKS_JSON);
+			mockHttp.Expect(HttpMethod.Get, endpoint).Respond((HttpRequestMessage request) =>
+			{
+				var response = new HttpResponseMessage(HttpStatusCode.OK);
+				response.Headers.Add("Link", $"<{endpoint}>; rel=\"next\"; title=\"1\", <{endpoint}>; rel=\"prev\"; title=\"1\", <{endpoint}>; rel=\"last\"; title=\"1\", <{endpoint}>; rel=\"first\"; title=\"1\"");
+				response.Content = new StringContent(MULTIPLE_BLOCKS_JSON);
+				return response;
+			});
 
 			var logger = _outputHelper.ToLogger<IClient>();
 			var client = Utils.GetFluentClient(mockHttp, logger);
