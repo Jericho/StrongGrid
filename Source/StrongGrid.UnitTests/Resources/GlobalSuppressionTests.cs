@@ -35,11 +35,14 @@ namespace StrongGrid.UnitTests.Resources
 		public async Task GetAll()
 		{
 			// Arrange
+			var limit = 50;
+			var endpoint = Utils.GetSendGridApiUri("suppression/unsubscribes") + $"?limit={limit}&offset=0";
+
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("suppression/unsubscribes")).Respond((HttpRequestMessage request) =>
+			mockHttp.Expect(HttpMethod.Get, endpoint).Respond((HttpRequestMessage request) =>
 			{
 				var response = new HttpResponseMessage(HttpStatusCode.OK);
-				response.Headers.Add("link", "<https://api.sendgrid.com/v3/suppression/unsubscribes?limit=50&offset=0>; rel=\"next\"; title=\"1\", <https://api.sendgrid.com/v3/suppression/unsubscribes?limit=50&offset=0>; rel=\"prev\"; title=\"1\", <https://api.sendgrid.com/v3/suppression/unsubscribes?limit=50&offset=0>; rel=\"last\"; title=\"1\", <https://api.sendgrid.com/v3/suppression/unsubscribes?limit=50&offset=0>; rel=\"first\"; title=\"1\"");
+				response.Headers.Add("Link", $"<{endpoint}>; rel=\"next\"; title=\"1\", <{endpoint}>; rel=\"prev\"; title=\"1\", <{endpoint}>; rel=\"last\"; title=\"1\", <{endpoint}>; rel=\"first\"; title=\"1\"");
 				response.Content = new StringContent(GLOBALLY_UNSUBSCRIBED);
 				return response;
 			});
@@ -48,7 +51,7 @@ namespace StrongGrid.UnitTests.Resources
 			var globalSuppressions = new GlobalSuppressions(client);
 
 			// Act
-			var result = await globalSuppressions.GetAllAsync(null, null, null, 50, 0, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await globalSuppressions.GetAllAsync(null, null, null, limit, 0, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
