@@ -1157,12 +1157,19 @@ namespace StrongGrid
 
 			while (true)
 			{
+				// Retrieve 500 ip addresses at a time (that's the maximum SendGrid allow us to retrieve at a time)
 				var allIpAddresses = await ipAddresses.GetAllAsync(limit: Utils.MaxSendGridPagingLimit, offset: currentOffset, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+				// Take the addresses that have not been added to a pool
 				unassignedIpAddresses.AddRange(allIpAddresses.Where(ip => ip.Pools == null || !ip.Pools.Any()));
 
+				// Stop if we have enough unassigned addresses
 				if (unassignedIpAddresses.Count >= offset + limit) break;
+
+				// Stop if there are no more addresses to fetch
 				if (allIpAddresses.Length < Utils.MaxSendGridPagingLimit) break;
 
+				// Increase the offset so we retrieve the next set of 500 addresses
 				currentOffset += Utils.MaxSendGridPagingLimit;
 			}
 
