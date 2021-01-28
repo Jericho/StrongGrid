@@ -1070,32 +1070,19 @@ namespace StrongGrid
 		/// <param name="httpContent">The content.</param>
 		/// <param name="paginationLinks">The pagination links.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
-		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
+		/// <param name="options">Options to control behavior Converter during parsing.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		private static async Task<PaginatedResponseWithLinks<T>> AsPaginatedResponseWithLinks<T>(this HttpContent httpContent, IEnumerable<PaginationLink> paginationLinks, string propertyName, JsonConverter jsonConverter = null)
+		private static async Task<PaginatedResponseWithLinks<T>> AsPaginatedResponseWithLinks<T>(this HttpContent httpContent, IEnumerable<PaginationLink> paginationLinks, string propertyName, JsonSerializerOptions options = null, CancellationToken cancellationToken = default)
 		{
-			var responseContent = await httpContent.ReadAsStringAsync(null).ConfigureAwait(false);
+			var jsonDocument = await httpContent.AsRawJsonDocument(null, false, cancellationToken).ConfigureAwait(false);
+			var metadataProperty = jsonDocument.RootElement.GetProperty("_metadata");
+			var metadata = metadataProperty.ToObject<PaginationMetadata>(options);
 
-			var serializer = new JsonSerializer();
-			if (jsonConverter != null) serializer.Converters.Add(jsonConverter);
-
-			T[] records;
-
-			if (!string.IsNullOrEmpty(propertyName))
+			if (!jsonDocument.RootElement.TryGetProperty(propertyName, out JsonElement jProperty))
 			{
-				var jObject = JObject.Parse(responseContent);
-				var jProperty = jObject.Property(propertyName);
-				if (jProperty == null)
-				{
-					throw new ArgumentException($"The response does not contain a field called '{propertyName}'", nameof(propertyName));
-				}
-
-				records = jProperty.Value?.ToObject<T[]>(serializer) ?? Array.Empty<T>();
-			}
-			else
-			{
-				records = JArray.Parse(responseContent).ToObject<T[]>(serializer);
+				throw new ArgumentException($"The response does not contain a field called '{propertyName}'", nameof(propertyName));
 			}
 
 			var result = new PaginatedResponseWithLinks<T>()
@@ -1104,7 +1091,7 @@ namespace StrongGrid
 				Previous = paginationLinks.SingleOrDefault(l => l.Relationship == "prev"),
 				Next = paginationLinks.SingleOrDefault(l => l.Relationship == "next"),
 				Last = paginationLinks.SingleOrDefault(l => l.Relationship == "last"),
-				Records = records
+				Records = jProperty.ToObject<T[]>(options) ?? Array.Empty<T>()
 			};
 
 			return result;
