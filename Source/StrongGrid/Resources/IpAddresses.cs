@@ -127,24 +127,6 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Retrieve unassigned IP addresses.
-		/// </summary>
-		/// <param name="cancellationToken">Cancellation token.</param>
-		/// <returns>
-		/// An array of <see cref="IpAddress">Ip addresses</see>.
-		/// </returns>
-		public async Task<IpAddress[]> GetUnassignedAsync(CancellationToken cancellationToken = default)
-		{
-			var allIpAddresses = await this.GetAllAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
-
-			var unassignedIpAddresses = allIpAddresses
-				.Where(ip => ip.Subusers == null || !ip.Subusers.Any())
-				.ToArray();
-
-			return unassignedIpAddresses;
-		}
-
-		/// <summary>
 		/// Retrieve all IP addresess that are currently warming up.
 		/// </summary>
 		/// <param name="cancellationToken">Cancellation token.</param>

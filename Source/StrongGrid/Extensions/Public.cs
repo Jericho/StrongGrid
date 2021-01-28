@@ -1139,5 +1139,25 @@ namespace StrongGrid
 			if (filterConditions.HasValue && filterConditions.Value != null && filterConditions.Value.Any()) filters.Add(new KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>(SearchLogicalOperator.And, filterConditions.Value));
 			return segments.UpdateAsync(segmentId, name, filters, cancellationToken);
 		}
+
+		/// <summary>
+		/// Retrieve unassigned IP addresses.
+		/// </summary>
+		/// <param name="ipAddresses">The IP addresses resource.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="IpAddress">Ip addresses</see>.
+		/// </returns>
+		public static async Task<IpAddress[]> GetUnassignedAsync(this IIpAddresses ipAddresses, CancellationToken cancellationToken = default)
+		{
+			var allIpAddresses = await ipAddresses.GetAllAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+
+			var unassignedIpAddresses = allIpAddresses.Records
+				.Where(ip => ip.Pools == null || !ip.Pools.Any())
+				.ToArray();
+
+			return unassignedIpAddresses;
+		}
+
 	}
 }
