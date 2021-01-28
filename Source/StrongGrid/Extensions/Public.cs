@@ -1130,19 +1130,32 @@ namespace StrongGrid
 		/// Retrieve unassigned IP addresses.
 		/// </summary>
 		/// <param name="ipAddresses">The IP addresses resource.</param>
+		/// <param name="limit">The number of IPs you want returned at the same time.</param>
+		/// <param name="offset">The offset for the number of IPs that you are requesting.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="IpAddress">Ip addresses</see>.
 		/// </returns>
-		public static async Task<IpAddress[]> GetUnassignedAsync(this IIpAddresses ipAddresses, CancellationToken cancellationToken = default)
+		public static async Task<IpAddress[]> GetUnassignedAsync(this IIpAddresses ipAddresses, int limit = 10, int offset = 0, CancellationToken cancellationToken = default)
 		{
-			var allIpAddresses = await ipAddresses.GetAllAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+			var unassignedIpAddresses = new List<IpAddress>(limit);
+			var currentOffset = 0;
 
-			var unassignedIpAddresses = allIpAddresses.Records
-				.Where(ip => ip.Pools == null || !ip.Pools.Any())
+			while (true)
+			{
+				var allIpAddresses = await ipAddresses.GetAllAsync(limit: Utils.MaxSendGridPagingLimit, offset: currentOffset, cancellationToken: cancellationToken).ConfigureAwait(false);
+				unassignedIpAddresses.AddRange(allIpAddresses.Records.Where(ip => ip.Pools == null || !ip.Pools.Any()));
+
+				if (unassignedIpAddresses.Count >= offset + limit) break;
+				if (allIpAddresses.Next == null) break;
+
+				currentOffset += Utils.MaxSendGridPagingLimit;
+			}
+
+			return unassignedIpAddresses
+				.Skip(offset)
+				.Take(limit)
 				.ToArray();
-
-			return unassignedIpAddresses;
 		}
 
 	}

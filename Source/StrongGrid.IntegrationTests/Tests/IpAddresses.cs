@@ -40,7 +40,7 @@ namespace StrongGrid.IntegrationTests.Tests
 			await log.WriteLineAsync($"There are {assigned.Length} assigned IP addresses").ConfigureAwait(false);
 
 			// GET THE UNASSIGNED IP ADDRESSES
-			var unAssigned = await client.IpAddresses.GetUnassignedAsync(cancellationToken).ConfigureAwait(false);
+			var unAssigned = await client.IpAddresses.GetUnassignedAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"There are {unAssigned.Length} unassigned IP addresses").ConfigureAwait(false);
 
 			// GET THE REMAINING IP ADDRESSES
