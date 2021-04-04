@@ -194,7 +194,8 @@ Task("Run-Unit-Tests")
 	{
 		NoBuild = true,
 		NoRestore = true,
-		Configuration = configuration
+		Configuration = configuration,
+		Framework = IsRunningOnWindows() ? null : "netcoreapp3.1"
 	});
 });
 
