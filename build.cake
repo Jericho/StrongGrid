@@ -17,6 +17,10 @@
 var target = Argument<string>("target", "Default");
 var configuration = Argument<string>("configuration", "Release");
 
+if (target == "AppVeyor" && IsRunningOnUnix())
+{
+	target = "AppVeyor-Ubuntu";
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // GLOBAL VARIABLES
@@ -195,7 +199,6 @@ Task("Run-Unit-Tests")
 });
 
 Task("Run-Code-Coverage")
-	.WithCriteria(() => IsRunningOnWindows())
 	.IsDependentOn("Build")
 	.Does(() =>
 {
@@ -221,6 +224,7 @@ Task("Run-Code-Coverage")
 });
 
 Task("Upload-Coverage-Result")
+	.IsDependentOn("Run-Code-Coverage")
 	.Does(() =>
 {
 	CoverallsIo($"{codeCoverageDir}coverage.xml");
@@ -290,7 +294,6 @@ Task("Publish-NuGet")
 	.WithCriteria(() => isMainRepo)
 	.WithCriteria(() => isMainBranch)
 	.WithCriteria(() => isTagged)
-	.WithCriteria(() => IsRunningOnWindows())
 	.Does(() =>
 {
 	if(string.IsNullOrEmpty(nuGetApiKey)) throw new InvalidOperationException("Could not resolve NuGet API key.");
@@ -311,7 +314,6 @@ Task("Publish-MyGet")
 	.WithCriteria(() => !isLocalBuild)
 	.WithCriteria(() => !isPullRequest)
 	.WithCriteria(() => isMainRepo)
-	.WithCriteria(() => IsRunningOnWindows())
 	.Does(() =>
 {
 	if(string.IsNullOrEmpty(myGetApiKey)) throw new InvalidOperationException("Could not resolve MyGet API key.");
@@ -352,7 +354,6 @@ Task("Publish-GitHub-Release")
 	.WithCriteria(() => isMainRepo)
 	.WithCriteria(() => isMainBranch)
 	.WithCriteria(() => isTagged)
-	.WithCriteria(() => IsRunningOnWindows())
 	.Does(() =>
 {
 	if (string.IsNullOrEmpty(gitHubToken))
@@ -428,6 +429,11 @@ Task("AppVeyor")
 	.IsDependentOn("Publish-MyGet")
 	.IsDependentOn("Publish-NuGet")
 	.IsDependentOn("Publish-GitHub-Release");
+
+Task("AppVeyor-Ubuntu")
+	.IsDependentOn("Run-Unit-Tests")
+	.IsDependentOn("Create-NuGet-Package")
+	.IsDependentOn("Upload-AppVeyor-Artifacts");
 
 Task("Default")
 	.IsDependentOn("Run-Unit-Tests")
