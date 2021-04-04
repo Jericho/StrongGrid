@@ -98,17 +98,57 @@ namespace StrongGrid
 			if (string.IsNullOrEmpty(signature)) throw new ArgumentNullException(nameof(signature));
 			if (string.IsNullOrEmpty(timestamp)) throw new ArgumentNullException(nameof(timestamp));
 
-			// Convert the signature and public key provided by SendGrid into formats usable by the .net crypto classes
-			var sig = ConvertECDSASignature.LightweightConvertSignatureFromX9_62ToISO7816_8(256, Convert.FromBase64String(signature));
-			var cngBlob = Utils.ConvertSecp256R1PublicKeyToEccPublicBlob(publicKey);
+			// Decode the base64 encoded values
+			var signatureBytes = Convert.FromBase64String(signature);
+			var publicKeyBytes = Convert.FromBase64String(publicKey);
 
 			// Must combine the timestamp and the payload
 			var data = Encoding.UTF8.GetBytes(timestamp + requestBody);
+
+			/*
+				The 'ECDsa.ImportSubjectPublicKeyInfo' method was introduced in .NET core 3.0
+				and the DSASignatureFormat enum was introduced in .NET 5.0.
+
+				We can get rid of the 'ConvertECDSASignature' class and the Utils methods that
+				convert public keys when we stop suporting .NET framework and .NET standard
+
+				Note:
+					ECDsa is cross-platform and can be used on Windows and Linux/Ubuntu.
+					ECDsaCng is Windows only.
+			*/
+
+#if NET5_0_OR_GREATER
+			// Verify the signature
+			var eCDsa = ECDsa.Create();
+			eCDsa.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
+			var verified = eCDsa.VerifyData(data, signatureBytes, HashAlgorithmName.SHA256, DSASignatureFormat.Rfc3279DerSequence);
+#elif NET472_OR_GREATER || NETSTANDARD2_0
+			// Convert the signature and public key provided by SendGrid into formats usable by the ECDsa .net crypto class
+			var sig = ConvertECDSASignature.LightweightConvertSignatureFromX9_62ToISO7816_8(256, signatureBytes);
+			var (x, y) = Utils.GetXYFromSecp256r1PublicKey(publicKeyBytes);
+
+			// Verify the signature
+			var eCDsa = ECDsa.Create();
+			eCDsa.ImportParameters(new ECParameters
+			{
+				Curve = ECCurve.NamedCurves.nistP256, // aka secp256r1 aka prime256v1
+				Q = new ECPoint
+				{
+					X = x,
+					Y = y
+				}
+			});
+			var verified = eCDsa.VerifyData(data, sig, HashAlgorithmName.SHA256);
+#else
+			// Convert the signature and public key provided by SendGrid into formats usable by the ECDsaCng .net crypto class
+			var sig = ConvertECDSASignature.LightweightConvertSignatureFromX9_62ToISO7816_8(256, signatureBytes);
+			var cngBlob = Utils.ConvertSecp256R1PublicKeyToEccPublicBlob(publicKeyBytes);
 
 			// Verify the signature
 			var cngKey = CngKey.Import(cngBlob, CngKeyBlobFormat.EccPublicBlob);
 			var eCDsaCng = new ECDsaCng(cngKey);
 			var verified = eCDsaCng.VerifyData(data, sig);
+#endif
 
 			if (!verified)
 			{
