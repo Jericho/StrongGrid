@@ -1,13 +1,13 @@
 // Install tools.
-#tool nuget:?package=GitVersion.CommandLine&version=5.6.0
+#tool dotnet:?package=GitVersion.Tool&version=5.6.6
 #tool nuget:?package=GitReleaseManager&version=0.11.0
 #tool nuget:?package=OpenCover&version=4.7.922
-#tool nuget:?package=ReportGenerator&version=4.8.4
+#tool nuget:?package=ReportGenerator&version=4.8.7
 #tool nuget:?package=coveralls.io&version=1.4.2
 #tool nuget:?package=xunit.runner.console&version=2.4.1
 
 // Install addins.
-#addin nuget:?package=Cake.Coveralls&version=0.10.2
+#addin nuget:?package=Cake.Coveralls&version=1.0.0
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,6 +17,10 @@
 var target = Argument<string>("target", "Default");
 var configuration = Argument<string>("configuration", "Release");
 
+if (target == "AppVeyor" && IsRunningOnUnix())
+{
+	target = "AppVeyor-Ubuntu";
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // GLOBAL VARIABLES
@@ -25,7 +29,7 @@ var configuration = Argument<string>("configuration", "Release");
 var libraryName = "StrongGrid";
 var gitHubRepo = "StrongGrid";
 
-var testCoverageFilter = "+[StrongGrid]* -[StrongGrid]StrongGrid.Properties.* -[StrongGrid]StrongGrid.Models.* -[StrongGrid]StrongGrid.Logging.*";
+var testCoverageFilter = "+[StrongGrid]* -[StrongGrid]StrongGrid.Properties.* -[StrongGrid]StrongGrid.Models.*";
 var testCoverageExcludeByAttribute = "*.ExcludeFromCodeCoverage*";
 var testCoverageExcludeByFile = "*/*Designer.cs;*/*AssemblyInfo.cs";
 
@@ -52,7 +56,7 @@ var versionInfo = GitVersion(new GitVersionSettings() { OutputType = GitVersionO
 var milestone = versionInfo.MajorMinorPatch;
 var cakeVersion = typeof(ICakeContext).Assembly.GetName().Version.ToString();
 var isLocalBuild = BuildSystem.IsLocalBuild;
-var isMainBranch = StringComparer.OrdinalIgnoreCase.Equals("master", BuildSystem.AppVeyor.Environment.Repository.Branch);
+var isMainBranch = StringComparer.OrdinalIgnoreCase.Equals("main", BuildSystem.AppVeyor.Environment.Repository.Branch);
 var isMainRepo = StringComparer.OrdinalIgnoreCase.Equals($"{gitHubRepoOwner}/{gitHubRepo}", BuildSystem.AppVeyor.Environment.Repository.Name);
 var isPullRequest = BuildSystem.AppVeyor.Environment.PullRequest.IsPullRequest;
 var isTagged = (
@@ -190,7 +194,8 @@ Task("Run-Unit-Tests")
 	{
 		NoBuild = true,
 		NoRestore = true,
-		Configuration = configuration
+		Configuration = configuration,
+		Framework = IsRunningOnWindows() ? null : "netcoreapp3.1"
 	});
 });
 
@@ -220,6 +225,7 @@ Task("Run-Code-Coverage")
 });
 
 Task("Upload-Coverage-Result")
+	.IsDependentOn("Run-Code-Coverage")
 	.Does(() =>
 {
 	CoverallsIo($"{codeCoverageDir}coverage.xml");
@@ -230,7 +236,7 @@ Task("Generate-Code-Coverage-Report")
 	.Does(() =>
 {
 	ReportGenerator(
-		$"{codeCoverageDir}coverage.xml",
+		new FilePath($"{codeCoverageDir}coverage.xml"),
 		codeCoverageDir,
 		new ReportGeneratorSettings() {
 			ClassFilters = new[] { "*.UnitTests*" }
@@ -332,20 +338,15 @@ Task("Create-Release-Notes")
 		Name              = milestone,
 		Milestone         = milestone,
 		Prerelease        = false,
-		TargetCommitish   = "master"
+		TargetCommitish   = "main"
 	};
 
-	if (!string.IsNullOrEmpty(gitHubToken))
+	if (string.IsNullOrEmpty(gitHubToken))
 	{
-		GitReleaseManagerCreate(gitHubToken, gitHubRepoOwner, gitHubRepo, settings);
+		throw new InvalidOperationException("GitHub token was not provided.");
 	}
-	else
-	{
-		if(string.IsNullOrEmpty(gitHubUserName)) throw new InvalidOperationException("Could not resolve GitHub user name.");
-		if(string.IsNullOrEmpty(gitHubPassword)) throw new InvalidOperationException("Could not resolve GitHub password.");
 
-		GitReleaseManagerCreate(gitHubUserName, gitHubPassword, gitHubRepoOwner, gitHubRepo, settings);
-	}
+	GitReleaseManagerCreate(gitHubToken, gitHubRepoOwner, gitHubRepo, settings);
 });
 
 Task("Publish-GitHub-Release")
@@ -356,17 +357,12 @@ Task("Publish-GitHub-Release")
 	.WithCriteria(() => isTagged)
 	.Does(() =>
 {
-	if (!string.IsNullOrEmpty(gitHubToken))
+	if (string.IsNullOrEmpty(gitHubToken))
 	{
-		GitReleaseManagerClose(gitHubToken, gitHubRepoOwner, gitHubRepo, milestone);
+		throw new InvalidOperationException("GitHub token was not provided.");
 	}
-	else
-	{
-		if(string.IsNullOrEmpty(gitHubUserName)) throw new InvalidOperationException("Could not resolve GitHub user name.");
-		if(string.IsNullOrEmpty(gitHubPassword)) throw new InvalidOperationException("Could not resolve GitHub password.");
 
-		GitReleaseManagerClose(gitHubUserName, gitHubPassword, gitHubRepoOwner, gitHubRepo, milestone);
-	}
+	GitReleaseManagerClose(gitHubToken, gitHubRepoOwner, gitHubRepo, milestone);
 });
 
 Task("Generate-Benchmark-Report")
@@ -434,6 +430,11 @@ Task("AppVeyor")
 	.IsDependentOn("Publish-MyGet")
 	.IsDependentOn("Publish-NuGet")
 	.IsDependentOn("Publish-GitHub-Release");
+
+Task("AppVeyor-Ubuntu")
+	.IsDependentOn("Run-Unit-Tests")
+	.IsDependentOn("Create-NuGet-Package")
+	.IsDependentOn("Upload-AppVeyor-Artifacts");
 
 Task("Default")
 	.IsDependentOn("Run-Unit-Tests")

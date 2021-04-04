@@ -17,17 +17,15 @@ namespace StrongGrid.Utilities
 		public static RecyclableMemoryStreamManager MemoryStreamManager { get; } = new RecyclableMemoryStreamManager();
 
 		/// <summary>
-		/// Converts a base64 encoded secp256r1/NIST P-256 public key.
+		/// Converts a secp256r1/NIST P-256 public key.
 		/// </summary>
-		/// <param name="base64EncodedPublicKey">The base64 encoded public key.</param>
+		/// <param name="subjectPublicKeyInfo">The public key.</param>
 		/// <returns>The converted public key.</returns>
 		/// <remarks>
 		/// From https://stackoverflow.com/questions/44502331/c-sharp-get-cngkey-object-from-public-key-in-text-file/44527439#44527439 .
 		/// </remarks>
-		public static byte[] ConvertSecp256R1PublicKeyToEccPublicBlob(string base64EncodedPublicKey)
+		public static byte[] ConvertSecp256R1PublicKeyToEccPublicBlob(byte[] subjectPublicKeyInfo)
 		{
-			var subjectPublicKeyInfo = Convert.FromBase64String(base64EncodedPublicKey);
-
 			if (subjectPublicKeyInfo.Length != 91)
 				throw new InvalidOperationException();
 
@@ -38,15 +36,35 @@ namespace StrongGrid.Utilities
 
 			var cngBlob = new byte[CngBlobPrefix.Length + 64];
 			Buffer.BlockCopy(CngBlobPrefix, 0, cngBlob, 0, CngBlobPrefix.Length);
-
-			Buffer.BlockCopy(
-				subjectPublicKeyInfo,
-				Secp256R1Prefix.Length,
-				cngBlob,
-				CngBlobPrefix.Length,
-				64);
+			Buffer.BlockCopy(subjectPublicKeyInfo, Secp256R1Prefix.Length, cngBlob, CngBlobPrefix.Length, 64);
 
 			return cngBlob;
+		}
+
+		/// <summary>
+		/// Get the 'x' and 'y' values from a secp256r1/NIST P-256 public key.
+		/// </summary>
+		/// <param name="subjectPublicKeyInfo">The public key.</param>
+		/// <returns>The X and Y values.</returns>
+		/// <remarks>
+		/// From https://stackoverflow.com/a/66938822/153084.
+		/// </remarks>
+		public static (byte[] X, byte[] Y) GetXYFromSecp256r1PublicKey(byte[] subjectPublicKeyInfo)
+		{
+			if (subjectPublicKeyInfo.Length != 91)
+				throw new InvalidOperationException();
+
+			var prefix = Secp256R1Prefix;
+
+			if (!subjectPublicKeyInfo.Take(prefix.Length).SequenceEqual(prefix))
+				throw new InvalidOperationException();
+
+			var x = new byte[32];
+			var y = new byte[32];
+			Buffer.BlockCopy(subjectPublicKeyInfo, prefix.Length, x, 0, x.Length);
+			Buffer.BlockCopy(subjectPublicKeyInfo, prefix.Length + x.Length, y, 0, y.Length);
+
+			return (x, y);
 		}
 	}
 }

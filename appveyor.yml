@@ -4,8 +4,8 @@ init:
 
 # Build script
 build_script:
-  - ps: .\build.ps1 -bootstrap
-  - ps: .\build.ps1 -Target AppVeyor
+  - dotnet --info
+  - ps: .\build.ps1 --target=AppVeyor
 
 # Tests
 test: off
@@ -21,10 +21,12 @@ branches:
 
 # Build cache
 cache:
-  - tools -> build.cake, tools\packages.config
+  - tools -> build.cake
 
 # Environment configuration
-image: Visual Studio 2019
+image:
+  - Visual Studio 2019
+  - Ubuntu1804
 
 #---------------------------------#
 #  Skip builds for doc changes    #
