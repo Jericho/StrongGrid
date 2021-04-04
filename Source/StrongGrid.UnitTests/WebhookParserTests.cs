@@ -418,7 +418,7 @@ Content-Disposition: form-data; name=""attachments""
 				inboundEmail.SpamScore.ShouldBeNull();
 				inboundEmail.Spf.ShouldBe("softfail");
 				inboundEmail.Subject.ShouldBe("Test #1");
-				inboundEmail.Text.ShouldBe("Test #1\r\n");
+				inboundEmail.Text.Replace("\r\n", "\n").ShouldBe("Test #1\n");
 				inboundEmail.To.ShouldNotBeNull();
 				inboundEmail.To.Length.ShouldBe(1);
 				inboundEmail.To[0].Email.ShouldBe("test@api.yourdomain.com");
@@ -455,7 +455,7 @@ Content-Disposition: form-data; name=""attachments""
 				inboundEmail.SpamScore.ShouldBeNull();
 				inboundEmail.Spf.ShouldBe("softfail");
 				inboundEmail.Subject.ShouldBe("Test #1");
-				inboundEmail.Text.ShouldBe("Test #1\r\n");
+				inboundEmail.Text.Replace("\r\n", "\n").ShouldBe("Test #1\n");
 				inboundEmail.To.ShouldNotBeNull();
 				inboundEmail.To.Length.ShouldBe(1);
 				inboundEmail.To[0].Email.ShouldBe("test@api.yourdomain.com");
@@ -482,8 +482,8 @@ Content-Disposition: form-data; name=""attachments""
 
 				inboundEmail.Dkim.ShouldBe("{@sendgrid.com : pass}");
 
-				var rawEmailTestData = File.ReadAllText("InboudEmailTestData/raw_email.txt");
-				inboundEmail.RawEmail.Trim().ShouldBe(rawEmailTestData);
+				var rawEmailTestData = File.ReadAllText("InboudEmailTestData/raw_email.txt").Replace("\r\n", "\n");
+				inboundEmail.RawEmail.Trim().Replace("\r\n", "\n").ShouldBe(rawEmailTestData);
 
 				inboundEmail.To[0].Email.ShouldBe("inbound@inbound.example.com");
 				inboundEmail.To[0].Name.ShouldBe(string.Empty);
@@ -535,8 +535,8 @@ Content-Disposition: form-data; name=""attachments""
 
 				inboundEmail.Dkim.ShouldBe("{@sendgrid.com : pass}");
 
-				var rawEmailTestData = File.ReadAllText("InboudEmailTestData/raw_email.txt");
-				inboundEmail.RawEmail.Trim().ShouldBe(rawEmailTestData);
+				var rawEmailTestData = File.ReadAllText("InboudEmailTestData/raw_email.txt").Replace("\r\n", "\n");
+				inboundEmail.RawEmail.Trim().Replace("\r\n", "\n").ShouldBe(rawEmailTestData);
 
 				inboundEmail.To[0].Email.ShouldBe("inbound@inbound.example.com");
 				inboundEmail.To[0].Name.ShouldBe(string.Empty);
@@ -589,7 +589,7 @@ Content-Disposition: form-data; name=""attachments""
 					new KeyValuePair<string, Encoding>("html", Encoding.ASCII),
 					new KeyValuePair<string, Encoding>("text", Encoding.UTF8)	// The original encoding is iso-8859-10 but we fallback on UTF-8
 				}).Count().ShouldBe(0);
-				inboundEmail.Text.ShouldBe("Hello SendGrid!\r\n");
+				inboundEmail.Text.Replace("\r\n", "\n").ShouldBe("Hello SendGrid!\n");
 			}
 		}
 

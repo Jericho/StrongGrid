@@ -17,6 +17,10 @@
 var target = Argument<string>("target", "Default");
 var configuration = Argument<string>("configuration", "Release");
 
+if (target == "AppVeyor" && IsRunningOnUnix())
+{
+	target = "AppVeyor-Ubuntu";
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // GLOBAL VARIABLES
@@ -190,7 +194,8 @@ Task("Run-Unit-Tests")
 	{
 		NoBuild = true,
 		NoRestore = true,
-		Configuration = configuration
+		Configuration = configuration,
+		Framework = IsRunningOnWindows() ? null : "netcoreapp3.1"
 	});
 });
 
@@ -220,6 +225,7 @@ Task("Run-Code-Coverage")
 });
 
 Task("Upload-Coverage-Result")
+	.IsDependentOn("Run-Code-Coverage")
 	.Does(() =>
 {
 	CoverallsIo($"{codeCoverageDir}coverage.xml");
@@ -424,6 +430,11 @@ Task("AppVeyor")
 	.IsDependentOn("Publish-MyGet")
 	.IsDependentOn("Publish-NuGet")
 	.IsDependentOn("Publish-GitHub-Release");
+
+Task("AppVeyor-Ubuntu")
+	.IsDependentOn("Run-Unit-Tests")
+	.IsDependentOn("Create-NuGet-Package")
+	.IsDependentOn("Upload-AppVeyor-Artifacts");
 
 Task("Default")
 	.IsDependentOn("Run-Unit-Tests")
