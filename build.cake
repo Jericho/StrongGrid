@@ -195,6 +195,7 @@ Task("Run-Unit-Tests")
 });
 
 Task("Run-Code-Coverage")
+	.WithCriteria(() => IsRunningOnWindows())
 	.IsDependentOn("Build")
 	.Does(() =>
 {
@@ -289,6 +290,7 @@ Task("Publish-NuGet")
 	.WithCriteria(() => isMainRepo)
 	.WithCriteria(() => isMainBranch)
 	.WithCriteria(() => isTagged)
+	.WithCriteria(() => IsRunningOnWindows())
 	.Does(() =>
 {
 	if(string.IsNullOrEmpty(nuGetApiKey)) throw new InvalidOperationException("Could not resolve NuGet API key.");
@@ -309,6 +311,7 @@ Task("Publish-MyGet")
 	.WithCriteria(() => !isLocalBuild)
 	.WithCriteria(() => !isPullRequest)
 	.WithCriteria(() => isMainRepo)
+	.WithCriteria(() => IsRunningOnWindows())
 	.Does(() =>
 {
 	if(string.IsNullOrEmpty(myGetApiKey)) throw new InvalidOperationException("Could not resolve MyGet API key.");
@@ -349,6 +352,7 @@ Task("Publish-GitHub-Release")
 	.WithCriteria(() => isMainRepo)
 	.WithCriteria(() => isMainBranch)
 	.WithCriteria(() => isTagged)
+	.WithCriteria(() => IsRunningOnWindows())
 	.Does(() =>
 {
 	if (string.IsNullOrEmpty(gitHubToken))
