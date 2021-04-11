@@ -351,9 +351,10 @@ namespace StrongGrid.Resources
 
 			var request = new HttpRequestMessage(HttpMethod.Put, uploadUrl)
 			{
-				Content = new StreamContent(stream)
+				Content = new StreamContent(await stream.CompressAsync().ConfigureAwait(false))
 			};
 
+			request.Headers.AcceptEncoding.TryParseAdd("gzip");
 			request.Headers.Add("User-Agent", _client.BaseClient.DefaultRequestHeaders.UserAgent.First().ToString());
 
 			foreach (var header in uploadHeaders)

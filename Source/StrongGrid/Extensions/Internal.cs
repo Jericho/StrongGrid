@@ -7,6 +7,7 @@ using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -279,16 +280,16 @@ namespace StrongGrid
 		internal static IRequest WithJsonBody<T>(this IRequest request, T body, bool omitCharSet = false)
 		{
 			return request.WithBody(bodyBuilder =>
+		{
+			var httpContent = bodyBuilder.Model(body, new MediaTypeHeaderValue("application/json"));
+
+			if (omitCharSet && !string.IsNullOrEmpty(httpContent.Headers.ContentType.CharSet))
 			{
-				var httpContent = bodyBuilder.Model(body, new MediaTypeHeaderValue("application/json"));
+				httpContent.Headers.ContentType.CharSet = string.Empty;
+			}
 
-				if (omitCharSet && !string.IsNullOrEmpty(httpContent.Headers.ContentType.CharSet))
-				{
-					httpContent.Headers.ContentType.CharSet = string.Empty;
-				}
-
-				return httpContent;
-			});
+			return httpContent;
+		});
 		}
 
 		/// <summary>
@@ -652,6 +653,18 @@ namespace StrongGrid
 			}
 		}
 
+		internal static async Task<Stream> CompressAsync(this Stream source)
+		{
+			var compressedStream = new MemoryStream();
+			using (var gzip = new GZipStream(compressedStream, CompressionMode.Compress, true))
+			{
+				await source.CopyToAsync(gzip).ConfigureAwait(false);
+			}
+
+			compressedStream.Position = 0;
+			return compressedStream;
+		}
+
 		private static async Task<(bool, string)> GetErrorMessage(HttpResponseMessage message)
 		{
 			// Assume there is no error
@@ -696,7 +709,7 @@ namespace StrongGrid
 		}
 
 				I have also seen cases where the JSON string looks like this:
-		{
+				{
 					"error": "Name already exists"
 				}
 			*/
