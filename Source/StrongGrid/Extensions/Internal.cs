@@ -23,30 +23,45 @@ namespace StrongGrid
 	/// </summary>
 	internal static class Internal
 	{
+		internal enum UnixTimePrecision
+		{
+			Seconds = 0,
+			Milliseconds = 1
+		}
+
+		private static readonly DateTime EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
 		/// <summary>
-		/// Converts a 'unix time' (which is expressed as the number of seconds since midnight on
-		/// January 1st 1970) to a .Net <see cref="DateTime" />.
+		/// Converts a 'unix time' (which is expressed as the number of seconds/milliseconds since
+		/// midnight on January 1st 1970) to a .Net <see cref="DateTime" />.
 		/// </summary>
 		/// <param name="unixTime">The unix time.</param>
+		/// <param name="precision">The desired precision.</param>
 		/// <returns>
 		/// The <see cref="DateTime" />.
 		/// </returns>
-		internal static DateTime FromUnixTime(this long unixTime)
+		internal static DateTime FromUnixTime(this long unixTime, UnixTimePrecision precision = UnixTimePrecision.Seconds)
 		{
-			return Utils.Epoch.AddSeconds(unixTime);
+			if (precision == UnixTimePrecision.Seconds) return EPOCH.AddSeconds(unixTime);
+			if (precision == UnixTimePrecision.Milliseconds) return EPOCH.AddMilliseconds(unixTime);
+			throw new Exception($"Unknown precision: {precision}");
 		}
 
 		/// <summary>
 		/// Converts a .Net <see cref="DateTime" /> into a 'Unix time' (which is expressed as the number
-		/// of seconds since midnight on January 1st 1970).
+		/// of seconds/milliseconds since midnight on January 1st 1970).
 		/// </summary>
 		/// <param name="date">The date.</param>
+		/// <param name="precision">The desired precision.</param>
 		/// <returns>
-		/// The numer of seconds since midnight on January 1st 1970.
+		/// The numer of seconds/milliseconds since midnight on January 1st 1970.
 		/// </returns>
-		internal static long ToUnixTime(this DateTime date)
+		internal static long ToUnixTime(this DateTime date, UnixTimePrecision precision = UnixTimePrecision.Seconds)
 		{
-			return Convert.ToInt64((date.ToUniversalTime() - Utils.Epoch).TotalSeconds);
+			var diff = date.ToUniversalTime() - EPOCH;
+			if (precision == UnixTimePrecision.Seconds) return Convert.ToInt64(diff.TotalSeconds);
+			if (precision == UnixTimePrecision.Milliseconds) return Convert.ToInt64(diff.TotalMilliseconds);
+			throw new Exception($"Unknown precision: {precision}");
 		}
 
 		/// <summary>
