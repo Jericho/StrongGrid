@@ -1,9 +1,8 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using StrongGrid.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace StrongGrid.Utilities
 {
@@ -71,13 +70,7 @@ namespace StrongGrid.Utilities
 
 			writer.WriteStartObject();
 
-#if NETSTANDARD1
-			var props = value.GetType().GetTypeInfo().DeclaredProperties;
-#else
-			var props = value.GetType().GetProperties();
-#endif
-
-			foreach (var propertyInfo in props)
+			foreach (var propertyInfo in value.GetType().GetProperties())
 			{
 				var propertyCustomAttributes = propertyInfo.GetCustomAttributes(false);
 				var propertyConverterAttribute = propertyCustomAttributes.OfType<JsonConverterAttribute>().FirstOrDefault();
