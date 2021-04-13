@@ -183,7 +183,7 @@ Task("Build")
 		Configuration = configuration,
 		NoRestore = true,
 		ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.LegacySemVerPadded),
-		Framework =  IsRunningOnWindows() ? null : "netstandard2.0;net5.0"
+		Framework =  IsRunningOnWindows() ? null : "netstandard2.0"
 	});
 });
 
@@ -196,7 +196,7 @@ Task("Run-Unit-Tests")
 		NoBuild = true,
 		NoRestore = true,
 		Configuration = configuration,
-		Framework = IsRunningOnWindows() ? null : "netcoreapp3.1;net5.0"
+		Framework = IsRunningOnWindows() ? null : "netcoreapp3.1"
 	});
 });
 
