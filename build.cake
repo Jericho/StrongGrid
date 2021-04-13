@@ -182,7 +182,8 @@ Task("Build")
 	{
 		Configuration = configuration,
 		NoRestore = true,
-		ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.LegacySemVerPadded)
+		ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.LegacySemVerPadded),
+		Framework =  IsRunningOnWindows() ? null : "netstandard2.0;net5.0"
 	});
 });
 
