@@ -227,7 +227,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Retrieve multiple contacts.
+		/// Retrieve multiple contacts by ID.
 		/// </summary>
 		/// <param name="contactIds">An enumeration of contact identifiers.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
@@ -246,6 +246,53 @@ namespace StrongGrid.Resources
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsObject<Contact[]>("result");
+		}
+
+		/// <summary>
+		/// Retrieve multiple contacts by email address.
+		/// </summary>
+		/// <param name="emailAdresses">An enumeration of email addresses.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="Contact" />.
+		/// </returns>
+		public async Task<Contact[]> GetMultipleByEmailAddressAsync(IEnumerable<string> emailAdresses, CancellationToken cancellationToken = default)
+		{
+			var data = new JObject()
+			{
+				{ "emails", new JArray(emailAdresses) }
+			};
+
+			var response = await _client
+				.PostAsync($"{_endpoint}/search/emails")
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsResponse()
+				.ConfigureAwait(false);
+
+			// If no contact is found, SendGrid return HTTP 404
+			if (response.Status == HttpStatusCode.NotFound)
+			{
+				return Array.Empty<Contact>();
+			}
+
+			var result = await response.AsRawJsonObject("result").ConfigureAwait(false);
+			var contacts = new List<Contact>();
+#if DEBUG
+			var errors = new List<(string EmailAddress, string ErrorMessage)>();
+#endif
+
+			foreach (var record in result)
+			{
+				var emailAddress = record.Key;
+				var resultValue = (JObject)record.Value;
+				if (resultValue["contact"] != null) contacts.Add(resultValue["contact"].ToObject<Contact>());
+#if DEBUG
+				if (resultValue["error"] != null) errors.Add((emailAddress, resultValue["error"].Value<string>()));
+#endif
+			}
+
+			return contacts.ToArray();
 		}
 
 		/// <summary>
