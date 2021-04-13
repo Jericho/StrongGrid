@@ -49,6 +49,9 @@ var outputDir = "./artifacts/";
 var codeCoverageDir = $"{outputDir}CodeCoverage/";
 var benchmarkDir = $"{outputDir}Benchmark/";
 
+var solutionFile = $"{sourceFolder}{libraryName}.sln";
+var sourceProject = $"{sourceFolder}{libraryName}/{libraryName}.csproj";
+var integrationTestsProject = $"{sourceFolder}{libraryName}.IntegrationTests/{libraryName}.IntegrationTests.csproj";
 var unitTestsProject = $"{sourceFolder}{libraryName}.UnitTests/{libraryName}.UnitTests.csproj";
 var benchmarkProject = $"{sourceFolder}{libraryName}.Benchmark/{libraryName}.Benchmark.csproj";
 
@@ -178,12 +181,12 @@ Task("Build")
 	.IsDependentOn("Restore-NuGet-Packages")
 	.Does(() =>
 {
-	DotNetCoreBuild($"{sourceFolder}{libraryName}.sln", new DotNetCoreBuildSettings
+	DotNetCoreBuild(solutionFile, new DotNetCoreBuildSettings
 	{
 		Configuration = configuration,
 		NoRestore = true,
 		ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.LegacySemVerPadded),
-		Framework =  IsRunningOnWindows() ? null : "netstandard2.0"
+		Framework =  IsRunningOnWindows() ? null : "net5.0"
 	});
 });
 
@@ -196,7 +199,7 @@ Task("Run-Unit-Tests")
 		NoBuild = true,
 		NoRestore = true,
 		Configuration = configuration,
-		Framework = IsRunningOnWindows() ? null : "netcoreapp3.1"
+		Framework = IsRunningOnWindows() ? null : "net5.0"
 	});
 });
 
@@ -272,7 +275,7 @@ Task("Create-NuGet-Package")
 		}
 	};
 
-	DotNetCorePack($"{sourceFolder}{libraryName}/{libraryName}.csproj", settings);
+	DotNetCorePack(sourceProject, settings);
 });
 
 Task("Upload-AppVeyor-Artifacts")
