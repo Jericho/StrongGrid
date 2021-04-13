@@ -109,6 +109,9 @@ namespace StrongGrid
 				The 'ECDsa.ImportSubjectPublicKeyInfo' method was introduced in .NET core 3.0
 				and the DSASignatureFormat enum was introduced in .NET 5.0.
 
+				We can get rid of the code that relies on ECDsaCng and remove reference to
+				System.Security.Cryptography.Cng in csproj when we drop support for net461.
+
 				We can get rid of the 'ConvertECDSASignature' class and the Utils methods that
 				convert public keys when we stop suporting .NET framework and .NET standard
 
