@@ -227,6 +227,28 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
+		/// Retrieve multiple contacts.
+		/// </summary>
+		/// <param name="contactIds">An enumeration of contact identifiers.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="Contact" />.
+		/// </returns>
+		public Task<Contact[]> GetMultipleAsync(IEnumerable<string> contactIds, CancellationToken cancellationToken = default)
+		{
+			var data = new JObject()
+			{
+				{ "ids", new JArray(contactIds) }
+			};
+
+			return _client
+				.PostAsync($"{_endpoint}/batch")
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsObject<Contact[]>("result");
+		}
+
+		/// <summary>
 		/// Searches for contacts matching the specified conditions.
 		/// </summary>
 		/// <remarks>

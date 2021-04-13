@@ -128,6 +128,16 @@ namespace StrongGrid.Resources
 		Task<Contact> GetAsync(string contactId, CancellationToken cancellationToken = default);
 
 		/// <summary>
+		/// Retrieve multiple contacts.
+		/// </summary>
+		/// <param name="contactIds">An enumeration of contact identifiers.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="Contact" />.
+		/// </returns>
+		Task<Contact[]> GetMultipleAsync(IEnumerable<string> contactIds, CancellationToken cancellationToken = default);
+
+		/// <summary>
 		/// Searches for contacts matching the specified conditions.
 		/// </summary>
 		/// <param name="filterConditions">Filtering conditions.</param>
