@@ -36,7 +36,7 @@ namespace StrongGrid
 
 		#region CTOR
 
-#if NETSTANDARD
+#if NETSTANDARD2_0 || NET5_0_OR_GREATER
 		static WebhookParser()
 		{
 			Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -142,7 +142,7 @@ namespace StrongGrid
 				}
 			});
 			var verified = eCDsa.VerifyData(data, sig, HashAlgorithmName.SHA256);
-#else
+#elif NETFRAMEWORK
 			// Convert the signature and public key provided by SendGrid into formats usable by the ECDsaCng .net crypto class
 			var sig = ConvertECDSASignature.LightweightConvertSignatureFromX9_62ToISO7816_8(256, signatureBytes);
 			var cngBlob = Utils.ConvertSecp256R1PublicKeyToEccPublicBlob(publicKeyBytes);
@@ -151,6 +151,8 @@ namespace StrongGrid
 			var cngKey = CngKey.Import(cngBlob, CngKeyBlobFormat.EccPublicBlob);
 			var eCDsaCng = new ECDsaCng(cngKey);
 			var verified = eCDsaCng.VerifyData(data, sig);
+#else
+			throw new Exception("CONFUSION: what framework is this????");
 #endif
 
 			if (!verified)
