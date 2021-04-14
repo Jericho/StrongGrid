@@ -113,14 +113,17 @@ namespace StrongGrid
 				System.Security.Cryptography.Cng in csproj when we drop support for net461.
 
 				We can get rid of the 'ConvertECDSASignature' class and the Utils methods that
-				convert public keys when we stop suporting .NET framework and .NET standard
+				convert public keys when we stop suporting .NET framework and .NET standard.
+
+				NET5_0_OR_GREATER works fine on Windows but doesn't work on Ubuntu. That's I
+				added the seemingly redundant "NET5_0" in the conditional block below.
 
 				Note:
 					ECDsa is cross-platform and can be used on Windows and Linux/Ubuntu.
 					ECDsaCng is Windows only.
 			*/
 
-#if NET5_0_OR_GREATER
+#if NET5_0 || NET5_0_OR_GREATER
 			// Verify the signature
 			var eCDsa = ECDsa.Create();
 			eCDsa.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
