@@ -25,6 +25,7 @@ cache:
 
 # Environment configuration
 image:
+  - Visual Studio 2019
   - Ubuntu1804
 
 #---------------------------------#
