@@ -201,26 +201,32 @@ Task("Build")
 	.IsDependentOn("Restore-NuGet-Packages")
 	.Does(() =>
 {
-	DotNetCoreBuild(solutionFile, new DotNetCoreBuildSettings
-	{
-		Configuration = configuration,
-		NoRestore = true,
-		ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.LegacySemVerPadded),
-		Framework =  IsRunningOnWindows() ? null : "netstandar2.0"
-	});
+	using (DiagnosticVerbosity())
+    {
+		DotNetCoreBuild(solutionFile, new DotNetCoreBuildSettings
+		{
+			Configuration = configuration,
+			NoRestore = true,
+			ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.LegacySemVerPadded),
+			Framework =  IsRunningOnWindows() ? null : "netstandar2.0"
+		});
+	}
 });
 
 Task("Run-Unit-Tests")
 	.IsDependentOn("Build")
 	.Does(() =>
 {
-	DotNetCoreTest(unitTestsProject, new DotNetCoreTestSettings
-	{
-		NoBuild = true,
-		NoRestore = true,
-		Configuration = configuration,
-		Framework = IsRunningOnWindows() ? null : "netcoreapp3.1"
-	});
+	using (DiagnosticVerbosity())
+    {
+		DotNetCoreTest(unitTestsProject, new DotNetCoreTestSettings
+		{
+			NoBuild = true,
+			NoRestore = true,
+			Configuration = configuration,
+			Framework = IsRunningOnWindows() ? null : "netcoreapp3.1"
+		});
+	}
 });
 
 Task("Run-Code-Coverage")
