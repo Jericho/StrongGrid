@@ -7,7 +7,7 @@
 #tool nuget:?package=xunit.runner.console&version=2.4.1
 
 // Install addins.
-#addin nuget:?package=Cake.Coveralls&version=1.0.0
+#addin nuget:?package=Cake.Coveralls&version=1.0.1
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -147,8 +147,28 @@ Task("AppVeyor-Build_Number")
 	});
 });
 
+Task("Remove-Integration-Tests")
+	.WithCriteria(() => AppVeyor.IsRunningOnAppVeyor)
+	.Does(() =>
+{
+	// Integration tests are intended to be used for debugging purposes and not intended to be executed in CI environment.
+	// Also, the runner for these tests contains windows-specific code (such as resizing window, moving window to center of screen, etc.)
+	// which can cause problems when attempting to run unit tests on an Ubuntu image on AppVeyor.
+
+	Information("Here are the projects in the solution before removing integration tests:");
+	DotNetCoreTool(solutionFile, "sln", "list");
+	Information("");
+
+	DotNetCoreTool(solutionFile, "sln", $"remove {integrationTestsProject.TrimStart(sourceFolder, StringComparison.OrdinalIgnoreCase)}");
+	Information("");
+
+	Information("Here are the projects in the solution after removing integration tests:");
+	DotNetCoreTool(solutionFile, "sln", "list");
+});
+
 Task("Clean")
 	.IsDependentOn("AppVeyor-Build_Number")
+	.IsDependentOn("Remove-Integration-Tests")
 	.Does(() =>
 {
 	// Clean solution directories.
@@ -165,27 +185,8 @@ Task("Clean")
 	CreateDirectory(codeCoverageDir);
 });
 
-Task("Remove-Integration-Tests")
-	.WithCriteria(() => AppVeyor.IsRunningOnAppVeyor)
-	.Does(() =>
-{
-	// Integration tests are intended to be used for debugging purposes and not intended to be executed in CI environment.
-	// Also, the runner for these tests contains windows-specific code (such as resizing window, moving window to center of screen, etc.)
-	// which cause problems when attempting to run unit tests on an Ubuntu image on AppVeyor.
-
-	Information("Here are the project in the solution before removing integration tests:");
-	DotNetCoreTool(solutionFile, "sln", "list");
-	Information("");
-
-	DotNetCoreTool(solutionFile, "sln", $"remove {integrationTestsProject.TrimStart(sourceFolder, StringComparison.OrdinalIgnoreCase)}");
-	Information("");
-
-	Information("Here are the project in the solution after removing integration tests:");
-	DotNetCoreTool(solutionFile, "sln", "list");
-});
-
 Task("Restore-NuGet-Packages")
-	.IsDependentOn("Remove-Integration-Tests")
+	.IsDependentOn("Clean")
 	.Does(() =>
 {
 	DotNetCoreRestore("./Source/", new DotNetCoreRestoreSettings
@@ -205,7 +206,7 @@ Task("Build")
 		Configuration = configuration,
 		NoRestore = true,
 		ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.LegacySemVerPadded),
-		Framework =  IsRunningOnWindows() ? null : "net5.0"
+		Framework =  IsRunningOnWindows() ? null : "netstandar2.0;net5.0"
 	});
 });
 
@@ -218,7 +219,7 @@ Task("Run-Unit-Tests")
 		NoBuild = true,
 		NoRestore = true,
 		Configuration = configuration,
-		Framework = IsRunningOnWindows() ? null : "net5.0"
+		Framework = IsRunningOnWindows() ? null : "netcoreapp3.1;net5.0"
 	});
 });
 
