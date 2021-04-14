@@ -165,8 +165,27 @@ Task("Clean")
 	CreateDirectory(codeCoverageDir);
 });
 
+Task("Remove-Integration-Tests")
+	.WithCriteria(() => AppVeyor.IsRunningOnAppVeyor)
+	.Does(() =>
+{
+	// Integration tests are intended to be used for debugging purposes and not intended to be executed in CI environment.
+	// Also, the runner for these tests contains windows-specific code (such as resizing window, moving window to center of screen, etc.)
+	// which cause problems when attempting to run unit tests on an Ubuntu image on AppVeyor.
+
+	Information("Here are the project in the solution before removing integration tests:");
+	DotNetCoreTool(solutionFile, "sln", "list");
+	Information("");
+
+	DotNetCoreTool(solutionFile, "sln", $"remove {integrationTestsProject.TrimStart(sourceFolder, StringComparison.OrdinalIgnoreCase)}");
+	Information("");
+
+	Information("Here are the project in the solution after removing integration tests:");
+	DotNetCoreTool(solutionFile, "sln", "list");
+});
+
 Task("Restore-NuGet-Packages")
-	.IsDependentOn("Clean")
+	.IsDependentOn("Remove-Integration-Tests")
 	.Does(() =>
 {
 	DotNetCoreRestore("./Source/", new DotNetCoreRestoreSettings
@@ -450,3 +469,25 @@ Task("Default")
 ///////////////////////////////////////////////////////////////////////////////
 
 RunTarget(target);
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// PRIVATE METHODS
+///////////////////////////////////////////////////////////////////////////////
+private static string TrimStart(this string source, string value, StringComparison comparisonType)
+{
+	if (source == null)
+	{
+		throw new ArgumentNullException(nameof(source));
+	}
+
+	int valueLength = value.Length;
+	int startIndex = 0;
+	while (source.IndexOf(value, startIndex, comparisonType) == startIndex)
+	{
+		startIndex += valueLength;
+	}
+
+	return source.Substring(startIndex);
+}
