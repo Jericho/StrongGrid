@@ -120,7 +120,7 @@ namespace StrongGrid
 					ECDsaCng is Windows only.
 			*/
 
-#if NET5_0 || NET5_0_OR_GREATER
+#if NET5_0_OR_GREATER
 			// Verify the signature
 			var eCDsa = ECDsa.Create();
 			eCDsa.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);

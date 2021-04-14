@@ -201,32 +201,26 @@ Task("Build")
 	.IsDependentOn("Restore-NuGet-Packages")
 	.Does(() =>
 {
-	using (DiagnosticVerbosity())
-    {
-		DotNetCoreBuild(solutionFile, new DotNetCoreBuildSettings
-		{
-			Configuration = configuration,
-			NoRestore = true,
-			ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.LegacySemVerPadded),
-			Framework =  IsRunningOnWindows() ? null : "net5.0"
-		});
-	}
+	DotNetCoreBuild(solutionFile, new DotNetCoreBuildSettings
+	{
+		Configuration = configuration,
+		NoRestore = true,
+		ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.LegacySemVerPadded),
+		Framework =  IsRunningOnWindows() ? null : "net5.0"
+	});
 });
 
 Task("Run-Unit-Tests")
 	.IsDependentOn("Build")
 	.Does(() =>
 {
-	using (DiagnosticVerbosity())
-    {
-		DotNetCoreTest(unitTestsProject, new DotNetCoreTestSettings
-		{
-			NoBuild = true,
-			NoRestore = true,
-			Configuration = configuration,
-			Framework = IsRunningOnWindows() ? null : "net5.0"
-		});
-	}
+	DotNetCoreTest(unitTestsProject, new DotNetCoreTestSettings
+	{
+		NoBuild = true,
+		NoRestore = true,
+		Configuration = configuration,
+		Framework = IsRunningOnWindows() ? null : "net5.0"
+	});
 });
 
 Task("Run-Code-Coverage")
@@ -301,7 +295,10 @@ Task("Create-NuGet-Package")
 		}
 	};
 
-	DotNetCorePack(sourceProject, settings);
+	using (DiagnosticVerbosity())
+    {
+		DotNetCorePack(sourceProject, settings);
+	}
 });
 
 Task("Upload-AppVeyor-Artifacts")
