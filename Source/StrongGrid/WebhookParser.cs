@@ -120,7 +120,7 @@ namespace StrongGrid
 					ECDsaCng is Windows only.
 			*/
 
-#if NET5_0_OR_GREATER
+#if NET5_0 || NET5_0_OR_GREATER
 			// Verify the signature
 			var eCDsa = ECDsa.Create();
 			eCDsa.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
@@ -152,7 +152,7 @@ namespace StrongGrid
 			var eCDsaCng = new ECDsaCng(cngKey);
 			var verified = eCDsaCng.VerifyData(data, sig);
 #else
-			throw new Exception("CONFUSION: what framework is this????");
+#error Unhandled TFM
 #endif
 
 			if (!verified)
