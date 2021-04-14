@@ -456,7 +456,7 @@ Task("AppVeyor")
 	.IsDependentOn("Publish-GitHub-Release");
 
 Task("AppVeyor-Ubuntu")
-	.IsDependentOn("Run-Unit-Tests")
+	.IsDependentOn("Run-Unit-Tests");
 
 Task("Default")
 	.IsDependentOn("Run-Unit-Tests")

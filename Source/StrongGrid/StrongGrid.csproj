@@ -56,14 +56,6 @@
     <PackageReference Include="System.Security.Cryptography.Cng" Version="5.0.0" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
   </ItemGroup>
-
-  <PropertyGroup Condition=" $(TargetFramework.StartsWith('net4')) ">
-    <DefineConstants>$(DefineConstants);NETFULL</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
-    <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
-  </PropertyGroup>
   
   <PropertyGroup Condition="'$(Configuration)' == 'Release' ">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
