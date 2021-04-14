@@ -295,10 +295,7 @@ Task("Create-NuGet-Package")
 		}
 	};
 
-	using (DiagnosticVerbosity())
-    {
-		DotNetCorePack(sourceProject, settings);
-	}
+	DotNetCorePack(sourceProject, settings);
 });
 
 Task("Upload-AppVeyor-Artifacts")
@@ -460,8 +457,6 @@ Task("AppVeyor")
 
 Task("AppVeyor-Ubuntu")
 	.IsDependentOn("Run-Unit-Tests")
-	.IsDependentOn("Create-NuGet-Package")
-	.IsDependentOn("Upload-AppVeyor-Artifacts");
 
 Task("Default")
 	.IsDependentOn("Run-Unit-Tests")
