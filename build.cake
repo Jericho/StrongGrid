@@ -208,7 +208,7 @@ Task("Build")
 			Configuration = configuration,
 			NoRestore = true,
 			ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.LegacySemVerPadded),
-			Framework =  IsRunningOnWindows() ? null : "netstandar2.0"
+			Framework =  IsRunningOnWindows() ? null : "netstandard2.0"
 		});
 	}
 });
