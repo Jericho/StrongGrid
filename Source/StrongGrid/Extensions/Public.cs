@@ -1164,6 +1164,5 @@ namespace StrongGrid
 				.Take(limit)
 				.ToArray();
 		}
-
 	}
 }
