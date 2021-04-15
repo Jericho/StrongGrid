@@ -116,7 +116,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, endpoint).Respond((HttpRequestMessage request) =>
 			{
 				var response = new HttpResponseMessage(HttpStatusCode.OK);
-				response.Headers.Add("Link", $"<{endpoint}>; rel=\"next\"; title=\"1\", <{endpoint}>; rel=\"prev\"; title=\"1\", <{endpoint}>; rel=\"last\"; title=\"1\", <{endpoint}>; rel=\"first\"; title=\"1\"");
+				response.Headers.Add("Link", $"<{endpoint}>; rel=\"prev\"; title=\"1\", <{endpoint}>; rel=\"last\"; title=\"1\", <{endpoint}>; rel=\"first\"; title=\"1\"");
 				response.Content = new StringContent(MULTIPLE_API_KEY_JSON);
 				return response;
 			});
@@ -125,7 +125,7 @@ namespace StrongGrid.UnitTests.Resources
 			var apiKeys = new ApiKeys(client);
 
 			// Act
-			var result = await apiKeys.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
+			var result = await apiKeys.GetAllAsync(limit, 0, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
