@@ -176,7 +176,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, endpoint).Respond((HttpRequestMessage request) =>
 			{
 				var response = new HttpResponseMessage(HttpStatusCode.OK);
-				response.Headers.Add("Link", $"<{endpoint}>; rel=\"next\"; title=\"1\", <{endpoint}>; rel=\"prev\"; title=\"1\", <{endpoint}>; rel=\"last\"; title=\"1\", <{endpoint}>; rel=\"first\"; title=\"1\"");
+				response.Headers.Add("Link", $"<{endpoint}>; rel=\"prev\"; title=\"1\", <{endpoint}>; rel=\"last\"; title=\"1\", <{endpoint}>; rel=\"first\"; title=\"1\"");
 				response.Content = new StringContent(MULTIPLE_IPADDRESSES_JSON);
 				return response;
 			});
@@ -223,13 +223,13 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var limit = 10;
-			var endpoint = Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&offset=0";
+			var endpoint = Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={StrongGrid.Utilities.Utils.MaxSendGridPagingLimit}&offset=0";
 
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, endpoint).Respond((HttpRequestMessage request) =>
 			{
 				var response = new HttpResponseMessage(HttpStatusCode.OK);
-				response.Headers.Add("Link", $"<{endpoint}>; rel=\"next\"; title=\"1\", <{endpoint}>; rel=\"prev\"; title=\"1\", <{endpoint}>; rel=\"last\"; title=\"1\", <{endpoint}>; rel=\"first\"; title=\"1\"");
+				response.Headers.Add("Link", $"<{endpoint}>; rel=\"prev\"; title=\"1\", <{endpoint}>; rel=\"last\"; title=\"1\", <{endpoint}>; rel=\"first\"; title=\"1\"");
 				response.Content = new StringContent(MULTIPLE_IPADDRESSES_JSON);
 				return response;
 			});
@@ -238,7 +238,7 @@ namespace StrongGrid.UnitTests.Resources
 			var ipAddresses = new IpAddresses(client);
 
 			// Act
-			var result = await ipAddresses.GetUnassignedAsync(CancellationToken.None);
+			var result = await ipAddresses.GetUnassignedAsync(limit, 0, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
