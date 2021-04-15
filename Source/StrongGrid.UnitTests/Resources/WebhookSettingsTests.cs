@@ -237,7 +237,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, endpoint).Respond((HttpRequestMessage request) =>
 			{
 				var response = new HttpResponseMessage(HttpStatusCode.OK);
-				response.Headers.Add("Link", $"<{endpoint}>; rel=\"next\"; title=\"1\", <{endpoint}>; rel=\"prev\"; title=\"1\", <{endpoint}>; rel=\"last\"; title=\"1\", <{endpoint}>; rel=\"first\"; title=\"1\"");
+				response.Headers.Add("Link", $"<{endpoint}>; rel=\"prev\"; title=\"1\", <{endpoint}>; rel=\"last\"; title=\"1\", <{endpoint}>; rel=\"first\"; title=\"1\"");
 				response.Content = new StringContent(
 					"{\"result\":[" +
 					SINGLE_INBOUNDPARSE_WEBHOOK_SETTING_JSON + "," +
