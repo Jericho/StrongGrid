@@ -10,6 +10,12 @@ namespace StrongGrid
 	/// </summary>
 	public class LegacyClient : BaseClient, ILegacyClient
 	{
+		private static readonly StrongGridClientOptions _defaultOptions = new StrongGridClientOptions()
+		{
+			LogLevelSuccessfulCalls = LogLevel.Debug,
+			LogLevelFailedCalls = LogLevel.Debug
+		};
+
 		#region PROPERTIES
 
 		/// <summary>
@@ -79,7 +85,7 @@ namespace StrongGrid
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
 		public LegacyClient(string apiKey, StrongGridClientOptions options = null, ILogger logger = null)
-			: base(apiKey, null, false, options, logger)
+			: base(apiKey, null, false, options ?? _defaultOptions, logger)
 		{
 			Init();
 		}
@@ -92,7 +98,7 @@ namespace StrongGrid
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
 		public LegacyClient(string apiKey, IWebProxy proxy, StrongGridClientOptions options = null, ILogger logger = null)
-			: base(apiKey, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }), true, options, logger)
+			: base(apiKey, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }), true, options ?? _defaultOptions, logger)
 		{
 			Init();
 		}
@@ -105,7 +111,7 @@ namespace StrongGrid
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
 		public LegacyClient(string apiKey, HttpMessageHandler handler, StrongGridClientOptions options = null, ILogger logger = null)
-			: base(apiKey, new HttpClient(handler), true, options, logger)
+			: base(apiKey, new HttpClient(handler), true, options ?? _defaultOptions, logger)
 		{
 			Init();
 		}
@@ -118,26 +124,9 @@ namespace StrongGrid
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
 		public LegacyClient(string apiKey, HttpClient httpClient, StrongGridClientOptions options = null, ILogger logger = null)
-			: base(apiKey, httpClient, false, options, logger)
+			: base(apiKey, httpClient, false, options ?? _defaultOptions, logger)
 		{
 			Init();
-		}
-
-		#endregion
-
-		#region PUBLIC METHODS
-
-		/// <summary>
-		/// Return the default options.
-		/// </summary>
-		/// <returns>The default options.</returns>
-		public override StrongGridClientOptions GetDefaultOptions()
-		{
-			return new StrongGridClientOptions()
-			{
-				LogLevelSuccessfulCalls = LogLevel.Debug,
-				LogLevelFailedCalls = LogLevel.Debug
-			};
 		}
 
 		#endregion

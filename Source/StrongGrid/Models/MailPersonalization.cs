@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
@@ -13,6 +13,16 @@ namespace StrongGrid.Models
 	/// </summary>
 	public class MailPersonalization
 	{
+		/// <summary>
+		/// Gets or sets the 'From' email address used to deliver the message.
+		/// This address should be a verified sender in your Twilio SendGrid account.
+		/// </summary>
+		/// <value>
+		/// From.
+		/// </value>
+		[JsonProperty("from", NullValueHandling = NullValueHandling.Ignore)]
+		public MailAddress From { get; set; }
+
 		/// <summary>
 		/// Gets or sets an array of recipients.
 		/// Each <see cref="MailAddress"/> object within this array may contain the recipient’s

@@ -227,6 +227,75 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
+		/// Retrieve multiple contacts by ID.
+		/// </summary>
+		/// <param name="contactIds">An enumeration of contact identifiers.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="Contact" />.
+		/// </returns>
+		public Task<Contact[]> GetMultipleAsync(IEnumerable<string> contactIds, CancellationToken cancellationToken = default)
+		{
+			var data = new JObject()
+			{
+				{ "ids", new JArray(contactIds) }
+			};
+
+			return _client
+				.PostAsync($"{_endpoint}/batch")
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsObject<Contact[]>("result");
+		}
+
+		/// <summary>
+		/// Retrieve multiple contacts by email address.
+		/// </summary>
+		/// <param name="emailAdresses">An enumeration of email addresses.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="Contact" />.
+		/// </returns>
+		public async Task<Contact[]> GetMultipleByEmailAddressAsync(IEnumerable<string> emailAdresses, CancellationToken cancellationToken = default)
+		{
+			var data = new JObject()
+			{
+				{ "emails", new JArray(emailAdresses) }
+			};
+
+			var response = await _client
+				.PostAsync($"{_endpoint}/search/emails")
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsResponse()
+				.ConfigureAwait(false);
+
+			// If no contact is found, SendGrid return HTTP 404
+			if (response.Status == HttpStatusCode.NotFound)
+			{
+				return Array.Empty<Contact>();
+			}
+
+			var result = await response.AsRawJsonObject("result").ConfigureAwait(false);
+			var contacts = new List<Contact>();
+#if DEBUG
+			var errors = new List<(string EmailAddress, string ErrorMessage)>();
+#endif
+
+			foreach (var record in result)
+			{
+				var emailAddress = record.Key;
+				var resultValue = (JObject)record.Value;
+				if (resultValue["contact"] != null) contacts.Add(resultValue["contact"].ToObject<Contact>());
+#if DEBUG
+				if (resultValue["error"] != null) errors.Add((emailAddress, resultValue["error"].Value<string>()));
+#endif
+			}
+
+			return contacts.ToArray();
+		}
+
+		/// <summary>
 		/// Searches for contacts matching the specified conditions.
 		/// </summary>
 		/// <remarks>
@@ -316,15 +385,15 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Request all contacts to be exported.
+		/// Import contacts.
 		///
-		/// Use the "job id" returned by this method with the CheckExportJobStatusAsync
-		/// method to verify if the export job is completed.
+		/// Use the "job id" returned by this method with the GetImportJobAsync
+		/// method to verify if the import job is completed.
 		/// </summary>
 		/// <param name="stream">The stream containing the data to import.</param>
-		/// <param name="fileType">File type for export file. Choose from json or csv.</param>
+		/// <param name="fileType">File type for import file. Choose from json or csv.</param>
 		/// <param name="fieldsMapping">List of field_definition IDs to map the uploaded CSV columns to. For example, [null, "w1", "_rf1"] means to skip Col[0], map Col[1] => CustomField w1, map Col[2] => ReservedField _rf1.</param>
-		/// <param name="listIds">Ids of the contact lists you want to export.</param>
+		/// <param name="listIds">All contacts will be added to each of the specified lists.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The job id.
@@ -333,7 +402,7 @@ namespace StrongGrid.Resources
 		{
 			var data = new JObject();
 			data.AddPropertyIfValue("list_ids", listIds);
-			data.AddPropertyIfValue("file_type", fileType);
+			data.AddPropertyIfEnumValue("file_type", (Parameter<FileType>)fileType);
 			data.AddPropertyIfValue("field_mappings", fieldsMapping);
 
 			var importRequest = await _client
@@ -343,15 +412,20 @@ namespace StrongGrid.Resources
 				.AsRawJsonObject()
 				.ConfigureAwait(false);
 
-			var importJobId = importRequest["id"].Value<string>();
-			var uploadUrl = importRequest["upload_url"].Value<string>();
-			var uploadHeaders = importRequest["upload_headers"].Value<KeyValuePair<string, string>[]>();
+			var importJobId = importRequest.GetPropertyValue<string>("job_id");
+			var uploadUrl = importRequest.GetPropertyValue<string>("upload_uri");
+			var uploadHeaders = ((JArray)importRequest["upload_headers"])
+				.Select(hdr => new KeyValuePair<string, string>(hdr.GetPropertyValue<string>("header"), hdr.GetPropertyValue<string>("value")))
+				.ToArray();
 
-			var request = new HttpRequestMessage(HttpMethod.Post, uploadUrl)
+			var request = new HttpRequestMessage(HttpMethod.Put, uploadUrl)
 			{
-				Content = new StreamContent(stream)
+				Content = new StreamContent(await stream.CompressAsync().ConfigureAwait(false))
 			};
-			request.Headers.Clear();
+
+			request.Headers.AcceptEncoding.TryParseAdd("gzip");
+			request.Headers.Add("User-Agent", _client.BaseClient.DefaultRequestHeaders.UserAgent.First().ToString());
+
 			foreach (var header in uploadHeaders)
 			{
 				request.Headers.Add(header.Key, header.Value);
@@ -359,7 +433,8 @@ namespace StrongGrid.Resources
 
 			using (var client = new HttpClient())
 			{
-				await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
+				var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw new SendGridException($"File upload failed: {response.ReasonPhrase}", response, "Diagnostic log unavailable");
 			}
 
 			return importJobId;

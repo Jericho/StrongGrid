@@ -363,6 +363,10 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
+### VisualStudio Patch ###
+# Additional files built by Visual Studio
+*.tlog
+
 # WinMerge
 *.bak
 

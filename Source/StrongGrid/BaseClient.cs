@@ -277,7 +277,7 @@ namespace StrongGrid
 		{
 			_mustDisposeHttpClient = disposeClient;
 			_httpClient = httpClient;
-			_options = options ?? GetDefaultOptions();
+			_options = options;
 			_logger = logger ?? NullLogger.Instance;
 
 			_fluentClient = new FluentClient(new Uri(SENDGRID_V3_BASE_URI), httpClient)
@@ -336,12 +336,6 @@ namespace StrongGrid
 		#endregion
 
 		#region PUBLIC METHODS
-
-		/// <summary>
-		/// When overridden in a derived class, returns the default options.
-		/// </summary>
-		/// <returns>The default options.</returns>
-		public abstract StrongGridClientOptions GetDefaultOptions();
 
 		/// <summary>
 		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.

@@ -27,6 +27,7 @@ namespace StrongGrid.IntegrationTests.Tests
 			{
 				new MailPersonalization
 				{
+					From = new MailAddress("alternate_sender@example.com", "Alternate Sender"),
 					To = new[] { to1, to1 },
 					Cc = new[] { to1 },
 					Bcc = new[] { to1 },

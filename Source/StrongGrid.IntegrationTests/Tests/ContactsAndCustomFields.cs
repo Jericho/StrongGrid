@@ -84,6 +84,20 @@ namespace StrongGrid.IntegrationTests.Tests
 
 			if (contacts.Any())
 			{
+				var batchById = await client.Contacts.GetMultipleAsync(contacts.Take(10).Select(c => c.Id), cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"Retrieved {batchById.Length} contacts by ID in a single API call.").ConfigureAwait(false);
+				foreach (var record in batchById)
+				{
+					await log.WriteLineAsync($"\t{record.FirstName} {record.LastName}").ConfigureAwait(false);
+				}
+
+				var batchByEmailAddress = await client.Contacts.GetMultipleByEmailAddressAsync(contacts.Take(10).Select(c => c.Email), cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"Retrieved {batchByEmailAddress.Length} contacts by email address in a single API call.").ConfigureAwait(false);
+				foreach (var record in batchByEmailAddress)
+				{
+					await log.WriteLineAsync($"\t{record.FirstName} {record.LastName}").ConfigureAwait(false);
+				}
+
 				var contact = await client.Contacts.GetAsync(contacts.First().Id).ConfigureAwait(false);
 				await log.WriteLineAsync($"Retrieved contact {contact.Id}").ConfigureAwait(false);
 				await log.WriteLineAsync($"\tEmail: {contact.Email}").ConfigureAwait(false);
