@@ -2,12 +2,13 @@
 #tool dotnet:?package=GitVersion.Tool&version=5.6.6
 #tool nuget:?package=GitReleaseManager&version=0.11.0
 #tool nuget:?package=OpenCover&version=4.7.922
-#tool nuget:?package=ReportGenerator&version=4.8.7
+#tool nuget:?package=ReportGenerator&version=4.8.8
 #tool nuget:?package=coveralls.io&version=1.4.2
 #tool nuget:?package=xunit.runner.console&version=2.4.1
 
 // Install addins.
 #addin nuget:?package=Cake.Coveralls&version=1.0.1
+#addin nuget:?package=Cake.Git&version=1.0.1
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,10 +18,8 @@
 var target = Argument<string>("target", "Default");
 var configuration = Argument<string>("configuration", "Release");
 
-if (target == "AppVeyor" && IsRunningOnUnix())
-{
-	target = "AppVeyor-Ubuntu";
-}
+if (IsRunningOnUnix()) target = "Run-Unit-Tests";
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // GLOBAL VARIABLES
@@ -123,10 +122,27 @@ Setup(context =>
 			string.IsNullOrEmpty(gitHubPassword) ? "[NULL]" : new string('*', gitHubPassword.Length)
 		);
 	}
+
+	// Integration tests are intended to be used for debugging purposes and not intended to be executed in CI environment.
+	// Also, the runner for these tests contains windows-specific code (such as resizing window, moving window to center of screen, etc.)
+	// which can cause problems when attempting to run unit tests on an Ubuntu image on AppVeyor.
+	if (IsRunningOnUnix())
+	{
+		Information("");
+		Information("Removing integration tests");
+		DotNetCoreTool(solutionFile, "sln", $"remove {integrationTestsProject.TrimStart(sourceFolder, StringComparison.OrdinalIgnoreCase)}");
+	}
 });
 
 Teardown(context =>
 {
+	if (IsRunningOnUnix())
+	{
+		Information("Restoring integration tests");
+		GitCheckout(".", new FilePath[] { solutionFile });
+		Information("");
+	}
+
 	// Executed AFTER the last task.
 	Information("Finished running tasks.");
 });
@@ -147,28 +163,8 @@ Task("AppVeyor-Build_Number")
 	});
 });
 
-Task("Remove-Integration-Tests")
-	.WithCriteria(() => AppVeyor.IsRunningOnAppVeyor)
-	.Does(() =>
-{
-	// Integration tests are intended to be used for debugging purposes and not intended to be executed in CI environment.
-	// Also, the runner for these tests contains windows-specific code (such as resizing window, moving window to center of screen, etc.)
-	// which can cause problems when attempting to run unit tests on an Ubuntu image on AppVeyor.
-
-	Information("Here are the projects in the solution before removing integration tests:");
-	DotNetCoreTool(solutionFile, "sln", "list");
-	Information("");
-
-	DotNetCoreTool(solutionFile, "sln", $"remove {integrationTestsProject.TrimStart(sourceFolder, StringComparison.OrdinalIgnoreCase)}");
-	Information("");
-
-	Information("Here are the projects in the solution after removing integration tests:");
-	DotNetCoreTool(solutionFile, "sln", "list");
-});
-
 Task("Clean")
 	.IsDependentOn("AppVeyor-Build_Number")
-	.IsDependentOn("Remove-Integration-Tests")
 	.Does(() =>
 {
 	// Clean solution directories.

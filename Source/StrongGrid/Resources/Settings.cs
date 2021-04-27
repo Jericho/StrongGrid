@@ -18,7 +18,6 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class Settings : ISettings
 	{
-		private const string _endpoint = "settings";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
