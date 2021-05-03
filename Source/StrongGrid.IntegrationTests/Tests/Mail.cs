@@ -111,6 +111,7 @@ namespace StrongGrid.IntegrationTests.Tests
 				customArgs: customArgs,
 				mailSettings: mailSettings,
 				trackingSettings: trackingSettings,
+				priority: MailPriority.High,
 				cancellationToken: cancellationToken
 			).ConfigureAwait(false);
 			await log.WriteLineAsync($"Email has been sent. Message Id: {messageId}").ConfigureAwait(false);

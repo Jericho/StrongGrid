@@ -24,6 +24,56 @@ namespace StrongGrid.Resources
 		private const int MAX_EMAIL_SIZE = 30 * 1024 * 1024;
 
 		private const string _endpoint = "mail";
+
+		// The following values are documented here: https://docs.microsoft.com/en-us/openspecs/exchange_server_protocols/ms-oxcmail/2bb19f1b-b35e-4966-b1cb-1afd044e83ab
+		// X-Priority:
+		//   - a number from 1 to 5 where 1 corresponds to "high" and 5 corresponds to "low"
+		// Priority:
+		//   - Urgent
+		//   - Normal
+		//   - Non-Urgent
+		// Importance:
+		//   - High
+		//   - Normal
+		//   - Low
+		// X-MSMail-Priority:
+		//   - High
+		//   - Normal
+		//   - Low
+		private static readonly IDictionary<MailPriority, KeyValuePair<string, string>[]> _priorityHeaders = new Dictionary<MailPriority, KeyValuePair<string, string>[]>()
+		{
+			{
+				MailPriority.High,
+				new[]
+				{
+					new KeyValuePair<string, string>("X-Priority", "1"),
+					new KeyValuePair<string, string>("Priority", "urgent"),
+					new KeyValuePair<string, string>("Importance", "high"),
+					new KeyValuePair<string, string>("X-MSMail-Priority", "high")
+				}
+			},
+			{
+				MailPriority.Normal,
+				new[]
+				{
+					new KeyValuePair<string, string>("X-Priority", "3"),
+					new KeyValuePair<string, string>("Priority", "normal"),
+					new KeyValuePair<string, string>("Importance", "normal"),
+					new KeyValuePair<string, string>("X-MSMail-Priority", "normal")
+				}
+			},
+			{
+				MailPriority.Low,
+				new[]
+				{
+					new KeyValuePair<string, string>("X-Priority", "5"),
+					new KeyValuePair<string, string>("Priority", "non-urgent"),
+					new KeyValuePair<string, string>("Importance", "low"),
+					new KeyValuePair<string, string>("X-MSMail-Priority", "low")
+				}
+			}
+		};
+
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
@@ -176,25 +226,13 @@ namespace StrongGrid.Resources
 				data.Add("sections", sctns);
 			}
 
-			if (priority == MailPriority.Low)
+			if (_priorityHeaders.TryGetValue(priority, out KeyValuePair<string, string>[] priorityHeaders))
 			{
-				var lowPriorityHeaders = new KeyValuePair<string, string>[]
-				{
-					new KeyValuePair<string, string>("X-Priority", "5"),
-					new KeyValuePair<string, string>("Priority", "non-urgent"),
-					new KeyValuePair<string, string>("Importance", "low")
-				};
-				headers = headers == null ? lowPriorityHeaders : headers.Concat(lowPriorityHeaders);
+				headers = (headers ?? Array.Empty<KeyValuePair<string, string>>()).Concat(priorityHeaders);
 			}
-			else if (priority == MailPriority.High)
+			else
 			{
-				var highPriorityHeaders = new KeyValuePair<string, string>[]
-				{
-					new KeyValuePair<string, string>("X-Priority", "1"),
-					new KeyValuePair<string, string>("Priority", "urgent"),
-					new KeyValuePair<string, string>("Importance", "high")
-				};
-				headers = headers == null ? highPriorityHeaders : headers.Concat(highPriorityHeaders);
+				throw new Exception($"{priority} is an unknown priority");
 			}
 
 			if (headers != null && headers.Any())
