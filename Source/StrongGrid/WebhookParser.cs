@@ -109,9 +109,6 @@ namespace StrongGrid
 				The 'ECDsa.ImportSubjectPublicKeyInfo' method was introduced in .NET core 3.0
 				and the DSASignatureFormat enum was introduced in .NET 5.0.
 
-				We can get rid of the code that relies on ECDsaCng and remove reference to
-				System.Security.Cryptography.Cng in csproj when we drop support for net461.
-
 				We can get rid of the 'ConvertECDSASignature' class and the Utils methods that
 				convert public keys when we stop suporting .NET framework and .NET standard.
 
@@ -120,10 +117,6 @@ namespace StrongGrid
 				on their Ubuntu image because it's still on NET SDK 5.0.101. That's why I added
 				the seemingly redundant "NET5_0" in the conditional block below. It will be safe
 				to remove it when the SDK in AppVeyor's Ubuntu image is upgraded.
-
-				Note:
-					ECDsa is cross-platform and can be used on Windows and Linux/Ubuntu.
-					ECDsaCng is Windows only.
 			*/
 
 #if NET5_0 || NET5_0_OR_GREATER
@@ -131,7 +124,7 @@ namespace StrongGrid
 			var eCDsa = ECDsa.Create();
 			eCDsa.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
 			var verified = eCDsa.VerifyData(data, signatureBytes, HashAlgorithmName.SHA256, DSASignatureFormat.Rfc3279DerSequence);
-#elif NET472_OR_GREATER || NETSTANDARD2_0
+#elif NET48_OR_GREATER || NETSTANDARD2_1
 			// Convert the signature and public key provided by SendGrid into formats usable by the ECDsa .net crypto class
 			var sig = ConvertECDSASignature.LightweightConvertSignatureFromX9_62ToISO7816_8(256, signatureBytes);
 			var (x, y) = Utils.GetXYFromSecp256r1PublicKey(publicKeyBytes);
@@ -148,15 +141,6 @@ namespace StrongGrid
 				}
 			});
 			var verified = eCDsa.VerifyData(data, sig, HashAlgorithmName.SHA256);
-#elif NETFRAMEWORK
-			// Convert the signature and public key provided by SendGrid into formats usable by the ECDsaCng .net crypto class
-			var sig = ConvertECDSASignature.LightweightConvertSignatureFromX9_62ToISO7816_8(256, signatureBytes);
-			var cngBlob = Utils.ConvertSecp256R1PublicKeyToEccPublicBlob(publicKeyBytes);
-
-			// Verify the signature
-			var cngKey = CngKey.Import(cngBlob, CngKeyBlobFormat.EccPublicBlob);
-			var eCDsaCng = new ECDsaCng(cngKey);
-			var verified = eCDsaCng.VerifyData(data, sig);
 #else
 #error Unhandled TFM
 #endif
