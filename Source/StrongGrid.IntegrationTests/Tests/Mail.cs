@@ -67,12 +67,6 @@ namespace StrongGrid.IntegrationTests.Tests
 				{
 					Enabled = false
 				},
-				SpamChecking = new SpamCheckingSettings
-				{
-					Enabled = false,
-					Threshold = 1,
-					PostToUrl = "http://whatever.com"
-				},
 				Footer = new FooterSettings
 				{
 					Enabled = true,

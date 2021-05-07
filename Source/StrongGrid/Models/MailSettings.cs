@@ -33,14 +33,5 @@ namespace StrongGrid.Models
 		/// </value>
 		[JsonProperty("sandbox_mode", NullValueHandling = NullValueHandling.Ignore)]
 		public SandboxModeSettings SandboxMode { get; set; }
-
-		/// <summary>
-		/// Gets or sets the spam checking.
-		/// </summary>
-		/// <value>
-		/// The spam checking.
-		/// </value>
-		[JsonProperty("spam_check", NullValueHandling = NullValueHandling.Ignore)]
-		public SpamCheckingSettings SpamChecking { get; set; }
 	}
 }
