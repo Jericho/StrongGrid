@@ -191,6 +191,16 @@ namespace StrongGrid.Resources
 			var isDynamicTemplate = Template.IsDynamic(templateId);
 			var personalizationConverter = new MailPersonalizationConverter(isDynamicTemplate);
 
+			// Manually serialize the MailSettings object because the shape of the C# class does not match the shape of the desired JSON.
+			// The C# class was intentionaly simplified to improve developers experience.
+			var mailSettingsJsonObject = new JObject();
+			mailSettingsJsonObject.AddPropertyIfValue("bypass_list_management/enable", mailSettings.BypassListManagement);
+			mailSettingsJsonObject.AddPropertyIfValue("bypass_spam_management/enable", mailSettings.BypassSpamManagement);
+			mailSettingsJsonObject.AddPropertyIfValue("bypass_bounce_management/enable", mailSettings.BypassBounceManagement);
+			mailSettingsJsonObject.AddPropertyIfValue("bypass_unsubscribe_management/enable", mailSettings.BypassUnsubscribeManagement);
+			mailSettingsJsonObject.AddPropertyIfValue("footer", mailSettings.Footer);
+			mailSettingsJsonObject.AddPropertyIfValue("sandbox_mode/enable", mailSettings.SandboxModeEnabled);
+
 			var data = new JObject();
 			data.AddPropertyIfValue("from", from);
 			data.AddPropertyIfValue("reply_to", replyTo);
@@ -203,7 +213,7 @@ namespace StrongGrid.Resources
 			data.AddPropertyIfValue("batch_id", batchId);
 			data.AddPropertyIfValue("asm", unsubscribeOptions);
 			data.AddPropertyIfValue("ip_pool_name", ipPoolName);
-			data.AddPropertyIfValue("mail_settings", mailSettings);
+			data.AddPropertyIfValue("mail_settings", mailSettingsJsonObject);
 			data.AddPropertyIfValue("tracking_settings", trackingSettings);
 			data.AddPropertyIfValue("personalizations", personalizationsCopy, personalizationConverter);
 

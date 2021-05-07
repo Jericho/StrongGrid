@@ -59,14 +59,7 @@ namespace StrongGrid.IntegrationTests.Tests
 			};
 			var mailSettings = new MailSettings
 			{
-				SandboxMode = new SandboxModeSettings
-				{
-					Enabled = true
-				},
-				BypassListManagement = new BypassListManagementSettings
-				{
-					Enabled = false
-				},
+				SandboxModeEnabled = true,
 				Footer = new FooterSettings
 				{
 					Enabled = true,

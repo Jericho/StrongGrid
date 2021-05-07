@@ -310,6 +310,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SpamCheckingSettings" />.
 		/// </returns>
+		[Obsolete("As of august 2020, SendGrid has retired Spam Check mail settings.")]
 		Task<SpamCheckSettings> GetSpamCheckMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
@@ -323,6 +324,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SpamCheckingSettings" />.
 		/// </returns>
+		[Obsolete("As of august 2020, SendGrid has retired Spam Check mail settings.")]
 		Task<SpamCheckSettings> UpdateSpamCheckMailSettingsAsync(bool enabled, string postToUrl, int threshold, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
