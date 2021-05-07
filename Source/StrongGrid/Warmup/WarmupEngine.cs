@@ -88,7 +88,6 @@ namespace StrongGrid.Warmup
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
 		/// <param name="templateId">The template identifier.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -112,7 +111,6 @@ namespace StrongGrid.Warmup
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
 			string templateId = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -217,7 +215,6 @@ namespace StrongGrid.Warmup
 					replyTo,
 					attachments,
 					templateId,
-					sections,
 					headers,
 					categories,
 					customArgs,
@@ -239,7 +236,6 @@ namespace StrongGrid.Warmup
 					replyTo,
 					attachments,
 					templateId,
-					sections,
 					headers,
 					categories,
 					customArgs,
@@ -284,7 +280,6 @@ namespace StrongGrid.Warmup
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
 			string templateId = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -311,7 +306,6 @@ namespace StrongGrid.Warmup
 					replyTo,
 					attachments,
 					templateId,
-					sections,
 					headers,
 					categories,
 					customArgs,

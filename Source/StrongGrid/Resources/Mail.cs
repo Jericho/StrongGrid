@@ -95,7 +95,6 @@ namespace StrongGrid.Resources
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
 		/// <param name="templateId">The template identifier.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -120,7 +119,6 @@ namespace StrongGrid.Resources
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
 			string templateId = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -214,17 +212,6 @@ namespace StrongGrid.Resources
 			data.AddPropertyIfValue("mail_settings", mailSettings);
 			data.AddPropertyIfValue("tracking_settings", trackingSettings);
 			data.AddPropertyIfValue("personalizations", personalizationsCopy, personalizationConverter);
-
-			if (sections != null && sections.Any())
-			{
-				var sctns = new JObject();
-				foreach (var section in sections)
-				{
-					sctns.Add(section.Key, section.Value);
-				}
-
-				data.Add("sections", sctns);
-			}
 
 			if (_priorityHeaders.TryGetValue(priority, out KeyValuePair<string, string>[] priorityHeaders))
 			{
