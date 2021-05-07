@@ -188,12 +188,6 @@ namespace StrongGrid.Resources
 			numberOfRecipients += personalizationsCopy.Sum(p => p.Bcc?.Count(r => r != null) ?? 0);
 			if (numberOfRecipients >= 1000) throw new ArgumentOutOfRangeException(nameof(numberOfRecipients), numberOfRecipients, "The total number of recipients must be less than 1000");
 
-			// SendGrid throws an unhelpful error when the Bcc email address is an empty string
-			if (mailSettings?.Bcc != null && string.IsNullOrWhiteSpace(mailSettings.Bcc.EmailAddress))
-			{
-				mailSettings.Bcc.EmailAddress = null;
-			}
-
 			var isDynamicTemplate = Template.IsDynamic(templateId);
 			var personalizationConverter = new MailPersonalizationConverter(isDynamicTemplate);
 

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace StrongGrid.Models
 {
@@ -7,15 +7,6 @@ namespace StrongGrid.Models
 	/// </summary>
 	public class MailSettings
 	{
-		/// <summary>
-		/// Gets or sets the BCC.
-		/// </summary>
-		/// <value>
-		/// The BCC.
-		/// </value>
-		[JsonProperty("bcc", NullValueHandling = NullValueHandling.Ignore)]
-		public BccSettings Bcc { get; set; }
-
 		/// <summary>
 		/// Gets or sets the bypass list management.
 		/// </summary>

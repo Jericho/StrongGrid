@@ -63,11 +63,6 @@ namespace StrongGrid.IntegrationTests.Tests
 				{
 					Enabled = true
 				},
-				Bcc = new BccSettings
-				{
-					Enabled = true,
-					EmailAddress = "recipient3@mailinator.com"
-				},
 				BypassListManagement = new BypassListManagementSettings
 				{
 					Enabled = false

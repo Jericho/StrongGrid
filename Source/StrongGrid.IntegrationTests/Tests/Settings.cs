@@ -33,6 +33,16 @@ namespace StrongGrid.IntegrationTests.Tests
 				await log.WriteLineAsync($"  - {mailSetting.Title}: {(mailSetting.Enabled ? "Enabled" : "Not enabled")}").ConfigureAwait(false);
 			}
 
+			var bccSettings = await client.Settings.GetBccMailSettingsAsync(null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("BCC settings retrieved:").ConfigureAwait(false);
+			await log.WriteLineAsync($"  - Enabled: {bccSettings.Enabled}").ConfigureAwait(false);
+			await log.WriteLineAsync($"  - Address: {bccSettings.EmailAddress}").ConfigureAwait(false);
+
+			var updatedBccSettings = await client.Settings.UpdateBccMailSettingsAsync(false, null, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("BCC settings updated:").ConfigureAwait(false);
+			await log.WriteLineAsync($"  - Enabled: {updatedBccSettings.Enabled}").ConfigureAwait(false);
+			await log.WriteLineAsync($"  - Address: {updatedBccSettings.EmailAddress}").ConfigureAwait(false);
+
 			var clickTrackingSettings = await client.Settings.GetClickTrackingSettingsAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("Click tracking settings retrieved:").ConfigureAwait(false);
 			await log.WriteLineAsync($"  - Enabled in text content: {clickTrackingSettings.EnabledInTextContent}").ConfigureAwait(false);

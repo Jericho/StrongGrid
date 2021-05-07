@@ -1,5 +1,6 @@
 using StrongGrid.Models;
 using StrongGrid.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -197,6 +198,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="EmailAddressSetting" />.
 		/// </returns>
+		[Obsolete("As of august 2020, SendGrid has retired BCC mail settings.")]
 		Task<EmailAddressSetting> GetBccMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
@@ -209,6 +211,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="EmailAddressSetting" />.
 		/// </returns>
+		[Obsolete("As of august 2020, SendGrid has retired BCC mail settings.")]
 		Task<EmailAddressSetting> UpdateBccMailSettingsAsync(bool enabled, string email, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
