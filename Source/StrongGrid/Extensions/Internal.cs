@@ -295,16 +295,16 @@ namespace StrongGrid
 		internal static IRequest WithJsonBody<T>(this IRequest request, T body, bool omitCharSet = false)
 		{
 			return request.WithBody(bodyBuilder =>
-		{
-			var httpContent = bodyBuilder.Model(body, new MediaTypeHeaderValue("application/json"));
-
-			if (omitCharSet && !string.IsNullOrEmpty(httpContent.Headers.ContentType.CharSet))
 			{
-				httpContent.Headers.ContentType.CharSet = string.Empty;
-			}
+				var httpContent = bodyBuilder.Model(body, new MediaTypeHeaderValue("application/json"));
 
-			return httpContent;
-		});
+				if (omitCharSet && !string.IsNullOrEmpty(httpContent.Headers.ContentType.CharSet))
+				{
+					httpContent.Headers.ContentType.CharSet = string.Empty;
+				}
+
+				return httpContent;
+			});
 		}
 
 		/// <summary>
