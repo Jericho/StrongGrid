@@ -59,25 +59,7 @@ namespace StrongGrid.IntegrationTests.Tests
 			};
 			var mailSettings = new MailSettings
 			{
-				SandboxMode = new SandboxModeSettings
-				{
-					Enabled = true
-				},
-				Bcc = new BccSettings
-				{
-					Enabled = true,
-					EmailAddress = "recipient3@mailinator.com"
-				},
-				BypassListManagement = new BypassListManagementSettings
-				{
-					Enabled = false
-				},
-				SpamChecking = new SpamCheckingSettings
-				{
-					Enabled = false,
-					Threshold = 1,
-					PostToUrl = "http://whatever.com"
-				},
+				SandboxModeEnabled = true,
 				Footer = new FooterSettings
 				{
 					Enabled = true,

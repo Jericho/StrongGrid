@@ -30,7 +30,6 @@ namespace StrongGrid
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -63,7 +62,6 @@ namespace StrongGrid
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -76,7 +74,7 @@ namespace StrongGrid
 			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
-			return mailResource.SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, priority, cancellationToken);
+			return mailResource.SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -95,7 +93,6 @@ namespace StrongGrid
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -129,7 +126,6 @@ namespace StrongGrid
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -142,7 +138,7 @@ namespace StrongGrid
 			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
-			return mailResource.SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, templateId, substitutions, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, priority, cancellationToken);
+			return mailResource.SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, templateId, substitutions, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -158,7 +154,6 @@ namespace StrongGrid
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -189,7 +184,6 @@ namespace StrongGrid
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -202,7 +196,7 @@ namespace StrongGrid
 			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
-			return mailResource.SendToMultipleRecipientsAsync(recipients, from, dynamicTemplateId, dynamicData, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, priority, cancellationToken);
+			return mailResource.SendToMultipleRecipientsAsync(recipients, from, dynamicTemplateId, dynamicData, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -220,7 +214,6 @@ namespace StrongGrid
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -254,7 +247,6 @@ namespace StrongGrid
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -267,7 +259,7 @@ namespace StrongGrid
 			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
-			return mailResource.SendAmpEmailToMultipleRecipientsAsync(recipients, from, subject, ampContent, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, priority, cancellationToken);
+			return mailResource.SendAmpEmailToMultipleRecipientsAsync(recipients, from, subject, ampContent, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -284,7 +276,6 @@ namespace StrongGrid
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -316,7 +307,6 @@ namespace StrongGrid
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -352,7 +342,7 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return mailResource.SendAsync(personalizations, subject, contents, from, replyTo, attachments, null, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
+			return mailResource.SendAsync(personalizations, subject, contents, from, replyTo, attachments, null, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -371,7 +361,6 @@ namespace StrongGrid
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -405,7 +394,6 @@ namespace StrongGrid
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -442,7 +430,7 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return mailResource.SendAsync(personalizations, subject, contents, from, replyTo, attachments, templateId, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
+			return mailResource.SendAsync(personalizations, subject, contents, from, replyTo, attachments, templateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -458,7 +446,6 @@ namespace StrongGrid
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -489,7 +476,6 @@ namespace StrongGrid
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -527,7 +513,7 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return mailResource.SendAsync(personalizations, null, null, from, replyTo, attachments, dynamicTemplateId, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
+			return mailResource.SendAsync(personalizations, null, null, from, replyTo, attachments, dynamicTemplateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -545,7 +531,6 @@ namespace StrongGrid
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -578,7 +563,6 @@ namespace StrongGrid
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -615,7 +599,7 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return mailResource.SendAsync(personalizations, subject, contents, from, replyTo, attachments, null, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
+			return mailResource.SendAsync(personalizations, subject, contents, from, replyTo, attachments, null, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -632,7 +616,6 @@ namespace StrongGrid
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -664,7 +647,6 @@ namespace StrongGrid
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -676,7 +658,7 @@ namespace StrongGrid
 			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
-			return warmupEngine.SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, priority, cancellationToken);
+			return warmupEngine.SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -695,7 +677,6 @@ namespace StrongGrid
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -728,7 +709,6 @@ namespace StrongGrid
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -740,7 +720,7 @@ namespace StrongGrid
 			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
-			return warmupEngine.SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, templateId, substitutions, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, priority, cancellationToken);
+			return warmupEngine.SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, templateId, substitutions, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -756,7 +736,6 @@ namespace StrongGrid
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -786,7 +765,6 @@ namespace StrongGrid
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -798,7 +776,7 @@ namespace StrongGrid
 			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
-			return warmupEngine.SendToMultipleRecipientsAsync(recipients, from, dynamicTemplateId, dynamicData, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, priority, cancellationToken);
+			return warmupEngine.SendToMultipleRecipientsAsync(recipients, from, dynamicTemplateId, dynamicData, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -815,7 +793,6 @@ namespace StrongGrid
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -846,7 +823,6 @@ namespace StrongGrid
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -881,7 +857,7 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return warmupEngine.SendAsync(personalizations, subject, contents, from, replyTo, attachments, null, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
+			return warmupEngine.SendAsync(personalizations, subject, contents, from, replyTo, attachments, null, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -900,7 +876,6 @@ namespace StrongGrid
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -933,7 +908,6 @@ namespace StrongGrid
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -969,7 +943,7 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return warmupEngine.SendAsync(personalizations, subject, contents, from, replyTo, attachments, templateId, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
+			return warmupEngine.SendAsync(personalizations, subject, contents, from, replyTo, attachments, templateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -985,7 +959,6 @@ namespace StrongGrid
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -1015,7 +988,6 @@ namespace StrongGrid
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -1052,7 +1024,7 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return warmupEngine.SendAsync(personalizations, null, null, from, replyTo, attachments, dynamicTemplateId, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
+			return warmupEngine.SendAsync(personalizations, null, null, from, replyTo, attachments, dynamicTemplateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>

@@ -2,6 +2,7 @@ using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -369,6 +370,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="EmailAddressSetting" />.
 		/// </returns>
+		[Obsolete("As of august 2020, SendGrid has retired BCC mail settings.")]
 		public Task<EmailAddressSetting> GetBccMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
@@ -388,6 +390,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="EmailAddressSetting" />.
 		/// </returns>
+		[Obsolete("As of august 2020, SendGrid has retired BCC mail settings.")]
 		public Task<EmailAddressSetting> UpdateBccMailSettingsAsync(bool enabled, string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var bccMailSettings = new EmailAddressSetting
@@ -583,6 +586,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SpamCheckingSettings" />.
 		/// </returns>
+		[Obsolete("As of august 2020, SendGrid has retired Spam Check mail settings.")]
 		public Task<SpamCheckSettings> GetSpamCheckMailSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
@@ -603,6 +607,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="SpamCheckingSettings" />.
 		/// </returns>
+		[Obsolete("As of august 2020, SendGrid has retired Spam Check mail settings.")]
 		public Task<SpamCheckSettings> UpdateSpamCheckMailSettingsAsync(bool enabled, string postToUrl, int threshold, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var spamCheckMailSettings = new SpamCheckSettings
