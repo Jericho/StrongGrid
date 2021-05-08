@@ -188,19 +188,18 @@ namespace StrongGrid.Resources
 			numberOfRecipients += personalizationsCopy.Sum(p => p.Bcc?.Count(r => r != null) ?? 0);
 			if (numberOfRecipients >= 1000) throw new ArgumentOutOfRangeException(nameof(numberOfRecipients), numberOfRecipients, "The total number of recipients must be less than 1000");
 
-			var isDynamicTemplate = Template.IsDynamic(templateId);
-			var personalizationConverter = new MailPersonalizationConverter(isDynamicTemplate);
+			// Get the priority headers
+			if (!_priorityHeaders.TryGetValue(priority, out KeyValuePair<string, string>[] priorityHeaders))
+			{
+				throw new Exception($"{priority} is an unknown priority");
+			}
 
-			// Manually serialize the MailSettings object because the shape of the C# class does not match the shape of the desired JSON.
-			// The C# class was intentionaly simplified to improve developers experience.
-			var mailSettingsJsonObject = new JObject();
-			mailSettingsJsonObject.AddPropertyIfValue("bypass_list_management/enable", mailSettings.BypassListManagement);
-			mailSettingsJsonObject.AddPropertyIfValue("bypass_spam_management/enable", mailSettings.BypassSpamManagement);
-			mailSettingsJsonObject.AddPropertyIfValue("bypass_bounce_management/enable", mailSettings.BypassBounceManagement);
-			mailSettingsJsonObject.AddPropertyIfValue("bypass_unsubscribe_management/enable", mailSettings.BypassUnsubscribeManagement);
-			mailSettingsJsonObject.AddPropertyIfValue("footer", mailSettings.Footer);
-			mailSettingsJsonObject.AddPropertyIfValue("sandbox_mode/enable", mailSettings.SandboxModeEnabled);
+			// Combine headers with priority headers making sure not to duplicate priority headers
+			var combinedHeaders = (headers ?? Array.Empty<KeyValuePair<string, string>>())
+				.Where(kvp => !priorityHeaders.Any(p => p.Key.Equals(kvp.Key, StringComparison.OrdinalIgnoreCase)))
+				.Concat(priorityHeaders);
 
+			// Serialize the mail message
 			var data = new JObject();
 			data.AddPropertyIfValue("from", from);
 			data.AddPropertyIfValue("reply_to", replyTo);
@@ -213,45 +212,17 @@ namespace StrongGrid.Resources
 			data.AddPropertyIfValue("batch_id", batchId);
 			data.AddPropertyIfValue("asm", unsubscribeOptions);
 			data.AddPropertyIfValue("ip_pool_name", ipPoolName);
-			data.AddPropertyIfValue("mail_settings", mailSettingsJsonObject);
+			data.AddPropertyIfValue("mail_settings", mailSettings);
 			data.AddPropertyIfValue("tracking_settings", trackingSettings);
-			data.AddPropertyIfValue("personalizations", personalizationsCopy, personalizationConverter);
-
-			if (_priorityHeaders.TryGetValue(priority, out KeyValuePair<string, string>[] priorityHeaders))
-			{
-				headers = (headers ?? Array.Empty<KeyValuePair<string, string>>()).Concat(priorityHeaders);
-			}
-			else
-			{
-				throw new Exception($"{priority} is an unknown priority");
-			}
-
-			if (headers != null && headers.Any())
-			{
-				var hdrs = new JObject();
-				foreach (var header in headers)
-				{
-					hdrs.Add(header.Key, header.Value);
-				}
-
-				data.Add("headers", hdrs);
-			}
-
-			if (customArgs != null && customArgs.Any())
-			{
-				var args = new JObject();
-				foreach (var customArg in customArgs)
-				{
-					args.Add(customArg.Key, customArg.Value);
-				}
-
-				data.Add("custom_args", args);
-			}
+			data.AddPropertyIfValue("personalizations", personalizationsCopy, new MailPersonalizationConverter(Template.IsDynamic(templateId)));
+			data.AddPropertyIfValue("headers", ConvertEnumerationToJObject(combinedHeaders));
+			data.AddPropertyIfValue("custom_args", ConvertEnumerationToJObject(customArgs));
 
 			// SendGrid does not allow emails that exceed 30MB
 			var contentSize = JsonConvert.SerializeObject(data, Formatting.None).Length;
 			if (contentSize > MAX_EMAIL_SIZE) throw new Exception("Email exceeds the size limit");
 
+			// Send the request
 			var response = await _client
 				.PostAsync($"{_endpoint}/send")
 				.WithJsonBody(data)
@@ -259,6 +230,7 @@ namespace StrongGrid.Resources
 				.AsResponse()
 				.ConfigureAwait(false);
 
+			// Get the messageId from the response
 			if (response.Message.Headers.TryGetValues("X-Message-Id", out IEnumerable<string> values))
 			{
 				return values?.FirstOrDefault();
@@ -287,6 +259,19 @@ namespace StrongGrid.Resources
 				.Union(recipientsNameDoesNotContainComma)
 				.Union(recipientsWithoutName)
 				.ToArray();
+		}
+
+		private static JObject ConvertEnumerationToJObject(IEnumerable<KeyValuePair<string, string>> items)
+		{
+			if (items == null || !items.Any()) return null;
+
+			var obj = new JObject();
+			foreach (var item in items)
+			{
+				obj.Add(item.Key, item.Value);
+			}
+
+			return obj;
 		}
 	}
 }

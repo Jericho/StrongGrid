@@ -1,8 +1,12 @@
+using Newtonsoft.Json;
+using StrongGrid.Utilities;
+
 namespace StrongGrid.Models
 {
 	/// <summary>
 	/// Mail settings.
 	/// </summary>
+	[JsonConverter(typeof(MailSettingsConverter))]
 	public class MailSettings
 	{
 		/// <summary>
