@@ -36,7 +36,7 @@ namespace StrongGrid
 
 		#region CTOR
 
-#if NETSTANDARD2_0 || NET5_0_OR_GREATER
+#if NETSTANDARD2_1 || NET5_0_OR_GREATER
 		static WebhookParser()
 		{
 			Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -119,7 +119,7 @@ namespace StrongGrid
 				to remove it when the SDK in AppVeyor's Ubuntu image is upgraded.
 			*/
 
-#if NET5_0 || NET5_0_OR_GREATER
+#if NET5_0_OR_GREATER
 			// Verify the signature
 			var eCDsa = ECDsa.Create();
 			eCDsa.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
