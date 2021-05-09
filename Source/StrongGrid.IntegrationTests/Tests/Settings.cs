@@ -33,6 +33,28 @@ namespace StrongGrid.IntegrationTests.Tests
 				await log.WriteLineAsync($"  - {mailSetting.Title}: {(mailSetting.Enabled ? "Enabled" : "Not enabled")}").ConfigureAwait(false);
 			}
 
+			var spamCheckSettings = await client.Settings.GetSpamCheckMailSettingsAsync(null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("SPAM Check settings retrieved:").ConfigureAwait(false);
+			await log.WriteLineAsync($"  - Enabled: {spamCheckSettings.Enabled}").ConfigureAwait(false);
+			await log.WriteLineAsync($"  - Threshold: {spamCheckSettings.Threshold}").ConfigureAwait(false);
+			await log.WriteLineAsync($"  - URL: {spamCheckSettings.Url}").ConfigureAwait(false);
+
+			var updatedSpamCheckSettings = await client.Settings.UpdateSpamCheckMailSettingsAsync(false, null, 1, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("SPAM Check settings updated:").ConfigureAwait(false);
+			await log.WriteLineAsync($"  - Enabled: {updatedSpamCheckSettings.Enabled}").ConfigureAwait(false);
+			await log.WriteLineAsync($"  - Threshold: {updatedSpamCheckSettings.Threshold}").ConfigureAwait(false);
+			await log.WriteLineAsync($"  - URL: {updatedSpamCheckSettings.Url}").ConfigureAwait(false);
+
+			var bccSettings = await client.Settings.GetBccMailSettingsAsync(null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("BCC settings retrieved:").ConfigureAwait(false);
+			await log.WriteLineAsync($"  - Enabled: {bccSettings.Enabled}").ConfigureAwait(false);
+			await log.WriteLineAsync($"  - Address: {bccSettings.EmailAddress}").ConfigureAwait(false);
+
+			var updatedBccSettings = await client.Settings.UpdateBccMailSettingsAsync(false, null, null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("BCC settings updated:").ConfigureAwait(false);
+			await log.WriteLineAsync($"  - Enabled: {updatedBccSettings.Enabled}").ConfigureAwait(false);
+			await log.WriteLineAsync($"  - Address: {updatedBccSettings.EmailAddress}").ConfigureAwait(false);
+
 			var clickTrackingSettings = await client.Settings.GetClickTrackingSettingsAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("Click tracking settings retrieved:").ConfigureAwait(false);
 			await log.WriteLineAsync($"  - Enabled in text content: {clickTrackingSettings.EnabledInTextContent}").ConfigureAwait(false);

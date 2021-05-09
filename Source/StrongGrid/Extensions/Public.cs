@@ -2,6 +2,7 @@ using StrongGrid.Models;
 using StrongGrid.Models.Search;
 using StrongGrid.Resources;
 using StrongGrid.Utilities;
+using StrongGrid.Warmup;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,6 @@ namespace StrongGrid
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -62,7 +62,6 @@ namespace StrongGrid
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -75,7 +74,7 @@ namespace StrongGrid
 			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
-			return mailResource.SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, priority, cancellationToken);
+			return mailResource.SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -94,7 +93,6 @@ namespace StrongGrid
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -128,7 +126,6 @@ namespace StrongGrid
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -141,7 +138,7 @@ namespace StrongGrid
 			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
-			return mailResource.SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, templateId, substitutions, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, priority, cancellationToken);
+			return mailResource.SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, templateId, substitutions, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -157,7 +154,6 @@ namespace StrongGrid
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -188,7 +184,6 @@ namespace StrongGrid
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -201,7 +196,7 @@ namespace StrongGrid
 			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
-			return mailResource.SendToMultipleRecipientsAsync(recipients, from, dynamicTemplateId, dynamicData, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, priority, cancellationToken);
+			return mailResource.SendToMultipleRecipientsAsync(recipients, from, dynamicTemplateId, dynamicData, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -219,7 +214,6 @@ namespace StrongGrid
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -253,7 +247,6 @@ namespace StrongGrid
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -266,7 +259,7 @@ namespace StrongGrid
 			CancellationToken cancellationToken = default)
 		{
 			var recipients = new[] { to };
-			return mailResource.SendAmpEmailToMultipleRecipientsAsync(recipients, from, subject, ampContent, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, priority, cancellationToken);
+			return mailResource.SendAmpEmailToMultipleRecipientsAsync(recipients, from, subject, ampContent, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -283,7 +276,6 @@ namespace StrongGrid
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -315,7 +307,6 @@ namespace StrongGrid
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -351,7 +342,7 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return mailResource.SendAsync(personalizations, subject, contents, from, replyTo, attachments, null, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
+			return mailResource.SendAsync(personalizations, subject, contents, from, replyTo, attachments, null, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -370,7 +361,6 @@ namespace StrongGrid
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -404,7 +394,6 @@ namespace StrongGrid
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -441,7 +430,7 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return mailResource.SendAsync(personalizations, subject, contents, from, replyTo, attachments, templateId, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
+			return mailResource.SendAsync(personalizations, subject, contents, from, replyTo, attachments, templateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -457,7 +446,6 @@ namespace StrongGrid
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -488,7 +476,6 @@ namespace StrongGrid
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -526,7 +513,7 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return mailResource.SendAsync(personalizations, null, null, from, replyTo, attachments, dynamicTemplateId, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
+			return mailResource.SendAsync(personalizations, null, null, from, replyTo, attachments, dynamicTemplateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -544,7 +531,6 @@ namespace StrongGrid
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
 		/// <param name="replyTo">The reply to.</param>
 		/// <param name="attachments">The attachments.</param>
-		/// <param name="sections">The sections.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
 		/// <param name="customArgs">The custom arguments.</param>
@@ -577,7 +563,6 @@ namespace StrongGrid
 			SubscriptionTrackingSettings subscriptionTracking = null,
 			MailAddress replyTo = null,
 			IEnumerable<Attachment> attachments = null,
-			IEnumerable<KeyValuePair<string, string>> sections = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
 			IEnumerable<string> categories = null,
 			IEnumerable<KeyValuePair<string, string>> customArgs = null,
@@ -614,7 +599,432 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return mailResource.SendAsync(personalizations, subject, contents, from, replyTo, attachments, null, sections, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
+			return mailResource.SendAsync(personalizations, subject, contents, from, replyTo, attachments, null, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
+		}
+
+		/// <summary>
+		/// Send an email to a single recipient without using a template (which means you must provide the subject, html content and text content).
+		/// </summary>
+		/// <param name="warmupEngine">The warmup engine.</param>
+		/// <param name="to">To.</param>
+		/// <param name="from">From.</param>
+		/// <param name="subject">The subject.</param>
+		/// <param name="htmlContent">Content of the HTML.</param>
+		/// <param name="textContent">Content of the text.</param>
+		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
+		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
+		/// <param name="subscriptionTracking">The subscription tracking.</param>
+		/// <param name="replyTo">The reply to.</param>
+		/// <param name="attachments">The attachments.</param>
+		/// <param name="headers">The headers.</param>
+		/// <param name="categories">The categories.</param>
+		/// <param name="customArgs">The custom arguments.</param>
+		/// <param name="sendAt">The send at.</param>
+		/// <param name="batchId">The batch identifier.</param>
+		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
+		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The result.
+		/// </returns>
+		/// <remarks>
+		/// This overload is ideal when sending an email without using a template.
+		/// This is a convenience method with simplified parameters.
+		/// If you need more options, use the <see cref="IWarmupEngine.SendAsync" /> method.
+		/// </remarks>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
+		public static Task<WarmupResult> SendToSingleRecipientAsync(
+			this IWarmupEngine warmupEngine,
+			MailAddress to,
+			MailAddress from,
+			string subject,
+			string htmlContent,
+			string textContent,
+			bool trackOpens = true,
+			bool trackClicks = true,
+			SubscriptionTrackingSettings subscriptionTracking = null,
+			MailAddress replyTo = null,
+			IEnumerable<Attachment> attachments = null,
+			IEnumerable<KeyValuePair<string, string>> headers = null,
+			IEnumerable<string> categories = null,
+			IEnumerable<KeyValuePair<string, string>> customArgs = null,
+			DateTime? sendAt = null,
+			string batchId = null,
+			UnsubscribeOptions unsubscribeOptions = null,
+			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
+			CancellationToken cancellationToken = default)
+		{
+			var recipients = new[] { to };
+			return warmupEngine.SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, priority, cancellationToken);
+		}
+
+		/// <summary>
+		/// Send an email to a single recipient using a legacy template.
+		/// </summary>
+		/// <param name="warmupEngine">The warmup engine.</param>
+		/// <param name="to">To.</param>
+		/// <param name="from">From.</param>
+		/// <param name="subject">The subject.</param>
+		/// <param name="htmlContent">Content of the HTML.</param>
+		/// <param name="textContent">Content of the text.</param>
+		/// <param name="templateId">The template identifier.</param>
+		/// <param name="substitutions">Data to be merged in the content.</param>
+		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
+		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
+		/// <param name="subscriptionTracking">The subscription tracking.</param>
+		/// <param name="replyTo">The reply to.</param>
+		/// <param name="attachments">The attachments.</param>
+		/// <param name="headers">The headers.</param>
+		/// <param name="categories">The categories.</param>
+		/// <param name="customArgs">The custom arguments.</param>
+		/// <param name="sendAt">The send at.</param>
+		/// <param name="batchId">The batch identifier.</param>
+		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
+		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The result.
+		/// </returns>
+		/// <remarks>
+		/// This is a convenience method with simplified parameters.
+		/// If you need more options, use the <see cref="IWarmupEngine.SendAsync" /> method.
+		/// </remarks>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
+		public static Task<WarmupResult> SendToSingleRecipientAsync(
+			this IWarmupEngine warmupEngine,
+			MailAddress to,
+			MailAddress from,
+			string subject,
+			string htmlContent,
+			string textContent,
+			string templateId,
+			IEnumerable<KeyValuePair<string, string>> substitutions = null,
+			bool trackOpens = true,
+			bool trackClicks = true,
+			SubscriptionTrackingSettings subscriptionTracking = null,
+			MailAddress replyTo = null,
+			IEnumerable<Attachment> attachments = null,
+			IEnumerable<KeyValuePair<string, string>> headers = null,
+			IEnumerable<string> categories = null,
+			IEnumerable<KeyValuePair<string, string>> customArgs = null,
+			DateTime? sendAt = null,
+			string batchId = null,
+			UnsubscribeOptions unsubscribeOptions = null,
+			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
+			CancellationToken cancellationToken = default)
+		{
+			var recipients = new[] { to };
+			return warmupEngine.SendToMultipleRecipientsAsync(recipients, from, subject, htmlContent, textContent, templateId, substitutions, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, priority, cancellationToken);
+		}
+
+		/// <summary>
+		/// Send an email to a single recipient using a dynamic template.
+		/// </summary>
+		/// <param name="warmupEngine">The warmup engine.</param>
+		/// <param name="to">To.</param>
+		/// <param name="from">From.</param>
+		/// <param name="dynamicTemplateId">The identifier of the template.</param>
+		/// <param name="dynamicData">The data to be merged in the content.</param>
+		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
+		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
+		/// <param name="subscriptionTracking">The subscription tracking.</param>
+		/// <param name="replyTo">The reply to.</param>
+		/// <param name="attachments">The attachments.</param>
+		/// <param name="headers">The headers.</param>
+		/// <param name="categories">The categories.</param>
+		/// <param name="customArgs">The custom arguments.</param>
+		/// <param name="sendAt">The send at.</param>
+		/// <param name="batchId">The batch identifier.</param>
+		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
+		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The result.
+		/// </returns>
+		/// <remarks>
+		/// This is a convenience method with simplified parameters.
+		/// If you need more options, use the <see cref="IWarmupEngine.SendAsync" /> method.
+		/// </remarks>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
+		public static Task<WarmupResult> SendToSingleRecipientAsync(
+			this IWarmupEngine warmupEngine,
+			MailAddress to,
+			MailAddress from,
+			string dynamicTemplateId,
+			object dynamicData = null,
+			bool trackOpens = true,
+			bool trackClicks = true,
+			SubscriptionTrackingSettings subscriptionTracking = null,
+			MailAddress replyTo = null,
+			IEnumerable<Attachment> attachments = null,
+			IEnumerable<KeyValuePair<string, string>> headers = null,
+			IEnumerable<string> categories = null,
+			IEnumerable<KeyValuePair<string, string>> customArgs = null,
+			DateTime? sendAt = null,
+			string batchId = null,
+			UnsubscribeOptions unsubscribeOptions = null,
+			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
+			CancellationToken cancellationToken = default)
+		{
+			var recipients = new[] { to };
+			return warmupEngine.SendToMultipleRecipientsAsync(recipients, from, dynamicTemplateId, dynamicData, trackOpens, trackClicks, subscriptionTracking, replyTo, attachments, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, priority, cancellationToken);
+		}
+
+		/// <summary>
+		/// Send the same email to multiple recipients without using a template (which means you must provide the subject, html content and text content).
+		/// </summary>
+		/// <param name="warmupEngine">The warmup engine.</param>
+		/// <param name="recipients">The recipients.</param>
+		/// <param name="from">From.</param>
+		/// <param name="subject">The subject.</param>
+		/// <param name="htmlContent">Content of the HTML.</param>
+		/// <param name="textContent">Content of the text.</param>
+		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
+		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
+		/// <param name="subscriptionTracking">The subscription tracking.</param>
+		/// <param name="replyTo">The reply to.</param>
+		/// <param name="attachments">The attachments.</param>
+		/// <param name="headers">The headers.</param>
+		/// <param name="categories">The categories.</param>
+		/// <param name="customArgs">The custom arguments.</param>
+		/// <param name="sendAt">The send at.</param>
+		/// <param name="batchId">The batch identifier.</param>
+		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
+		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The result.
+		/// </returns>
+		/// <remarks>
+		/// This is a convenience method with simplified parameters.
+		/// If you need more options, use the <see cref="IWarmupEngine.SendAsync" /> method.
+		/// </remarks>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
+		public static Task<WarmupResult> SendToMultipleRecipientsAsync(
+			this IWarmupEngine warmupEngine,
+			IEnumerable<MailAddress> recipients,
+			MailAddress from,
+			string subject,
+			string htmlContent,
+			string textContent,
+			bool trackOpens = true,
+			bool trackClicks = true,
+			SubscriptionTrackingSettings subscriptionTracking = null,
+			MailAddress replyTo = null,
+			IEnumerable<Attachment> attachments = null,
+			IEnumerable<KeyValuePair<string, string>> headers = null,
+			IEnumerable<string> categories = null,
+			IEnumerable<KeyValuePair<string, string>> customArgs = null,
+			DateTime? sendAt = null,
+			string batchId = null,
+			UnsubscribeOptions unsubscribeOptions = null,
+			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
+			CancellationToken cancellationToken = default)
+		{
+			var personalizations = new[]
+			{
+				new MailPersonalization
+				{
+					To = recipients.ToArray()
+				}
+			};
+
+			var contents = new List<MailContent>();
+			if (!string.IsNullOrEmpty(textContent)) contents.Add(new MailContent("text/plain", textContent));
+			if (!string.IsNullOrEmpty(htmlContent)) contents.Add(new MailContent("text/html", htmlContent));
+
+			var trackingSettings = new TrackingSettings
+			{
+				ClickTracking = new ClickTrackingSettings
+				{
+					EnabledInHtmlContent = trackClicks,
+					EnabledInTextContent = trackClicks
+				},
+				OpenTracking = new OpenTrackingSettings { Enabled = trackOpens },
+				GoogleAnalytics = new GoogleAnalyticsSettings { Enabled = false },
+				SubscriptionTracking = subscriptionTracking
+			};
+
+			return warmupEngine.SendAsync(personalizations, subject, contents, from, replyTo, attachments, null, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
+		}
+
+		/// <summary>
+		/// Send the same email to multiple recipients using a legacy template.
+		/// </summary>
+		/// <param name="warmupEngine">The warmup engine.</param>
+		/// <param name="recipients">The recipients.</param>
+		/// <param name="from">From.</param>
+		/// <param name="subject">The subject.</param>
+		/// <param name="htmlContent">Content of the HTML.</param>
+		/// <param name="textContent">Content of the text.</param>
+		/// <param name="templateId">The template identifier.</param>
+		/// <param name="substitutions">Data to be merged in the content.</param>
+		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
+		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
+		/// <param name="subscriptionTracking">The subscription tracking.</param>
+		/// <param name="replyTo">The reply to.</param>
+		/// <param name="attachments">The attachments.</param>
+		/// <param name="headers">The headers.</param>
+		/// <param name="categories">The categories.</param>
+		/// <param name="customArgs">The custom arguments.</param>
+		/// <param name="sendAt">The send at.</param>
+		/// <param name="batchId">The batch identifier.</param>
+		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
+		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The result.
+		/// </returns>
+		/// <remarks>
+		/// This is a convenience method with simplified parameters.
+		/// If you need more options, use the <see cref="IWarmupEngine.SendAsync" /> method.
+		/// </remarks>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
+		public static Task<WarmupResult> SendToMultipleRecipientsAsync(
+			this IWarmupEngine warmupEngine,
+			IEnumerable<MailAddress> recipients,
+			MailAddress from,
+			string subject,
+			string htmlContent,
+			string textContent,
+			string templateId,
+			IEnumerable<KeyValuePair<string, string>> substitutions = null,
+			bool trackOpens = true,
+			bool trackClicks = true,
+			SubscriptionTrackingSettings subscriptionTracking = null,
+			MailAddress replyTo = null,
+			IEnumerable<Attachment> attachments = null,
+			IEnumerable<KeyValuePair<string, string>> headers = null,
+			IEnumerable<string> categories = null,
+			IEnumerable<KeyValuePair<string, string>> customArgs = null,
+			DateTime? sendAt = null,
+			string batchId = null,
+			UnsubscribeOptions unsubscribeOptions = null,
+			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
+			CancellationToken cancellationToken = default)
+		{
+			var personalizations = new[]
+			{
+				new MailPersonalization
+				{
+					To = recipients.ToArray(),
+					Substitutions = substitutions?.ToArray()
+				}
+			};
+
+			var contents = new List<MailContent>();
+			if (!string.IsNullOrEmpty(textContent)) contents.Add(new MailContent("text/plain", textContent));
+			if (!string.IsNullOrEmpty(htmlContent)) contents.Add(new MailContent("text/html", htmlContent));
+
+			var trackingSettings = new TrackingSettings
+			{
+				ClickTracking = new ClickTrackingSettings
+				{
+					EnabledInHtmlContent = trackClicks,
+					EnabledInTextContent = trackClicks
+				},
+				OpenTracking = new OpenTrackingSettings { Enabled = trackOpens },
+				GoogleAnalytics = new GoogleAnalyticsSettings { Enabled = false },
+				SubscriptionTracking = subscriptionTracking
+			};
+
+			return warmupEngine.SendAsync(personalizations, subject, contents, from, replyTo, attachments, templateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
+		}
+
+		/// <summary>
+		/// Send the same email to multiple recipients.
+		/// </summary>
+		/// <param name="warmupEngine">The warmup engine.</param>
+		/// <param name="recipients">The recipients.</param>
+		/// <param name="from">From.</param>
+		/// <param name="dynamicTemplateId">The identifier of the template.</param>
+		/// <param name="dynamicData">The data to be merged in the content.</param>
+		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
+		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
+		/// <param name="subscriptionTracking">The subscription tracking.</param>
+		/// <param name="replyTo">The reply to.</param>
+		/// <param name="attachments">The attachments.</param>
+		/// <param name="headers">The headers.</param>
+		/// <param name="categories">The categories.</param>
+		/// <param name="customArgs">The custom arguments.</param>
+		/// <param name="sendAt">The send at.</param>
+		/// <param name="batchId">The batch identifier.</param>
+		/// <param name="unsubscribeOptions">The unsubscribe options.</param>
+		/// <param name="mailSettings">The mail settings.</param>
+		/// <param name="priority">The priority.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The result.
+		/// </returns>
+		/// <remarks>
+		/// This is a convenience method with simplified parameters.
+		/// If you need more options, use the <see cref="IWarmupEngine.SendAsync" /> method.
+		/// </remarks>
+		/// <exception cref="ArgumentOutOfRangeException">Too many recipients.</exception>
+		/// <exception cref="Exception">Email exceeds the size limit.</exception>
+		public static Task<WarmupResult> SendToMultipleRecipientsAsync(
+			this IWarmupEngine warmupEngine,
+			IEnumerable<MailAddress> recipients,
+			MailAddress from,
+			string dynamicTemplateId,
+			object dynamicData = null,
+			bool trackOpens = true,
+			bool trackClicks = true,
+			SubscriptionTrackingSettings subscriptionTracking = null,
+			MailAddress replyTo = null,
+			IEnumerable<Attachment> attachments = null,
+			IEnumerable<KeyValuePair<string, string>> headers = null,
+			IEnumerable<string> categories = null,
+			IEnumerable<KeyValuePair<string, string>> customArgs = null,
+			DateTime? sendAt = null,
+			string batchId = null,
+			UnsubscribeOptions unsubscribeOptions = null,
+			MailSettings mailSettings = null,
+			MailPriority priority = MailPriority.Normal,
+			CancellationToken cancellationToken = default)
+		{
+			if (!Template.IsDynamic(dynamicTemplateId))
+			{
+				throw new ArgumentException($"{dynamicTemplateId} is not a valid dynamic template identifier.", nameof(dynamicTemplateId));
+			}
+
+			var personalizations = new[]
+			{
+				new MailPersonalization
+				{
+					To = recipients.ToArray(),
+					DynamicData = dynamicData
+				}
+			};
+
+			var trackingSettings = new TrackingSettings
+			{
+				ClickTracking = new ClickTrackingSettings
+				{
+					EnabledInHtmlContent = trackClicks,
+					EnabledInTextContent = trackClicks
+				},
+				OpenTracking = new OpenTrackingSettings { Enabled = trackOpens },
+				GoogleAnalytics = new GoogleAnalyticsSettings { Enabled = false },
+				SubscriptionTracking = subscriptionTracking
+			};
+
+			return warmupEngine.SendAsync(personalizations, null, null, from, replyTo, attachments, dynamicTemplateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
