@@ -12,7 +12,7 @@ namespace StrongGrid.Utilities
 	/// Converts a JSON string received from a webhook into and array of <see cref="Event">events</see>.
 	/// </summary>
 	/// <seealso cref="Newtonsoft.Json.JsonConverter" />
-	internal class WebHookEventConverter : JsonConverter
+	internal class EventConverter : JsonConverter
 	{
 		private static readonly string[] _knownProperties =
 		{
