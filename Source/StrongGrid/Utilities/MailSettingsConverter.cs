@@ -62,29 +62,12 @@ namespace StrongGrid.Utilities
 
 			var mailSettings = (MailSettings)value;
 
-			writer.WritePropertyName("bypass_list_management");
-			writer.WriteStartObject();
-			writer.WritePropertyName("enable");
-			serializer.Serialize(writer, mailSettings.BypassListManagement);
-			writer.WriteEndObject();
-
-			writer.WritePropertyName("bypass_spam_management");
-			writer.WriteStartObject();
-			writer.WritePropertyName("enable");
-			serializer.Serialize(writer, mailSettings.BypassSpamManagement);
-			writer.WriteEndObject();
-
-			writer.WritePropertyName("bypass_bounce_management");
-			writer.WriteStartObject();
-			writer.WritePropertyName("enable");
-			serializer.Serialize(writer, mailSettings.BypassBounceManagement);
-			writer.WriteEndObject();
-
-			writer.WritePropertyName("bypass_unsubscribe_management");
-			writer.WriteStartObject();
-			writer.WritePropertyName("enable");
-			serializer.Serialize(writer, mailSettings.BypassUnsubscribeManagement);
-			writer.WriteEndObject();
+			// bypass_xxx_management should be omited when the value is 'false'.
+			// See https://github.com/Jericho/StrongGrid/issues/395 for details.
+			if (mailSettings.BypassListManagement) WriteEnabledProperty(writer, "bypass_list_management", true, serializer);
+			if (mailSettings.BypassSpamManagement) WriteEnabledProperty(writer, "bypass_spam_management", true, serializer);
+			if (mailSettings.BypassBounceManagement) WriteEnabledProperty(writer, "bypass_bounce_management", true, serializer);
+			if (mailSettings.BypassUnsubscribeManagement) WriteEnabledProperty(writer, "bypass_unsubscribe_management", true, serializer);
 
 			if (mailSettings.Footer != null)
 			{
@@ -92,11 +75,7 @@ namespace StrongGrid.Utilities
 				serializer.Serialize(writer, mailSettings.Footer);
 			}
 
-			writer.WritePropertyName("sandbox_mode");
-			writer.WriteStartObject();
-			writer.WritePropertyName("enable");
-			serializer.Serialize(writer, mailSettings.SandboxModeEnabled);
-			writer.WriteEndObject();
+			WriteEnabledProperty(writer, "sandbox_mode", mailSettings.SandboxModeEnabled, serializer);
 
 			// End of JSON serialization
 			writer.WriteEndObject();
@@ -115,6 +94,15 @@ namespace StrongGrid.Utilities
 		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 		{
 			throw new NotSupportedException("The MailSettingsConverter can only be used to write JSON");
+		}
+
+		private static void WriteEnabledProperty(JsonWriter writer, string propertyName, bool value, JsonSerializer serializer)
+		{
+			writer.WritePropertyName(propertyName);
+			writer.WriteStartObject();
+			writer.WritePropertyName("enable");
+			serializer.Serialize(writer, value);
+			writer.WriteEndObject();
 		}
 	}
 }
