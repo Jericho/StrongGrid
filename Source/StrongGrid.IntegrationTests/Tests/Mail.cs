@@ -65,7 +65,9 @@ namespace StrongGrid.IntegrationTests.Tests
 					Enabled = true,
 					HtmlContent = "<p>This email was sent with the help of the <b><a href=\"https://www.nuget.org/packages/StrongGrid/\">StrongGrid</a></b> library</p>",
 					TextContent = "This email was sent with the help of the StrongGrid library"
-				}
+				},
+				BypassSpamManagement = true,
+				BypassListManagement = false
 			};
 			var trackingSettings = new TrackingSettings
 			{
