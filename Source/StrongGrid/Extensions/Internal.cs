@@ -676,6 +676,52 @@ namespace StrongGrid
 			return compressedStream;
 		}
 
+		/// <summary>Convert an enum to its string representation.</summary>
+		/// <typeparam name="T">The enum type.</typeparam>
+		/// <param name="enumValue">The value.</param>
+		/// <returns>The string representation of the enum value.</returns>
+		/// <remarks>Inspired by: https://stackoverflow.com/questions/10418651/using-enummemberattribute-and-doing-automatic-string-conversions .</remarks>
+		internal static string ToEnumString<T>(this T enumValue)
+			where T : Enum
+		{
+			var enumType = enumValue.GetType();
+			var name = Enum.GetName(enumType, enumValue);
+
+			var enumMemberAttribute = ((EnumMemberAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(EnumMemberAttribute), true)).SingleOrDefault();
+			if (enumMemberAttribute != null) return enumMemberAttribute.Value;
+
+			var descriptionAttribute = ((DescriptionAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(DescriptionAttribute), true)).SingleOrDefault();
+			if (descriptionAttribute != null) return descriptionAttribute.Description;
+
+			return enumValue.ToString();
+		}
+
+		/// <summary>Parses a string into its corresponding enum value.</summary>
+		/// <typeparam name="T">The enum type.</typeparam>
+		/// <param name="str">The string value.</param>
+		/// <returns>The enum representayionm of the string value.</returns>
+		/// <remarks>Inspired by: https://stackoverflow.com/questions/10418651/using-enummemberattribute-and-doing-automatic-string-conversions .</remarks>
+		internal static T ToEnum<T>(this string str)
+			where T : Enum
+		{
+			var enumType = typeof(T);
+			foreach (var name in Enum.GetNames(enumType))
+			{
+				// See if there's a matching 'EnumMember' attribute
+				var enumMemberAttribute = ((EnumMemberAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(EnumMemberAttribute), true)).SingleOrDefault();
+				if (enumMemberAttribute != null && string.Equals(enumMemberAttribute.Value, str, StringComparison.OrdinalIgnoreCase)) return (T)Enum.Parse(enumType, name);
+
+				// See if there's a matching 'Description' attribute
+				var descriptionAttribute = ((DescriptionAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(DescriptionAttribute), true)).SingleOrDefault();
+				if (descriptionAttribute != null && string.Equals(descriptionAttribute.Description, str, StringComparison.OrdinalIgnoreCase)) return (T)Enum.Parse(enumType, name);
+
+				// See if the value matches the name
+				if (string.Equals(name, str, StringComparison.OrdinalIgnoreCase)) return (T)Enum.Parse(enumType, name);
+			}
+
+			throw new ArgumentException($"There is no value in the {enumType.Name} enum that corresponds to '{str}'.");
+		}
+
 		internal static T ToObject<T>(this JsonElement element, JsonSerializerOptions options = null, CancellationToken token = default)
 		{
 			return JsonSerializer.Deserialize<T>(element.GetRawText());
