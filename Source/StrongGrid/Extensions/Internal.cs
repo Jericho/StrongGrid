@@ -1,18 +1,21 @@
 using HttpMultipartParser;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Dynamic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -198,12 +201,12 @@ namespace StrongGrid
 		/// <param name="response">The response.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
 		/// <param name="throwIfPropertyIsMissing">Indicates if an exception should be thrown when the specified JSON property is missing from the response.</param>
-		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
+		/// <param name="options">Options to control behavior Converter during parsing.</param>
 		/// <returns>Returns the strongly typed object.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		internal static Task<T> AsObject<T>(this IResponse response, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonConverter jsonConverter = null)
+		internal static Task<T> AsObject<T>(this IResponse response, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonSerializerOptions options = null)
 		{
-			return response.Message.Content.AsObject<T>(propertyName, throwIfPropertyIsMissing, jsonConverter);
+			return response.Message.Content.AsObject<T>(propertyName, throwIfPropertyIsMissing, options);
 		}
 
 		/// <summary>Asynchronously retrieve the JSON encoded response body and convert it to an object of the desired type.</summary>
@@ -211,68 +214,53 @@ namespace StrongGrid
 		/// <param name="request">The request.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
 		/// <param name="throwIfPropertyIsMissing">Indicates if an exception should be thrown when the specified JSON property is missing from the response.</param>
-		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
+		/// <param name="options">Options to control behavior Converter during parsing.</param>
 		/// <returns>Returns the strongly typed object.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		internal static async Task<T> AsObject<T>(this IRequest request, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonConverter jsonConverter = null)
+		internal static async Task<T> AsObject<T>(this IRequest request, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonSerializerOptions options = null)
 		{
 			var response = await request.AsResponse().ConfigureAwait(false);
-			return await response.AsObject<T>(propertyName, throwIfPropertyIsMissing, jsonConverter).ConfigureAwait(false);
-		}
-
-		/// <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
-		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		internal static Task<JObject> AsRawJsonObject(this IResponse response, string propertyName = null, bool throwIfPropertyIsMissing = true)
-		{
-			return response.Message.Content.AsRawJsonObject(propertyName, throwIfPropertyIsMissing);
-		}
-
-		/// <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
-		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		internal static async Task<JObject> AsRawJsonObject(this IRequest request, string propertyName = null, bool throwIfPropertyIsMissing = true)
-		{
-			var response = await request.AsResponse().ConfigureAwait(false);
-			return await response.AsRawJsonObject(propertyName, throwIfPropertyIsMissing).ConfigureAwait(false);
-		}
-
-		/// <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
-		/// <exception cref="ApiException">An error occurred processing the response.</exception>
-		internal static Task<JArray> AsRawJsonArray(this IResponse response, string propertyName = null, bool throwIfPropertyIsMissing = true)
-		{
-			return response.Message.Content.AsRawJsonArray(propertyName, throwIfPropertyIsMissing);
-		}
-
-		/// <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
-		/// <exception cref="ApiException">An error occurred processing the response.</exception>
-		internal static async Task<JArray> AsRawJsonArray(this IRequest request, string propertyName = null, bool throwIfPropertyIsMissing = true)
-		{
-			var response = await request.AsResponse().ConfigureAwait(false);
-			return await response.AsRawJsonArray(propertyName, throwIfPropertyIsMissing).ConfigureAwait(false);
+			return await response.Content.AsObject<T>(propertyName, throwIfPropertyIsMissing, options).ConfigureAwait(false);
 		}
 
 		/// <summary>Asynchronously retrieve the JSON encoded content and convert it to a 'PaginatedResponse' object.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="response">The response.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
-		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
+		/// <param name="options">Options to control behavior Converter during parsing.</param>
 		/// <returns>Returns the paginated response.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		internal static Task<PaginatedResponse<T>> AsPaginatedResponse<T>(this IResponse response, string propertyName = null, JsonConverter jsonConverter = null)
+		internal static Task<PaginatedResponse<T>> AsPaginatedResponse<T>(this IResponse response, string propertyName = null, JsonSerializerOptions options = null)
 		{
-			return response.Message.Content.AsPaginatedResponse<T>(propertyName, jsonConverter);
+			return response.Message.Content.AsPaginatedResponse<T>(propertyName, options);
 		}
 
 		/// <summary>Asynchronously retrieve the JSON encoded content and convert it to a 'PaginatedResponse' object.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="request">The request.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
-		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
+		/// <param name="options">Options to control behavior Converter during parsing.</param>
 		/// <returns>Returns the paginated response.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		internal static async Task<PaginatedResponse<T>> AsPaginatedResponse<T>(this IRequest request, string propertyName = null, JsonConverter jsonConverter = null)
+		internal static async Task<PaginatedResponse<T>> AsPaginatedResponse<T>(this IRequest request, string propertyName = null, JsonSerializerOptions options = null)
 		{
 			var response = await request.AsResponse().ConfigureAwait(false);
-			return await response.AsPaginatedResponse<T>(propertyName, jsonConverter).ConfigureAwait(false);
+			return await response.AsPaginatedResponse<T>(propertyName, options).ConfigureAwait(false);
+		}
+
+		/// <summary>Get a raw JSON document representation of the response.</summary>
+		/// <exception cref="ApiException">An error occurred processing the response.</exception>
+		internal static Task<JsonDocument> AsRawJsonDocument(this IResponse response, string propertyName = null, bool throwIfPropertyIsMissing = true)
+		{
+			return response.Message.Content.AsRawJsonDocument(propertyName, throwIfPropertyIsMissing);
+		}
+
+		/// <summary>Get a raw JSON document representation of the response.</summary>
+		/// <exception cref="ApiException">An error occurred processing the response.</exception>
+		internal static async Task<JsonDocument> AsRawJsonDocument(this IRequest request, string propertyName = null, bool throwIfPropertyIsMissing = true)
+		{
+			var response = await request.AsResponse().ConfigureAwait(false);
+			return await response.Content.AsRawJsonDocument(propertyName, throwIfPropertyIsMissing).ConfigureAwait(false);
 		}
 
 		/// <summary>Set the body content of the HTTP request.</summary>
@@ -295,6 +283,40 @@ namespace StrongGrid
 		/// default ordering of the items in the MediaTypeFormatterCollection.
 		/// </remarks>
 		internal static IRequest WithJsonBody<T>(this IRequest request, T body, bool omitCharSet = false)
+		{
+			return request.WithBody(bodyBuilder =>
+			{
+				var httpContent = bodyBuilder.Model(body, new MediaTypeHeaderValue("application/json"));
+
+				if (omitCharSet && !string.IsNullOrEmpty(httpContent.Headers.ContentType.CharSet))
+				{
+					httpContent.Headers.ContentType.CharSet = string.Empty;
+				}
+
+				return httpContent;
+			});
+		}
+
+		/// <summary>Set the body content of the HTTP request.</summary>
+		/// <typeparam name="T">The type of object to serialize into a JSON string.</typeparam>
+		/// <param name="request">The request.</param>
+		/// <param name="body">The value to serialize into the HTTP body content.</param>
+		/// <param name="omitCharSet">
+		/// Indicates if the charset should be omitted from the 'Content-Type' request header.
+		/// The vast majority of SendGrid's endpoints require this parameter to be false but one
+		/// notable exception is 'Contacts.Upsert' in the new marketing campaigns API.
+		/// SendGrid has not documented when it should be true/false, I only figured it out when
+		/// getting a "invalid content-type: application/json; charset=utf-8" exception which was
+		/// solved by omitting the "charset".
+		/// </param>
+		/// <returns>Returns the request builder for chaining.</returns>
+		/// <remarks>
+		/// This method is equivalent to IRequest.AsBody&lt;T&gt;(T body) because omitting the media type
+		/// causes the first formatter in MediaTypeFormatterCollection to be used by default and the first
+		/// formatter happens to be the JSON formatter. However, I don't feel good about relying on the
+		/// default ordering of the items in the MediaTypeFormatterCollection.
+		/// </remarks>
+		internal static IRequest WithJsonBody(this IRequest request, ExpandoObject body, bool omitCharSet = false)
 		{
 			return request.WithBody(bodyBuilder =>
 			{
@@ -423,107 +445,79 @@ namespace StrongGrid
 			return scopes;
 		}
 
-		internal static void AddPropertyIfValue(this JObject jsonObject, string propertyName, string value)
+		internal static void AddProperty<T>(this ExpandoObject obj, string propertyName, Parameter<T> parameter, bool ignoreIfDefault = true)
 		{
-			if (string.IsNullOrEmpty(value)) return;
-			jsonObject.AddDeepProperty(propertyName, value);
+			if (ignoreIfDefault && !parameter.HasValue) return;
+			obj.AddProperty(propertyName, parameter.Value, false);
 		}
 
-		internal static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, T value, JsonConverter converter = null)
+		internal static void AddProperty<T>(this ExpandoObject obj, string propertyName, T value, bool ignoreIfDefault = true)
 		{
-			if (EqualityComparer<T>.Default.Equals(value, default)) return;
-
-			var jsonSerializer = new JsonSerializer();
-			if (converter != null)
+			switch (value)
 			{
-				jsonSerializer.Converters.Add(converter);
+				case string stringValue:
+					if (ignoreIfDefault && string.IsNullOrEmpty(stringValue)) return;
+					obj.AddDeepProperty(propertyName, stringValue);
+					break;
+
+				case Enum enumValue:
+					obj.AddDeepProperty(propertyName, enumValue.ToEnumString());
+					break;
+
+				case IEnumerable enumerableValue:
+					if (ignoreIfDefault)
+					{
+						if (enumerableValue == null) return;
+
+						// Non-generic IEnumerable does not natively provide a way to check if it contains any items.
+						// Therefore, we need to figure it out ourselves
+						var countainsAtLeastOneItem = false;
+						foreach (var item in enumerableValue)
+						{
+							countainsAtLeastOneItem = true;
+							break;
+						}
+
+						if (!countainsAtLeastOneItem) return;
+					}
+
+					obj.AddDeepProperty(propertyName, value);
+					break;
+
+				default:
+					if (ignoreIfDefault && EqualityComparer<T>.Default.Equals(value, default)) return;
+					obj.AddDeepProperty(propertyName, value);
+					break;
 			}
-
-			jsonObject.AddDeepProperty(propertyName, JToken.FromObject(value, jsonSerializer));
 		}
 
-		internal static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, IEnumerable<T> value, JsonConverter converter = null)
-		{
-			if (value == null || !value.Any()) return;
-
-			var jsonSerializer = new JsonSerializer();
-			if (converter != null)
-			{
-				jsonSerializer.Converters.Add(converter);
-			}
-
-			jsonObject.AddDeepProperty(propertyName, JArray.FromObject(value.ToArray(), jsonSerializer));
-		}
-
-		internal static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, Parameter<T> parameter, JsonConverter converter = null)
-		{
-			var jsonSerializer = new JsonSerializer();
-			if (converter != null)
-			{
-				jsonSerializer.Converters.Add(converter);
-			}
-
-			AddPropertyIfValue(jsonObject, propertyName, parameter, value => JToken.FromObject(value, jsonSerializer));
-		}
-
-		internal static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, Parameter<IEnumerable<T>> parameter, JsonConverter converter = null)
-		{
-			var jsonSerializer = new JsonSerializer();
-			if (converter != null)
-			{
-				jsonSerializer.Converters.Add(converter);
-			}
-
-			AddPropertyIfValue(jsonObject, propertyName, parameter, value => JArray.FromObject(value.ToArray(), jsonSerializer));
-		}
-
-		internal static void AddPropertyIfEnumValue<T>(this JObject jsonObject, string propertyName, Parameter<T> parameter, JsonConverter converter = null)
-		{
-			var jsonSerializer = new JsonSerializer();
-			if (converter != null)
-			{
-				jsonSerializer.Converters.Add(converter);
-			}
-
-			AddPropertyIfValue(jsonObject, propertyName, parameter, value => JToken.Parse(JsonConvert.SerializeObject(value)).ToString());
-		}
-
-		internal static void AddPropertyIfValue<T>(this JObject jsonObject, string propertyName, Parameter<T> parameter, Func<T, JToken> convertValueToJsonToken)
-		{
-			if (convertValueToJsonToken == null) throw new ArgumentNullException(nameof(convertValueToJsonToken));
-			if (!parameter.HasValue) return;
-
-			jsonObject.AddDeepProperty(propertyName, parameter.Value == null ? null : convertValueToJsonToken(parameter.Value));
-		}
-
-		internal static void AddDeepProperty(this JObject jsonObject, string propertyName, JToken value)
+		internal static void AddDeepProperty<T>(this ExpandoObject obj, string propertyName, T value)
 		{
 			var separatorLocation = propertyName.IndexOf('/');
+			var expandoAsDict = obj as IDictionary<string, object>;
 
 			if (separatorLocation == -1)
 			{
-				jsonObject.Add(propertyName, value);
+				expandoAsDict.Add(propertyName, value);
 			}
 			else
 			{
 				var name = propertyName.Substring(0, separatorLocation);
 				var childrenName = propertyName.Substring(separatorLocation + 1);
 
-				var property = jsonObject.Value<JObject>(name);
-				if (property == null)
+				var properties = expandoAsDict.Where(kvp => kvp.Key.Equals(name, StringComparison.OrdinalIgnoreCase));
+				if (!properties.Any())
 				{
-					property = new JObject();
-					jsonObject.Add(name, property);
+					var propertyValue = new ExpandoObject();
+					propertyValue.AddDeepProperty(childrenName, value);
+					expandoAsDict.Add(name, propertyValue);
 				}
-
-				property.AddDeepProperty(childrenName, value);
+				else
+				{
+					var propertyValue = properties.Single().Value as ExpandoObject;
+					propertyValue.AddDeepProperty(childrenName, value);
+				}
 			}
-		}
-
-		internal static T GetPropertyValue<T>(this JToken item, string name, T defaultValue = default)
-		{
-			if (item[name] == null) return defaultValue;
-			return item[name].Value<T>();
 		}
 
 		internal static async Task<TResult[]> ForEachAsync<T, TResult>(this IEnumerable<T> items, Func<T, Task<TResult>> action, int maxDegreeOfParalellism)
@@ -682,6 +676,11 @@ namespace StrongGrid
 			return compressedStream;
 		}
 
+		internal static T ToObject<T>(this JsonElement element, JsonSerializerOptions options = null, CancellationToken token = default)
+		{
+			return JsonSerializer.Deserialize<T>(element.GetRawText());
+		}
+
 		private static async Task<(bool, string)> GetErrorMessage(HttpResponseMessage message)
 		{
 			// Assume there is no error
@@ -737,23 +736,26 @@ namespace StrongGrid
 			{
 				try
 				{
+					var jsonContent = JsonDocument.Parse(responseContent);
+					var foundErrors = jsonContent.RootElement.TryGetProperty("errors", out JsonElement jsonErrors);
+					var foundError = jsonContent.RootElement.TryGetProperty("error", out JsonElement jsonError);
+
 					// Check for the presence of property called 'errors'
-					var jObject = JObject.Parse(responseContent);
-					var errorsArray = (JArray)jObject["errors"];
-					if (errorsArray != null && errorsArray.Count > 0)
+					if (foundErrors && jsonErrors.ValueKind == JsonValueKind.Array)
 					{
-						errorMessage = string.Join(Environment.NewLine, errorsArray.Select(error => error["message"].Value<string>()));
+						var errors = jsonErrors.EnumerateArray()
+							.Select(jsonElement => jsonElement.GetProperty("message").GetString())
+							.ToArray();
+
+						errorMessage = string.Join(Environment.NewLine, errors);
 						isError = true;
 					}
-					else
+
+					// Check for the presence of property called 'error'
+					else if (foundError)
 					{
-						// Check for the presence of property called 'error'
-						var errorProperty = jObject["error"];
-						if (errorProperty != null)
-						{
-							errorMessage = errorProperty.Value<string>();
-							isError = true;
-						}
+						errorMessage = jsonError.GetString();
+						isError = true;
 					}
 				}
 				catch
@@ -770,109 +772,65 @@ namespace StrongGrid
 		/// <param name="httpContent">The content.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
 		/// <param name="throwIfPropertyIsMissing">Indicates if an exception should be thrown when the specified JSON property is missing from the response.</param>
-		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
+		/// <param name="options">Options to control behavior Converter during parsing.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>Returns the strongly typed object.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		private static async Task<T> AsObject<T>(this HttpContent httpContent, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonConverter jsonConverter = null)
+		private static async Task<T> AsObject<T>(this HttpContent httpContent, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonSerializerOptions options = null, CancellationToken cancellationToken = default)
 		{
 			var responseContent = await httpContent.ReadAsStringAsync(null).ConfigureAwait(false);
 
-			var serializer = new JsonSerializer();
-			if (jsonConverter != null) serializer.Converters.Add(jsonConverter);
-
-			if (!string.IsNullOrEmpty(propertyName))
+			if (string.IsNullOrEmpty(propertyName))
 			{
-				var jObject = JObject.Parse(responseContent);
-				var jProperty = jObject.Property(propertyName);
-				if (jProperty == null)
-				{
-					if (throwIfPropertyIsMissing)
-					{
-						throw new ArgumentException($"The response does not contain a field called '{propertyName}'", nameof(propertyName));
-					}
-					else
-					{
-						return default;
-					}
-				}
-
-				return jProperty.Value.ToObject<T>(serializer);
+				return JsonSerializer.Deserialize<T>(responseContent, options);
 			}
-			else if (typeof(T).IsArray)
+
+			var jsonDoc = JsonDocument.Parse(responseContent, (JsonDocumentOptions)default);
+			if (jsonDoc.RootElement.TryGetProperty(propertyName, out JsonElement property))
 			{
-				return JArray.Parse(responseContent).ToObject<T>(serializer);
+				var propertyContent = property.GetRawText();
+				return JsonSerializer.Deserialize<T>(propertyContent, options);
+			}
+			else if (throwIfPropertyIsMissing)
+			{
+				throw new ArgumentException($"The response does not contain a field called '{propertyName}'", nameof(propertyName));
 			}
 			else
 			{
-				return JObject.Parse(responseContent).ToObject<T>(serializer);
+				return default;
 			}
 		}
 
-		/// <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
+		/// <summary>Get a raw JSON object representation of the response.</summary>
 		/// <param name="httpContent">The content.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
 		/// <param name="throwIfPropertyIsMissing">Indicates if an exception should be thrown when the specified JSON property is missing from the response.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		private static async Task<JObject> AsRawJsonObject(this HttpContent httpContent, string propertyName = null, bool throwIfPropertyIsMissing = true)
+		private static async Task<JsonDocument> AsRawJsonDocument(this HttpContent httpContent, string propertyName = null, bool throwIfPropertyIsMissing = true, CancellationToken cancellationToken = default)
 		{
-			var responseContent = await httpContent.ReadAsStringAsync(null).ConfigureAwait(false);
+			var responseContent = await httpContent.ReadAsStringAsync(null, cancellationToken).ConfigureAwait(false);
 
-			if (!string.IsNullOrEmpty(propertyName))
+			var jsonDoc = JsonDocument.Parse(responseContent, (JsonDocumentOptions)default);
+
+			if (string.IsNullOrEmpty(propertyName))
 			{
-				var jObject = JObject.Parse(responseContent);
-				var jProperty = jObject.Property(propertyName);
-				if (jProperty == null)
-				{
-					if (throwIfPropertyIsMissing)
-					{
-						throw new ArgumentException($"The response does not contain a field called '{propertyName}'", nameof(propertyName));
-					}
-					else
-					{
-						return default;
-					}
-				}
+				return jsonDoc;
+			}
 
-				return (JObject)jProperty.Value;
+			if (jsonDoc.RootElement.TryGetProperty(propertyName, out JsonElement property))
+			{
+				var propertyContent = property.GetRawText();
+				return JsonDocument.Parse(propertyContent, (JsonDocumentOptions)default);
+			}
+			else if (throwIfPropertyIsMissing)
+			{
+				throw new ArgumentException($"The response does not contain a field called '{propertyName}'", nameof(propertyName));
 			}
 			else
 			{
-				return JObject.Parse(responseContent);
-			}
-		}
-
-		/// <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
-		/// <param name="httpContent">The content.</param>
-		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
-		/// <param name="throwIfPropertyIsMissing">Indicates if an exception should be thrown when the specified JSON property is missing from the response.</param>
-		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
-		/// <exception cref="ApiException">An error occurred processing the response.</exception>
-		private static async Task<JArray> AsRawJsonArray(this HttpContent httpContent, string propertyName = null, bool throwIfPropertyIsMissing = true)
-		{
-			var responseContent = await httpContent.ReadAsStringAsync(null).ConfigureAwait(false);
-
-			if (!string.IsNullOrEmpty(propertyName))
-			{
-				var jObject = JObject.Parse(responseContent);
-				var jProperty = jObject.Property(propertyName);
-				if (jProperty == null)
-				{
-					if (throwIfPropertyIsMissing)
-					{
-						throw new ArgumentException($"The response does not contain a field called '{propertyName}'", nameof(propertyName));
-					}
-					else
-					{
-						return default;
-					}
-				}
-
-				return (JArray)jProperty.Value;
-			}
-			else
-			{
-				return JArray.Parse(responseContent);
+				return default;
 			}
 		}
 
@@ -880,21 +838,17 @@ namespace StrongGrid
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="httpContent">The content.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
-		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
+		/// <param name="options">Options to control behavior Converter during parsing.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		private static async Task<PaginatedResponse<T>> AsPaginatedResponse<T>(this HttpContent httpContent, string propertyName, JsonConverter jsonConverter = null)
+		private static async Task<PaginatedResponse<T>> AsPaginatedResponse<T>(this HttpContent httpContent, string propertyName, JsonSerializerOptions options = null, CancellationToken cancellationToken = default)
 		{
-			var responseContent = await httpContent.ReadAsStringAsync(null).ConfigureAwait(false);
-			var jObject = JObject.Parse(responseContent);
+			var jsonDocument = await httpContent.AsRawJsonDocument(null, false, cancellationToken).ConfigureAwait(false);
+			var metadataProperty = jsonDocument.RootElement.GetProperty("_metadata");
+			var metadata = JsonSerializer.Deserialize<PaginationMetadata>(metadataProperty.GetRawText(), options);
 
-			var metadata = jObject.Property("_metadata").Value.ToObject<PaginationMetadata>();
-
-			var serializer = new JsonSerializer();
-			if (jsonConverter != null) serializer.Converters.Add(jsonConverter);
-
-			var jProperty = jObject.Property(propertyName);
-			if (jProperty == null)
+			if (!jsonDocument.RootElement.TryGetProperty(propertyName, out JsonElement jProperty))
 			{
 				throw new ArgumentException($"The response does not contain a field called '{propertyName}'", nameof(propertyName));
 			}
@@ -905,7 +859,7 @@ namespace StrongGrid
 				CurrentPageToken = metadata.SelfToken,
 				NextPageToken = metadata.NextToken,
 				TotalRecords = metadata.Count,
-				Records = jProperty.Value?.ToObject<T[]>(serializer) ?? Array.Empty<T>()
+				Records = JsonSerializer.Deserialize<T[]>(jProperty.GetRawText(), options)
 			};
 
 			return result;
