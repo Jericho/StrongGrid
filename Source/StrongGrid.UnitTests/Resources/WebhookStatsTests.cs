@@ -1,4 +1,4 @@
-﻿using RichardSzalay.MockHttp;
+using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Resources;
@@ -21,21 +21,21 @@ namespace StrongGrid.UnitTests.Resources
 			var endDate = new DateTime(2015, 1, 2);
 			var apiResponse = @"[
 				{
-					'date': '2015-01-01',
-					'stats': [
+					""date"": ""2015-01-01"",
+					""stats"": [
 						{
-							'metrics': {
-								'received': 1
+							""metrics"": {
+								""received"": 1
 							}
 						}
 					]
 				},
 				{
-					'date': '2015-01-02',
-					'stats': [
+					""date"": ""2015-01-02"",
+					""stats"": [
 						{
-							'metrics': {
-								'received': 3
+							""metrics"": {
+								""received"": 3
 							}
 						}
 					]

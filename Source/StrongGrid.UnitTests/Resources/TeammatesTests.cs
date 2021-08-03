@@ -1,10 +1,10 @@
-using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Resources;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -19,103 +19,103 @@ namespace StrongGrid.UnitTests.Resources
 
 		private const string MULTIPLE_ACCESS_REQUESTS_JSON = @"[
 			{
-				'id': 1,
-				'scope_group_name': 'Mail Settings',
-				'username': 'teammate1',
-				'email': 'teammate1@example.com',
-				'first_name': 'Teammate',
-				'last_name': 'One'
+				""id"": 1,
+				""scope_group_name"": ""Mail Settings"",
+				""username"": ""teammate1"",
+				""email"": ""teammate1@example.com"",
+				""first_name"": ""Teammate"",
+				""last_name"": ""One""
 			},
 			{
-				'id': 2,
-				'scope_group_name': 'Stats',
-				'username': 'teammate2',
-				'email': 'teammate2@example.com',
-				'first_name': 'Teammate',
-				'last_name': 'Two'
+				""id"": 2,
+				""scope_group_name"": ""Stats"",
+				""username"": ""teammate2"",
+				""email"": ""teammate2@example.com"",
+				""first_name"": ""Teammate"",
+				""last_name"": ""Two""
 			}
 		]";
 		private const string SINGLE_INVITATION_JSON = @"{
-			'email': 'teammate1 @example.com',
-			'scopes': [
-				'user.profile.read',
-				'user.profile.update'
+			""email"": ""teammate1 @example.com"",
+			""scopes"": [
+				""user.profile.read"",
+				""user.profile.update""
 			],
-			'is_admin': false
+			""is_admin"": false
 		}";
 		private const string MULTIPLE_INVITATIONS_JSON = @"{
-			'result': [
+			""result"": [
 				{
-					'email': 'user1@example.com',
-					'scopes': [
-						'user.profile.read',
-						'user.profile.edit'
+					""email"": ""user1@example.com"",
+					""scopes"": [
+						""user.profile.read"",
+						""user.profile.edit""
 					],
-					'is_admin': false,
-					'pending_id': 'abcd123abc',
-					'expiration_date': 1456424263
+					""is_admin"": false,
+					""pending_id"": ""abcd123abc"",
+					""expiration_date"": 1456424263
 				},
 				{
-					'email': 'user2@example.com',
-					'scopes': [],
-					'is_admin': true,
-					'pending_id': 'bcde234bcd',
-					'expiration_date': 1456424263
+					""email"": ""user2@example.com"",
+					""scopes"": [],
+					""is_admin"": true,
+					""pending_id"": ""bcde234bcd"",
+					""expiration_date"": 1456424263
 				}
 			]
 		}";
 		private const string SINGLE_TEAMMATE_JSON = @"{
-			'username': 'teammate1',
-			'email': 'teammate1@example.com',
-			'first_name': 'Jane',
-			'last_name': 'Doe',
-			'user_type': 'owner',
-			'is_admin': true,
-			'phone': '123-345-3453',
-			'website': 'www.example.com',
-			'company': 'ACME Inc.',
-			'address': '123 Acme St',
-			'address2': '',
-			'city': 'City',
-			'state': 'CA',
-			'country': 'USA',
-			'zip': '12345'
+			""username"": ""teammate1"",
+			""email"": ""teammate1@example.com"",
+			""first_name"": ""Jane"",
+			""last_name"": ""Doe"",
+			""user_type"": ""owner"",
+			""is_admin"": true,
+			""phone"": ""123-345-3453"",
+			""website"": ""www.example.com"",
+			""company"": ""ACME Inc."",
+			""address"": ""123 Acme St"",
+			""address2"": """",
+			""city"": ""City"",
+			""state"": ""CA"",
+			""country"": ""USA"",
+			""zip"": ""12345""
 		}";
 		private const string MULTIPLE_TEAMMATES_JSON = @"{
-			'result': [
+			""result"": [
 				{
-					'username': 'teammate2',
-					'email': 'teammate2@example.com',
-					'first_name': 'John',
-					'last_name': 'Doe',
-					'user_type': 'teammate',
-					'is_admin': false,
-					'phone': '123-345-3453',
-					'website': 'www.example.com',
-					'company': 'ACME Inc.',
-					'address': '123 Acme St',
-					'address2': '',
-					'city': 'City',
-					'state': 'CA',
-					'country': 'USA',
-					'zip': '12345'
+					""username"": ""teammate2"",
+					""email"": ""teammate2@example.com"",
+					""first_name"": ""John"",
+					""last_name"": ""Doe"",
+					""user_type"": ""teammate"",
+					""is_admin"": false,
+					""phone"": ""123-345-3453"",
+					""website"": ""www.example.com"",
+					""company"": ""ACME Inc."",
+					""address"": ""123 Acme St"",
+					""address2"": """",
+					""city"": ""City"",
+					""state"": ""CA"",
+					""country"": ""USA"",
+					""zip"": ""12345""
 				},
 				{
-					'username': 'teammate3',
-					'email': 'teammate3@example.com',
-					'first_name': 'Steve',
-					'last_name': 'Doe',
-					'user_type': 'admin',
-					'is_admin': true,
-					'phone': '123-345-3453',
-					'website': 'www.example.com',
-					'company': 'ACME Inc.',
-					'address': '123 Acme St',
-					'address2': '',
-					'city': 'City',
-					'state': 'CA',
-					'country': 'USA',
-					'zip': '12345'
+					""username"": ""teammate3"",
+					""email"": ""teammate3@example.com"",
+					""first_name"": ""Steve"",
+					""last_name"": ""Doe"",
+					""user_type"": ""admin"",
+					""is_admin"": true,
+					""phone"": ""123-345-3453"",
+					""website"": ""www.example.com"",
+					""company"": ""ACME Inc."",
+					""address"": ""123 Acme St"",
+					""address2"": """",
+					""city"": ""City"",
+					""state"": ""CA"",
+					""country"": ""USA"",
+					""zip"": ""12345""
 				}
 			]
 		}";
@@ -128,7 +128,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<Teammate>(SINGLE_TEAMMATE_JSON);
+			var result = JsonSerializer.Deserialize<Teammate>(SINGLE_TEAMMATE_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();

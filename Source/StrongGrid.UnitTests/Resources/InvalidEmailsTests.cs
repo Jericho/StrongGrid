@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
@@ -6,6 +5,7 @@ using StrongGrid.Resources;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -19,20 +19,20 @@ namespace StrongGrid.UnitTests.Resources
 		private const string ENDPOINT = "suppression/invalid_emails";
 
 		private const string SINGLE_INVALID_EMAIL_JSON = @"{
-			'created': 1454433146,
-			'email': 'test1@example.com',
-			'reason': 'Mail domain mentioned in email address is unknown'
+			""created"": 1454433146,
+			""email"": ""test1@example.com"",
+			""reason"": ""Mail domain mentioned in email address is unknown""
 		}";
 		private const string MULTIPLE_INVALID_EMAILS_JSON = @"[
 			{
-				'created': 1449953655,
-				'email': 'user1@example.com',
-				'reason': 'Mail domain mentioned in email address is unknown'
+				""created"": 1449953655,
+				""email"": ""user1@example.com"",
+				""reason"": ""Mail domain mentioned in email address is unknown""
 			},
 			{
-				'created': 1449939373,
-				'email': 'user1@example.com',
-				'reason': 'Mail domain mentioned in email address is unknown'
+				""created"": 1449939373,
+				""email"": ""user1@example.com"",
+				""reason"": ""Mail domain mentioned in email address is unknown""
 			}
 		]";
 
@@ -44,7 +44,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<InvalidEmail>(SINGLE_INVALID_EMAIL_JSON);
+			var result = JsonSerializer.Deserialize<InvalidEmail>(SINGLE_INVALID_EMAIL_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();

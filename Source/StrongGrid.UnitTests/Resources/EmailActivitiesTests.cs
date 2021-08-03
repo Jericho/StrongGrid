@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
@@ -8,6 +7,7 @@ using StrongGrid.Resources;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -21,19 +21,19 @@ namespace StrongGrid.UnitTests.Resources
 		private const string ENDPOINT = "messages";
 
 		private const string SINGLE_MESSAGE = @"{
-			'from_email': 'test@example.com',
-			'msg_id': 'thtIPCIcR_iFZDws2JCrwA.filter0004p3las1-2776-5ACA5525-31.1',
-			'subject': 'Dear customer',
-			'to_email': 'bob@example.com',
-			'status': 'delivered',
-			'opens_count': 2,
-			'clicks_count': 1,
-			'last_event_time': '2018-04-08T17:47:18Z'
+			""from_email"": ""test@example.com"",
+			""msg_id"": ""thtIPCIcR_iFZDws2JCrwA.filter0004p3las1-2776-5ACA5525-31.1"",
+			""subject"": ""Dear customer"",
+			""to_email"": ""bob@example.com"",
+			""status"": ""delivered"",
+			""opens_count"": 2,
+			""clicks_count"": 1,
+			""last_event_time"": ""2018-04-08T17:47:18Z""
 		}";
 
-		private const string NO_MESSAGES_FOUND = "{'messages':[]}";
-		private const string ONE_MESSAGE_FOUND = "{'messages':[" + SINGLE_MESSAGE + "]}";
-		private const string MULTIPLE_MESSAGES_FOUND = "{'messages':[" +
+		private const string NO_MESSAGES_FOUND = "{\"messages\":[]}";
+		private const string ONE_MESSAGE_FOUND = "{\"messages\":[" + SINGLE_MESSAGE + "]}";
+		private const string MULTIPLE_MESSAGES_FOUND = "{\"messages\":[" +
 			SINGLE_MESSAGE + "," +
 			SINGLE_MESSAGE + "," +
 			SINGLE_MESSAGE +
@@ -47,7 +47,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<EmailMessageActivity>(SINGLE_MESSAGE);
+			var result = JsonSerializer.Deserialize<EmailMessageActivity>(SINGLE_MESSAGE);
 
 			// Assert
 			result.ShouldNotBeNull();

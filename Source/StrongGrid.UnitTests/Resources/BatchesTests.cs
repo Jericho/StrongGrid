@@ -16,23 +16,23 @@ namespace StrongGrid.UnitTests.Resources
 		private const string ENDPOINT = "mail/batch";
 
 		private const string SINGLE_BATCH_JSON = @"{
-			'batch_id': 'BATCH_ID_1',
-			'status': 'cancel'
+			""batch_id"": ""BATCH_ID_1"",
+			""status"": ""cancel""
 		}";
 		private const string MULTIPLE_BATCHES_JSON = @"[
 			{
-				'batch_id': 'BATCH_ID_1',
-				'status': 'cancel'
+				""batch_id"": ""BATCH_ID_1"",
+				""status"": ""cancel""
 			},
 			{
-				'batch_id': 'BATCH_ID_2',
-				'status': 'pause'
+				""batch_id"": ""BATCH_ID_2"",
+				""status"": ""pause""
 			}
 		]";
 		private const string MULTIPLE_BATCHES_SINGLE_ITEM_JSON = @"[
 			{
-				'batch_id': 'BATCH_ID_1',
-				'status': 'cancel'
+				""batch_id"": ""BATCH_ID_1"",
+				""status"": ""cancel""
 			}
 		]";
 		private const string EMPTY_BATCHES_JSON = @"[
@@ -66,7 +66,7 @@ namespace StrongGrid.UnitTests.Resources
 			var batchId = "ABC123";
 
 			var apiResponse = @"{
-				'batch_id': 'ABC123'
+				""batch_id"": ""ABC123""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -91,10 +91,10 @@ namespace StrongGrid.UnitTests.Resources
 			var batchId = "ABC123";
 
 			var apiResponse = @"{
-				'errors': [
+				""errors"": [
 					{
-						'field': null,
-						'message': 'invalid batch id'
+						""field"": null,
+						""message"": ""invalid batch id""
 					}
 				]
 			}";
@@ -121,10 +121,10 @@ namespace StrongGrid.UnitTests.Resources
 			var batchId = "ABC123";
 
 			var apiResponse = @"{
-				'errors': [
+				""errors"": [
 					{
-						'field': null,
-						'message': 'an error has occurred'
+						""field"": null,
+						""message"": ""an error has occurred""
 					}
 				]
 			}";

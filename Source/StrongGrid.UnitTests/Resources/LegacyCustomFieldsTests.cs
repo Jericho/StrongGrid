@@ -1,10 +1,10 @@
-using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Resources.Legacy;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -18,26 +18,26 @@ namespace StrongGrid.UnitTests.Resources
 		private const string ENDPOINT = "contactdb/custom_fields";
 
 		private const string SINGLE_CUSTOM_FIELD_JSON = @"{
-			'id': 1,
-			'name': 'customfield1',
-			'type': 'text'
+			""id"": 1,
+			""name"": ""customfield1"",
+			""type"": ""text""
 		}";
 		private const string MULTIPLE_CUSTOM_FIELDS_JSON = @"{
-			'custom_fields': [
+			""custom_fields"": [
 				{
-					'id': 1,
-					'name': 'birthday',
-					'type': 'date'
+					""id"": 1,
+					""name"": ""birthday"",
+					""type"": ""date""
 				},
 				{
-					'id': 2,
-					'name': 'middle_name',
-					'type': 'text'
+					""id"": 2,
+					""name"": ""middle_name"",
+					""type"": ""text""
 				},
 				{
-					'id': 3,
-					'name': 'favorite_number',
-					'type': 'number'
+					""id"": 3,
+					""name"": ""favorite_number"",
+					""type"": ""number""
 				}
 			]
 		}";
@@ -50,7 +50,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<StrongGrid.Models.Legacy.CustomFieldMetadata>(SINGLE_CUSTOM_FIELD_JSON);
+			var result = JsonSerializer.Deserialize<StrongGrid.Models.Legacy.CustomFieldMetadata>(SINGLE_CUSTOM_FIELD_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -147,42 +147,42 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'reserved_fields': [
+				""reserved_fields"": [
 					{
-						'name': 'first_name',
-						'type': 'text'
+						""name"": ""first_name"",
+						""type"": ""text""
 					},
 					{
-						'name': 'last_name',
-						'type': 'text'
+						""name"": ""last_name"",
+						""type"": ""text""
 					},
 					{
-						'name': 'email',
-						'type': 'text'
+						""name"": ""email"",
+						""type"": ""text""
 					},
 					{
-						'name': 'created_at',
-						'type': 'date'
+						""name"": ""created_at"",
+						""type"": ""date""
 					},
 					{
-						'name': 'updated_at',
-						'type': 'date'
+						""name"": ""updated_at"",
+						""type"": ""date""
 					},
 					{
-						'name': 'last_emailed',
-						'type': 'date'
+						""name"": ""last_emailed"",
+						""type"": ""date""
 					},
 					{
-						'name': 'last_clicked',
-						'type': 'date'
+						""name"": ""last_clicked"",
+						""type"": ""date""
 					},
 					{
-						'name': 'last_opened',
-						'type': 'date'
+						""name"": ""last_opened"",
+						""type"": ""date""
 					},
 					{
-						'name': 'my_custom_field',
-						'type': 'text'
+						""name"": ""my_custom_field"",
+						""type"": ""text""
 					}
 				]
 			}";

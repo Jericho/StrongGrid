@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
@@ -6,6 +5,7 @@ using StrongGrid.Resources;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -19,52 +19,52 @@ namespace StrongGrid.UnitTests.Resources
 		private const string ENDPOINT = "designs";
 
 		private const string SINGLE_DESIGN_JSON = @"{
-			'id':'4fa4db1f-219e-4599-8239-05dde4404611',
-			'name':'This is my name',
-			'html_content':'<html><body>This is a test</body></html>',
-			'plain_content':'This is a test',
-			'generate_plain_content':true,
-			'thumbnail_url':'//us-east-2-production-thumbnail-bucket.s3.amazonaws.com/a6d262cec2588fe05c894ea162f8a1f26d91f37fe7fa412f2c3ecf091d14d60b.png',
-			'subject':'This is the subject',
-			'created_at':'2019-12-24T20:14:41Z',
-			'updated_at':'2019-12-24T20:15:22Z',
-			'editor':'code',
-			'categories':['one','two','three']
+			""id"":""4fa4db1f-219e-4599-8239-05dde4404611"",
+			""name"":""This is my name"",
+			""html_content"":""<html><body>This is a test</body></html>"",
+			""plain_content"":""This is a test"",
+			""generate_plain_content"":true,
+			""thumbnail_url"":""//us-east-2-production-thumbnail-bucket.s3.amazonaws.com/a6d262cec2588fe05c894ea162f8a1f26d91f37fe7fa412f2c3ecf091d14d60b.png"",
+			""subject"":""This is the subject"",
+			""created_at"":""2019-12-24T20:14:41Z"",
+			""updated_at"":""2019-12-24T20:15:22Z"",
+			""editor"":""code"",
+			""categories"":[""one"",""two"",""three""]
 		}";
 		private const string MULTIPLE_DESIGNS_JSON = @"{
-			'result': [
+			""result"": [
 				{
-					'id':'4fa4db1f-219e-4599-8239-05dde4404611',
-					'name':'This is my name',
-					'html_content':'<html><body>This is a test</body></html>',
-					'plain_content':'This is a test',
-					'generate_plain_content':true,
-					'thumbnail_url':'//us-east-2-production-thumbnail-bucket.s3.amazonaws.com/a6d262cec2588fe05c894ea162f8a1f26d91f37fe7fa412f2c3ecf091d14d60b.png',
-					'subject':'This is the subject',
-					'created_at':'2019-12-24T20:14:41Z',
-					'updated_at':'2019-12-24T20:15:22Z',
-					'editor':'code',
-					'categories':['one','two','three']
+					""id"":""4fa4db1f-219e-4599-8239-05dde4404611"",
+					""name"":""This is my name"",
+					""html_content"":""<html><body>This is a test</body></html>"",
+					""plain_content"":""This is a test"",
+					""generate_plain_content"":true,
+					""thumbnail_url"":""//us-east-2-production-thumbnail-bucket.s3.amazonaws.com/a6d262cec2588fe05c894ea162f8a1f26d91f37fe7fa412f2c3ecf091d14d60b.png"",
+					""subject"":""This is the subject"",
+					""created_at"":""2019-12-24T20:14:41Z"",
+					""updated_at"":""2019-12-24T20:15:22Z"",
+					""editor"":""code"",
+					""categories"":[""one"",""two"",""three""]
 				},
 				{
-					'id':'another_key',
-					'name':'Another name',
-					'html_content':'<html><body>This is another test</body></html>',
-					'plain_content':'This is another test',
-					'generate_plain_content':true,
-					'thumbnail_url':'//us-east-2-production-thumbnail-bucket.s3.amazonaws.com/a6d262cec2588fe05c894ea162f8a1f26d91f37fe7fa412f2c3ecf091d14d60b.png',
-					'subject':'This is the other subject',
-					'created_at':'2019-12-24T20:14:41Z',
-					'updated_at':'2019-12-24T20:15:22Z',
-					'editor':'code',
-					'categories':['four','five']
+					""id"":""another_key"",
+					""name"":""Another name"",
+					""html_content"":""<html><body>This is another test</body></html>"",
+					""plain_content"":""This is another test"",
+					""generate_plain_content"":true,
+					""thumbnail_url"":""//us-east-2-production-thumbnail-bucket.s3.amazonaws.com/a6d262cec2588fe05c894ea162f8a1f26d91f37fe7fa412f2c3ecf091d14d60b.png"",
+					""subject"":""This is the other subject"",
+					""created_at"":""2019-12-24T20:14:41Z"",
+					""updated_at"":""2019-12-24T20:15:22Z"",
+					""editor"":""code"",
+					""categories"":[""four"",""five""]
 				}
 			],
-			'_metadata':{
-				'prev':'https://api.sendgrid.com/v3/designs?page_token=prev_token',
-				'self':'https://api.sendgrid.com/v3/designs?page_token=self_token',
-				'next':'https://api.sendgrid.com/v3/designs?page_token=next_token',
-				'count':5
+			""_metadata"":{
+				""prev"":""https://api.sendgrid.com/v3/designs?page_token=prev_token"",
+				""self"":""https://api.sendgrid.com/v3/designs?page_token=self_token"",
+				""next"":""https://api.sendgrid.com/v3/designs?page_token=next_token"",
+				""count"":5
 			}
 		}";
 
@@ -76,7 +76,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<Design>(SINGLE_DESIGN_JSON);
+			var result = JsonSerializer.Deserialize<Design>(SINGLE_DESIGN_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();

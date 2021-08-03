@@ -1,10 +1,10 @@
-using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Resources;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -19,26 +19,26 @@ namespace StrongGrid.UnitTests.Resources
 		private const string INBOUNDPARSE_ENDPOINT = "user/webhooks/parse";
 
 		private const string SINGLE_EVENT_WEBHOOK_SETTING_JSON = @"{
-			'enabled': true,
-			'url': 'url',
-			'group_resubscribe': true,
-			'delivered': true,
-			'group_unsubscribe': true,
-			'spam_report': true,
-			'bounce': true,
-			'deferred': true,
-			'unsubscribe': true,
-			'processed': true,
-			'open': true,
-			'click': true,
-			'dropped': true
+			""enabled"": true,
+			""url"": ""url"",
+			""group_resubscribe"": true,
+			""delivered"": true,
+			""group_unsubscribe"": true,
+			""spam_report"": true,
+			""bounce"": true,
+			""deferred"": true,
+			""unsubscribe"": true,
+			""processed"": true,
+			""open"": true,
+			""click"": true,
+			""dropped"": true
 		}";
 
 		private const string SINGLE_INBOUNDPARSE_WEBHOOK_SETTING_JSON = @"{
-			'hostname': 'myhostname.com',
-			'url': 'http://email.myhosthame.com',
-			'spam_check': true,
-			'send_raw': false
+			""hostname"": ""myhostname.com"",
+			""url"": ""http://email.myhosthame.com"",
+			""spam_check"": true,
+			""send_raw"": false
 		}";
 
 		#endregion
@@ -49,7 +49,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<EventWebhookSettings>(SINGLE_EVENT_WEBHOOK_SETTING_JSON);
+			var result = JsonSerializer.Deserialize<EventWebhookSettings>(SINGLE_EVENT_WEBHOOK_SETTING_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -73,7 +73,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<InboundParseWebhookSettings>(SINGLE_INBOUNDPARSE_WEBHOOK_SETTING_JSON);
+			var result = JsonSerializer.Deserialize<InboundParseWebhookSettings>(SINGLE_INBOUNDPARSE_WEBHOOK_SETTING_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -89,19 +89,19 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			var apiResponse = @"{
-				'enabled': true,
-				'url': 'url',
-				'group_resubscribe': true,
-				'delivered': true,
-				'group_unsubscribe': true,
-				'spam_report': true,
-				'bounce': true,
-				'deferred': true,
-				'unsubscribe': true,
-				'processed': true,
-				'open': true,
-				'click': true,
-				'dropped': true
+				""enabled"": true,
+				""url"": ""url"",
+				""group_resubscribe"": true,
+				""delivered"": true,
+				""group_unsubscribe"": true,
+				""spam_report"": true,
+				""bounce"": true,
+				""deferred"": true,
+				""unsubscribe"": true,
+				""processed"": true,
+				""open"": true,
+				""click"": true,
+				""dropped"": true
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -150,19 +150,19 @@ namespace StrongGrid.UnitTests.Resources
 			var unsubscribe = true;
 
 			var apiResponse = @"{
-				'enabled': true,
-				'url': 'url',
-				'group_resubscribe': true,
-				'delivered': true,
-				'group_unsubscribe': true,
-				'spam_report': true,
-				'bounce': true,
-				'deferred': true,
-				'unsubscribe': true,
-				'processed': true,
-				'open': true,
-				'click': true,
-				'dropped': true
+				""enabled"": true,
+				""url"": ""url"",
+				""group_resubscribe"": true,
+				""delivered"": true,
+				""group_unsubscribe"": true,
+				""spam_report"": true,
+				""bounce"": true,
+				""deferred"": true,
+				""unsubscribe"": true,
+				""processed"": true,
+				""open"": true,
+				""click"": true,
+				""dropped"": true
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -225,7 +225,7 @@ namespace StrongGrid.UnitTests.Resources
 		public async Task GetAllInboundParseWebhookSettings()
 		{
 			// Arrange
-			var apiResponse = "{'result':[" +
+			var apiResponse = "{\"result\":[" +
 				SINGLE_INBOUNDPARSE_WEBHOOK_SETTING_JSON + "," +
 				SINGLE_INBOUNDPARSE_WEBHOOK_SETTING_JSON +
 			"]}";

@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
@@ -6,6 +5,7 @@ using StrongGrid.Models.Legacy;
 using StrongGrid.Resources.Legacy;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -19,45 +19,45 @@ namespace StrongGrid.UnitTests.Resources
 		private const string ENDPOINT = "contactdb/segments";
 
 		private const string SINGLE_SEGMENT_JSON = @"{
-			'id': 1,
-			'name': 'Last Name Miller',
-			'list_id': 4,
-			'conditions': [
+			""id"": 1,
+			""name"": ""Last Name Miller"",
+			""list_id"": 4,
+			""conditions"": [
 				{
-					'field': 'last_name',
-					'value': 'Miller',
-					'operator': 'eq',
-					'and_or': ''
+					""field"": ""last_name"",
+					""value"": ""Miller"",
+					""operator"": ""eq"",
+					""and_or"": """"
 				},
 				{
-					'field': 'last_clicked',
-					'value': '01/02/2015',
-					'operator': 'gt',
-					'and_or': 'and'
+					""field"": ""last_clicked"",
+					""value"": ""01/02/2015"",
+					""operator"": ""gt"",
+					""and_or"": ""and""
 				},
 				{
-					'field': 'clicks.campaign_identifier',
-					'value': '513',
-					'operator': 'eq',
-					'and_or': 'or'
+					""field"": ""clicks.campaign_identifier"",
+					""value"": ""513"",
+					""operator"": ""eq"",
+					""and_or"": ""or""
 				}
 			]
 		}";
 		private const string MULTIPLE_SEGMENTS_JSON = @"{
-			'segments': [
+			""segments"": [
 				{
-					'id': 1,
-					'name': 'Last Name Miller',
-					'list_id': 4,
-					'conditions': [
+					""id"": 1,
+					""name"": ""Last Name Miller"",
+					""list_id"": 4,
+					""conditions"": [
 						{
-							'field': 'last_name',
-							'value': 'Miller',
-							'operator': 'eq',
-							'and_or': ''
+							""field"": ""last_name"",
+							""value"": ""Miller"",
+							""operator"": ""eq"",
+							""and_or"": """"
 						}
 					],
-					'recipient_count': 1
+					""recipient_count"": 1
 				}
 			]
 		}";
@@ -70,7 +70,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<StrongGrid.Models.Legacy.Segment>(SINGLE_SEGMENT_JSON);
+			var result = JsonSerializer.Deserialize<StrongGrid.Models.Legacy.Segment>(SINGLE_SEGMENT_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -268,23 +268,23 @@ namespace StrongGrid.UnitTests.Resources
 			var page = 1;
 
 			var apiResponse = @"{
-				'recipients': [
+				""recipients"": [
 					{
-						'created_at': 1422313607,
-						'email': 'jones@example.com',
-						'first_name': null,
-						'id': 'YUBh',
-						'last_clicked': null,
-						'last_emailed': null,
-						'last_name': 'Jones',
-						'last_opened': null,
-						'updated_at': 1422313790,
-						'custom_fields': [
+						""created_at"": 1422313607,
+						""email"": ""jones@example.com"",
+						""first_name"": null,
+						""id"": ""YUBh"",
+						""last_clicked"": null,
+						""last_emailed"": null,
+						""last_name"": ""Jones"",
+						""last_opened"": null,
+						""updated_at"": 1422313790,
+						""custom_fields"": [
 							{
-								'id': 23,
-								'name': 'pet',
-								'value': 'Indiana',
-								'type': 'text'
+								""id"": 23,
+								""name"": ""pet"",
+								""value"": ""Indiana"",
+								""type"": ""text""
 							}
 						]
 					}

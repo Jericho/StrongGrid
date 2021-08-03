@@ -1,10 +1,10 @@
-using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Resources;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -18,24 +18,24 @@ namespace StrongGrid.UnitTests.Resources
 		private const string ENDPOINT = "api_keys";
 
 		private const string SINGLE_API_KEY_JSON = @"{
-			'api_key': 'SG.xxxxxxxx.yyyyyyyy',
-			'api_key_id': 'xxxxxxxx',
-			'name': 'My API Key',
-			'scopes': [
-				'mail.send',
-				'alerts.create',
-				'alerts.read'
+			""api_key"": ""SG.xxxxxxxx.yyyyyyyy"",
+			""api_key_id"": ""xxxxxxxx"",
+			""name"": ""My API Key"",
+			""scopes"": [
+				""mail.send"",
+				""alerts.create"",
+				""alerts.read""
 			]
 		}";
 		private const string MULTIPLE_API_KEY_JSON = @"{
-			'result': [
+			""result"": [
 				{
-					'name': 'A New Hope',
-					'api_key_id': 'xxxxxxxx'
+					""name"": ""A New Hope"",
+					""api_key_id"": ""xxxxxxxx""
 				},
 				{
-					'name': 'Another key',
-					'api_key_id': 'yyyyyyyy'
+					""name"": ""Another key"",
+					""api_key_id"": ""yyyyyyyy""
 				}
 			]
 		}";
@@ -48,7 +48,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<ApiKey>(SINGLE_API_KEY_JSON);
+			var result = JsonSerializer.Deserialize<ApiKey>(SINGLE_API_KEY_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -214,10 +214,10 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 			var name = "My API Key with all permissions";
 			var userScopesJson = @"{
-				'scopes': [
-					'aaa',
-					'bbb',
-					'ccc'
+				""scopes"": [
+					""aaa"",
+					""bbb"",
+					""ccc""
 				]
 			}";
 
@@ -243,10 +243,10 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 			var name = "My API Key with read-only permissions";
 			var userScopesJson = @"{
-				'scopes': [
-					'aaa',
-					'bbb',
-					'ccc'
+				""scopes"": [
+					""aaa"",
+					""bbb"",
+					""ccc""
 				]
 			}";
 

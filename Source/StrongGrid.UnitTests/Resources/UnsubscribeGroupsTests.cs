@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Resources;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -18,27 +18,27 @@ namespace StrongGrid.UnitTests.Resources
 		private const string ENDPOINT = "asm/groups";
 
 		private const string SINGLE_SUPPRESSION_GROUP_JSON = @"{
-			'id': 1,
-			'name': 'Product Suggestions',
-			'description': 'Suggestions for products our users might like.',
-			'is_default': true
+			""id"": 1,
+			""name"": ""Product Suggestions"",
+			""description"": ""Suggestions for products our users might like."",
+			""is_default"": true
 		}";
 		private const string MULTIPLE_SUPPRESSION_GROUPS_JSON = @"[
 			{
-				'id': 100,
-				'name': 'Newsletters',
-				'description': 'Our monthly newsletter.',
-				'last_email_sent_at': null,
-				'is_default': true,
-				'unsubscribes': 400
+				""id"": 100,
+				""name"": ""Newsletters"",
+				""description"": ""Our monthly newsletter."",
+				""last_email_sent_at"": null,
+				""is_default"": true,
+				""unsubscribes"": 400
 			},
 			{
-				'id': 101,
-				'name': 'Alerts',
-				'description 2': 'Emails triggered by user-defined rules.',
-				'last_email_sent_at': null,
-				'is_default': false,
-				'unsubscribes': 1
+				""id"": 101,
+				""name"": ""Alerts"",
+				""description 2"": ""Emails triggered by user-defined rules."",
+				""last_email_sent_at"": null,
+				""is_default"": false,
+				""unsubscribes"": 1
 			}
 		]";
 
@@ -50,7 +50,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<SuppressionGroup>(SINGLE_SUPPRESSION_GROUP_JSON);
+			var result = JsonSerializer.Deserialize<SuppressionGroup>(SINGLE_SUPPRESSION_GROUP_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -69,9 +69,9 @@ namespace StrongGrid.UnitTests.Resources
 			var isDefault = true;
 
 			var apiResponse = @"{
-				'name': 'Product Suggestions',
-				'description': 'Suggestions for products our users might like.',
-				'is_default': true
+				""name"": ""Product Suggestions"",
+				""description"": ""Suggestions for products our users might like."",
+				""is_default"": true
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();

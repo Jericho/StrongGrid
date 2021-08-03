@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
@@ -6,6 +5,7 @@ using StrongGrid.Resources;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -20,21 +20,21 @@ namespace StrongGrid.UnitTests.Resources
 
 		private const string SINGLE_SPAM_REPORT_JSON = @"[
 				{
-					'created': 1454433146,
-					'email': 'test1@example.com',
-					'ip': '10.89.32.5'
+					""created"": 1454433146,
+					""email"": ""test1@example.com"",
+					""ip"": ""10.89.32.5""
 				}
 		]";
 		private const string MULTIPLE_SPAM_REPORTS_JSON = @"[
 			{
-				'created': 1443651141,
-				'email': 'user1@example.com',
-				'ip': '10.63.202.100'
+				""created"": 1443651141,
+				""email"": ""user1@example.com"",
+				""ip"": ""10.63.202.100""
 			},
 			{
-				'created': 1443651154,
-				'email': 'user2@example.com',
-				'ip': '10.63.202.100'
+				""created"": 1443651154,
+				""email"": ""user2@example.com"",
+				""ip"": ""10.63.202.100""
 			}
 		]";
 
@@ -46,7 +46,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<SpamReport[]>(SINGLE_SPAM_REPORT_JSON);
+			var result = JsonSerializer.Deserialize<SpamReport[]>(SINGLE_SPAM_REPORT_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();

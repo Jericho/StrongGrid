@@ -1,6 +1,6 @@
-using Newtonsoft.Json;
 using Shouldly;
 using StrongGrid.Models;
+using System.Text.Json;
 using Xunit;
 
 namespace StrongGrid.UnitTests.Models
@@ -8,22 +8,22 @@ namespace StrongGrid.UnitTests.Models
 	public class PaginationMetadataTests
 	{
 		private const string FIRST_PAGE_JSON = @"{
-			'self':'https://api.sendgrid.com/v3/designs?page_token=self_token',
-			'next':'https://api.sendgrid.com/v3/designs?page_token=next_token',
-			'count':5
+			""self"":""https://api.sendgrid.com/v3/designs?page_token=self_token"",
+			""next"":""https://api.sendgrid.com/v3/designs?page_token=next_token"",
+			""count"":5
 		}";
 
 		private const string MIDDLE_PAGE_JSON = @"{
-			'prev':'https://api.sendgrid.com/v3/designs?page_token=prev_token',
-			'self':'https://api.sendgrid.com/v3/designs?page_token=self_token',
-			'next':'https://api.sendgrid.com/v3/designs?page_token=next_token',
-			'count':5
+			""prev"":""https://api.sendgrid.com/v3/designs?page_token=prev_token"",
+			""self"":""https://api.sendgrid.com/v3/designs?page_token=self_token"",
+			""next"":""https://api.sendgrid.com/v3/designs?page_token=next_token"",
+			""count"":5
 		}";
 
 		private const string LAST_PAGE_JSON = @"{
-			'prev':'https://api.sendgrid.com/v3/designs?page_token=prev_token',
-			'self':'https://api.sendgrid.com/v3/designs?page_token=self_token',
-			'count':5
+			""prev"":""https://api.sendgrid.com/v3/designs?page_token=prev_token"",
+			""self"":""https://api.sendgrid.com/v3/designs?page_token=self_token"",
+			""count"":5
 		}";
 
 		[Fact]
@@ -32,7 +32,7 @@ namespace StrongGrid.UnitTests.Models
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<PaginationMetadata>(FIRST_PAGE_JSON);
+			var result = JsonSerializer.Deserialize<PaginationMetadata>(FIRST_PAGE_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -51,7 +51,7 @@ namespace StrongGrid.UnitTests.Models
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<PaginationMetadata>(MIDDLE_PAGE_JSON);
+			var result = JsonSerializer.Deserialize<PaginationMetadata>(MIDDLE_PAGE_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -70,7 +70,7 @@ namespace StrongGrid.UnitTests.Models
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<PaginationMetadata>(LAST_PAGE_JSON);
+			var result = JsonSerializer.Deserialize<PaginationMetadata>(LAST_PAGE_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();

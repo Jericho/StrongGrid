@@ -1,9 +1,9 @@
-using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Resources;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -15,10 +15,10 @@ namespace StrongGrid.UnitTests.Resources
 		#region FIELDS
 
 		private const string SINGLE_GLOBAL_SETTING_JSON = @"{
-			'name': 'bcc',
-			'title': 'BCC',
-			'description': 'lorem ipsum... .',
-			'enabled': true
+			""name"": ""bcc"",
+			""title"": ""BCC"",
+			""description"": ""lorem ipsum... ."",
+			""enabled"": true
 		}";
 
 		#endregion
@@ -29,7 +29,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<GlobalSetting>(SINGLE_GLOBAL_SETTING_JSON);
+			var result = JsonSerializer.Deserialize<GlobalSetting>(SINGLE_GLOBAL_SETTING_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -44,8 +44,8 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'require_tls': true,
-				'require_valid_cert': false
+				""require_tls"": true,
+				""require_valid_cert"": false
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -73,8 +73,8 @@ namespace StrongGrid.UnitTests.Resources
 			var requireValidCert = true;
 
 			var apiResponse = @"{
-				'require_tls': true,
-				'require_valid_cert': true
+				""require_tls"": true,
+				""require_valid_cert"": true
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -102,12 +102,12 @@ namespace StrongGrid.UnitTests.Resources
 			var offset = 3;
 
 			var apiResponse = @"{
-				'result': [
+				""result"": [
 					{
-						'name': 'bcc',
-						'title': 'BCC',
-						'description': 'lorem ipsum... .',
-						'enabled': true
+						""name"": ""bcc"",
+						""title"": ""BCC"",
+						""description"": ""lorem ipsum... ."",
+						""enabled"": true
 					}
 				]
 			}";
@@ -137,12 +137,12 @@ namespace StrongGrid.UnitTests.Resources
 			var offset = 3;
 
 			var apiResponse = @"{
-				'result': [
+				""result"": [
 					{
-						'name': 'new_relic',
-						'title': 'New Relic',
-						'description': 'lorem ipsum... .',
-						'enabled': true
+						""name"": ""new_relic"",
+						""title"": ""New Relic"",
+						""description"": ""lorem ipsum... ."",
+						""enabled"": true
 					}
 				]
 			}";
@@ -169,8 +169,8 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'enabled': true,
-				'license_key': 'key'
+				""enabled"": true,
+				""license_key"": ""key""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -198,8 +198,8 @@ namespace StrongGrid.UnitTests.Resources
 			var licenseKey = "abc123";
 
 			var apiResponse = @"{
-				'enabled': true,
-				'license_key': 'abc123'
+				""enabled"": true,
+				""license_key"": ""abc123""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -227,12 +227,12 @@ namespace StrongGrid.UnitTests.Resources
 			var offset = 3;
 
 			var apiResponse = @"{
-				'result': [
+				""result"": [
 					{
-						'name': 'open',
-						'title': 'Open Tracking',
-						'description': 'lorem ipsum... .',
-						'enabled': true
+						""name"": ""open"",
+						""title"": ""Open Tracking"",
+						""description"": ""lorem ipsum... ."",
+						""enabled"": true
 					}
 				]
 			}";
@@ -259,8 +259,8 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'enable_text': true,
-				'enabled': false,
+				""enable_text"": true,
+				""enabled"": false
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -287,8 +287,8 @@ namespace StrongGrid.UnitTests.Resources
 			var enabledInHtml = true;
 
 			var apiResponse = @"{
-				'enable_text': false,
-				'enabled': true,
+				""enable_text"": false,
+				""enabled"": true
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -312,12 +312,12 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'enabled': true,
-				'utm_source': 'sendgrid.com',
-				'utm_medium': 'email',
-				'utm_term': '',
-				'utm_content': '',
-				'utm_campaign': 'website'
+				""enabled"": true,
+				""utm_source"": ""sendgrid.com"",
+				""utm_medium"": ""email"",
+				""utm_term"": """",
+				""utm_content"": """",
+				""utm_campaign"": ""website""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -353,12 +353,12 @@ namespace StrongGrid.UnitTests.Resources
 			var utmCampaign = "website";
 
 			var apiResponse = @"{
-				'enabled': true,
-				'utm_source': 'sendgrid.com',
-				'utm_medium': 'email',
-				'utm_term': '',
-				'utm_content': '',
-				'utm_campaign': 'website'
+				""enabled"": true,
+				""utm_source"": ""sendgrid.com"",
+				""utm_medium"": ""email"",
+				""utm_term"": """",
+				""utm_content"": """",
+				""utm_campaign"": ""website""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -381,7 +381,7 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'enabled': true,
+				""enabled"": true
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -406,7 +406,7 @@ namespace StrongGrid.UnitTests.Resources
 			var enabled = true;
 
 			var apiResponse = @"{
-				'enabled': true,
+				""enabled"": true
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -429,12 +429,12 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'enabled': true,
-				'landing': 'landing page html',
-				'url': 'url',
-				'replace': 'replacement tag',
-				'html_content': 'html content',
-				'plain_content': 'text content'
+				""enabled"": true,
+				""landing"": ""landing page html"",
+				""url"": ""url"",
+				""replace"": ""replacement tag"",
+				""html_content"": ""html content"",
+				""plain_content"": ""text content""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -470,12 +470,12 @@ namespace StrongGrid.UnitTests.Resources
 			var textContent = "text content";
 
 			var apiResponse = @"{
-				'enabled': true,
-				'landing': 'landing page html',
-				'url': 'url',
-				'replace': 'replacement tag',
-				'html_content': 'html content',
-				'plain_content': 'text content'
+				""enabled"": true,
+				""landing"": ""landing page html"",
+				""url"": ""url"",
+				""replace"": ""replacement tag"",
+				""html_content"": ""html content"",
+				""plain_content"": ""text content""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -498,8 +498,8 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'enabled': true,
-				'email': 'email@example.com'
+				""enabled"": true,
+				""email"": ""email@example.com""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -527,8 +527,8 @@ namespace StrongGrid.UnitTests.Resources
 			var email = "email@example.com";
 
 			var apiResponse = @"{
-				'enabled': true,
-				'email': 'email@example.com'
+				""enabled"": true,
+				""email"": ""email@example.com""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -551,10 +551,10 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'enabled': true,
-				'list': [
-					'email1@example.com',
-					'example.com'
+				""enabled"": true,
+				""list"": [
+					""email1@example.com"",
+					""example.com""
 				]
 			}";
 
@@ -586,10 +586,10 @@ namespace StrongGrid.UnitTests.Resources
 			var emailAddresses = new[] { "email@example.com", "example.com" };
 
 			var apiResponse = @"{
-				'enabled': true,
-				'list': [
-					'email1@example.com',
-					'example.com'
+				""enabled"": true,
+				""list"": [
+					""email1@example.com"",
+					""example.com""
 				]
 			}";
 
@@ -613,9 +613,9 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'enabled': true,
-				'html_content': '... 123 ...',
-				'plain_content': '... abc ...'
+				""enabled"": true,
+				""html_content"": ""... 123 ..."",
+				""plain_content"": ""... abc ...""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -645,9 +645,9 @@ namespace StrongGrid.UnitTests.Resources
 			var textContent = "text content";
 
 			var apiResponse = @"{
-				'enabled': true,
-				'html_content': 'html content',
-				'plain_content': 'text content'
+				""enabled"": true,
+				""html_content"": ""html content"",
+				""plain_content"": ""text content""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -670,8 +670,8 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'enabled': true,
-				'email': 'email address'
+				""enabled"": true,
+				""email"": ""email address""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -699,8 +699,8 @@ namespace StrongGrid.UnitTests.Resources
 			var email = "email address";
 
 			var apiResponse = @"{
-				'enabled': true,
-				'email': 'email address'
+				""enabled"": true,
+				""email"": ""email address""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -723,7 +723,7 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'enabled': true,
+				""enabled"": true
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -748,7 +748,7 @@ namespace StrongGrid.UnitTests.Resources
 			var enabled = true;
 
 			var apiResponse = @"{
-				'enabled': true,
+				""enabled"": true
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -771,9 +771,9 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'enabled': true,
-				'url': 'url',
-				'max_score': 5
+				""enabled"": true,
+				""url"": ""url"",
+				""max_score"": 5
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -803,9 +803,9 @@ namespace StrongGrid.UnitTests.Resources
 			var threshold = 5;
 
 			var apiResponse = @"{
-				'enabled': true,
-				'url': 'url',
-				'max_score': 5
+				""enabled"": true,
+				""url"": ""url"",
+				""max_score"": 5
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -828,8 +828,8 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'enabled': true,
-				'html_content': ' <% body %> '
+				""enabled"": true,
+				""html_content"": "" <% body %> ""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -854,11 +854,11 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var enabled = true;
-			var htmlContent = "' <% body %> ";
+			var htmlContent = " <% body %> ";
 
 			var apiResponse = @"{
-				'enabled': true,
-				'html_content': ' <% body %> '
+				""enabled"": true,
+				""html_content"": "" <% body %> ""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -881,9 +881,9 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'enabled': true,
-				'hard_bounces': 5,
-				'soft_bounces': 5
+				""enabled"": true,
+				""hard_bounces"": 5,
+				""soft_bounces"": 5
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -913,9 +913,9 @@ namespace StrongGrid.UnitTests.Resources
 			var softBounces = 5;
 
 			var apiResponse = @"{
-				'enabled': true,
-				'hard_bounces': 5,
-				'soft_bounces': 5
+				""enabled"": true,
+				""hard_bounces"": 5,
+				""soft_bounces"": 5
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -938,8 +938,8 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'enabled': true,
-				'email': 'email address'
+				""enabled"": true,
+				""email"": ""email address""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -967,8 +967,8 @@ namespace StrongGrid.UnitTests.Resources
 			var email = "email address";
 
 			var apiResponse = @"{
-				'enabled': true,
-				'email': 'email address'
+				""enabled"": true,
+				""email"": ""email address""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
