@@ -1,53 +1,45 @@
-using Newtonsoft.Json;
 using Shouldly;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.Json;
 using Xunit;
 
 namespace StrongGrid.UnitTests.Utilities
 {
 	public class MetricsConverterTests
 	{
-		[Fact]
-		public void Properties()
+		[Theory]
+		[InlineData(typeof(KeyValuePair<string, long>[]), true)]
+		[InlineData((Type)null, false)]
+		[InlineData(typeof(TimeSpan), false)]
+		[InlineData(typeof(string), false)]
+		[InlineData(typeof(StrongGrid.Models.Field), false)]
+		public void CanConvert(Type typeToConvert, bool expected)
 		{
-			// Act
+			// Arrange
 			var converter = new MetricsConverter();
 
 			// Assert
-			converter.CanRead.ShouldBeTrue();
-			converter.CanWrite.ShouldBeFalse();
+			converter.CanConvert(typeToConvert).ShouldBe(expected);
 		}
 
-		[Fact]
-		public void CanConvert()
-		{
-			// Act
-			var converter = new MetricsConverter();
-			var type = (Type)null;
-
-			// Assert
-			converter.CanConvert(type).ShouldBeTrue();
-		}
 
 		[Fact]
 		public void Write()
 		{
 			// Arrange
-			var sb = new StringBuilder();
-			var sw = new StringWriter(sb);
-			var writer = new JsonTextWriter(sw);
-
-			var value = (object)null;
-			var serializer = new JsonSerializer();
+			var value = (KeyValuePair<string, long>[])null;
+			var ms = new MemoryStream();
+			var jsonWriter = new Utf8JsonWriter(ms);
+			var options = new JsonSerializerOptions();
 
 			var converter = new MetricsConverter();
 
 			// Act
-			Should.Throw<NotImplementedException>(() => converter.WriteJson(writer, value, serializer));
+			Should.Throw<NotImplementedException>(() => converter.Write(jsonWriter, value, options));
 		}
 
 		[Fact]
@@ -56,28 +48,24 @@ namespace StrongGrid.UnitTests.Utilities
 			// Arrange
 			var json = "{\"metric1\":1,\"metric2\":2}";
 
-			var textReader = new StringReader(json);
-			var jsonReader = new JsonTextReader(textReader);
+			var jsonUtf8 = (ReadOnlySpan<byte>)Encoding.UTF8.GetBytes(json);
+			var jsonReader = new Utf8JsonReader(jsonUtf8);
 			var objectType = (Type)null;
-			var existingValue = (object)null;
-			var serializer = new JsonSerializer();
+			var options = new JsonSerializerOptions();
 
 			var converter = new MetricsConverter();
 
 			// Act
 			jsonReader.Read();
-			var result = converter.ReadJson(jsonReader, objectType, existingValue, serializer);
+			var result = converter.Read(ref jsonReader, objectType, options);
 
 			// Assert
 			result.ShouldNotBeNull();
-			result.ShouldBeOfType<KeyValuePair<string, long>[]>();
-
-			var resultAsArray = (KeyValuePair<string, long>[])result;
-			resultAsArray.Length.ShouldBe(2);
-			resultAsArray[0].Key.ShouldBe("metric1");
-			resultAsArray[0].Value.ShouldBe(1);
-			resultAsArray[1].Key.ShouldBe("metric2");
-			resultAsArray[1].Value.ShouldBe(2);
+			result.Length.ShouldBe(2);
+			result[0].Key.ShouldBe("metric1");
+			result[0].Value.ShouldBe(1);
+			result[1].Key.ShouldBe("metric2");
+			result[1].Value.ShouldBe(2);
 		}
 	}
 }
