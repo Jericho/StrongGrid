@@ -73,13 +73,7 @@ namespace StrongGrid
 		/// <returns>An array of <see cref="Event">events</see>.</returns>
 		public async Task<Event[]> ParseEventsWebhookAsync(Stream stream)
 		{
-			string requestBody;
-			using (var streamReader = new StreamReader(stream))
-			{
-				requestBody = await streamReader.ReadToEndAsync().ConfigureAwait(false);
-			}
-
-			var webHookEvents = ParseEventsWebhook(requestBody);
+			var webHookEvents = await JsonSerializer.DeserializeAsync<Event[]>(stream).ConfigureAwait(false);
 			return webHookEvents;
 		}
 
