@@ -722,9 +722,9 @@ namespace StrongGrid
 			throw new ArgumentException($"There is no value in the {enumType.Name} enum that corresponds to '{str}'.");
 		}
 
-		internal static T ToObject<T>(this JsonElement element, JsonSerializerOptions options = null, CancellationToken token = default)
+		internal static T ToObject<T>(this JsonElement element, JsonSerializerOptions options = null)
 		{
-			return JsonSerializer.Deserialize<T>(element.GetRawText());
+			return JsonSerializer.Deserialize<T>(element.GetRawText(), options);
 		}
 
 		private static async Task<(bool, string)> GetErrorMessage(HttpResponseMessage message)
