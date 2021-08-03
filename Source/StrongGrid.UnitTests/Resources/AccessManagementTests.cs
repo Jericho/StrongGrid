@@ -137,7 +137,7 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "whitelist")).Respond("application/json", MULTIPLE_ACCESS_ENTRIES_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "whitelist")).Respond("application/json", MULTIPLE_WHITELISTED_IPS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var accessManagement = new AccessManagement(client);
@@ -149,7 +149,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
-			result.Length.ShouldBe(2);
+			result.Length.ShouldBe(3);
 		}
 
 		[Fact]
