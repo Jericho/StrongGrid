@@ -14,7 +14,7 @@ namespace StrongGrid.Models
 		/// The identifier.
 		/// </value>
 		[JsonPropertyName("id")]
-		public long Id { get; set; }
+		public string Id { get; set; }
 
 		/// <summary>
 		/// Gets or sets the name.
