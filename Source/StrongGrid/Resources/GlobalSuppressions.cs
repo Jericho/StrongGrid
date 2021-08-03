@@ -1,9 +1,10 @@
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -81,7 +82,7 @@ namespace StrongGrid.Resources
 				.GetAsync($"{_endpoint}/{email}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsRawJsonObject()
+				.AsRawJsonDocument()
 				.ConfigureAwait(false);
 
 			// If the email address is on the global suppression list, the response will look like this:
@@ -89,8 +90,7 @@ namespace StrongGrid.Resources
 			//      "recipient_email": "{email}"
 			//  }
 			// If the email address is not on the global suppression list, the response will be empty
-			var propertyDictionary = (IDictionary<string, JToken>)response;
-			return propertyDictionary.ContainsKey("recipient_email");
+			return response.RootElement.TryGetProperty("recipient_email", out JsonElement _);
 		}
 
 		/// <summary>
@@ -104,7 +104,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task AddAsync(IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject(new JProperty("recipient_emails", JArray.FromObject(emails.ToArray())));
+			var data = new ExpandoObject();
+			data.AddProperty("recipient_emails", emails.ToArray(), false);
+
 			return _client
 				.PostAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)

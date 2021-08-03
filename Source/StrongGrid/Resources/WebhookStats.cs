@@ -1,8 +1,5 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
-using StrongGrid.Utilities;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -50,7 +47,7 @@ namespace StrongGrid.Resources
 				.WithCancellationToken(cancellationToken);
 
 			if (endDate.HasValue) request.WithArgument("end_date", endDate.Value.ToString("yyyy-MM-dd"));
-			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString());
+			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", aggregatedBy.ToEnumString());
 
 			return request.AsObject<Statistic[]>();
 		}

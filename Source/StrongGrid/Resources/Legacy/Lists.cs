@@ -1,7 +1,6 @@
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
-using StrongGrid.Utilities;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,10 +39,9 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public async Task<Models.Legacy.List> CreateAsync(string name, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				new JProperty("name", name)
-			};
+			var data = new ExpandoObject();
+			data.AddProperty("name", name);
+
 			var list = await _client
 				.PostAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
@@ -102,7 +100,7 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task DeleteAsync(IEnumerable<long> listIds, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = JArray.FromObject(listIds.ToArray());
+			var data = listIds.ToArray();
 			return _client
 				.DeleteAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
@@ -143,10 +141,9 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task UpdateAsync(long listId, string name, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				new JProperty("name", name)
-			};
+			var data = new ExpandoObject();
+			data.AddProperty("name", name);
+
 			return _client
 				.PatchAsync($"{_endpoint}/{listId}")
 				.OnBehalfOf(onBehalfOf)
@@ -229,7 +226,7 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task AddRecipientsAsync(long listId, IEnumerable<string> contactIds, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = JArray.FromObject(contactIds.ToArray());
+			var data = contactIds.ToArray();
 			return _client
 				.PostAsync($"{_endpoint}/{listId}/recipients")
 				.OnBehalfOf(onBehalfOf)
@@ -250,7 +247,7 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task RemoveRecipientsAsync(long listId, IEnumerable<string> contactIds, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = JArray.FromObject(contactIds.ToArray());
+			var data = contactIds.ToArray();
 			return _client
 				.DeleteAsync($"{_endpoint}/{listId}/recipients")
 				.OnBehalfOf(onBehalfOf)

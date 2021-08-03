@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -106,12 +106,11 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<SuppressionGroup> CreateAsync(string name, string description, bool isDefault, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "name", name },
-				{ "description", description },
-				{ "is_default", isDefault }
-			};
+			var data = new ExpandoObject();
+			data.AddProperty("name", name);
+			data.AddProperty("description", description);
+			data.AddProperty("is_default", isDefault);
+
 			return _client
 				.PostAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
@@ -133,9 +132,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<SuppressionGroup> UpdateAsync(long groupId, Parameter<string> name = default, Parameter<string> description = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject();
-			data.AddPropertyIfValue("name", name.Value);
-			data.AddPropertyIfValue("description", description);
+			var data = new ExpandoObject();
+			data.AddProperty("name", name.Value);
+			data.AddProperty("description", description);
 
 			return _client
 				.PatchAsync($"{_endpoint}/{groupId}")

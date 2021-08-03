@@ -1,7 +1,7 @@
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -159,12 +159,11 @@ namespace StrongGrid.Resources
 		/// </remarks>
 		public Task<TeammateInvitation> InviteTeammateAsync(string email, IEnumerable<string> scopes, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "email", email },
-				{ "scopes", JArray.FromObject(scopes.ToArray()) },
-				{ "is_admin", false }
-			};
+			var data = new ExpandoObject();
+			data.AddProperty("email", email);
+			data.AddProperty("scopes", scopes.ToArray());
+			data.AddProperty("is_admin", false);
+
 			return _client
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
@@ -191,12 +190,11 @@ namespace StrongGrid.Resources
 			var scopes = await _client.GetCurrentScopes(true, cancellationToken).ConfigureAwait(true);
 			scopes = scopes.Where(s => s.EndsWith(".read", System.StringComparison.OrdinalIgnoreCase)).ToArray();
 
-			var data = new JObject
-			{
-				{ "email", email },
-				{ "scopes", JArray.FromObject(scopes.ToArray()) },
-				{ "is_admin", false }
-			};
+			var data = new ExpandoObject();
+			data.AddProperty("email", email);
+			data.AddProperty("scopes", scopes.ToArray());
+			data.AddProperty("is_admin", false);
+
 			return await _client
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
@@ -221,11 +219,10 @@ namespace StrongGrid.Resources
 		/// </remarks>
 		public Task<TeammateInvitation> InviteTeammateAsAdminAsync(string email, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "email", email },
-				{ "is_admin", true }
-			};
+			var data = new ExpandoObject();
+			data.AddProperty("email", email);
+			data.AddProperty("is_admin", true);
+
 			return _client
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
@@ -273,11 +270,10 @@ namespace StrongGrid.Resources
 		/// <returns>The <see cref="Teammate" />.</returns>
 		public Task<Teammate> UpdateTeammatePermissionsAsync(string username, IEnumerable<string> scopes, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "is_admin", false },
-				{ "scopes", JArray.FromObject(scopes.ToArray()) }
-			};
+			var data = new ExpandoObject();
+			data.AddProperty("scopes", scopes.ToArray());
+			data.AddProperty("is_admin", false);
+
 			return _client
 				.PatchAsync($"{_endpoint}/{username}")
 				.WithJsonBody(data)

@@ -1,9 +1,8 @@
-﻿using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
-using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -80,7 +79,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject(new JProperty("delete_all", true));
+			var data = new ExpandoObject();
+			data.AddProperty("delete_all", true);
+
 			return _client
 				.DeleteAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
@@ -100,7 +101,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject(new JProperty("emails", JArray.FromObject(emails.ToArray())));
+			var data = new ExpandoObject();
+			data.AddProperty("emails", emails.ToArray());
+
 			return _client
 				.DeleteAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)

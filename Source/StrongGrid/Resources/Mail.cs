@@ -1,11 +1,11 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -180,6 +180,9 @@ namespace StrongGrid.Resources
 				personalization.To = EnsureRecipientsNamesAreQuoted(personalization.To);
 				personalization.Cc = EnsureRecipientsNamesAreQuoted(personalization.Cc);
 				personalization.Bcc = EnsureRecipientsNamesAreQuoted(personalization.Bcc);
+
+				// Indicate if a dynamic template is being used. This is used by MailPersonalizationConverter to generate the appropriate JSON
+				personalization.IsUsedWithDynamicTemplate = Template.IsDynamic(templateId);
 			}
 
 			// The total number of recipients must be less than 1000. This includes all recipients defined within the to, cc, and bcc parameters, across each object that you include in the personalizations array.
@@ -207,26 +210,26 @@ namespace StrongGrid.Resources
 			if (numberOfReplyToAddresses > 1000) throw new ArgumentOutOfRangeException(nameof(numberOfReplyToAddresses), numberOfReplyToAddresses, "The number of distinct reply-to addresses can't exceed 1000");
 
 			// Serialize the mail message
-			var data = new JObject();
-			data.AddPropertyIfValue("from", from);
-			data.AddPropertyIfValue("reply_to_list", cleanReplyTo);
-			data.AddPropertyIfValue("subject", subject);
-			data.AddPropertyIfValue("content", contents);
-			data.AddPropertyIfValue("attachments", attachments);
-			data.AddPropertyIfValue("template_id", templateId);
-			data.AddPropertyIfValue("categories", categories);
-			data.AddPropertyIfValue("send_at", sendAt?.ToUnixTime());
-			data.AddPropertyIfValue("batch_id", batchId);
-			data.AddPropertyIfValue("asm", unsubscribeOptions);
-			data.AddPropertyIfValue("ip_pool_name", ipPoolName);
-			data.AddPropertyIfValue("mail_settings", mailSettings);
-			data.AddPropertyIfValue("tracking_settings", trackingSettings);
-			data.AddPropertyIfValue("personalizations", personalizationsCopy, new MailPersonalizationConverter(Template.IsDynamic(templateId)));
-			data.AddPropertyIfValue("headers", ConvertEnumerationToJObject(combinedHeaders));
-			data.AddPropertyIfValue("custom_args", ConvertEnumerationToJObject(customArgs));
+			var data = new ExpandoObject();
+			data.AddProperty("from", from);
+			data.AddProperty("reply_to_list", cleanReplyTo);
+			data.AddProperty("subject", subject);
+			data.AddProperty("content", contents);
+			data.AddProperty("attachments", attachments);
+			data.AddProperty("template_id", templateId);
+			data.AddProperty("categories", categories);
+			data.AddProperty("send_at", sendAt?.ToUnixTime());
+			data.AddProperty("batch_id", batchId);
+			data.AddProperty("asm", unsubscribeOptions);
+			data.AddProperty("ip_pool_name", ipPoolName);
+			data.AddProperty("mail_settings", mailSettings);
+			data.AddProperty("tracking_settings", trackingSettings);
+			data.AddProperty("personalizations", personalizationsCopy);
+			data.AddProperty("headers", ConvertEnumerationToExpando(combinedHeaders));
+			data.AddProperty("custom_args", ConvertEnumerationToExpando(customArgs));
 
 			// SendGrid does not allow emails that exceed 30MB
-			var contentSize = JsonConvert.SerializeObject(data, Formatting.None).Length;
+			var contentSize = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = false }).Length;
 			if (contentSize > MAX_EMAIL_SIZE) throw new Exception("Email exceeds the size limit");
 
 			// Send the request
@@ -268,14 +271,14 @@ namespace StrongGrid.Resources
 				.ToArray();
 		}
 
-		private static JObject ConvertEnumerationToJObject(IEnumerable<KeyValuePair<string, string>> items)
+		private static ExpandoObject ConvertEnumerationToExpando(IEnumerable<KeyValuePair<string, string>> items)
 		{
 			if (items == null || !items.Any()) return null;
 
-			var obj = new JObject();
+			var obj = new ExpandoObject();
 			foreach (var item in items)
 			{
-				obj.Add(item.Key, item.Value);
+				obj.AddProperty(item.Key, item.Value);
 			}
 
 			return obj;

@@ -1,7 +1,7 @@
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -66,14 +66,14 @@ namespace StrongGrid.Resources
 				.GetAsync($"{_endpoint}/suppressions/{email}")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsObject<JObject[]>("suppressions")
+				.AsRawJsonDocument("suppressions")
 				.ConfigureAwait(false);
 
 			// SendGrid returns all the groups with a boolean property called "suppressed" indicating
 			// if the specified email address is in the group or not. Therefore we need to filter the
 			// result of the call to only include the groups where this boolean property is 'true'
-			var unsubscribedFrom = result
-				.Where(item => (bool)item["suppressed"])
+			var unsubscribedFrom = result.RootElement.EnumerateArray()
+				.Where(item => item.GetProperty("suppressed").GetBoolean())
 				.Select(item => item.ToObject<SuppressionGroup>())
 				.ToArray();
 
@@ -127,7 +127,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task AddAddressToUnsubscribeGroupAsync(long groupId, IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject(new JProperty("recipient_emails", JArray.FromObject(emails.ToArray())));
+			var data = new ExpandoObject();
+			data.AddProperty("recipient_emails", emails.ToArray());
+
 			return _client
 				.PostAsync($"{_endpoint}/groups/{groupId}/suppressions")
 				.OnBehalfOf(onBehalfOf)
@@ -167,10 +169,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<bool> IsSuppressedAsync(long groupId, string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "recipient_emails", JArray.FromObject(new[] { email }) }
-			};
+			var data = new ExpandoObject();
+			data.AddProperty("recipient_emails", new[] { email });
+
 			var result = await _client
 				.PostAsync($"{_endpoint}/groups/{groupId}/suppressions/search")
 				.OnBehalfOf(onBehalfOf)

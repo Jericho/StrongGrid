@@ -1,8 +1,8 @@
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -78,7 +78,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Subuser> CreateAsync(string username, string email, string password, Parameter<IEnumerable<string>> ips = default, CancellationToken cancellationToken = default)
 		{
-			var data = CreateJObject(username: username, email: email, password: password, ips: ips);
+			var data = ConvertToExpando(username: username, email: email, password: password, ips: ips);
 			return _client
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
@@ -116,10 +116,9 @@ namespace StrongGrid.Resources
 		{
 			if (disabled.HasValue)
 			{
-				var data = new JObject()
-				{
-					{ "disabled", disabled.Value }
-				};
+				var data = new ExpandoObject();
+				data.AddProperty("disabled", disabled.Value);
+
 				await _client
 					.PatchAsync($"{_endpoint}/{username}")
 					.WithJsonBody(data)
@@ -130,11 +129,11 @@ namespace StrongGrid.Resources
 
 			if (ips.HasValue)
 			{
-				var ipdata = JArray.FromObject(ips.Value);
+				var ipData = ips.Value.ToArray();
 
 				await _client
 					.PutAsync($"{_endpoint}/{username}/ips")
-					.WithJsonBody(ipdata)
+					.WithJsonBody(ipData)
 					.WithCancellationToken(cancellationToken)
 					.AsMessage()
 					.ConfigureAwait(false);
@@ -169,11 +168,10 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<MonitorSettings> CreateMonitorSettingsAsync(string username, string email, int frequency, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject()
-			{
-				{ "email", email },
-				{ "frequency", frequency }
-			};
+			var data = new ExpandoObject();
+			data.AddProperty("email", email);
+			data.AddProperty("frequency", frequency);
+
 			return _client
 				.PostAsync($"{_endpoint}/{username}/monitor")
 				.WithJsonBody(data)
@@ -193,9 +191,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<MonitorSettings> UpdateMonitorSettingsAsync(string username, Parameter<string> email = default, Parameter<int> frequency = default, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject();
-			data.AddPropertyIfValue("email", email);
-			data.AddPropertyIfValue("frequency", frequency);
+			var data = new ExpandoObject();
+			data.AddProperty("email", email);
+			data.AddProperty("frequency", frequency);
 
 			return _client
 				.PutAsync($"{_endpoint}/{username}/monitor")
@@ -259,19 +257,19 @@ namespace StrongGrid.Resources
 			return request.AsObject<SenderReputation[]>();
 		}
 
-		private static JObject CreateJObject(
+		private static ExpandoObject ConvertToExpando(
 			Parameter<int> id = default,
 			Parameter<string> username = default,
 			Parameter<string> password = default,
 			Parameter<string> email = default,
 			Parameter<IEnumerable<string>> ips = default)
 		{
-			var result = new JObject();
-			result.AddPropertyIfValue("id", id);
-			result.AddPropertyIfValue("username", username);
-			result.AddPropertyIfValue("email", email);
-			result.AddPropertyIfValue("password", password);
-			result.AddPropertyIfValue("ips", ips);
+			var result = new ExpandoObject();
+			result.AddProperty("id", id);
+			result.AddProperty("username", username);
+			result.AddProperty("email", email);
+			result.AddProperty("password", password);
+			result.AddProperty("ips", ips);
 			return result;
 		}
 	}

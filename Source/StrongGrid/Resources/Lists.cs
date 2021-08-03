@@ -1,6 +1,6 @@
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
+using System.Dynamic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -88,10 +88,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<List> UpdateAsync(string listId, string name, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				new JProperty("name", name)
-			};
+			var data = new ExpandoObject();
+			data.AddProperty("name", name);
+
 			return _client
 				.PatchAsync($"{_endpoint}/{listId}")
 				.WithJsonBody(data)
@@ -147,10 +146,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<List> CreateAsync(string name, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				new JProperty("name", name)
-			};
+			var data = new ExpandoObject();
+			data.AddProperty("name", name);
+
 			return _client
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
