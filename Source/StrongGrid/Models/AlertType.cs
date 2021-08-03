@@ -1,13 +1,13 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using StrongGrid.Utilities;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
 	/// <summary>
 	/// Enumeration to indicate the type of alert.
 	/// </summary>
-	[JsonConverter(typeof(StringEnumConverter))]
+	[JsonConverter(typeof(StringEnumConverter<AlertType>))]
 	public enum AlertType
 	{
 		/// <summary>

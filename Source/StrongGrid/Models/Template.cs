@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
 using System;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -17,7 +17,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("id")]
 		public string Id { get; set; }
 
 		/// <summary>
@@ -26,7 +26,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The name.
 		/// </value>
-		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("name")]
 		public string Name { get; set; }
 
 		/// <summary>
@@ -35,7 +35,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The type.
 		/// </value>
-		[JsonProperty("generation", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("generation")]
 		public TemplateType Type { get; set; }
 
 		/// <summary>
@@ -44,7 +44,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The versions.
 		/// </value>
-		[JsonProperty("versions", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("versions")]
 		public TemplateVersion[] Versions { get; set; }
 
 		/// <summary>

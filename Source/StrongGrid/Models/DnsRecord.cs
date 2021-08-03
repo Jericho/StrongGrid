@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The host.
 		/// </value>
-		[JsonProperty("host", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("host")]
 		public string Host { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The type.
 		/// </value>
-		[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("type")]
 		public string Type { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The data.
 		/// </value>
-		[JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("data")]
 		public string Data { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Models
 		/// <value>
 		///   <c>true</c> if this instance is valid; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("valid", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("valid")]
 		public bool IsValid { get; set; }
 	}
 }

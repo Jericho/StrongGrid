@@ -1,5 +1,6 @@
-using Newtonsoft.Json;
+using StrongGrid.Utilities;
 using System;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -15,7 +16,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("id")]
 		public string Id { get; set; }
 
 		/// <summary>
@@ -24,7 +25,8 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The status.
 		/// </value>
-		[JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("status")]
+		[JsonConverter(typeof(StringEnumConverter<JobStatus>))]
 		public JobStatus Status { get; set; }
 
 		/// <summary>
@@ -33,7 +35,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The creation date.
 		/// </value>
-		[JsonProperty("created_at", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("created_at")]
 		public DateTime CreatedOn { get; set; }
 
 		/// <summary>
@@ -42,7 +44,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The completion date.
 		/// </value>
-		[JsonProperty("completed_at", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("completed_at")]
 		public DateTime CompletedOn { get; set; }
 
 		/// <summary>
@@ -51,7 +53,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The expiration date.
 		/// </value>
-		[JsonProperty("expires_at", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("expires_at")]
 		public DateTime ExpiresOn { get; set; }
 
 		/// <summary>
@@ -60,7 +62,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The URLs.
 		/// </value>
-		[JsonProperty("urls", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("urls")]
 		public string[] FileUrls { get; set; }
 
 		/// <summary>
@@ -69,7 +71,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The message.
 		/// </value>
-		[JsonProperty("message", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("message")]
 		public string Message { get; set; }
 
 		/// <summary>
@@ -78,8 +80,8 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The user identifier.
 		/// </value>
-		[JsonProperty("user_id", NullValueHandling = NullValueHandling.Ignore)]
-		public string UserId { get; set; }
+		[JsonPropertyName("user_id")]
+		public long UserId { get; set; }
 
 		/// <summary>
 		/// Gets or sets the export type.
@@ -87,7 +89,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The export type.
 		/// </value>
-		[JsonProperty("export_type", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("export_type")]
 		public ExportType ExportType { get; set; }
 
 		/// <summary>
@@ -96,7 +98,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The lists.
 		/// </value>
-		[JsonProperty("lists", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("lists")]
 		public List[] Lists { get; set; }
 
 		/// <summary>
@@ -105,7 +107,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The lists.
 		/// </value>
-		[JsonProperty("segments", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("segments")]
 		public Segment[] Segments { get; set; }
 
 		/// <summary>
@@ -114,7 +116,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The count.
 		/// </value>
-		[JsonProperty("contact_count", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("contact_count")]
 		public long ContactCount { get; set; }
 	}
 }

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.EmailActivities
 {
@@ -14,7 +14,7 @@ namespace StrongGrid.Models.EmailActivities
 		/// <value>
 		/// The reason.
 		/// </value>
-		[JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("url")]
 		public string Url { get; set; }
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace StrongGrid.Models.EmailActivities
 		/// <value>
 		/// The user agent.
 		/// </value>
-		[JsonProperty("http_user_agent", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("http_user_agent")]
 		public string UserAgent { get; set; }
 	}
 }

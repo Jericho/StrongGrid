@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The name.
 		/// </value>
-		[JsonProperty("reputation", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("reputation")]
 		public float Reputation { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The type.
 		/// </value>
-		[JsonProperty("username", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("username")]
 		public string Username { get; set; }
 	}
 }

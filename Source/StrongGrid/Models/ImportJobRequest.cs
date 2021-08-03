@@ -1,5 +1,5 @@
-using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -14,7 +14,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("id")]
 		public string Id { get; set; }
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The upload file URI.
 		/// </value>
-		[JsonProperty("upload_uri", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("upload_uri")]
 		public string UploadUri { get; set; }
 
 		/// <summary>
@@ -32,7 +32,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The headers.
 		/// </value>
-		[JsonProperty("upload_headers", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("upload_headers")]
 		public KeyValuePair<string, string>[] Headers { get; set; }
 	}
 }

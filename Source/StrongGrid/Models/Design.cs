@@ -1,5 +1,5 @@
-using Newtonsoft.Json;
 using System;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -14,7 +14,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The id.
 		/// </value>
-		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("id")]
 		public string Id { get; set; }
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The name.
 		/// </value>
-		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("name")]
 		public string Name { get; set; }
 
 		/// <summary>
@@ -32,7 +32,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The generate_plain_content.
 		/// </value>
-		[JsonProperty("generate_plain_content", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("generate_plain_content")]
 		public bool GeneratePlainContent { get; set; }
 
 		/// <summary>
@@ -41,7 +41,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The type of editor.
 		/// </value>
-		[JsonProperty("editor", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("editor")]
 		public EditorType EditorType { get; set; }
 
 		/// <summary>
@@ -50,7 +50,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The URL.
 		/// </value>
-		[JsonProperty("thumbnail_url", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("thumbnail_url")]
 		public string ThumbnailUrl { get; set; }
 
 		/// <summary>
@@ -59,7 +59,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The categories.
 		/// </value>
-		[JsonProperty("categories", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("categories")]
 		public string[] Categories { get; set; }
 
 		/// <summary>
@@ -68,7 +68,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The HTML content.
 		/// </value>
-		[JsonProperty("html_content", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("html_content")]
 		public string HtmlContent { get; set; }
 
 		/// <summary>
@@ -77,7 +77,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The plain text content.
 		/// </value>
-		[JsonProperty("plain_content", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("plain_content")]
 		public string PlainContent { get; set; }
 
 		/// <summary>
@@ -86,7 +86,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The subject.
 		/// </value>
-		[JsonProperty("subject", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("subject")]
 		public string Subject { get; set; }
 
 		/// <summary>
@@ -95,7 +95,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The created on.
 		/// </value>
-		[JsonProperty("created_at", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("created_at")]
 
 		public DateTime CreatedOn { get; set; }
 
@@ -105,7 +105,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The modified on.
 		/// </value>
-		[JsonProperty("updated_at", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("updated_at")]
 		public DateTime ModifiedOn { get; set; }
 	}
 }

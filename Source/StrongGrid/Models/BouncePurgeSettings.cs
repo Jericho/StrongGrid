@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("enabled")]
 		public bool Enabled { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The hard bounces.
 		/// </value>
-		[JsonProperty("hard_bounces", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("hard_bounces")]
 		public int HardBounces { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The soft bounces.
 		/// </value>
-		[JsonProperty("soft_bounces", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("soft_bounces")]
 		public int SoftBounces { get; set; }
 	}
 }

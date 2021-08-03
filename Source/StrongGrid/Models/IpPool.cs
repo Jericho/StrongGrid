@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The email.
 		/// </value>
-		[JsonProperty("pool_name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("pool_name")]
 		public string Name { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The IP addresses.
 		/// </value>
-		[JsonProperty("ips", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("ips")]
 		public IpPoolAddress[] IpAddresses { get; set; }
 	}
 }

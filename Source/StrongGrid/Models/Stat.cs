@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -15,7 +15,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The metrics.
 		/// </value>
-		[JsonProperty("metrics", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("metrics")]
 		[JsonConverter(typeof(MetricsConverter))]
 		public KeyValuePair<string, long>[] Metrics { get; set; }
 
@@ -25,7 +25,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The name.
 		/// </value>
-		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("name")]
 		public string Name { get; set; }
 
 		/// <summary>
@@ -34,7 +34,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The type.
 		/// </value>
-		[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("type")]
 		public string Type { get; set; }
 	}
 }

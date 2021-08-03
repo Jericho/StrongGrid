@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -14,7 +14,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The name.
 		/// </value>
-		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("name")]
 		public string Name { get; set; }
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The key.
 		/// </value>
-		[JsonProperty("api_key", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("api_key")]
 		public string Key { get; set; }
 
 		/// <summary>
@@ -32,7 +32,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The key identifier.
 		/// </value>
-		[JsonProperty("api_key_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("api_key_id")]
 		public string KeyId { get; set; }
 
 		/// <summary>
@@ -41,7 +41,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The scopes.
 		/// </value>
-		[JsonProperty("scopes", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("scopes")]
 		public string[] Scopes { get; set; }
 	}
 }

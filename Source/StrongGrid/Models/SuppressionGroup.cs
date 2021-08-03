@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -14,7 +14,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("id")]
 		public long Id { get; set; }
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The name.
 		/// </value>
-		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("name")]
 		public string Name { get; set; }
 
 		/// <summary>
@@ -32,7 +32,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The description.
 		/// </value>
-		[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("description")]
 		public string Description { get; set; }
 
 		/// <summary>
@@ -41,7 +41,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// <c>true</c> if this instance is default; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("is_default", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("is_default")]
 		public bool IsDefault { get; set; }
 
 		/// <summary>
@@ -50,7 +50,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The number of email addresses in this suppression group.
 		/// </value>
-		[JsonProperty("unsubscribes", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("unsubscribes")]
 		public long UnsubscribesCount { get; set; }
 	}
 }

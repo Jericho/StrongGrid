@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The number of remaining addresses.
 		/// </value>
-		[JsonProperty("remaining", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("remaining")]
 		public int Remaining { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The length of time.
 		/// </value>
-		[JsonProperty("period", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("period")]
 		public string Period { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The cost.
 		/// </value>
-		[JsonProperty("price_per_ip", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("price_per_ip")]
 		public double PricePerIp { get; set; }
 	}
 }

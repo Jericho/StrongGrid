@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
 using StrongGrid.Utilities;
 using System;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -15,7 +15,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The IP address.
 		/// </value>
-		[JsonProperty("ip", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("ip")]
 		public string Address { get; set; }
 
 		/// <summary>
@@ -24,7 +24,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The cost.
 		/// </value>
-		[JsonProperty("start_date", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("start_date")]
 		[JsonConverter(typeof(EpochConverter))]
 		public DateTime? WarmupStartedOn { get; set; }
 
@@ -34,7 +34,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The warmup indicator.
 		/// </value>
-		[JsonProperty("warmup", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("warmup")]
 		public bool Warmup { get; set; }
 	}
 }

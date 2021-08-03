@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// a record.
 		/// </value>
-		[JsonProperty("a_record", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("a_record")]
 		public ValidationResult ARecord { get; set; }
 	}
 }

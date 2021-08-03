@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.Legacy
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models.Legacy
 		/// <value>
 		/// The field.
 		/// </value>
-		[JsonProperty("field", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("field")]
 		public string Field { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models.Legacy
 		/// <value>
 		/// The value.
 		/// </value>
-		[JsonProperty("value", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("value")]
 		public string Value { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Models.Legacy
 		/// <value>
 		/// The operator.
 		/// </value>
-		[JsonProperty("operator", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("operator")]
 		public ConditionOperator Operator { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Models.Legacy
 		/// <value>
 		/// The logical operator.
 		/// </value>
-		[JsonProperty("and_or", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("and_or")]
 		public LogicalOperator LogicalOperator { get; set; }
 	}
 }

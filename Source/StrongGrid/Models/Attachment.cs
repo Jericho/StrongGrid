@@ -1,9 +1,9 @@
 using HeyRed.Mime;
-using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The content.
 		/// </value>
-		[JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("content")]
 		public string Content { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The type.
 		/// </value>
-		[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("type")]
 		public string Type { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The name of the file.
 		/// </value>
-		[JsonProperty("filename", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("filename")]
 		public string FileName { get; set; }
 
 		/// <summary>
@@ -49,7 +49,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The disposition.
 		/// </value>
-		[JsonProperty("disposition", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("disposition")]
 		public string Disposition { get; set; }
 
 		/// <summary>
@@ -58,7 +58,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The content identifier.
 		/// </value>
-		[JsonProperty("content_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("content_id")]
 		public string ContentId { get; set; }
 
 		/// <summary>

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.EmailActivities
 {
@@ -14,7 +14,7 @@ namespace StrongGrid.Models.EmailActivities
 		/// <value>
 		/// The reason.
 		/// </value>
-		[JsonProperty("reason", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("reason")]
 		public string Reason { get; set; }
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace StrongGrid.Models.EmailActivities
 		/// <value>
 		/// The mx server.
 		/// </value>
-		[JsonProperty("mx_server", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("mx_server")]
 		public string MxServer { get; set; }
 	}
 }

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.Webhooks
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The user list identifier.
 		/// </value>
-		[JsonProperty("newsletter_user_list_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("newsletter_user_list_id")]
 		public string UserListId { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("newsletter_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("newsletter_id")]
 		public string Id { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The send identifier.
 		/// </value>
-		[JsonProperty("newsletter_send_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("newsletter_send_id")]
 		public string SendId { get; set; }
 	}
 }

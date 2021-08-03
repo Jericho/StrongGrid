@@ -1,13 +1,14 @@
-using Newtonsoft.Json;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.Webhooks
 {
 	/// <summary>
 	/// A webhook event.
 	/// </summary>
+	[JsonConverter(typeof(EventConverter))]
 	public abstract class Event
 	{
 		/// <summary>
@@ -16,7 +17,8 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The type.
 		/// </value>
-		[JsonProperty("event", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("event")]
+		[JsonConverter(typeof(StringEnumConverter<EventType>))]
 		public EventType EventType { get; set; }
 
 		/// <summary>
@@ -25,7 +27,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The email address.
 		/// </value>
-		[JsonProperty("email", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("email")]
 		public string Email { get; set; }
 
 		/// <summary>
@@ -34,7 +36,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The timestamp.
 		/// </value>
-		[JsonProperty("timestamp", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("timestamp")]
 		[JsonConverter(typeof(EpochConverter))]
 		public DateTime Timestamp { get; set; }
 
@@ -42,12 +44,13 @@ namespace StrongGrid.Models.Webhooks
 		/// Gets or sets the internal event identifier.
 		/// </summary>
 		/// <remarks>
-		/// You can use this unique Id for deduplication purposes. This Id is up to 100 characters long and is URL safe.
+		/// You can use this unique Id for deduplication purposes.
+		/// This Id is up to 100 characters long and is URL safe.
 		/// </remarks>
 		/// <value>
 		/// The internal event identifier.
 		/// </value>
-		[JsonProperty("sg_event_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("sg_event_id")]
 		public string InternalEventId { get; set; }
 
 		/// <summary>
@@ -62,7 +65,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The internal message identifier.
 		/// </value>
-		[JsonProperty("sg_message_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("sg_message_id")]
 		public string InternalMessageId { get; set; }
 
 		/// <summary>
@@ -97,7 +100,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The marketing campaign identifier.
 		/// </value>
-		[JsonProperty("marketing_campaign_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("marketing_campaign_id")]
 		public long? MarketingCampaignId { get; set; }
 
 		/// <summary>
@@ -106,7 +109,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The name of the marketing campaign.
 		/// </value>
-		[JsonProperty("marketing_campaign_name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("marketing_campaign_name")]
 		public string MarketingCampaignName { get; set; }
 
 		/// <summary>
@@ -115,7 +118,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The user identifier.
 		/// </value>
-		[JsonProperty("sg_user_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("sg_user_id")]
 		public long? UserId { get; set; }
 
 		/// <summary>
@@ -124,7 +127,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The newsletter.
 		/// </value>
-		[JsonProperty("newsletter", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("newsletter")]
 		public Newsletter Newsletter { get; set; }
 
 		/// <summary>
@@ -133,7 +136,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The marketing campaign version.
 		/// </value>
-		[JsonProperty("marketing_campaign_version", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("marketing_campaign_version")]
 		public string MarketingCampaignVersion { get; set; }
 
 		/// <summary>
@@ -142,7 +145,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The marketing campaign split identifier.
 		/// </value>
-		[JsonProperty("marketing_campaign_split_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("marketing_campaign_split_id")]
 		public long? MarketingCampaignSplitId { get; set; }
 	}
 }

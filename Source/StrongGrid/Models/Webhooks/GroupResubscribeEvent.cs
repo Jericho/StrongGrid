@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.Webhooks
 {
@@ -23,7 +23,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The user agent.
 		/// </value>
-		[JsonProperty("useragent", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("useragent")]
 		public string UserAgent { get; set; }
 
 		/// <summary>
@@ -32,7 +32,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The IP address.
 		/// </value>
-		[JsonProperty("ip", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("ip")]
 		public string IpAddress { get; set; }
 
 		/// <summary>
@@ -44,7 +44,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The asm group identifier.
 		/// </value>
-		[JsonProperty("asm_group_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("asm_group_id")]
 		public long? AsmGroupId { get; set; }
 	}
 }

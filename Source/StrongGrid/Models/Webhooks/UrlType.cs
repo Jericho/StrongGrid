@@ -1,13 +1,13 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using StrongGrid.Utilities;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.Webhooks
 {
 	/// <summary>
 	/// Enumeration to indicate the type of url.
 	/// </summary>
-	[JsonConverter(typeof(StringEnumConverter))]
+	[JsonConverter(typeof(StringEnumConverter<UrlType>))]
 	public enum UrlType
 	{
 		/// <summary>

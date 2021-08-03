@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -14,7 +14,7 @@ namespace StrongGrid.Models
 		/// Gets or sets a value indicating whether the address is suspected to be a role address.
 		/// If true, the local part of the email address (before the @ sign) appears to be a group email address such as "hr" or "admin".
 		/// </summary>
-		[JsonProperty("is_suspected_role_address", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("is_suspected_role_address")]
 		public bool IsSuspectedRoleAddress { get; set; }
 	}
 }

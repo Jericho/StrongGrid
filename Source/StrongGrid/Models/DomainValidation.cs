@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +14,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The domain identifier.
 		/// </value>
-		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("id")]
 		public long DomainId { get; set; }
 
 		/// <summary>
@@ -22,7 +23,7 @@ namespace StrongGrid.Models
 		/// <value>
 		///   <c>true</c> if this instance is valid; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("valid", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("valid")]
 		public bool IsValid { get; set; }
 
 		/// <summary>
@@ -31,7 +32,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The validation results.
 		/// </value>
-		[JsonProperty("validation_results", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("validation_results")]
 		public DomainValidationResults ValidationResults { get; set; }
 	}
 }

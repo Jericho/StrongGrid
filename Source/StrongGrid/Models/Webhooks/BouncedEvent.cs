@@ -1,5 +1,5 @@
-using Newtonsoft.Json;
 using StrongGrid.Utilities;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.Webhooks
 {
@@ -23,7 +23,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The IP address.
 		/// </value>
-		[JsonProperty("ip", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("ip")]
 		public string IpAddress { get; set; }
 
 		/// <summary>
@@ -43,7 +43,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The reason.
 		/// </value>
-		[JsonProperty("reason", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("reason")]
 		public string Reason { get; set; }
 
 		/// <summary>
@@ -55,7 +55,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The status code.
 		/// </value>
-		[JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("status")]
 		public string Status { get; set; }
 
 		/// <summary>
@@ -64,7 +64,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		///   <c>true</c> if TLS was used; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("tls", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("tls")]
 		[JsonConverter(typeof(IntegerBooleanConverter))]
 		public bool Tls { get; set; }
 
@@ -74,7 +74,8 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The type of bounce.
 		/// </value>
-		[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("type")]
+		[JsonConverter(typeof(StringEnumConverter<BounceType>))]
 		public BounceType Type { get; set; }
 	}
 }

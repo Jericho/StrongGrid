@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("enabled")]
 		public bool Enabled { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The license key.
 		/// </value>
-		[JsonProperty("license_key", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("license_key")]
 		public string LicenseKey { get; set; }
 	}
 }

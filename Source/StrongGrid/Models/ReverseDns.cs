@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -18,7 +18,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("id")]
 		public long Id { get; set; }
 
 		/// <summary>
@@ -27,7 +27,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The ip address.
 		/// </value>
-		[JsonProperty("ip", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("ip")]
 		public string IpAddress { get; set; }
 
 		/// <summary>
@@ -36,7 +36,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The RDNS.
 		/// </value>
-		[JsonProperty("rdns", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("rdns")]
 		public string RDNS { get; set; }
 
 		/// <summary>
@@ -45,7 +45,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The subdomain.
 		/// </value>
-		[JsonProperty("subdomain", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("subdomain")]
 		public string Subdomain { get; set; }
 
 		/// <summary>
@@ -54,7 +54,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The domain.
 		/// </value>
-		[JsonProperty("domain", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("domain")]
 		public string Domain { get; set; }
 
 		/// <summary>
@@ -63,7 +63,7 @@ namespace StrongGrid.Models
 		/// <value>
 		///   <c>true</c> if this instance is valid; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("valid", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("valid")]
 		public bool IsValid { get; set; }
 
 		/// <summary>
@@ -72,7 +72,7 @@ namespace StrongGrid.Models
 		/// <value>
 		///   <c>true</c> if this instance is legacy; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("legacy", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("legacy")]
 		public bool IsLegacy { get; set; }
 
 		/// <summary>
@@ -81,7 +81,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// a record.
 		/// </value>
-		[JsonProperty("a_record", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("a_record")]
 		public DnsRecord ARecord { get; set; }
 	}
 }

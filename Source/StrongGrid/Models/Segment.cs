@@ -1,5 +1,5 @@
-using Newtonsoft.Json;
 using System;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -14,7 +14,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("id")]
 		public string Id { get; set; }
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The name.
 		/// </value>
-		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("name")]
 		public string Name { get; set; }
 
 		/// <summary>
@@ -32,7 +32,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The list identifier.
 		/// </value>
-		[JsonProperty("parent_list_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("parent_list_id")]
 		public string ListId { get; set; }
 
 		/// <summary>
@@ -41,7 +41,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The query DSL.
 		/// </value>
-		[JsonProperty("query_dsl", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("query_dsl")]
 		public string QueryDsl { get; set; }
 
 		/// <summary>
@@ -50,7 +50,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The recipient count.
 		/// </value>
-		[JsonProperty("contacts_count", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("contacts_count")]
 		public long ContactsCount { get; set; }
 
 		/// <summary>
@@ -59,7 +59,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The created on.
 		/// </value>
-		[JsonProperty("created_at", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("created_at")]
 		public DateTime CreatedOn { get; set; }
 
 		/// <summary>
@@ -68,7 +68,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The updated on.
 		/// </value>
-		[JsonProperty("updated_at", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("updated_at")]
 		public DateTime UpdatedOn { get; set; }
 
 		/// <summary>
@@ -80,8 +80,8 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The date the sample data was most recently updated.
 		/// </value>
-		[JsonProperty("sample_updated_at", NullValueHandling = NullValueHandling.Ignore)]
-		public DateTime SampleRefreshedOn { get; set; }
+		[JsonPropertyName("sample_updated_at")]
+		public DateTime? SampleRefreshedOn { get; set; }
 
 		/// <summary>
 		/// Gets or sets the sample contacts.
@@ -89,7 +89,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// An array of <see cref="Contact">Contacts</see> that match the segmenting criteria.
 		/// </value>
-		[JsonProperty("contacts_sample", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("contacts_sample")]
 		public Contact[] SampleContacts { get; set; }
 	}
 }

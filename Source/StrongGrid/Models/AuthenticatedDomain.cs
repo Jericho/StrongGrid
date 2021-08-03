@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -21,7 +21,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("id")]
 		public long Id { get; set; }
 
 		/// <summary>
@@ -30,7 +30,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The domain.
 		/// </value>
-		[JsonProperty("domain", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("domain")]
 		public string Domain { get; set; }
 
 		/// <summary>
@@ -39,7 +39,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The subdomain.
 		/// </value>
-		[JsonProperty("subdomain", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("subdomain")]
 		public string Subdomain { get; set; }
 
 		/// <summary>
@@ -48,7 +48,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The username.
 		/// </value>
-		[JsonProperty("username", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("username")]
 		public string Username { get; set; }
 
 		/// <summary>
@@ -57,7 +57,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The user identifier.
 		/// </value>
-		[JsonProperty("user_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("user_id")]
 		public long UserId { get; set; }
 
 		/// <summary>
@@ -66,7 +66,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The ip addresses.
 		/// </value>
-		[JsonProperty("ips", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("ips")]
 		public string[] IpAddresses { get; set; }
 
 		/// <summary>
@@ -75,7 +75,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// <c>true</c> if this instance is custom SPF; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("custom_spf", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("custom_spf")]
 		public bool IsCustomSpf { get; set; }
 
 		/// <summary>
@@ -84,7 +84,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// <c>true</c> if this instance is default; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("default", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("default")]
 		public bool IsDefault { get; set; }
 
 		/// <summary>
@@ -93,7 +93,7 @@ namespace StrongGrid.Models
 		/// <value>
 		///   <c>true</c> if this instance is legacy; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("legacy", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("legacy")]
 		public bool IsLegacy { get; set; }
 
 		/// <summary>
@@ -102,7 +102,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// <c>true</c> if this instance is automatic security; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("automatic_security", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("automatic_security")]
 		public bool IsAutomaticSecurity { get; set; }
 
 		/// <summary>
@@ -111,7 +111,7 @@ namespace StrongGrid.Models
 		/// <value>
 		///   <c>true</c> if this instance is valid; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("valid", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("valid")]
 		public bool IsValid { get; set; }
 
 		/// <summary>
@@ -120,7 +120,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The DNS.
 		/// </value>
-		[JsonProperty("dns", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("dns")]
 		public AuthenticatedDomainDns DNS { get; set; }
 	}
 }

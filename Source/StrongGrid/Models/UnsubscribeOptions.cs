@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The group identifier.
 		/// </value>
-		[JsonProperty("group_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("group_id")]
 		public long GroupId { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The groups to display.
 		/// </value>
-		[JsonProperty("groups_to_display", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("groups_to_display")]
 		public int[] GroupsToDisplay { get; set; }
 	}
 }

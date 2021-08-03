@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The subject.
 		/// </value>
-		[JsonProperty("subject", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("subject")]
 		public string Subject { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The HTML content.
 		/// </value>
-		[JsonProperty("html_content", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("html_content")]
 		public string HtmlContent { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The plain text content.
 		/// </value>
-		[JsonProperty("plain_content", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("plain_content")]
 		public string TextContent { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The generate_plain_content.
 		/// </value>
-		[JsonProperty("generate_plain_content", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("generate_plain_content")]
 		public bool GeneratePlainContent { get; set; }
 
 		/// <summary>
@@ -49,7 +49,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The type of editor.
 		/// </value>
-		[JsonProperty("editor", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("editor")]
 		public EditorType EditorType { get; set; }
 
 		/// <summary>
@@ -58,7 +58,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The suppression group identifier.
 		/// </value>
-		[JsonProperty("suppression_group_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("suppression_group_id")]
 		public long? SuppressionGroupId { get; set; }
 
 		/// <summary>
@@ -67,7 +67,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The custom unsubscribe URL.
 		/// </value>
-		[JsonProperty("custom_unsubscribe_url", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("custom_unsubscribe_url")]
 		public string CustomUnsubscribeUrl { get; set; }
 
 		/// <summary>
@@ -76,7 +76,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The sender identifier.
 		/// </value>
-		[JsonProperty("sender_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("sender_id")]
 		public long SenderId { get; set; }
 
 		/// <summary>
@@ -85,7 +85,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The ip pool.
 		/// </value>
-		[JsonProperty("ip_pool", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("ip_pool")]
 		public string IpPool { get; set; }
 	}
 }

@@ -1,13 +1,13 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using StrongGrid.Utilities;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
 	/// <summary>
 	/// Enumeration to indicate the verdict of an email validation.
 	/// </summary>
-	[JsonConverter(typeof(StringEnumConverter))]
+	[JsonConverter(typeof(StringEnumConverter<EmailValidationVerdict>))]
 	public enum EmailValidationVerdict
 	{
 		/// <summary>

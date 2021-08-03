@@ -1,5 +1,5 @@
-using Newtonsoft.Json;
 using StrongGrid.Utilities;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -15,7 +15,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// <c>true</c> if [enabled in HTML content]; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("enable", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("enable")]
 		public bool EnabledInHtmlContent { get; set; }
 
 		/// <summary>
@@ -24,7 +24,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// <c>true</c> if [enabled in text content]; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("enable_text", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("enable_text")]
 		public bool EnabledInTextContent { get; set; }
 	}
 }
