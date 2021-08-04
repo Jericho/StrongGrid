@@ -97,6 +97,5 @@ namespace StrongGrid.Utilities
 
 			writer.WriteEndArray();
 		}
-
 	}
 }

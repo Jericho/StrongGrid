@@ -298,7 +298,6 @@ namespace StrongGrid
 		}
 
 		/// <summary>Set the body content of the HTTP request.</summary>
-		/// <typeparam name="T">The type of object to serialize into a JSON string.</typeparam>
 		/// <param name="request">The request.</param>
 		/// <param name="body">The value to serialize into the HTTP body content.</param>
 		/// <param name="omitCharSet">
