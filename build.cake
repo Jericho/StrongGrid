@@ -1,13 +1,13 @@
 // Install tools.
 #tool dotnet:?package=GitVersion.Tool&version=5.6.6
-#tool nuget:?package=GitReleaseManager&version=0.11.0
-#tool nuget:?package=OpenCover&version=4.7.1189
-#tool nuget:?package=ReportGenerator&version=4.8.8
+#tool nuget:?package=GitReleaseManager&version=0.12.0
+#tool nuget:?package=OpenCover&version=4.7.1221
+#tool nuget:?package=ReportGenerator&version=4.8.12
 #tool nuget:?package=coveralls.io&version=1.4.2
 #tool nuget:?package=xunit.runner.console&version=2.4.1
 
 // Install addins.
-#addin nuget:?package=Cake.Coveralls&version=1.0.1
+#addin nuget:?package=Cake.Coveralls&version=1.1.0
 #addin nuget:?package=Cake.Git&version=1.0.1
 
 
@@ -223,11 +223,17 @@ Task("Run-Code-Coverage")
 	.IsDependentOn("Build")
 	.Does(() =>
 {
+	// For the purpose of calculating code coverage, a single target will suffice.
+	// FYI, this will cause an error if the unit test project is not configured
+	// to target this desired framework:
+	var desiredFramework = "net5.0";
+
 	Action<ICakeContext> testAction = ctx => ctx.DotNetCoreTest(unitTestsProject, new DotNetCoreTestSettings
 	{
 		NoBuild = true,
 		NoRestore = true,
-		Configuration = configuration
+		Configuration = configuration,
+		Framework = desiredFramework
 	});
 
 	OpenCover(testAction,
@@ -434,8 +440,11 @@ Task("Benchmark")
 	.WithCriteria(isBenchmarkPresent)
 	.Does(() =>
 {
-    var htmlReport = GetFiles($"{benchmarkDir}results/*-report.html", new GlobberSettings { IsCaseSensitive = false }).FirstOrDefault();
-	StartProcess("cmd", $"/c start {htmlReport}");
+    var htmlReports = GetFiles($"{benchmarkDir}results/*-report.html", new GlobberSettings { IsCaseSensitive = false });
+	foreach (var htmlReport in htmlReports)
+	{
+		StartProcess("cmd", $"/c start {htmlReport}");
+	}
 });
 
 Task("ReleaseNotes")
@@ -444,15 +453,11 @@ Task("ReleaseNotes")
 Task("AppVeyor")
 	.IsDependentOn("Run-Code-Coverage")
 	.IsDependentOn("Upload-Coverage-Result")
-    .IsDependentOn("Generate-Benchmark-Report")
 	.IsDependentOn("Create-NuGet-Package")
 	.IsDependentOn("Upload-AppVeyor-Artifacts")
 	.IsDependentOn("Publish-MyGet")
 	.IsDependentOn("Publish-NuGet")
 	.IsDependentOn("Publish-GitHub-Release");
-
-Task("AppVeyor-Ubuntu")
-	.IsDependentOn("Run-Unit-Tests");
 
 Task("Default")
 	.IsDependentOn("Run-Unit-Tests")
