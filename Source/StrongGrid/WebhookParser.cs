@@ -111,12 +111,6 @@ namespace StrongGrid
 
 				We can get rid of the 'ConvertECDSASignature' class and the Utils methods that
 				convert public keys when we stop suporting .NET framework and .NET standard.
-
-				NET5_0_OR_GREATER was added to the NET SDK very recently and works fine on
-				AppVeyor's Windows image which runs NET SDK 5.0.201. However, it doesn't work
-				on their Ubuntu image because it's still on NET SDK 5.0.101. That's why I added
-				the seemingly redundant "NET5_0" in the conditional block below. It will be safe
-				to remove it when the SDK in AppVeyor's Ubuntu image is upgraded.
 			*/
 
 #if NET5_0_OR_GREATER
