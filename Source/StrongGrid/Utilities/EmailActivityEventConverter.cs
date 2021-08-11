@@ -37,7 +37,7 @@ namespace StrongGrid.Utilities
 			throw new NotImplementedException();
 		}
 
-		private Event Convert(JsonElement jsonElement, JsonSerializerOptions options)
+		private static Event Convert(JsonElement jsonElement, JsonSerializerOptions options)
 		{
 			jsonElement.TryGetProperty("event_name", out JsonElement eventTypeProperty);
 			var eventTypeAsString = eventTypeProperty.GetString();

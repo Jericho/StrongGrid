@@ -145,7 +145,7 @@ namespace StrongGrid.Resources
 				.AsMessage();
 		}
 
-		private string ToQueryDsl(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>> filterConditions)
+		private static string ToQueryDsl(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>> filterConditions)
 		{
 			if (filterConditions == null) return null;
 
