@@ -152,7 +152,7 @@ namespace StrongGrid.Resources
 			var conditions = new List<string>(filterConditions.Count());
 			foreach (var criteria in filterConditions)
 			{
-				var logicalOperator = criteria.Key.GetAttributeOfType<EnumMemberAttribute>().Value;
+				var logicalOperator = criteria.Key.ToEnumString();
 				var values = criteria.Value.Select(criteriaValue => criteriaValue.ToString());
 				conditions.Add(string.Join($" {logicalOperator} ", values));
 			}

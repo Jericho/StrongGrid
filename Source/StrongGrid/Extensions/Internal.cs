@@ -683,13 +683,10 @@ namespace StrongGrid
 		internal static string ToEnumString<T>(this T enumValue)
 			where T : Enum
 		{
-			var enumType = enumValue.GetType();
-			var name = Enum.GetName(enumType, enumValue);
-
-			var enumMemberAttribute = ((EnumMemberAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(EnumMemberAttribute), true)).SingleOrDefault();
+			var enumMemberAttribute = enumValue.GetAttributeOfType<EnumMemberAttribute>();
 			if (enumMemberAttribute != null) return enumMemberAttribute.Value;
 
-			var descriptionAttribute = ((DescriptionAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(DescriptionAttribute), true)).SingleOrDefault();
+			var descriptionAttribute = enumValue.GetAttributeOfType<DescriptionAttribute>();
 			if (descriptionAttribute != null) return descriptionAttribute.Description;
 
 			return enumValue.ToString();

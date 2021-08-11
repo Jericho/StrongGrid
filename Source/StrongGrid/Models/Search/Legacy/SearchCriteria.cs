@@ -62,7 +62,7 @@ namespace StrongGrid.Models.Search.Legacy
 			}
 			else if (value is Enum enumValue)
 			{
-				return $"\"{enumValue.GetAttributeOfType<EnumMemberAttribute>()?.Value ?? value.ToString()}\"";
+				return $"\"{enumValue.ToEnumString()}\"";
 			}
 			else if (value is IEnumerable values)
 			{
@@ -93,7 +93,7 @@ namespace StrongGrid.Models.Search.Legacy
 		/// <returns>The string representation of the operator.</returns>
 		public virtual string ConvertOperatorToString()
 		{
-			return FilterOperator.GetAttributeOfType<EnumMemberAttribute>()?.Value ?? FilterOperator.ToString();
+			return FilterOperator.ToEnumString();
 		}
 
 		/// <summary>
@@ -102,7 +102,7 @@ namespace StrongGrid.Models.Search.Legacy
 		/// <returns>A <see cref="string"/> representation of the search criteria.</returns>
 		public override string ToString()
 		{
-			var fieldName = FilterField.GetAttributeOfType<EnumMemberAttribute>().Value;
+			var fieldName = FilterField.ToEnumString();
 			var filterOperator = ConvertOperatorToString();
 			var filterValue = ConvertValueToString();
 			return $"{fieldName}{filterOperator}{filterValue}";
