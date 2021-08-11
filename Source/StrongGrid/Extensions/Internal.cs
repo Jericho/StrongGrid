@@ -297,39 +297,6 @@ namespace StrongGrid
 			});
 		}
 
-		/// <summary>Set the body content of the HTTP request.</summary>
-		/// <param name="request">The request.</param>
-		/// <param name="body">The value to serialize into the HTTP body content.</param>
-		/// <param name="omitCharSet">
-		/// Indicates if the charset should be omitted from the 'Content-Type' request header.
-		/// The vast majority of SendGrid's endpoints require this parameter to be false but one
-		/// notable exception is 'Contacts.Upsert' in the new marketing campaigns API.
-		/// SendGrid has not documented when it should be true/false, I only figured it out when
-		/// getting a "invalid content-type: application/json; charset=utf-8" exception which was
-		/// solved by omitting the "charset".
-		/// </param>
-		/// <returns>Returns the request builder for chaining.</returns>
-		/// <remarks>
-		/// This method is equivalent to IRequest.AsBody&lt;T&gt;(T body) because omitting the media type
-		/// causes the first formatter in MediaTypeFormatterCollection to be used by default and the first
-		/// formatter happens to be the JSON formatter. However, I don't feel good about relying on the
-		/// default ordering of the items in the MediaTypeFormatterCollection.
-		/// </remarks>
-		internal static IRequest WithJsonBody(this IRequest request, ExpandoObject body, bool omitCharSet = false)
-		{
-			return request.WithBody(bodyBuilder =>
-			{
-				var httpContent = bodyBuilder.Model(body, new MediaTypeHeaderValue("application/json"));
-
-				if (omitCharSet && !string.IsNullOrEmpty(httpContent.Headers.ContentType.CharSet))
-				{
-					httpContent.Headers.ContentType.CharSet = string.Empty;
-				}
-
-				return httpContent;
-			});
-		}
-
 		/// <summary>
 		/// Impersonate a user when making a call to the SendGrid API.
 		/// </summary>
