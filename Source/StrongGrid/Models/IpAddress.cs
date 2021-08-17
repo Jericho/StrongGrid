@@ -70,7 +70,7 @@ namespace StrongGrid.Models
 		/// The cost.
 		/// </value>
 		[JsonPropertyName("start_date")]
-		[JsonConverter(typeof(EpochConverter))]
+		[JsonConverter(typeof(NullableEpochConverter))]
 		public DateTime? WarmupStartedOn { get; set; }
 
 		/// <summary>

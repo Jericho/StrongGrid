@@ -77,7 +77,7 @@ namespace StrongGrid.Models.Legacy
 		/// The last clicked on.
 		/// </value>
 		[JsonPropertyName("last_clicked")]
-		[JsonConverter(typeof(EpochConverter))]
+		[JsonConverter(typeof(NullableEpochConverter))]
 		public DateTime? LastClickedOn { get; set; }
 
 		/// <summary>
@@ -87,7 +87,7 @@ namespace StrongGrid.Models.Legacy
 		/// The last emailed on.
 		/// </value>
 		[JsonPropertyName("last_emailed")]
-		[JsonConverter(typeof(EpochConverter))]
+		[JsonConverter(typeof(NullableEpochConverter))]
 		public DateTime? LastEmailedOn { get; set; }
 
 		/// <summary>
@@ -106,7 +106,7 @@ namespace StrongGrid.Models.Legacy
 		/// The last opened on.
 		/// </value>
 		[JsonPropertyName("last_opened")]
-		[JsonConverter(typeof(EpochConverter))]
+		[JsonConverter(typeof(NullableEpochConverter))]
 		public DateTime? LastOpenedOn { get; set; }
 
 		/// <summary>
