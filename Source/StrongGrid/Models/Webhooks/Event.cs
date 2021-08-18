@@ -54,7 +54,10 @@ namespace StrongGrid.Models.Webhooks
 		/// Gets or sets the internal message identifier.
 		/// </summary>
 		/// <remarks>
-		/// This value in this property is useful to SendGrid support. It contains the message Id and information about where the mail was processed concatenated together. Having this data available is helpful for troubleshooting purposes. Developers should use the 'MessageId' property to get the message's unique identifier.
+		/// This value in this property is useful to SendGrid support.
+		/// It contains the message Id and information about where the mail was processed concatenated together.
+		/// Having this data available is helpful for troubleshooting purposes.
+		/// Developers should use the 'MessageId' property to get the message's unique identifier.
 		/// </remarks>
 		/// <value>
 		/// The internal message identifier.
