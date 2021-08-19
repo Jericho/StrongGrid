@@ -37,13 +37,8 @@ namespace StrongGrid.Utilities
 
 		public override void Serialize(Type type, object value, Stream stream, HttpContent content, TransportContext transportContext)
 		{
-			var options = new JsonSerializerOptions()
-			{
-				DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-			};
-
 			var writer = new StreamWriter(stream);
-			writer.Write(JsonSerializer.Serialize(value, type, options));
+			writer.Write(JsonSerializer.Serialize(value, type, _serializerOptions));
 			writer.Write(JsonSerializer.Serialize(value, type, _serializerOptions));
 			writer.Flush();
 		}
