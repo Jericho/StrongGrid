@@ -44,7 +44,7 @@ namespace StrongGrid.Warmup
 			{
 				using (var stream = File.OpenRead(fileName))
 				{
-					warmupStatus = await JsonSerializer.DeserializeAsync<WarmupStatus>(stream, null, cancellationToken).ConfigureAwait(false);
+					warmupStatus = await JsonSerializer.DeserializeAsync<WarmupStatus>(stream, cancellationToken: cancellationToken).ConfigureAwait(false);
 				}
 			}
 

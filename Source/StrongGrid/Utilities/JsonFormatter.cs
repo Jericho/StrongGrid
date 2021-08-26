@@ -21,6 +21,9 @@ namespace StrongGrid.Utilities
 			DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
 		};
 
+		private static readonly StrongGridJsonSerializerContext _deserializationContext = new StrongGridJsonSerializerContext(_deserializerOptions);
+		private static readonly StrongGridJsonSerializerContext _serializationContext = new StrongGridJsonSerializerContext(_serializerOptions);
+
 		public JsonFormatter()
 		{
 			this.AddMediaType("application/json");
@@ -30,15 +33,14 @@ namespace StrongGrid.Utilities
 		{
 			var reader = new StreamReader(stream); // don't dispose (stream disposal is handled elsewhere)
 			string streamContent = reader.ReadToEnd();
-
-			object deserializedResult = JsonSerializer.Deserialize(streamContent, type, _deserializerOptions);
+			object deserializedResult = JsonSerializer.Deserialize(streamContent, type, _deserializationContext);
 			return deserializedResult;
 		}
 
 		public override void Serialize(Type type, object value, Stream stream, HttpContent content, TransportContext transportContext)
 		{
 			var writer = new StreamWriter(stream);
-			writer.Write(JsonSerializer.Serialize(value, type, _serializerOptions));
+			writer.Write(JsonSerializer.Serialize(value, type, _serializationContext));
 			writer.Write(JsonSerializer.Serialize(value, type, _serializerOptions));
 			writer.Flush();
 		}
