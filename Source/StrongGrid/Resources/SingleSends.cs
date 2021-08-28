@@ -3,7 +3,6 @@ using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -66,7 +65,7 @@ namespace StrongGrid.Resources
 			Parameter<string> ipPool = default,
 			CancellationToken cancellationToken = default)
 		{
-			var data = ConvertToExpando(name, senderId, categories, customUnsubscribeUrl, suppressionGroupId, listIds, segmentIds, default, ipPool, subject, htmlContent, textContent, string.IsNullOrEmpty(textContent), designId, editor);
+			var data = ConvertToJson(name, senderId, categories, customUnsubscribeUrl, suppressionGroupId, listIds, segmentIds, default, ipPool, subject, htmlContent, textContent, string.IsNullOrEmpty(textContent), designId, editor);
 			return _client
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
@@ -112,7 +111,7 @@ namespace StrongGrid.Resources
 			Parameter<string> ipPool = default,
 			CancellationToken cancellationToken = default)
 		{
-			var data = ConvertToExpando(name, senderId, categories, customUnsubscribeUrl, suppressionGroupId, listIds, segmentIds, default, ipPool, subject, htmlContent, textContent, string.IsNullOrEmpty(textContent), designId, editor);
+			var data = ConvertToJson(name, senderId, categories, customUnsubscribeUrl, suppressionGroupId, listIds, segmentIds, default, ipPool, subject, htmlContent, textContent, string.IsNullOrEmpty(textContent), designId, editor);
 			return _client
 				.PatchAsync($"{_endpoint}/{singleSendId}")
 				.WithJsonBody(data)
@@ -200,7 +199,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task SendNowAsync(string singleSendId, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("send_at", "now");
 
 			return _client
@@ -221,7 +220,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task ScheduleAsync(string singleSendId, DateTime sendOn, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("send_at", sendOn.ToUniversalTime().ToString("o"));
 
 			return _client
@@ -247,9 +246,9 @@ namespace StrongGrid.Resources
 				.AsMessage();
 		}
 
-		private static ExpandoObject ConvertToExpando(string name, long senderId, Parameter<IEnumerable<string>> categories, Parameter<string> customUnsubscribeUrl, Parameter<long?> suppressionGroupId, Parameter<IEnumerable<string>> listIds, Parameter<IEnumerable<string>> segmentIds, Parameter<DateTime?> sendOn, Parameter<string> ipPool, Parameter<string> subject, Parameter<string> htmlContent, Parameter<string> textContent, Parameter<bool> generateTextContent, Parameter<string> designId, Parameter<EditorType> editor)
+		private static StrongGridJsonObject ConvertToJson(string name, long senderId, Parameter<IEnumerable<string>> categories, Parameter<string> customUnsubscribeUrl, Parameter<long?> suppressionGroupId, Parameter<IEnumerable<string>> listIds, Parameter<IEnumerable<string>> segmentIds, Parameter<DateTime?> sendOn, Parameter<string> ipPool, Parameter<string> subject, Parameter<string> htmlContent, Parameter<string> textContent, Parameter<bool> generateTextContent, Parameter<string> designId, Parameter<EditorType> editor)
 		{
-			var result = new ExpandoObject();
+			var result = new StrongGridJsonObject();
 			result.AddProperty("name", name);
 			result.AddProperty("categories", categories);
 			result.AddProperty("send_at", sendOn);

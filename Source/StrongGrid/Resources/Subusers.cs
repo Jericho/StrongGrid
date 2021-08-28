@@ -2,7 +2,6 @@ using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -78,7 +77,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Subuser> CreateAsync(string username, string email, string password, Parameter<IEnumerable<string>> ips = default, CancellationToken cancellationToken = default)
 		{
-			var data = ConvertToExpando(username: username, email: email, password: password, ips: ips);
+			var data = ConvertToJson(username: username, email: email, password: password, ips: ips);
 			return _client
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
@@ -116,7 +115,7 @@ namespace StrongGrid.Resources
 		{
 			if (disabled.HasValue)
 			{
-				var data = new ExpandoObject();
+				var data = new StrongGridJsonObject();
 				data.AddProperty("disabled", disabled.Value);
 
 				await _client
@@ -168,7 +167,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<MonitorSettings> CreateMonitorSettingsAsync(string username, string email, int frequency, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("email", email);
 			data.AddProperty("frequency", frequency);
 
@@ -191,7 +190,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<MonitorSettings> UpdateMonitorSettingsAsync(string username, Parameter<string> email = default, Parameter<int> frequency = default, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("email", email);
 			data.AddProperty("frequency", frequency);
 
@@ -257,14 +256,14 @@ namespace StrongGrid.Resources
 			return request.AsObject<SenderReputation[]>();
 		}
 
-		private static ExpandoObject ConvertToExpando(
+		private static StrongGridJsonObject ConvertToJson(
 			Parameter<int> id = default,
 			Parameter<string> username = default,
 			Parameter<string> password = default,
 			Parameter<string> email = default,
 			Parameter<IEnumerable<string>> ips = default)
 		{
-			var result = new ExpandoObject();
+			var result = new StrongGridJsonObject();
 			result.AddProperty("id", id);
 			result.AddProperty("username", username);
 			result.AddProperty("email", email);

@@ -1,7 +1,7 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
+using StrongGrid.Utilities;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -127,7 +127,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task AddAddressToUnsubscribeGroupAsync(long groupId, IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("recipient_emails", emails.ToArray());
 
 			return _client
@@ -169,7 +169,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<bool> IsSuppressedAsync(long groupId, string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("recipient_emails", new[] { email });
 
 			var result = await _client

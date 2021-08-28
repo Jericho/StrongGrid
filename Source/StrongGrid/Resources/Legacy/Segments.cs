@@ -1,6 +1,6 @@
 using Pathoschild.Http.Client;
+using StrongGrid.Utilities;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,7 +43,7 @@ namespace StrongGrid.Resources.Legacy
 		{
 			conditions = conditions ?? Enumerable.Empty<Models.Legacy.SearchCondition>();
 
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
 			data.AddProperty("conditions", conditions.ToArray());
 			data.AddProperty("list_id", listId);
@@ -107,7 +107,7 @@ namespace StrongGrid.Resources.Legacy
 		{
 			conditions = conditions ?? Enumerable.Empty<Models.Legacy.SearchCondition>();
 
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
 			data.AddProperty("list_id", listId);
 			data.AddProperty("conditions", conditions);

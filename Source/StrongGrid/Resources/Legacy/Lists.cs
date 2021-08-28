@@ -1,6 +1,6 @@
 using Pathoschild.Http.Client;
+using StrongGrid.Utilities;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -39,7 +39,7 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public async Task<Models.Legacy.List> CreateAsync(string name, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
 
 			var list = await _client
@@ -141,7 +141,7 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task UpdateAsync(long listId, string name, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
 
 			return _client

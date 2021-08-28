@@ -1,6 +1,6 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
-using System.Dynamic;
+using StrongGrid.Utilities;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -42,7 +42,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<string> CreateAsync(string name, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
 
 			return _client
@@ -101,7 +101,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<string> UpdateAsync(string name, string newName, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("name", newName);
 
 			return _client
@@ -138,7 +138,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<IpPoolAddress> AddAddressAsync(string name, string address, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("ip", address);
 
 			return _client

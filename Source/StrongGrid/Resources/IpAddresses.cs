@@ -1,6 +1,6 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
-using System.Dynamic;
+using StrongGrid.Utilities;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -39,7 +39,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<AddIpAddressResult> AddAsync(int count, string[] subusers = null, bool? warmup = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("count", count);
 			data.AddProperty("subusers", subusers);
 			data.AddProperty("warmup", warmup.Value);
@@ -168,7 +168,7 @@ namespace StrongGrid.Resources
 		/// <returns>The async task.</returns>
 		public Task StartWarmupAsync(string address, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("ip", address);
 
 			return _client

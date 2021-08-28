@@ -1,7 +1,6 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
-using System.Dynamic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -122,7 +121,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task SendEventTestAsync(string url, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("url", url);
 
 			return _client
@@ -147,7 +146,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<InboundParseWebhookSettings> CreateInboundParseWebhookSettingsAsync(string hostname, string url, bool spamCheck = false, bool sendRaw = false, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = ConvertToExpando(hostname, url, spamCheck, sendRaw);
+			var data = ConvertToJson(hostname, url, spamCheck, sendRaw);
 			return _client
 				.PostAsync($"{_inboundParseWebhookEndpoint}/settings")
 				.OnBehalfOf(onBehalfOf)
@@ -205,7 +204,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task UpdateInboundParseWebhookSettingsAsync(string hostname, Parameter<string> url = default, Parameter<bool> spamCheck = default, Parameter<bool> sendRaw = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = ConvertToExpando(hostname, url, spamCheck, sendRaw);
+			var data = ConvertToJson(hostname, url, spamCheck, sendRaw);
 			return _client
 				.PatchAsync($"{_inboundParseWebhookEndpoint}/settings/{hostname}")
 				.OnBehalfOf(onBehalfOf)
@@ -247,9 +246,9 @@ namespace StrongGrid.Resources
 				.AsObject<string>("public_key");
 		}
 
-		private static ExpandoObject ConvertToExpando(string hostname, Parameter<string> url, Parameter<bool> spamCheck, Parameter<bool> sendRaw)
+		private static StrongGridJsonObject ConvertToJson(string hostname, Parameter<string> url, Parameter<bool> spamCheck, Parameter<bool> sendRaw)
 		{
-			var result = new ExpandoObject();
+			var result = new StrongGridJsonObject();
 			result.AddProperty("hostname", hostname);
 			result.AddProperty("url", url);
 			result.AddProperty("spam_check", spamCheck);

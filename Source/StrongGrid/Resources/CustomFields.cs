@@ -1,7 +1,7 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
+using StrongGrid.Utilities;
 using System;
-using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,7 +38,7 @@ namespace StrongGrid.Resources
 		/// <returns>The <see cref="FieldMetadata">metadata</see> about the new field.</returns>
 		public Task<FieldMetadata> CreateAsync(string name, FieldType type, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
 			data.AddProperty("field_type", type.ToEnumString());
 
@@ -85,7 +85,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<FieldMetadata> UpdateAsync(string fieldId, string name = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("id", fieldId);
 			data.AddProperty("name", name);
 

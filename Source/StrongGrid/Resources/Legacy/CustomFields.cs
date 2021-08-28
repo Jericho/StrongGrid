@@ -1,6 +1,6 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
-using System.Dynamic;
+using StrongGrid.Utilities;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -37,7 +37,7 @@ namespace StrongGrid.Resources.Legacy
 		/// <returns>The <see cref="Models.Legacy.CustomFieldMetadata">metadata</see> about the new field.</returns>
 		public Task<Models.Legacy.CustomFieldMetadata> CreateAsync(string name, FieldType type, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
 			data.AddProperty("type", type.ToEnumString());
 

@@ -1,7 +1,6 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
-using System.Dynamic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -77,7 +76,7 @@ namespace StrongGrid.Resources
 			string onBehalfOf = null,
 			CancellationToken cancellationToken = default)
 		{
-			var data = ConvertToExpando(address, city, company, country, firstName, lastName, phone, state, website, zip);
+			var data = ConvertToJson(address, city, company, country, firstName, lastName, phone, state, website, zip);
 			return _client
 				.PatchAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
@@ -131,7 +130,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<string> UpdateEmailAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("email", email);
 
 			return _client
@@ -170,7 +169,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<string> UpdateUsernameAsync(string username, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("username", username);
 
 			return _client
@@ -210,7 +209,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task UpdatePasswordAsync(string oldPassword, string newPassword, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("new_password", oldPassword);
 			data.AddProperty("old_password", newPassword);
 
@@ -239,7 +238,7 @@ namespace StrongGrid.Resources
 				.AsObject<string[]>("scopes");
 		}
 
-		private static ExpandoObject ConvertToExpando(
+		private static StrongGridJsonObject ConvertToJson(
 			Parameter<string> address = default,
 			Parameter<string> city = default,
 			Parameter<string> company = default,
@@ -251,7 +250,7 @@ namespace StrongGrid.Resources
 			Parameter<string> website = default,
 			Parameter<string> zip = default)
 		{
-			var result = new ExpandoObject();
+			var result = new StrongGridJsonObject();
 			result.AddProperty("address", address);
 			result.AddProperty("city", city);
 			result.AddProperty("company", company);

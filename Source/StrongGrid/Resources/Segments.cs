@@ -3,9 +3,7 @@ using StrongGrid.Models;
 using StrongGrid.Models.Search;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -44,7 +42,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Segment> CreateAsync(string name, IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>> filterConditions, string listId = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
 			data.AddProperty("query_dsl", ToQueryDsl(filterConditions));
 			data.AddProperty("parent_list_id", listId);
@@ -111,7 +109,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Segment> UpdateAsync(string segmentId, Parameter<string> name = default, Parameter<IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>>> filterConditions = default, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
 			if (filterConditions.HasValue)
 			{

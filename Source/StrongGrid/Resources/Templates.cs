@@ -1,7 +1,6 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
-using System.Dynamic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,7 +40,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Template> CreateAsync(string name, TemplateType type, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
 			data.AddProperty("generation", type.ToEnumString());
 
@@ -102,7 +101,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Template> UpdateAsync(string templateId, string name, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
 
 			return _client
@@ -149,7 +148,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<TemplateVersion> CreateVersionAsync(string templateId, string name, string subject, string htmlContent, string textContent, bool isActive, Parameter<EditorType?> editorType = default, Parameter<object> testData = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
 			data.AddProperty("subject", subject);
 			data.AddProperty("html_content", htmlContent);
@@ -222,7 +221,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<TemplateVersion> UpdateVersionAsync(string templateId, string versionId, Parameter<string> name = default, Parameter<string> subject = default, Parameter<string> htmlContent = default, Parameter<string> textContent = default, Parameter<bool> isActive = default, Parameter<object> testData = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
 			data.AddProperty("subject", subject);
 			data.AddProperty("html_content", htmlContent);

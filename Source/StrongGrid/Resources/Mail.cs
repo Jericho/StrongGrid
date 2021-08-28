@@ -3,7 +3,6 @@ using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
@@ -210,7 +209,7 @@ namespace StrongGrid.Resources
 			if (numberOfReplyToAddresses > 1000) throw new ArgumentOutOfRangeException(nameof(numberOfReplyToAddresses), numberOfReplyToAddresses, "The number of distinct reply-to addresses can't exceed 1000");
 
 			// Serialize the mail message
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("from", from);
 			data.AddProperty("reply_to_list", cleanReplyTo);
 			data.AddProperty("subject", subject);
@@ -225,12 +224,12 @@ namespace StrongGrid.Resources
 			data.AddProperty("mail_settings", mailSettings);
 			data.AddProperty("tracking_settings", trackingSettings);
 			data.AddProperty("personalizations", personalizationsCopy);
-			data.AddProperty("headers", ConvertEnumerationToExpando(combinedHeaders));
-			data.AddProperty("custom_args", ConvertEnumerationToExpando(customArgs));
+			data.AddProperty("headers", ConvertEnumerationToJson(combinedHeaders));
+			data.AddProperty("custom_args", ConvertEnumerationToJson(customArgs));
 
 			// SendGrid does not allow emails that exceed 30MB
-			var contentSize = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = false }).Length;
-			if (contentSize > MAX_EMAIL_SIZE) throw new Exception("Email exceeds the size limit");
+			var serializedContent = JsonSerializer.Serialize(data, typeof(StrongGridJsonObject), JsonFormatter.SerializationContext);
+			if (serializedContent.Length > MAX_EMAIL_SIZE) throw new Exception("Email exceeds the size limit");
 
 			// Send the request
 			var response = await _client
@@ -271,11 +270,11 @@ namespace StrongGrid.Resources
 				.ToArray();
 		}
 
-		private static ExpandoObject ConvertEnumerationToExpando(IEnumerable<KeyValuePair<string, string>> items)
+		private static StrongGridJsonObject ConvertEnumerationToJson(IEnumerable<KeyValuePair<string, string>> items)
 		{
 			if (items == null || !items.Any()) return null;
 
-			var obj = new ExpandoObject();
+			var obj = new StrongGridJsonObject();
 			foreach (var item in items)
 			{
 				obj.AddProperty(item.Key, item.Value);

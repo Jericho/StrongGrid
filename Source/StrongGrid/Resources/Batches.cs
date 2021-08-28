@@ -1,7 +1,7 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
+using StrongGrid.Utilities;
 using System;
-using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -78,7 +78,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task Cancel(string batchId, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("batch_id", batchId);
 			data.AddProperty("status", "cancel");
 
@@ -99,7 +99,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task Pause(string batchId, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("batch_id", batchId);
 			data.AddProperty("status", "pause");
 

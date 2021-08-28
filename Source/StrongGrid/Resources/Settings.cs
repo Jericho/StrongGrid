@@ -3,9 +3,7 @@ using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -188,7 +186,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<ClickTrackingSettings> UpdateClickTrackingSettingsAsync(Parameter<bool> enabledInText = default, Parameter<bool> enabledInHtml = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("enable_text", enabledInText);
 			data.AddProperty("enabled", enabledInHtml);
 
@@ -279,7 +277,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<bool> UpdateOpenTrackingSettingsAsync(bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("enabled", enabled);
 
 			return _client
@@ -566,7 +564,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<bool> UpdatePlainContentMailSettingsAsync(bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("enabled", enabled);
 
 			return _client

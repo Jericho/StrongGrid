@@ -3,7 +3,6 @@ using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -106,7 +105,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<SuppressionGroup> CreateAsync(string name, string description, bool isDefault, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
 			data.AddProperty("description", description);
 			data.AddProperty("is_default", isDefault);
@@ -132,7 +131,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<SuppressionGroup> UpdateAsync(long groupId, Parameter<string> name = default, Parameter<string> description = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name.Value);
 			data.AddProperty("description", description);
 

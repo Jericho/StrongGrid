@@ -1,7 +1,7 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
+using StrongGrid.Utilities;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -159,7 +159,7 @@ namespace StrongGrid.Resources
 		/// </remarks>
 		public Task<TeammateInvitation> InviteTeammateAsync(string email, IEnumerable<string> scopes, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("email", email);
 			data.AddProperty("scopes", scopes.ToArray());
 			data.AddProperty("is_admin", false);
@@ -190,7 +190,7 @@ namespace StrongGrid.Resources
 			var scopes = await _client.GetCurrentScopes(true, cancellationToken).ConfigureAwait(true);
 			scopes = scopes.Where(s => s.EndsWith(".read", System.StringComparison.OrdinalIgnoreCase)).ToArray();
 
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("email", email);
 			data.AddProperty("scopes", scopes.ToArray());
 			data.AddProperty("is_admin", false);
@@ -219,7 +219,7 @@ namespace StrongGrid.Resources
 		/// </remarks>
 		public Task<TeammateInvitation> InviteTeammateAsAdminAsync(string email, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("email", email);
 			data.AddProperty("is_admin", true);
 
@@ -270,7 +270,7 @@ namespace StrongGrid.Resources
 		/// <returns>The <see cref="Teammate" />.</returns>
 		public Task<Teammate> UpdateTeammatePermissionsAsync(string username, IEnumerable<string> scopes, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("scopes", scopes.ToArray());
 			data.AddProperty("is_admin", false);
 

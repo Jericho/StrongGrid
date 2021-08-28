@@ -1,8 +1,8 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
+using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
@@ -104,7 +104,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task AddAsync(IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("recipient_emails", emails.ToArray(), false);
 
 			return _client

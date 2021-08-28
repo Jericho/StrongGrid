@@ -11,6 +11,9 @@ namespace StrongGrid.Utilities
 {
 	internal class JsonFormatter : MediaTypeFormatterBase
 	{
+		internal static readonly StrongGridJsonSerializerContext DeserializationContext = new StrongGridJsonSerializerContext(_deserializerOptions);
+		internal static readonly StrongGridJsonSerializerContext SerializationContext = new StrongGridJsonSerializerContext(_serializerOptions);
+
 		private static readonly JsonSerializerOptions _deserializerOptions = new JsonSerializerOptions()
 		{
 			PropertyNameCaseInsensitive = false
@@ -18,11 +21,8 @@ namespace StrongGrid.Utilities
 
 		private static readonly JsonSerializerOptions _serializerOptions = new JsonSerializerOptions()
 		{
-			DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+			DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
 		};
-
-		private static readonly StrongGridJsonSerializerContext _deserializationContext = new StrongGridJsonSerializerContext(_deserializerOptions);
-		private static readonly StrongGridJsonSerializerContext _serializationContext = new StrongGridJsonSerializerContext(_serializerOptions);
 
 		public JsonFormatter()
 		{
@@ -33,14 +33,14 @@ namespace StrongGrid.Utilities
 		{
 			var reader = new StreamReader(stream); // don't dispose (stream disposal is handled elsewhere)
 			string streamContent = reader.ReadToEnd();
-			object deserializedResult = JsonSerializer.Deserialize(streamContent, type, _deserializationContext);
+			object deserializedResult = JsonSerializer.Deserialize(streamContent, type, DeserializationContext);
 			return deserializedResult;
 		}
 
 		public override void Serialize(Type type, object value, Stream stream, HttpContent content, TransportContext transportContext)
 		{
 			var writer = new StreamWriter(stream);
-			writer.Write(JsonSerializer.Serialize(value, type, _serializationContext));
+			writer.Write(JsonSerializer.Serialize(value, type, SerializationContext));
 			writer.Write(JsonSerializer.Serialize(value, type, _serializerOptions));
 			writer.Flush();
 		}

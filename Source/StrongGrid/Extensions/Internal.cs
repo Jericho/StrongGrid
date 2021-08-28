@@ -3,10 +3,8 @@ using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Dynamic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -409,81 +407,6 @@ namespace StrongGrid
 			}
 
 			return scopes;
-		}
-
-		internal static void AddProperty<T>(this ExpandoObject obj, string propertyName, Parameter<T> parameter, bool ignoreIfDefault = true)
-		{
-			if (ignoreIfDefault && !parameter.HasValue) return;
-			obj.AddProperty(propertyName, parameter.Value, false);
-		}
-
-		internal static void AddProperty<T>(this ExpandoObject obj, string propertyName, T value, bool ignoreIfDefault = true)
-		{
-			switch (value)
-			{
-				case string stringValue:
-					if (ignoreIfDefault && string.IsNullOrEmpty(stringValue)) return;
-					obj.AddDeepProperty(propertyName, stringValue);
-					break;
-
-				case Enum enumValue:
-					obj.AddDeepProperty(propertyName, enumValue.ToEnumString());
-					break;
-
-				case IEnumerable enumerableValue:
-					if (ignoreIfDefault)
-					{
-						if (enumerableValue == null) return;
-
-						// Non-generic IEnumerable does not natively provide a way to check if it contains any items.
-						// Therefore, we need to figure it out ourselves
-						var countainsAtLeastOneItem = false;
-						foreach (var item in enumerableValue)
-						{
-							countainsAtLeastOneItem = true;
-							break;
-						}
-
-						if (!countainsAtLeastOneItem) return;
-					}
-
-					obj.AddDeepProperty(propertyName, value);
-					break;
-
-				default:
-					if (ignoreIfDefault && EqualityComparer<T>.Default.Equals(value, default)) return;
-					obj.AddDeepProperty(propertyName, value);
-					break;
-			}
-		}
-
-		internal static void AddDeepProperty<T>(this ExpandoObject obj, string propertyName, T value)
-		{
-			var separatorLocation = propertyName.IndexOf('/');
-			var expandoAsDict = obj as IDictionary<string, object>;
-
-			if (separatorLocation == -1)
-			{
-				expandoAsDict.Add(propertyName, value);
-			}
-			else
-			{
-				var name = propertyName.Substring(0, separatorLocation);
-				var childrenName = propertyName.Substring(separatorLocation + 1);
-
-				var properties = expandoAsDict.Where(kvp => kvp.Key.Equals(name, StringComparison.OrdinalIgnoreCase));
-				if (!properties.Any())
-				{
-					var propertyValue = new ExpandoObject();
-					propertyValue.AddDeepProperty(childrenName, value);
-					expandoAsDict.Add(name, propertyValue);
-				}
-				else
-				{
-					var propertyValue = properties.Single().Value as ExpandoObject;
-					propertyValue.AddDeepProperty(childrenName, value);
-				}
-			}
 		}
 
 		internal static async Task<TResult[]> ForEachAsync<T, TResult>(this IEnumerable<T> items, Func<T, Task<TResult>> action, int maxDegreeOfParalellism)

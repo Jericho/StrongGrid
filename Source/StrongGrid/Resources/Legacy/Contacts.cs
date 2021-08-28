@@ -3,7 +3,6 @@ using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -54,7 +53,7 @@ namespace StrongGrid.Resources.Legacy
 			CancellationToken cancellationToken = default)
 		{
 			// SendGrid expects an array despite the fact we are creating a single contact
-			var data = new[] { ConvertToExpando(email, firstName, lastName, customFields) };
+			var data = new[] { ConvertToJson(email, firstName, lastName, customFields) };
 
 			var response = await _client
 				.PostAsync(_endpoint)
@@ -92,7 +91,7 @@ namespace StrongGrid.Resources.Legacy
 			CancellationToken cancellationToken = default)
 		{
 			// SendGrid expects an array despite the fact we are updating a single contact
-			var data = new[] { ConvertToExpando(email, firstName, lastName, customFields) };
+			var data = new[] { ConvertToJson(email, firstName, lastName, customFields) };
 
 			var response = await _client
 				.PatchAsync(_endpoint)
@@ -116,16 +115,12 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task<Models.Legacy.ImportResult> ImportAsync(IEnumerable<Models.Legacy.Contact> contacts, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new List<ExpandoObject>();
-			foreach (var contact in contacts)
-			{
-				data.Add(ConvertToExpando(contact));
-			}
+			var data = contacts.Select(c => ConvertToJson(c)).ToArray();
 
 			return _client
 				.PostAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
-				.WithJsonBody(data.ToArray())
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsObject<Models.Legacy.ImportResult>();
 		}
@@ -249,7 +244,7 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task<Models.Legacy.Contact[]> SearchAsync(IEnumerable<Models.Legacy.SearchCondition> conditions, long? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("list_id", listId);
 			data.AddProperty("conditions", conditions);
 
@@ -279,13 +274,13 @@ namespace StrongGrid.Resources.Legacy
 				.AsObject<Models.Legacy.List[]>("lists");
 		}
 
-		private static ExpandoObject ConvertToExpando(
+		private static StrongGridJsonObject ConvertToJson(
 			Parameter<string> email,
 			Parameter<string> firstName,
 			Parameter<string> lastName,
 			Parameter<IEnumerable<Models.Legacy.Field>> customFields)
 		{
-			var result = new ExpandoObject();
+			var result = new StrongGridJsonObject();
 			result.AddProperty("email", email);
 			result.AddProperty("first_name", firstName);
 			result.AddProperty("last_name", lastName);
@@ -321,9 +316,9 @@ namespace StrongGrid.Resources.Legacy
 			return result;
 		}
 
-		private static ExpandoObject ConvertToExpando(Models.Legacy.Contact contact)
+		private static StrongGridJsonObject ConvertToJson(Models.Legacy.Contact contact)
 		{
-			var result = ConvertToExpando(contact.Email, contact.FirstName, contact.LastName, contact.CustomFields);
+			var result = ConvertToJson(contact.Email, contact.FirstName, contact.LastName, contact.CustomFields);
 			result.AddProperty("id", contact.Id);
 			return result;
 		}

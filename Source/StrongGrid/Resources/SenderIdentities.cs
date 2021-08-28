@@ -1,7 +1,6 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
-using System.Dynamic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -46,7 +45,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<SenderIdentity> CreateAsync(string nickname, MailAddress from, MailAddress replyTo, string address1, string address2, string city, string state, string zip, string country, CancellationToken cancellationToken = default)
 		{
-			var data = ConvertToExpando(nickname, from, replyTo, address1, address2, city, state, zip, country);
+			var data = ConvertToJson(nickname, from, replyTo, address1, address2, city, state, zip, country);
 
 			return _client
 				.PostAsync(_endpoint)
@@ -86,7 +85,7 @@ namespace StrongGrid.Resources
 				.AsObject<SenderIdentity[]>();
 		}
 
-		private static ExpandoObject ConvertToExpando(
+		private static StrongGridJsonObject ConvertToJson(
 			Parameter<string> nickname,
 			Parameter<MailAddress> from,
 			Parameter<MailAddress> replyTo,
@@ -97,7 +96,7 @@ namespace StrongGrid.Resources
 			Parameter<string> zip,
 			Parameter<string> country)
 		{
-			var result = new ExpandoObject();
+			var result = new StrongGridJsonObject();
 			result.AddProperty("nickname", nickname);
 			result.AddProperty("from", from);
 			result.AddProperty("reply_to", replyTo);

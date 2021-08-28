@@ -4,12 +4,10 @@ using StrongGrid.Models.Search;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -73,9 +71,9 @@ namespace StrongGrid.Resources
 			CancellationToken cancellationToken = default)
 		{
 			// SendGrid expects an array despite the fact we are creating a single contact
-			var contacts = new[] { ConvertToExpando(email, firstName, lastName, addressLine1, addressLine2, city, stateOrProvince, country, postalCode, alternateEmails, customFields) };
+			var contacts = new[] { ConvertToJson(email, firstName, lastName, addressLine1, addressLine2, city, stateOrProvince, country, postalCode, alternateEmails, customFields) };
 
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("list_ids", listIds);
 			data.AddProperty("contacts", contacts);
 
@@ -98,15 +96,9 @@ namespace StrongGrid.Resources
 		/// <exception cref="SendGridException">Thrown when an exception occurred while adding or updating the contact.</exception>
 		public Task<string> UpsertAsync(IEnumerable<Contact> contacts, IEnumerable<string> listIds, CancellationToken cancellationToken = default)
 		{
-			var contactsExpando = new List<ExpandoObject>();
-			foreach (var contact in contacts)
-			{
-				contactsExpando.Add(ConvertToExpando(contact));
-			}
-
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("list_ids", listIds);
-			data.AddProperty("contacts", contactsExpando.ToArray());
+			data.AddProperty("contacts", contacts.Select(c => ConvertToJson(c)).ToArray());
 
 			return _client
 				.PutAsync(_endpoint)
@@ -198,7 +190,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<string> ExportAsync(FileType fileType = FileType.Csv, IEnumerable<string> listIds = null, IEnumerable<string> segmentIds = null, Parameter<long> maxFileSize = default, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("list_ids", listIds);
 			data.AddProperty("segment_ids", segmentIds);
 			data.AddProperty("file_type", fileType);
@@ -237,7 +229,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Contact[]> GetMultipleAsync(IEnumerable<string> contactIds, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("ids", contactIds, false);
 
 			return _client
@@ -257,7 +249,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<Contact[]> GetMultipleByEmailAddressAsync(IEnumerable<string> emailAdresses, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("emails", emailAdresses, false);
 
 			var response = await _client
@@ -317,7 +309,7 @@ namespace StrongGrid.Resources
 
 			var query = string.Join(" AND ", conditions);
 
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("query", query, false);
 
 			return _client
@@ -366,7 +358,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<string> ImportFromStreamAsync(Stream stream, FileType fileType, IEnumerable<string> fieldsMapping = null, IEnumerable<string> listIds = null, CancellationToken cancellationToken = default)
 		{
-			var data = new ExpandoObject();
+			var data = new StrongGridJsonObject();
 			data.AddProperty("list_ids", listIds);
 			data.AddProperty("file_type", (Parameter<FileType>)fileType);
 			data.AddProperty("field_mappings", fieldsMapping);
@@ -518,7 +510,7 @@ namespace StrongGrid.Resources
 			}
 		}
 
-		private static ExpandoObject ConvertToExpando(
+		private static StrongGridJsonObject ConvertToJson(
 			Parameter<string> email,
 			Parameter<string> firstName,
 			Parameter<string> lastName,
@@ -531,7 +523,7 @@ namespace StrongGrid.Resources
 			Parameter<IEnumerable<string>> alternateEmails = default,
 			Parameter<IEnumerable<Field>> customFields = default)
 		{
-			var result = new ExpandoObject();
+			var result = new StrongGridJsonObject();
 			result.AddProperty("email", email);
 			result.AddProperty("first_name", firstName);
 			result.AddProperty("last_name", lastName);
@@ -545,7 +537,7 @@ namespace StrongGrid.Resources
 
 			if (customFields.HasValue && customFields.Value != null && customFields.Value.Any())
 			{
-				var fields = new ExpandoObject();
+				var fields = new StrongGridJsonObject();
 
 				foreach (var customField in customFields.Value.OfType<Field<string>>())
 				{
@@ -578,9 +570,9 @@ namespace StrongGrid.Resources
 			return result;
 		}
 
-		private static ExpandoObject ConvertToExpando(Contact contact)
+		private static StrongGridJsonObject ConvertToJson(Contact contact)
 		{
-			var result = ConvertToExpando(contact.Email, contact.FirstName, contact.LastName, contact.AddressLine1, contact.AddressLine2, contact.City, contact.StateOrProvice, contact.Country, contact.PostalCode, contact.AlternateEmails, contact.CustomFields);
+			var result = ConvertToJson(contact.Email, contact.FirstName, contact.LastName, contact.AddressLine1, contact.AddressLine2, contact.City, contact.StateOrProvice, contact.Country, contact.PostalCode, contact.AlternateEmails, contact.CustomFields);
 			result.AddProperty("id", contact.Id);
 			return result;
 		}

@@ -2,7 +2,6 @@ using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -86,7 +85,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<ApiKey> CreateAsync(string name, Parameter<IEnumerable<string>> scopes = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = ConvertToExpando(name, scopes);
+			var data = ConvertToJson(name, scopes);
 			return _client
 				.PostAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
@@ -124,7 +123,7 @@ namespace StrongGrid.Resources
 		/// <returns>The <see cref="ApiKey"/>.</returns>
 		public Task<ApiKey> UpdateAsync(string keyId, string name, Parameter<IEnumerable<string>> scopes = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = ConvertToExpando(name, scopes);
+			var data = ConvertToJson(name, scopes);
 			return (scopes.HasValue && (scopes.Value ?? Enumerable.Empty<string>()).Any() ? _client.PutAsync($"{_endpoint}/{keyId}") : _client.PatchAsync($"{_endpoint}/{keyId}"))
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
@@ -195,9 +194,9 @@ namespace StrongGrid.Resources
 			return readOnlyApiKey;
 		}
 
-		private static ExpandoObject ConvertToExpando(string name, Parameter<IEnumerable<string>> scopes)
+		private static StrongGridJsonObject ConvertToJson(string name, Parameter<IEnumerable<string>> scopes)
 		{
-			var result = new ExpandoObject();
+			var result = new StrongGridJsonObject();
 			result.AddProperty("name", name);
 			result.AddProperty("scopes", scopes);
 			return result;
