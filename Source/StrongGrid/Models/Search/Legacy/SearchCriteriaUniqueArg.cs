@@ -1,5 +1,3 @@
-using System.Runtime.Serialization;
-
 namespace StrongGrid.Models.Search.Legacy
 {
 	/// <summary>

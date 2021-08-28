@@ -75,7 +75,6 @@ namespace StrongGrid.Models.Webhooks
 		/// The type of bounce.
 		/// </value>
 		[JsonPropertyName("type")]
-		[JsonConverter(typeof(StringEnumConverter<BounceType>))]
 		public BounceType Type { get; set; }
 	}
 }
