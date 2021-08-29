@@ -638,7 +638,7 @@ Content-Disposition: form-data; name=""attachments""
 			result.Reason.ShouldBe("500 unknown recipient");
 			result.SmtpId.ShouldBe("<14c5d75ce93.dfd.64b469@ismtpd-555>");
 			result.Status.ShouldBe("5.0.0");
-			result.Type.ShouldBe(StrongGrid.Models.Webhooks.BounceType.HardBounce);
+			result.Type.ShouldBe(StrongGrid.Models.BounceType.Bounce);
 			result.Timestamp.ToUnixTime().ShouldBe(1513299569);
 			result.UniqueArguments.ShouldNotBeNull();
 			result.UniqueArguments.Count.ShouldBe(0);
