@@ -200,9 +200,14 @@ Task("Build")
 	DotNetCoreBuild(solutionFile, new DotNetCoreBuildSettings
 	{
 		Configuration = configuration,
+		Framework =  IsRunningOnWindows() ? null : "net5.0",
 		NoRestore = true,
-		ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.LegacySemVerPadded),
-		Framework =  IsRunningOnWindows() ? null : "net5.0"
+		ArgumentCustomization = args =>
+		{
+			return args
+				.Append("/p:SemVer={0}", versionInfo.LegacySemVerPadded)
+				.Append("/p:ContinuousIntegrationBuild={0}", BuildSystem.IsLocalBuild ? "false" : "true");
+		}
 	});
 });
 
