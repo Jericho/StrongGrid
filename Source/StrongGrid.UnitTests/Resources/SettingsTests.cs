@@ -494,59 +494,6 @@ namespace StrongGrid.UnitTests.Resources
 		}
 
 		[Fact]
-		public async Task GetBccMailSettingsAsync()
-		{
-			// Arrange
-			var apiResponse = @"{
-				""enabled"": true,
-				""email"": ""email@example.com""
-			}";
-
-			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("mail_settings/bcc")).Respond("application/json", apiResponse);
-
-			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client);
-
-			// Act
-			var result = await settings.GetBccMailSettingsAsync(null, CancellationToken.None).ConfigureAwait(false);
-
-			// Assert
-			mockHttp.VerifyNoOutstandingExpectation();
-			mockHttp.VerifyNoOutstandingRequest();
-			result.ShouldNotBeNull();
-			result.Enabled.ShouldBe(true);
-			result.EmailAddress.ShouldBe("email@example.com");
-		}
-
-		[Fact]
-		public async Task UpdateBccMailSettingsAsync()
-		{
-			// Arrange
-			var enabled = true;
-			var email = "email@example.com";
-
-			var apiResponse = @"{
-				""enabled"": true,
-				""email"": ""email@example.com""
-			}";
-
-			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("mail_settings/bcc")).Respond("application/json", apiResponse);
-
-			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client);
-
-			// Act
-			var result = await settings.UpdateBccMailSettingsAsync(enabled, email, null, CancellationToken.None).ConfigureAwait(false);
-
-			// Assert
-			mockHttp.VerifyNoOutstandingExpectation();
-			mockHttp.VerifyNoOutstandingRequest();
-			result.ShouldNotBeNull();
-		}
-
-		[Fact]
 		public async Task GetAddressWhitelistMailSettingsAsync()
 		{
 			// Arrange
@@ -764,63 +711,6 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldBeTrue();
-		}
-
-		[Fact]
-		public async Task GetSpamCheckMailSettingsAsync()
-		{
-			// Arrange
-			var apiResponse = @"{
-				""enabled"": true,
-				""url"": ""url"",
-				""max_score"": 5
-			}";
-
-			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("mail_settings/spam_check")).Respond("application/json", apiResponse);
-
-			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client);
-
-			// Act
-			var result = await settings.GetSpamCheckMailSettingsAsync(null, CancellationToken.None).ConfigureAwait(false);
-
-			// Assert
-			mockHttp.VerifyNoOutstandingExpectation();
-			mockHttp.VerifyNoOutstandingRequest();
-			result.ShouldNotBeNull();
-			result.Enabled.ShouldBe(true);
-			result.Url.ShouldBe("url");
-			result.Threshold.ShouldBe(5);
-		}
-
-		[Fact]
-		public async Task UpdateSpamCheckMailSettingsAsync()
-		{
-			// Arrange
-			var enabled = true;
-			var postToUrl = "url";
-			var threshold = 5;
-
-			var apiResponse = @"{
-				""enabled"": true,
-				""url"": ""url"",
-				""max_score"": 5
-			}";
-
-			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("mail_settings/spam_check")).Respond("application/json", apiResponse);
-
-			var client = Utils.GetFluentClient(mockHttp);
-			var settings = new Settings(client);
-
-			// Act
-			var result = await settings.UpdateSpamCheckMailSettingsAsync(enabled, postToUrl, threshold, null, CancellationToken.None).ConfigureAwait(false);
-
-			// Assert
-			mockHttp.VerifyNoOutstandingExpectation();
-			mockHttp.VerifyNoOutstandingRequest();
-			result.ShouldNotBeNull();
 		}
 
 		[Fact]
