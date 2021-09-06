@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net5.0</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
+    <LangVersion>preview</LangVersion>
     <PlatformTarget>anycpu</PlatformTarget>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <OutputType>Library</OutputType>
@@ -43,7 +44,7 @@
     <PackageReference Include="Pathoschild.Http.FluentClient" Version="4.1.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" />
     <PackageReference Include="System.Buffers" Version="4.5.1" />
-    <PackageReference Include="System.Text.Json" Version="6.0.0-rc.2.21428.1" />
+    <PackageReference Include="System.Text.Json" Version="6.0.0-rc.2.21454.1" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
