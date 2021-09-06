@@ -8,7 +8,7 @@
 
 // Install addins.
 #addin nuget:?package=Cake.Coveralls&version=1.1.0
-#addin nuget:?package=Cake.Git&version=1.0.1
+#addin nuget:?package=Cake.Git&version=1.1.0
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -285,10 +285,10 @@ Task("Create-NuGet-Package")
 		NoRestore = true,
 		NoDependencies = true,
 		OutputDirectory = outputDir,
+		SymbolPackageFormat = "snupkg",
 		ArgumentCustomization = (args) =>
 		{
 			return args
-				.Append("/p:SymbolPackageFormat=snupkg")
 				.Append("/p:PackageReleaseNotes=\"{0}\"", releaseNotesUrl)
 				.Append("/p:Version={0}", versionInfo.LegacySemVerPadded)
 				.Append("/p:AssemblyVersion={0}", versionInfo.MajorMinorPatch)
