@@ -11,6 +11,16 @@ namespace StrongGrid.Utilities
 {
 	internal class JsonFormatter : MediaTypeFormatterBase
 	{
+		private static readonly JsonSerializerOptions _deserializerOptions = new JsonSerializerOptions()
+		{
+			PropertyNameCaseInsensitive = false
+		};
+
+		private static readonly JsonSerializerOptions _serializerOptions = new JsonSerializerOptions()
+		{
+			DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+		};
+
 		public JsonFormatter()
 		{
 			this.AddMediaType("application/json");
@@ -21,7 +31,7 @@ namespace StrongGrid.Utilities
 			var reader = new StreamReader(stream); // don't dispose (stream disposal is handled elsewhere)
 			string streamContent = reader.ReadToEnd();
 
-			object deserializedResult = JsonSerializer.Deserialize(streamContent, type, null);
+			object deserializedResult = JsonSerializer.Deserialize(streamContent, type, _deserializerOptions);
 			return deserializedResult;
 		}
 
@@ -34,6 +44,7 @@ namespace StrongGrid.Utilities
 
 			var writer = new StreamWriter(stream);
 			writer.Write(JsonSerializer.Serialize(value, type, options));
+			writer.Write(JsonSerializer.Serialize(value, type, _serializerOptions));
 			writer.Flush();
 		}
 	}
