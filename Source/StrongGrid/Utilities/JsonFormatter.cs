@@ -41,7 +41,6 @@ namespace StrongGrid.Utilities
 		{
 			var writer = new StreamWriter(stream);
 			writer.Write(JsonSerializer.Serialize(value, type, SerializationContext));
-			writer.Write(JsonSerializer.Serialize(value, type, _serializerOptions));
 			writer.Flush();
 		}
 	}
