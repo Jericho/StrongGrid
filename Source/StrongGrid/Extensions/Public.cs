@@ -28,7 +28,7 @@ namespace StrongGrid
 		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
 		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
-		/// <param name="replyTo">The reply to.</param>
+		/// <param name="replyTo">The reply-to address.</param>
 		/// <param name="attachments">The attachments.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
@@ -91,7 +91,7 @@ namespace StrongGrid
 		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
 		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
-		/// <param name="replyTo">The reply to.</param>
+		/// <param name="replyTo">The reply-to address.</param>
 		/// <param name="attachments">The attachments.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
@@ -152,7 +152,7 @@ namespace StrongGrid
 		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
 		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
-		/// <param name="replyTo">The reply to.</param>
+		/// <param name="replyTo">The reply-to address.</param>
 		/// <param name="attachments">The attachments.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
@@ -212,7 +212,7 @@ namespace StrongGrid
 		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
 		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
-		/// <param name="replyTo">The reply to.</param>
+		/// <param name="replyTo">The reply-to address.</param>
 		/// <param name="attachments">The attachments.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
@@ -274,7 +274,7 @@ namespace StrongGrid
 		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
 		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
-		/// <param name="replyTo">The reply to.</param>
+		/// <param name="replyTo">The reply-to address.</param>
 		/// <param name="attachments">The attachments.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
@@ -342,7 +342,7 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return mailResource.SendAsync(personalizations, subject, contents, from, replyTo, attachments, null, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
+			return mailResource.SendAsync(personalizations, subject, contents, from, new[] { replyTo }, attachments, null, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -359,7 +359,7 @@ namespace StrongGrid
 		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
 		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
-		/// <param name="replyTo">The reply to.</param>
+		/// <param name="replyTo">The reply-to address.</param>
 		/// <param name="attachments">The attachments.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
@@ -430,7 +430,7 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return mailResource.SendAsync(personalizations, subject, contents, from, replyTo, attachments, templateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
+			return mailResource.SendAsync(personalizations, subject, contents, from, new[] { replyTo }, attachments, templateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -444,7 +444,7 @@ namespace StrongGrid
 		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
 		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
-		/// <param name="replyTo">The reply to.</param>
+		/// <param name="replyTo">The reply-to address.</param>
 		/// <param name="attachments">The attachments.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
@@ -513,7 +513,7 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return mailResource.SendAsync(personalizations, null, null, from, replyTo, attachments, dynamicTemplateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
+			return mailResource.SendAsync(personalizations, null, null, from, new[] { replyTo }, attachments, dynamicTemplateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -529,7 +529,7 @@ namespace StrongGrid
 		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
 		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
-		/// <param name="replyTo">The reply to.</param>
+		/// <param name="replyTo">The reply-to address.</param>
 		/// <param name="attachments">The attachments.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
@@ -599,7 +599,7 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return mailResource.SendAsync(personalizations, subject, contents, from, replyTo, attachments, null, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
+			return mailResource.SendAsync(personalizations, subject, contents, from, new[] { replyTo }, attachments, null, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -614,7 +614,7 @@ namespace StrongGrid
 		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
 		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
-		/// <param name="replyTo">The reply to.</param>
+		/// <param name="replyTo">The reply-to address.</param>
 		/// <param name="attachments">The attachments.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
@@ -675,7 +675,7 @@ namespace StrongGrid
 		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
 		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
-		/// <param name="replyTo">The reply to.</param>
+		/// <param name="replyTo">The reply-to address.</param>
 		/// <param name="attachments">The attachments.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
@@ -734,7 +734,7 @@ namespace StrongGrid
 		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
 		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
-		/// <param name="replyTo">The reply to.</param>
+		/// <param name="replyTo">The reply-to address.</param>
 		/// <param name="attachments">The attachments.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
@@ -791,7 +791,7 @@ namespace StrongGrid
 		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
 		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
-		/// <param name="replyTo">The reply to.</param>
+		/// <param name="replyTo">The reply-to address.</param>
 		/// <param name="attachments">The attachments.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
@@ -857,7 +857,7 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return warmupEngine.SendAsync(personalizations, subject, contents, from, replyTo, attachments, null, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
+			return warmupEngine.SendAsync(personalizations, subject, contents, from, new[] { replyTo }, attachments, null, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -874,7 +874,7 @@ namespace StrongGrid
 		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
 		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
-		/// <param name="replyTo">The reply to.</param>
+		/// <param name="replyTo">The reply-to address.</param>
 		/// <param name="attachments">The attachments.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
@@ -943,7 +943,7 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return warmupEngine.SendAsync(personalizations, subject, contents, from, replyTo, attachments, templateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
+			return warmupEngine.SendAsync(personalizations, subject, contents, from, new[] { replyTo }, attachments, templateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -957,7 +957,7 @@ namespace StrongGrid
 		/// <param name="trackOpens">if set to <c>true</c> [track opens].</param>
 		/// <param name="trackClicks">if set to <c>true</c> [track clicks].</param>
 		/// <param name="subscriptionTracking">The subscription tracking.</param>
-		/// <param name="replyTo">The reply to.</param>
+		/// <param name="replyTo">The reply-to address.</param>
 		/// <param name="attachments">The attachments.</param>
 		/// <param name="headers">The headers.</param>
 		/// <param name="categories">The categories.</param>
@@ -1024,7 +1024,7 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return warmupEngine.SendAsync(personalizations, null, null, from, replyTo, attachments, dynamicTemplateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
+			return warmupEngine.SendAsync(personalizations, null, null, from, new[] { replyTo }, attachments, dynamicTemplateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>

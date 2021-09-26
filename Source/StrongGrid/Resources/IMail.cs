@@ -21,7 +21,7 @@ namespace StrongGrid.Resources
 		/// <param name="subject">The subject.</param>
 		/// <param name="contents">The contents.</param>
 		/// <param name="from">From.</param>
-		/// <param name="replyTo">The reply to.</param>
+		/// <param name="replyTo">The reply-to addresses.</param>
 		/// <param name="attachments">The attachments.</param>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="headers">The headers.</param>
@@ -45,7 +45,7 @@ namespace StrongGrid.Resources
 			string subject,
 			IEnumerable<MailContent> contents,
 			MailAddress from,
-			MailAddress replyTo = null,
+			IEnumerable<MailAddress> replyTo = null,
 			IEnumerable<Attachment> attachments = null,
 			string templateId = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
