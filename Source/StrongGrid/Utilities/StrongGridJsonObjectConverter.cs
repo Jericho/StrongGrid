@@ -146,7 +146,14 @@ namespace StrongGrid.Utilities
 			}
 			else
 			{
-				JsonSerializer.Serialize(writer, value, options);
+				try
+				{
+					JsonSerializer.Serialize(writer, value, options);
+				}
+				catch (Exception e)
+				{
+					throw new Exception($"Unable to write a value of type {value.GetType().FullName}", e);
+				}
 			}
 		}
 	}
