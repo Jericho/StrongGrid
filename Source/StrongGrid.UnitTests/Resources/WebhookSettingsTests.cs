@@ -15,10 +15,10 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string EVENT_ENDPOINT = "user/webhooks/event";
-		private const string INBOUNDPARSE_ENDPOINT = "user/webhooks/parse";
+		internal const string EVENT_ENDPOINT = "user/webhooks/event";
+		internal const string INBOUNDPARSE_ENDPOINT = "user/webhooks/parse";
 
-		private const string SINGLE_EVENT_WEBHOOK_SETTING_JSON = @"{
+		internal const string SINGLE_EVENT_WEBHOOK_SETTING_JSON = @"{
 			""enabled"": true,
 			""url"": ""url"",
 			""group_resubscribe"": true,
@@ -34,7 +34,7 @@ namespace StrongGrid.UnitTests.Resources
 			""dropped"": true
 		}";
 
-		private const string SINGLE_INBOUNDPARSE_WEBHOOK_SETTING_JSON = @"{
+		internal const string SINGLE_INBOUNDPARSE_WEBHOOK_SETTING_JSON = @"{
 			""hostname"": ""myhostname.com"",
 			""url"": ""http://email.myhosthame.com"",
 			""spam_check"": true,

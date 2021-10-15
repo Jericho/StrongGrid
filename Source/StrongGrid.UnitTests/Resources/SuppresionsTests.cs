@@ -13,8 +13,8 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "asm";
-		private const string ALL_GROUPS_JSON = @"{
+		internal const string ENDPOINT = "asm";
+		internal const string ALL_GROUPS_JSON = @"{
 			""suppressions"": [
 				{
 					""description"": ""Optional description."",
@@ -39,7 +39,7 @@ namespace StrongGrid.UnitTests.Resources
 				}
 			]
 		}";
-		private const string ALL_SUPPRESSIONS_JSON = @"[
+		internal const string ALL_SUPPRESSIONS_JSON = @"[
 			{
 				""email"":""test @example.com"",
 				""group_id"": 1,

@@ -16,9 +16,9 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "contactdb/segments";
+		internal const string ENDPOINT = "contactdb/segments";
 
-		private const string SINGLE_SEGMENT_JSON = @"{
+		internal const string SINGLE_SEGMENT_JSON = @"{
 			""id"": 1,
 			""name"": ""Last Name Miller"",
 			""list_id"": 4,
@@ -43,7 +43,7 @@ namespace StrongGrid.UnitTests.Resources
 				}
 			]
 		}";
-		private const string MULTIPLE_SEGMENTS_JSON = @"{
+		internal const string MULTIPLE_SEGMENTS_JSON = @"{
 			""segments"": [
 				{
 					""id"": 1,

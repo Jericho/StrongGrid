@@ -13,8 +13,8 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "asm/suppressions/global";
-		private const string GLOBALLY_UNSUBSCRIBED = @"[
+		internal const string ENDPOINT = "asm/suppressions/global";
+		internal const string GLOBALLY_UNSUBSCRIBED = @"[
 			{
 				""email"": ""example@bogus.com"",
 				""created"": 1422313607

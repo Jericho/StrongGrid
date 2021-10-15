@@ -16,9 +16,9 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "campaigns";
+		internal const string ENDPOINT = "campaigns";
 
-		private const string SINGLE_CAMPAIGN_JSON = @"{
+		internal const string SINGLE_CAMPAIGN_JSON = @"{
 			""id"": 986724,
 			""title"": ""March Newsletter"",
 			""subject"": ""New Products for Spring!"",
@@ -40,7 +40,7 @@ namespace StrongGrid.UnitTests.Resources
 			""plain_content"": ""Check out our spring line!"",
 			""status"": ""Draft""
 		}";
-		private const string MULTIPLE_CAMPAIGNS_JSON = @"{
+		internal const string MULTIPLE_CAMPAIGNS_JSON = @"{
 			""result"": [
 				{
 					""id"": 986724,

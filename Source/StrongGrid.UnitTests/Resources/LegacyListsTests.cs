@@ -14,14 +14,14 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "contactdb/lists";
+		internal const string ENDPOINT = "contactdb/lists";
 
-		private const string SINGLE_LIST_JSON = @"{
+		internal const string SINGLE_LIST_JSON = @"{
 			""id"": 1,
 			""name"": ""listname"",
 			""recipient_count"": 0
 		}";
-		private const string MULTIPLE_LISTS_JSON = @"{
+		internal const string MULTIPLE_LISTS_JSON = @"{
 			""lists"": [
 				{
 					""id"": 1,

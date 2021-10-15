@@ -15,9 +15,9 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "teammates";
+		internal const string ENDPOINT = "teammates";
 
-		private const string MULTIPLE_ACCESS_REQUESTS_JSON = @"[
+		internal const string MULTIPLE_ACCESS_REQUESTS_JSON = @"[
 			{
 				""id"": 1,
 				""scope_group_name"": ""Mail Settings"",
@@ -35,7 +35,7 @@ namespace StrongGrid.UnitTests.Resources
 				""last_name"": ""Two""
 			}
 		]";
-		private const string SINGLE_INVITATION_JSON = @"{
+		internal const string SINGLE_INVITATION_JSON = @"{
 			""email"": ""teammate1 @example.com"",
 			""scopes"": [
 				""user.profile.read"",
@@ -43,7 +43,7 @@ namespace StrongGrid.UnitTests.Resources
 			],
 			""is_admin"": false
 		}";
-		private const string MULTIPLE_INVITATIONS_JSON = @"{
+		internal const string MULTIPLE_INVITATIONS_JSON = @"{
 			""result"": [
 				{
 					""email"": ""user1@example.com"",
@@ -64,7 +64,7 @@ namespace StrongGrid.UnitTests.Resources
 				}
 			]
 		}";
-		private const string SINGLE_TEAMMATE_JSON = @"{
+		internal const string SINGLE_TEAMMATE_JSON = @"{
 			""username"": ""teammate1"",
 			""email"": ""teammate1@example.com"",
 			""first_name"": ""Jane"",
@@ -81,7 +81,7 @@ namespace StrongGrid.UnitTests.Resources
 			""country"": ""USA"",
 			""zip"": ""12345""
 		}";
-		private const string MULTIPLE_TEAMMATES_JSON = @"{
+		internal const string MULTIPLE_TEAMMATES_JSON = @"{
 			""result"": [
 				{
 					""username"": ""teammate2"",

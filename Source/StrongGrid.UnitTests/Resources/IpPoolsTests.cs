@@ -15,9 +15,9 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "ips/pools";
+		internal const string ENDPOINT = "ips/pools";
 
-		private const string SINGLE_IPPOOL_JSON = @"{
+		internal const string SINGLE_IPPOOL_JSON = @"{
 			""pool_name"": ""marketing"",
 			""ips"":
 			[

@@ -14,7 +14,7 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string SINGLE_GLOBAL_SETTING_JSON = @"{
+		internal const string SINGLE_GLOBAL_SETTING_JSON = @"{
 			""name"": ""bcc"",
 			""title"": ""BCC"",
 			""description"": ""lorem ipsum... ."",

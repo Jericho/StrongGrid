@@ -16,9 +16,9 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "access_settings";
+		internal const string ENDPOINT = "access_settings";
 
-		private const string SINGLE_ACCESS_ENTRY_JSON = @"{
+		internal const string SINGLE_ACCESS_ENTRY_JSON = @"{
 			""allowed"": false,
 			""auth_method"": ""basic"",
 			""first_at"": 1444087966,
@@ -26,7 +26,7 @@ namespace StrongGrid.UnitTests.Resources
 			""last_at"": 1444406672,
 			""location"": ""Australia""
 		}";
-		private const string MULTIPLE_ACCESS_ENTRIES_JSON = @"{
+		internal const string MULTIPLE_ACCESS_ENTRIES_JSON = @"{
 			""result"": [
 				{
 					""allowed"": false,
@@ -47,13 +47,13 @@ namespace StrongGrid.UnitTests.Resources
 			]
 		}";
 
-		private const string SINGLE_WHITELISTED_IP_JSON = @"{
+		internal const string SINGLE_WHITELISTED_IP_JSON = @"{
 			""id"": 1,
 			""ip"": ""192.168.1.1/32"",
 			""created_at"": 1441824715,
 			""updated_at"": 1441824715
 		}";
-		private const string MULTIPLE_WHITELISTED_IPS_JSON = @"{
+		internal const string MULTIPLE_WHITELISTED_IPS_JSON = @"{
 			""result"": [
 				{
 					""id"": 1,

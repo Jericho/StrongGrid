@@ -15,9 +15,9 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "api_keys";
+		internal const string ENDPOINT = "api_keys";
 
-		private const string SINGLE_API_KEY_JSON = @"{
+		internal const string SINGLE_API_KEY_JSON = @"{
 			""api_key"": ""SG.xxxxxxxx.yyyyyyyy"",
 			""api_key_id"": ""xxxxxxxx"",
 			""name"": ""My API Key"",
@@ -27,7 +27,7 @@ namespace StrongGrid.UnitTests.Resources
 				""alerts.read""
 			]
 		}";
-		private const string MULTIPLE_API_KEY_JSON = @"{
+		internal const string MULTIPLE_API_KEY_JSON = @"{
 			""result"": [
 				{
 					""name"": ""A New Hope"",

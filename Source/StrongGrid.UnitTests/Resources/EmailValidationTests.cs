@@ -14,9 +14,9 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "validations/email";
+		internal const string ENDPOINT = "validations/email";
 
-		private const string INVALID_EMAIL_RESPONSE = @"{
+		internal const string INVALID_EMAIL_JSON = @"{
 			""email"": ""john.doe@gmial.com"",
 			""verdict"": ""Invalid"",
 			""score"": 0.00089,
@@ -40,7 +40,7 @@ namespace StrongGrid.UnitTests.Resources
 			""ip_address"": ""123.45.67.89""
 		}";
 
-		private const string VALID_EMAIL_RESPONSE = @"{
+		internal const string VALID_EMAIL_JSON = @"{
 			""email"": ""valid_email_address@mtsg.me"",
 			""verdict"": ""Valid"",
 			""score"": 0.93357,
@@ -73,7 +73,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonSerializer.Deserialize<EmailValidationResult>(INVALID_EMAIL_RESPONSE);
+			var result = JsonSerializer.Deserialize<EmailValidationResult>(INVALID_EMAIL_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -104,7 +104,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonSerializer.Deserialize<EmailValidationResult>(VALID_EMAIL_RESPONSE);
+			var result = JsonSerializer.Deserialize<EmailValidationResult>(VALID_EMAIL_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -132,7 +132,7 @@ namespace StrongGrid.UnitTests.Resources
 		public async Task ValidateAsync()
 		{
 			// Arrange
-			var apiResponse = "{\"result\":" + VALID_EMAIL_RESPONSE + "}";
+			var apiResponse = "{\"result\":" + VALID_EMAIL_JSON + "}";
 
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", apiResponse);

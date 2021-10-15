@@ -15,15 +15,15 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "asm/groups";
+		internal const string ENDPOINT = "asm/groups";
 
-		private const string SINGLE_SUPPRESSION_GROUP_JSON = @"{
+		internal const string SINGLE_SUPPRESSION_GROUP_JSON = @"{
 			""id"": 1,
 			""name"": ""Product Suggestions"",
 			""description"": ""Suggestions for products our users might like."",
 			""is_default"": true
 		}";
-		private const string MULTIPLE_SUPPRESSION_GROUPS_JSON = @"[
+		internal const string MULTIPLE_SUPPRESSION_GROUPS_JSON = @"[
 			{
 				""id"": 100,
 				""name"": ""Newsletters"",

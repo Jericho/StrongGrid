@@ -16,9 +16,9 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "senders";
+		internal const string ENDPOINT = "senders";
 
-		private const string SINGLE_SENDER_IDENTITY_JSON = @"{
+		internal const string SINGLE_SENDER_IDENTITY_JSON = @"{
 			""id"": 1,
 			""nickname"": ""My Sender ID"",
 			""from"": {
@@ -40,7 +40,7 @@ namespace StrongGrid.UnitTests.Resources
 			""created_at"": 1449872165,
 			""locked"": false
 		}";
-		private const string MULTIPLE_SENDER_IDENTITIES_JSON = @"[
+		internal const string MULTIPLE_SENDER_IDENTITIES_JSON = @"[
 			{
 				""id"": 1,
 				""nickname"": ""My Sender ID"",

@@ -17,9 +17,9 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "contactdb/recipients";
+		internal const string ENDPOINT = "contactdb/recipients";
 
-		private const string SINGLE_RECIPIENT_JSON = @"{
+		internal const string SINGLE_RECIPIENT_JSON = @"{
 			""created_at"": 1422313607,
 			""email"": ""jones@example.com"",
 			""first_name"": null,
@@ -38,7 +38,7 @@ namespace StrongGrid.UnitTests.Resources
 				}
 			]
 		}";
-		private const string MULTIPLE_RECIPIENTS_JSON = @"{
+		internal const string MULTIPLE_RECIPIENTS_JSON = @"{
 			""recipients"": [
 				{
 					""created_at"": 1422313607,

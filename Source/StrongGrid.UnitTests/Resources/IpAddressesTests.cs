@@ -16,9 +16,9 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "ips";
+		internal const string ENDPOINT = "ips";
 
-		private const string SINGLE_ASSIGNED_IPADDRESS_JSON = @"{
+		internal const string SINGLE_ASSIGNED_IPADDRESS_JSON = @"{
 			""ip"": ""192.168.1.1"",
 			""pools"": [
 				""pool1"",
@@ -33,7 +33,7 @@ namespace StrongGrid.UnitTests.Resources
 			""assigned_at"": 1482883200
 		}";
 
-		private const string SINGLE_UNASSIGNED_IPADDRESS_JSON = @"{
+		internal const string SINGLE_UNASSIGNED_IPADDRESS_JSON = @"{
 			""ip"": ""208.115.214.22"",
 			""pools"": [],
 			""whitelabeled"": true,

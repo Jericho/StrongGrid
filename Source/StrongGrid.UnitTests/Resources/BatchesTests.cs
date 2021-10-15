@@ -13,13 +13,13 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "mail/batch";
+		internal const string ENDPOINT = "mail/batch";
 
-		private const string SINGLE_BATCH_JSON = @"{
+		internal const string SINGLE_BATCH_JSON = @"{
 			""batch_id"": ""BATCH_ID_1"",
 			""status"": ""cancel""
 		}";
-		private const string MULTIPLE_BATCHES_JSON = @"[
+		internal const string MULTIPLE_BATCHES_JSON = @"[
 			{
 				""batch_id"": ""BATCH_ID_1"",
 				""status"": ""cancel""
@@ -29,13 +29,13 @@ namespace StrongGrid.UnitTests.Resources
 				""status"": ""pause""
 			}
 		]";
-		private const string MULTIPLE_BATCHES_SINGLE_ITEM_JSON = @"[
+		internal const string MULTIPLE_BATCHES_SINGLE_ITEM_JSON = @"[
 			{
 				""batch_id"": ""BATCH_ID_1"",
 				""status"": ""cancel""
 			}
 		]";
-		private const string EMPTY_BATCHES_JSON = @"[
+		internal const string EMPTY_BATCHES_JSON = @"[
 		]";
 
 		#endregion

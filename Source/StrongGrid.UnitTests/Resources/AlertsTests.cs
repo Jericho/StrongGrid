@@ -16,9 +16,9 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "alerts";
+		internal const string ENDPOINT = "alerts";
 
-		private const string SINGLE_ALERT_JSON = @"{
+		internal const string SINGLE_ALERT_JSON = @"{
 			""created_at"": 1451520930,
 			""email_to"": ""test@example.com"",
 			""frequency"": ""daily"",
@@ -26,7 +26,7 @@ namespace StrongGrid.UnitTests.Resources
 			""type"": ""stats_notification"",
 			""updated_at"": 1451520930
 		}";
-		private const string MULTIPLE_ALERTS_JSON = @"[
+		internal const string MULTIPLE_ALERTS_JSON = @"[
 			{
 				""created_at"": 1451498784,
 				""email_to"": ""test@example.com"",

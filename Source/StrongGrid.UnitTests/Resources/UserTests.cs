@@ -16,9 +16,9 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "user/profile";
+		internal const string ENDPOINT = "user/profile";
 
-		private const string SINGLE_PROFILE_JSON = @"{
+		internal const string SINGLE_PROFILE_JSON = @"{
 			""address"": ""814 West Chapman Avenue"",
 			""city"": ""Orange"",
 			""company"": ""SendGrid"",

@@ -16,16 +16,16 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "suppression/spam_reports";
+		internal const string ENDPOINT = "suppression/spam_reports";
 
-		private const string SINGLE_SPAM_REPORT_JSON = @"[
+		internal const string SINGLE_SPAM_REPORT_JSON = @"[
 				{
 					""created"": 1454433146,
 					""email"": ""test1@example.com"",
 					""ip"": ""10.89.32.5""
 				}
 		]";
-		private const string MULTIPLE_SPAM_REPORTS_JSON = @"[
+		internal const string MULTIPLE_SPAM_REPORTS_JSON = @"[
 			{
 				""created"": 1443651141,
 				""email"": ""user1@example.com"",

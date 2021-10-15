@@ -16,14 +16,14 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "suppression/invalid_emails";
+		internal const string ENDPOINT = "suppression/invalid_emails";
 
-		private const string SINGLE_INVALID_EMAIL_JSON = @"{
+		internal const string SINGLE_INVALID_EMAIL_JSON = @"{
 			""created"": 1454433146,
 			""email"": ""test1@example.com"",
 			""reason"": ""Mail domain mentioned in email address is unknown""
 		}";
-		private const string MULTIPLE_INVALID_EMAILS_JSON = @"[
+		internal const string MULTIPLE_INVALID_EMAILS_JSON = @"[
 			{
 				""created"": 1449953655,
 				""email"": ""user1@example.com"",

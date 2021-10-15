@@ -15,14 +15,14 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "contactdb/custom_fields";
+		internal const string ENDPOINT = "contactdb/custom_fields";
 
-		private const string SINGLE_CUSTOM_FIELD_JSON = @"{
+		internal const string SINGLE_CUSTOM_FIELD_JSON = @"{
 			""id"": 1,
 			""name"": ""customfield1"",
 			""type"": ""text""
 		}";
-		private const string MULTIPLE_CUSTOM_FIELDS_JSON = @"{
+		internal const string MULTIPLE_CUSTOM_FIELDS_JSON = @"{
 			""custom_fields"": [
 				{
 					""id"": 1,

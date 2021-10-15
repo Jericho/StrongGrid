@@ -18,9 +18,9 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "messages";
+		internal const string ENDPOINT = "messages";
 
-		private const string SINGLE_MESSAGE = @"{
+		internal const string SINGLE_MESSAGE = @"{
 			""from_email"": ""test@example.com"",
 			""msg_id"": ""thtIPCIcR_iFZDws2JCrwA.filter0004p3las1-2776-5ACA5525-31.1"",
 			""subject"": ""Dear customer"",
@@ -31,9 +31,9 @@ namespace StrongGrid.UnitTests.Resources
 			""last_event_time"": ""2018-04-08T17:47:18Z""
 		}";
 
-		private const string NO_MESSAGES_FOUND = "{\"messages\":[]}";
-		private const string ONE_MESSAGE_FOUND = "{\"messages\":[" + SINGLE_MESSAGE + "]}";
-		private const string MULTIPLE_MESSAGES_FOUND = "{\"messages\":[" +
+		internal const string NO_MESSAGES_FOUND = "{\"messages\":[]}";
+		internal const string ONE_MESSAGE_FOUND = "{\"messages\":[" + SINGLE_MESSAGE + "]}";
+		internal const string MULTIPLE_MESSAGES_FOUND = "{\"messages\":[" +
 			SINGLE_MESSAGE + "," +
 			SINGLE_MESSAGE + "," +
 			SINGLE_MESSAGE +

@@ -15,15 +15,15 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "suppression/blocks";
+		internal const string ENDPOINT = "suppression/blocks";
 
-		private const string SINGLE_BLOCK_JSON = @"{
+		internal const string SINGLE_BLOCK_JSON = @"{
 			""created"": 1443651154,
 			""email"": ""user1@example.com"",
 			""reason"": ""error dialing remote address: dial tcp 10.57.152.165:25: no route to host"",
 			""status"": ""4.0.0""
 		}";
-		private const string MULTIPLE_BLOCKS_JSON = @"[
+		internal const string MULTIPLE_BLOCKS_JSON = @"[
 			{
 				""created"": 1443651154,
 				""email"": ""user1@example.com"",

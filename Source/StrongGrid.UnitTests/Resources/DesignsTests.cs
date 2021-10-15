@@ -16,9 +16,9 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "designs";
+		internal const string ENDPOINT = "designs";
 
-		private const string SINGLE_DESIGN_JSON = @"{
+		internal const string SINGLE_DESIGN_JSON = @"{
 			""id"":""4fa4db1f-219e-4599-8239-05dde4404611"",
 			""name"":""This is my name"",
 			""html_content"":""<html><body>This is a test</body></html>"",
@@ -31,7 +31,7 @@ namespace StrongGrid.UnitTests.Resources
 			""editor"":""code"",
 			""categories"":[""one"",""two"",""three""]
 		}";
-		private const string MULTIPLE_DESIGNS_JSON = @"{
+		internal const string MULTIPLE_DESIGNS_JSON = @"{
 			""result"": [
 				{
 					""id"":""4fa4db1f-219e-4599-8239-05dde4404611"",

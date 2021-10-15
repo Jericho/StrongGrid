@@ -16,9 +16,9 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "templates";
+		internal const string ENDPOINT = "templates";
 
-		private const string SINGLE_TEMPLATE_JSON = @"{
+		internal const string SINGLE_TEMPLATE_JSON = @"{
 			""id"": ""e8ac01d5-a07a-4a71-b14c-4721136fe6aa"",
 			""name"": ""example template name"",
 			""versions"": [
@@ -35,7 +35,7 @@ namespace StrongGrid.UnitTests.Resources
 				}
 			]
 		}";
-		private const string MULTIPLE_TEMPLATES_JSON = @"{
+		internal const string MULTIPLE_TEMPLATES_JSON = @"{
 			""templates"": [
 				{
 					""id"": ""e8ac01d5-a07a-4a71-b14c-4721136fe6aa"",
@@ -52,7 +52,7 @@ namespace StrongGrid.UnitTests.Resources
 				}
 			]
 		}";
-		private const string SINGLE_TEMPLATE_VERSION_JSON = @"{
+		internal const string SINGLE_TEMPLATE_VERSION_JSON = @"{
 			""id"": ""8aefe0ee-f12b-4575-b5b7-c97e21cb36f3"",
 			""template_id"": ""ddb96bbc-9b92-425e-8979-99464621b543"",
 			""active"": 1,

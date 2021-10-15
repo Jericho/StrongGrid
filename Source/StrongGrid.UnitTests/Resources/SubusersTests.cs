@@ -17,15 +17,15 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "subusers";
+		internal const string ENDPOINT = "subusers";
 
-		private const string SINGLE_SUBUSER_JSON = @"{
+		internal const string SINGLE_SUBUSER_JSON = @"{
 			""id"": 1,
 			""username"": ""TestUser"",
 			""email"": ""Test@example.com"",
 			""disabled"": true
 		}";
-		private const string SINGLE_SUBUSER_CREATED_JSON = @"{
+		internal const string SINGLE_SUBUSER_CREATED_JSON = @"{
 			""id"": 1,
 			""username"": ""TestUser"",
 			""password"": ""somepass"",
@@ -35,7 +35,7 @@ namespace StrongGrid.UnitTests.Resources
 				""2.2.2.2""
 			]
 		}";
-		private const string MULTIPLE_SUBUSER_JSON = @"[
+		internal const string MULTIPLE_SUBUSER_JSON = @"[
 			  {
 				""id"": 1,
 				""username"": ""TestUser"",
@@ -49,21 +49,21 @@ namespace StrongGrid.UnitTests.Resources
 				""disabled"": true
 			  }
 		]";
-		private const string MULTIPLE_IPS_JSON = @"[
+		internal const string MULTIPLE_IPS_JSON = @"[
 			  ""1.1.1.1"",
 			  ""2.2.2.2""
 		]";
-		private const string MONITOR_SETTINGS_JSON = @"{
+		internal const string MONITOR_SETTINGS_JSON = @"{
 		  ""email"": ""test@example.com"",
 		  ""frequency"": 500
 		}";
-		private const string SINGLE_REPUTATION_JSON = @"[
+		internal const string SINGLE_REPUTATION_JSON = @"[
 		  {
 			""username"": ""example_subuser"",
 			""reputation"": 99
 		  }
 		]";
-		private const string MULTIPLE_REPUTATIONS_JSON = @"[
+		internal const string MULTIPLE_REPUTATIONS_JSON = @"[
 		  {
 			""username"": ""example_subuser"",
 			""reputation"": 99

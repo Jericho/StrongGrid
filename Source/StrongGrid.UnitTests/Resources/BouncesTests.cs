@@ -16,15 +16,15 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "suppression/bounces";
+		internal const string ENDPOINT = "suppression/bounces";
 
-		private const string SINGLE_BOUNCE_JSON = @"{
+		internal const string SINGLE_BOUNCE_JSON = @"{
 			""created"": 1443651125,
 			""email"": ""testemail1@test.com"",
 			""reason"": ""550 5.1.1 The email account that you tried to reach does not exist. Please try double-checking the recipient's email address for typos or unnecessary spaces. Learn more at  https://support.google.com/mail/answer/6596 o186si2389584ioe.63 - gsmtp "",
 			""status"": ""5.1.1""
 		}";
-		private const string MULTIPLE_BOUNCES_JSON = @"[
+		internal const string MULTIPLE_BOUNCES_JSON = @"[
 			{
 				""created"": 1443651125,
 				""email"": ""testemail1@test.com"",

@@ -16,9 +16,9 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "whitelabel";
+		internal const string ENDPOINT = "whitelabel";
 
-		private const string SINGLE_DOMAIN_JSON = @"{
+		internal const string SINGLE_DOMAIN_JSON = @"{
 			""id"": 1,
 			""domain"": ""example.com"",
 			""subdomain"": ""mail"",
@@ -60,7 +60,7 @@ namespace StrongGrid.UnitTests.Resources
 				}
 			}
 		}";
-		private const string MULTIPLE_DOMAINS_JSON = @"[
+		internal const string MULTIPLE_DOMAINS_JSON = @"[
 			{
 				""id"": 1,
 				""domain"": ""example.com"",
@@ -144,7 +144,7 @@ namespace StrongGrid.UnitTests.Resources
 				}
 			}
 		]";
-		private const string SINGLE_IP_JSON = @"{
+		internal const string SINGLE_IP_JSON = @"{
 			""id"": 1,
 			""ip"": ""192.168.1.1"",
 			""rdns"": ""o1.email.example.com"",
@@ -169,7 +169,7 @@ namespace StrongGrid.UnitTests.Resources
 				""data"": ""192.168.1.1""
 			}
 		}";
-		private const string MULTIPLE_IPS_JSON = @"[
+		internal const string MULTIPLE_IPS_JSON = @"[
 			{
 				""id"": 1,
 				""ip"": ""192.168.1.1"",
@@ -221,7 +221,7 @@ namespace StrongGrid.UnitTests.Resources
 				}
 			}
 		]";
-		private const string SINGLE_LINK_JSON = @"{
+		internal const string SINGLE_LINK_JSON = @"{
 			""id"": 1,
 			""domain"": ""example.com"",
 			""subdomain"": ""mail"",
@@ -245,7 +245,7 @@ namespace StrongGrid.UnitTests.Resources
 				}
 			}
 		}";
-		private const string MULTIPLE_LINKS_JSON = @"[
+		internal const string MULTIPLE_LINKS_JSON = @"[
 			{
 				""id"": 1,
 				""domain"": ""example.com"",
