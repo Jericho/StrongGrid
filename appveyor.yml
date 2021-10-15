@@ -1,5 +1,5 @@
 environment:
- _DOTNET_VERSION: "6.0.100-rc.2.21505.57"
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # For faster CI builds
 
 # scripts that are called at very beginning, before repo cloning
 init:
@@ -7,9 +7,7 @@ init:
 
 # scripts that run after cloning repository
 install:
- - ps: "[Net.ServicePointManager]::SecurityProtocol = 'Tls12'"
- - ps: Invoke-WebRequest https://dot.net/v1/dotnet-install.ps1 -OutFile dotnet-install.ps1
- - ps: if ((-Not (Test-Path .\dotnet.exe)) -or (((.\dotnet.exe --version) -Join '') -ne $Env:_DOTNET_VERSION)) { .\dotnet-install.ps1 -Version $Env:_DOTNET_VERSION -InstallDir .\dotnet } else { $Env:path = $Env:APPVEYOR_BUILD_FOLDER + "\dotnet\dotnet.exe;" + $Env:path }
+ - ps: Import-Module .\appveyor.psm1; Invoke-AppveyorInstall
 
 # scripts to run before build
 before_build:
