@@ -1,11 +1,26 @@
-# Before Build
+environment:
+ _DOTNET_VERSION: "6.0.100-rc.2.21505.57"
+
+# scripts that are called at very beginning, before repo cloning
 init:
   - git config --global core.autocrlf true
 
-# Build script
-build_script:
+# scripts that run after cloning repository
+install:
+ - ps: "[Net.ServicePointManager]::SecurityProtocol = 'Tls12'"
+ - ps: Invoke-WebRequest https://dot.net/v1/dotnet-install.ps1 -OutFile .tmp\dotnet-install.ps1
+ - ps: if ((-Not (Test-Path .tmp\dotnet\dotnet.exe)) -or (((.tmp\dotnet\dotnet.exe --version) -Join '') -ne $Env:_DOTNET_VERSION)) { .tmp\dotnet-install.ps1 -Version $Env:_DOTNET_VERSION -InstallDir .tmp\dotnet } else { $Env:path = $Env:APPVEYOR_BUILD_FOLDER + "\.tmp\dotnet\dotnet.exe;" + $Env:path }
+
+# scripts to run before build
+before_build:
   - dotnet --info
+
+# to run your custom scripts instead of automatic MSBuild
+build_script:
   - ps: .\build.ps1 --target=AppVeyor
+
+# scripts to run after build
+after_build:
 
 # Tests
 test: off
@@ -28,9 +43,6 @@ image:
   - Ubuntu1804
   - Visual Studio 2019
 
-#---------------------------------#
-#  Skip builds for doc changes    #
-#---------------------------------#
+#  Skip builds for doc changes
 skip_commits:
-  # Regex for matching commit message
   message: /\(doc\).*/
