@@ -34,6 +34,7 @@ namespace StrongGrid.Utilities
 			"send_at",
 			"sg_content_type",
 			"sg_event_id",
+			"sg_machine_open",
 			"sg_message_id",
 			"sg_user_id",
 			"smtp-id",
