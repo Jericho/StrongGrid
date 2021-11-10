@@ -242,6 +242,7 @@ namespace StrongGrid
 		/// </summary>
 		/// <param name="stream">The stream.</param>
 		/// <returns>The <see cref="InboundEmail"/>.</returns>
+		[Obsolete("Use the async version of this method, it can read the content of the stream much more efficiently.")]
 		public InboundEmail ParseInboundEmailWebhook(Stream stream)
 		{
 			// We need to be able to rewind the stream.
