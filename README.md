@@ -59,14 +59,14 @@ StrongGrid supports the `4.8` and `5.0` .NET framework as well as any framework 
 You declare your client variable like so:
 ```csharp
 var apiKey = "... your api key...";
-var client = new Client(apiKey);
+var strongGridClient = new StrongGrid.Client(apiKey);
 ```
 
 If you need to use a proxy, you can pass it to the Client:
 ```csharp
 var apiKey = "... your api key...";
 var proxy = new WebProxy("http://myproxy:1234");
-var client = new Client(apiKey, proxy);
+var strongGridClient = new StrongGrid.Client(apiKey, proxy);
 ```
 
 One of the most common scenarios is to send transactional emails. 
@@ -74,10 +74,10 @@ One of the most common scenarios is to send transactional emails.
 Here are a few examples:
 ```csharp
 // Send an email to a single recipient
-var messageId = await client.Mail.SendToSingleRecipientAsync(to, from, subject, html, text).ConfigureAwait(false);
+var messageId = await strongGridClient.Mail.SendToSingleRecipientAsync(to, from, subject, html, text).ConfigureAwait(false);
 
 // Send an email to multiple recipients
-var messageId = await client.Mail.SendToMultipleRecipientsAsync(new[] { to1, to2, to3 }, from, subject, html, text).ConfigureAwait(false);
+var messageId = await strongGridClient.Mail.SendToMultipleRecipientsAsync(new[] { to1, to2, to3 }, from, subject, html, text).ConfigureAwait(false);
 
 // Include attachments when sending an email
 var attachments = new[]
@@ -85,7 +85,7 @@ var attachments = new[]
 	Attachment.FromLocalFile(@"C:\MyDocuments\MySpreadsheet.xlsx"),
 	Attachment.FromLocalFile(@"C:\temp\Headshot.jpg")
 };
-var messageId = await client.Mail.SendToSingleRecipientAsync(to, from, subject, html, text, attachments: attachments).ConfigureAwait(false);
+var messageId = await strongGridClient.Mail.SendToSingleRecipientAsync(to, from, subject, html, text, attachments: attachments).ConfigureAwait(false);
 ```
 
 You have access to numerous 'resources' (such as Contacts, Lists, Segments, Settings, SenderAuthentication, etc) off of the Client and each resource offers several methods to such as retrieve, create, update, delete, etc. 
@@ -93,22 +93,22 @@ You have access to numerous 'resources' (such as Contacts, Lists, Segments, Sett
 Here are a few example:
 ```csharp
 // Create a new contact (contacts are sometimes refered to as 'recipients')
-var contactId = await client.Contacts.CreateAsync(email, firstName, lastName, customFields);
+var contactId = await strongGridClient.Contacts.CreateAsync(email, firstName, lastName, customFields);
 
 // Send an email
-await client.Mail.SendToSingleRecipientAsync(to, from, subject, htmlContent, textContent);
+await strongGridClient.Mail.SendToSingleRecipientAsync(to, from, subject, htmlContent, textContent);
 
 // Retreive all the API keys in your account
-var apiKeys = await client.ApiKeys.GetAllAsync();
+var apiKeys = await strongGridClient.ApiKeys.GetAllAsync();
 
 // Add an email address to a suppression group
-await client.Suppressions.AddAddressToUnsubscribeGroupAsync(groupId, "test1@example.com");
+await strongGridClient.Suppressions.AddAddressToUnsubscribeGroupAsync(groupId, "test1@example.com");
 
 // Get statistics between the two specific dates
-var globalStats = await client.Statistics.GetGlobalStatisticsAsync(startDate, endDate);
+var globalStats = await strongGridClient.Statistics.GetGlobalStatisticsAsync(startDate, endDate);
 
 // Create a new email template
-var template = await client.Templates.CreateAsync("My template");
+var template = await strongGridClient.Templates.CreateAsync("My template");
 ```
 
 ### Dynamic templates
@@ -117,7 +117,7 @@ In August 2018, SendGrid released a new feature in their API that allows you to 
 First, you must specify `TemplateType.Dynamic` when creating a new template like in this example:
 
 ```csharp
-var dynamicTemplate = await client.Templates.CreateAsync("My dynamic template", TemplateType.Dynamic).ConfigureAwait(false);
+var dynamicTemplate = await strongGridClient.Templates.CreateAsync("My dynamic template", TemplateType.Dynamic).ConfigureAwait(false);
 ```
 
 Second, you create a version of your content where you use the Handlebars syntax to define the merge fields and you can also specify an optional "test data" that will be used by the SendGrid UI to show you a sample. Rest assured that this test data will never be sent to any recipient. The following code sample demonstrates creating a dynamic template version containing [simple substitution](https://sendgrid.com/docs/User_Guide/Transactional_Templates/Using_handlebars.html#-Substitution) for `CreditBalance`, [deep object replacements](https://sendgrid.com/docs/User_Guide/Transactional_Templates/Using_handlebars.html#-Deep-object-replacement) for `Customer.first_name` and `Customer.last_name` and an [iterator](https://sendgrid.com/docs/User_Guide/Transactional_Templates/Using_handlebars.html#-Iterations) that displays information about multiple orders.
@@ -152,7 +152,7 @@ var testData = new
 		new { item = "item3", date = "1/3/2018" }
 	}
 };
-await client.Templates.CreateVersionAsync(dynamicTemplate.Id, "Version 1", subject, htmlContent, textContent, true, EditorType.Code, testData).ConfigureAwait(false);
+await strongGridClient.Templates.CreateVersionAsync(dynamicTemplate.Id, "Version 1", subject, htmlContent, textContent, true, EditorType.Code, testData).ConfigureAwait(false);
 ```
 
 Finally, you can send an email to a recipient and specify the dynamic data that applies to them like so:
@@ -174,7 +174,7 @@ var dynamicData = new
 };
 var to = new MailAddress("bobsmith@hotmail.com", "Bob Smith");
 var from = new MailAddress("test@example.com", "John Smith");
-var messageId = await client.Mail.SendToSingleRecipientAsync(to, from, dynamicTemplate.Id, dynamicData).ConfigureAwait(false);
+var messageId = await strongGridClient.Mail.SendToSingleRecipientAsync(to, from, dynamicTemplate.Id, dynamicData).ConfigureAwait(false);
 ```
 
 
@@ -336,7 +336,7 @@ var subusers = new[] { "your_subuser" }; // The subusers you authorize to send e
 await warmupEngine.PrepareWithNewIpAddressesAsync(howManyAddresses, subusers, CancellationToken.None).ConfigureAwait(false);
 ```
 
-**End of warmup process:** When the process is completed, the IP pool is deleted and the warmed up IP address(es) are returned to the default pool. You can subsequently invoke the `client.Mail.SendAsync(...)` method to send your emails.
+**End of warmup process:** When the process is completed, the IP pool is deleted and the warmed up IP address(es) are returned to the default pool. You can subsequently invoke the `strongGridClient.Mail.SendAsync(...)` method to send your emails.
 
 ## License
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FJericho%2FStrongGrid.svg?type=large)](https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FJericho%2FStrongGrid?ref=badge_large)
