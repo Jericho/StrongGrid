@@ -1,5 +1,7 @@
+# environment variables
 environment:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # For faster CI builds
+  DOTNET_ROLL_FORWARD: Major # See https://github.com/GitTools/GitVersion/issues/2906 until 5.8.0 is released
 
 # scripts that are called at very beginning, before repo cloning
 init:
