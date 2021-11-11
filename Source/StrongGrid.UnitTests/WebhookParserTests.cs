@@ -118,6 +118,7 @@ namespace StrongGrid.UnitTests
 			'timestamp':1513299569,
 			'smtp-id':'<14c5d75ce93.dfd.64b469@ismtpd-555>',
 			'event':'open',
+			'sg_machine_open': false,
 			'category':'cat facts',
 			'sg_event_id':'FOTFFO0ecsBE-zxFXfs6WA==',
 			'sg_message_id':'14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0',
@@ -750,6 +751,7 @@ Content-Disposition: form-data; name=""attachments""
 			// Assert
 			result.Email.ShouldBe("example@test.com");
 			result.EventType.ShouldBe(EventType.Open);
+			result.MachineOpen.ShouldBeFalse();
 			result.Timestamp.ToUnixTime().ShouldBe(1513299569);
 			result.UserAgent.ShouldBe("Mozilla/4.0 (compatible; MSIE 6.1; Windows XP; .NET CLR 1.1.4322; .NET CLR 2.0.50727)");
 			result.UniqueArguments.ShouldNotBeNull();

@@ -270,13 +270,13 @@ namespace StrongGrid.Resources.Legacy
 		/// <returns>
 		/// An array of <see cref="List" />.
 		/// </returns>
-		public Task<List[]> GetListsAsync(string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<Models.Legacy.List[]> GetListsAsync(string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/{contactId}/lists")
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsObject<List[]>("lists");
+				.AsObject<Models.Legacy.List[]>("lists");
 		}
 
 		private static JObject ConvertToJObject(

@@ -92,7 +92,7 @@ namespace StrongGrid.Resources
 		/// <param name="subject">The subject.</param>
 		/// <param name="contents">The contents.</param>
 		/// <param name="from">From.</param>
-		/// <param name="replyTo">The reply to.</param>
+		/// <param name="replyTo">The reply-to addresses.</param>
 		/// <param name="attachments">The attachments.</param>
 		/// <param name="templateId">The template identifier.</param>
 		/// <param name="headers">The headers.</param>
@@ -116,7 +116,7 @@ namespace StrongGrid.Resources
 			string subject,
 			IEnumerable<MailContent> contents,
 			MailAddress from,
-			MailAddress replyTo = null,
+			IEnumerable<MailAddress> replyTo = null,
 			IEnumerable<Attachment> attachments = null,
 			string templateId = null,
 			IEnumerable<KeyValuePair<string, string>> headers = null,
@@ -199,10 +199,17 @@ namespace StrongGrid.Resources
 				.Where(kvp => !priorityHeaders.Any(p => p.Key.Equals(kvp.Key, StringComparison.OrdinalIgnoreCase)))
 				.Concat(priorityHeaders);
 
+			// Remove duplicates from the list of 'reply-to' addresses
+			var cleanReplyTo = replyTo?.Distinct(emailAddressComparer) ?? Enumerable.Empty<MailAddress>();
+
+			// SendGrid allows no more than 1000 'reply-to' addresses
+			var numberOfReplyToAddresses = cleanReplyTo.Count();
+			if (numberOfReplyToAddresses > 1000) throw new ArgumentOutOfRangeException(nameof(numberOfReplyToAddresses), numberOfReplyToAddresses, "The number of distinct reply-to addresses can't exceed 1000");
+
 			// Serialize the mail message
 			var data = new JObject();
 			data.AddPropertyIfValue("from", from);
-			data.AddPropertyIfValue("reply_to", replyTo);
+			data.AddPropertyIfValue("reply_to_list", cleanReplyTo);
 			data.AddPropertyIfValue("subject", subject);
 			data.AddPropertyIfValue("content", contents);
 			data.AddPropertyIfValue("attachments", attachments);

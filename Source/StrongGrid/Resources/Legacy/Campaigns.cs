@@ -181,10 +181,8 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task SendNowAsync(long campaignId, CancellationToken cancellationToken = default)
 		{
-			var data = (JObject)null;
 			return _client
 				.PostAsync($"{_endpoint}/{campaignId}/schedules/now")
-				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
 		}

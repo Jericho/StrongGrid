@@ -85,7 +85,7 @@ namespace StrongGrid.UnitTests.Warmup
 
 			var mockMailResource = new Mock<IMail>(MockBehavior.Strict);
 			mockMailResource
-				.Setup(r => r.SendAsync(It.Is<MailPersonalization[]>(p => p.Length == 1), It.IsAny<string>(), It.IsAny<IEnumerable<MailContent>>(), It.IsAny<MailAddress>(), It.IsAny<MailAddress>(), It.IsAny<IEnumerable<Attachment>>(), It.IsAny<string>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<DateTime?>(), It.IsAny<string>(), It.IsAny<UnsubscribeOptions>(), It.IsAny<string>(), It.IsAny<MailSettings>(), It.IsAny<TrackingSettings>(), It.IsAny<MailPriority>(), It.IsAny<CancellationToken>()))
+				.Setup(r => r.SendAsync(It.Is<MailPersonalization[]>(p => p.Length == 1), It.IsAny<string>(), It.IsAny<IEnumerable<MailContent>>(), It.IsAny<MailAddress>(), It.IsAny<IEnumerable<MailAddress>>(), It.IsAny<IEnumerable<Attachment>>(), It.IsAny<string>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<DateTime?>(), It.IsAny<string>(), It.IsAny<UnsubscribeOptions>(), It.IsAny<string>(), It.IsAny<MailSettings>(), It.IsAny<TrackingSettings>(), It.IsAny<MailPriority>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync("message_id_on_pool");
 
 			var mockClient = new Mock<IBaseClient>(MockBehavior.Strict);
@@ -152,10 +152,10 @@ namespace StrongGrid.UnitTests.Warmup
 
 			var mockMailResource = new Mock<IMail>(MockBehavior.Strict);
 			mockMailResource
-				.Setup(r => r.SendAsync(It.Is<MailPersonalization[]>(p => p.Length == 1 && p[0].To[0].Email == "bob@example.com"), It.IsAny<string>(), It.IsAny<IEnumerable<MailContent>>(), It.IsAny<MailAddress>(), It.IsAny<MailAddress>(), It.IsAny<IEnumerable<Attachment>>(), It.IsAny<string>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<DateTime?>(), It.IsAny<string>(), It.IsAny<UnsubscribeOptions>(), It.IsAny<string>(), It.IsAny<MailSettings>(), It.IsAny<TrackingSettings>(), It.IsAny<MailPriority>(), It.IsAny<CancellationToken>()))
+				.Setup(r => r.SendAsync(It.Is<MailPersonalization[]>(p => p.Length == 1 && p[0].To[0].Email == "bob@example.com"), It.IsAny<string>(), It.IsAny<IEnumerable<MailContent>>(), It.IsAny<MailAddress>(), It.IsAny<IEnumerable<MailAddress>>(), It.IsAny<IEnumerable<Attachment>>(), It.IsAny<string>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<DateTime?>(), It.IsAny<string>(), It.IsAny<UnsubscribeOptions>(), It.IsAny<string>(), It.IsAny<MailSettings>(), It.IsAny<TrackingSettings>(), It.IsAny<MailPriority>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync("message_id_on_pool");
 			mockMailResource
-				.Setup(r => r.SendAsync(It.Is<MailPersonalization[]>(p => p.Length == 1 && p[0].To[0].Email == "sue@example.com"), It.IsAny<string>(), It.IsAny<IEnumerable<MailContent>>(), It.IsAny<MailAddress>(), It.IsAny<MailAddress>(), It.IsAny<IEnumerable<Attachment>>(), It.IsAny<string>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<DateTime?>(), It.IsAny<string>(), It.IsAny<UnsubscribeOptions>(), It.IsAny<string>(), It.IsAny<MailSettings>(), It.IsAny<TrackingSettings>(), It.IsAny<MailPriority>(), It.IsAny<CancellationToken>()))
+				.Setup(r => r.SendAsync(It.Is<MailPersonalization[]>(p => p.Length == 1 && p[0].To[0].Email == "sue@example.com"), It.IsAny<string>(), It.IsAny<IEnumerable<MailContent>>(), It.IsAny<MailAddress>(), It.IsAny<IEnumerable<MailAddress>>(), It.IsAny<IEnumerable<Attachment>>(), It.IsAny<string>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<DateTime?>(), It.IsAny<string>(), It.IsAny<UnsubscribeOptions>(), It.IsAny<string>(), It.IsAny<MailSettings>(), It.IsAny<TrackingSettings>(), It.IsAny<MailPriority>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync("message_id_not_on_pool");
 
 			var mockClient = new Mock<IBaseClient>(MockBehavior.Strict);
@@ -222,7 +222,7 @@ namespace StrongGrid.UnitTests.Warmup
 
 			var mockMailResource = new Mock<IMail>(MockBehavior.Strict);
 			mockMailResource
-				.Setup(r => r.SendAsync(It.Is<MailPersonalization[]>(p => p.Length == 2), It.IsAny<string>(), It.IsAny<IEnumerable<MailContent>>(), It.IsAny<MailAddress>(), It.IsAny<MailAddress>(), It.IsAny<IEnumerable<Attachment>>(), It.IsAny<string>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<DateTime?>(), It.IsAny<string>(), It.IsAny<UnsubscribeOptions>(), It.IsAny<string>(), It.IsAny<MailSettings>(), It.IsAny<TrackingSettings>(), It.IsAny<MailPriority>(), It.IsAny<CancellationToken>()))
+				.Setup(r => r.SendAsync(It.Is<MailPersonalization[]>(p => p.Length == 2), It.IsAny<string>(), It.IsAny<IEnumerable<MailContent>>(), It.IsAny<MailAddress>(), It.IsAny<IEnumerable<MailAddress>>(), It.IsAny<IEnumerable<Attachment>>(), It.IsAny<string>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<DateTime?>(), It.IsAny<string>(), It.IsAny<UnsubscribeOptions>(), It.IsAny<string>(), It.IsAny<MailSettings>(), It.IsAny<TrackingSettings>(), It.IsAny<MailPriority>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync("message_id_on_pool");
 
 			var mockClient = new Mock<IBaseClient>(MockBehavior.Strict);
@@ -289,7 +289,7 @@ namespace StrongGrid.UnitTests.Warmup
 
 			var mockMailResource = new Mock<IMail>(MockBehavior.Strict);
 			mockMailResource
-				.Setup(r => r.SendAsync(It.Is<MailPersonalization[]>(p => p.Length == 2), It.IsAny<string>(), It.IsAny<IEnumerable<MailContent>>(), It.IsAny<MailAddress>(), It.IsAny<MailAddress>(), It.IsAny<IEnumerable<Attachment>>(), It.IsAny<string>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<DateTime?>(), It.IsAny<string>(), It.IsAny<UnsubscribeOptions>(), It.IsAny<string>(), It.IsAny<MailSettings>(), It.IsAny<TrackingSettings>(), It.IsAny<MailPriority>(), It.IsAny<CancellationToken>()))
+				.Setup(r => r.SendAsync(It.Is<MailPersonalization[]>(p => p.Length == 2), It.IsAny<string>(), It.IsAny<IEnumerable<MailContent>>(), It.IsAny<MailAddress>(), It.IsAny<IEnumerable<MailAddress>>(), It.IsAny<IEnumerable<Attachment>>(), It.IsAny<string>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<DateTime?>(), It.IsAny<string>(), It.IsAny<UnsubscribeOptions>(), It.IsAny<string>(), It.IsAny<MailSettings>(), It.IsAny<TrackingSettings>(), It.IsAny<MailPriority>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync("message_id_on_pool");
 
 			var mockClient = new Mock<IBaseClient>(MockBehavior.Strict);
@@ -361,10 +361,10 @@ namespace StrongGrid.UnitTests.Warmup
 
 			var mockMailResource = new Mock<IMail>(MockBehavior.Strict);
 			mockMailResource
-				.Setup(r => r.SendAsync(It.Is<MailPersonalization[]>(p => p.Length == 1 && p[0].To[0].Email == "bob@example.com"), It.IsAny<string>(), It.IsAny<IEnumerable<MailContent>>(), It.IsAny<MailAddress>(), It.IsAny<MailAddress>(), It.IsAny<IEnumerable<Attachment>>(), It.IsAny<string>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<DateTime?>(), It.IsAny<string>(), It.IsAny<UnsubscribeOptions>(), It.IsAny<string>(), It.IsAny<MailSettings>(), It.IsAny<TrackingSettings>(), It.IsAny<MailPriority>(), It.IsAny<CancellationToken>()))
+				.Setup(r => r.SendAsync(It.Is<MailPersonalization[]>(p => p.Length == 1 && p[0].To[0].Email == "bob@example.com"), It.IsAny<string>(), It.IsAny<IEnumerable<MailContent>>(), It.IsAny<MailAddress>(), It.IsAny<IEnumerable<MailAddress>>(), It.IsAny<IEnumerable<Attachment>>(), It.IsAny<string>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<DateTime?>(), It.IsAny<string>(), It.IsAny<UnsubscribeOptions>(), It.IsAny<string>(), It.IsAny<MailSettings>(), It.IsAny<TrackingSettings>(), It.IsAny<MailPriority>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync("message_id_on_pool");
 			mockMailResource
-				.Setup(r => r.SendAsync(It.Is<MailPersonalization[]>(p => p.Length == 1 && p[0].To[0].Email == "sue@example.com"), It.IsAny<string>(), It.IsAny<IEnumerable<MailContent>>(), It.IsAny<MailAddress>(), It.IsAny<MailAddress>(), It.IsAny<IEnumerable<Attachment>>(), It.IsAny<string>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<DateTime?>(), It.IsAny<string>(), It.IsAny<UnsubscribeOptions>(), It.IsAny<string>(), It.IsAny<MailSettings>(), It.IsAny<TrackingSettings>(), It.IsAny<MailPriority>(), It.IsAny<CancellationToken>()))
+				.Setup(r => r.SendAsync(It.Is<MailPersonalization[]>(p => p.Length == 1 && p[0].To[0].Email == "sue@example.com"), It.IsAny<string>(), It.IsAny<IEnumerable<MailContent>>(), It.IsAny<MailAddress>(), It.IsAny<IEnumerable<MailAddress>>(), It.IsAny<IEnumerable<Attachment>>(), It.IsAny<string>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<DateTime?>(), It.IsAny<string>(), It.IsAny<UnsubscribeOptions>(), It.IsAny<string>(), It.IsAny<MailSettings>(), It.IsAny<TrackingSettings>(), It.IsAny<MailPriority>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync("message_id_not_on_pool");
 
 			var mockClient = new Mock<IBaseClient>(MockBehavior.Strict);

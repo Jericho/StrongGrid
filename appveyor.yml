@@ -1,11 +1,24 @@
-# Before Build
+environment:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # For faster CI builds
+
+# scripts that are called at very beginning, before repo cloning
 init:
   - git config --global core.autocrlf true
 
-# Build script
-build_script:
+# scripts that run after cloning repository
+install:
+ - ps: Import-Module .\appveyor.psm1; Invoke-AppveyorInstall
+
+# scripts to run before build
+before_build:
   - dotnet --info
+
+# to run your custom scripts instead of automatic MSBuild
+build_script:
   - ps: .\build.ps1 --target=AppVeyor
+
+# scripts to run after build
+after_build:
 
 # Tests
 test: off
@@ -28,9 +41,6 @@ image:
   - Ubuntu1804
   - Visual Studio 2019
 
-#---------------------------------#
-#  Skip builds for doc changes    #
-#---------------------------------#
+#  Skip builds for doc changes
 skip_commits:
-  # Regex for matching commit message
   message: /\(doc\).*/

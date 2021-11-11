@@ -153,6 +153,6 @@ namespace StrongGrid.Resources.Legacy
 		/// <returns>
 		/// An array of <see cref="List" />.
 		/// </returns>
-		Task<List[]> GetListsAsync(string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<Models.Legacy.List[]> GetListsAsync(string contactId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 	}
 }
