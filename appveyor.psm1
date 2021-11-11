@@ -2,39 +2,41 @@
 
 $ErrorActionPreference = 'Stop'
 
-# Implements the AppVeyor 'install' step and installs the desired .Net Core SDK if needed.
+# Implements the AppVeyor 'install' step and installs the desired .Net Core SDK if not already installed.
 function Invoke-AppVeyorInstall {
 
-    Write-Verbose -Verbose "Installing required .Net CORE SDK"
+    Write-Verbose -Verbose "Checking availability of desired .Net CORE SDK"
+
     # the legacy WMF4 image only has the old preview SDKs of dotnet
     $globalDotJson = Get-Content (Join-Path $PSScriptRoot 'global.json') -Raw | ConvertFrom-Json
-    $requiredDotNetCoreSDKVersion = $globalDotJson.sdk.version
+    $desiredDotNetCoreSDKVersion = $globalDotJson.sdk.version
     if ($PSVersionTable.PSVersion.Major -gt 4) {
-        $requiredDotNetCoreSDKVersionPresent = (dotnet --list-sdks) -match $requiredDotNetCoreSDKVersion
+        $desiredDotNetCoreSDKVersionPresent = (dotnet --list-sdks) -match $desiredDotNetCoreSDKVersion
     }
     else {
         # WMF 4 image has old SDK that does not have --list-sdks parameter
-        $requiredDotNetCoreSDKVersionPresent = (dotnet --version).StartsWith($requiredDotNetCoreSDKVersion)
+        $desiredDotNetCoreSDKVersionPresent = (dotnet --version).StartsWith($desiredDotNetCoreSDKVersion)
     }
-    if (-not $requiredDotNetCoreSDKVersionPresent) {
-        Write-Verbose -Verbose "Installing required .Net CORE SDK $requiredDotNetCoreSDKVersion"
+
+    if (-not $desiredDotNetCoreSDKVersionPresent) {
+        Write-Verbose -Verbose "Installing desired .Net CORE SDK $desiredDotNetCoreSDKVersion"
         $originalSecurityProtocol = [Net.ServicePointManager]::SecurityProtocol
         try {
             [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
             if ($IsLinux -or $isMacOS) {
                 Invoke-WebRequest 'https://dot.net/v1/dotnet-install.sh' -OutFile dotnet-install.sh
-                bash dotnet-install.sh --version $requiredDotNetCoreSDKVersion
+                bash dotnet-install.sh --version $desiredDotNetCoreSDKVersion
                 [System.Environment]::SetEnvironmentVariable('PATH', "/home/appveyor/.dotnet$([System.IO.Path]::PathSeparator)$PATH")
             }
             else {
                 Invoke-WebRequest 'https://dot.net/v1/dotnet-install.ps1' -OutFile dotnet-install.ps1
-                .\dotnet-install.ps1 -Version $requiredDotNetCoreSDKVersion
+                .\dotnet-install.ps1 -Version $desiredDotNetCoreSDKVersion
             }
         }
         finally {
             [Net.ServicePointManager]::SecurityProtocol = $originalSecurityProtocol
             Remove-Item .\dotnet-install.*
         }
-        Write-Verbose -Verbose 'Installed required .Net CORE SDK'
+        Write-Verbose -Verbose 'Installed desired .Net CORE SDK'
     }
 }
