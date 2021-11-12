@@ -9,7 +9,7 @@ init:
 
 # scripts that run after cloning repository
 install:
-# - ps: Import-Module .\appveyor.psm1; Invoke-AppveyorInstall
+ - ps: Import-Module .\appveyor.psm1; Invoke-AppveyorInstall
 
 # scripts to run before build
 before_build:
