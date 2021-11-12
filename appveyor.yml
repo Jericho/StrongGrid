@@ -36,7 +36,7 @@ branches:
 
 # Build cache
 cache:
-  - tools -> build.cake
+  - tools -> build.cake, appveyor.psm1
 
 # Environment configuration
 image:
