@@ -29,7 +29,7 @@ function Invoke-AppVeyorInstall {
 
                 Write-Verbose -Verbose "BEFORE"
                 Write-Verbose -Verbose "Env Path: $Env:Path"
-                Write-Verbose -Verbose "GetEnvVar: $([Environment]::GetEnvironmentVariable("Path")))"
+                Write-Verbose -Verbose "PATH: $([Environment]::GetEnvironmentVariable("PATH"))"
 
                 $OLDPATH = $Env:Path # [System.Environment]::GetEnvironmentVariable("PATH")
                 $NEWPATH = "/home/appveyor/.dotnet$([System.IO.Path]::PathSeparator)$OLDPATH"
@@ -37,7 +37,7 @@ function Invoke-AppVeyorInstall {
 
                 Write-Verbose -Verbose "AFTER"
                 Write-Verbose -Verbose "Env Path: $Env:Path"
-                Write-Verbose -Verbose "GetEnvVar: $([Environment]::GetEnvironmentVariable("Path")))"
+                Write-Verbose -Verbose "PATH: $([Environment]::GetEnvironmentVariable("PATH"))"
             }
             else {
                 Invoke-WebRequest 'https://dot.net/v1/dotnet-install.ps1' -OutFile dotnet-install.ps1
