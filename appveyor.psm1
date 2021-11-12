@@ -25,8 +25,7 @@ function Invoke-AppVeyorInstall {
             [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
             if ($IsLinux -or $isMacOS) {
                 Invoke-WebRequest 'https://dot.net/v1/dotnet-install.sh' -OutFile dotnet-install.sh
-                bash dotnet-install.sh --version $desiredDotNetCoreSDKVersion
-                [System.Environment]::SetEnvironmentVariable('PATH', "/home/appveyor/.dotnet$([System.IO.Path]::PathSeparator)$PATH")
+                sudo bash dotnet-install.sh --version $desiredDotNetCoreSDKVersion
             }
             else {
                 Invoke-WebRequest 'https://dot.net/v1/dotnet-install.ps1' -OutFile dotnet-install.ps1
