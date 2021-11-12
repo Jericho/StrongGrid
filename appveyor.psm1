@@ -7,16 +7,9 @@ function Invoke-AppVeyorInstall {
 
     Write-Verbose -Verbose "Checking availability of desired .Net CORE SDK"
 
-    # the legacy WMF4 image only has the old preview SDKs of dotnet
     $globalDotJson = Get-Content (Join-Path $PSScriptRoot 'global.json') -Raw | ConvertFrom-Json
     $desiredDotNetCoreSDKVersion = $globalDotJson.sdk.version
-    if ($PSVersionTable.PSVersion.Major -gt 4) {
-        $desiredDotNetCoreSDKVersionPresent = (dotnet --list-sdks) -match $desiredDotNetCoreSDKVersion
-    }
-    else {
-        # WMF 4 image has old SDK that does not have --list-sdks parameter
-        $desiredDotNetCoreSDKVersionPresent = (dotnet --version).StartsWith($desiredDotNetCoreSDKVersion)
-    }
+    $desiredDotNetCoreSDKVersionPresent = (dotnet --list-sdks) -match $desiredDotNetCoreSDKVersion
 
     if (-not $desiredDotNetCoreSDKVersionPresent) {
         Write-Verbose -Verbose "Installing desired .Net CORE SDK $desiredDotNetCoreSDKVersion"
