@@ -25,7 +25,14 @@ function Invoke-AppVeyorInstall {
             [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
             if ($IsLinux -or $isMacOS) {
                 Invoke-WebRequest 'https://dot.net/v1/dotnet-install.sh' -OutFile dotnet-install.sh
-                sudo bash dotnet-install.sh --version $desiredDotNetCoreSDKVersion --install-dir /usr/share/dotnet
+                bash dotnet-install.sh --version $desiredDotNetCoreSDKVersion
+
+                $OLDPATH = [System.Environment]::GetEnvironmentVariable("PATH")
+                $NEWPATH = "/home/appveyor/.dotnet$([System.IO.Path]::PathSeparator)$OLDPATH"
+                [Environment]::SetEnvironmentVariable("PATH", "$NEWPATH")
+
+                Write-Verbose -Verbose "OLD PATH: $OLDPATH"
+                Write-Verbose -Verbose "NEW PATH: $([System.Environment]::GetEnvironmentVariable("PATH"))"
             }
             else {
                 Invoke-WebRequest 'https://dot.net/v1/dotnet-install.ps1' -OutFile dotnet-install.ps1
