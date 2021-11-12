@@ -27,12 +27,17 @@ function Invoke-AppVeyorInstall {
                 Invoke-WebRequest 'https://dot.net/v1/dotnet-install.sh' -OutFile dotnet-install.sh
                 bash dotnet-install.sh --version $desiredDotNetCoreSDKVersion
 
-                $OLDPATH = [System.Environment]::GetEnvironmentVariable("PATH")
+                Write-Verbose -Verbose "BEFORE"
+                Write-Verbose -Verbose "Env Path: $Env:Path"
+                Write-Verbose -Verbose "GetEnvVar: $([Environment]::GetEnvironmentVariable("Path")))"
+
+                $OLDPATH = $Env:Path # [System.Environment]::GetEnvironmentVariable("PATH")
                 $NEWPATH = "/home/appveyor/.dotnet$([System.IO.Path]::PathSeparator)$OLDPATH"
                 [Environment]::SetEnvironmentVariable("PATH", "$NEWPATH")
 
-                Write-Verbose -Verbose "OLD PATH: $OLDPATH"
-                Write-Verbose -Verbose "NEW PATH: $([System.Environment]::GetEnvironmentVariable("PATH"))"
+                Write-Verbose -Verbose "AFTER"
+                Write-Verbose -Verbose "Env Path: $Env:Path"
+                Write-Verbose -Verbose "GetEnvVar: $([Environment]::GetEnvironmentVariable("Path")))"
             }
             else {
                 Invoke-WebRequest 'https://dot.net/v1/dotnet-install.ps1' -OutFile dotnet-install.ps1
