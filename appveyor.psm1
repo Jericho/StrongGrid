@@ -2,17 +2,17 @@
 
 $ErrorActionPreference = 'Stop'
 
-# Implements the AppVeyor 'install' step and installs the desired .Net Core SDK if not already installed.
+# Implements the AppVeyor 'install' step and installs the desired .NET SDK if not already installed.
 function Invoke-AppVeyorInstall {
 
-    Write-Verbose -Verbose "Checking availability of desired .Net CORE SDK"
+    Write-Verbose -Verbose "Checking availability of .NET SDK $desiredDotNetCoreSDKVersion"
 
     $globalDotJson = Get-Content (Join-Path $PSScriptRoot 'global.json') -Raw | ConvertFrom-Json
     $desiredDotNetCoreSDKVersion = $globalDotJson.sdk.version
     $desiredDotNetCoreSDKVersionPresent = (dotnet --list-sdks) -match $desiredDotNetCoreSDKVersion
 
     if (-not $desiredDotNetCoreSDKVersionPresent) {
-        Write-Verbose -Verbose "Installing desired .Net CORE SDK $desiredDotNetCoreSDKVersion"
+        Write-Verbose -Verbose "Installing .NET SDK $desiredDotNetCoreSDKVersion"
         $originalSecurityProtocol = [Net.ServicePointManager]::SecurityProtocol
         try {
             [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
@@ -51,6 +51,9 @@ function Invoke-AppVeyorInstall {
             [Net.ServicePointManager]::SecurityProtocol = $originalSecurityProtocol
             Remove-Item .\dotnet-install.*
         }
-        Write-Verbose -Verbose 'Installed desired .Net CORE SDK'
+        Write-Verbose -Verbose "Installed .NET SDK $desiredDotNetCoreSDKVersion"
+    }
+    else {
+        Write-Verbose -Verbose ".NET SDK $desiredDotNetCoreSDKVersion already installed on this machine"
     }
 }
