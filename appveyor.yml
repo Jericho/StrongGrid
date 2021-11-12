@@ -17,7 +17,7 @@ before_build:
 
 # to run your custom scripts instead of automatic MSBuild
 build_script:
-  - ps: .\build.ps1 --target=AppVeyor --verbosity=diagnostic
+  - ps: .\build.ps1 --target=AppVeyor
 
 # scripts to run after build
 after_build:
@@ -36,12 +36,12 @@ branches:
 
 # Build cache
 cache:
-  - tools -> build.cake, appveyor.psm1
+  - tools -> build.cake
 
 # Environment configuration
 image:
   - Ubuntu1804
-#  - Visual Studio 2022
+  - Visual Studio 2022
 
 #  Skip builds for doc changes
 skip_commits:
