@@ -52,7 +52,6 @@ namespace StrongGrid.Benchmark
 			var legacyLists = await _legacyClient.Lists.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
 			var legacySegments = await _legacyClient.Segments.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
 			var legacySenderIdentities = await _legacyClient.SenderIdentities.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
-			var messageId = await _client.Mail.SendToSingleRecipientAsync(null, null, null, null, null).ConfigureAwait(false);
 			var authenticationDomains = await _client.SenderAuthentication.GetAllDomainsAsync(excludeSubusers: false).ConfigureAwait(false);
 			var reverseDns = await _client.SenderAuthentication.GetAllReverseDnsAsync().ConfigureAwait(false);
 			var links = await _client.SenderAuthentication.GetAllLinksAsync().ConfigureAwait(false);
@@ -90,7 +89,6 @@ namespace StrongGrid.Benchmark
 			mockHttp.When(HttpMethod.Get, UnitTests.Utils.GetSendGridApiUri("contactdb/lists")).Respond("application/json", UnitTests.Resources.LegacyListsTests.MULTIPLE_LISTS_JSON);
 			mockHttp.When(HttpMethod.Get, UnitTests.Utils.GetSendGridApiUri("contactdb/segments")).Respond("application/json", UnitTests.Resources.LegacySegmentsTests.MULTIPLE_SEGMENTS_JSON);
 			mockHttp.When(HttpMethod.Get, UnitTests.Utils.GetSendGridApiUri("senders")).Respond("application/json", UnitTests.Resources.LegacySenderIdentitiesTests.MULTIPLE_SENDER_IDENTITIES_JSON);
-			mockHttp.When(HttpMethod.Post, UnitTests.Utils.GetSendGridApiUri("mail", "send")).Respond(HttpStatusCode.Accepted);
 			mockHttp.When(HttpMethod.Get, UnitTests.Utils.GetSendGridApiUri("whitelabel", "domains?exclude_subusers=false&limit=50&offset=0")).Respond("application/json", UnitTests.Resources.SenderAuthenticationTests.MULTIPLE_DOMAINS_JSON);
 			mockHttp.When(HttpMethod.Get, UnitTests.Utils.GetSendGridApiUri("whitelabel", "ips?limit=50&offset=0")).Respond("application/json", UnitTests.Resources.SenderAuthenticationTests.MULTIPLE_IPS_JSON);
 			mockHttp.When(HttpMethod.Get, UnitTests.Utils.GetSendGridApiUri("whitelabel", "links?limit=50&offset=0")).Respond("application/json", UnitTests.Resources.SenderAuthenticationTests.MULTIPLE_LINKS_JSON);
