@@ -37,6 +37,7 @@ namespace StrongGrid.Models.Webhooks
 		/// </value>
 		[JsonPropertyName("reason")]
 		[Obsolete("I believe this field is not included in the webhook data posted by SendGrid (despite what their documentation says). Use the 'Response' field instead.")]
+		[JsonIgnore]
 		public string Reason { get; set; }
 
 		/// <summary>
