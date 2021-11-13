@@ -169,6 +169,14 @@ namespace StrongGrid.Utilities
 	[JsonSerializable(typeof(StrongGrid.Models.Webhooks.Event), TypeInfoPropertyName = "WebhooksEvent")]
 	[JsonSerializable(typeof(StrongGrid.Models.Webhooks.GroupResubscribeEvent), TypeInfoPropertyName = "WebhooksGroupResubscribeEvent")]
 	[JsonSerializable(typeof(StrongGrid.Models.Webhooks.GroupUnsubscribeEvent), TypeInfoPropertyName = "WebhooksGroupUnsubscribeEvent")]
+	/*
+	 * Intentionally commenting out the following three lines because InboundEmailAttachment has a
+	 * property of type 'Stream' which System.Text.Json.SourceGeneration can not handle.
+	 * To make matters worse, you get an error regarding ReadOnlySpan<byte> which is confusing and not helpful.
+	[JsonSerializable(typeof(StrongGrid.Models.Webhooks.InboundEmail), TypeInfoPropertyName = "WebhooksInboundEmail")]
+	[JsonSerializable(typeof(StrongGrid.Models.Webhooks.InboundEmailAttachment), TypeInfoPropertyName = "WebhooksInboundEmailAttachment")]
+	[JsonSerializable(typeof(StrongGrid.Models.Webhooks.InboundEmailEnvelope), TypeInfoPropertyName = "WebhooksInboundEmailEnvelope")]
+	*/
 	[JsonSerializable(typeof(StrongGrid.Models.Webhooks.IpPool), TypeInfoPropertyName = "WebhooksIpPool")]
 	[JsonSerializable(typeof(StrongGrid.Models.Webhooks.Newsletter), TypeInfoPropertyName = "WebhooksNewsletter")]
 	[JsonSerializable(typeof(StrongGrid.Models.Webhooks.OpenedEvent), TypeInfoPropertyName = "WebhooksOpenedEvent")]
