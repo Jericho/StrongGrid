@@ -342,7 +342,9 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return mailResource.SendAsync(personalizations, subject, contents, from, new[] { replyTo }, attachments, null, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
+			var replyToList = replyTo == null ? null : new[] { replyTo };
+
+			return mailResource.SendAsync(personalizations, subject, contents, from, replyToList, attachments, null, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -430,7 +432,9 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return mailResource.SendAsync(personalizations, subject, contents, from, new[] { replyTo }, attachments, templateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
+			var replyToList = replyTo == null ? null : new[] { replyTo };
+
+			return mailResource.SendAsync(personalizations, subject, contents, from, replyToList, attachments, templateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -513,7 +517,9 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return mailResource.SendAsync(personalizations, null, null, from, new[] { replyTo }, attachments, dynamicTemplateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
+			var replyToList = replyTo == null ? null : new[] { replyTo };
+
+			return mailResource.SendAsync(personalizations, null, null, from, replyToList, attachments, dynamicTemplateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -599,7 +605,9 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return mailResource.SendAsync(personalizations, subject, contents, from, new[] { replyTo }, attachments, null, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
+			var replyToList = replyTo == null ? null : new[] { replyTo };
+
+			return mailResource.SendAsync(personalizations, subject, contents, from, replyToList, attachments, null, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, ipPoolName, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -857,7 +865,9 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return warmupEngine.SendAsync(personalizations, subject, contents, from, new[] { replyTo }, attachments, null, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
+			var replyToList = replyTo == null ? null : new[] { replyTo };
+
+			return warmupEngine.SendAsync(personalizations, subject, contents, from, replyToList, attachments, null, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -943,7 +953,9 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return warmupEngine.SendAsync(personalizations, subject, contents, from, new[] { replyTo }, attachments, templateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
+			var replyToList = replyTo == null ? null : new[] { replyTo };
+
+			return warmupEngine.SendAsync(personalizations, subject, contents, from, replyToList, attachments, templateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
@@ -1024,7 +1036,9 @@ namespace StrongGrid
 				SubscriptionTracking = subscriptionTracking
 			};
 
-			return warmupEngine.SendAsync(personalizations, null, null, from, new[] { replyTo }, attachments, dynamicTemplateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
+			var replyToList = replyTo == null ? null : new[] { replyTo };
+
+			return warmupEngine.SendAsync(personalizations, null, null, from, replyToList, attachments, dynamicTemplateId, headers, categories, customArgs, sendAt, batchId, unsubscribeOptions, mailSettings, trackingSettings, priority, cancellationToken);
 		}
 
 		/// <summary>
