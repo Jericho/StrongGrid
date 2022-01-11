@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -52,6 +52,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get all API Keys belonging to the authenticated user.
 		/// </summary>
+		/// <param name="limit">The limit.</param>
+		/// <param name="offset">The offset.</param>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
@@ -61,10 +63,12 @@ namespace StrongGrid.Resources
 		/// The response does not include the permissions associated with each api key.
 		/// In order to get the permission for a given key, you need to <see cref="GetAsync(string, string, CancellationToken)">retrieve keys one at a time</see>.
 		/// </remarks>
-		public Task<ApiKey[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<ApiKey[]> GetAllAsync(int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync(_endpoint)
+				.WithArgument("limit", limit)
+				.WithArgument("offset", offset)
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsObject<ApiKey[]>("result");
