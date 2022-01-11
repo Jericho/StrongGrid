@@ -677,7 +677,7 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var ipAddress = "192.168.77.1";
-			var domain = "exmaple.com";
+			var domain = "example.com";
 			var subdomain = "mail";
 
 			var mockHttp = new MockHttpMessageHandler();

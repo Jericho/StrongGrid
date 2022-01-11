@@ -179,7 +179,7 @@ namespace StrongGrid.UnitTests.Resources
 		public async Task EmailExceedsSizeLimit()
 		{
 			// Arrange
-			var from = new MailAddress("bob@exmaple.com", "Bob Smith");
+			var from = new MailAddress("bob@example.com", "Bob Smith");
 			var subject = new string('a', 10 * 1024 * 1024);
 			var recipients = new List<MailAddress>();
 			for (int i = 0; i < 999; i++)

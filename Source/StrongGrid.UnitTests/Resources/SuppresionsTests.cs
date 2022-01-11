@@ -86,7 +86,7 @@ namespace StrongGrid.UnitTests.Resources
 		public async Task GetUnsubscribedGroupsAsync()
 		{
 			// Arrange
-			var email = "test@exmaple.com";
+			var email = "test@example.com";
 
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "suppressions", email)).Respond("application/json", ALL_GROUPS_JSON);
