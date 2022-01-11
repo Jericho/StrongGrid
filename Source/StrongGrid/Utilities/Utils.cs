@@ -11,6 +11,8 @@ namespace StrongGrid.Utilities
 	{
 		private static readonly byte[] Secp256R1Prefix = Convert.FromBase64String("MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE");
 
+		public const int MaxSendGridPagingLimit = 500;
+
 		public static RecyclableMemoryStreamManager MemoryStreamManager { get; } = new RecyclableMemoryStreamManager();
 
 		/// <summary>

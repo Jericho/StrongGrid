@@ -112,7 +112,7 @@ namespace StrongGrid.UnitTests.Resources
 			var apiKeys = new ApiKeys(client);
 
 			// Act
-			var result = await apiKeys.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
+			var result = await apiKeys.GetAllAsync(cancellationToken: CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

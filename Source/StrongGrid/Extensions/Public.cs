@@ -1150,14 +1150,20 @@ namespace StrongGrid
 		/// </returns>
 		public static async Task<IpAddress[]> GetUnassignedAsync(this IIpAddresses ipAddresses, CancellationToken cancellationToken = default)
 		{
-			var allIpAddresses = await ipAddresses.GetAllAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+			var unassignedIpAddresses = new List<IpAddress>();
+			var currentOffset = 0;
 
-			var unassignedIpAddresses = allIpAddresses.Records
-				.Where(ip => ip.Pools == null || !ip.Pools.Any())
-				.ToArray();
+			while (true)
+			{
+				var allIpAddresses = await ipAddresses.GetAllAsync(limit: Utils.MaxSendGridPagingLimit, offset: currentOffset, cancellationToken: cancellationToken).ConfigureAwait(false);
+				unassignedIpAddresses.AddRange(allIpAddresses.Where(ip => ip.Pools == null || !ip.Pools.Any()));
 
-			return unassignedIpAddresses;
+				if (allIpAddresses.Length < Utils.MaxSendGridPagingLimit) break;
+
+				currentOffset += Utils.MaxSendGridPagingLimit;
+			}
+
+			return unassignedIpAddresses.ToArray();
 		}
-
 	}
 }
