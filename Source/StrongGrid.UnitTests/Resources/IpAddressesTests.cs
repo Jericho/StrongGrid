@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
@@ -218,14 +218,17 @@ namespace StrongGrid.UnitTests.Resources
 		public async Task GetUnassignedAsync()
 		{
 			// Arrange
+			var limit = 25;
+			var offset = 0;
+
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", MULTIPLE_IPADDRESSES_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?exclude_whitelabels=false&limit=500&offset={offset}&sort_by_direction=asc").Respond("application/json", MULTIPLE_IPADDRESSES_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var ipAddresses = new IpAddresses(client);
 
 			// Act
-			var result = await ipAddresses.GetUnassignedAsync(CancellationToken.None).ConfigureAwait(false);
+			var result = await ipAddresses.GetUnassignedAsync(limit, offset, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
