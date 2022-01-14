@@ -33,7 +33,7 @@ function Invoke-AppVeyorInstall {
                 # This is supposed to result in the desired .NET SDK to be installed side-by-side
                 # with the other version(s) of the SDK already installed. However, my experience
                 # on Ubuntu images in Appveyor has been that the recently installed SDK is the only
-                # one detected and the previous version are no longer detected as being installed.
+                # one detected and the previous versions are no longer detected as being installed.
                 #
                 # This whole thing is problematic because GitVersion.Tool 5.7 is not compatible with
                 # .NET 6 (in fact, it doesn't even install) and you must have .NET 5 installed side-by-side

@@ -1139,5 +1139,36 @@ namespace StrongGrid
 			if (filterConditions.HasValue && filterConditions.Value != null && filterConditions.Value.Any()) filters.Add(new KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>(SearchLogicalOperator.And, filterConditions.Value));
 			return segments.UpdateAsync(segmentId, name, filters, cancellationToken);
 		}
+
+		/// <summary>
+		/// Retrieve unassigned IP addresses.
+		/// </summary>
+		/// <param name="ipAddresses">The IP addresses resource.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="IpAddress">Ip addresses</see>.
+		/// </returns>
+		public static async Task<IpAddress[]> GetUnassignedAsync(this IIpAddresses ipAddresses, CancellationToken cancellationToken = default)
+		{
+			var unassignedIpAddresses = new List<IpAddress>();
+			var currentOffset = 0;
+
+			while (true)
+			{
+				// Retrieve 500 ip addresses at a time (that's the maximum SendGrid allow us to retrieve at a time)
+				var allIpAddresses = await ipAddresses.GetAllAsync(limit: Utils.MaxSendGridPagingLimit, offset: currentOffset, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+				// Take the addresses that have not been added to a pool
+				unassignedIpAddresses.AddRange(allIpAddresses.Where(ip => ip.Pools == null || !ip.Pools.Any()));
+
+				// Stop if there are no more addresses to fetch
+				if (allIpAddresses.Length < Utils.MaxSendGridPagingLimit) break;
+
+				// Increase the offset so we retrieve the next set of 500 addresses
+				currentOffset += Utils.MaxSendGridPagingLimit;
+			}
+
+			return unassignedIpAddresses.ToArray();
+		}
 	}
 }

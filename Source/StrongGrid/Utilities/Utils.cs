@@ -9,9 +9,11 @@ namespace StrongGrid.Utilities
 	/// </summary>
 	internal static class Utils
 	{
-		private static readonly byte[] Secp256R1Prefix = Convert.FromBase64String("MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE");
+		public const int MaxSendGridPagingLimit = 500;
 
 		public static RecyclableMemoryStreamManager MemoryStreamManager { get; } = new RecyclableMemoryStreamManager();
+
+		private static readonly byte[] Secp256R1Prefix = Convert.FromBase64String("MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE");
 
 		/// <summary>
 		/// Get the 'x' and 'y' values from a secp256r1/NIST P-256 public key.

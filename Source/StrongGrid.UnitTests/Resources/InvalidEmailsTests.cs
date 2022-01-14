@@ -57,14 +57,17 @@ namespace StrongGrid.UnitTests.Resources
 		public async Task GetAllAsync()
 		{
 			// Arrange
+			var limit = 25;
+			var offset = 0;
+
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit=25&offset=0").Respond("application/json", MULTIPLE_INVALID_EMAILS_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&offset={offset}").Respond("application/json", MULTIPLE_INVALID_EMAILS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var invalidEmails = new InvalidEmails(client);
 
 			// Act
-			var result = await invalidEmails.GetAllAsync().ConfigureAwait(false);
+			var result = await invalidEmails.GetAllAsync(null, null, limit, offset, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

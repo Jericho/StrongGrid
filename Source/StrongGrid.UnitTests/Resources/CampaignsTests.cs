@@ -379,7 +379,7 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var campaignId = 986724;
-			var emailAddresses = new[] { "test1@example.com", "test2@exmaple.com" };
+			var emailAddresses = new[] { "test1@example.com", "test2@example.com" };
 
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, campaignId, "schedules/test")).Respond(HttpStatusCode.NoContent);

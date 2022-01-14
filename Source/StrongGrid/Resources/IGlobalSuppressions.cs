@@ -1,4 +1,4 @@
-﻿using StrongGrid.Models;
+using StrongGrid.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -30,7 +30,7 @@ namespace StrongGrid.Resources
 		/// <remarks>
 		/// After much trial and error, we came to the conclusion that SendGrid allows you to search
 		/// for addresses that "begin with" your search term. So, if you have two email addresses on
-		/// your global suppression list such as user1@hotmail.com and user2@gmail.com for exmaple,
+		/// your global suppression list such as user1@hotmail.com and user2@gmail.com for example,
 		/// you will be able to search for 'user1', or 'user2' or even 'user' but you cannot search
 		/// for 'hotmail' or 'gmail'.
 		///

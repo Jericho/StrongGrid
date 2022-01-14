@@ -13,7 +13,7 @@ namespace StrongGrid.IntegrationTests.Tests
 			await log.WriteLineAsync("\n***** TEAMMATES *****\n").ConfigureAwait(false);
 
 			// GET ALL THE PENDING INVITATIONS
-			var pendingInvitation = await client.Teammates.GetAllPendingInvitationsAsync(cancellationToken).ConfigureAwait(false);
+			var pendingInvitation = await client.Teammates.GetAllPendingInvitationsAsync(50, 0, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"There are {pendingInvitation.Length} pending invitations").ConfigureAwait(false);
 
 			// GET ALL THE TEAMMATES
