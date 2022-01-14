@@ -1150,9 +1150,9 @@ namespace StrongGrid
 		/// <returns>
 		/// An array of <see cref="IpAddress">Ip addresses</see>.
 		/// </returns>
-		public static async Task<IpAddress[]> GetUnassignedAsync(this IIpAddresses ipAddresses, int limit = 10, int offset = 0, CancellationToken cancellationToken = default)
+		public static async Task<IpAddress[]> GetUnassignedAsync(this IIpAddresses ipAddresses, CancellationToken cancellationToken = default)
 		{
-			var unassignedIpAddresses = new List<IpAddress>(limit);
+			var unassignedIpAddresses = new List<IpAddress>();
 			var currentOffset = 0;
 
 			while (true)
@@ -1163,9 +1163,6 @@ namespace StrongGrid
 				// Take the addresses that have not been added to a pool
 				unassignedIpAddresses.AddRange(allIpAddresses.Where(ip => ip.Pools == null || !ip.Pools.Any()));
 
-				// Stop if we have enough unassigned addresses
-				if (unassignedIpAddresses.Count >= offset + limit) break;
-
 				// Stop if there are no more addresses to fetch
 				if (allIpAddresses.Length < Utils.MaxSendGridPagingLimit) break;
 
@@ -1173,10 +1170,7 @@ namespace StrongGrid
 				currentOffset += Utils.MaxSendGridPagingLimit;
 			}
 
-			return unassignedIpAddresses
-				.Skip(offset)
-				.Take(limit)
-				.ToArray();
+			return unassignedIpAddresses.ToArray();
 		}
 	}
 }
