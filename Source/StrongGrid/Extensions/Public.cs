@@ -1144,8 +1144,6 @@ namespace StrongGrid
 		/// Retrieve unassigned IP addresses.
 		/// </summary>
 		/// <param name="ipAddresses">The IP addresses resource.</param>
-		/// <param name="limit">The number of IPs you want returned at the same time.</param>
-		/// <param name="offset">The offset for the number of IPs that you are requesting.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="IpAddress">Ip addresses</see>.
