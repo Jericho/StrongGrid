@@ -241,7 +241,7 @@ namespace StrongGrid.UnitTests.Resources
 			var teammates = new Teammates(client);
 
 			// Act
-			var result = await teammates.GetAllPendingInvitationsAsync(CancellationToken.None).ConfigureAwait(false);
+			var result = await teammates.GetAllPendingInvitationsAsync(50, 0, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
