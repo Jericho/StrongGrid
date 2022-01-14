@@ -1,7 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
-using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -34,15 +33,19 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get all suppressions.
 		/// </summary>
+		/// <param name="limit">The limit.</param>
+		/// <param name="offset">The offset.</param>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Suppression"/>.
 		/// </returns>
-		public Task<Suppression[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task<Suppression[]> GetAllAsync(int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync($"{_endpoint}/suppressions")
+				.WithArgument("limit", limit)
+				.WithArgument("offset", offset)
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsObject<Suppression[]>();

@@ -66,14 +66,18 @@ namespace StrongGrid.UnitTests.Resources
 		public async Task GetAllAsync()
 		{
 			// Arrange
+			var limit = 25;
+			var offset = 5;
+			var endpoint = Utils.GetSendGridApiUri(ENDPOINT, "suppressions") + $"?limit={limit}&offset={offset}";
+
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "suppressions")).Respond("application/json", ALL_SUPPRESSIONS_JSON);
+			mockHttp.Expect(HttpMethod.Get, endpoint).Respond("application/json", ALL_SUPPRESSIONS_JSON);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var suppresions = new Suppressions(client);
 
 			// Act
-			var result = await suppresions.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
+			var result = await suppresions.GetAllAsync(limit, offset, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

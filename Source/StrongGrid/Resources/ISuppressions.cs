@@ -1,4 +1,4 @@
-﻿using StrongGrid.Models;
+using StrongGrid.Models;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,12 +17,14 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Get all suppressions.
 		/// </summary>
+		/// <param name="limit">The limit.</param>
+		/// <param name="offset">The offset.</param>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Suppression"/>.
 		/// </returns>
-		Task<Suppression[]> GetAllAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<Suppression[]> GetAllAsync(int limit = 50, int offset = 0, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get all unsubscribe groups that the given email address has been added to.
