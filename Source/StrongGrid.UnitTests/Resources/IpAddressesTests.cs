@@ -18,7 +18,7 @@ namespace StrongGrid.UnitTests.Resources
 
 		private const string ENDPOINT = "ips";
 
-		private const string SINGLE_IPADDRESS_JSON = @"{
+		private const string SINGLE_ASSIGNED_IPADDRESS_JSON = @"{
 			'ip': '192.168.1.1',
 			'pools': [
 				'pool1',
@@ -33,32 +33,21 @@ namespace StrongGrid.UnitTests.Resources
 			'assigned_at': 1482883200
 		}";
 
-		private const string MULTIPLE_IPADDRESSES_JSON = @"[
-			{
-				'ip': '192.168.1.1',
-				'pools': [
-					'pool1',
-					'pool2'
-				],
-				'whitelabeled': false,
-				'start_date': 1409616000,
-				'subusers': [
-					'tim@sendgrid.net'
-				],
-				'warmup': false,
-				'assigned_at': 1482883200
-			},
-			{
-				'ip': '208.115.214.22',
-				'pools': [],
-				'whitelabeled': true,
-				'rdns': 'o1.email.burgermail.com',
-				'start_date': 1409616000,
-				'subusers': [],
-				'warmup': false,
-				'assigned_at': 1482883200
-			}
-		]";
+		private const string SINGLE_UNASSIGNED_IPADDRESS_JSON = @"{
+			'ip': '208.115.214.22',
+			'pools': [],
+			'whitelabeled': true,
+			'rdns': 'o1.email.burgermail.com',
+			'start_date': 1409616000,
+			'subusers': [],
+			'warmup': false,
+			'assigned_at': 1482883200
+		}";
+
+		private const string MULTIPLE_IPADDRESSES_JSON = "[" +
+			SINGLE_ASSIGNED_IPADDRESS_JSON + "," +
+			SINGLE_UNASSIGNED_IPADDRESS_JSON +
+		"]";
 
 		#endregion
 
@@ -68,7 +57,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<IpAddress>(SINGLE_IPADDRESS_JSON);
+			var result = JsonConvert.DeserializeObject<IpAddress>(SINGLE_ASSIGNED_IPADDRESS_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -198,8 +187,12 @@ namespace StrongGrid.UnitTests.Resources
 		public async Task GetAssignedAsync()
 		{
 			// Arrange
+			var apiResponse = "[" +
+				SINGLE_ASSIGNED_IPADDRESS_JSON +
+			"]";
+
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "assigned")).Respond("application/json", MULTIPLE_IPADDRESSES_JSON);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "assigned")).Respond("application/json", apiResponse);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var ipAddresses = new IpAddresses(client);
@@ -211,7 +204,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
-			result.Length.ShouldBe(2);
+			result.Length.ShouldBe(1);
 		}
 
 		[Fact]
