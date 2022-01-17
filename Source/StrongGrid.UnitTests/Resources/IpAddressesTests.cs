@@ -44,7 +44,7 @@ namespace StrongGrid.UnitTests.Resources
 			""assigned_at"": 1482883200
 		}";
 
-		private const string MULTIPLE_IPADDRESSES_JSON = "[" +
+		internal const string MULTIPLE_IPADDRESSES_JSON = "[" +
 			SINGLE_ASSIGNED_IPADDRESS_JSON + "," +
 			SINGLE_UNASSIGNED_IPADDRESS_JSON +
 		"]";
