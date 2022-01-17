@@ -218,7 +218,7 @@ namespace StrongGrid
 		internal static async Task<T> AsObject<T>(this IRequest request, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonSerializerOptions options = null)
 		{
 			var response = await request.AsResponse().ConfigureAwait(false);
-			return await response.Content.AsObject<T>(propertyName, throwIfPropertyIsMissing, options).ConfigureAwait(false);
+			return await response.AsObject<T>(propertyName, throwIfPropertyIsMissing, options).ConfigureAwait(false);
 		}
 
 		/// <summary>Asynchronously retrieve the JSON encoded content and convert it to a 'PaginatedResponse' object.</summary>
@@ -258,7 +258,7 @@ namespace StrongGrid
 		internal static async Task<JsonDocument> AsRawJsonDocument(this IRequest request, string propertyName = null, bool throwIfPropertyIsMissing = true)
 		{
 			var response = await request.AsResponse().ConfigureAwait(false);
-			return await response.Content.AsRawJsonDocument(propertyName, throwIfPropertyIsMissing).ConfigureAwait(false);
+			return await response.AsRawJsonDocument(propertyName, throwIfPropertyIsMissing).ConfigureAwait(false);
 		}
 
 		/// <summary>Set the body content of the HTTP request.</summary>
