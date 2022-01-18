@@ -312,10 +312,10 @@ namespace StrongGrid
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="response">The response.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
-		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
+		/// <param name="options">Options to control behavior Converter during parsing.</param>
 		/// <returns>Returns the paginated response.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		internal static Task<PaginatedResponseWithLinks<T>> AsPaginatedResponseWithLinks<T>(this IResponse response, string propertyName = null, JsonConverter jsonConverter = null)
+		internal static Task<PaginatedResponseWithLinks<T>> AsPaginatedResponseWithLinks<T>(this IResponse response, string propertyName = null, JsonSerializerOptions options = null)
 		{
 			var link = response.Message.Headers.GetValue("Link");
 			if (string.IsNullOrEmpty(link))
@@ -325,20 +325,20 @@ namespace StrongGrid
 
 			var paginationLinks = PaginationLinksParser.Parse(link);
 
-			return response.Message.Content.AsPaginatedResponseWithLinks<T>(paginationLinks, propertyName, jsonConverter);
+			return response.Message.Content.AsPaginatedResponseWithLinks<T>(paginationLinks, propertyName, options);
 		}
 
 		/// <summary>Asynchronously retrieve the JSON encoded content and convert it to a 'AsPaginatedResponseWithLinks' object.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="request">The request.</param>
 		/// <param name="propertyName">The name of the JSON property (or null if not applicable) where the desired data is stored.</param>
-		/// <param name="jsonConverter">Converter that will be used during deserialization.</param>
+		/// <param name="options">Options to control behavior Converter during parsing.</param>
 		/// <returns>Returns the paginated response.</returns>
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
-		internal static async Task<PaginatedResponseWithLinks<T>> AsPaginatedResponseWithLinks<T>(this IRequest request, string propertyName = null, JsonConverter jsonConverter = null)
+		internal static async Task<PaginatedResponseWithLinks<T>> AsPaginatedResponseWithLinks<T>(this IRequest request, string propertyName = null, JsonSerializerOptions options = null)
 		{
 			var response = await request.AsResponse().ConfigureAwait(false);
-			return await response.AsPaginatedResponseWithLinks<T>(propertyName, jsonConverter).ConfigureAwait(false);
+			return await response.AsPaginatedResponseWithLinks<T>(propertyName, options).ConfigureAwait(false);
 		}
 
 		/// <summary>Set the body content of the HTTP request.</summary>
