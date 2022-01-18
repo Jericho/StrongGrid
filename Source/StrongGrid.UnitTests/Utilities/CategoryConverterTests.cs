@@ -1,8 +1,9 @@
-using Newtonsoft.Json;
 using Shouldly;
 using StrongGrid.Utilities;
 using System;
 using System.IO;
+using System.Text;
+using System.Text.Json;
 using Xunit;
 
 namespace StrongGrid.UnitTests.Utilities
@@ -10,94 +11,65 @@ namespace StrongGrid.UnitTests.Utilities
 	public class CategoryConverterTests
 	{
 		[Fact]
-		public void Properties()
-		{
-			// Act
-			var converter = new CategoryConverter();
-
-			// Assert
-			converter.CanRead.ShouldBeTrue();
-			converter.CanWrite.ShouldBeFalse();
-		}
-
-		[Fact]
-		public void CanConvert()
-		{
-			// Act
-			var converter = new CategoryConverter();
-
-			// Assert
-			converter.CanConvert(null).ShouldBeTrue();
-		}
-
-		[Fact]
 		public void Write()
 		{
 			// Arrange
-			var writer = (JsonWriter)null;
-			var value = (object)null;
-			var serializer = (JsonSerializer)null;
+			var value = new[] { "abc123" };
+			var ms = new MemoryStream();
+			var jsonWriter = new Utf8JsonWriter(ms);
+			var options = new JsonSerializerOptions();
 
 			var converter = new CategoryConverter();
 
 			// Act
-			Should.Throw<NotImplementedException>(() => converter.WriteJson(writer, value, serializer));
+			Should.Throw<NotImplementedException>(() => converter.Write(jsonWriter, value, options));
 		}
 
 		[Fact]
 		public void Read_single()
 		{
 			// Arrange
-			var json = "'category1'";
-
-			var textReader = new StringReader(json);
-			var jsonReader = new JsonTextReader(textReader);
+			var json = "\"category1\"";
+			var jsonUtf8 = (ReadOnlySpan<byte>)Encoding.UTF8.GetBytes(json);
+			var jsonReader = new Utf8JsonReader(jsonUtf8);
 			var objectType = (Type)null;
-			var existingValue = (object)null;
-			var serializer = new JsonSerializer();
+			var options = new JsonSerializerOptions();
 
 			var converter = new CategoryConverter();
 
 			// Act
 			jsonReader.Read();
-			var result = converter.ReadJson(jsonReader, objectType, existingValue, serializer);
+			var result = converter.Read(ref jsonReader, objectType, options);
 
 			// Assert
 			result.ShouldNotBeNull();
-			result.ShouldBeOfType<string[]>();
-
-			var resultAsArray = (string[])result;
-			resultAsArray.Length.ShouldBe(1);
-			resultAsArray[0].ShouldBe("category1");
+			result.Length.ShouldBe(1);
+			result[0].ShouldBe("category1");
 		}
 
 		[Fact]
 		public void Read_multiple()
 		{
 			// Arrange
-			var json = "['category1','category2','category3']";
+			var json = "[\"category1\",\"category2\",\"category3\"]";
 
-			var textReader = new StringReader(json);
-			var jsonReader = new JsonTextReader(textReader);
+			var jsonUtf8 = (ReadOnlySpan<byte>)Encoding.UTF8.GetBytes(json);
+			var jsonReader = new Utf8JsonReader(jsonUtf8);
 			var objectType = (Type)null;
-			var existingValue = (object)null;
-			var serializer = new JsonSerializer();
+			var options = new JsonSerializerOptions();
 
 			var converter = new CategoryConverter();
 
 			// Act
 			jsonReader.Read();
-			var result = converter.ReadJson(jsonReader, objectType, existingValue, serializer);
+			var result = converter.Read(ref jsonReader, objectType, options);
 
 			// Assert
 			result.ShouldNotBeNull();
-			result.ShouldBeOfType<string[]>();
-
-			var resultAsArray = (string[])result;
-			resultAsArray.Length.ShouldBe(3);
-			resultAsArray[0].ShouldBe("category1");
-			resultAsArray[1].ShouldBe("category2");
-			resultAsArray[2].ShouldBe("category3");
+			result.Length.ShouldBe(3);
+			result[0].ShouldBe("category1");
+			result[1].ShouldBe("category2");
+			result[2].ShouldBe("category3");
 		}
 	}
 }

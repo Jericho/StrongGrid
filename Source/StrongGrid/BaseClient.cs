@@ -5,7 +5,9 @@ using Pathoschild.Http.Client.Extensibility;
 using StrongGrid.Resources;
 using StrongGrid.Utilities;
 using System;
+using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Reflection;
 
 namespace StrongGrid
@@ -285,6 +287,11 @@ namespace StrongGrid
 				.SetRequestCoordinator(new SendGridRetryStrategy());
 
 			_fluentClient.Filters.Remove<DefaultErrorFilter>();
+
+			// Replace the built-in Json formatter
+			var defaultJsonFormatter = _fluentClient.Formatters.OfType<JsonMediaTypeFormatter>().Single();
+			_fluentClient.Formatters.Remove(defaultJsonFormatter);
+			_fluentClient.Formatters.Add(new JsonFormatter());
 
 			// Order is important: DiagnosticHandler must be first.
 			// Also, the list of filters must be kept in sync with the filters in Utils.GetFluentClient in the unit testing project.

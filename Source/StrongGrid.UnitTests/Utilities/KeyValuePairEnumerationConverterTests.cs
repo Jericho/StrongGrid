@@ -1,26 +1,16 @@
-using Newtonsoft.Json;
 using Shouldly;
 using StrongGrid.Utilities;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.Json;
 using Xunit;
 
 namespace StrongGrid.UnitTests.Utilities
 {
 	public class KeyValuePairEnumerationConverterTests
 	{
-		[Fact]
-		public void Properties()
-		{
-			// Act
-			var converter = new KeyValuePairEnumerationConverter();
-
-			// Assert
-			converter.CanRead.ShouldBeTrue();
-			converter.CanWrite.ShouldBeTrue();
-		}
-
 		[Fact]
 		public void CanConvert_true()
 		{
@@ -36,18 +26,20 @@ namespace StrongGrid.UnitTests.Utilities
 		public void Write_null()
 		{
 			// Arrange
-			var sb = new StringBuilder();
-			var sw = new StringWriter(sb);
-			var writer = new JsonTextWriter(sw);
-
-			var value = (object)null;
-			var serializer = new JsonSerializer();
+			var value = (KeyValuePair<string, string>[])null;
+			var ms = new MemoryStream();
+			var jsonWriter = new Utf8JsonWriter(ms);
+			var options = new JsonSerializerOptions();
 
 			var converter = new KeyValuePairEnumerationConverter();
 
 			// Act
-			converter.WriteJson(writer, value, serializer);
-			var result = sb.ToString();
+			converter.Write(jsonWriter, value, options);
+			jsonWriter.Flush();
+
+			ms.Position = 0;
+			var sr = new StreamReader(ms);
+			var result = sr.ReadToEnd();
 
 			// Assert
 			result.ShouldBeEmpty();
@@ -57,22 +49,24 @@ namespace StrongGrid.UnitTests.Utilities
 		public void Write()
 		{
 			// Arrange
-			var sb = new StringBuilder();
-			var sw = new StringWriter(sb);
-			var writer = new JsonTextWriter(sw);
-
 			var value = new[]
 			{
 				new KeyValuePair<string, string>("key1", "value1"),
 				new KeyValuePair<string, string>("key2", "value2")
 			};
-			var serializer = new JsonSerializer();
+			var ms = new MemoryStream();
+			var jsonWriter = new Utf8JsonWriter(ms);
+			var options = new JsonSerializerOptions();
 
 			var converter = new KeyValuePairEnumerationConverter();
 
 			// Act
-			converter.WriteJson(writer, value, serializer);
-			var result = sb.ToString();
+			converter.Write(jsonWriter, value, options);
+			jsonWriter.Flush();
+
+			ms.Position = 0;
+			var sr = new StreamReader(ms);
+			var result = sr.ReadToEnd();
 
 			// Assert
 			result.ShouldBe("{\"key1\":\"value1\",\"key2\":\"value2\"}");
@@ -83,18 +77,16 @@ namespace StrongGrid.UnitTests.Utilities
 		{
 			// Arrange
 			var json = "{ \"some_value\": \"QWERTY\", \"another_value\": \"ABC_123\" }";
-
-			var textReader = new StringReader(json);
-			var jsonReader = new JsonTextReader(textReader);
-			var objectType = typeof(KeyValuePair<string, string>[]);
-			var existingValue = (object)null;
-			var serializer = new JsonSerializer();
+			var jsonUtf8 = (ReadOnlySpan<byte>)Encoding.UTF8.GetBytes(json);
+			var jsonReader = new Utf8JsonReader(jsonUtf8);
+			var objectType = (Type)null;
+			var options = new JsonSerializerOptions();
 
 			var converter = new KeyValuePairEnumerationConverter();
 
 			// Act
 			jsonReader.Read();
-			var result = converter.ReadJson(jsonReader, objectType, existingValue, serializer);
+			var result = converter.Read(ref jsonReader, objectType, options);
 
 			// Assert
 			result.ShouldNotBeNull();

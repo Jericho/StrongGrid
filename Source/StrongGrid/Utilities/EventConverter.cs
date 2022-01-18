@@ -1,0 +1,129 @@
+using StrongGrid.Models;
+using StrongGrid.Models.Webhooks;
+using System;
+using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace StrongGrid.Utilities
+{
+	/// <summary>
+	/// Converts a JSON string received from a webhook into and array of <see cref="Event">events</see>.
+	/// </summary>
+	/// <seealso cref="JsonConverter" />
+	internal class EventConverter : JsonConverter<Event>
+	{
+		private static readonly string[] _knownProperties =
+		{
+			"asm_group_id",
+			"attempt",
+			"category",
+			"cert_err",
+			"email",
+			"event",
+			"ip",
+			"marketing_campaign_id",
+			"marketing_campaign_name",
+			"marketing_campaign_split_id",
+			"marketing_campaign_version",
+			"newsletter",
+			"pool",
+			"reason",
+			"response",
+			"send_at",
+			"sg_content_type",
+			"sg_event_id",
+			"sg_machine_open",
+			"sg_message_id",
+			"sg_user_id",
+			"smtp-id",
+			"status",
+			"template",
+			"timestamp",
+			"tls",
+			"type",
+			"url",
+			"url_offset",
+			"useragent"
+		};
+
+		public override bool CanConvert(Type type)
+		{
+			return type.IsAssignableFrom(typeof(Event));
+		}
+
+		public override Event Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			if (JsonDocument.TryParseValue(ref reader, out var doc))
+			{
+				if (doc.RootElement.TryGetProperty("event", out var type))
+				{
+					var typeAsString = type.GetString();
+					var eventType = typeAsString.ToEnum<EventType>();
+
+					var rootElement = doc.RootElement.GetRawText();
+
+					var webHookEvent = (Event)null;
+					switch (eventType)
+					{
+						case EventType.Bounce:
+							webHookEvent = JsonSerializer.Deserialize<BouncedEvent>(rootElement);
+							break;
+						case EventType.Click:
+							webHookEvent = JsonSerializer.Deserialize<ClickedEvent>(rootElement);
+							break;
+						case EventType.Deferred:
+							webHookEvent = JsonSerializer.Deserialize<DeferredEvent>(rootElement);
+							break;
+						case EventType.Delivered:
+							webHookEvent = JsonSerializer.Deserialize<DeliveredEvent>(rootElement);
+							break;
+						case EventType.Dropped:
+							webHookEvent = JsonSerializer.Deserialize<DroppedEvent>(rootElement);
+							break;
+						case EventType.GroupResubscribe:
+							webHookEvent = JsonSerializer.Deserialize<GroupResubscribeEvent>(rootElement);
+							break;
+						case EventType.GroupUnsubscribe:
+							webHookEvent = JsonSerializer.Deserialize<GroupUnsubscribeEvent>(rootElement);
+							break;
+						case EventType.Open:
+							webHookEvent = JsonSerializer.Deserialize<OpenedEvent>(rootElement);
+							break;
+						case EventType.Processed:
+							webHookEvent = JsonSerializer.Deserialize<ProcessedEvent>(rootElement);
+							break;
+						case EventType.SpamReport:
+							webHookEvent = JsonSerializer.Deserialize<SpamReportEvent>(rootElement);
+							break;
+						case EventType.Unsubscribe:
+							webHookEvent = JsonSerializer.Deserialize<UnsubscribeEvent>(rootElement);
+							break;
+						default:
+							throw new Exception($"{typeAsString} is an unknown event type");
+					}
+
+					var properties = doc.RootElement
+						.EnumerateObject()
+						.Where(property => !_knownProperties.Contains(property.Name));
+
+					foreach (var property in properties)
+					{
+						webHookEvent.UniqueArguments.Add(property.Name, property.Value.GetString());
+					}
+
+					return webHookEvent;
+				}
+
+				throw new JsonException("Failed to extract 'event' property, it might be missing?");
+			}
+
+			throw new JsonException("Failed to parse JsonDocument");
+		}
+
+		public override void Write(Utf8JsonWriter writer, Event value, JsonSerializerOptions options)
+		{
+			throw new NotImplementedException();
+		}
+	}
+}

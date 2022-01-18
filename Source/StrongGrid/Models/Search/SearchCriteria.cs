@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Linq;
-using System.Runtime.Serialization;
 
 namespace StrongGrid.Models.Search
 {
@@ -62,7 +61,7 @@ namespace StrongGrid.Models.Search
 			}
 			else if (value is Enum enumValue)
 			{
-				return $"\"{enumValue.GetAttributeOfType<EnumMemberAttribute>()?.Value ?? value.ToString()}\"";
+				return $"\"{enumValue.ToEnumString()}\"";
 			}
 			else if (value is IEnumerable values)
 			{
@@ -111,7 +110,7 @@ namespace StrongGrid.Models.Search
 		/// <returns>The string representation of the operator.</returns>
 		public virtual string ConvertOperatorToString()
 		{
-			return FilterOperator.GetAttributeOfType<EnumMemberAttribute>()?.Value ?? FilterOperator.ToString();
+			return FilterOperator.ToEnumString();
 		}
 
 		/// <summary>
@@ -140,7 +139,7 @@ namespace StrongGrid.Models.Search
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValue">The filter value.</param>
 		public SearchCriteria(TEnum filterField, SearchComparisonOperator filterOperator, object filterValue)
-			: base(filterField.GetAttributeOfType<EnumMemberAttribute>().Value, filterOperator, filterValue)
+			: base(filterField.ToEnumString(), filterOperator, filterValue)
 		{
 		}
 	}

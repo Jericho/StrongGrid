@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The ID.
 		/// </value>
-		[JsonProperty("pending_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("pending_id")]
 		public string Id { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The email.
 		/// </value>
-		[JsonProperty("email", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("email")]
 		public string Email { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The scopes.
 		/// </value>
-		[JsonProperty("scopes", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("scopes")]
 		public string[] Scopes { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The flag that indicates if a teammate has admin permissions.
 		/// </value>
-		[JsonProperty("is_admin", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("is_admin")]
 		public bool IsAdmin { get; set; }
 	}
 }

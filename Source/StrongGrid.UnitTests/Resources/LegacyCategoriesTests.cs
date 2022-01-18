@@ -12,14 +12,14 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "categories";
+		internal const string ENDPOINT = "categories";
 
-		private const string MULTIPLE_CATEGORIES_JSON = @"[
-			{ 'category': 'cat1' },
-			{ 'category': 'cat2' },
-			{ 'category': 'cat3' },
-			{ 'category': 'cat4' },
-			{ 'category': 'cat5' }
+		internal const string MULTIPLE_CATEGORIES_JSON = @"[
+			{ ""category"": ""cat1"" },
+			{ ""category"": ""cat2"" },
+			{ ""category"": ""cat3"" },
+			{ ""category"": ""cat4"" },
+			{ ""category"": ""cat5"" }
 		]";
 
 		#endregion

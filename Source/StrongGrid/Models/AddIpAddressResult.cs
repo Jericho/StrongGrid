@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -17,7 +17,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// An array of <see cref="IpAddress">IP Addresses</see>.
 		/// </value>
-		[JsonProperty("ips", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("ips")]
 		public IpAddress[] IpAddresses { get; set; }
 
 		/// <summary>
@@ -26,7 +26,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The number of IP addresses.
 		/// </value>
-		[JsonProperty("remaining_ips", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("remaining_ips")]
 		public int RemainingIpAddresses { get; set; }
 
 		/// <summary>
@@ -35,7 +35,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The value indicating whether or not the IPs are being warmed up.
 		/// </value>
-		[JsonProperty("warmup", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("warmup")]
 		public bool WarmingUp { get; set; }
 	}
 }

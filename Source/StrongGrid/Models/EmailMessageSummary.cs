@@ -1,7 +1,7 @@
-using Newtonsoft.Json;
 using StrongGrid.Models.EmailActivities;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -16,7 +16,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The 'from' address.
 		/// </value>
-		[JsonProperty("from_email", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("from_email")]
 		public string From { get; set; }
 
 		/// <summary>
@@ -25,7 +25,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The message id.
 		/// </value>
-		[JsonProperty("msg_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("msg_id")]
 		public string MessageId { get; set; }
 
 		/// <summary>
@@ -34,7 +34,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The subject.
 		/// </value>
-		[JsonProperty("subject", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("subject")]
 		public string Subject { get; set; }
 
 		/// <summary>
@@ -43,7 +43,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The 'to' address.
 		/// </value>
-		[JsonProperty("to_email", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("to_email")]
 		public string To { get; set; }
 
 		/// <summary>
@@ -52,7 +52,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The status.
 		/// </value>
-		[JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("status")]
 		public EmailActivityStatus Status { get; set; }
 
 		/// <summary>
@@ -61,7 +61,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The template identifier.
 		/// </value>
-		[JsonProperty("template_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("template_id")]
 		public string TemplateId { get; set; }
 
 		/// <summary>
@@ -70,7 +70,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The group identifier.
 		/// </value>
-		[JsonProperty("asm_group_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("asm_group_id")]
 		public string AsmGroupId { get; set; }
 
 		/// <summary>
@@ -79,7 +79,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The teammate.
 		/// </value>
-		[JsonProperty("teammate", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("teammate")]
 		public string Teammate { get; set; }
 
 		/// <summary>
@@ -88,7 +88,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The API key identifier.
 		/// </value>
-		[JsonProperty("api_key_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("api_key_id")]
 		public string ApiKeyId { get; set; }
 
 		/// <summary>
@@ -97,7 +97,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The IP address.
 		/// </value>
-		[JsonProperty("outbound_ip", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("outbound_ip")]
 		public string OutboundIpAddress { get; set; }
 
 		/// <summary>
@@ -106,7 +106,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The type of IP address.
 		/// </value>
-		[JsonProperty("outbound_ip_type", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("outbound_ip_type")]
 		public IpAddressType OutboundIpAddressType { get; set; }
 
 		/// <summary>
@@ -115,7 +115,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The marketing campaign identifier.
 		/// </value>
-		[JsonProperty("marketing_campaign_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("marketing_campaign_id")]
 		public string MarketingCampaignId { get; set; }
 
 		/// <summary>
@@ -124,7 +124,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The name of the marketing campaign.
 		/// </value>
-		[JsonProperty("marketing_campaign_name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("marketing_campaign_name")]
 		public string MarketingCampaignName { get; set; }
 
 		/// <summary>
@@ -133,7 +133,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The marketing campaign split identifier.
 		/// </value>
-		[JsonProperty("marketing_campaign_split_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("marketing_campaign_split_id")]
 		public string MarketingCampaignSplitId { get; set; }
 
 		/// <summary>
@@ -142,7 +142,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The marketing campaign version.
 		/// </value>
-		[JsonProperty("marketing_campaign_version", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("marketing_campaign_version")]
 		public string MarketingCampaignVersion { get; set; }
 
 		/// <summary>
@@ -151,7 +151,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The categories.
 		/// </value>
-		[JsonProperty("categories", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("categories")]
 		public string[] Categories { get; set; }
 
 		/// <summary>
@@ -160,7 +160,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The events.
 		/// </value>
-		[JsonProperty("events", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("events")]
 		[JsonConverter(typeof(EmailActivityEventConverter))]
 		public Event[] Events { get; set; }
 
@@ -170,7 +170,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The custom arguments.
 		/// </value>
-		[JsonProperty("unique_args", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("unique_args")]
 		[JsonConverter(typeof(KeyValuePairEnumerationConverter))]
 		public KeyValuePair<string, string>[] CustomArguments { get; set; }
 	}

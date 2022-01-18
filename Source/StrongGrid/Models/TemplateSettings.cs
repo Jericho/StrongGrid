@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("enabled")]
 		public bool Enabled { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The content of the HTML.
 		/// </value>
-		[JsonProperty("html_content", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("html_content")]
 		public string HtmlContent { get; set; }
 	}
 }

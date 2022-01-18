@@ -1,4 +1,3 @@
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -47,7 +46,7 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task<SenderIdentity> CreateAsync(string nickname, MailAddress from, MailAddress replyTo, string address1, string address2, string city, string state, string zip, string country, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = CreateJObject(nickname, from, replyTo, address1, address2, city, state, zip, country);
+			var data = ConvertToJson(nickname, from, replyTo, address1, address2, city, state, zip, country);
 
 			return _client
 				.PostAsync(_endpoint)
@@ -124,7 +123,7 @@ namespace StrongGrid.Resources.Legacy
 			string onBehalfOf = null,
 			CancellationToken cancellationToken = default)
 		{
-			var data = CreateJObject(nickname, from, replyTo, address1, address2, city, state, zip, country);
+			var data = ConvertToJson(nickname, from, replyTo, address1, address2, city, state, zip, country);
 
 			return _client
 				.PatchAsync($"{_endpoint}/{senderId}")
@@ -170,7 +169,7 @@ namespace StrongGrid.Resources.Legacy
 				.AsMessage();
 		}
 
-		private static JObject CreateJObject(
+		private static StrongGridJsonObject ConvertToJson(
 			Parameter<string> nickname,
 			Parameter<MailAddress> from,
 			Parameter<MailAddress> replyTo,
@@ -181,16 +180,16 @@ namespace StrongGrid.Resources.Legacy
 			Parameter<string> zip,
 			Parameter<string> country)
 		{
-			var result = new JObject();
-			result.AddPropertyIfValue("nickname", nickname);
-			result.AddPropertyIfValue("from", from);
-			result.AddPropertyIfValue("reply_to", replyTo);
-			result.AddPropertyIfValue("address", address1);
-			result.AddPropertyIfValue("address2", address2);
-			result.AddPropertyIfValue("city", city);
-			result.AddPropertyIfValue("state", state);
-			result.AddPropertyIfValue("zip", zip);
-			result.AddPropertyIfValue("country", country);
+			var result = new StrongGridJsonObject();
+			result.AddProperty("nickname", nickname);
+			result.AddProperty("from", from);
+			result.AddProperty("reply_to", replyTo);
+			result.AddProperty("address", address1);
+			result.AddProperty("address2", address2);
+			result.AddProperty("city", city);
+			result.AddProperty("state", state);
+			result.AddProperty("zip", zip);
+			result.AddProperty("country", country);
 			return result;
 		}
 	}

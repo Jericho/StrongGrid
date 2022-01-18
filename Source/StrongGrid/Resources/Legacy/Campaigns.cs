@@ -1,4 +1,3 @@
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -68,7 +67,7 @@ namespace StrongGrid.Resources.Legacy
 			Parameter<EditorType?> editor = default,
 			CancellationToken cancellationToken = default)
 		{
-			var data = CreateJObject(title, senderId, subject, htmlContent, textContent, listIds, segmentIds, categories, suppressionGroupId, customUnsubscribeUrl, ipPool, editor);
+			var data = ConvertToJson(title, senderId, subject, htmlContent, textContent, listIds, segmentIds, categories, suppressionGroupId, customUnsubscribeUrl, ipPool, editor);
 			return _client
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
@@ -163,7 +162,7 @@ namespace StrongGrid.Resources.Legacy
 			Parameter<EditorType?> editor = default,
 			CancellationToken cancellationToken = default)
 		{
-			var data = CreateJObject(title, senderId, subject, htmlContent, textContent, listIds, segmentIds, categories, suppressionGroupId, customUnsubscribeUrl, ipPool, editor);
+			var data = ConvertToJson(title, senderId, subject, htmlContent, textContent, listIds, segmentIds, categories, suppressionGroupId, customUnsubscribeUrl, ipPool, editor);
 			return _client
 				.PatchAsync($"{_endpoint}/{campaignId}")
 				.WithJsonBody(data)
@@ -198,10 +197,9 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task ScheduleAsync(long campaignId, DateTime sendOn, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "send_at", sendOn.ToUnixTime() }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("send_at", sendOn.ToUnixTime());
+
 			return _client
 				.PostAsync($"{_endpoint}/{campaignId}/schedules")
 				.WithJsonBody(data)
@@ -220,10 +218,9 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task RescheduleAsync(long campaignId, DateTime sendOn, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "send_at", sendOn.ToUnixTime() }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("send_at", sendOn.ToUnixTime());
+
 			return _client
 				.PatchAsync($"{_endpoint}/{campaignId}/schedules")
 				.WithJsonBody(data)
@@ -283,9 +280,9 @@ namespace StrongGrid.Resources.Legacy
 			emailAddresses = emailAddresses ?? Enumerable.Empty<string>();
 			if (!emailAddresses.Any()) throw new ArgumentException("You must specify at least one email address");
 
-			var data = new JObject();
-			if (emailAddresses.Count() == 1) data.AddPropertyIfValue("to", emailAddresses.First());
-			else data.AddPropertyIfValue("to", emailAddresses);
+			var data = new StrongGridJsonObject();
+			if (emailAddresses.Count() == 1) data.AddProperty("to", emailAddresses.First());
+			else data.AddProperty("to", emailAddresses);
 
 			return _client
 				.PostAsync($"{_endpoint}/{campaignId}/schedules/test")
@@ -294,21 +291,21 @@ namespace StrongGrid.Resources.Legacy
 				.AsMessage();
 		}
 
-		private static JObject CreateJObject(Parameter<string> title, Parameter<long?> senderId, Parameter<string> subject, Parameter<string> htmlContent, Parameter<string> textContent, Parameter<IEnumerable<long>> listIds, Parameter<IEnumerable<long>> segmentIds, Parameter<IEnumerable<string>> categories, Parameter<long?> suppressionGroupId, Parameter<string> customUnsubscribeUrl, Parameter<string> ipPool, Parameter<EditorType?> editor)
+		private static StrongGridJsonObject ConvertToJson(Parameter<string> title, Parameter<long?> senderId, Parameter<string> subject, Parameter<string> htmlContent, Parameter<string> textContent, Parameter<IEnumerable<long>> listIds, Parameter<IEnumerable<long>> segmentIds, Parameter<IEnumerable<string>> categories, Parameter<long?> suppressionGroupId, Parameter<string> customUnsubscribeUrl, Parameter<string> ipPool, Parameter<EditorType?> editor)
 		{
-			var result = new JObject();
-			result.AddPropertyIfValue("title", title);
-			result.AddPropertyIfValue("subject", subject);
-			result.AddPropertyIfValue("sender_id", senderId);
-			result.AddPropertyIfValue("html_content", htmlContent);
-			result.AddPropertyIfValue("plain_content", textContent);
-			result.AddPropertyIfValue("list_ids", listIds);
-			result.AddPropertyIfValue("segment_ids", segmentIds);
-			result.AddPropertyIfValue("categories", categories);
-			result.AddPropertyIfValue("suppression_group_id", suppressionGroupId);
-			result.AddPropertyIfValue("custom_unsubscribe_url", customUnsubscribeUrl);
-			result.AddPropertyIfValue("ip_pool", ipPool);
-			result.AddPropertyIfEnumValue("editor", editor);
+			var result = new StrongGridJsonObject();
+			result.AddProperty("title", title);
+			result.AddProperty("subject", subject);
+			result.AddProperty("sender_id", senderId);
+			result.AddProperty("html_content", htmlContent);
+			result.AddProperty("plain_content", textContent);
+			result.AddProperty("list_ids", listIds);
+			result.AddProperty("segment_ids", segmentIds);
+			result.AddProperty("categories", categories);
+			result.AddProperty("suppression_group_id", suppressionGroupId);
+			result.AddProperty("custom_unsubscribe_url", customUnsubscribeUrl);
+			result.AddProperty("ip_pool", ipPool);
+			result.AddProperty("editor", editor);
 			return result;
 		}
 	}

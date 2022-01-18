@@ -1,4 +1,3 @@
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -78,7 +77,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Alert> CreateAsync(AlertType type, Parameter<string> emailTo = default, Parameter<Frequency?> frequency = default, Parameter<int?> percentage = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = CreateJObject(type, emailTo, frequency, percentage);
+			var data = ConvertToJson(type, emailTo, frequency, percentage);
 			return _client
 				.PostAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
@@ -119,7 +118,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Alert> UpdateAsync(long alertId, Parameter<AlertType?> type = default, Parameter<string> emailTo = default, Parameter<Frequency?> frequency = default, Parameter<int?> percentage = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = CreateJObject(type, emailTo, frequency, percentage);
+			var data = ConvertToJson(type, emailTo, frequency, percentage);
 			return _client
 				.PatchAsync($"{_endpoint}/{alertId}")
 				.OnBehalfOf(onBehalfOf)
@@ -128,13 +127,13 @@ namespace StrongGrid.Resources
 				.AsObject<Alert>();
 		}
 
-		private static JObject CreateJObject(Parameter<AlertType?> type, Parameter<string> emailTo, Parameter<Frequency?> frequency, Parameter<int?> percentage)
+		private static StrongGridJsonObject ConvertToJson(Parameter<AlertType?> type, Parameter<string> emailTo, Parameter<Frequency?> frequency, Parameter<int?> percentage)
 		{
-			var result = new JObject();
-			result.AddPropertyIfEnumValue("type", type);
-			result.AddPropertyIfValue("email_to", emailTo);
-			result.AddPropertyIfEnumValue("frequency", frequency);
-			result.AddPropertyIfValue("percentage", percentage);
+			var result = new StrongGridJsonObject();
+			result.AddProperty("type", type);
+			result.AddProperty("email_to", emailTo);
+			result.AddProperty("frequency", frequency);
+			result.AddProperty("percentage", percentage);
 			return result;
 		}
 	}

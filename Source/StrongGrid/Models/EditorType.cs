@@ -1,15 +1,21 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using StrongGrid.Utilities;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
 	/// <summary>
 	/// Enumeration to indicate the editor used in the UI.
 	/// </summary>
-	[JsonConverter(typeof(StringEnumConverter))]
+	[JsonConverter(typeof(StringEnumConverter<EditorType>))]
 	public enum EditorType
 	{
+		/// <summary>
+		/// Unspecified.
+		/// </summary>
+		[EnumMember(Value = null)]
+		Unspecified,
+
 		/// <summary>
 		/// This editor allows you to edit the HTML source.
 		/// </summary>

@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The requested count.
 		/// </value>
-		[JsonProperty("requested_count", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("requested_count")]
 		public long RequestedCount { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The created count.
 		/// </value>
-		[JsonProperty("created_count", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("created_count")]
 		public long CreatedCount { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The updated count.
 		/// </value>
-		[JsonProperty("updated_count", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("updated_count")]
 		public long UpdatedCount { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The deleted count.
 		/// </value>
-		[JsonProperty("deleted_count", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("deleted_count")]
 		public long DeletedCount { get; set; }
 
 		/// <summary>
@@ -49,7 +49,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The error count.
 		/// </value>
-		[JsonProperty("errored_count", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("errored_count")]
 		public long ErroredCount { get; set; }
 
 		/// <summary>
@@ -58,7 +58,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The error file URL.
 		/// </value>
-		[JsonProperty("errors_url", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("errors_url")]
 		public string ErrorsUrl { get; set; }
 	}
 }

@@ -1,4 +1,3 @@
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -92,17 +91,15 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<AuthenticatedDomain> CreateDomainAsync(string domain, string subdomain = null, string username = null, IEnumerable<string> ips = null, bool automaticSecurity = false, bool customSpf = false, bool isDefault = false, string customDkimSelector = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "domain", domain }
-			};
-			data.AddPropertyIfValue("subdomain", subdomain);
-			data.AddPropertyIfValue("username", username);
-			data.AddPropertyIfValue("ips", ips);
-			data.AddPropertyIfValue("custom_spf", customSpf);
-			data.AddPropertyIfValue("default", isDefault);
-			data.AddPropertyIfValue("automatic_security", automaticSecurity);
-			data.AddPropertyIfValue("custom_dkim_selector", customDkimSelector);
+			var data = new StrongGridJsonObject();
+			data.AddProperty("domain", domain);
+			data.AddProperty("subdomain", subdomain);
+			data.AddProperty("username", username);
+			data.AddProperty("ips", ips);
+			data.AddProperty("custom_spf", customSpf);
+			data.AddProperty("default", isDefault);
+			data.AddProperty("automatic_security", automaticSecurity);
+			data.AddProperty("custom_dkim_selector", customDkimSelector);
 
 			return _client
 				.PostAsync($"{_endpoint}/domains")
@@ -125,9 +122,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<AuthenticatedDomain> UpdateDomainAsync(long domainId, Parameter<bool> isDefault = default, Parameter<bool> customSpf = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject();
-			data.AddPropertyIfValue("custom_spf", customSpf);
-			data.AddPropertyIfValue("default", isDefault);
+			var data = new StrongGridJsonObject();
+			data.AddProperty("custom_spf", customSpf);
+			data.AddProperty("default", isDefault);
 
 			return _client
 				.PatchAsync($"{_endpoint}/domains/{domainId}")
@@ -167,10 +164,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<AuthenticatedDomain> AddIpAddressToDomainAsync(long domainId, string ipAddress, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "ip", ipAddress }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("ip", ipAddress);
+
 			return _client
 				.PostAsync($"{_endpoint}/domains/{domainId}/ips")
 				.OnBehalfOf(onBehalfOf)
@@ -272,10 +268,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<AuthenticatedDomain> AssociateDomainAsync(long domainId, string username = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "username", username }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("username", username);
+
 			return _client
 				.PostAsync($"{_endpoint}/domains/{domainId}/subuser")
 				.OnBehalfOf(onBehalfOf)
@@ -341,12 +336,11 @@ namespace StrongGrid.Resources
 		/// </remarks>
 		public Task<ReverseDns> SetupReverseDnsAsync(string ipAddress, string domain, string subdomain, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "ip", ipAddress },
-				{ "domain", domain },
-				{ "subdomain", subdomain }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("ip", ipAddress);
+			data.AddProperty("domain", domain);
+			data.AddProperty("subdomain", subdomain);
+
 			return _client
 				.PostAsync($"{_endpoint}/ips")
 				.OnBehalfOf(onBehalfOf)
@@ -450,12 +444,11 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<BrandedLink> CreateLinkAsync(string domain, string subdomain, bool isDefault, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "default", isDefault },
-				{ "domain", domain },
-				{ "subdomain", subdomain }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("default", isDefault);
+			data.AddProperty("domain", domain);
+			data.AddProperty("subdomain", subdomain);
+
 			return _client
 				.PostAsync($"{_endpoint}/links")
 				.OnBehalfOf(onBehalfOf)
@@ -476,10 +469,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<BrandedLink> UpdateLinkAsync(long linkId, bool isDefault, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "default", isDefault }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("default", isDefault);
+
 			return _client
 				.PatchAsync($"{_endpoint}/links/{linkId}")
 				.OnBehalfOf(onBehalfOf)
@@ -599,10 +591,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<BrandedLink> AssociateLinkAsync(long linkId, string username = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "username", username }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("username", username);
+
 			return _client
 				.PostAsync($"{_endpoint}/links/{linkId}/subuser")
 				.OnBehalfOf(onBehalfOf)

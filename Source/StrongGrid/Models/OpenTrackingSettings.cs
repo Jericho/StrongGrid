@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -14,7 +14,7 @@ namespace StrongGrid.Models
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("enable", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("enable")]
 		public bool Enabled { get; set; }
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The substitution tag.
 		/// </value>
-		[JsonProperty("substitution_tag", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("substitution_tag")]
 		public string SubstitutionTag { get; set; }
 	}
 }

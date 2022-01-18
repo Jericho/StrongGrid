@@ -1,10 +1,10 @@
-using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Resources;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -15,20 +15,20 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "suppression/blocks";
+		internal const string ENDPOINT = "suppression/blocks";
 
-		private const string SINGLE_BLOCK_JSON = @"{
-			'created': 1443651154,
-			'email': 'user1@example.com',
-			'reason': 'error dialing remote address: dial tcp 10.57.152.165:25: no route to host',
-			'status': '4.0.0'
+		internal const string SINGLE_BLOCK_JSON = @"{
+			""created"": 1443651154,
+			""email"": ""user1@example.com"",
+			""reason"": ""error dialing remote address: dial tcp 10.57.152.165:25: no route to host"",
+			""status"": ""4.0.0""
 		}";
-		private const string MULTIPLE_BLOCKS_JSON = @"[
+		internal const string MULTIPLE_BLOCKS_JSON = @"[
 			{
-				'created': 1443651154,
-				'email': 'user1@example.com',
-				'reason': 'error dialing remote address: dial tcp 10.57.152.165:25: no route to host',
-				'status': '4.0.0'
+				""created"": 1443651154,
+				""email"": ""user1@example.com"",
+				""reason"": ""error dialing remote address: dial tcp 10.57.152.165:25: no route to host"",
+				""status"": ""4.0.0""
 			}
 		]";
 
@@ -40,7 +40,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<Block>(SINGLE_BLOCK_JSON);
+			var result = JsonSerializer.Deserialize<Block>(SINGLE_BLOCK_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();

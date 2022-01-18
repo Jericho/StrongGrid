@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.EmailActivities
 {
@@ -14,7 +14,7 @@ namespace StrongGrid.Models.EmailActivities
 		/// <value>
 		/// The reason.
 		/// </value>
-		[JsonProperty("bounce_type", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("bounce_type")]
 		public BounceType Type { get; set; }
 	}
 }

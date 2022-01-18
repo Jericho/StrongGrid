@@ -1,4 +1,3 @@
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -102,11 +101,11 @@ namespace StrongGrid.Resources
 				SpamReport = spamReport,
 				Unsubscribe = unsubscribe
 			};
-			var data = JObject.FromObject(eventWebhookSettings);
+
 			return _client
 				.PatchAsync($"{_eventWebhookEndpoint}/settings")
 				.OnBehalfOf(onBehalfOf)
-				.WithJsonBody(data)
+				.WithJsonBody(eventWebhookSettings)
 				.WithCancellationToken(cancellationToken)
 				.AsObject<EventWebhookSettings>();
 		}
@@ -122,10 +121,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task SendEventTestAsync(string url, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "url", url }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("url", url);
 
 			return _client
 				.PostAsync($"{_eventWebhookEndpoint}/test")
@@ -149,7 +146,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<InboundParseWebhookSettings> CreateInboundParseWebhookSettingsAsync(string hostname, string url, bool spamCheck = false, bool sendRaw = false, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = CreateJObject(hostname, url, spamCheck, sendRaw);
+			var data = ConvertToJson(hostname, url, spamCheck, sendRaw);
 			return _client
 				.PostAsync($"{_inboundParseWebhookEndpoint}/settings")
 				.OnBehalfOf(onBehalfOf)
@@ -207,7 +204,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task UpdateInboundParseWebhookSettingsAsync(string hostname, Parameter<string> url = default, Parameter<bool> spamCheck = default, Parameter<bool> sendRaw = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = CreateJObject(hostname, url, spamCheck, sendRaw);
+			var data = ConvertToJson(hostname, url, spamCheck, sendRaw);
 			return _client
 				.PatchAsync($"{_inboundParseWebhookEndpoint}/settings/{hostname}")
 				.OnBehalfOf(onBehalfOf)
@@ -249,15 +246,13 @@ namespace StrongGrid.Resources
 				.AsObject<string>("public_key");
 		}
 
-		private static JObject CreateJObject(string hostname, Parameter<string> url, Parameter<bool> spamCheck, Parameter<bool> sendRaw)
+		private static StrongGridJsonObject ConvertToJson(string hostname, Parameter<string> url, Parameter<bool> spamCheck, Parameter<bool> sendRaw)
 		{
-			var result = new JObject
-			{
-				{ "hostname", hostname }
-			};
-			result.AddPropertyIfValue("url", url);
-			result.AddPropertyIfValue("spam_check", spamCheck);
-			result.AddPropertyIfValue("send_raw", sendRaw);
+			var result = new StrongGridJsonObject();
+			result.AddProperty("hostname", hostname);
+			result.AddProperty("url", url);
+			result.AddProperty("spam_check", spamCheck);
+			result.AddProperty("send_raw", sendRaw);
 			return result;
 		}
 	}

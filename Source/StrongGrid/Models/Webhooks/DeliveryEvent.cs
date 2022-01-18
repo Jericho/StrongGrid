@@ -1,5 +1,5 @@
-using Newtonsoft.Json;
 using StrongGrid.Utilities;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.Webhooks
 {
@@ -15,7 +15,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The SMTP identifier.
 		/// </value>
-		[JsonProperty("smtp-id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("smtp-id")]
 		public string SmtpId { get; set; }
 
 		/// <summary>
@@ -24,7 +24,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The categories.
 		/// </value>
-		[JsonProperty("category", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("category")]
 		[JsonConverter(typeof(CategoryConverter))]
 		public string[] Categories { get; set; }
 
@@ -37,7 +37,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The asm group identifier.
 		/// </value>
-		[JsonProperty("asm_group_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("asm_group_id")]
 		public long? AsmGroupId { get; set; }
 	}
 }

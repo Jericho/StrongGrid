@@ -1,7 +1,6 @@
-using Newtonsoft.Json;
-using StrongGrid.Utilities;
 using System;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -15,7 +14,7 @@ namespace StrongGrid.Models
 		private string _selfToken;
 		private string _nextToken;
 
-		[JsonProperty("prev", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("prev")]
 		public string PrevUrl
 		{
 			get
@@ -30,7 +29,7 @@ namespace StrongGrid.Models
 			}
 		}
 
-		[JsonProperty("self", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("self")]
 		public string SelfUrl
 		{
 			get
@@ -45,7 +44,7 @@ namespace StrongGrid.Models
 			}
 		}
 
-		[JsonProperty("next", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("next")]
 		public string NextUrl
 		{
 			get
@@ -60,7 +59,7 @@ namespace StrongGrid.Models
 			}
 		}
 
-		[JsonProperty("count", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("count")]
 		public long Count { get; set; }
 
 		public string PrevToken => _prevToken;

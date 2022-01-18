@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		///   <c>true</c> if [require TLS]; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("require_tls", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("require_tls")]
 		public bool RequireTls { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// <c>true</c> if a valid certificate is required; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("require_valid_cert", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("require_valid_cert")]
 		public bool RequireValidCertificate { get; set; }
 	}
 }

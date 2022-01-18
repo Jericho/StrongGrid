@@ -1,8 +1,8 @@
-using Newtonsoft.Json;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -39,7 +39,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The address line 1.
 		/// </value>
-		[JsonProperty("address_line_1", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("address_line_1")]
 		public string AddressLine1 { get; set; }
 
 		/// <summary>
@@ -48,7 +48,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The address line 2.
 		/// </value>
-		[JsonProperty("address_line_2", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("address_line_2")]
 		public string AddressLine2 { get; set; }
 
 		/// <summary>
@@ -57,7 +57,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The additional emails associated with the contact.
 		/// </value>
-		[JsonProperty("alternate_emails", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("alternate_emails")]
 
 		public string[] AlternateEmails { get; set; }
 
@@ -67,7 +67,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The city.
 		/// </value>
-		[JsonProperty("city", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("city")]
 		public string City { get; set; }
 
 		/// <summary>
@@ -76,7 +76,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The country.
 		/// </value>
-		[JsonProperty("country", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("country")]
 		public string Country { get; set; }
 
 		/// <summary>
@@ -85,7 +85,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The email.
 		/// </value>
-		[JsonProperty("email", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("email")]
 		public string Email { get; set; }
 
 		/// <summary>
@@ -94,7 +94,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The first name.
 		/// </value>
-		[JsonProperty("first_name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("first_name")]
 		public string FirstName { get; set; }
 
 		/// <summary>
@@ -103,7 +103,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("id")]
 		public string Id { get; set; }
 
 		/// <summary>
@@ -112,7 +112,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The last name.
 		/// </value>
-		[JsonProperty("last_name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("last_name")]
 		public string LastName { get; set; }
 
 		/// <summary>
@@ -121,7 +121,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The postal code.
 		/// </value>
-		[JsonProperty("postal_code", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("postal_code")]
 		public string PostalCode { get; set; }
 
 		/// <summary>
@@ -130,7 +130,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The state or province.
 		/// </value>
-		[JsonProperty("state_province_region", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("state_province_region")]
 		public string StateOrProvice { get; set; }
 
 		/// <summary>
@@ -139,7 +139,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The lists associated with this contact.
 		/// </value>
-		[JsonProperty("list_ids", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("list_ids")]
 		public string[] Lists { get; set; }
 
 		/// <summary>
@@ -148,7 +148,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The created on.
 		/// </value>
-		[JsonProperty("created_at", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("created_at")]
 		public DateTime CreatedOn { get; set; }
 
 		/// <summary>
@@ -157,7 +157,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The modified on.
 		/// </value>
-		[JsonProperty("updated_at", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("updated_at")]
 		public DateTime ModifiedOn { get; set; }
 
 		/// <summary>
@@ -166,7 +166,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The custom fields.
 		/// </value>
-		[JsonProperty("custom_fields", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("custom_fields")]
 		[JsonConverter(typeof(CustomFieldsConverter))]
 		public Field[] CustomFields { get; set; }
 
@@ -176,7 +176,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The phone number.
 		/// </value>
-		[JsonProperty("phone_number", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("phone_number")]
 		public string PhoneNumber { get; set; }
 
 		/// <summary>
@@ -185,7 +185,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The whatsapp.
 		/// </value>
-		[JsonProperty("whatsapp", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("whatsapp")]
 		public string WhatsApp { get; set; }
 
 		/// <summary>
@@ -194,7 +194,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The line.
 		/// </value>
-		[JsonProperty("line", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("line")]
 		public string Line { get; set; }
 
 		/// <summary>
@@ -203,7 +203,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The facebook.
 		/// </value>
-		[JsonProperty("facebook", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("facebook")]
 		public string Facebook { get; set; }
 
 		/// <summary>
@@ -212,7 +212,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The unique name.
 		/// </value>
-		[JsonProperty("unique_name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("unique_name")]
 		public string UniqueName { get; set; }
 
 		/// <summary>
@@ -221,7 +221,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The last clicked on.
 		/// </value>
-		[JsonProperty("last_clicked", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("last_clicked")]
 		public DateTime? LastClickedOn { get; set; }
 
 		/// <summary>
@@ -230,7 +230,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The last emailed on.
 		/// </value>
-		[JsonProperty("last_emailed", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("last_emailed")]
 		public DateTime? LastEmailedOn { get; set; }
 
 		/// <summary>
@@ -239,7 +239,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The last opened on.
 		/// </value>
-		[JsonProperty("last_opened", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("last_opened")]
 		public DateTime? LastOpenedOn { get; set; }
 	}
 }

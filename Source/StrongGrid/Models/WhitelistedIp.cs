@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
 using StrongGrid.Utilities;
 using System;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -15,7 +15,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("id")]
 		public long Id { get; set; }
 
 		/// <summary>
@@ -24,7 +24,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The ip address.
 		/// </value>
-		[JsonProperty("ip", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("ip")]
 		public string IpAddress { get; set; }
 
 		/// <summary>
@@ -33,7 +33,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The created on.
 		/// </value>
-		[JsonProperty("created_at", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("created_at")]
 		[JsonConverter(typeof(EpochConverter))]
 		public DateTime CreatedOn { get; set; }
 
@@ -43,7 +43,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The modified on.
 		/// </value>
-		[JsonProperty("updated_at", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("updated_at")]
 		[JsonConverter(typeof(EpochConverter))]
 		public DateTime ModifiedOn { get; set; }
 	}

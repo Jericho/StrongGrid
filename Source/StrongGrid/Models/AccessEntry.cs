@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
 using StrongGrid.Utilities;
 using System;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -15,7 +15,7 @@ namespace StrongGrid.Models
 		/// <value>
 		///   <c>true</c> if access was granted; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("allowed", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("allowed")]
 		public bool Allowed { get; set; }
 
 		/// <summary>
@@ -24,7 +24,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The authorization method.
 		/// </value>
-		[JsonProperty("auth_method", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("auth_method")]
 		public string AuthorizationMethod { get; set; }
 
 		/// <summary>
@@ -33,7 +33,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The date.
 		/// </value>
-		[JsonProperty("first_at", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("first_at")]
 		[JsonConverter(typeof(EpochConverter))]
 		public DateTime FirstAccessOn { get; set; }
 
@@ -43,7 +43,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The ip address.
 		/// </value>
-		[JsonProperty("ip", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("ip")]
 		public string IpAddress { get; set; }
 
 		/// <summary>
@@ -52,7 +52,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The user name.
 		/// </value>
-		[JsonProperty("last_at", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("last_at")]
 		[JsonConverter(typeof(EpochConverter))]
 		public DateTime LatestAccessOn { get; set; }
 
@@ -62,7 +62,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The location.
 		/// </value>
-		[JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("location")]
 		public string Location { get; set; }
 	}
 }

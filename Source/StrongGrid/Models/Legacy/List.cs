@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.Legacy
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models.Legacy
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("id")]
 		public long Id { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models.Legacy
 		/// <value>
 		/// The name.
 		/// </value>
-		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("name")]
 		public string Name { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Models.Legacy
 		/// <value>
 		/// The recipient count.
 		/// </value>
-		[JsonProperty("recipient_count", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("recipient_count")]
 		public long RecipientCount { get; set; }
 	}
 }

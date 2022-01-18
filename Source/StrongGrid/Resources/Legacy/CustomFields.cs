@@ -1,5 +1,3 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -39,11 +37,10 @@ namespace StrongGrid.Resources.Legacy
 		/// <returns>The <see cref="Models.Legacy.CustomFieldMetadata">metadata</see> about the new field.</returns>
 		public Task<Models.Legacy.CustomFieldMetadata> CreateAsync(string name, FieldType type, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "name", name },
-				{ "type", JToken.Parse(JsonConvert.SerializeObject(type)).ToString() }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("name", name);
+			data.AddProperty("type", type.ToEnumString());
+
 			return _client
 				.PostAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)

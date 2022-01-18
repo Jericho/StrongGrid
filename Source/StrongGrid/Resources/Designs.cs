@@ -1,4 +1,3 @@
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -115,7 +114,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Design> DuplicateAsync(string id, string name = null, EditorType? editorType = null, CancellationToken cancellationToken = default)
 		{
-			var data = CreateJObject(name, editorType);
+			var data = ConvertToJson(name, editorType);
 			return _client
 				.PostAsync($"{_endpoint}/{id}")
 				.WithJsonBody(data)
@@ -135,7 +134,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Design> DuplicatePrebuiltAsync(string id, string name = null, EditorType? editorType = null, CancellationToken cancellationToken = default)
 		{
-			var data = CreateJObject(name, editorType);
+			var data = ConvertToJson(name, editorType);
 			return _client
 				.PostAsync($"{_endpoint}/pre-builts/{id}")
 				.WithJsonBody(data)
@@ -175,7 +174,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Design> CreateAsync(string name, string htmlContent, Parameter<string> plainContent = default, Parameter<bool> generatePlainContent = default, Parameter<string> subject = default, EditorType editorType = EditorType.Code, Parameter<string[]> categories = default, CancellationToken cancellationToken = default)
 		{
-			var data = CreateJObject(name, editorType, htmlContent, plainContent, generatePlainContent, subject, categories);
+			var data = ConvertToJson(name, editorType, htmlContent, plainContent, generatePlainContent, subject, categories);
 			return _client
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
@@ -199,7 +198,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Design> UpdateAsync(string id, Parameter<string> name = default, Parameter<string> htmlContent = default, Parameter<string> plainContent = default, Parameter<bool> generatePlainContent = default, Parameter<string> subject = default, Parameter<string[]> categories = default, CancellationToken cancellationToken = default)
 		{
-			var data = CreateJObject(name, default, htmlContent, plainContent, generatePlainContent, subject, categories);
+			var data = ConvertToJson(name, default, htmlContent, plainContent, generatePlainContent, subject, categories);
 			return _client
 				.PatchAsync($"{_endpoint}/{id}")
 				.WithJsonBody(data)
@@ -207,16 +206,16 @@ namespace StrongGrid.Resources
 				.AsObject<Design>();
 		}
 
-		private static JObject CreateJObject(string name, Parameter<EditorType?> editorType = default, Parameter<string> htmlContent = default, Parameter<string> plainContent = default, Parameter<bool> generatePlainContent = default, Parameter<string> subject = default, Parameter<string[]> categories = default)
+		private static StrongGridJsonObject ConvertToJson(string name, EditorType? editorType = null, Parameter<string> htmlContent = default, Parameter<string> plainContent = default, Parameter<bool> generatePlainContent = default, Parameter<string> subject = default, Parameter<string[]> categories = default)
 		{
-			var result = new JObject();
-			result.AddPropertyIfValue("name", name);
-			result.AddPropertyIfValue("editor", editorType);
-			result.AddPropertyIfValue("html_content", htmlContent);
-			result.AddPropertyIfValue("plain_content", plainContent);
-			result.AddPropertyIfValue("generate_plain_content", generatePlainContent);
-			result.AddPropertyIfValue("subject", subject);
-			result.AddPropertyIfValue("categories", categories);
+			var result = new StrongGridJsonObject();
+			result.AddProperty("name", name);
+			result.AddProperty("editor", editorType);
+			result.AddProperty("html_content", htmlContent);
+			result.AddProperty("plain_content", plainContent);
+			result.AddProperty("generate_plain_content", generatePlainContent);
+			result.AddProperty("subject", subject);
+			result.AddProperty("categories", categories);
 			return result;
 		}
 	}

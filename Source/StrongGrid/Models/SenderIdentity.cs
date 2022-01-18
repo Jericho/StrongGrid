@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
 using StrongGrid.Utilities;
 using System;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -15,7 +15,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("id")]
 		public long Id { get; set; }
 
 		/// <summary>
@@ -24,7 +24,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The name of the nick.
 		/// </value>
-		[JsonProperty("nickname", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("nickname")]
 		public string NickName { get; set; }
 
 		/// <summary>
@@ -33,7 +33,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// From.
 		/// </value>
-		[JsonProperty("from", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("from")]
 		public MailAddress From { get; set; }
 
 		/// <summary>
@@ -42,7 +42,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The reply to.
 		/// </value>
-		[JsonProperty("reply_to", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("reply_to")]
 		public MailAddress ReplyTo { get; set; }
 
 		/// <summary>
@@ -51,7 +51,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The address1.
 		/// </value>
-		[JsonProperty("address", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("address")]
 		public string Address1 { get; set; }
 
 		/// <summary>
@@ -60,7 +60,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The address2.
 		/// </value>
-		[JsonProperty("address_2", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("address_2")]
 		public string Address2 { get; set; }
 
 		/// <summary>
@@ -69,7 +69,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The city.
 		/// </value>
-		[JsonProperty("city", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("city")]
 		public string City { get; set; }
 
 		/// <summary>
@@ -78,7 +78,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The state.
 		/// </value>
-		[JsonProperty("state", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("state")]
 		public string State { get; set; }
 
 		/// <summary>
@@ -87,7 +87,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The zip.
 		/// </value>
-		[JsonProperty("zip", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("zip")]
 		public string Zip { get; set; }
 
 		/// <summary>
@@ -96,7 +96,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The country.
 		/// </value>
-		[JsonProperty("country", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("country")]
 		public string Country { get; set; }
 
 		/// <summary>
@@ -105,7 +105,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The verification.
 		/// </value>
-		[JsonProperty("verified", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("verified")]
 		public VerificationStatus Verification { get; set; }
 
 		/// <summary>
@@ -114,7 +114,7 @@ namespace StrongGrid.Models
 		/// <value>
 		///   <c>true</c> if locked; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("locked", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("locked")]
 		public bool Locked { get; set; }
 
 		/// <summary>
@@ -123,7 +123,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The created on.
 		/// </value>
-		[JsonProperty("created_at", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("created_at")]
 		[JsonConverter(typeof(EpochConverter))]
 		public DateTime CreatedOn { get; set; }
 
@@ -133,7 +133,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The modified on.
 		/// </value>
-		[JsonProperty("updated_at", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("updated_at")]
 		[JsonConverter(typeof(EpochConverter))]
 		public DateTime ModifiedOn { get; set; }
 	}

@@ -1,57 +1,42 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
 using System.Globalization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Utilities
 {
 	/// <summary>
 	/// Converts a <see cref="DateTime" /> expressed in a format acceptable to SendGrid to and from JSON.
 	/// </summary>
-	/// <seealso cref="Newtonsoft.Json.Converters.DateTimeConverterBase" />
-	internal class SendGridDateTimeConverter : DateTimeConverterBase
+	/// <seealso cref="JsonConverter" />
+	internal class SendGridDateTimeConverter : JsonConverter<DateTime>
 	{
 		private const string SENDGRID_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+		private const string SENDGRID_DATEONLY_FORMAT = "yyyy-MM-dd";
 
-		/// <summary>
-		/// Determines whether this instance can convert the specified object type.
-		/// </summary>
-		/// <param name="objectType">Type of the object.</param>
-		/// <returns>
-		/// <c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
-		/// </returns>
-		public override bool CanConvert(Type objectType)
+		public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			return objectType == typeof(DateTime);
+			var provider = new CultureInfo("en-US");
+			var style = DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal;
+			var dateAsString = reader.GetString();
+
+			if (DateTime.TryParseExact(dateAsString, SENDGRID_DATETIME_FORMAT, provider, style, out DateTime sendGridDateAndTime))
+			{
+				return sendGridDateAndTime;
+			}
+			else if (DateTime.TryParseExact(dateAsString, SENDGRID_DATEONLY_FORMAT, provider, style, out DateTime sendGridDateOnly))
+			{
+				return sendGridDateOnly;
+			}
+			else
+			{
+				throw new Exception("Unable to convert JSON value into a date.");
+			}
 		}
 
-		/// <summary>
-		/// Writes the JSON representation of the object.
-		/// </summary>
-		/// <param name="writer">The <see cref="T:Newtonsoft.Json.JsonWriter" /> to write to.</param>
-		/// <param name="value">The value.</param>
-		/// <param name="serializer">The calling serializer.</param>
-		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+		public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
 		{
-			if (value == null) return;
-			writer.WriteValue(((DateTime)value).ToString(SENDGRID_DATETIME_FORMAT));
-		}
-
-		/// <summary>
-		/// Reads the JSON representation of the object.
-		/// </summary>
-		/// <param name="reader">The <see cref="T:Newtonsoft.Json.JsonReader" /> to read from.</param>
-		/// <param name="objectType">Type of the object.</param>
-		/// <param name="existingValue">The existing value of object being read.</param>
-		/// <param name="serializer">The calling serializer.</param>
-		/// <returns>
-		/// The object value.
-		/// </returns>
-		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-		{
-			if (reader.Value == null) return null;
-			var date = DateTime.ParseExact(reader.Value.ToString(), SENDGRID_DATETIME_FORMAT, new CultureInfo("en-US"), DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
-			return date;
+			writer.WriteStringValue(value.ToString(SENDGRID_DATETIME_FORMAT));
 		}
 	}
 }

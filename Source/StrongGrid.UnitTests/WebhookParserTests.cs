@@ -1,12 +1,11 @@
-using Newtonsoft.Json;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Models.Webhooks;
-using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -18,164 +17,164 @@ namespace StrongGrid.UnitTests
 
 		private const string PROCESSED_JSON = @"
 		{
-			'email':'example@test.com',
-			'timestamp':1513299569,
-			'pool': {
-				'name':'new_MY_test',
-				'id':210
+			""email"":""example@test.com"",
+			""timestamp"":1513299569,
+			""pool"": {
+				""name"":""new_MY_test"",
+				""id"":210
 			},
-			'smtp-id':'<14c5d75ce93.dfd.64b469@ismtpd-555>',
-			'event':'processed',
-			'category':'cat facts',
-			'sg_event_id':'rbtnWrG1DVDGGGFHFyun0A==',
-			'sg_message_id':'14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.000000000000000000000',
-			'asm_group_id':123456
+			""smtp-id"":""<14c5d75ce93.dfd.64b469@ismtpd-555>"",
+			""event"":""processed"",
+			""category"":""cat facts"",
+			""sg_event_id"":""rbtnWrG1DVDGGGFHFyun0A=="",
+			""sg_message_id"":""14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.000000000000000000000"",
+			""asm_group_id"":123456
 		}";
 
 		private const string BOUNCED_JSON = @"
 		{
-			'email':'example@test.com',
-			'timestamp':1513299569,
-			'smtp-id':'<14c5d75ce93.dfd.64b469@ismtpd-555>',
-			'event':'bounce',
-			'category':'cat facts',
-			'sg_event_id':'6g4ZI7SA-xmRDv57GoPIPw==',
-			'sg_message_id':'14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0',
-			'reason':'500 unknown recipient',
-			'status':'5.0.0',
-			'type':'bounce'
+			""email"":""example@test.com"",
+			""timestamp"":1513299569,
+			""smtp-id"":""<14c5d75ce93.dfd.64b469@ismtpd-555>"",
+			""event"":""bounce"",
+			""category"":""cat facts"",
+			""sg_event_id"":""6g4ZI7SA-xmRDv57GoPIPw=="",
+			""sg_message_id"":""14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0"",
+			""reason"":""500 unknown recipient"",
+			""status"":""5.0.0"",
+			""type"":""bounce""
 		}";
 
 		private const string DEFERRED_JSON = @"
 		{
-			'email':'example@test.com',
-			'timestamp':1513299569,
-			'smtp-id':'<14c5d75ce93.dfd.64b469@ismtpd-555>',
-			'event':'deferred',
-			'category':'cat facts',
-			'sg_event_id':'t7LEShmowp86DTdUW8M-GQ==',
-			'sg_message_id':'14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0',
-			'response':'400 try again later',
-			'attempt':'5'
+			""email"":""example@test.com"",
+			""timestamp"":1513299569,
+			""smtp-id"":""<14c5d75ce93.dfd.64b469@ismtpd-555>"",
+			""event"":""deferred"",
+			""category"":""cat facts"",
+			""sg_event_id"":""t7LEShmowp86DTdUW8M-GQ=="",
+			""sg_message_id"":""14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0"",
+			""response"":""400 try again later"",
+			""attempt"":""5""
 		}";
 
 		private const string DROPPED_JSON = @"
 		{
-			'email':'example@test.com',
-			'timestamp':1513299569,
-			'smtp-id':'<14c5d75ce93.dfd.64b469@ismtpd-555>',
-			'event':'dropped',
-			'category':'cat facts',
-			'sg_event_id':'zmzJhfJgAfUSOW80yEbPyw==',
-			'sg_message_id':'14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0',
-			'reason':'Bounced Address',
-			'status':'5.0.0'
+			""email"":""example@test.com"",
+			""timestamp"":1513299569,
+			""smtp-id"":""<14c5d75ce93.dfd.64b469@ismtpd-555>"",
+			""event"":""dropped"",
+			""category"":""cat facts"",
+			""sg_event_id"":""zmzJhfJgAfUSOW80yEbPyw=="",
+			""sg_message_id"":""14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0"",
+			""reason"":""Bounced Address"",
+			""status"":""5.0.0""
 		}";
 
 		private const string BLOCKED_JSON = @"
 		{
-			'email':'example@test.com',
-			'timestamp':1513299569,
-			'smtp-id':'<14c5d75ce93.dfd.64b469@ismtpd-555>',
-			'event':'bounce',
-			'category':'cat facts',
-			'sg_event_id':'6g4ZI7SA-xmRDv57GoPIPw==',
-			'sg_message_id':'14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0',
-			'reason':'500 unknown recipient',
-			'status':'5.0.0',
-			'type':'blocked'
+			""email"":""example@test.com"",
+			""timestamp"":1513299569,
+			""smtp-id"":""<14c5d75ce93.dfd.64b469@ismtpd-555>"",
+			""event"":""bounce"",
+			""category"":""cat facts"",
+			""sg_event_id"":""6g4ZI7SA-xmRDv57GoPIPw=="",
+			""sg_message_id"":""14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0"",
+			""reason"":""500 unknown recipient"",
+			""status"":""5.0.0"",
+			""type"":""blocked""
 		}";
 
 		private const string DELIVERED_JSON = @"
 		{
-			'email':'example@test.com',
-			'timestamp':1513299569,
-			'smtp-id':'<14c5d75ce93.dfd.64b469@ismtpd-555>',
-			'event':'delivered',
-			'category':'cat facts',
-			'sg_event_id':'rWVYmVk90MjZJ9iohOBa3w==',
-			'sg_message_id':'14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0',
-			'response':'250 OK'
+			""email"":""example@test.com"",
+			""timestamp"":1513299569,
+			""smtp-id"":""<14c5d75ce93.dfd.64b469@ismtpd-555>"",
+			""event"":""delivered"",
+			""category"":""cat facts"",
+			""sg_event_id"":""rWVYmVk90MjZJ9iohOBa3w=="",
+			""sg_message_id"":""14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0"",
+			""response"":""250 OK""
 		}";
 
 		private const string CLICKED_JSON = @"
 		{
-			'email':'example@test.com',
-			'timestamp':1513299569,
-			'smtp-id':'<14c5d75ce93.dfd.64b469@ismtpd-555>',
-			'event':'click',
-			'category':'cat facts',
-			'sg_event_id':'kCAi1KttyQdEKHhdC-nuEA==',
-			'sg_message_id':'14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0',
-			'useragent':'Mozilla/4.0 (compatible; MSIE 6.1; Windows XP; .NET CLR 1.1.4322; .NET CLR 2.0.50727)',
-			'ip':'255.255.255.255',
-			'url':'http://www.sendgrid.com/'
+			""email"":""example@test.com"",
+			""timestamp"":1513299569,
+			""smtp-id"":""<14c5d75ce93.dfd.64b469@ismtpd-555>"",
+			""event"":""click"",
+			""category"":""cat facts"",
+			""sg_event_id"":""kCAi1KttyQdEKHhdC-nuEA=="",
+			""sg_message_id"":""14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0"",
+			""useragent"":""Mozilla/4.0 (compatible; MSIE 6.1; Windows XP; .NET CLR 1.1.4322; .NET CLR 2.0.50727)"",
+			""ip"":""255.255.255.255"",
+			""url"":""http://www.sendgrid.com/""
 		}";
 
 		private const string OPENED_JSON = @"
 		{
-			'email':'example@test.com',
-			'timestamp':1513299569,
-			'smtp-id':'<14c5d75ce93.dfd.64b469@ismtpd-555>',
-			'event':'open',
-			'sg_machine_open': false,
-			'category':'cat facts',
-			'sg_event_id':'FOTFFO0ecsBE-zxFXfs6WA==',
-			'sg_message_id':'14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0',
-			'useragent':'Mozilla/4.0 (compatible; MSIE 6.1; Windows XP; .NET CLR 1.1.4322; .NET CLR 2.0.50727)',
-			'ip':'255.255.255.255'
+			""email"":""example@test.com"",
+			""timestamp"":1513299569,
+			""smtp-id"":""<14c5d75ce93.dfd.64b469@ismtpd-555>"",
+			""event"":""open"",
+			""sg_machine_open"": false,
+			""category"":""cat facts"",
+			""sg_event_id"":""FOTFFO0ecsBE-zxFXfs6WA=="",
+			""sg_message_id"":""14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0"",
+			""useragent"":""Mozilla/4.0 (compatible; MSIE 6.1; Windows XP; .NET CLR 1.1.4322; .NET CLR 2.0.50727)"",
+			""ip"":""255.255.255.255""
 		}";
 
 		private const string SPAMREPORT_JSON = @"
 		{
-			'email':'example@test.com',
-			'timestamp':1513299569,
-			'smtp-id':'<14c5d75ce93.dfd.64b469@ismtpd-555>',
-			'event':'spamreport',
-			'category':'cat facts',
-			'sg_event_id':'37nvH5QBz858KGVYCM4uOA==',
-			'sg_message_id':'14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0'
+			""email"":""example@test.com"",
+			""timestamp"":1513299569,
+			""smtp-id"":""<14c5d75ce93.dfd.64b469@ismtpd-555>"",
+			""event"":""spamreport"",
+			""category"":""cat facts"",
+			""sg_event_id"":""37nvH5QBz858KGVYCM4uOA=="",
+			""sg_message_id"":""14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0""
 		}";
 
 		private const string UNSUBSCRIBE_JSON = @"
 		{
-			'email':'example@test.com',
-			'timestamp':1513299569,
-			'smtp-id':'<14c5d75ce93.dfd.64b469@ismtpd-555>',
-			'event':'unsubscribe',
-			'category':'cat facts',
-			'sg_event_id':'zz_BjPgU_5pS-J8vlfB1sg==',
-			'sg_message_id':'14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0'
+			""email"":""example@test.com"",
+			""timestamp"":1513299569,
+			""smtp-id"":""<14c5d75ce93.dfd.64b469@ismtpd-555>"",
+			""event"":""unsubscribe"",
+			""category"":""cat facts"",
+			""sg_event_id"":""zz_BjPgU_5pS-J8vlfB1sg=="",
+			""sg_message_id"":""14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0""
 		}";
 
 		private const string GROUPUNSUBSCRIBE_JSON = @"
 		{
-			'email':'example@test.com',
-			'timestamp':1513299569,
-			'smtp-id':'<14c5d75ce93.dfd.64b469@ismtpd-555>',
-			'event':'group_unsubscribe',
-			'category':'cat facts',
-			'sg_event_id':'ahSCB7xYcXFb-hEaawsPRw==',
-			'sg_message_id':'14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0',
-			'useragent':'Mozilla/4.0 (compatible; MSIE 6.1; Windows XP; .NET CLR 1.1.4322; .NET CLR 2.0.50727)',
-			'ip':'255.255.255.255',
-			'url':'http://www.sendgrid.com/',
-			'asm_group_id':10
+			""email"":""example@test.com"",
+			""timestamp"":1513299569,
+			""smtp-id"":""<14c5d75ce93.dfd.64b469@ismtpd-555>"",
+			""event"":""group_unsubscribe"",
+			""category"":""cat facts"",
+			""sg_event_id"":""ahSCB7xYcXFb-hEaawsPRw=="",
+			""sg_message_id"":""14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0"",
+			""useragent"":""Mozilla/4.0 (compatible; MSIE 6.1; Windows XP; .NET CLR 1.1.4322; .NET CLR 2.0.50727)"",
+			""ip"":""255.255.255.255"",
+			""url"":""http://www.sendgrid.com/"",
+			""asm_group_id"":10
 		}";
 
 		private const string GROUPRESUBSCRIBE_JSON = @"
 		{
-			'email':'example@test.com',
-			'timestamp':1513299569,
-			'smtp-id':'<14c5d75ce93.dfd.64b469@ismtpd-555>',
-			'event':'group_resubscribe',
-			'category':'cat facts',
-			'sg_event_id':'w_u0vJhLT-OFfprar5N93g==',
-			'sg_message_id':'14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0',
-			'useragent':'Mozilla/4.0 (compatible; MSIE 6.1; Windows XP; .NET CLR 1.1.4322; .NET CLR 2.0.50727)',
-			'ip':'255.255.255.255',
-			'url':'http://www.sendgrid.com/',
-			'asm_group_id':10
+			""email"":""example@test.com"",
+			""timestamp"":1513299569,
+			""smtp-id"":""<14c5d75ce93.dfd.64b469@ismtpd-555>"",
+			""event"":""group_resubscribe"",
+			""category"":""cat facts"",
+			""sg_event_id"":""w_u0vJhLT-OFfprar5N93g=="",
+			""sg_message_id"":""14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0"",
+			""useragent"":""Mozilla/4.0 (compatible; MSIE 6.1; Windows XP; .NET CLR 1.1.4322; .NET CLR 2.0.50727)"",
+			""ip"":""255.255.255.255"",
+			""url"":""http://www.sendgrid.com/"",
+			""asm_group_id"":10
 		}";
 
 		private const string INBOUND_EMAIL_WEBHOOK = @"--xYzZY
@@ -600,7 +599,7 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 
 			// Act
-			var result = (ProcessedEvent)JsonConvert.DeserializeObject<Event>(PROCESSED_JSON, new WebHookEventConverter());
+			var result = (ProcessedEvent)JsonSerializer.Deserialize<Event>(PROCESSED_JSON);
 
 			// Assert
 			result.AsmGroupId.ShouldBe(123456);
@@ -626,7 +625,7 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 
 			// Act
-			var result = (BouncedEvent)JsonConvert.DeserializeObject<Event>(BOUNCED_JSON, new WebHookEventConverter());
+			var result = (BouncedEvent)JsonSerializer.Deserialize<Event>(BOUNCED_JSON);
 
 			// Assert
 			result.Categories.Length.ShouldBe(1);
@@ -639,7 +638,7 @@ Content-Disposition: form-data; name=""attachments""
 			result.Reason.ShouldBe("500 unknown recipient");
 			result.SmtpId.ShouldBe("<14c5d75ce93.dfd.64b469@ismtpd-555>");
 			result.Status.ShouldBe("5.0.0");
-			result.Type.ShouldBe(StrongGrid.Models.Webhooks.BounceType.HardBounce);
+			result.Type.ShouldBe(StrongGrid.Models.BounceType.Bounce);
 			result.Timestamp.ToUnixTime().ShouldBe(1513299569);
 			result.UniqueArguments.ShouldNotBeNull();
 			result.UniqueArguments.Count.ShouldBe(0);
@@ -651,7 +650,7 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 
 			// Act
-			var result = (DeferredEvent)JsonConvert.DeserializeObject<Event>(DEFERRED_JSON, new WebHookEventConverter());
+			var result = (DeferredEvent)JsonSerializer.Deserialize<Event>(DEFERRED_JSON);
 
 			// Assert
 			result.AsmGroupId.ShouldBeNull();
@@ -675,7 +674,7 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 
 			// Act
-			var result = (DroppedEvent)JsonConvert.DeserializeObject<Event>(DROPPED_JSON, new WebHookEventConverter());
+			var result = (DroppedEvent)JsonSerializer.Deserialize<Event>(DROPPED_JSON);
 
 			// Assert
 			result.Categories.Length.ShouldBe(1);
@@ -698,7 +697,7 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 
 			// Act
-			var result = (DeliveredEvent)JsonConvert.DeserializeObject<Event>(DELIVERED_JSON, new WebHookEventConverter());
+			var result = (DeliveredEvent)JsonSerializer.Deserialize<Event>(DELIVERED_JSON);
 
 			// Assert
 			result.AsmGroupId.ShouldBeNull();
@@ -722,7 +721,7 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 
 			// Act
-			var result = (ClickedEvent)JsonConvert.DeserializeObject<Event>(CLICKED_JSON, new WebHookEventConverter());
+			var result = (ClickedEvent)JsonSerializer.Deserialize<Event>(CLICKED_JSON);
 
 			// Assert
 			result.Categories.Length.ShouldBe(1);
@@ -746,7 +745,7 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 
 			// Act
-			var result = (OpenedEvent)JsonConvert.DeserializeObject<Event>(OPENED_JSON, new WebHookEventConverter());
+			var result = (OpenedEvent)JsonSerializer.Deserialize<Event>(OPENED_JSON);
 
 			// Assert
 			result.Email.ShouldBe("example@test.com");
@@ -764,7 +763,7 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 
 			// Act
-			var result = (SpamReportEvent)JsonConvert.DeserializeObject<Event>(SPAMREPORT_JSON, new WebHookEventConverter());
+			var result = (SpamReportEvent)JsonSerializer.Deserialize<Event>(SPAMREPORT_JSON);
 
 			// Assert
 			result.Email.ShouldBe("example@test.com");
@@ -780,7 +779,7 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 
 			// Act
-			var result = (UnsubscribeEvent)JsonConvert.DeserializeObject<Event>(UNSUBSCRIBE_JSON, new WebHookEventConverter());
+			var result = (UnsubscribeEvent)JsonSerializer.Deserialize<Event>(UNSUBSCRIBE_JSON);
 
 			// Assert
 			result.Email.ShouldBe("example@test.com");
@@ -796,7 +795,7 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 
 			// Act
-			var result = (GroupUnsubscribeEvent)JsonConvert.DeserializeObject<Event>(GROUPUNSUBSCRIBE_JSON, new WebHookEventConverter());
+			var result = (GroupUnsubscribeEvent)JsonSerializer.Deserialize<Event>(GROUPUNSUBSCRIBE_JSON);
 
 			// Assert
 			result.Email.ShouldBe("example@test.com");
@@ -814,7 +813,7 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 
 			// Act
-			var result = (GroupResubscribeEvent)JsonConvert.DeserializeObject<Event>(GROUPRESUBSCRIBE_JSON, new WebHookEventConverter());
+			var result = (GroupResubscribeEvent)JsonSerializer.Deserialize<Event>(GROUPRESUBSCRIBE_JSON);
 
 			// Assert
 			result.Email.ShouldBe("example@test.com");
@@ -859,6 +858,7 @@ Content-Disposition: form-data; name=""attachments""
 				result.ShouldNotBeNull();
 				result.Length.ShouldBe(1);
 				result[0].GetType().ShouldBe(typeof(BouncedEvent));
+				result[0].EventType.ShouldBe(EventType.Bounce);
 			}
 		}
 
@@ -877,6 +877,7 @@ Content-Disposition: form-data; name=""attachments""
 				result.ShouldNotBeNull();
 				result.Length.ShouldBe(1);
 				result[0].GetType().ShouldBe(typeof(DeferredEvent));
+				result[0].EventType.ShouldBe(EventType.Deferred);
 			}
 		}
 
@@ -895,6 +896,7 @@ Content-Disposition: form-data; name=""attachments""
 				result.ShouldNotBeNull();
 				result.Length.ShouldBe(1);
 				result[0].GetType().ShouldBe(typeof(DroppedEvent));
+				result[0].EventType.ShouldBe(EventType.Dropped);
 			}
 		}
 
@@ -913,6 +915,7 @@ Content-Disposition: form-data; name=""attachments""
 				result.ShouldNotBeNull();
 				result.Length.ShouldBe(1);
 				result[0].GetType().ShouldBe(typeof(ClickedEvent));
+				result[0].EventType.ShouldBe(EventType.Click);
 			}
 		}
 
@@ -931,6 +934,7 @@ Content-Disposition: form-data; name=""attachments""
 				result.ShouldNotBeNull();
 				result.Length.ShouldBe(1);
 				result[0].GetType().ShouldBe(typeof(OpenedEvent));
+				result[0].EventType.ShouldBe(EventType.Open);
 			}
 		}
 
@@ -949,6 +953,7 @@ Content-Disposition: form-data; name=""attachments""
 				result.ShouldNotBeNull();
 				result.Length.ShouldBe(1);
 				result[0].GetType().ShouldBe(typeof(UnsubscribeEvent));
+				result[0].EventType.ShouldBe(EventType.Unsubscribe);
 			}
 		}
 
@@ -967,6 +972,7 @@ Content-Disposition: form-data; name=""attachments""
 				result.ShouldNotBeNull();
 				result.Length.ShouldBe(1);
 				result[0].GetType().ShouldBe(typeof(GroupUnsubscribeEvent));
+				result[0].EventType.ShouldBe(EventType.GroupUnsubscribe);
 			}
 		}
 
@@ -985,6 +991,7 @@ Content-Disposition: form-data; name=""attachments""
 				result.ShouldNotBeNull();
 				result.Length.ShouldBe(1);
 				result[0].GetType().ShouldBe(typeof(GroupResubscribeEvent));
+				result[0].EventType.ShouldBe(EventType.GroupResubscribe);
 			}
 		}
 

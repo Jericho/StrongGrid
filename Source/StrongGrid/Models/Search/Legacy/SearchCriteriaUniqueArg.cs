@@ -1,5 +1,3 @@
-using System.Runtime.Serialization;
-
 namespace StrongGrid.Models.Search.Legacy
 {
 	/// <summary>
@@ -59,7 +57,7 @@ namespace StrongGrid.Models.Search.Legacy
 		/// <returns>The string representation of the operator.</returns>
 		public virtual string ConvertOperatorToString()
 		{
-			return FilterOperator.GetAttributeOfType<EnumMemberAttribute>()?.Value ?? FilterOperator.ToString();
+			return FilterOperator.ToEnumString();
 		}
 
 		/// <summary>

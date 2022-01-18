@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("id")]
 		public long Id { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The scope.
 		/// </value>
-		[JsonProperty("scope_group_name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("scope_group_name")]
 		public string ScopeGroupName { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The user name.
 		/// </value>
-		[JsonProperty("username", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("username")]
 		public string Username { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The email.
 		/// </value>
-		[JsonProperty("email", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("email")]
 		public string Email { get; set; }
 
 		/// <summary>
@@ -49,7 +49,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The first name.
 		/// </value>
-		[JsonProperty("first_name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("first_name")]
 		public string FirstName { get; set; }
 
 		/// <summary>
@@ -58,7 +58,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The last name.
 		/// </value>
-		[JsonProperty("lastname", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("lastname")]
 		public string LastName { get; set; }
 	}
 }

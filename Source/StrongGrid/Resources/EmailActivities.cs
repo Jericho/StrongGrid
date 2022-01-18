@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -48,7 +47,7 @@ namespace StrongGrid.Resources
 			{
 				foreach (var criteria in filterConditions)
 				{
-					var logicalOperator = criteria.Key.GetAttributeOfType<EnumMemberAttribute>().Value;
+					var logicalOperator = criteria.Key.ToEnumString();
 					var values = criteria.Value.Select(criteriaValue => criteriaValue.ToString());
 					conditions.Add(string.Join($" {logicalOperator} ", values));
 				}

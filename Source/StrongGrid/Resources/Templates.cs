@@ -1,8 +1,7 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -41,11 +40,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Template> CreateAsync(string name, TemplateType type, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "name", name },
-				{ "generation", JToken.Parse(JsonConvert.SerializeObject(type)).ToString() }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("name", name);
+			data.AddProperty("generation", type.ToEnumString());
 
 			return _client
 				.PostAsync(_endpoint)
@@ -68,7 +65,7 @@ namespace StrongGrid.Resources
 		{
 			return _client
 				.GetAsync(_endpoint)
-				.WithArgument("generations", JToken.Parse(JsonConvert.SerializeObject(type)).ToString())
+				.WithArgument("generations", type.ToEnumString())
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsObject<Template[]>("templates");
@@ -104,10 +101,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Template> UpdateAsync(string templateId, string name, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "name", name }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("name", name);
+
 			return _client
 				.PatchAsync($"{_endpoint}/{templateId}")
 				.OnBehalfOf(onBehalfOf)
@@ -152,16 +148,14 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<TemplateVersion> CreateVersionAsync(string templateId, string name, string subject, string htmlContent, string textContent, bool isActive, Parameter<EditorType?> editorType = default, Parameter<object> testData = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "name", name },
-				{ "subject", subject },
-				{ "html_content", htmlContent },
-				{ "plain_content", textContent },
-				{ "active", isActive ? 1 : 0 }
-			};
-			data.AddPropertyIfEnumValue("editor", editorType);
-			data.AddPropertyIfValue("test_data", testData, value => JToken.Parse(JsonConvert.SerializeObject(value)).ToString());
+			var data = new StrongGridJsonObject();
+			data.AddProperty("name", name);
+			data.AddProperty("subject", subject);
+			data.AddProperty("html_content", htmlContent);
+			data.AddProperty("plain_content", textContent);
+			data.AddProperty("active", isActive ? 1 : 0);
+			data.AddProperty("editor", editorType);
+			data.AddProperty("test_data", JsonSerializer.Serialize(testData));
 
 			return _client
 				.PostAsync($"{_endpoint}/{templateId}/versions")
@@ -227,13 +221,13 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<TemplateVersion> UpdateVersionAsync(string templateId, string versionId, Parameter<string> name = default, Parameter<string> subject = default, Parameter<string> htmlContent = default, Parameter<string> textContent = default, Parameter<bool> isActive = default, Parameter<object> testData = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject();
-			data.AddPropertyIfValue("name", name);
-			data.AddPropertyIfValue("subject", subject);
-			data.AddPropertyIfValue("html_content", htmlContent);
-			data.AddPropertyIfValue("plain_content", textContent);
-			data.AddPropertyIfValue("active", isActive, value => JToken.FromObject(value ? 1 : 0));
-			data.AddPropertyIfValue("test_data", testData);
+			var data = new StrongGridJsonObject();
+			data.AddProperty("name", name);
+			data.AddProperty("subject", subject);
+			data.AddProperty("html_content", htmlContent);
+			data.AddProperty("plain_content", textContent);
+			data.AddProperty("active", isActive ? 1 : 0);
+			data.AddProperty("test_data", testData);
 
 			return _client
 				.PatchAsync($"{_endpoint}/{templateId}/versions/{versionId}")

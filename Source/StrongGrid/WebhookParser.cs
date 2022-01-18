@@ -1,6 +1,4 @@
 using HttpMultipartParser;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using StrongGrid.Models.Webhooks;
 using StrongGrid.Utilities;
 using System;
@@ -10,6 +8,7 @@ using System.Linq;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace StrongGrid
@@ -74,13 +73,7 @@ namespace StrongGrid
 		/// <returns>An array of <see cref="Event">events</see>.</returns>
 		public async Task<Event[]> ParseEventsWebhookAsync(Stream stream)
 		{
-			string requestBody;
-			using (var streamReader = new StreamReader(stream))
-			{
-				requestBody = await streamReader.ReadToEndAsync().ConfigureAwait(false);
-			}
-
-			var webHookEvents = ParseEventsWebhook(requestBody);
+			var webHookEvents = await JsonSerializer.DeserializeAsync<Event[]>(stream).ConfigureAwait(false);
 			return webHookEvents;
 		}
 
@@ -155,8 +148,8 @@ namespace StrongGrid
 		/// <returns>An array of <see cref="Event">events</see>.</returns>
 		public Event[] ParseEventsWebhook(string requestBody)
 		{
-			var webHookEvents = JsonConvert.DeserializeObject<List<Event>>(requestBody, new WebHookEventConverter());
-			return webHookEvents.ToArray();
+			var webHookEvents = JsonSerializer.Deserialize<Event[]>(requestBody);
+			return webHookEvents;
 		}
 
 		/// <summary>
@@ -184,13 +177,12 @@ namespace StrongGrid
 			var parser = await MultipartFormDataParser.ParseAsync(stream, Encoding.UTF8).ConfigureAwait(false);
 
 			// Convert the 'charset' from a string into array of KeyValuePair
-			var charsetsAsJObject = JObject.Parse(parser.GetParameterValue("charsets", "{}"));
-			var charsets = charsetsAsJObject
-				.Properties()
+			var charsetsJsonDoc = JsonDocument.Parse(parser.GetParameterValue("charsets", "{}"));
+			var charsets = charsetsJsonDoc.RootElement.EnumerateObject()
 				.Select(prop =>
 				{
 					var key = prop.Name;
-					var encodingName = prop.Value.ToString();
+					var encodingName = prop.Value.GetString();
 
 					try
 					{
@@ -263,13 +255,12 @@ namespace StrongGrid
 			var parser = MultipartFormDataParser.Parse(stream, Encoding.UTF8);
 
 			// Convert the 'charset' from a string into array of KeyValuePair
-			var charsetsAsJObject = JObject.Parse(parser.GetParameterValue("charsets", "{}"));
-			var charsets = charsetsAsJObject
-				.Properties()
+			var charsetsJsonDoc = JsonDocument.Parse(parser.GetParameterValue("charsets", "{}"));
+			var charsets = charsetsJsonDoc.RootElement.EnumerateObject()
 				.Select(prop =>
 				{
 					var key = prop.Name;
-					var encodingName = prop.Value.ToString();
+					var encodingName = prop.Value.GetString();
 
 					try
 					{
@@ -361,9 +352,8 @@ namespace StrongGrid
 			var rawEmail = parser.GetParameterValue("email", string.Empty);
 
 			// Combine the 'attachment-info' and Files into an array of Attachments
-			var attachmentInfoAsJObject = JObject.Parse(parser.GetParameterValue("attachment-info", "{}"));
-			var attachments = attachmentInfoAsJObject
-				.Properties()
+			var attachmentInfoJsonDoc = JsonDocument.Parse(parser.GetParameterValue("attachment-info", "{}"));
+			var attachments = attachmentInfoJsonDoc.RootElement.EnumerateObject()
 				.Select(prop =>
 				{
 					var attachment = prop.Value.ToObject<InboundEmailAttachment>();
@@ -381,7 +371,7 @@ namespace StrongGrid
 				}).ToArray();
 
 			// Convert the 'envelope' from a JSON string into a strongly typed object
-			var envelope = JsonConvert.DeserializeObject<InboundEmailEnvelope>(parser.GetParameterValue("envelope", "{}"));
+			var envelope = JsonSerializer.Deserialize<InboundEmailEnvelope>(parser.GetParameterValue("envelope", "{}"));
 
 			// Convert the 'from' from a string into an email address
 			var rawFrom = GetEncodedValue("from", charsets, encodedParsers, string.Empty);

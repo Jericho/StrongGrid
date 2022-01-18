@@ -1,7 +1,8 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using StrongGrid.Models;
 using System;
+using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Utilities
 {
@@ -11,68 +12,32 @@ namespace StrongGrid.Utilities
 	/// sometimes spelled "enabled" and sometimes spelled "enable" depending
 	/// on which endpoint in SendGrid's API you are invoking.
 	/// </summary>
-	/// <seealso cref="Newtonsoft.Json.JsonConverter" />
-	internal class ClickTrackingSettingsConverter : JsonConverter
+	/// <seealso cref="JsonConverter" />
+	internal class ClickTrackingSettingsConverter : JsonConverter<ClickTrackingSettings>
 	{
-		/// <summary>
-		/// Determines whether this instance can convert the specified object type.
-		/// </summary>
-		/// <param name="objectType">Type of the object.</param>
-		/// <returns>
-		/// <c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
-		/// </returns>
-		public override bool CanConvert(Type objectType) => objectType == typeof(ClickTrackingSettings);
-
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="T:Newtonsoft.Json.JsonConverter" /> can read JSON.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="T:Newtonsoft.Json.JsonConverter" /> can read JSON; otherwise, <c>false</c>.
-		/// </value>
-		public override bool CanRead => true;
-
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="T:Newtonsoft.Json.JsonConverter" /> can write JSON.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="T:Newtonsoft.Json.JsonConverter" /> can write JSON; otherwise, <c>false</c>.
-		/// </value>
-		public override bool CanWrite => false;
-
-		/// <summary>
-		/// Writes the JSON representation of the object.
-		/// </summary>
-		/// <param name="writer">The <see cref="T:Newtonsoft.Json.JsonWriter" /> to write to.</param>
-		/// <param name="value">The value.</param>
-		/// <param name="serializer">The calling serializer.</param>
-		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+		public override ClickTrackingSettings Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			throw new NotImplementedException();
-		}
-
-		/// <summary>
-		/// Reads the JSON representation of the object.
-		/// </summary>
-		/// <param name="reader">The <see cref="T:Newtonsoft.Json.JsonReader" /> to read from.</param>
-		/// <param name="objectType">Type of the object.</param>
-		/// <param name="existingValue">The existing value of object being read.</param>
-		/// <param name="serializer">The calling serializer.</param>
-		/// <returns>
-		/// The object value.
-		/// </returns>
-		/// <exception cref="System.Exception">Unable to determine the field type.</exception>
-		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-		{
-			if (reader.TokenType == JsonToken.StartObject)
+			if (JsonDocument.TryParseValue(ref reader, out var doc))
 			{
-				var jObject = JObject.Load(reader);
+				var enabledInText = false;
+				var enabledInHtml = false;
 
-				jObject.TryGetValue("enable_text", out JToken enableInTextProperty);
-				jObject.TryGetValue("enable", out JToken enableInHtmlProperty);
-				jObject.TryGetValue("enabled", out JToken enabledInHtmlProperty);
+				if (doc.RootElement.TryGetProperty("enable_text", out var enableInTextProperty))
+				{
+					enabledInText = enableInTextProperty.GetBoolean();
+				}
 
-				var enabledInText = enableInTextProperty?.Value<bool>() ?? false;
-				var enabledInHtml = enableInHtmlProperty?.Value<bool>() ?? enabledInHtmlProperty?.Value<bool>() ?? false;
+				// First we look for an element called 'enable'
+				if (doc.RootElement.TryGetProperty("enable", out var enableInHtmlProperty))
+				{
+					enabledInHtml = enableInHtmlProperty.GetBoolean();
+				}
+
+				// If we did not find 'enable', we look for 'enabled'
+				else if (doc.RootElement.TryGetProperty("enabled", out var enabledInHtmlProperty))
+				{
+					enabledInHtml = enabledInHtmlProperty.GetBoolean();
+				}
 
 				return new ClickTrackingSettings()
 				{
@@ -82,6 +47,16 @@ namespace StrongGrid.Utilities
 			}
 
 			return null;
+		}
+
+		public override void Write(Utf8JsonWriter writer, ClickTrackingSettings value, JsonSerializerOptions options)
+		{
+			var valueType = typeof(ClickTrackingSettings);
+
+			writer.WriteStartObject();
+			writer.WriteBoolean(((JsonPropertyNameAttribute)valueType.GetProperty("EnabledInTextContent").GetCustomAttributes(typeof(JsonPropertyNameAttribute), false).Single()).Name, value.EnabledInTextContent);
+			writer.WriteBoolean(((JsonPropertyNameAttribute)valueType.GetProperty("EnabledInHtmlContent").GetCustomAttributes(typeof(JsonPropertyNameAttribute), false).Single()).Name, value.EnabledInHtmlContent);
+			writer.WriteEndObject();
 		}
 	}
 }

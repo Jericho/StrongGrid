@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Resources;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -15,15 +15,15 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "ips/pools";
+		internal const string ENDPOINT = "ips/pools";
 
-		private const string SINGLE_IPPOOL_JSON = @"{
-			'pool_name': 'marketing',
-			'ips':
+		internal const string SINGLE_IPPOOL_JSON = @"{
+			""pool_name"": ""marketing"",
+			""ips"":
 			[
-				{ 'ip': '1.1.1.1', 'start_date': null, 'warmup': false },
-				{ 'ip': '2.2.2.2', 'start_date': null, 'warmup': false },
-				{ 'ip': '3.3.3.3', 'start_date': null, 'warmup': false }
+				{ ""ip"": ""1.1.1.1"", ""start_date"": null, ""warmup"": false },
+				{ ""ip"": ""2.2.2.2"", ""start_date"": null, ""warmup"": false },
+				{ ""ip"": ""3.3.3.3"", ""start_date"": null, ""warmup"": false }
 			]
 		}";
 
@@ -35,7 +35,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<IpPool>(SINGLE_IPPOOL_JSON);
+			var result = JsonSerializer.Deserialize<IpPool>(SINGLE_IPPOOL_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -53,7 +53,7 @@ namespace StrongGrid.UnitTests.Resources
 			var name = "marketing";
 
 			var apiResponse = @"{
-				'name': 'marketing'
+				""name"": ""marketing""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -78,10 +78,10 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 			var apiResponse = @"[
 				{
-					'name': 'marketing'
+					""name"": ""marketing""
 				},
 				{
-					'name': 'transactional'
+					""name"": ""transactional""
 				}
 			]";
 
@@ -132,7 +132,7 @@ namespace StrongGrid.UnitTests.Resources
 			var newName = "New Name";
 
 			var apiResponse = @"{
-				'name': 'New Name'
+				""name"": ""New Name""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -179,12 +179,12 @@ namespace StrongGrid.UnitTests.Resources
 			var address = "0.0.0.0";
 
 			var apiResponse = @"{
-			  'ip': '000.00.00.0',
-			  'pools': [
-				'test1'
+			  ""ip"": ""000.00.00.0"",
+			  ""pools"": [
+				""test1""
 			  ],
-			  'start_date': 1409616000,
-			  'warmup': true
+			  ""start_date"": 1409616000,
+			  ""warmup"": true
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();

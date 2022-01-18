@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.Legacy
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models.Legacy
 		/// <value>
 		/// The name.
 		/// </value>
-		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("name")]
 		public string Name { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models.Legacy
 		/// <value>
 		/// The type.
 		/// </value>
-		[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("type")]
 		public FieldType Type { get; set; }
 	}
 }

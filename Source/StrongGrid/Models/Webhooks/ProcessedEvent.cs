@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.Webhooks
 {
@@ -22,7 +22,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The IP pool used when the email was sent.
 		/// </value>
-		[JsonProperty("pool", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("pool")]
 		public IpPool IpPool { get; set; }
 	}
 }

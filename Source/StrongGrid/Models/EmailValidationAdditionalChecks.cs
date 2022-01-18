@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -14,14 +14,14 @@ namespace StrongGrid.Models
 		/// Gets or sets a value indicating whether the address has known bounces.
 		/// If true, the email address has previously been sent to through your SendGrid account and has resulted in a bounce.
 		/// </summary>
-		[JsonProperty("has_known_bounces", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("has_known_bounces")]
 		public bool HasKnownBounces { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether the address has suspected bounces.
 		/// If true, SendGrid's machine learning model suspects that the email address might bounce.
 		/// </summary>
-		[JsonProperty("has_suspected_bounces", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("has_suspected_bounces")]
 		public bool HasSuspectedBounces { get; set; }
 	}
 }

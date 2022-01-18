@@ -1,81 +1,42 @@
-using Newtonsoft.Json;
 using StrongGrid.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Utilities
 {
 	/// <summary>
 	/// Converts a  MailPersonalization object to and from JSON.
 	/// </summary>
-	/// <seealso cref="Newtonsoft.Json.JsonConverter" />
-	internal class MailPersonalizationConverter : JsonConverter
+	/// <seealso cref="JsonConverter" />
+	internal class MailPersonalizationConverter : JsonConverter<MailPersonalization>
 	{
-		private readonly bool _isUsedWithDynamicTemplate;
-
 		public MailPersonalizationConverter()
-			: this(false)
 		{
 		}
 
-		public MailPersonalizationConverter(bool isUsedWithDynamicTemplate)
+		public override MailPersonalization Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			_isUsedWithDynamicTemplate = isUsedWithDynamicTemplate;
+			throw new NotSupportedException("The MailPersonalizationConverter can only be used to write JSON");
 		}
 
-		/// <summary>
-		/// Determines whether this instance can convert the specified object type.
-		/// </summary>
-		/// <param name="objectType">Type of the object.</param>
-		/// <returns>
-		/// <c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
-		/// </returns>
-		public override bool CanConvert(Type objectType)
-		{
-			return objectType == typeof(MailPersonalization);
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="T:Newtonsoft.Json.JsonConverter" /> can read JSON.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="T:Newtonsoft.Json.JsonConverter" /> can read JSON; otherwise, <c>false</c>.
-		/// </value>
-		public override bool CanRead
-		{
-			get { return false; }
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="T:Newtonsoft.Json.JsonConverter" /> can write JSON.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="T:Newtonsoft.Json.JsonConverter" /> can write JSON; otherwise, <c>false</c>.
-		/// </value>
-		public override bool CanWrite
-		{
-			get { return true; }
-		}
-
-		/// <summary>
-		/// Writes the JSON representation of the object.
-		/// </summary>
-		/// <param name="writer">The <see cref="T:Newtonsoft.Json.JsonWriter" /> to write to.</param>
-		/// <param name="value">The value.</param>
-		/// <param name="serializer">The calling serializer.</param>
-		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+		public override void Write(Utf8JsonWriter writer, MailPersonalization value, JsonSerializerOptions options)
 		{
 			if (value == null) return;
 
 			writer.WriteStartObject();
 
-			foreach (var propertyInfo in value.GetType().GetProperties())
+			var allProperties = typeof(MailPersonalization).GetProperties();
+			var isUsedWithDynamicTemplate = value.IsUsedWithDynamicTemplate;
+
+			foreach (var propertyInfo in allProperties)
 			{
 				var propertyCustomAttributes = propertyInfo.GetCustomAttributes(false);
 				var propertyConverterAttribute = propertyCustomAttributes.OfType<JsonConverterAttribute>().FirstOrDefault();
 				var propertyIsIgnored = propertyCustomAttributes.OfType<JsonIgnoreAttribute>().Any();
-				var propertyName = propertyCustomAttributes.OfType<JsonPropertyAttribute>().FirstOrDefault()?.PropertyName ?? propertyInfo.Name;
+				var propertyName = propertyCustomAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault()?.Name ?? propertyInfo.Name;
 				var propertyValue = propertyInfo.GetValue(value);
 
 				// Skip the property if it's decorated with the 'ignore' attribute
@@ -88,30 +49,30 @@ namespace StrongGrid.Utilities
 				if (propertyInfo.Name == "Substitutions")
 				{
 					// Ignore this property when email is sent using a dynamic template
-					if (_isUsedWithDynamicTemplate) continue;
+					if (isUsedWithDynamicTemplate) continue;
 
 					// Ignore this property if the enumeration is empty
 					var substitutions = (IEnumerable<KeyValuePair<string, string>>)propertyValue;
 					if (!substitutions.Any()) continue;
 
 					// Write the substitutions to JSON
-					WriteJsonProperty(writer, propertyName, propertyValue, serializer, propertyConverterAttribute);
+					WriteJsonProperty(writer, propertyName, propertyValue, options, propertyConverterAttribute);
 				}
 
 				// Special case: dynamic data
 				else if (propertyInfo.Name == "DynamicData")
 				{
 					// Ignore this property when email is sent without using a template or when using a 'legacy' template
-					if (!_isUsedWithDynamicTemplate) continue;
+					if (!isUsedWithDynamicTemplate) continue;
 
 					// Write the dynamic data to JSON
-					WriteJsonProperty(writer, propertyName, propertyValue, serializer, propertyConverterAttribute);
+					WriteJsonProperty(writer, propertyName, propertyValue, options, propertyConverterAttribute);
 				}
 
 				// Write the property to JSON
 				else
 				{
-					WriteJsonProperty(writer, propertyName, propertyValue, serializer, propertyConverterAttribute);
+					WriteJsonProperty(writer, propertyName, propertyValue, options, propertyConverterAttribute);
 				}
 			}
 
@@ -119,36 +80,19 @@ namespace StrongGrid.Utilities
 			writer.WriteEndObject();
 		}
 
-		/// <summary>
-		/// Reads the JSON representation of the object.
-		/// </summary>
-		/// <param name="reader">The <see cref="T:Newtonsoft.Json.JsonReader" /> to read from.</param>
-		/// <param name="objectType">Type of the object.</param>
-		/// <param name="existingValue">The existing value of object being read.</param>
-		/// <param name="serializer">The calling serializer.</param>
-		/// <returns>
-		/// The object value.
-		/// </returns>
-		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-		{
-			throw new NotSupportedException("The MailPersonalizationConverter can only be used to write JSON");
-		}
-
-		private void WriteJsonProperty(JsonWriter writer, string propertyName, object propertyValue, JsonSerializer serializer, JsonConverterAttribute propertyConverterAttribute)
+		public void WriteJsonProperty(Utf8JsonWriter writer, string propertyName, object propertyValue, JsonSerializerOptions options, JsonConverterAttribute propertyConverterAttribute)
 		{
 			writer.WritePropertyName(propertyName);
 
+			// It's important to clone the options in order to be able to modify the 'Converters' list
+			var clonedOptions = new JsonSerializerOptions(options);
+
 			if (propertyConverterAttribute != null)
 			{
-				var converter = (JsonConverter)Activator.CreateInstance(propertyConverterAttribute.ConverterType);
-				var propertyJsonSerializer = new JsonSerializer();
-				propertyJsonSerializer.Converters.Add(converter);
-				propertyJsonSerializer.Serialize(writer, propertyValue);
+				clonedOptions.Converters.Add((JsonConverter)Activator.CreateInstance(propertyConverterAttribute.ConverterType));
 			}
-			else
-			{
-				serializer.Serialize(writer, propertyValue);
-			}
+
+			JsonSerializer.Serialize(writer, propertyValue, propertyValue.GetType(), clonedOptions);
 		}
 	}
 }

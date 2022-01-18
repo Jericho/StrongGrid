@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
@@ -7,6 +6,7 @@ using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -17,60 +17,60 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "subusers";
+		internal const string ENDPOINT = "subusers";
 
-		private const string SINGLE_SUBUSER_JSON = @"{
-			'id': 1,
-			'username': 'TestUser',
-			'email': 'Test@example.com',
-			'disabled': true
+		internal const string SINGLE_SUBUSER_JSON = @"{
+			""id"": 1,
+			""username"": ""TestUser"",
+			""email"": ""Test@example.com"",
+			""disabled"": true
 		}";
-		private const string SINGLE_SUBUSER_CREATED_JSON = @"{
-			'id': 1,
-			'username': 'TestUser',
-			'password': 'somepass',
-			'email': 'Test@example.com',
-			'ips': [
-				'1.1.1.1',
-				'2.2.2.2'
+		internal const string SINGLE_SUBUSER_CREATED_JSON = @"{
+			""id"": 1,
+			""username"": ""TestUser"",
+			""password"": ""somepass"",
+			""email"": ""Test@example.com"",
+			""ips"": [
+				""1.1.1.1"",
+				""2.2.2.2""
 			]
 		}";
-		private const string MULTIPLE_SUBUSER_JSON = @"[
+		internal const string MULTIPLE_SUBUSER_JSON = @"[
 			  {
-				'id': 1,
-				'username': 'TestUser',
-				'email': 'Test@example.com',
-				'disabled': false
+				""id"": 1,
+				""username"": ""TestUser"",
+				""email"": ""Test@example.com"",
+				""disabled"": false
 			  },
 			  {
-				'id': 2,
-				'username': 'John',
-				'email': 'John@example.com',
-				'disabled': true
+				""id"": 2,
+				""username"": ""John"",
+				""email"": ""John@example.com"",
+				""disabled"": true
 			  }
 		]";
-		private const string MULTIPLE_IPS_JSON = @"[
-			  '1.1.1.1',
-			  '2.2.2.2'
+		internal const string MULTIPLE_IPS_JSON = @"[
+			  ""1.1.1.1"",
+			  ""2.2.2.2""
 		]";
-		private const string MONITOR_SETTINGS_JSON = @"{
-		  'email': 'test@example.com',
-		  'frequency': 500
+		internal const string MONITOR_SETTINGS_JSON = @"{
+		  ""email"": ""test@example.com"",
+		  ""frequency"": 500
 		}";
-		private const string SINGLE_REPUTATION_JSON = @"[
+		internal const string SINGLE_REPUTATION_JSON = @"[
 		  {
-			'username': 'example_subuser',
-			'reputation': 99
+			""username"": ""example_subuser"",
+			""reputation"": 99
 		  }
 		]";
-		private const string MULTIPLE_REPUTATIONS_JSON = @"[
+		internal const string MULTIPLE_REPUTATIONS_JSON = @"[
 		  {
-			'username': 'example_subuser',
-			'reputation': 99
+			""username"": ""example_subuser"",
+			""reputation"": 99
 		  },
 		  {
-			'username': 'example_subuser2',
-			'reputation': 95.2
+			""username"": ""example_subuser2"",
+			""reputation"": 95.2
 		  }
 		]";
 
@@ -82,7 +82,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<Subuser>(SINGLE_SUBUSER_JSON);
+			var result = JsonSerializer.Deserialize<Subuser>(SINGLE_SUBUSER_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -98,7 +98,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<Subuser>(SINGLE_SUBUSER_CREATED_JSON);
+			var result = JsonSerializer.Deserialize<Subuser>(SINGLE_SUBUSER_CREATED_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -116,7 +116,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<MonitorSettings>(MONITOR_SETTINGS_JSON);
+			var result = JsonSerializer.Deserialize<MonitorSettings>(MONITOR_SETTINGS_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();

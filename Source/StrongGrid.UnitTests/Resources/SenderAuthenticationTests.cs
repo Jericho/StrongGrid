@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
@@ -6,6 +5,7 @@ using StrongGrid.Resources;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -16,281 +16,281 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "whitelabel";
+		internal const string ENDPOINT = "whitelabel";
 
-		private const string SINGLE_DOMAIN_JSON = @"{
-			'id': 1,
-			'domain': 'example.com',
-			'subdomain': 'mail',
-			'username': 'john@example.com',
-			'user_id': 7,
-			'ips': [
-				'192.168.1.1',
-				'192.168.1.2'
+		internal const string SINGLE_DOMAIN_JSON = @"{
+			""id"": 1,
+			""domain"": ""example.com"",
+			""subdomain"": ""mail"",
+			""username"": ""john@example.com"",
+			""user_id"": 7,
+			""ips"": [
+				""192.168.1.1"",
+				""192.168.1.2""
 			],
-			'custom_spf': true,
-			'default': true,
-			'legacy': false,
-			'automatic_security': true,
-			'valid': true,
-			'dns': {
-				'mail_cname': {
-					'host': 'mail.example.com',
-					'type': 'cname',
-					'data': 'u7.wl.sendgrid.net',
-					'valid': true
+			""custom_spf"": true,
+			""default"": true,
+			""legacy"": false,
+			""automatic_security"": true,
+			""valid"": true,
+			""dns"": {
+				""mail_cname"": {
+					""host"": ""mail.example.com"",
+					""type"": ""cname"",
+					""data"": ""u7.wl.sendgrid.net"",
+					""valid"": true
 				},
-				'spf': {
-					'host': 'example.com',
-					'type': 'txt',
-					'data': 'v=spf1 include:u7.wl.sendgrid.net -all',
-					'valid': true
+				""spf"": {
+					""host"": ""example.com"",
+					""type"": ""txt"",
+					""data"": ""v=spf1 include:u7.wl.sendgrid.net -all"",
+					""valid"": true
 				},
-				'dkim1': {
-					'host': 's1._domainkey.example.com',
-					'type': 'cname',
-					'data': 's1._domainkey.u7.wl.sendgrid.net',
-					'valid': true
+				""dkim1"": {
+					""host"": ""s1._domainkey.example.com"",
+					""type"": ""cname"",
+					""data"": ""s1._domainkey.u7.wl.sendgrid.net"",
+					""valid"": true
 				},
-				'dkim2': {
-					'host': 's2._domainkey.example.com',
-					'type': 'cname',
-					'data': 's2._domainkey.u7.wl.sendgrid.net',
-					'valid': true
+				""dkim2"": {
+					""host"": ""s2._domainkey.example.com"",
+					""type"": ""cname"",
+					""data"": ""s2._domainkey.u7.wl.sendgrid.net"",
+					""valid"": true
 				}
 			}
 		}";
-		private const string MULTIPLE_DOMAINS_JSON = @"[
+		internal const string MULTIPLE_DOMAINS_JSON = @"[
 			{
-				'id': 1,
-				'domain': 'example.com',
-				'subdomain': 'mail',
-				'username': 'john@example.com',
-				'user_id': 7,
-				'ips': [
-					'192.168.1.1',
-					'192.168.1.2'
+				""id"": 1,
+				""domain"": ""example.com"",
+				""subdomain"": ""mail"",
+				""username"": ""john@example.com"",
+				""user_id"": 7,
+				""ips"": [
+					""192.168.1.1"",
+					""192.168.1.2""
 				],
-				'custom_spf': true,
-				'default': true,
-				'legacy': false,
-				'automatic_security': true,
-				'valid': true,
-				'dns': {
-					'mail_cname': {
-						'host': 'mail.example.com',
-						'type': 'cname',
-						'data': 'u7.wl.sendgrid.net',
-						'valid': true
+				""custom_spf"": true,
+				""default"": true,
+				""legacy"": false,
+				""automatic_security"": true,
+				""valid"": true,
+				""dns"": {
+					""mail_cname"": {
+						""host"": ""mail.example.com"",
+						""type"": ""cname"",
+						""data"": ""u7.wl.sendgrid.net"",
+						""valid"": true
 					},
-					'spf': {
-						'host': 'example.com',
-						'type': 'txt',
-						'data': 'v=spf1 include:u7.wl.sendgrid.net -all',
-						'valid': true
+					""spf"": {
+						""host"": ""example.com"",
+						""type"": ""txt"",
+						""data"": ""v=spf1 include:u7.wl.sendgrid.net -all"",
+						""valid"": true
 					},
-					'dkim1': {
-						'host': 's1._domainkey.example.com',
-						'type': 'cname',
-						'data': 's1._domainkey.u7.wl.sendgrid.net',
-						'valid': true
+					""dkim1"": {
+						""host"": ""s1._domainkey.example.com"",
+						""type"": ""cname"",
+						""data"": ""s1._domainkey.u7.wl.sendgrid.net"",
+						""valid"": true
 					},
-					'dkim2': {
-						'host': 's2._domainkey.example.com',
-						'type': 'cname',
-						'data': 's2._domainkey.u7.wl.sendgrid.net',
-						'valid': true
+					""dkim2"": {
+						""host"": ""s2._domainkey.example.com"",
+						""type"": ""cname"",
+						""data"": ""s2._domainkey.u7.wl.sendgrid.net"",
+						""valid"": true
 					}
 				}
 			},
 			{
-				'id': 2,
-				'domain': 'example2.com',
-				'subdomain': 'news',
-				'username': 'jane@example2.com',
-				'user_id': 8,
-				'ips': [
+				""id"": 2,
+				""domain"": ""example2.com"",
+				""subdomain"": ""news"",
+				""username"": ""jane@example2.com"",
+				""user_id"": 8,
+				""ips"": [
 				],
-				'custom_spf': false,
-				'default': true,
-				'legacy': false,
-				'automatic_security': true,
-				'valid': false,
-				'dns': {
-					'mail_server': {
-						'host': 'news.example2.com',
-						'type': 'mx',
-						'data': 'sendgrid.net',
-						'valid': false
+				""custom_spf"": false,
+				""default"": true,
+				""legacy"": false,
+				""automatic_security"": true,
+				""valid"": false,
+				""dns"": {
+					""mail_server"": {
+						""host"": ""news.example2.com"",
+						""type"": ""mx"",
+						""data"": ""sendgrid.net"",
+						""valid"": false
 					},
-					'subdomain_spf': {
-						'host': 'news.example2.com',
-						'type': 'txt',
-						'data': 'v=spf1 include:sendgrid.net ~all',
-						'valid': false
+					""subdomain_spf"": {
+						""host"": ""news.example2.com"",
+						""type"": ""txt"",
+						""data"": ""v=spf1 include:sendgrid.net ~all"",
+						""valid"": false
 					},
-					'domain_spf': {
-						'host': 'example2.com',
-						'type': 'txt',
-						'data': 'v=spf1 include:news.example2.com -all',
-						'valid': false
+					""domain_spf"": {
+						""host"": ""example2.com"",
+						""type"": ""txt"",
+						""data"": ""v=spf1 include:news.example2.com -all"",
+						""valid"": false
 					},
-					'dkim': {
-						'host': 's1._domainkey.example2.com',
-						'type': 'txt',
-						'data': 'k=rsa; t=s; p=publicKey',
-						'valid': false
+					""dkim"": {
+						""host"": ""s1._domainkey.example2.com"",
+						""type"": ""txt"",
+						""data"": ""k=rsa; t=s; p=publicKey"",
+						""valid"": false
 					}
 				}
 			}
 		]";
-		private const string SINGLE_IP_JSON = @"{
-			'id': 1,
-			'ip': '192.168.1.1',
-			'rdns': 'o1.email.example.com',
-			'users': [
+		internal const string SINGLE_IP_JSON = @"{
+			""id"": 1,
+			""ip"": ""192.168.1.1"",
+			""rdns"": ""o1.email.example.com"",
+			""users"": [
 				{
-					'username': 'john@example.com',
-					'user_id': 7
+					""username"": ""john@example.com"",
+					""user_id"": 7
 				},
 				{
-					'username': 'jane@example.com',
-					'user_id': 8
+					""username"": ""jane@example.com"",
+					""user_id"": 8
 				}
 			],
-			'subdomain': 'email',
-			'domain': 'example.com',
-			'valid': true,
-			'legacy': false,
-			'a_record': {
-				'valid': true,
-				'type': 'a',
-				'host': 'o1.email.example.com',
-				'data': '192.168.1.1'
+			""subdomain"": ""email"",
+			""domain"": ""example.com"",
+			""valid"": true,
+			""legacy"": false,
+			""a_record"": {
+				""valid"": true,
+				""type"": ""a"",
+				""host"": ""o1.email.example.com"",
+				""data"": ""192.168.1.1""
 			}
 		}";
-		private const string MULTIPLE_IPS_JSON = @"[
+		internal const string MULTIPLE_IPS_JSON = @"[
 			{
-				'id': 1,
-				'ip': '192.168.1.1',
-				'rdns': 'o1.email.example.com',
-				'users': [
+				""id"": 1,
+				""ip"": ""192.168.1.1"",
+				""rdns"": ""o1.email.example.com"",
+				""users"": [
 					{
-						'username': 'john@example.com',
-						'user_id': 7
+						""username"": ""john@example.com"",
+						""user_id"": 7
 					},
 					{
-						'username': 'jane@example.com',
-						'user_id': 8
+						""username"": ""jane@example.com"",
+						""user_id"": 8
 					}
 				],
-				'subdomain': 'email',
-				'domain': 'example.com',
-				'valid': true,
-				'legacy': false,
-				'a_record': {
-					'valid': true,
-					'type': 'a',
-					'host': 'o1.email.example.com',
-					'data': '192.168.1.1'
+				""subdomain"": ""email"",
+				""domain"": ""example.com"",
+				""valid"": true,
+				""legacy"": false,
+				""a_record"": {
+					""valid"": true,
+					""type"": ""a"",
+					""host"": ""o1.email.example.com"",
+					""data"": ""192.168.1.1""
 				}
 			},
 			{
-				'id': 2,
-				'ip': '192.168.1.2',
-				'rdns': 'o2.email.example.com',
-				'users': [
+				""id"": 2,
+				""ip"": ""192.168.1.2"",
+				""rdns"": ""o2.email.example.com"",
+				""users"": [
 					{
-						'username': 'john@example.com',
-						'user_id': 7
+						""username"": ""john@example.com"",
+						""user_id"": 7
 					},
 					{
-						'username': 'jane@example2.com',
-						'user_id': 9
+						""username"": ""jane@example2.com"",
+						""user_id"": 9
 					}
 				],
-				'subdomain': 'email',
-				'domain': 'example.com',
-				'valid': true,
-				'legacy': false,
-				'a_record': {
-					'valid': true,
-					'type': 'a',
-					'host': 'o2.email.example.com',
-					'data': '192.168.1.2'
+				""subdomain"": ""email"",
+				""domain"": ""example.com"",
+				""valid"": true,
+				""legacy"": false,
+				""a_record"": {
+					""valid"": true,
+					""type"": ""a"",
+					""host"": ""o2.email.example.com"",
+					""data"": ""192.168.1.2""
 				}
 			}
 		]";
-		private const string SINGLE_LINK_JSON = @"{
-			'id': 1,
-			'domain': 'example.com',
-			'subdomain': 'mail',
-			'username': 'john@example.com',
-			'user_id': 7,
-			'default': true,
-			'valid': true,
-			'legacy': false,
-			'dns': {
-				'domain_cname': {
-					'valid': true,
-					'type': 'cname',
-					'host': 'mail.example.com',
-					'data': 'sendgrid.net'
+		internal const string SINGLE_LINK_JSON = @"{
+			""id"": 1,
+			""domain"": ""example.com"",
+			""subdomain"": ""mail"",
+			""username"": ""john@example.com"",
+			""user_id"": 7,
+			""default"": true,
+			""valid"": true,
+			""legacy"": false,
+			""dns"": {
+				""domain_cname"": {
+					""valid"": true,
+					""type"": ""cname"",
+					""host"": ""mail.example.com"",
+					""data"": ""sendgrid.net""
 				},
-				'owner_cname': {
-					'valid': true,
-					'type': 'cname',
-					'host': '7.example.com',
-					'data': 'sendgrid.net'
+				""owner_cname"": {
+					""valid"": true,
+					""type"": ""cname"",
+					""host"": ""7.example.com"",
+					""data"": ""sendgrid.net""
 				}
 			}
 		}";
-		private const string MULTIPLE_LINKS_JSON = @"[
+		internal const string MULTIPLE_LINKS_JSON = @"[
 			{
-				'id': 1,
-				'domain': 'example.com',
-				'subdomain': 'mail',
-				'username': 'john@example.com',
-				'user_id': 7,
-				'default': true,
-				'valid': true,
-				'legacy': false,
-				'dns': {
-					'domain_cname': {
-						'valid': true,
-						'type': 'cname',
-						'host': 'mail.example.com',
-						'data': 'sendgrid.net'
+				""id"": 1,
+				""domain"": ""example.com"",
+				""subdomain"": ""mail"",
+				""username"": ""john@example.com"",
+				""user_id"": 7,
+				""default"": true,
+				""valid"": true,
+				""legacy"": false,
+				""dns"": {
+					""domain_cname"": {
+						""valid"": true,
+						""type"": ""cname"",
+						""host"": ""mail.example.com"",
+						""data"": ""sendgrid.net""
 					},
-					'owner_cname': {
-						'valid': true,
-						'type': 'cname',
-						'host': '7.example.com',
-						'data': 'sendgrid.net'
+					""owner_cname"": {
+						""valid"": true,
+						""type"": ""cname"",
+						""host"": ""7.example.com"",
+						""data"": ""sendgrid.net""
 					}
 				}
 			},
 			{
-				'id': 2,
-				'domain': 'example2.com',
-				'subdomain': 'news',
-				'username': 'john@example.com',
-				'user_id': 8,
-				'default': false,
-				'valid': false,
-				'legacy': false,
-				'dns': {
-					'domain_cname': {
-						'valid': true,
-						'type': 'cname',
-						'host': 'news.example2.com',
-						'data': 'sendgrid.net'
+				""id"": 2,
+				""domain"": ""example2.com"",
+				""subdomain"": ""news"",
+				""username"": ""john@example.com"",
+				""user_id"": 8,
+				""default"": false,
+				""valid"": false,
+				""legacy"": false,
+				""dns"": {
+					""domain_cname"": {
+						""valid"": true,
+						""type"": ""cname"",
+						""host"": ""news.example2.com"",
+						""data"": ""sendgrid.net""
 					},
-					'owner_cname': {
-						'valid': false,
-						'type': 'cname',
-						'host': '8.example2.com',
-						'data': 'sendgrid.net'
+					""owner_cname"": {
+						""valid"": false,
+						""type"": ""cname"",
+						""host"": ""8.example2.com"",
+						""data"": ""sendgrid.net""
 					}
 				}
 			}
@@ -304,7 +304,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<AuthenticatedDomain>(SINGLE_DOMAIN_JSON);
+			var result = JsonSerializer.Deserialize<AuthenticatedDomain>(SINGLE_DOMAIN_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -521,24 +521,24 @@ namespace StrongGrid.UnitTests.Resources
 			var domainId = 1L;
 
 			var apiResponse = @"{
-				'id': 1,
-				'valid': true,
-				'validation_results': {
-					'mail_cname': {
-						'valid': false,
-						'reason': 'Expected your MX record to be \'mx.sendgrid.net\' but found \'example.com\'.'
+				""id"": 1,
+				""valid"": true,
+				""validation_results"": {
+					""mail_cname"": {
+						""valid"": false,
+						""reason"": ""Expected your MX record to be \""mx.sendgrid.net\"" but found \""example.com\"".""
 					},
-					'dkim1': {
-						'valid': true,
-						'reason': null
+					""dkim1"": {
+						""valid"": true,
+						""reason"": null
 					},
-					'dkim2': {
-						'valid': true,
-						'reason': null
+					""dkim2"": {
+						""valid"": true,
+						""reason"": null
 					},
-					'spf': {
-						'valid': true,
-						'reason': null
+					""spf"": {
+						""valid"": true,
+						""reason"": null
 					}
 				}
 			}";
@@ -563,7 +563,7 @@ namespace StrongGrid.UnitTests.Resources
 			result.ValidationResults.Dkim2.IsValid.ShouldBe(true);
 			result.ValidationResults.Dkim2.Reason.ShouldBeNull();
 			result.ValidationResults.Mail.IsValid.ShouldBe(false);
-			result.ValidationResults.Mail.Reason.ShouldBe("Expected your MX record to be \'mx.sendgrid.net\' but found \'example.com\'.");
+			result.ValidationResults.Mail.Reason.ShouldBe("Expected your MX record to be \"mx.sendgrid.net\" but found \"example.com\".");
 			result.ValidationResults.Spf.IsValid.ShouldBe(true);
 			result.ValidationResults.Spf.Reason.ShouldBeNull();
 		}
@@ -722,12 +722,12 @@ namespace StrongGrid.UnitTests.Resources
 			var id = 1L;
 
 			var apiResponse = @"{
-				'id': 1,
-				'valid': true,
-				'validation_results': {
-					'a_record': {
-						'valid': true,
-						'reason': null
+				""id"": 1,
+				""valid"": true,
+				""validation_results"": {
+					""a_record"": {
+						""valid"": true,
+						""reason"": null
 					}
 				}
 			}";
@@ -865,16 +865,16 @@ namespace StrongGrid.UnitTests.Resources
 			var linkId = 1L;
 
 			var apiResponse = @"{
-				'id': 1,
-				'valid': true,
-				'validation_results': {
-					'domain_cname': {
-						'valid': false,
-						'reason': 'Expected CNAME to match \'sendgrid.net.\' but found \'example.com.\'.'
+				""id"": 1,
+				""valid"": true,
+				""validation_results"": {
+					""domain_cname"": {
+						""valid"": false,
+						""reason"": ""Expected CNAME to match \""sendgrid.net.\"" but found \""example.com.\"".""
 					},
-					'owner_cname': {
-						'valid': true,
-						'reason': null
+					""owner_cname"": {
+						""valid"": true,
+						""reason"": null
 					}
 				}
 			}";
@@ -895,7 +895,7 @@ namespace StrongGrid.UnitTests.Resources
 			result.LinkId.ShouldBe(1);
 			result.IsValid.ShouldBe(true);
 			result.ValidationResults.Domain.IsValid.ShouldBe(false);
-			result.ValidationResults.Domain.Reason.ShouldBe("Expected CNAME to match \'sendgrid.net.\' but found \'example.com.\'.");
+			result.ValidationResults.Domain.Reason.ShouldBe("Expected CNAME to match \"sendgrid.net.\" but found \"example.com.\".");
 			result.ValidationResults.Owner.IsValid.ShouldBe(true);
 			result.ValidationResults.Owner.Reason.ShouldBeNull();
 		}

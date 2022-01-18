@@ -1,4 +1,3 @@
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -59,12 +58,12 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<EnforcedTlsSettings> UpdateEnforcedTlsSettingsAsync(bool requireTls, bool requireValidCert, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var enforcedTlsSettings = new EnforcedTlsSettings
+			var data = new EnforcedTlsSettings
 			{
 				RequireTls = requireTls,
 				RequireValidCertificate = requireValidCert
 			};
-			var data = JObject.FromObject(enforcedTlsSettings);
+
 			return _client
 				.PatchAsync("user/settings/enforced_tls")
 				.OnBehalfOf(onBehalfOf)
@@ -123,12 +122,12 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<NewRelicSettings> UpdateNewRelicSettingsAsync(bool enabled, string licenseKey, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var newRelicSettings = new NewRelicSettings
+			var data = new NewRelicSettings
 			{
 				Enabled = enabled,
 				LicenseKey = licenseKey
 			};
-			var data = JObject.FromObject(newRelicSettings);
+
 			return _client
 				.PatchAsync("partner_settings/new_relic")
 				.OnBehalfOf(onBehalfOf)
@@ -187,9 +186,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<ClickTrackingSettings> UpdateClickTrackingSettingsAsync(Parameter<bool> enabledInText = default, Parameter<bool> enabledInHtml = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject();
-			data.AddPropertyIfValue("enable_text", enabledInText);
-			data.AddPropertyIfValue("enabled", enabledInHtml);
+			var data = new StrongGridJsonObject();
+			data.AddProperty("enable_text", enabledInText);
+			data.AddProperty("enabled", enabledInHtml);
 
 			return _client
 				.PatchAsync("tracking_settings/click")
@@ -232,7 +231,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<GoogleAnalyticsGlobalSettings> UpdateGoogleAnalyticsGlobalSettingsAsync(bool enabled, string utmSource, string utmMedium, string utmTerm, string utmContent, string utmCampaign, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var googleAnalyticsGlobalSettings = new GoogleAnalyticsGlobalSettings
+			var data = new GoogleAnalyticsGlobalSettings
 			{
 				Enabled = enabled,
 				UtmSource = utmSource,
@@ -241,7 +240,7 @@ namespace StrongGrid.Resources
 				UtmContent = utmContent,
 				UtmCampaign = utmCampaign
 			};
-			var data = JObject.FromObject(googleAnalyticsGlobalSettings);
+
 			return _client
 				.PatchAsync("tracking_settings/google_analytics")
 				.OnBehalfOf(onBehalfOf)
@@ -278,10 +277,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<bool> UpdateOpenTrackingSettingsAsync(bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "enabled", enabled }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("enabled", enabled);
+
 			return _client
 				.PatchAsync("tracking_settings/open")
 				.OnBehalfOf(onBehalfOf)
@@ -323,7 +321,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<SubscriptionSettings> UpdateSubscriptionTrackingSettingsAsync(bool enabled, string landingPageHtml, string url, string replacementTag, string htmlContent, string textContent, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var subscriptionTrackingSettings = new SubscriptionSettings
+			var data = new SubscriptionSettings
 			{
 				Enabled = enabled,
 				LandingPageHtml = landingPageHtml,
@@ -332,7 +330,7 @@ namespace StrongGrid.Resources
 				HtmlContent = htmlContent,
 				TextContent = textContent
 			};
-			var data = JObject.FromObject(subscriptionTrackingSettings);
+
 			return _client
 				.PatchAsync("tracking_settings/subscription")
 				.OnBehalfOf(onBehalfOf)
@@ -393,12 +391,12 @@ namespace StrongGrid.Resources
 		[Obsolete("As of august 2020, SendGrid has retired BCC mail settings.")]
 		public Task<EmailAddressSetting> UpdateBccMailSettingsAsync(bool enabled, string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var bccMailSettings = new EmailAddressSetting
+			var data = new EmailAddressSetting
 			{
 				Enabled = enabled,
 				EmailAddress = email
 			};
-			var data = JObject.FromObject(bccMailSettings);
+
 			return _client
 				.PatchAsync("mail_settings/bcc")
 				.OnBehalfOf(onBehalfOf)
@@ -436,12 +434,12 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<AddressWhitelistSettings> UpdateAddressWhitelistMailSettingsAsync(bool enabled, IEnumerable<string> emailAddresses, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var addressWhitelistSettings = new AddressWhitelistSettings
+			var data = new AddressWhitelistSettings
 			{
 				Enabled = enabled,
 				EmailAddresses = emailAddresses.ToArray()
 			};
-			var data = JObject.FromObject(addressWhitelistSettings);
+
 			return _client
 				.PatchAsync("mail_settings/address_whitelist")
 				.OnBehalfOf(onBehalfOf)
@@ -480,13 +478,13 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<FooterGlobalSettings> UpdateFooterMailSettingsAsync(bool enabled, string htmlContent, string textContent, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var footerGlobalSetting = new FooterGlobalSettings
+			var data = new FooterGlobalSettings
 			{
 				Enabled = enabled,
 				HtmlContent = htmlContent,
 				TextContent = textContent
 			};
-			var data = JObject.FromObject(footerGlobalSetting);
+
 			return _client
 				.PatchAsync("mail_settings/footer")
 				.OnBehalfOf(onBehalfOf)
@@ -524,12 +522,12 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<EmailAddressSetting> UpdateForwardSpamMailSettingsAsync(bool enabled, string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var forwardSpamMailSettins = new EmailAddressSetting
+			var data = new EmailAddressSetting
 			{
 				Enabled = enabled,
 				EmailAddress = email
 			};
-			var data = JObject.FromObject(forwardSpamMailSettins);
+
 			return _client
 				.PatchAsync("mail_settings/forward_spam")
 				.OnBehalfOf(onBehalfOf)
@@ -566,10 +564,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<bool> UpdatePlainContentMailSettingsAsync(bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "enabled", enabled }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("enabled", enabled);
+
 			return _client
 				.PatchAsync("mail_settings/plain_content")
 				.OnBehalfOf(onBehalfOf)
@@ -610,13 +607,13 @@ namespace StrongGrid.Resources
 		[Obsolete("As of august 2020, SendGrid has retired Spam Check mail settings.")]
 		public Task<SpamCheckSettings> UpdateSpamCheckMailSettingsAsync(bool enabled, string postToUrl, int threshold, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var spamCheckMailSettings = new SpamCheckSettings
+			var data = new SpamCheckSettings
 			{
 				Enabled = enabled,
 				Url = postToUrl,
 				Threshold = threshold
 			};
-			var data = JObject.FromObject(spamCheckMailSettings);
+
 			return _client
 				.PatchAsync("mail_settings/spam_check")
 				.OnBehalfOf(onBehalfOf)
@@ -654,12 +651,12 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<TemplateSettings> UpdateTemplateMailSettingsAsync(bool enabled, string htmlContent, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var templateMailSettings = new TemplateSettings
+			var data = new TemplateSettings
 			{
 				Enabled = enabled,
 				HtmlContent = htmlContent
 			};
-			var data = JObject.FromObject(templateMailSettings);
+
 			return _client
 				.PatchAsync("mail_settings/template")
 				.OnBehalfOf(onBehalfOf)
@@ -698,13 +695,13 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<BouncePurgeSettings> UpdateBouncePurgeMailSettingsAsync(bool enabled, int hardBounces, int softBounces, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var bouncePurgeSettings = new BouncePurgeSettings
+			var data = new BouncePurgeSettings
 			{
 				Enabled = enabled,
 				HardBounces = hardBounces,
 				SoftBounces = softBounces
 			};
-			var data = JObject.FromObject(bouncePurgeSettings);
+
 			return _client
 				.PatchAsync("mail_settings/bounce_purge")
 				.OnBehalfOf(onBehalfOf)
@@ -742,12 +739,12 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<EmailAddressSetting> UpdateForwardBounceMailSettingsAsync(bool enabled, string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var forwardSpamMailSettings = new EmailAddressSetting
+			var data = new EmailAddressSetting
 			{
 				Enabled = enabled,
 				EmailAddress = email
 			};
-			var data = JObject.FromObject(forwardSpamMailSettings);
+
 			return _client
 				.PatchAsync("mail_settings/forward_bounce")
 				.OnBehalfOf(onBehalfOf)

@@ -13,19 +13,19 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "asm/suppressions/global";
-		private const string GLOBALLY_UNSUBSCRIBED = @"[
+		internal const string ENDPOINT = "asm/suppressions/global";
+		internal const string GLOBALLY_UNSUBSCRIBED = @"[
 			{
-				'email': 'example@bogus.com',
-				'created': 1422313607
+				""email"": ""example@bogus.com"",
+				""created"": 1422313607
 			},
 			{
-				'email': 'bogus@example.com',
-				'created': 1422313607
+				""email"": ""bogus@example.com"",
+				""created"": 1422313607
 			},
 			{
-				'email': 'invalid@somewhere.com',
-				'created': 1422313607
+				""email"": ""invalid@somewhere.com"",
+				""created"": 1422313607
 			}
 		]";
 
@@ -57,9 +57,9 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 			var emails = new[] { "test1@example.com", "test2@example.com" };
 			var apiResponse = @"{
-				'recipient_emails': [
-					'test1@example.com',
-					'test2@example.com'
+				""recipient_emails"": [
+					""test1@example.com"",
+					""test2@example.com""
 				]
 			}";
 
@@ -104,7 +104,7 @@ namespace StrongGrid.UnitTests.Resources
 			var email = "test1@example.com";
 
 			var apiResponse = @"{
-				'recipient_email': 'test1@example.com'
+				""recipient_email"": ""test1@example.com""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();

@@ -1,6 +1,6 @@
-using Newtonsoft.Json;
 using StrongGrid.Utilities;
 using System;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -15,7 +15,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("id")]
 		public string Id { get; set; }
 
 		/// <summary>
@@ -24,7 +24,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The template identifier.
 		/// </value>
-		[JsonProperty("template_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("template_id")]
 		public string TemplateId { get; set; }
 
 		/// <summary>
@@ -33,7 +33,7 @@ namespace StrongGrid.Models
 		/// <value>
 		///   <c>true</c> if this instance is active; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("active", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("active")]
 		[JsonConverter(typeof(IntegerBooleanConverter))]
 		public bool IsActive { get; set; }
 
@@ -43,7 +43,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The name.
 		/// </value>
-		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("name")]
 		public string Name { get; set; }
 
 		/// <summary>
@@ -52,7 +52,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The content of the HTML.
 		/// </value>
-		[JsonProperty("html_content", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("html_content")]
 		public string HtmlContent { get; set; }
 
 		/// <summary>
@@ -61,7 +61,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The content of the text.
 		/// </value>
-		[JsonProperty("plain_content", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("plain_content")]
 		public string TextContent { get; set; }
 
 		/// <summary>
@@ -70,7 +70,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The content of the subject.
 		/// </value>
-		[JsonProperty("subject", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("subject")]
 		public string Subject { get; set; }
 
 		/// <summary>
@@ -79,7 +79,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The type of editor.
 		/// </value>
-		[JsonProperty("editor", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("editor")]
 		public EditorType EditorType { get; set; }
 
 		/// <summary>
@@ -88,7 +88,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The updated on.
 		/// </value>
-		[JsonProperty("updated_at", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("updated_at")]
 		[JsonConverter(typeof(SendGridDateTimeConverter))]
 		public DateTime UpdatedOn { get; set; }
 	}

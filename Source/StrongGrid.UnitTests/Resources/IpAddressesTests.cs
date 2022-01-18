@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
@@ -6,6 +5,7 @@ using StrongGrid.Resources;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -16,35 +16,35 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "ips";
+		internal const string ENDPOINT = "ips";
 
-		private const string SINGLE_ASSIGNED_IPADDRESS_JSON = @"{
-			'ip': '192.168.1.1',
-			'pools': [
-				'pool1',
-				'pool2'
+		internal const string SINGLE_ASSIGNED_IPADDRESS_JSON = @"{
+			""ip"": ""192.168.1.1"",
+			""pools"": [
+				""pool1"",
+				""pool2""
 			],
-			'whitelabeled': false,
-			'start_date': 1409616000,
-			'subusers': [
-				'tim@sendgrid.net'
+			""whitelabeled"": false,
+			""start_date"": 1409616000,
+			""subusers"": [
+				""tim@sendgrid.net""
 			],
-			'warmup': false,
-			'assigned_at': 1482883200
+			""warmup"": false,
+			""assigned_at"": 1482883200
 		}";
 
-		private const string SINGLE_UNASSIGNED_IPADDRESS_JSON = @"{
-			'ip': '208.115.214.22',
-			'pools': [],
-			'whitelabeled': true,
-			'rdns': 'o1.email.burgermail.com',
-			'start_date': 1409616000,
-			'subusers': [],
-			'warmup': false,
-			'assigned_at': 1482883200
+		internal const string SINGLE_UNASSIGNED_IPADDRESS_JSON = @"{
+			""ip"": ""208.115.214.22"",
+			""pools"": [],
+			""whitelabeled"": true,
+			""rdns"": ""o1.email.burgermail.com"",
+			""start_date"": 1409616000,
+			""subusers"": [],
+			""warmup"": false,
+			""assigned_at"": 1482883200
 		}";
 
-		private const string MULTIPLE_IPADDRESSES_JSON = "[" +
+		internal const string MULTIPLE_IPADDRESSES_JSON = "[" +
 			SINGLE_ASSIGNED_IPADDRESS_JSON + "," +
 			SINGLE_UNASSIGNED_IPADDRESS_JSON +
 		"]";
@@ -57,7 +57,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<IpAddress>(SINGLE_ASSIGNED_IPADDRESS_JSON);
+			var result = JsonSerializer.Deserialize<IpAddress>(SINGLE_ASSIGNED_IPADDRESS_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -80,7 +80,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<IpAddress[]>(MULTIPLE_IPADDRESSES_JSON);
+			var result = JsonSerializer.Deserialize<IpAddress[]>(MULTIPLE_IPADDRESSES_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -101,14 +101,14 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'ips': [
+				""ips"": [
 					{
-						'ip': '1.2.3.4',
-						'subusers': [ 'jdesautels' ]
+						""ip"": ""1.2.3.4"",
+						""subusers"": [ ""jdesautels"" ]
 					}
 				],
-				'remaining_ips':2,
-				'warmup': false
+				""remaining_ips"":2,
+				""warmup"": false
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -136,11 +136,11 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'results': [
+				""results"": [
 					{
-						'remaining': 2,
-						'period': 'month',
-						'price_per_ip': 20
+						""remaining"": 2,
+						""period"": ""month"",
+						""price_per_ip"": 20
 					}
 				]
 			}";

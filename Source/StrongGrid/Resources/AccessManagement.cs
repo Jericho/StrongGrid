@@ -1,6 +1,6 @@
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
+using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -77,10 +77,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<WhitelistedIp> AddIpAddressToWhitelistAsync(string ip, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "ips", new JArray(new JObject { { "ip", ip } }) }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("ips/ip", ip);
 
 			var result = await _client
 				.PostAsync($"{_endpoint}/whitelist")
@@ -105,16 +103,15 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<WhitelistedIp[]> AddIpAddressesToWhitelistAsync(IEnumerable<string> ips, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var ipsJsonArray = new JArray();
-			foreach (var ip in ips)
+			var ipsJsonArray = ips.Select(ip =>
 			{
-				ipsJsonArray.Add(new JObject { { "ip", ip } });
-			}
+				var ipJson = new StrongGridJsonObject();
+				ipJson.AddProperty("ip", ip);
+				return ipJson;
+			}).ToArray();
 
-			var data = new JObject
-			{
-				{ "ips", ipsJsonArray }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("ips", ipsJsonArray);
 
 			return _client
 				.PostAsync($"{_endpoint}/whitelist")
@@ -153,10 +150,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task RemoveIpAddressesFromWhitelistAsync(IEnumerable<long> ids, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "ids", new JArray(ids.ToArray()) }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("ids", ids.ToArray());
 
 			return _client
 				.DeleteAsync($"{_endpoint}/whitelist")

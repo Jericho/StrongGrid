@@ -1,5 +1,5 @@
 using Shouldly;
-using StrongGrid.Utilities;
+using StrongGrid.Models.Legacy;
 using System;
 using Xunit;
 
@@ -57,6 +57,26 @@ namespace StrongGrid.UnitTests.Utilities
 
 			// Assert
 			result.ShouldBe(1468155111);
+		}
+
+		[Fact]
+		public void ToEnum_throws_when_invalid_value()
+		{
+			Should.Throw<Exception>(() => "This is not a valid value".ToEnum<CampaignStatus>());
+		}
+
+		[Theory]
+		[InlineData("in progress", CampaignStatus.InProgress)]
+		[InlineData("IN PROGRESS", CampaignStatus.InProgress)]
+		[InlineData("In Progress", CampaignStatus.InProgress)]
+		[InlineData("In progress", CampaignStatus.InProgress)]
+		public void ToEnum_is_case_insensitive(string descripion, CampaignStatus expectedStatus)
+		{
+			// Act
+			var result = descripion.ToEnum<CampaignStatus>();
+
+			// Assert
+			result.ShouldBe(expectedStatus);
 		}
 	}
 }

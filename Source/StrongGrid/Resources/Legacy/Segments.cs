@@ -1,5 +1,5 @@
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
+using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -43,12 +43,10 @@ namespace StrongGrid.Resources.Legacy
 		{
 			conditions = conditions ?? Enumerable.Empty<Models.Legacy.SearchCondition>();
 
-			var data = new JObject
-			{
-				{ "name", name },
-				{ "conditions", JArray.FromObject(conditions.ToArray()) }
-			};
-			data.AddPropertyIfValue("list_id", listId);
+			var data = new StrongGridJsonObject();
+			data.AddProperty("name", name);
+			data.AddProperty("conditions", conditions.ToArray());
+			data.AddProperty("list_id", listId);
 
 			return _client
 				.PostAsync(_endpoint)
@@ -109,10 +107,10 @@ namespace StrongGrid.Resources.Legacy
 		{
 			conditions = conditions ?? Enumerable.Empty<Models.Legacy.SearchCondition>();
 
-			var data = new JObject();
-			data.AddPropertyIfValue("name", name);
-			data.AddPropertyIfValue("list_id", listId);
-			data.AddPropertyIfValue("conditions", conditions);
+			var data = new StrongGridJsonObject();
+			data.AddProperty("name", name);
+			data.AddProperty("list_id", listId);
+			data.AddProperty("conditions", conditions);
 
 			return _client
 				.PatchAsync($"{_endpoint}/{segmentId}")

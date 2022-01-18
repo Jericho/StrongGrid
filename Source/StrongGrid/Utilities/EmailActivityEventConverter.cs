@@ -1,140 +1,86 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using StrongGrid.Models;
 using StrongGrid.Models.EmailActivities;
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Utilities
 {
 	/// <summary>
 	/// Converts a JSON string into and array of <see cref="Event">events</see>.
 	/// </summary>
-	/// <seealso cref="Newtonsoft.Json.JsonConverter" />
-	internal class EmailActivityEventConverter : JsonConverter
+	/// <seealso cref="JsonConverter" />
+	internal class EmailActivityEventConverter : JsonConverter<Event[]>
 	{
-		/// <summary>
-		/// Determines whether this instance can convert the specified object type.
-		/// </summary>
-		/// <param name="objectType">Type of the object.</param>
-		/// <returns>
-		/// <c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
-		/// </returns>
-		public override bool CanConvert(Type objectType)
+		public override Event[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			return objectType == typeof(Event);
+			if (JsonDocument.TryParseValue(ref reader, out var doc))
+			{
+				if (doc.RootElement.ValueKind == JsonValueKind.Array)
+				{
+					return doc.RootElement.EnumerateArray()
+						.Select(item => Convert(item, options))
+						.ToArray();
+				}
+				else if (doc.RootElement.ValueKind == JsonValueKind.Object)
+				{
+					return new[] { Convert(doc.RootElement, options) };
+				}
+			}
+
+			throw new Exception("Unable to convert to Event(s)");
 		}
 
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="T:Newtonsoft.Json.JsonConverter" /> can read JSON.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="T:Newtonsoft.Json.JsonConverter" /> can read JSON; otherwise, <c>false</c>.
-		/// </value>
-		public override bool CanRead
-		{
-			get { return true; }
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="T:Newtonsoft.Json.JsonConverter" /> can write JSON.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="T:Newtonsoft.Json.JsonConverter" /> can write JSON; otherwise, <c>false</c>.
-		/// </value>
-		public override bool CanWrite
-		{
-			get { return false; }
-		}
-
-		/// <summary>
-		/// Writes the JSON representation of the object.
-		/// </summary>
-		/// <param name="writer">The <see cref="T:Newtonsoft.Json.JsonWriter" /> to write to.</param>
-		/// <param name="value">The value.</param>
-		/// <param name="serializer">The calling serializer.</param>
-		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+		public override void Write(Utf8JsonWriter writer, Event[] value, JsonSerializerOptions options)
 		{
 			throw new NotImplementedException();
 		}
 
-		/// <summary>
-		/// Reads the JSON representation of the object.
-		/// </summary>
-		/// <param name="reader">The <see cref="T:Newtonsoft.Json.JsonReader" /> to read from.</param>
-		/// <param name="objectType">Type of the object.</param>
-		/// <param name="existingValue">The existing value of object being read.</param>
-		/// <param name="serializer">The calling serializer.</param>
-		/// <returns>
-		/// The object value.
-		/// </returns>
-		/// <exception cref="System.Exception">Unable to determine the field type.</exception>
-		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+		private static Event Convert(JsonElement jsonElement, JsonSerializerOptions options)
 		{
-			if (reader.TokenType == JsonToken.StartArray)
-			{
-				var jArray = JArray.Load(reader);
-				var items = jArray
-					.OfType<JObject>()
-					.Select(item => Convert(item, serializer))
-					.Where(item => item != null)
-					.ToArray();
+			jsonElement.TryGetProperty("event_name", out JsonElement eventTypeProperty);
+			var eventTypeAsString = eventTypeProperty.GetString();
+			var eventType = eventTypeAsString.ToEnum<EventType>();
 
-				return items;
-			}
-			else if (reader.TokenType == JsonToken.StartObject)
-			{
-				var jObject = JObject.Load(reader);
-				return Convert(jObject, serializer);
-			}
-
-			throw new Exception("Unable to convert to Event");
-		}
-
-		private Event Convert(JObject jsonObject, JsonSerializer serializer)
-		{
-			jsonObject.TryGetValue("event_name", StringComparison.OrdinalIgnoreCase, out JToken eventTypeJsonProperty);
-			var eventType = (EventType)eventTypeJsonProperty.ToObject(typeof(EventType));
-
-			var emailActivityEvent = (Event)null;
+			Event emailActivityEvent;
 			switch (eventType)
 			{
 				case EventType.Bounce:
-					emailActivityEvent = jsonObject.ToObject<BounceEvent>(serializer);
+					emailActivityEvent = jsonElement.ToObject<BounceEvent>(options);
 					break;
 				case EventType.Open:
-					emailActivityEvent = jsonObject.ToObject<OpenEvent>(serializer);
+					emailActivityEvent = jsonElement.ToObject<OpenEvent>(options);
 					break;
 				case EventType.Click:
-					emailActivityEvent = jsonObject.ToObject<ClickEvent>(serializer);
+					emailActivityEvent = jsonElement.ToObject<ClickEvent>(options);
 					break;
 				case EventType.Processed:
-					emailActivityEvent = jsonObject.ToObject<ProcessedEvent>(serializer);
+					emailActivityEvent = jsonElement.ToObject<ProcessedEvent>(options);
 					break;
 				case EventType.Dropped:
-					emailActivityEvent = jsonObject.ToObject<DroppedEvent>(serializer);
+					emailActivityEvent = jsonElement.ToObject<DroppedEvent>(options);
 					break;
 				case EventType.Delivered:
-					emailActivityEvent = jsonObject.ToObject<DeliveredEvent>(serializer);
+					emailActivityEvent = jsonElement.ToObject<DeliveredEvent>(options);
 					break;
 				case EventType.Deferred:
-					emailActivityEvent = jsonObject.ToObject<DeferredEvent>(serializer);
+					emailActivityEvent = jsonElement.ToObject<DeferredEvent>(options);
 					break;
 				case EventType.SpamReport:
-					emailActivityEvent = jsonObject.ToObject<SpamReportEvent>(serializer);
+					emailActivityEvent = jsonElement.ToObject<SpamReportEvent>(options);
 					break;
 				case EventType.Unsubscribe:
-					emailActivityEvent = jsonObject.ToObject<UnsubscribeEvent>(serializer);
+					emailActivityEvent = jsonElement.ToObject<UnsubscribeEvent>(options);
 					break;
 				case EventType.GroupUnsubscribe:
-					emailActivityEvent = jsonObject.ToObject<GroupUnsubscribeEvent>(serializer);
+					emailActivityEvent = jsonElement.ToObject<GroupUnsubscribeEvent>(options);
 					break;
 				case EventType.GroupResubscribe:
-					emailActivityEvent = jsonObject.ToObject<GroupResubscribeEvent>(serializer);
+					emailActivityEvent = jsonElement.ToObject<GroupResubscribeEvent>(options);
 					break;
 				default:
-					throw new Exception($"{eventTypeJsonProperty.ToString()} is an unknown event type");
+					throw new Exception($"{eventTypeAsString} is an unknown event type");
 			}
 
 			return emailActivityEvent;

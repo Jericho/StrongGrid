@@ -1,4 +1,3 @@
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -54,7 +53,7 @@ namespace StrongGrid.Resources.Legacy
 			CancellationToken cancellationToken = default)
 		{
 			// SendGrid expects an array despite the fact we are creating a single contact
-			var data = new[] { ConvertToJObject(email, firstName, lastName, customFields) };
+			var data = new[] { ConvertToJson(email, firstName, lastName, customFields) };
 
 			var response = await _client
 				.PostAsync(_endpoint)
@@ -92,7 +91,7 @@ namespace StrongGrid.Resources.Legacy
 			CancellationToken cancellationToken = default)
 		{
 			// SendGrid expects an array despite the fact we are updating a single contact
-			var data = new[] { ConvertToJObject(email, firstName, lastName, customFields) };
+			var data = new[] { ConvertToJson(email, firstName, lastName, customFields) };
 
 			var response = await _client
 				.PatchAsync(_endpoint)
@@ -116,11 +115,7 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task<Models.Legacy.ImportResult> ImportAsync(IEnumerable<Models.Legacy.Contact> contacts, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JArray();
-			foreach (var contact in contacts)
-			{
-				data.Add(ConvertToJObject(contact));
-			}
+			var data = contacts.Select(c => ConvertToJson(c)).ToArray();
 
 			return _client
 				.PostAsync(_endpoint)
@@ -155,7 +150,7 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task DeleteAsync(IEnumerable<string> contactId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = JArray.FromObject(contactId.ToArray());
+			var data = contactId.ToArray();
 			return _client
 				.DeleteAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
@@ -249,9 +244,9 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task<Models.Legacy.Contact[]> SearchAsync(IEnumerable<Models.Legacy.SearchCondition> conditions, long? listId = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject();
-			data.AddPropertyIfValue("list_id", listId);
-			data.AddPropertyIfValue("conditions", conditions);
+			var data = new StrongGridJsonObject();
+			data.AddProperty("list_id", listId);
+			data.AddProperty("conditions", conditions);
 
 			return _client
 				.PostAsync($"{_endpoint}/search")
@@ -279,52 +274,52 @@ namespace StrongGrid.Resources.Legacy
 				.AsObject<Models.Legacy.List[]>("lists");
 		}
 
-		private static JObject ConvertToJObject(
+		private static StrongGridJsonObject ConvertToJson(
 			Parameter<string> email,
 			Parameter<string> firstName,
 			Parameter<string> lastName,
 			Parameter<IEnumerable<Models.Legacy.Field>> customFields)
 		{
-			var result = new JObject();
-			result.AddPropertyIfValue("email", email);
-			result.AddPropertyIfValue("first_name", firstName);
-			result.AddPropertyIfValue("last_name", lastName);
+			var result = new StrongGridJsonObject();
+			result.AddProperty("email", email);
+			result.AddProperty("first_name", firstName);
+			result.AddProperty("last_name", lastName);
 
 			if (customFields.HasValue && customFields.Value != null)
 			{
 				foreach (var customField in customFields.Value.OfType<Models.Legacy.Field<string>>())
 				{
-					result.AddPropertyIfValue(customField.Name, customField.Value);
+					result.AddProperty(customField.Name, customField.Value);
 				}
 
 				foreach (var customField in customFields.Value.OfType<Models.Legacy.Field<long>>())
 				{
-					result.AddPropertyIfValue(customField.Name, customField.Value);
+					result.AddProperty(customField.Name, customField.Value);
 				}
 
 				foreach (var customField in customFields.Value.OfType<Models.Legacy.Field<long?>>())
 				{
-					result.AddPropertyIfValue(customField.Name, customField.Value);
+					result.AddProperty(customField.Name, customField.Value);
 				}
 
 				foreach (var customField in customFields.Value.OfType<Models.Legacy.Field<DateTime>>())
 				{
-					result.AddPropertyIfValue(customField.Name, customField.Value.ToUnixTime());
+					result.AddProperty(customField.Name, customField.Value.ToUnixTime());
 				}
 
 				foreach (var customField in customFields.Value.OfType<Models.Legacy.Field<DateTime?>>())
 				{
-					result.AddPropertyIfValue(customField.Name, customField.Value?.ToUnixTime());
+					result.AddProperty(customField.Name, customField.Value?.ToUnixTime());
 				}
 			}
 
 			return result;
 		}
 
-		private static JObject ConvertToJObject(Models.Legacy.Contact contact)
+		private static StrongGridJsonObject ConvertToJson(Models.Legacy.Contact contact)
 		{
-			var result = ConvertToJObject(contact.Email, contact.FirstName, contact.LastName, contact.CustomFields);
-			result.AddPropertyIfValue("id", contact.Id);
+			var result = ConvertToJson(contact.Email, contact.FirstName, contact.LastName, contact.CustomFields);
+			result.AddProperty("id", contact.Id);
 			return result;
 		}
 	}

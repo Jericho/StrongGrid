@@ -1,4 +1,3 @@
-﻿using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
@@ -6,6 +5,7 @@ using StrongGrid.Resources;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -16,40 +16,40 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "alerts";
+		internal const string ENDPOINT = "alerts";
 
-		private const string SINGLE_ALERT_JSON = @"{
-			'created_at': 1451520930,
-			'email_to': 'test@example.com',
-			'frequency': 'daily',
-			'id': 48,
-			'type': 'stats_notification',
-			'updated_at': 1451520930
+		internal const string SINGLE_ALERT_JSON = @"{
+			""created_at"": 1451520930,
+			""email_to"": ""test@example.com"",
+			""frequency"": ""daily"",
+			""id"": 48,
+			""type"": ""stats_notification"",
+			""updated_at"": 1451520930
 		}";
-		private const string MULTIPLE_ALERTS_JSON = @"[
+		internal const string MULTIPLE_ALERTS_JSON = @"[
 			{
-				'created_at': 1451498784,
-				'email_to': 'test@example.com',
-				'id': 46,
-				'percentage': 90,
-				'type': 'usage_limit',
-				'updated_at': 1451498784
+				""created_at"": 1451498784,
+				""email_to"": ""test@example.com"",
+				""id"": 46,
+				""percentage"": 90,
+				""type"": ""usage_limit"",
+				""updated_at"": 1451498784
 			},
 			{
-				'created_at': 1451498812,
-				'email_to': 'test@example.com',
-				'frequency': 'monthly',
-				'id': 47,
-				'type': 'stats_notification',
-				'updated_at': 1451498812
+				""created_at"": 1451498812,
+				""email_to"": ""test@example.com"",
+				""frequency"": ""monthly"",
+				""id"": 47,
+				""type"": ""stats_notification"",
+				""updated_at"": 1451498812
 			},
 			{
-				'created_at': 1451520930,
-				'email_to': 'test@example.com',
-				'frequency': 'daily',
-				'id': 48,
-				'type': 'stats_notification',
-				'updated_at': 1451520930
+				""created_at"": 1451520930,
+				""email_to"": ""test@example.com"",
+				""frequency"": ""daily"",
+				""id"": 48,
+				""type"": ""stats_notification"",
+				""updated_at"": 1451520930
 			}
 		]";
 
@@ -61,7 +61,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<Alert>(SINGLE_ALERT_JSON);
+			var result = JsonSerializer.Deserialize<Alert>(SINGLE_ALERT_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();

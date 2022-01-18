@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The domain.
 		/// </value>
-		[JsonProperty("domain_cname", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("domain_cname")]
 		public DnsRecord Domain { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The owner.
 		/// </value>
-		[JsonProperty("owner_cname", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("owner_cname")]
 		public DnsRecord Owner { get; set; }
 	}
 }

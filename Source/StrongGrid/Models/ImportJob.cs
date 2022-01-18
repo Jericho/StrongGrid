@@ -1,5 +1,5 @@
-using Newtonsoft.Json;
 using System;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -15,7 +15,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("id")]
 		public string Id { get; set; }
 
 		/// <summary>
@@ -24,7 +24,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The status.
 		/// </value>
-		[JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("status")]
 		public JobStatus Status { get; set; }
 
 		/// <summary>
@@ -33,7 +33,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The job type.
 		/// </value>
-		[JsonProperty("job_type", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("job_type")]
 		public ImportType Type { get; set; }
 
 		/// <summary>
@@ -42,7 +42,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The results.
 		/// </value>
-		[JsonProperty("results", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("results")]
 		public ImportResults Results { get; set; }
 
 		/// <summary>
@@ -51,7 +51,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The creation date.
 		/// </value>
-		[JsonProperty("started_at", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("started_at")]
 		public DateTime StartedOn { get; set; }
 
 		/// <summary>
@@ -60,7 +60,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The completion date.
 		/// </value>
-		[JsonProperty("finished_at", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("finished_at")]
 		public DateTime CompletedOn { get; set; }
 	}
 }

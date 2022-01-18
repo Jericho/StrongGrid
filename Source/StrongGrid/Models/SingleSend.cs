@@ -1,5 +1,5 @@
-using Newtonsoft.Json;
 using System;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -14,7 +14,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("id")]
 		public string Id { get; set; }
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The name.
 		/// </value>
-		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("name")]
 		public string Name { get; set; }
 
 		/// <summary>
@@ -32,7 +32,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The categories.
 		/// </value>
-		[JsonProperty("categories", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("categories")]
 		public string[] Categories { get; set; }
 
 		/// <summary>
@@ -41,7 +41,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The status.
 		/// </value>
-		[JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("status")]
 		public SingleSendStatus Status { get; set; }
 
 		/// <summary>
@@ -50,7 +50,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The date and time when the single send will be sent.
 		/// </value>
-		[JsonProperty("send_at", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("send_at")]
 		public DateTime? SendOn { get; set; }
 
 		/// <summary>
@@ -59,7 +59,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The date and time when the single send was modified.
 		/// </value>
-		[JsonProperty("updated_at", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("updated_at")]
 		public DateTime? UpdatedOn { get; set; }
 
 		/// <summary>
@@ -68,7 +68,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The date and time when the single send was created.
 		/// </value>
-		[JsonProperty("created_at", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("created_at")]
 		public DateTime? CreatedOn { get; set; }
 
 		/// <summary>
@@ -214,10 +214,10 @@ namespace StrongGrid.Models
 			set => SendTo.Segments = value;
 		}
 
-		[JsonProperty("email_config", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("email_config")]
 		private SingleSendEmailConfig EmailConfig { get; set; }
 
-		[JsonProperty("send_to", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("send_to")]
 		private SingleSendSendTo SendTo { get; set; }
 	}
 }

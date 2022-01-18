@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("enabled")]
+		[JsonPropertyName("enabled")]
 		public bool Enabled { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The threshold.
 		/// </value>
-		[JsonProperty("max_score")]
+		[JsonPropertyName("max_score")]
 		public int Threshold { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The URL.
 		/// </value>
-		[JsonProperty("url")]
+		[JsonPropertyName("url")]
 		public string Url { get; set; }
 	}
 }
