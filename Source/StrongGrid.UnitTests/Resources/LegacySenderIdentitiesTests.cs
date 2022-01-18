@@ -3,7 +3,6 @@ using Shouldly;
 using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Resources.Legacy;
-using System;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;

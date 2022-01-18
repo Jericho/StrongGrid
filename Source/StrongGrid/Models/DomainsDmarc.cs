@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The array of domains.
 		/// </value>
-		[JsonProperty("soft_failures", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("soft_failures")]
 		public string[] SoftFailures { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The aray of domains.
 		/// </value>
-		[JsonProperty("hard_failures", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("hard_failures")]
 		public string[] HardFailures { get; set; }
 	}
 }

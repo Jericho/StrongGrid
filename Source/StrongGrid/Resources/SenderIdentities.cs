@@ -204,13 +204,13 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<SenderIdentity> UpdateAsync(long senderIdentityId, Parameter<string> nickname = default, Parameter<MailAddress> from = default, Parameter<MailAddress> replyTo = default, Parameter<string> address1 = default, Parameter<string> address2 = default, Parameter<string> city = default, Parameter<string> state = default, Parameter<string> zip = default, Parameter<string> country = default, CancellationToken cancellationToken = default)
 		{
-			var data = CreateJObject(nickname, from, replyTo, address1, address2, city, state, zip, country);
+			var data = ConvertToJson(nickname, from, replyTo, address1, address2, city, state, zip, country);
 
 			return _client
 				.PatchAsync($"{_endpoint}/{senderIdentityId}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsSendGridObject<SenderIdentity>();
+				.AsObject<SenderIdentity>();
 		}
 
 		private static StrongGridJsonObject ConvertToJson(
