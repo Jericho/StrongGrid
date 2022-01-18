@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
@@ -7,6 +6,7 @@ using StrongGrid.Resources.Legacy;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -17,51 +17,51 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "contactdb/recipients";
+		internal const string ENDPOINT = "contactdb/recipients";
 
-		private const string SINGLE_RECIPIENT_JSON = @"{
-			'created_at': 1422313607,
-			'email': 'jones@example.com',
-			'first_name': null,
-			'id': 'YUBh',
-			'last_clicked': null,
-			'last_emailed': null,
-			'last_name': 'Jones',
-			'last_opened': null,
-			'updated_at': 1422313790,
-			'custom_fields': [
+		internal const string SINGLE_RECIPIENT_JSON = @"{
+			""created_at"": 1422313607,
+			""email"": ""jones@example.com"",
+			""first_name"": null,
+			""id"": ""YUBh"",
+			""last_clicked"": null,
+			""last_emailed"": null,
+			""last_name"": ""Jones"",
+			""last_opened"": null,
+			""updated_at"": 1422313790,
+			""custom_fields"": [
 				{
-					'id': 23,
-					'name': 'pet',
-					'value': 'Indiana',
-					'type': 'text'
+					""id"": 23,
+					""name"": ""pet"",
+					""value"": ""Indiana"",
+					""type"": ""text""
 				}
 			]
 		}";
-		private const string MULTIPLE_RECIPIENTS_JSON = @"{
-			'recipients': [
+		internal const string MULTIPLE_RECIPIENTS_JSON = @"{
+			""recipients"": [
 				{
-					'created_at': 1422313607,
-					'email': 'jones@example.com',
-					'first_name': null,
-					'id': 'YUBh',
-					'last_clicked': null,
-					'last_emailed': null,
-					'last_name': 'Jones',
-					'last_opened': null,
-					'updated_at': 1422313790,
-					'custom_fields': [
+					""created_at"": 1422313607,
+					""email"": ""jones@example.com"",
+					""first_name"": null,
+					""id"": ""YUBh"",
+					""last_clicked"": null,
+					""last_emailed"": null,
+					""last_name"": ""Jones"",
+					""last_opened"": null,
+					""updated_at"": 1422313790,
+					""custom_fields"": [
 						{
-							'id': 23,
-							'name': 'pet',
-							'value': 'Indiana',
-							'type': 'text'
+							""id"": 23,
+							""name"": ""pet"",
+							""value"": ""Indiana"",
+							""type"": ""text""
 						},
 						{
-							'id': 24,
-							'name': 'age',
-							'value': '43',
-							'type': 'number'
+							""id"": 24,
+							""name"": ""age"",
+							""value"": ""43"",
+							""type"": ""number""
 						}
 					]
 				}
@@ -76,7 +76,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<StrongGrid.Models.Legacy.Contact>(SINGLE_RECIPIENT_JSON);
+			var result = JsonSerializer.Deserialize<StrongGrid.Models.Legacy.Contact>(SINGLE_RECIPIENT_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -107,16 +107,16 @@ namespace StrongGrid.UnitTests.Resources
 			var lastName = "Doe";
 
 			var apiResponse = @"{
-				'error_count': 0,
-				'error_indices': [
+				""error_count"": 0,
+				""error_indices"": [
 				],
-				'unmodified_indices': [
+				""unmodified_indices"": [
 				],
-				'new_count': 1,
-				'persisted_recipients': [
-					'am9uZXNAZXhhbXBsZS5jb20='
+				""new_count"": 1,
+				""persisted_recipients"": [
+					""am9uZXNAZXhhbXBsZS5jb20=""
 				],
-				'updated_count': 0
+				""updated_count"": 0
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -143,16 +143,16 @@ namespace StrongGrid.UnitTests.Resources
 			var lastName = "Doe";
 
 			var apiResponse = @"{
-				'error_count': 1,
-				'error_indices': [0],
-				'unmodified_indices': [],
-				'new_count': 0,
-				'persisted_recipients': [],
-				'updated_count': 0,
-				'errors': [
+				""error_count"": 1,
+				""error_indices"": [0],
+				""unmodified_indices"": [],
+				""new_count"": 0,
+				""persisted_recipients"": [],
+				""updated_count"": 0,
+				""errors"": [
 					{
-						'message': 'Invalid email.',
-						'error_indices': [0]
+						""message"": ""Invalid email."",
+						""error_indices"": [0]
 					}
 				]
 			}";
@@ -185,23 +185,23 @@ namespace StrongGrid.UnitTests.Resources
 			};
 
 			var apiResponse = @"{
-				'error_count': 1,
-				'error_indices': [
+				""error_count"": 1,
+				""error_indices"": [
 					2
 				],
-				'unmodified_indices': [
+				""unmodified_indices"": [
 					3
 				],
-				'new_count': 2,
-				'persisted_recipients': [
-					'YUBh',
-					'bWlsbGVyQG1pbGxlci50ZXN0'
+				""new_count"": 2,
+				""persisted_recipients"": [
+					""YUBh"",
+					""bWlsbGVyQG1pbGxlci50ZXN0""
 				],
-				'updated_count': 0,
-				'errors': [
+				""updated_count"": 0,
+				""errors"": [
 					{
-						'message': 'Invalid email.',
-						'error_indices': [
+						""message"": ""Invalid email."",
+						""error_indices"": [
 							2
 						]
 					}
@@ -239,17 +239,17 @@ namespace StrongGrid.UnitTests.Resources
 			var lastName = "Jones";
 
 			var apiResponse = @"{
-				'error_count': 0,
-				'error_indices': [
+				""error_count"": 0,
+				""error_indices"": [
 				],
-				'unmodified_indices': [
+				""unmodified_indices"": [
 					1
 				],
-				'new_count': 0,
-				'persisted_recipients': [
-					'am9uZXNAZXhhbXBsZS5jb20='
+				""new_count"": 0,
+				""persisted_recipients"": [
+					""am9uZXNAZXhhbXBsZS5jb20=""
 				],
-				'updated_count': 1
+				""updated_count"": 1
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -283,16 +283,16 @@ namespace StrongGrid.UnitTests.Resources
 			var lastName = "Jones";
 
 			var apiResponse = @"{
-				'error_count': 1,
-				'error_indices': [0],
-				'unmodified_indices': [],
-				'new_count': 0,
-				'persisted_recipients': [],
-				'updated_count': 0,
-				'errors': [
+				""error_count"": 1,
+				""error_indices"": [0],
+				""unmodified_indices"": [],
+				""new_count"": 0,
+				""persisted_recipients"": [],
+				""updated_count"": 0,
+				""errors"": [
 					{
-						'message': 'Invalid email.',
-						'error_indices': [0]
+						""message"": ""Invalid email."",
+						""error_indices"": [0]
 					}
 				]
 			}";
@@ -413,7 +413,7 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'recipient_count': 2
+				""recipient_count"": 2
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -436,7 +436,7 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'recipient_count': 3
+				""recipient_count"": 3
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -484,29 +484,29 @@ namespace StrongGrid.UnitTests.Resources
 				}
 			};
 			var apiResponse = @"{
-				'recipients': [
+				""recipients"": [
 					{
-						'created_at': 1422313607,
-						'email': 'jones@example.com',
-						'first_name': null,
-						'id': 'YUBh',
-						'last_clicked': 12345,
-						'last_emailed': null,
-						'last_name': 'Miller',
-						'last_opened': null,
-						'updated_at': 1422313790,
-						'custom_fields': [
+						""created_at"": 1422313607,
+						""email"": ""jones@example.com"",
+						""first_name"": null,
+						""id"": ""YUBh"",
+						""last_clicked"": 12345,
+						""last_emailed"": null,
+						""last_name"": ""Miller"",
+						""last_opened"": null,
+						""updated_at"": 1422313790,
+						""custom_fields"": [
 							{
-								'id': 23,
-								'name': 'pet',
-								'value': 'Indiana',
-								'type': 'text'
+								""id"": 23,
+								""name"": ""pet"",
+								""value"": ""Indiana"",
+								""type"": ""text""
 							},
 							{
-								'id': 24,
-								'name': 'age',
-								'value': '43',
-								'type': 'number'
+								""id"": 24,
+								""name"": ""age"",
+								""value"": ""43"",
+								""type"": ""number""
 							}
 						]
 					}
@@ -542,29 +542,29 @@ namespace StrongGrid.UnitTests.Resources
 			var listId = (int?)null;
 			var conditions = (SearchCondition[])null;
 			var apiResponse = @"{
-				'recipients': [
+				""recipients"": [
 					{
-						'created_at': 1422313607,
-						'email': 'jones@example.com',
-						'first_name': null,
-						'id': 'YUBh',
-						'last_clicked': 12345,
-						'last_emailed': null,
-						'last_name': 'Miller',
-						'last_opened': null,
-						'updated_at': 1422313790,
-						'custom_fields': [
+						""created_at"": 1422313607,
+						""email"": ""jones@example.com"",
+						""first_name"": null,
+						""id"": ""YUBh"",
+						""last_clicked"": 12345,
+						""last_emailed"": null,
+						""last_name"": ""Miller"",
+						""last_opened"": null,
+						""updated_at"": 1422313790,
+						""custom_fields"": [
 							{
-								'id': 23,
-								'name': 'pet',
-								'value': 'Indiana',
-								'type': 'text'
+								""id"": 23,
+								""name"": ""pet"",
+								""value"": ""Indiana"",
+								""type"": ""text""
 							},
 							{
-								'id': 24,
-								'name': 'age',
-								'value': '43',
-								'type': 'number'
+								""id"": 24,
+								""name"": ""age"",
+								""value"": ""43"",
+								""type"": ""number""
 							}
 						]
 					}
@@ -599,16 +599,16 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 			var contactId = "YUBh";
 			var listsJson = @"{
-				'lists': [
+				""lists"": [
 					{
-						'id': 1,
-						'name': 'prospects',
-						'recipient_count': 1
+						""id"": 1,
+						""name"": ""prospects"",
+						""recipient_count"": 1
 					},
 					{
-						'id': 2,
-						'name': 'customers',
-						'recipient_count': 1
+						""id"": 2,
+						""name"": ""customers"",
+						""recipient_count"": 1
 					}
 				]
 			}";

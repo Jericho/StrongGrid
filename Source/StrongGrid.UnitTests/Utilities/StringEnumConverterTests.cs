@@ -1,6 +1,6 @@
-using Newtonsoft.Json;
 using Shouldly;
 using StrongGrid.Models.Legacy;
+using System.Text.Json;
 using Xunit;
 
 namespace StrongGrid.UnitTests.Utilities
@@ -15,10 +15,10 @@ namespace StrongGrid.UnitTests.Utilities
 		public void Case_insensitive(string json, CampaignStatus expectedStatus)
 		{
 			// Arrange
-			var value = $"'{json}'";
+			var value = $"\"{json}\"";
 
 			// Act
-			var result = JsonConvert.DeserializeObject<CampaignStatus>(value);
+			var result = JsonSerializer.Deserialize<CampaignStatus>(value);
 
 			// Assert
 			result.ShouldBe(expectedStatus);

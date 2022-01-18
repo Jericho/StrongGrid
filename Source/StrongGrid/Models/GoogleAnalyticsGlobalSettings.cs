@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("enabled")]
 		public bool Enabled { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The utm source.
 		/// </value>
-		[JsonProperty("utm_source", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("utm_source")]
 		public string UtmSource { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The utm medium.
 		/// </value>
-		[JsonProperty("utm_medium", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("utm_medium")]
 		public string UtmMedium { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The utm term.
 		/// </value>
-		[JsonProperty("utm_term", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("utm_term")]
 		public string UtmTerm { get; set; }
 
 		/// <summary>
@@ -49,7 +49,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The content of the utm.
 		/// </value>
-		[JsonProperty("utm_content", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("utm_content")]
 		public string UtmContent { get; set; }
 
 		/// <summary>
@@ -58,7 +58,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The utm campaign.
 		/// </value>
-		[JsonProperty("utm_campaign", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("utm_campaign")]
 		public string UtmCampaign { get; set; }
 	}
 }

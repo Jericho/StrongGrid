@@ -1,9 +1,9 @@
-using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Resources;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -14,55 +14,55 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "validations/email";
+		internal const string ENDPOINT = "validations/email";
 
-		private const string INVALID_EMAIL_RESPONSE = @"{
-			'email': 'john.doe@gmial.com',
-			'verdict': 'Invalid',
-			'score': 0.00089,
-			'local': 'john.doe',
-			'host': 'gmial.com',
-			'suggestion': 'gmail.com',
-			'checks': {
-				'domain': {
-					'has_valid_address_syntax': true,
-					'has_mx_or_a_record': true,
-					'is_suspected_disposable_address': false
+		internal const string INVALID_EMAIL_JSON = @"{
+			""email"": ""john.doe@gmial.com"",
+			""verdict"": ""Invalid"",
+			""score"": 0.00089,
+			""local"": ""john.doe"",
+			""host"": ""gmial.com"",
+			""suggestion"": ""gmail.com"",
+			""checks"": {
+				""domain"": {
+					""has_valid_address_syntax"": true,
+					""has_mx_or_a_record"": true,
+					""is_suspected_disposable_address"": false
 				},
-				'local_part': {
-					'is_suspected_role_address': false
+				""local_part"": {
+					""is_suspected_role_address"": false
 				},
-				'additional': {
-					'has_known_bounces': false,
-					'has_suspected_bounces': true
+				""additional"": {
+					""has_known_bounces"": false,
+					""has_suspected_bounces"": true
 				}
 			},
-			'ip_address': '123.45.67.89'
+			""ip_address"": ""123.45.67.89""
 		}";
 
-		private const string VALID_EMAIL_RESPONSE = @"{
-			'email': 'valid_email_address@mtsg.me',
-			'verdict': 'Valid',
-			'score': 0.93357,
-			'local': 'valid_email_address',
-			'host': 'mtsg.me',
-			'checks': {
-				'domain': {
-					'has_valid_address_syntax': true,
-					'has_mx_or_a_record': true,
-					'is_suspected_disposable_address': false
+		internal const string VALID_EMAIL_JSON = @"{
+			""email"": ""valid_email_address@mtsg.me"",
+			""verdict"": ""Valid"",
+			""score"": 0.93357,
+			""local"": ""valid_email_address"",
+			""host"": ""mtsg.me"",
+			""checks"": {
+				""domain"": {
+					""has_valid_address_syntax"": true,
+					""has_mx_or_a_record"": true,
+					""is_suspected_disposable_address"": false
 
 				},
-				'local_part': {
-					'is_suspected_role_address': false
+				""local_part"": {
+					""is_suspected_role_address"": false
 				},
-				'additional': {
-					'has_known_bounces': false,
-					'has_suspected_bounces': false
+				""additional"": {
+					""has_known_bounces"": false,
+					""has_suspected_bounces"": false
 				}
 			},
-			'source': 'TEST',
-			'ip_address': '123.123.123.123'
+			""source"": ""TEST"",
+			""ip_address"": ""123.123.123.123""
 		}";
 
 		#endregion
@@ -73,7 +73,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<EmailValidationResult>(INVALID_EMAIL_RESPONSE);
+			var result = JsonSerializer.Deserialize<EmailValidationResult>(INVALID_EMAIL_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -104,7 +104,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<EmailValidationResult>(VALID_EMAIL_RESPONSE);
+			var result = JsonSerializer.Deserialize<EmailValidationResult>(VALID_EMAIL_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -132,7 +132,7 @@ namespace StrongGrid.UnitTests.Resources
 		public async Task ValidateAsync()
 		{
 			// Arrange
-			var apiResponse = "{'result':" + VALID_EMAIL_RESPONSE + "}";
+			var apiResponse = "{\"result\":" + VALID_EMAIL_JSON + "}";
 
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", apiResponse);

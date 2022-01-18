@@ -1,7 +1,7 @@
-using Newtonsoft.Json;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -11,6 +11,7 @@ namespace StrongGrid.Models
 	/// documentation on Personalizations. Parameters in personalizations will override the parameters
 	/// of the same name from the message level.
 	/// </summary>
+	[JsonConverter(typeof(MailPersonalizationConverter))]
 	public class MailPersonalization
 	{
 		/// <summary>
@@ -20,7 +21,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// From.
 		/// </value>
-		[JsonProperty("from", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("from")]
 		public MailAddress From { get; set; }
 
 		/// <summary>
@@ -31,7 +32,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// To.
 		/// </value>
-		[JsonProperty("to", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("to")]
 		public MailAddress[] To { get; set; }
 
 		/// <summary>
@@ -42,7 +43,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The cc.
 		/// </value>
-		[JsonProperty("cc", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("cc")]
 		public MailAddress[] Cc { get; set; }
 
 		/// <summary>
@@ -53,7 +54,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The BCC.
 		/// </value>
-		[JsonProperty("bcc", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("bcc")]
 		public MailAddress[] Bcc { get; set; }
 
 		/// <summary>
@@ -62,7 +63,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The subject.
 		/// </value>
-		[JsonProperty("subject", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("subject")]
 		public string Subject { get; set; }
 
 		/// <summary>
@@ -71,7 +72,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The headers.
 		/// </value>
-		[JsonProperty("headers", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("headers")]
 		[JsonConverter(typeof(KeyValuePairEnumerationConverter))]
 		public KeyValuePair<string, string>[] Headers { get; set; }
 
@@ -86,7 +87,7 @@ namespace StrongGrid.Models
 		/// Substitutions are ignored when using a dynamic template.
 		/// For dynamic templates, you must use <see cref="DynamicData"/>.
 		/// </remarks>
-		[JsonProperty("substitutions", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("substitutions")]
 		[JsonConverter(typeof(KeyValuePairEnumerationConverter))]
 		public KeyValuePair<string, string>[] Substitutions { get; set; }
 
@@ -101,7 +102,7 @@ namespace StrongGrid.Models
 		/// DynamicData is ignored when using a legacy template.
 		/// For legacy templates, you must use <see cref="Substitutions"/>.
 		/// </remarks>
-		[JsonProperty("dynamic_template_data", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("dynamic_template_data")]
 		public object DynamicData { get; set; }
 
 		/// <summary>
@@ -110,7 +111,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The custom arguments.
 		/// </value>
-		[JsonProperty("custom_args", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("custom_args")]
 		[JsonConverter(typeof(KeyValuePairEnumerationConverter))]
 		public KeyValuePair<string, string>[] CustomArguments { get; set; }
 
@@ -120,8 +121,14 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The send at.
 		/// </value>
-		[JsonProperty("send_at", NullValueHandling = NullValueHandling.Ignore)]
-		[JsonConverter(typeof(EpochConverter))]
+		[JsonPropertyName("send_at")]
+		[JsonConverter(typeof(NullableEpochConverter))]
 		public DateTime? SendAt { get; set; }
+
+		/// <summary>
+		/// Gets or sets a value indicating whether a dynamic template is use to personalize the content sent to the recipients.
+		/// This is for internal use only. It is used by the <see cref="MailPersonalizationConverter"/> to generate the appropriate JSON.
+		/// </summary>
+		internal bool IsUsedWithDynamicTemplate { get; set; }
 	}
 }

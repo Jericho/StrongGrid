@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The message.
 		/// </value>
-		[JsonProperty("message", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("message")]
 		public string Message { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The error indices.
 		/// </value>
-		[JsonProperty("error_indices", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("error_indices")]
 		public int[] ErrorIndices { get; set; }
 	}
 }

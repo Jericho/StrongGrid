@@ -19,53 +19,54 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 			var startDate = new DateTime(2015, 1, 1);
 			var endDate = new DateTime(2015, 1, 2);
+
 			var apiResponse = @"[
 				{
-					'date': '2015-01-01',
-					'stats': [
+					""date"": ""2015-01-01"",
+					""stats"": [
 						{
-							'metrics': {
-								'blocks': 1,
-								'bounce_drops': 0,
-								'bounces': 0,
-								'clicks': 0,
-								'deferred': 1,
-								'delivered': 1,
-								'invalid_emails': 1,
-								'opens': 1,
-								'processed': 2,
-								'requests': 3,
-								'spam_report_drops': 0,
-								'spam_reports': 0,
-								'unique_clicks': 0,
-								'unique_opens': 1,
-								'unsubscribe_drops': 0,
-								'unsubscribes': 0
+							""metrics"": {
+								""blocks"": 1,
+								""bounce_drops"": 0,
+								""bounces"": 0,
+								""clicks"": 0,
+								""deferred"": 1,
+								""delivered"": 1,
+								""invalid_emails"": 1,
+								""opens"": 1,
+								""processed"": 2,
+								""requests"": 3,
+								""spam_report_drops"": 0,
+								""spam_reports"": 0,
+								""unique_clicks"": 0,
+								""unique_opens"": 1,
+								""unsubscribe_drops"": 0,
+								""unsubscribes"": 0
 							}
 						}
 					]
 				},
 				{
-					'date': '2015-01-02',
-					'stats': [
+					""date"": ""2015-01-02"",
+					""stats"": [
 						{
-							'metrics': {
-								'blocks': 0,
-								'bounce_drops': 0,
-								'bounces': 0,
-								'clicks': 0,
-								'deferred': 0,
-								'delivered': 0,
-								'invalid_emails': 0,
-								'opens': 0,
-								'processed': 0,
-								'requests': 0,
-								'spam_report_drops': 0,
-								'spam_reports': 0,
-								'unique_clicks': 0,
-								'unique_opens': 0,
-								'unsubscribe_drops': 0,
-								'unsubscribes': 0
+							""metrics"": {
+								""blocks"": 0,
+								""bounce_drops"": 0,
+								""bounces"": 0,
+								""clicks"": 0,
+								""deferred"": 0,
+								""delivered"": 0,
+								""invalid_emails"": 0,
+								""opens"": 0,
+								""processed"": 0,
+								""requests"": 0,
+								""spam_report_drops"": 0,
+								""spam_reports"": 0,
+								""unique_clicks"": 0,
+								""unique_opens"": 0,
+								""unsubscribe_drops"": 0,
+								""unsubscribes"": 0
 							}
 						}
 					]
@@ -100,100 +101,100 @@ namespace StrongGrid.UnitTests.Resources
 
 			var apiResponse = @"[
 				{
-					'date': '2015 - 01 - 01',
-					'stats': [
+					""date"": ""2015-01-01"",
+					""stats"": [
 						{
-							'metrics': {
-								'blocks': 0,
-								'bounce_drops': 0,
-								'bounces': 0,
-								'clicks': 0,
-								'deferred': 0,
-								'delivered': 0,
-								'invalid_emails': 0,
-								'opens': 0,
-								'processed': 0,
-								'requests': 0,
-								'spam_report_drops': 0,
-								'spam_reports': 0,
-								'unique_clicks': 0,
-								'unique_opens': 0,
-								'unsubscribe_drops': 0,
-								'unsubscribes': 0
+							""metrics"": {
+								""blocks"": 0,
+								""bounce_drops"": 0,
+								""bounces"": 0,
+								""clicks"": 0,
+								""deferred"": 0,
+								""delivered"": 0,
+								""invalid_emails"": 0,
+								""opens"": 0,
+								""processed"": 0,
+								""requests"": 0,
+								""spam_report_drops"": 0,
+								""spam_reports"": 0,
+								""unique_clicks"": 0,
+								""unique_opens"": 0,
+								""unsubscribe_drops"": 0,
+								""unsubscribes"": 0
 							},
-							'name': 'cat1',
-							'type': 'category'
+							""name"": ""cat1"",
+							""type"": ""category""
 						},
 						{
-							'metrics': {
-								'blocks': 0,
-								'bounce_drops': 0,
-								'bounces': 0,
-								'clicks': 0,
-								'deferred': 0,
-								'delivered': 0,
-								'invalid_emails': 0,
-								'opens': 0,
-								'processed': 0,
-								'requests': 0,
-								'spam_report_drops': 0,
-								'spam_reports': 0,
-								'unique_clicks': 0,
-								'unique_opens': 0,
-								'unsubscribe_drops': 0,
-								'unsubscribes': 0
+							""metrics"": {
+								""blocks"": 0,
+								""bounce_drops"": 0,
+								""bounces"": 0,
+								""clicks"": 0,
+								""deferred"": 0,
+								""delivered"": 0,
+								""invalid_emails"": 0,
+								""opens"": 0,
+								""processed"": 0,
+								""requests"": 0,
+								""spam_report_drops"": 0,
+								""spam_reports"": 0,
+								""unique_clicks"": 0,
+								""unique_opens"": 0,
+								""unsubscribe_drops"": 0,
+								""unsubscribes"": 0
 							},
-							'name': 'cat2',
-							'type': 'category'
+							""name"": ""cat2"",
+							""type"": ""category""
 						}
 					]
 				},
 				{
-					'date': '2015-01-02',
-					'stats': [
+					""date"": ""2015-01-02"",
+					""stats"": [
 						{
-							'metrics': {
-								'blocks': 10,
-								'bounce_drops': 0,
-								'bounces': 0,
-								'clicks': 0,
-								'deferred': 0,
-								'delivered': 0,
-								'invalid_emails': 0,
-								'opens': 0,
-								'processed': 0,
-								'requests': 10,
-								'spam_report_drops': 0,
-								'spam_reports': 0,
-								'unique_clicks': 0,
-								'unique_opens': 0,
-								'unsubscribe_drops': 0,
-								'unsubscribes': 0
+							""metrics"": {
+								""blocks"": 10,
+								""bounce_drops"": 0,
+								""bounces"": 0,
+								""clicks"": 0,
+								""deferred"": 0,
+								""delivered"": 0,
+								""invalid_emails"": 0,
+								""opens"": 0,
+								""processed"": 0,
+								""requests"": 10,
+								""spam_report_drops"": 0,
+								""spam_reports"": 0,
+								""unique_clicks"": 0,
+								""unique_opens"": 0,
+								""unsubscribe_drops"": 0,
+								""unsubscribes"": 0
 							},
-							'name': 'cat1',
-							'type': 'category'
+							""name"": ""cat1"",
+							""type"": ""category""
 						},
 						{
-							'metrics': {
-								'blocks': 0,
-								'bounce_drops': 0,
-								'bounces': 0,
-								'clicks': 6,
-								'deferred': 0,
-								'delivered': 5,
-								'invalid_emails': 0,
-								'opens': 6,
-								'processed': 0,
-								'requests': 5,
-								'spam_report_drops': 0,
-								'spam_reports': 0,
-								'unique_clicks': 5,
-								'unique_opens': 5,
-								'unsubscribe_drops': 0,
-								'unsubscribes': 6
+							""metrics"": {
+								""blocks"": 0,
+								""bounce_drops"": 0,
+								""bounces"": 0,
+								""clicks"": 6,
+								""deferred"": 0,
+								""delivered"": 5,
+								""invalid_emails"": 0,
+								""opens"": 6,
+								""processed"": 0,
+								""requests"": 5,
+								""spam_report_drops"": 0,
+								""spam_reports"": 0,
+								""unique_clicks"": 5,
+								""unique_opens"": 5,
+								""unsubscribe_drops"": 0,
+								""unsubscribes"": 6
 							},
-							'name': 'cat2',
-							'type': 'category'
+							""name"": ""cat2"",
+							""type"": ""category""
 						}
 					]
 				}
@@ -225,102 +226,103 @@ namespace StrongGrid.UnitTests.Resources
 			var subusers = new[] { "user1", "user2" };
 			var startDate = new DateTime(2015, 1, 1);
 			var endDate = new DateTime(2015, 1, 2);
+
 			var apiResponse = @"[
 				{
-					'date': '2015-01-01',
-					'stats': [
+					""date"": ""2015-01-01"",
+					""stats"": [
 						{
-							'metrics': {
-								'blocks': 0,
-								'bounce_drops': 0,
-								'bounces': 0,
-								'clicks': 0,
-								'deferred': 0,
-								'delivered': 0,
-								'invalid_emails': 0,
-								'opens': 0,
-								'processed': 0,
-								'requests': 0,
-								'spam_report_drops': 0,
-								'spam_reports': 0,
-								'unique_clicks': 0,
-								'unique_opens': 0,
-								'unsubscribe_drops': 0,
-								'unsubscribes': 0
+							""metrics"": {
+								""blocks"": 0,
+								""bounce_drops"": 0,
+								""bounces"": 0,
+								""clicks"": 0,
+								""deferred"": 0,
+								""delivered"": 0,
+								""invalid_emails"": 0,
+								""opens"": 0,
+								""processed"": 0,
+								""requests"": 0,
+								""spam_report_drops"": 0,
+								""spam_reports"": 0,
+								""unique_clicks"": 0,
+								""unique_opens"": 0,
+								""unsubscribe_drops"": 0,
+								""unsubscribes"": 0
 							},
-							'name': 'user1',
-							'type': 'subuser'
+							""name"": ""user1"",
+							""type"": ""subuser""
 						},
 						{
-							'metrics': {
-								'blocks': 0,
-								'bounce_drops': 0,
-								'bounces': 0,
-								'clicks': 0,
-								'deferred': 0,
-								'delivered': 0,
-								'invalid_emails': 0,
-								'opens': 0,
-								'processed': 0,
-								'requests': 0,
-								'spam_report_drops': 0,
-								'spam_reports': 0,
-								'unique_clicks': 0,
-								'unique_opens': 0,
-								'unsubscribe_drops': 0,
-								'unsubscribes': 0
+							""metrics"": {
+								""blocks"": 0,
+								""bounce_drops"": 0,
+								""bounces"": 0,
+								""clicks"": 0,
+								""deferred"": 0,
+								""delivered"": 0,
+								""invalid_emails"": 0,
+								""opens"": 0,
+								""processed"": 0,
+								""requests"": 0,
+								""spam_report_drops"": 0,
+								""spam_reports"": 0,
+								""unique_clicks"": 0,
+								""unique_opens"": 0,
+								""unsubscribe_drops"": 0,
+								""unsubscribes"": 0
 							},
-							'name': 'user2',
-							'type': 'subuser'
+							""name"": ""user2"",
+							""type"": ""subuser""
 						}
 					]
 				},
 				{
-					'date': '2015-01-02',
-					'stats': [
+					""date"": ""2015-01-02"",
+					""stats"": [
 						{
-							'metrics': {
-								'blocks': 10,
-								'bounce_drops': 0,
-								'bounces': 0,
-								'clicks': 0,
-								'deferred': 0,
-								'delivered': 0,
-								'invalid_emails': 0,
-								'opens': 0,
-								'processed': 0,
-								'requests': 10,
-								'spam_report_drops': 0,
-								'spam_reports': 0,
-								'unique_clicks': 0,
-								'unique_opens': 0,
-								'unsubscribe_drops': 0,
-								'unsubscribes': 0
+							""metrics"": {
+								""blocks"": 10,
+								""bounce_drops"": 0,
+								""bounces"": 0,
+								""clicks"": 0,
+								""deferred"": 0,
+								""delivered"": 0,
+								""invalid_emails"": 0,
+								""opens"": 0,
+								""processed"": 0,
+								""requests"": 10,
+								""spam_report_drops"": 0,
+								""spam_reports"": 0,
+								""unique_clicks"": 0,
+								""unique_opens"": 0,
+								""unsubscribe_drops"": 0,
+								""unsubscribes"": 0
 							},
-							'name': 'user1',
-							'type': 'subuser'
+							""name"": ""user1"",
+							""type"": ""subuser""
 						},
 						{
-							'metrics': {
-								'blocks': 0,
-								'bounce_drops': 0,
-								'bounces': 0,
-								'clicks': 6,
-								'deferred': 0,
-								'delivered': 5,
-								'invalid_emails': 0,
-								'opens': 6,
-								'processed': 0,
-								'requests': 5,
-								'spam_report_drops': 0,
-								'spam_reports': 0,
-								'unique_clicks': 5,
-								'unique_opens': 5,
-								'unsubscribe_drops': 0,
-								'unsubscribes': 6
+							""metrics"": {
+								""blocks"": 0,
+								""bounce_drops"": 0,
+								""bounces"": 0,
+								""clicks"": 6,
+								""deferred"": 0,
+								""delivered"": 5,
+								""invalid_emails"": 0,
+								""opens"": 6,
+								""processed"": 0,
+								""requests"": 5,
+								""spam_report_drops"": 0,
+								""spam_reports"": 0,
+								""unique_clicks"": 5,
+								""unique_opens"": 5,
+								""unsubscribe_drops"": 0,
+								""unsubscribes"": 6
 							},
-							'name': 'user2',
-							'type': 'subuser'
+							""name"": ""user2"",
+							""type"": ""subuser""
 						}
 					]
 				}
@@ -352,34 +354,35 @@ namespace StrongGrid.UnitTests.Resources
 			var country = "US";
 			var startDate = new DateTime(2014, 10, 1);
 			var endDate = new DateTime(2014, 10, 2);
+
 			var apiResponse = @"[
 				{
-					'date': '2014-10-01',
-					'stats': [
+					""date"": ""2014-10-01"",
+					""stats"": [
 						{
-							'metrics': {
-								'clicks': 0,
-								'opens': 1,
-								'unique_clicks': 0,
-								'unique_opens': 1
+							""metrics"": {
+								""clicks"": 0,
+								""opens"": 1,
+								""unique_clicks"": 0,
+								""unique_opens"": 1
 							},
-							'name': 'us',
-							'type': 'country'
+							""name"": ""us"",
+							""type"": ""country""
 						}
 					]
 				},
 				{
-					'date': '2014-10-02',
-					'stats': [
+					""date"": ""2014-10-02"",
+					""stats"": [
 						{
-							'metrics': {
-								'clicks': 0,
-								'opens': 0,
-								'unique_clicks': 0,
-								'unique_opens': 0
+							""metrics"": {
+								""clicks"": 0,
+								""opens"": 0,
+								""unique_clicks"": 0,
+								""unique_opens"": 0
 							},
-							'name': 'us',
-							'type': 'country'
+							""name"": ""us"",
+							""type"": ""country""
 						}
 					]
 				}
@@ -410,30 +413,31 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 			var startDate = new DateTime(2014, 10, 1);
 			var endDate = new DateTime(2014, 10, 2);
+
 			var apiResponse = @"[
 				{
-					'date': '2014-10-01',
-					'stats': [
+					""date"": ""2014-10-01"",
+					""stats"": [
 						{
-							'metrics': {
-								'opens': 1,
-								'unique_opens': 1
+							""metrics"": {
+								""opens"": 1,
+								""unique_opens"": 1
 							},
-							'name': 'Webmail',
-							'type': 'device'
+							""name"": ""Webmail"",
+							""type"": ""device""
 						}
 					]
 				},
 				{
-					'date': '2014-10-02',
-					'stats': [
+					""date"": ""2014-10-02"",
+					""stats"": [
 						{
-							'metrics': {
-								'opens': 0,
-								'unique_opens': 0
+							""metrics"": {
+								""opens"": 0,
+								""unique_opens"": 0
 							},
-							'name': 'Webmail',
-							'type': 'device'
+							""name"": ""Webmail"",
+							""type"": ""device""
 						}
 					]
 				}
@@ -465,30 +469,31 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 			var startDate = new DateTime(2014, 10, 1);
 			var endDate = new DateTime(2014, 10, 2);
+
 			var apiResponse = @"[
 				{
-					'date': '2014-10-01',
-					'stats': [
+					""date"": ""2014-10-01"",
+					""stats"": [
 						{
-							'metrics': {
-								'opens': 1,
-								'unique_opens': 1
+							""metrics"": {
+								""opens"": 1,
+								""unique_opens"": 1
 							},
-							'name': 'Gmail',
-							'type': 'client'
+							""name"": ""Gmail"",
+							""type"": ""client""
 						}
 					]
 				},
 				{
-					'date': '2014-10-02',
-					'stats': [
+					""date"": ""2014-10-02"",
+					""stats"": [
 						{
-							'metrics': {
-								'opens': 0,
-								'unique_opens': 0
+							""metrics"": {
+								""opens"": 0,
+								""unique_opens"": 0
 							},
-							'name': 'Gmail',
-							'type': 'client'
+							""name"": ""Gmail"",
+							""type"": ""client""
 						}
 					]
 				}
@@ -521,46 +526,47 @@ namespace StrongGrid.UnitTests.Resources
 			var providers = new[] { "Gmail", "Hotmail" };
 			var startDate = new DateTime(2014, 10, 1);
 			var endDate = new DateTime(2014, 10, 2);
+
 			var apiResponse = @"[
 				{
-					'date': '2014-10-01',
-					'stats': [
+					""date"": ""2014-10-01"",
+					""stats"": [
 						{
-							'metrics': {
-								'blocks': 1,
-								'bounces': 0,
-								'clicks': 0,
-								'deferred': 1,
-								'delivered': 1,
-								'drops': 0,
-								'opens': 1,
-								'spam_reports': 0,
-								'unique_clicks': 0,
-								'unique_opens': 1
+							""metrics"": {
+								""blocks"": 1,
+								""bounces"": 0,
+								""clicks"": 0,
+								""deferred"": 1,
+								""delivered"": 1,
+								""drops"": 0,
+								""opens"": 1,
+								""spam_reports"": 0,
+								""unique_clicks"": 0,
+								""unique_opens"": 1
 							},
-							'name': 'Gmail',
-							'type': 'esp'
+							""name"": ""Gmail"",
+							""type"": ""esp""
 						}
 					]
 				},
 				{
-					'date': '2014-10-02',
-					'stats': [
+					""date"": ""2014-10-02"",
+					""stats"": [
 						{
-							'metrics': {
-								'blocks': 0,
-								'bounces': 0,
-								'clicks': 0,
-								'deferred': 0,
-								'delivered': 0,
-								'drops': 0,
-								'opens': 0,
-								'spam_reports': 0,
-								'unique_clicks': 0,
-								'unique_opens': 0
+							""metrics"": {
+								""blocks"": 0,
+								""bounces"": 0,
+								""clicks"": 0,
+								""deferred"": 0,
+								""delivered"": 0,
+								""drops"": 0,
+								""opens"": 0,
+								""spam_reports"": 0,
+								""unique_clicks"": 0,
+								""unique_opens"": 0
 							},
-							'name': 'Gmail',
-							'type': 'esp'
+							""name"": ""Gmail"",
+							""type"": ""esp""
 						}
 					]
 				}
@@ -592,46 +598,47 @@ namespace StrongGrid.UnitTests.Resources
 			var browsers = new[] { "Chrome", "Firefox" };
 			var startDate = new DateTime(2014, 10, 1);
 			var endDate = new DateTime(2014, 10, 2);
+
 			var apiResponse = @"[
 				{
-					'date': '2014-10-01',
-					'stats': [
+					""date"": ""2014-10-01"",
+					""stats"": [
 						{
-							'metrics': {
-								'clicks': 0,
-								'unique_clicks': 0
+							""metrics"": {
+								""clicks"": 0,
+								""unique_clicks"": 0
 							},
-							'name': 'Chrome',
-							'type': 'browser'
+							""name"": ""Chrome"",
+							""type"": ""browser""
 						},
 						{
-							'metrics': {
-								'clicks': 1,
-								'unique_clicks': 1
+							""metrics"": {
+								""clicks"": 1,
+								""unique_clicks"": 1
 							},
-							'name': 'Firefox',
-							'type': 'browser'
+							""name"": ""Firefox"",
+							""type"": ""browser""
 						}
 					]
 				},
 				{
-					'date': '2014-10-02',
-					'stats': [
+					""date"": ""2014-10-02"",
+					""stats"": [
 						{
-							'metrics': {
-								'clicks': 0,
-								'unique_clicks': 0
+							""metrics"": {
+								""clicks"": 0,
+								""unique_clicks"": 0
 							},
-							'name': 'Chrome',
-							'type': 'browser'
+							""name"": ""Chrome"",
+							""type"": ""browser""
 						},
 						{
-							'metrics': {
-								'clicks': 1,
-								'unique_clicks': 1
+							""metrics"": {
+								""clicks"": 1,
+								""unique_clicks"": 1
 							},
-							'name': 'Firefox',
-							'type': 'browser'
+							""name"": ""Firefox"",
+							""type"": ""browser""
 						}
 					]
 				}

@@ -1,4 +1,3 @@
-﻿using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -43,10 +42,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<string> CreateAsync(string name, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject()
-			{
-				{ "name", name }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("name", name);
+
 			return _client
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
@@ -63,15 +61,14 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<string[]> GetAllNamesAsync(CancellationToken cancellationToken = default)
 		{
-			var responseContent = await _client
+			var result = await _client
 				.GetAsync(_endpoint)
 				.WithCancellationToken(cancellationToken)
-				.AsString(null)
+				.AsRawJsonDocument()
 				.ConfigureAwait(false);
 
-			var allNames = JArray
-				.Parse(responseContent)
-				.Select(o => o.GetPropertyValue<string>("name"))
+			var allNames = result.RootElement.EnumerateArray()
+				.Select(o => o.GetProperty("name").GetString())
 				.ToArray();
 
 			return allNames;
@@ -104,10 +101,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<string> UpdateAsync(string name, string newName, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject()
-			{
-				{ "name", newName }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("name", newName);
+
 			return _client
 				.PutAsync($"{_endpoint}/{name}")
 				.WithJsonBody(data)
@@ -142,10 +138,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<IpPoolAddress> AddAddressAsync(string name, string address, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject()
-			{
-				{ "ip", address }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("ip", address);
+
 			return _client
 				.PostAsync($"{_endpoint}/{name}/ips")
 				.WithJsonBody(data)

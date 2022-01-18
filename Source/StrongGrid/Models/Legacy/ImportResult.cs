@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.Legacy
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models.Legacy
 		/// <value>
 		/// The error count.
 		/// </value>
-		[JsonProperty("error_count", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("error_count")]
 		public int ErrorCount { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models.Legacy
 		/// <value>
 		/// The error indices.
 		/// </value>
-		[JsonProperty("error_indices", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("error_indices")]
 		public int[] ErrorIndices { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Models.Legacy
 		/// <value>
 		/// The new count.
 		/// </value>
-		[JsonProperty("new_count", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("new_count")]
 		public int NewCount { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Models.Legacy
 		/// <value>
 		/// The persisted recipients.
 		/// </value>
-		[JsonProperty("persisted_recipients", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("persisted_recipients")]
 		public string[] PersistedRecipients { get; set; }
 
 		/// <summary>
@@ -49,7 +49,7 @@ namespace StrongGrid.Models.Legacy
 		/// <value>
 		/// The updated count.
 		/// </value>
-		[JsonProperty("updated_count", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("updated_count")]
 		public int UpdatedCount { get; set; }
 
 		/// <summary>
@@ -58,7 +58,7 @@ namespace StrongGrid.Models.Legacy
 		/// <value>
 		/// The errors.
 		/// </value>
-		[JsonProperty("errors", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("errors")]
 		public Error[] Errors { get; set; }
 	}
 }

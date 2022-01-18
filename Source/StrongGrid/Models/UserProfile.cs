@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The address.
 		/// </value>
-		[JsonProperty("address", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("address")]
 		public string Address { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The city.
 		/// </value>
-		[JsonProperty("city", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("city")]
 		public string City { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The company.
 		/// </value>
-		[JsonProperty("company", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("company")]
 		public string Company { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The country.
 		/// </value>
-		[JsonProperty("country", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("country")]
 		public string Country { get; set; }
 
 		/// <summary>
@@ -49,7 +49,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The first name.
 		/// </value>
-		[JsonProperty("first_name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("first_name")]
 		public string FirstName { get; set; }
 
 		/// <summary>
@@ -58,7 +58,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The last name.
 		/// </value>
-		[JsonProperty("last_name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("last_name")]
 		public string LastName { get; set; }
 
 		/// <summary>
@@ -67,7 +67,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The phone.
 		/// </value>
-		[JsonProperty("phone", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("phone")]
 		public string Phone { get; set; }
 
 		/// <summary>
@@ -76,7 +76,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The state.
 		/// </value>
-		[JsonProperty("state", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("state")]
 		public string State { get; set; }
 
 		/// <summary>
@@ -85,7 +85,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The website.
 		/// </value>
-		[JsonProperty("website", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("website")]
 		public string Website { get; set; }
 
 		/// <summary>
@@ -94,7 +94,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The zip code.
 		/// </value>
-		[JsonProperty("zip", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("zip")]
 		public string ZipCode { get; set; }
 	}
 }

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("enabled")]
 		public bool Enabled { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The landing page HTML.
 		/// </value>
-		[JsonProperty("landing", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("landing")]
 		public string LandingPageHtml { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The URL.
 		/// </value>
-		[JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("url")]
 		public string Url { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The replacement tag.
 		/// </value>
-		[JsonProperty("replace", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("replace")]
 		public string ReplacementTag { get; set; }
 
 		/// <summary>
@@ -49,7 +49,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The content of the HTML.
 		/// </value>
-		[JsonProperty("html_content", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("html_content")]
 		public string HtmlContent { get; set; }
 
 		/// <summary>
@@ -58,7 +58,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The content of the text.
 		/// </value>
-		[JsonProperty("plain_content", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("plain_content")]
 		public string TextContent { get; set; }
 	}
 }

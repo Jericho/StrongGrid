@@ -1,4 +1,5 @@
-using Newtonsoft.Json;
+using StrongGrid.Utilities;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.Webhooks
 {
@@ -17,7 +18,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The index.
 		/// </value>
-		[JsonProperty("index", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("index")]
 		public int Index { get; set; }
 
 		/// <summary>
@@ -27,7 +28,8 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The type.
 		/// </value>
-		[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("type")]
+		[JsonConverter(typeof(StringEnumConverter<UrlType>))]
 		public UrlType Type { get; set; }
 	}
 }

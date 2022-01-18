@@ -1,5 +1,5 @@
-using Newtonsoft.Json;
 using StrongGrid.Utilities;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.Webhooks
 {
@@ -23,7 +23,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The user agent.
 		/// </value>
-		[JsonProperty("useragent", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("useragent")]
 		public string UserAgent { get; set; }
 
 		/// <summary>
@@ -32,7 +32,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The IP address.
 		/// </value>
-		[JsonProperty("ip", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("ip")]
 		public string IpAddress { get; set; }
 
 		/// <summary>
@@ -41,7 +41,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The URL.
 		/// </value>
-		[JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("url")]
 		public string Url { get; set; }
 
 		/// <summary>
@@ -50,7 +50,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The categories.
 		/// </value>
-		[JsonProperty("category", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("category")]
 		[JsonConverter(typeof(CategoryConverter))]
 		public string[] Categories { get; set; }
 
@@ -63,7 +63,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The asm group identifier.
 		/// </value>
-		[JsonProperty("asm_group_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("asm_group_id")]
 		public long? AsmGroupId { get; set; }
 
 		/// <summary>
@@ -75,7 +75,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The URL offset.
 		/// </value>
-		[JsonProperty("url_offset", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("url_offset")]
 		public UrlOffset UrlOffset { get; set; }
 	}
 }

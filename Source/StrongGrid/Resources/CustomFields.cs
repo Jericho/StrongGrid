@@ -1,7 +1,6 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
+using StrongGrid.Utilities;
 using System;
 using System.Linq;
 using System.Threading;
@@ -39,11 +38,10 @@ namespace StrongGrid.Resources
 		/// <returns>The <see cref="FieldMetadata">metadata</see> about the new field.</returns>
 		public Task<FieldMetadata> CreateAsync(string name, FieldType type, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "name", name },
-				{ "field_type", JToken.Parse(JsonConvert.SerializeObject(type)).ToString() }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("name", name);
+			data.AddProperty("field_type", type.ToEnumString());
+
 			return _client
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
@@ -87,11 +85,10 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<FieldMetadata> UpdateAsync(string fieldId, string name = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "id", fieldId },
-				{ "name", name }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("id", fieldId);
+			data.AddProperty("name", name);
+
 			return _client
 				.PatchAsync($"{_endpoint}/{fieldId}")
 				.WithJsonBody(data)

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.Webhooks
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// To.
 		/// </value>
-		[JsonProperty("to", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("to")]
 		public string[] To { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// From.
 		/// </value>
-		[JsonProperty("from", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("from")]
 		public string From { get; set; }
 	}
 }

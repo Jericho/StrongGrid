@@ -1,9 +1,9 @@
-using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Resources.Legacy;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -14,19 +14,19 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "contactdb/lists";
+		internal const string ENDPOINT = "contactdb/lists";
 
-		private const string SINGLE_LIST_JSON = @"{
-			'id': 1,
-			'name': 'listname',
-			'recipient_count': 0
+		internal const string SINGLE_LIST_JSON = @"{
+			""id"": 1,
+			""name"": ""listname"",
+			""recipient_count"": 0
 		}";
-		private const string MULTIPLE_LISTS_JSON = @"{
-			'lists': [
+		internal const string MULTIPLE_LISTS_JSON = @"{
+			""lists"": [
 				{
-					'id': 1,
-					'name': 'the jones',
-					'recipient_count': 1
+					""id"": 1,
+					""name"": ""the jones"",
+					""recipient_count"": 1
 				}
 			]
 		}";
@@ -39,7 +39,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<StrongGrid.Models.Legacy.List>(SINGLE_LIST_JSON);
+			var result = JsonSerializer.Deserialize<StrongGrid.Models.Legacy.List>(SINGLE_LIST_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -180,17 +180,17 @@ namespace StrongGrid.UnitTests.Resources
 			var page = 1;
 
 			var apiResponse = @"{
-				'recipients': [
+				""recipients"": [
 					{
-						'created_at': 1422395108,
-						'email': 'e@example.com',
-						'first_name': 'Ed',
-						'id': 'YUBh',
-						'last_clicked': null,
-						'last_emailed': null,
-						'last_name': null,
-						'last_opened': null,
-						'updated_at': 1422395108
+						""created_at"": 1422395108,
+						""email"": ""e@example.com"",
+						""first_name"": ""Ed"",
+						""id"": ""YUBh"",
+						""last_clicked"": null,
+						""last_emailed"": null,
+						""last_name"": null,
+						""last_opened"": null,
+						""updated_at"": 1422395108
 					}
 				]
 			}";

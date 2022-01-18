@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The email address.
 		/// </value>
-		[JsonProperty("email", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("email")]
 		public string EmailAddress { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// Interval of emails between samples.
 		/// </value>
-		[JsonProperty("frequency", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("frequency")]
 		public int Frequency { get; set; }
 	}
 }

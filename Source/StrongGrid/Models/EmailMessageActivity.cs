@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
 using System;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -14,7 +14,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The 'from' address.
 		/// </value>
-		[JsonProperty("from_email", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("from_email")]
 		public string From { get; set; }
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The message id.
 		/// </value>
-		[JsonProperty("msg_id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("msg_id")]
 		public string MessageId { get; set; }
 
 		/// <summary>
@@ -32,7 +32,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The subject.
 		/// </value>
-		[JsonProperty("subject", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("subject")]
 		public string Subject { get; set; }
 
 		/// <summary>
@@ -41,7 +41,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The 'to' address.
 		/// </value>
-		[JsonProperty("to_email", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("to_email")]
 		public string To { get; set; }
 
 		/// <summary>
@@ -50,7 +50,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The status.
 		/// </value>
-		[JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("status")]
 		public EmailActivityStatus Status { get; set; }
 
 		/// <summary>
@@ -59,7 +59,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The opens count.
 		/// </value>
-		[JsonProperty("opens_count", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("opens_count")]
 		public long OpensCount { get; set; }
 
 		/// <summary>
@@ -68,7 +68,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The opens count.
 		/// </value>
-		[JsonProperty("clicks_count", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("clicks_count")]
 		public long ClicksCount { get; set; }
 
 		/// <summary>
@@ -77,7 +77,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The date of the last event.
 		/// </value>
-		[JsonProperty("last_event_time", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("last_event_time")]
 		public DateTime LastEventOn { get; set; }
 	}
 }

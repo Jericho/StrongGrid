@@ -1,5 +1,5 @@
-using Newtonsoft.Json;
 using StrongGrid.Utilities;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.Webhooks
 {
@@ -23,7 +23,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The categories.
 		/// </value>
-		[JsonProperty("category", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("category")]
 		[JsonConverter(typeof(CategoryConverter))]
 		public string[] Categories { get; set; }
 	}

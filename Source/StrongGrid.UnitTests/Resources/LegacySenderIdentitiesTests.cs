@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
@@ -6,6 +5,7 @@ using StrongGrid.Resources.Legacy;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -16,52 +16,52 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "senders";
+		internal const string ENDPOINT = "senders";
 
-		private const string SINGLE_SENDER_IDENTITY_JSON = @"{
-			'id': 1,
-			'nickname': 'My Sender ID',
-			'from': {
-				'email': 'from@example.com',
-				'name': 'Example INC'
+		internal const string SINGLE_SENDER_IDENTITY_JSON = @"{
+			""id"": 1,
+			""nickname"": ""My Sender ID"",
+			""from"": {
+				""email"": ""from@example.com"",
+				""name"": ""Example INC""
 			},
-			'reply_to': {
-				'email': 'replyto@example.com',
-				'name': 'Example INC'
+			""reply_to"": {
+				""email"": ""replyto@example.com"",
+				""name"": ""Example INC""
 			},
-			'address': '123 Elm St.',
-			'address_2': 'Apt. 456',
-			'city': 'Denver',
-			'state': 'Colorado',
-			'zip': '80202',
-			'country': 'United States',
-			'verified': { 'status': true, 'reason': '' },
-			'updated_at': 1449872165,
-			'created_at': 1449872165,
-			'locked': false
+			""address"": ""123 Elm St."",
+			""address_2"": ""Apt. 456"",
+			""city"": ""Denver"",
+			""state"": ""Colorado"",
+			""zip"": ""80202"",
+			""country"": ""United States"",
+			""verified"": { ""status"": true, ""reason"": """" },
+			""updated_at"": 1449872165,
+			""created_at"": 1449872165,
+			""locked"": false
 		}";
-		private const string MULTIPLE_SENDER_IDENTITIES_JSON = @"[
+		internal const string MULTIPLE_SENDER_IDENTITIES_JSON = @"[
 			{
-				'id': 1,
-				'nickname': 'My Sender ID',
-				'from': {
-					'email': 'from@example.com',
-					'name': 'Example INC'
+				""id"": 1,
+				""nickname"": ""My Sender ID"",
+				""from"": {
+					""email"": ""from@example.com"",
+					""name"": ""Example INC""
 				},
-				'reply_to': {
-					'email': 'replyto@example.com',
-					'name': 'Example INC'
+				""reply_to"": {
+					""email"": ""replyto@example.com"",
+					""name"": ""Example INC""
 				},
-				'address': '123 Elm St.',
-				'address_2': 'Apt. 456',
-				'city': 'Denver',
-				'state': 'Colorado',
-				'zip': '80202',
-				'country': 'United States',
-				'verified': { 'status': true, 'reason': '' },
-				'updated_at': 1449872165,
-				'created_at': 1449872165,
-				'locked': false
+				""address"": ""123 Elm St."",
+				""address_2"": ""Apt. 456"",
+				""city"": ""Denver"",
+				""state"": ""Colorado"",
+				""zip"": ""80202"",
+				""country"": ""United States"",
+				""verified"": { ""status"": true, ""reason"": """" },
+				""updated_at"": 1449872165,
+				""created_at"": 1449872165,
+				""locked"": false
 			}
 		]";
 
@@ -73,7 +73,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<SenderIdentity>(SINGLE_SENDER_IDENTITY_JSON);
+			var result = JsonSerializer.Deserialize<SenderIdentity>(SINGLE_SENDER_IDENTITY_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();

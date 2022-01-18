@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The hostname.
 		/// </value>
-		[JsonProperty("hostname", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("hostname")]
 		public string HostName { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The URL.
 		/// </value>
-		[JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("url")]
 		public string Url { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Models
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("spam_check", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("spam_check")]
 		public bool SpamCheck { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Models
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("send_raw", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("send_raw")]
 		public bool SendRaw { get; set; }
 	}
 }

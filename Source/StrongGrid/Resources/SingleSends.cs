@@ -1,4 +1,3 @@
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -66,7 +65,7 @@ namespace StrongGrid.Resources
 			Parameter<string> ipPool = default,
 			CancellationToken cancellationToken = default)
 		{
-			var data = CreateJObject(name, senderId, categories, customUnsubscribeUrl, suppressionGroupId, listIds, segmentIds, default, ipPool, subject, htmlContent, textContent, string.IsNullOrEmpty(textContent), designId, editor);
+			var data = ConvertToJson(name, senderId, categories, customUnsubscribeUrl, suppressionGroupId, listIds, segmentIds, default, ipPool, subject, htmlContent, textContent, string.IsNullOrEmpty(textContent), designId, editor);
 			return _client
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
@@ -112,7 +111,7 @@ namespace StrongGrid.Resources
 			Parameter<string> ipPool = default,
 			CancellationToken cancellationToken = default)
 		{
-			var data = CreateJObject(name, senderId, categories, customUnsubscribeUrl, suppressionGroupId, listIds, segmentIds, default, ipPool, subject, htmlContent, textContent, string.IsNullOrEmpty(textContent), designId, editor);
+			var data = ConvertToJson(name, senderId, categories, customUnsubscribeUrl, suppressionGroupId, listIds, segmentIds, default, ipPool, subject, htmlContent, textContent, string.IsNullOrEmpty(textContent), designId, editor);
 			return _client
 				.PatchAsync($"{_endpoint}/{singleSendId}")
 				.WithJsonBody(data)
@@ -200,10 +199,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task SendNowAsync(string singleSendId, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject()
-			{
-				{ "send_at", "now" }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("send_at", "now");
+
 			return _client
 				.PutAsync($"{_endpoint}/{singleSendId}/schedule")
 				.WithJsonBody(data)
@@ -222,10 +220,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task ScheduleAsync(string singleSendId, DateTime sendOn, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "send_at", sendOn.ToUniversalTime().ToString("o") }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("send_at", sendOn.ToUniversalTime().ToString("o"));
+
 			return _client
 				.PutAsync($"{_endpoint}/{singleSendId}/schedule")
 				.WithJsonBody(data)
@@ -249,24 +246,24 @@ namespace StrongGrid.Resources
 				.AsMessage();
 		}
 
-		private static JObject CreateJObject(string name, long senderId, Parameter<IEnumerable<string>> categories, Parameter<string> customUnsubscribeUrl, Parameter<long?> suppressionGroupId, Parameter<IEnumerable<string>> listIds, Parameter<IEnumerable<string>> segmentIds, Parameter<DateTime?> sendOn, Parameter<string> ipPool, Parameter<string> subject, Parameter<string> htmlContent, Parameter<string> textContent, Parameter<bool> generateTextContent, Parameter<string> designId, Parameter<EditorType> editor)
+		private static StrongGridJsonObject ConvertToJson(string name, long senderId, Parameter<IEnumerable<string>> categories, Parameter<string> customUnsubscribeUrl, Parameter<long?> suppressionGroupId, Parameter<IEnumerable<string>> listIds, Parameter<IEnumerable<string>> segmentIds, Parameter<DateTime?> sendOn, Parameter<string> ipPool, Parameter<string> subject, Parameter<string> htmlContent, Parameter<string> textContent, Parameter<bool> generateTextContent, Parameter<string> designId, Parameter<EditorType> editor)
 		{
-			var result = new JObject();
-			result.AddPropertyIfValue("name", name);
-			result.AddPropertyIfValue("categories", categories);
-			result.AddPropertyIfValue("send_at", sendOn);
-			result.AddPropertyIfValue("email_config/sender_id", senderId);
-			result.AddPropertyIfValue("email_config/custom_unsubscribe_url", customUnsubscribeUrl);
-			result.AddPropertyIfValue("email_config/suppression_group_id", suppressionGroupId);
-			result.AddPropertyIfValue("email_config/ip_pool", ipPool);
-			result.AddPropertyIfValue("email_config/subject", subject);
-			result.AddPropertyIfValue("email_config/html_content", htmlContent);
-			result.AddPropertyIfValue("email_config/plain_content", textContent);
-			result.AddPropertyIfValue("email_config/generate_plain_content", generateTextContent);
-			result.AddPropertyIfValue("email_config/design_id", designId);
-			result.AddPropertyIfEnumValue("email_config/editor", editor);
-			result.AddPropertyIfValue("send_to/list_ids", listIds);
-			result.AddPropertyIfValue("send_to/segment_ids", segmentIds);
+			var result = new StrongGridJsonObject();
+			result.AddProperty("name", name);
+			result.AddProperty("categories", categories);
+			result.AddProperty("send_at", sendOn);
+			result.AddProperty("email_config/sender_id", senderId);
+			result.AddProperty("email_config/custom_unsubscribe_url", customUnsubscribeUrl);
+			result.AddProperty("email_config/suppression_group_id", suppressionGroupId);
+			result.AddProperty("email_config/ip_pool", ipPool);
+			result.AddProperty("email_config/subject", subject);
+			result.AddProperty("email_config/html_content", htmlContent);
+			result.AddProperty("email_config/plain_content", textContent);
+			result.AddProperty("email_config/generate_plain_content", generateTextContent);
+			result.AddProperty("email_config/design_id", designId);
+			result.AddProperty("email_config/editor", editor);
+			result.AddProperty("send_to/list_ids", listIds);
+			result.AddProperty("send_to/segment_ids", segmentIds);
 
 			return result;
 		}

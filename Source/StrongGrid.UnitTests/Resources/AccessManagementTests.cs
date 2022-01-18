@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
@@ -6,6 +5,7 @@ using StrongGrid.Resources;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -16,62 +16,62 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "access_settings";
+		internal const string ENDPOINT = "access_settings";
 
-		private const string SINGLE_ACCESS_ENTRY_JSON = @"{
-			'allowed': false,
-			'auth_method': 'basic',
-			'first_at': 1444087966,
-			'ip': '1.1.1.1',
-			'last_at': 1444406672,
-			'location': 'Australia'
+		internal const string SINGLE_ACCESS_ENTRY_JSON = @"{
+			""allowed"": false,
+			""auth_method"": ""basic"",
+			""first_at"": 1444087966,
+			""ip"": ""1.1.1.1"",
+			""last_at"": 1444406672,
+			""location"": ""Australia""
 		}";
-		private const string MULTIPLE_ACCESS_ENTRIES_JSON = @"{
-			'result': [
+		internal const string MULTIPLE_ACCESS_ENTRIES_JSON = @"{
+			""result"": [
 				{
-					'allowed': false,
-					'auth_method': 'basic',
-					'first_at': 1444087966,
-					'ip': '1.1.1.1',
-					'last_at': 1444406672,
-					'location': 'Australia'
+					""allowed"": false,
+					""auth_method"": ""basic"",
+					""first_at"": 1444087966,
+					""ip"": ""1.1.1.1"",
+					""last_at"": 1444406672,
+					""location"": ""Australia""
 				},
 				{
-					'allowed': false,
-					'auth_method': 'basic',
-					'first_at': 1444087505,
-					'ip': '1.2.3.48',
-					'last_at': 1444087505,
-					'location': 'Mukilteo, Washington'
+					""allowed"": false,
+					""auth_method"": ""basic"",
+					""first_at"": 1444087505,
+					""ip"": ""1.2.3.48"",
+					""last_at"": 1444087505,
+					""location"": ""Mukilteo, Washington""
 				}
 			]
 		}";
 
-		private const string SINGLE_WHITELISTED_IP_JSON = @"{
-			'id': 1,
-			'ip': '192.168.1.1/32',
-			'created_at': 1441824715,
-			'updated_at': 1441824715
+		internal const string SINGLE_WHITELISTED_IP_JSON = @"{
+			""id"": 1,
+			""ip"": ""192.168.1.1/32"",
+			""created_at"": 1441824715,
+			""updated_at"": 1441824715
 		}";
-		private const string MULTIPLE_WHITELISTED_IPS_JSON = @"{
-			'result': [
+		internal const string MULTIPLE_WHITELISTED_IPS_JSON = @"{
+			""result"": [
 				{
-					'id': 1,
-					'ip': '192.168.1.1/32',
-					'created_at': 1441824715,
-					'updated_at': 1441824715
+					""id"": 1,
+					""ip"": ""192.168.1.1/32"",
+					""created_at"": 1441824715,
+					""updated_at"": 1441824715
 				},
 				{
-					'id': 2,
-					'ip': '192.168.1.2/32',
-					'created_at': 1441824715,
-					'updated_at': 1441824715
+					""id"": 2,
+					""ip"": ""192.168.1.2/32"",
+					""created_at"": 1441824715,
+					""updated_at"": 1441824715
 				},
 				{
-					'id': 3,
-					'ip': '192.168.1.3/32',
-					'created_at': 1441824715,
-					'updated_at': 1441824715
+					""id"": 3,
+					""ip"": ""192.168.1.3/32"",
+					""created_at"": 1441824715,
+					""updated_at"": 1441824715
 				}
 			]
 		}";
@@ -84,7 +84,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<AccessEntry>(SINGLE_ACCESS_ENTRY_JSON);
+			var result = JsonSerializer.Deserialize<AccessEntry>(SINGLE_ACCESS_ENTRY_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -102,7 +102,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<WhitelistedIp>(SINGLE_WHITELISTED_IP_JSON);
+			var result = JsonSerializer.Deserialize<WhitelistedIp>(SINGLE_WHITELISTED_IP_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -241,7 +241,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 			var id = 1111;
 
-			var apiResponse = "{'result':" + SINGLE_WHITELISTED_IP_JSON + "}";
+			var apiResponse = "{\"result\":" + SINGLE_WHITELISTED_IP_JSON + "}";
 
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "whitelist", id)).Respond("application/json", apiResponse);

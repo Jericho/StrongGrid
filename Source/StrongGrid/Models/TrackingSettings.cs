@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The click tracking.
 		/// </value>
-		[JsonProperty("click_tracking", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("click_tracking")]
 		public ClickTrackingSettings ClickTracking { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The open tracking.
 		/// </value>
-		[JsonProperty("open_tracking", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("open_tracking")]
 		public OpenTrackingSettings OpenTracking { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The subscription tracking.
 		/// </value>
-		[JsonProperty("subscription_tracking", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("subscription_tracking")]
 		public SubscriptionTrackingSettings SubscriptionTracking { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The google analytics.
 		/// </value>
-		[JsonProperty("ganalytics", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("ganalytics")]
 		public GoogleAnalyticsSettings GoogleAnalytics { get; set; }
 	}
 }

@@ -13,50 +13,50 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "asm";
-		private const string ALL_GROUPS_JSON = @"{
-			'suppressions': [
+		internal const string ENDPOINT = "asm";
+		internal const string ALL_GROUPS_JSON = @"{
+			""suppressions"": [
 				{
-					'description': 'Optional description.',
-					'id': 1,
-					'is_default': true,
-					'name': 'Weekly News',
-					'suppressed': true
+					""description"": ""Optional description."",
+					""id"": 1,
+					""is_default"": true,
+					""name"": ""Weekly News"",
+					""suppressed"": true
 				},
 				{
-					'description': 'Some daily news.',
-					'id': 2,
-					'is_default': true,
-					'name': 'Daily News',
-					'suppressed': true
+					""description"": ""Some daily news."",
+					""id"": 2,
+					""is_default"": true,
+					""name"": ""Daily News"",
+					""suppressed"": true
 				},
 				{
-					'description': 'An old group.',
-					'id': 2,
-					'is_default': false,
-					'name': 'Old News',
-					'suppressed': false
+					""description"": ""An old group."",
+					""id"": 2,
+					""is_default"": false,
+					""name"": ""Old News"",
+					""suppressed"": false
 				}
 			]
 		}";
-		private const string ALL_SUPPRESSIONS_JSON = @"[
+		internal const string ALL_SUPPRESSIONS_JSON = @"[
 			{
-				'email':'test @example.com',
-				'group_id': 1,
-				'group_name': 'Weekly News',
-				'created_at': 1410986704
+				""email"":""test @example.com"",
+				""group_id"": 1,
+				""group_name"": ""Weekly News"",
+				""created_at"": 1410986704
 			},
 			{
-				'email':'test1@example.com',
-				'group_id': 2,
-				'group_name': 'Daily News',
-				'created_at': 1411493671
+				""email"":""test1@example.com"",
+				""group_id"": 2,
+				""group_name"": ""Daily News"",
+				""created_at"": 1411493671
 			},
 			{
-				'email':'test2@example.com',
-				'group_id': 2,
-				'group_name': 'Daily News',
-				'created_at': 1411493671
+				""email"":""test2@example.com"",
+				""group_id"": 2,
+				""group_name"": ""Daily News"",
+				""created_at"": 1411493671
 			}
 		]";
 
@@ -115,8 +115,8 @@ namespace StrongGrid.UnitTests.Resources
 			var groupId = 123;
 
 			var apiResponse = @"[
-				'test1@example.com',
-				'test2@example.com'
+				""test1@example.com"",
+				""test2@example.com""
 			]";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -145,9 +145,9 @@ namespace StrongGrid.UnitTests.Resources
 			var email = "test1@example.com";
 
 			var apiResponse = @"{
-				'recipient_emails': [
-					'test1@example.com',
-					'test2@example.com'
+				""recipient_emails"": [
+					""test1@example.com"",
+					""test2@example.com""
 				]
 			}";
 
@@ -173,9 +173,9 @@ namespace StrongGrid.UnitTests.Resources
 			var emails = new[] { "test1@example.com", "test2@example.com" };
 
 			var apiResponse = @"{
-				'recipient_emails': [
-					'test1@example.com',
-					'test2@example.com'
+				""recipient_emails"": [
+					""test1@example.com"",
+					""test2@example.com""
 				]
 			}";
 
@@ -222,9 +222,9 @@ namespace StrongGrid.UnitTests.Resources
 			var groupId = 123;
 
 			var apiResponse = @"[
-				'a@a.com',
-				'b@b.com',
-				'test@example.com'
+				""a@a.com"",
+				""b@b.com"",
+				""test@example.com""
 			]";
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "groups", groupId, "suppressions/search")).Respond("application/json", apiResponse);
@@ -249,8 +249,8 @@ namespace StrongGrid.UnitTests.Resources
 			var groupId = 123;
 
 			var apiResponse = @"[
-				'a@a.com',
-				'b@b.com'
+				""a@a.com"",
+				""b@b.com""
 			]";
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "groups", groupId, "suppressions/search")).Respond("application/json", apiResponse);

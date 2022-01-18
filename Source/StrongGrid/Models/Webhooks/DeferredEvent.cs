@@ -1,5 +1,6 @@
-using Newtonsoft.Json;
 using System;
+using System.Diagnostics;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.Webhooks
 {
@@ -34,8 +35,9 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The reason.
 		/// </value>
-		[JsonProperty("reason", NullValueHandling = NullValueHandling.Ignore)]
-		[Obsolete("We believe this field is not included in the webhook data posted by SendGrid (despite what their documentation says). Use the 'Response' field instead.")]
+		[JsonPropertyName("reason")]
+		[Obsolete("I believe this field is not included in the webhook data posted by SendGrid (despite what their documentation says). Use the 'Response' field instead.")]
+		[JsonIgnore]
 		public string Reason { get; set; }
 
 		/// <summary>
@@ -44,7 +46,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The response.
 		/// </value>
-		[JsonProperty("response", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("response")]
 		public string Response { get; set; }
 
 		/// <summary>
@@ -53,7 +55,25 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The number of attempts.
 		/// </value>
-		[JsonProperty("attempt", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonIgnore]
 		public int Attempts { get; set; }
+
+		/// <summary>
+		/// Gets or sets the number of times SendGrid has attempted to deliver this message.
+		/// </summary>
+		/// <remarks>
+		/// This value is returned by the SendGrid API as a string.
+		/// The purpose of this property is simply to convert the string value into an integer.
+		/// </remarks>
+		/// <value>
+		/// The number of attempts.
+		/// </value>
+		[JsonPropertyName("attempt")]
+		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+		public string AttemptsAsString
+		{
+			get => Attempts.ToString();
+			set { Attempts = int.Parse(value); }
+		}
 	}
 }

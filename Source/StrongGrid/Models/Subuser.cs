@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The id.
 		/// </value>
-		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("id")]
 		public long Id { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The username.
 		/// </value>
-		[JsonProperty("username", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("username")]
 		public string Username { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The password.
 		/// </value>
-		[JsonProperty("password", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("password")]
 		public string Password { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The email address.
 		/// </value>
-		[JsonProperty("email", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("email")]
 		public string EmailAddress { get; set; }
 
 		/// <summary>
@@ -49,7 +49,7 @@ namespace StrongGrid.Models
 		/// <value>
 		///   <c>true</c> if this instance is disabled; otherwise, <c>false</c>.
 		/// </value>
-		[JsonProperty("disabled", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("disabled")]
 		public bool IsDisabled { get; set; }
 
 		/// <summary>
@@ -58,7 +58,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The ip addresses.
 		/// </value>
-		[JsonProperty("ips", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("ips")]
 		public string[] Ips { get; set; }
 	}
 }

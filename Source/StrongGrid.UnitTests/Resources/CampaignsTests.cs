@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models.Legacy;
@@ -6,6 +5,7 @@ using StrongGrid.Resources.Legacy;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -16,75 +16,75 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "campaigns";
+		internal const string ENDPOINT = "campaigns";
 
-		private const string SINGLE_CAMPAIGN_JSON = @"{
-			'id': 986724,
-			'title': 'March Newsletter',
-			'subject': 'New Products for Spring!',
-			'sender_id': 124451,
-			'list_ids': [
+		internal const string SINGLE_CAMPAIGN_JSON = @"{
+			""id"": 986724,
+			""title"": ""March Newsletter"",
+			""subject"": ""New Products for Spring!"",
+			""sender_id"": 124451,
+			""list_ids"": [
 				110,
 				124
 			],
-			'segment_ids': [
+			""segment_ids"": [
 				110
 			],
-			'categories': [
-				'spring line'
+			""categories"": [
+				""spring line""
 			],
-			'suppression_group_id': 42,
-			'custom_unsubscribe_url': '',
-			'ip_pool': 'marketing',
-			'html_content': '<html><head><title></title></head><body><p>Check out our spring line!</p></body></html>',
-			'plain_content': 'Check out our spring line!',
-			'status': 'Draft'
+			""suppression_group_id"": 42,
+			""custom_unsubscribe_url"": """",
+			""ip_pool"": ""marketing"",
+			""html_content"": ""<html><head><title></title></head><body><p>Check out our spring line!</p></body></html>"",
+			""plain_content"": ""Check out our spring line!"",
+			""status"": ""Draft""
 		}";
-		private const string MULTIPLE_CAMPAIGNS_JSON = @"{
-			'result': [
+		internal const string MULTIPLE_CAMPAIGNS_JSON = @"{
+			""result"": [
 				{
-					'id': 986724,
-					'title': 'March Newsletter',
-					'subject': 'New Products for Spring!',
-					'sender_id': 124451,
-					'list_ids': [
+					""id"": 986724,
+					""title"": ""March Newsletter"",
+					""subject"": ""New Products for Spring!"",
+					""sender_id"": 124451,
+					""list_ids"": [
 						110,
 						124
 					],
-					'segment_ids': [
+					""segment_ids"": [
 						110
 					],
-					'categories': [
-						'spring line'
+					""categories"": [
+						""spring line""
 					],
-					'suppression_group_id': 42,
-					'custom_unsubscribe_url': '',
-					'ip_pool': 'marketing',
-					'html_content': '<html><head><title></title></head><body><p>Check out our spring line!</p></body></html>',
-					'plain_content': 'Check out our spring line!',
-					'status': 'Draft'
+					""suppression_group_id"": 42,
+					""custom_unsubscribe_url"": """",
+					""ip_pool"": ""marketing"",
+					""html_content"": ""<html><head><title></title></head><body><p>Check out our spring line!</p></body></html>"",
+					""plain_content"": ""Check out our spring line!"",
+					""status"": ""Draft""
 				},
 				{
-					'id': 986723,
-					'title': 'February Newsletter',
-					'subject': 'Final Winter Product Sale!',
-					'sender_id': 124451,
-					'list_ids': [
+					""id"": 986723,
+					""title"": ""February Newsletter"",
+					""subject"": ""Final Winter Product Sale!"",
+					""sender_id"": 124451,
+					""list_ids"": [
 						110,
 						124
 					],
-					'segment_ids': [
+					""segment_ids"": [
 						110
 					],
-					'categories': [
-						'winter line'
+					""categories"": [
+						""winter line""
 					],
-					'suppression_group_id': 42,
-					'custom_unsubscribe_url': '',
-					'ip_pool': 'marketing',
-					'html_content': '<html><head><title></title></head><body><p>Last call for winter clothes!</p></body></html>',
-					'plain_content': 'Last call for winter clothes!',
-					'status': 'Sent'
+					""suppression_group_id"": 42,
+					""custom_unsubscribe_url"": """",
+					""ip_pool"": ""marketing"",
+					""html_content"": ""<html><head><title></title></head><body><p>Last call for winter clothes!</p></body></html>"",
+					""plain_content"": ""Last call for winter clothes!"",
+					""status"": ""Sent""
 				}
 			]
 		}";
@@ -97,7 +97,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<Campaign>(SINGLE_CAMPAIGN_JSON);
+			var result = JsonSerializer.Deserialize<Campaign>(SINGLE_CAMPAIGN_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -236,8 +236,8 @@ namespace StrongGrid.UnitTests.Resources
 			var campaignId = 986724;
 
 			var apiResponse = @"{
-				'id': 986724,
-				'status': 'Scheduled'
+				""id"": 986724,
+				""status"": ""Scheduled""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -262,9 +262,9 @@ namespace StrongGrid.UnitTests.Resources
 			var sendOn = DateTime.UtcNow.AddHours(5);
 
 			var apiResponse = @"{
-				'id': 986724,
-				'send_at': 1489771528,
-				'status': 'Scheduled'
+				""id"": 986724,
+				""send_at"": 1489771528,
+				""status"": ""Scheduled""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -289,9 +289,9 @@ namespace StrongGrid.UnitTests.Resources
 			var sendOn = DateTime.UtcNow.AddHours(15);
 
 			var apiResponse = @"{
-				'id': 986724,
-				'send_at': 1489451436,
-				'status': 'Scheduled'
+				""id"": 986724,
+				""send_at"": 1489451436,
+				""status"": ""Scheduled""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -314,7 +314,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 			var campaignId = 986724;
 			var apiResponse = @"{
-				'send_at': 1489771528
+				""send_at"": 1489771528
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();

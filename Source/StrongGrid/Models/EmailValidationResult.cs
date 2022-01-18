@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The email address.
 		/// </value>
-		[JsonProperty("email", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("email")]
 		public string Email { get; set; }
 
 		/// <summary>
@@ -24,7 +24,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The validation verdict.
 		/// </value>
-		[JsonProperty("verdict", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("verdict")]
 		public EmailValidationVerdict Verdict { get; set; }
 
 		/// <summary>
@@ -35,7 +35,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The score.
 		/// </value>
-		[JsonProperty("score", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("score")]
 		public double Score { get; set; }
 
 		/// <summary>
@@ -44,7 +44,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The local part of the email address.
 		/// </value>
-		[JsonProperty("local", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("local")]
 		public string Local { get; set; }
 
 		/// <summary>
@@ -53,7 +53,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The host part of the email address.
 		/// </value>
-		[JsonProperty("host", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("host")]
 		public string Host { get; set; }
 
 		/// <summary>
@@ -62,7 +62,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The suggestion.
 		/// </value>
-		[JsonProperty("suggestion", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("suggestion")]
 		public string Suggestion { get; set; }
 
 		/// <summary>
@@ -76,7 +76,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The suggestion.
 		/// </value>
-		[JsonProperty("checks", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("checks")]
 		public EmailValidationChecks Checks { get; set; }
 
 		/// <summary>
@@ -85,7 +85,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The one word classifier for this validation.
 		/// </value>
-		[JsonProperty("source", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("source")]
 		public string Source { get; set; }
 
 		/// <summary>
@@ -94,7 +94,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The IP address.
 		/// </value>
-		[JsonProperty("ip_address", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("ip_address")]
 		public string IpAddress { get; set; }
 	}
 }

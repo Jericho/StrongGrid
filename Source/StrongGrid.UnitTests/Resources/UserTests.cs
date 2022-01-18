@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
@@ -6,6 +5,7 @@ using StrongGrid.Resources;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -16,19 +16,19 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "user/profile";
+		internal const string ENDPOINT = "user/profile";
 
-		private const string SINGLE_PROFILE_JSON = @"{
-			'address': '814 West Chapman Avenue',
-			'city': 'Orange',
-			'company': 'SendGrid',
-			'country': 'US',
-			'first_name': 'Test',
-			'last_name': 'User',
-			'phone': '555-555-5555',
-			'state': 'CA',
-			'website': 'http://www.sendgrid.com',
-			'zip': '92868'
+		internal const string SINGLE_PROFILE_JSON = @"{
+			""address"": ""814 West Chapman Avenue"",
+			""city"": ""Orange"",
+			""company"": ""SendGrid"",
+			""country"": ""US"",
+			""first_name"": ""Test"",
+			""last_name"": ""User"",
+			""phone"": ""555-555-5555"",
+			""state"": ""CA"",
+			""website"": ""http://www.sendgrid.com"",
+			""zip"": ""92868""
 		}";
 
 		#endregion
@@ -39,7 +39,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<UserProfile>(SINGLE_PROFILE_JSON);
+			var result = JsonSerializer.Deserialize<UserProfile>(SINGLE_PROFILE_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -79,8 +79,8 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'type': 'free',
-				'reputation': 99.7
+				""type"": ""free"",
+				""reputation"": 99.7
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -126,7 +126,7 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'email': 'test@example.com'
+				""email"": ""test@example.com""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -151,7 +151,7 @@ namespace StrongGrid.UnitTests.Resources
 			var email = "test@example.com";
 
 			var apiResponse = @"{
-				'email': 'test@example.com'
+				""email"": ""test@example.com""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -174,7 +174,7 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'username': 'test_username'
+				""username"": ""test_username""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -199,7 +199,7 @@ namespace StrongGrid.UnitTests.Resources
 			var username = "test_username";
 
 			var apiResponse = @"{
-				'username': 'test_username'
+				""username"": ""test_username""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -222,13 +222,13 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'remain': 200,
-				'total': 200,
-				'overage': 0,
-				'used': 0,
-				'last_reset': '2013-01-01',
-				'next_reset': '2013-02-01',
-				'reset_frequency': 'monthly'
+				""remain"": 200,
+				""total"": 200,
+				""overage"": 0,
+				""used"": 0,
+				""last_reset"": ""2013-01-01"",
+				""next_reset"": ""2013-02-01"",
+				""reset_frequency"": ""monthly""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -279,10 +279,10 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var apiResponse = @"{
-				'scopes': [
-					'aaa',
-					'bbb',
-					'ccc'
+				""scopes"": [
+					""aaa"",
+					""bbb"",
+					""ccc""
 				]
 			}";
 

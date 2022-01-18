@@ -1,4 +1,3 @@
-﻿using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -79,11 +78,10 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task Cancel(string batchId, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "batch_id", batchId },
-				{ "status", "cancel" }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("batch_id", batchId);
+			data.AddProperty("status", "cancel");
+
 			return _client
 				.PostAsync("user/scheduled_sends")
 				.WithJsonBody(data)
@@ -101,11 +99,10 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task Pause(string batchId, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "batch_id", batchId },
-				{ "status", "pause" }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("batch_id", batchId);
+			data.AddProperty("status", "pause");
+
 			return _client
 				.PostAsync("user/scheduled_sends")
 				.WithJsonBody(data)

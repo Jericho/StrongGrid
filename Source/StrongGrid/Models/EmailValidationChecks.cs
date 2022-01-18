@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -16,7 +16,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The domain.
 		/// </value>
-		[JsonProperty("domain", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("domain")]
 		public EmailValidationDomainChecks Domain { get; set; }
 
 		/// <summary>
@@ -25,7 +25,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The local part checks.
 		/// </value>
-		[JsonProperty("local_part", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("local_part")]
 		public EmailValidationLocalPartChecks LocalPart { get; set; }
 
 		/// <summary>
@@ -34,7 +34,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The additional checks.
 		/// </value>
-		[JsonProperty("additional", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("additional")]
 		public EmailValidationAdditionalChecks Additional { get; set; }
 	}
 }

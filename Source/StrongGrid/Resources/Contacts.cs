@@ -1,4 +1,3 @@
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Models.Search;
@@ -9,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.Serialization;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -72,11 +71,11 @@ namespace StrongGrid.Resources
 			CancellationToken cancellationToken = default)
 		{
 			// SendGrid expects an array despite the fact we are creating a single contact
-			var contactsJObject = new[] { ConvertToJObject(email, firstName, lastName, addressLine1, addressLine2, city, stateOrProvince, country, postalCode, alternateEmails, customFields) };
+			var contacts = new[] { ConvertToJson(email, firstName, lastName, addressLine1, addressLine2, city, stateOrProvince, country, postalCode, alternateEmails, customFields) };
 
-			var data = new JObject();
-			data.AddPropertyIfValue("list_ids", listIds);
-			data.AddPropertyIfValue("contacts", contactsJObject);
+			var data = new StrongGridJsonObject();
+			data.AddProperty("list_ids", listIds);
+			data.AddProperty("contacts", contacts);
 
 			return _client
 				.PutAsync(_endpoint)
@@ -97,15 +96,9 @@ namespace StrongGrid.Resources
 		/// <exception cref="SendGridException">Thrown when an exception occurred while adding or updating the contact.</exception>
 		public Task<string> UpsertAsync(IEnumerable<Contact> contacts, IEnumerable<string> listIds, CancellationToken cancellationToken = default)
 		{
-			var contactsJObject = new JArray();
-			foreach (var contact in contacts)
-			{
-				contactsJObject.Add(ConvertToJObject(contact));
-			}
-
-			var data = new JObject();
-			data.AddPropertyIfValue("list_ids", listIds);
-			data.AddPropertyIfValue("contacts", contactsJObject);
+			var data = new StrongGridJsonObject();
+			data.AddProperty("list_ids", listIds);
+			data.AddProperty("contacts", contacts.Select(c => ConvertToJson(c)).ToArray());
 
 			return _client
 				.PutAsync(_endpoint)
@@ -172,11 +165,11 @@ namespace StrongGrid.Resources
 			var response = await _client
 				.GetAsync($"{_endpoint}/count")
 				.WithCancellationToken(cancellationToken)
-				.AsRawJsonObject()
+				.AsRawJsonDocument()
 				.ConfigureAwait(false);
 
-			var totalCount = response["contact_count"].Value<long>();
-			var billableCount = response["billable_count"].Value<long>();
+			var totalCount = response.RootElement.GetProperty("contact_count").GetInt64();
+			var billableCount = response.RootElement.GetProperty("billable_count").GetInt64();
 
 			return (totalCount, billableCount);
 		}
@@ -197,11 +190,11 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<string> ExportAsync(FileType fileType = FileType.Csv, IEnumerable<string> listIds = null, IEnumerable<string> segmentIds = null, Parameter<long> maxFileSize = default, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject();
-			data.AddPropertyIfValue("list_ids", listIds);
-			data.AddPropertyIfValue("segment_ids", segmentIds);
-			data.AddPropertyIfValue("file_type", fileType);
-			data.AddPropertyIfValue("max_file_size", maxFileSize);
+			var data = new StrongGridJsonObject();
+			data.AddProperty("list_ids", listIds);
+			data.AddProperty("segment_ids", segmentIds);
+			data.AddProperty("file_type", fileType);
+			data.AddProperty("max_file_size", maxFileSize);
 
 			return _client
 				.PostAsync($"{_endpoint}/exports")
@@ -236,10 +229,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Contact[]> GetMultipleAsync(IEnumerable<string> contactIds, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject()
-			{
-				{ "ids", new JArray(contactIds) }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("ids", contactIds, false);
 
 			return _client
 				.PostAsync($"{_endpoint}/batch")
@@ -258,10 +249,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<Contact[]> GetMultipleByEmailAddressAsync(IEnumerable<string> emailAdresses, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject()
-			{
-				{ "emails", new JArray(emailAdresses) }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("emails", emailAdresses, false);
 
 			var response = await _client
 				.PostAsync($"{_endpoint}/search/emails")
@@ -276,19 +265,18 @@ namespace StrongGrid.Resources
 				return Array.Empty<Contact>();
 			}
 
-			var result = await response.AsRawJsonObject("result").ConfigureAwait(false);
+			var result = await response.AsRawJsonDocument("result").ConfigureAwait(false);
 			var contacts = new List<Contact>();
 #if DEBUG
 			var errors = new List<(string EmailAddress, string ErrorMessage)>();
 #endif
 
-			foreach (var record in result)
+			foreach (var record in result.RootElement.EnumerateObject())
 			{
-				var emailAddress = record.Key;
-				var resultValue = (JObject)record.Value;
-				if (resultValue["contact"] != null) contacts.Add(resultValue["contact"].ToObject<Contact>());
+				var emailAddress = record.Name;
+				if (record.Value.TryGetProperty("contact", out JsonElement contactProperty)) contacts.Add(contactProperty.ToObject<Contact>());
 #if DEBUG
-				if (resultValue["error"] != null) errors.Add((emailAddress, resultValue["error"].Value<string>()));
+				if (record.Value.TryGetProperty("error", out JsonElement errorProperty)) errors.Add((emailAddress, errorProperty.GetRawText()));
 #endif
 			}
 
@@ -313,7 +301,7 @@ namespace StrongGrid.Resources
 			{
 				foreach (var criteria in filterConditions)
 				{
-					var logicalOperator = criteria.Key.GetAttributeOfType<EnumMemberAttribute>().Value;
+					var logicalOperator = criteria.Key.ToEnumString();
 					var values = criteria.Value.Select(criteriaValue => criteriaValue.ToString());
 					conditions.Add(string.Join($" {logicalOperator} ", values));
 				}
@@ -321,10 +309,8 @@ namespace StrongGrid.Resources
 
 			var query = string.Join(" AND ", conditions);
 
-			var data = new JObject()
-			{
-				{ "query", query }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("query", query, false);
 
 			return _client
 				.PostAsync($"{_endpoint}/search")
@@ -344,34 +330,6 @@ namespace StrongGrid.Resources
 		/// <remarks>Pagination of the contacts has been deprecated.</remarks>
 		public async Task<(Contact[] Contacts, long TotalCount)> GetAllAsync(CancellationToken cancellationToken = default)
 		{
-			/*
-			var s = @"
-			{
-				'address_line_1':'123 Main Street',
-				'address_line_2':'Suite 123',
-				'alternate_emails':['222@example.com','333@example.com'],
-				'city':'Tinytown',
-				'country':'USA',
-				'email':'111@example.com',
-				'first_name':'Robert',
-				'id':'76e61088-92c9-465f-a8a7-8f8adb9287a5',
-				'last_name':'Smith',
-				'list_ids':[],
-				'postal_code':'12345',
-				'state_province_region':'Florida',
-				'phone_number':'',
-				'whatsapp':'',
-				'line':'',
-				'facebook':'',
-				'unique_name':'',
-				'_metadata':{'self':'https://api.sendgrid.com/v3/marketing/contact/76e61088-92c9-465f-a8a7-8f8adb9287a5'},
-				'custom_fields':{},
-				'created_at':'2020-01-31T15:59:53Z',
-				'updated_at':'2020-01-31T17:36:01.74952077Z'
-			}";
-			var obj = JsonConvert.DeserializeObject<Contact>(s, new JsonSerializerSettings() { DateParseHandling = DateParseHandling.None });
-			*/
-
 			var response = await _client
 				.GetAsync(_endpoint)
 				.WithCancellationToken(cancellationToken)
@@ -400,22 +358,22 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<string> ImportFromStreamAsync(Stream stream, FileType fileType, IEnumerable<string> fieldsMapping = null, IEnumerable<string> listIds = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject();
-			data.AddPropertyIfValue("list_ids", listIds);
-			data.AddPropertyIfEnumValue("file_type", (Parameter<FileType>)fileType);
-			data.AddPropertyIfValue("field_mappings", fieldsMapping);
+			var data = new StrongGridJsonObject();
+			data.AddProperty("list_ids", listIds);
+			data.AddProperty("file_type", (Parameter<FileType>)fileType);
+			data.AddProperty("field_mappings", fieldsMapping);
 
 			var importRequest = await _client
 				.PutAsync($"{_endpoint}/imports")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsRawJsonObject()
+				.AsRawJsonDocument()
 				.ConfigureAwait(false);
 
-			var importJobId = importRequest.GetPropertyValue<string>("job_id");
-			var uploadUrl = importRequest.GetPropertyValue<string>("upload_uri");
-			var uploadHeaders = ((JArray)importRequest["upload_headers"])
-				.Select(hdr => new KeyValuePair<string, string>(hdr.GetPropertyValue<string>("header"), hdr.GetPropertyValue<string>("value")))
+			var importJobId = importRequest.RootElement.GetProperty("job_id").GetString();
+			var uploadUrl = importRequest.RootElement.GetProperty("upload_uri").GetString();
+			var uploadHeaders = importRequest.RootElement.GetProperty("upload_headers").EnumerateArray()
+				.Select(hdr => new KeyValuePair<string, string>(hdr.GetProperty("header").GetString(), hdr.GetProperty("value").GetString()))
 				.ToArray();
 
 			var request = new HttpRequestMessage(HttpMethod.Put, uploadUrl)
@@ -552,7 +510,7 @@ namespace StrongGrid.Resources
 			}
 		}
 
-		private static JObject ConvertToJObject(
+		private static StrongGridJsonObject ConvertToJson(
 			Parameter<string> email,
 			Parameter<string> firstName,
 			Parameter<string> lastName,
@@ -565,57 +523,57 @@ namespace StrongGrid.Resources
 			Parameter<IEnumerable<string>> alternateEmails = default,
 			Parameter<IEnumerable<Field>> customFields = default)
 		{
-			var result = new JObject();
-			result.AddPropertyIfValue("email", email);
-			result.AddPropertyIfValue("first_name", firstName);
-			result.AddPropertyIfValue("last_name", lastName);
-			result.AddPropertyIfValue("address_line_1", addressLine1);
-			result.AddPropertyIfValue("address_line_2", addressLine2);
-			result.AddPropertyIfValue("city", city);
-			result.AddPropertyIfValue("state_province_region", stateOrProvince);
-			result.AddPropertyIfValue("country", country);
-			result.AddPropertyIfValue("postal_code", postalCode);
-			result.AddPropertyIfValue("alternate_emails", alternateEmails);
+			var result = new StrongGridJsonObject();
+			result.AddProperty("email", email);
+			result.AddProperty("first_name", firstName);
+			result.AddProperty("last_name", lastName);
+			result.AddProperty("address_line_1", addressLine1);
+			result.AddProperty("address_line_2", addressLine2);
+			result.AddProperty("city", city);
+			result.AddProperty("state_province_region", stateOrProvince);
+			result.AddProperty("country", country);
+			result.AddProperty("postal_code", postalCode);
+			result.AddProperty("alternate_emails", alternateEmails);
 
 			if (customFields.HasValue && customFields.Value != null && customFields.Value.Any())
 			{
-				var fields = new JObject();
+				var fields = new StrongGridJsonObject();
 
 				foreach (var customField in customFields.Value.OfType<Field<string>>())
 				{
-					fields.Add(customField.Id, customField.Value);
+					fields.AddProperty(customField.Id, customField.Value);
 				}
 
 				foreach (var customField in customFields.Value.OfType<Field<long>>())
 				{
-					fields.Add(customField.Id, customField.Value);
+					fields.AddProperty(customField.Id, customField.Value);
 				}
 
 				foreach (var customField in customFields.Value.OfType<Field<long?>>())
 				{
-					fields.Add(customField.Id, customField.Value);
+					fields.AddProperty(customField.Id, customField.Value);
 				}
 
 				foreach (var customField in customFields.Value.OfType<Field<DateTime>>())
 				{
-					fields.Add(customField.Id, customField.Value.ToUniversalTime().ToString("o"));
+					fields.AddProperty(customField.Id, customField.Value.ToUniversalTime().ToString("o"));
 				}
 
 				foreach (var customField in customFields.Value.OfType<Field<DateTime?>>())
 				{
-					fields.Add(customField.Id, customField.Value?.ToUniversalTime().ToString("o"));
+					fields.AddProperty(customField.Id, customField.Value?.ToUniversalTime().ToString("o"));
 				}
 
-				result.Add("custom_fields", fields);
+				result.AddProperty("custom_fields", fields);
 			}
 
 			return result;
 		}
 
-		private static JObject ConvertToJObject(Contact contact)
+		private static StrongGridJsonObject ConvertToJson(Contact contact)
 		{
-			var result = ConvertToJObject(contact.Email, contact.FirstName, contact.LastName, contact.AddressLine1, contact.AddressLine2, contact.City, contact.StateOrProvice, contact.Country, contact.PostalCode, contact.AlternateEmails, contact.CustomFields);
-			result.AddPropertyIfValue("id", contact.Id);
+			var result = ConvertToJson(contact.Email, contact.FirstName, contact.LastName, contact.AddressLine1, contact.AddressLine2, contact.City, contact.StateOrProvice, contact.Country, contact.PostalCode, contact.AlternateEmails, contact.CustomFields);
+			result.AddProperty("id", contact.Id);
 			return result;
 		}
 	}

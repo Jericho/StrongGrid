@@ -1,12 +1,11 @@
-﻿using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Resources;
-using StrongGrid.Utilities;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -17,26 +16,26 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "suppression/bounces";
+		internal const string ENDPOINT = "suppression/bounces";
 
-		private const string SINGLE_BOUNCE_JSON = @"{
-			'created': 1443651125,
-			'email': 'testemail1@test.com',
-			'reason': '550 5.1.1 The email account that you tried to reach does not exist. Please try double-checking the recipient\'s email address for typos or unnecessary spaces. Learn more at  https://support.google.com/mail/answer/6596 o186si2389584ioe.63 - gsmtp ',
-			'status': '5.1.1'
+		internal const string SINGLE_BOUNCE_JSON = @"{
+			""created"": 1443651125,
+			""email"": ""testemail1@test.com"",
+			""reason"": ""550 5.1.1 The email account that you tried to reach does not exist. Please try double-checking the recipient's email address for typos or unnecessary spaces. Learn more at  https://support.google.com/mail/answer/6596 o186si2389584ioe.63 - gsmtp "",
+			""status"": ""5.1.1""
 		}";
-		private const string MULTIPLE_BOUNCES_JSON = @"[
+		internal const string MULTIPLE_BOUNCES_JSON = @"[
 			{
-				'created': 1443651125,
-				'email': 'testemail1@test.com',
-				'reason': '550 5.1.1 The email account that you tried to reach does not exist. Please try double-checking the recipient\'s email address for typos or unnecessary spaces. Learn more at  https://support.google.com/mail/answer/6596 o186si2389584ioe.63 - gsmtp ',
-				'status': '5.1.1'
+				""created"": 1443651125,
+				""email"": ""testemail1@test.com"",
+				""reason"": ""550 5.1.1 The email account that you tried to reach does not exist. Please try double-checking the recipient's email address for typos or unnecessary spaces. Learn more at  https://support.google.com/mail/answer/6596 o186si2389584ioe.63 - gsmtp "",
+				""status"": ""5.1.1""
 			},
 			{
-				'created': 1433800303,
-				'email': 'testemail2@testing.com',
-				'reason': '550 5.1.1 <testemail2@testing.com>: Recipient address rejected: User unknown in virtual alias table ',
-				'status': '5.1.1'
+				""created"": 1433800303,
+				""email"": ""testemail2@testing.com"",
+				""reason"": ""550 5.1.1 <testemail2@testing.com>: Recipient address rejected: User unknown in virtual alias table "",
+				""status"": ""5.1.1""
 			}
 		]";
 
@@ -48,7 +47,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonConvert.DeserializeObject<Bounce>(SINGLE_BOUNCE_JSON);
+			var result = JsonSerializer.Deserialize<Bounce>(SINGLE_BOUNCE_JSON);
 
 			// Assert
 			result.ShouldNotBeNull();

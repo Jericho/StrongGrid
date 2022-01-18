@@ -1,13 +1,13 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using StrongGrid.Utilities;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.Legacy
 {
 	/// <summary>
 	/// Enumeration to indicate a logical operator.
 	/// </summary>
-	[JsonConverter(typeof(StringEnumConverter))]
+	[JsonConverter(typeof(StringEnumConverter<LogicalOperator>))]
 	public enum LogicalOperator
 	{
 		/// <summary>

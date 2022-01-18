@@ -5,6 +5,7 @@ using RichardSzalay.MockHttp;
 using StrongGrid.Utilities;
 using System;
 using System.Linq;
+using System.Net.Http.Formatting;
 
 namespace StrongGrid.UnitTests
 {
@@ -18,6 +19,14 @@ namespace StrongGrid.UnitTests
 			var client = new FluentClient(new Uri(SENDGRID_API_BASE_URI), httpClient);
 			client.SetRequestCoordinator(new SendGridRetryStrategy());
 			client.Filters.Remove<DefaultErrorFilter>();
+
+			// Replace the built-in Json formatter
+			var defaultJsonFormatter = client.Formatters.OfType<JsonMediaTypeFormatter>().Single();
+			client.Formatters.Remove(defaultJsonFormatter);
+			client.Formatters.Add(new JsonFormatter());
+
+			// Order is important: DiagnosticHandler must be first.
+			// Also, the list of filters must be kept in sync with the filters in BaseClient in the StrongGrid project.
 			client.Filters.Add(new DiagnosticHandler(LogLevel.Debug, LogLevel.Error));
 			client.Filters.Add(new SendGridErrorHandler());
 			return client;

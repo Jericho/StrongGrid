@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
 using System;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -14,7 +14,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The remaining.
 		/// </value>
-		[JsonProperty("remain", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("remain")]
 		public long Remaining { get; set; }
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The total.
 		/// </value>
-		[JsonProperty("total", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("total")]
 		public long Total { get; set; }
 
 		/// <summary>
@@ -32,7 +32,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The overage.
 		/// </value>
-		[JsonProperty("overage", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("overage")]
 		public long Overage { get; set; }
 
 		/// <summary>
@@ -41,7 +41,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The used.
 		/// </value>
-		[JsonProperty("used", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("used")]
 		public long Used { get; set; }
 
 		/// <summary>
@@ -50,7 +50,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The last reset.
 		/// </value>
-		[JsonProperty("last_reset", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("last_reset")]
 		public DateTime LastReset { get; set; }
 
 		/// <summary>
@@ -59,7 +59,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The next reset.
 		/// </value>
-		[JsonProperty("next_reset", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("next_reset")]
 		public DateTime NextReset { get; set; }
 
 		/// <summary>
@@ -68,7 +68,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The reset frequency.
 		/// </value>
-		[JsonProperty("reset_frequency", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("reset_frequency")]
 		public string ResetFrequency { get; set; }
 	}
 }

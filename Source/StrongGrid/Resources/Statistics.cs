@@ -1,8 +1,5 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
-using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,7 +50,7 @@ namespace StrongGrid.Resources
 				.WithCancellationToken(cancellationToken);
 
 			if (endDate.HasValue) request.WithArgument("end_date", endDate.Value.ToString("yyyy-MM-dd"));
-			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString());
+			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", aggregatedBy.ToEnumString());
 
 			return request.AsObject<Statistic[]>();
 		}
@@ -78,7 +75,7 @@ namespace StrongGrid.Resources
 				.WithCancellationToken(cancellationToken);
 
 			if (endDate.HasValue) request.WithArgument("end_date", endDate.Value.ToString("yyyy-MM-dd"));
-			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString());
+			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", aggregatedBy.ToEnumString());
 			if (categories != null && categories.Any())
 			{
 				foreach (var category in categories)
@@ -112,7 +109,7 @@ namespace StrongGrid.Resources
 				.WithCancellationToken(cancellationToken);
 
 			if (endDate.HasValue) request.WithArgument("end_date", endDate.Value.ToString("yyyy-MM-dd"));
-			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString());
+			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", aggregatedBy.ToEnumString());
 			if (subusers != null && subusers.Any())
 			{
 				foreach (var subuser in subusers)
@@ -146,7 +143,7 @@ namespace StrongGrid.Resources
 				.WithCancellationToken(cancellationToken);
 
 			if (endDate.HasValue) request.WithArgument("end_date", endDate.Value.ToString("yyyy-MM-dd"));
-			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString());
+			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", aggregatedBy.ToEnumString());
 			if (!string.IsNullOrEmpty(country)) request.WithArgument("country", country);
 
 			return request.AsObject<Statistic[]>();
@@ -173,7 +170,7 @@ namespace StrongGrid.Resources
 				.WithCancellationToken(cancellationToken);
 
 			if (endDate.HasValue) request.WithArgument("end_date", endDate.Value.ToString("yyyy-MM-dd"));
-			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString());
+			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", aggregatedBy.ToEnumString());
 
 			return request.AsObject<Statistic[]>();
 		}
@@ -199,7 +196,7 @@ namespace StrongGrid.Resources
 				.WithCancellationToken(cancellationToken);
 
 			if (endDate.HasValue) request.WithArgument("end_date", endDate.Value.ToString("yyyy-MM-dd"));
-			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString());
+			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", aggregatedBy.ToEnumString());
 
 			return request.AsObject<Statistic[]>();
 		}
@@ -226,7 +223,7 @@ namespace StrongGrid.Resources
 				.WithCancellationToken(cancellationToken);
 
 			if (endDate.HasValue) request.WithArgument("end_date", endDate.Value.ToString("yyyy-MM-dd"));
-			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString());
+			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", aggregatedBy.ToEnumString());
 
 			if (providers != null && providers.Any())
 			{
@@ -261,7 +258,7 @@ namespace StrongGrid.Resources
 				.WithCancellationToken(cancellationToken);
 
 			if (endDate.HasValue) request.WithArgument("end_date", endDate.Value.ToString("yyyy-MM-dd"));
-			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", JToken.Parse(JsonConvert.SerializeObject(aggregatedBy)).ToString());
+			if (aggregatedBy != AggregateBy.None) request.WithArgument("aggregated_by", aggregatedBy.ToEnumString());
 
 			if (browsers != null && browsers.Any())
 			{

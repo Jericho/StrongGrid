@@ -1,4 +1,3 @@
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -38,11 +37,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<EmailValidationResult> ValidateAsync(string emailAddress, string source = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "email", emailAddress }
-			};
-			data.AddPropertyIfValue("source", source);
+			var data = new StrongGridJsonObject();
+			data.AddProperty("email", emailAddress);
+			data.AddProperty("source", source);
 
 			return _client
 				.PostAsync(_endpoint)

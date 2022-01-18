@@ -1,26 +1,15 @@
-using Newtonsoft.Json;
 using Shouldly;
 using StrongGrid.Utilities;
 using System;
 using System.IO;
 using System.Text;
+using System.Text.Json;
 using Xunit;
 
 namespace StrongGrid.UnitTests.Utilities
 {
 	public class IntegerBooleanConverterTests
 	{
-		[Fact]
-		public void Properties()
-		{
-			// Act
-			var converter = new IntegerBooleanConverter();
-
-			// Assert
-			converter.CanRead.ShouldBeTrue();
-			converter.CanWrite.ShouldBeTrue();
-		}
-
 		[Fact]
 		public void CanConvert_true()
 		{
@@ -44,42 +33,23 @@ namespace StrongGrid.UnitTests.Utilities
 		}
 
 		[Fact]
-		public void Write_null()
-		{
-			// Arrange
-			var sb = new StringBuilder();
-			var sw = new StringWriter(sb);
-			var writer = new JsonTextWriter(sw);
-
-			var value = (bool?)null;
-			var serializer = new JsonSerializer();
-
-			var converter = new IntegerBooleanConverter();
-
-			// Act
-			converter.WriteJson(writer, value, serializer);
-			var result = sb.ToString();
-
-			// Assert
-			result.ShouldBeEmpty();
-		}
-
-		[Fact]
 		public void Write_true()
 		{
 			// Arrange
-			var sb = new StringBuilder();
-			var sw = new StringWriter(sb);
-			var writer = new JsonTextWriter(sw);
-
 			var value = true;
-			var serializer = new JsonSerializer();
+			var ms = new MemoryStream();
+			var jsonWriter = new Utf8JsonWriter(ms);
+			var options = new JsonSerializerOptions();
 
 			var converter = new IntegerBooleanConverter();
 
 			// Act
-			converter.WriteJson(writer, value, serializer);
-			var result = sb.ToString();
+			converter.Write(jsonWriter, value, options);
+			jsonWriter.Flush();
+
+			ms.Position = 0;
+			var sr = new StreamReader(ms);
+			var result = sr.ReadToEnd();
 
 			// Assert
 			result.ShouldBe("1");
@@ -89,43 +59,23 @@ namespace StrongGrid.UnitTests.Utilities
 		public void Write_false()
 		{
 			// Arrange
-			var sb = new StringBuilder();
-			var sw = new StringWriter(sb);
-			var writer = new JsonTextWriter(sw);
-
 			var value = false;
-			var serializer = new JsonSerializer();
+			var ms = new MemoryStream();
+			var jsonWriter = new Utf8JsonWriter(ms);
+			var options = new JsonSerializerOptions();
 
 			var converter = new IntegerBooleanConverter();
 
 			// Act
-			converter.WriteJson(writer, value, serializer);
-			var result = sb.ToString();
+			converter.Write(jsonWriter, value, options);
+			jsonWriter.Flush();
+
+			ms.Position = 0;
+			var sr = new StreamReader(ms);
+			var result = sr.ReadToEnd();
 
 			// Assert
 			result.ShouldBe("0");
-		}
-
-		[Fact]
-		public void Read_null()
-		{
-			// Arrange
-			var json = "";
-
-			var textReader = new StringReader(json);
-			var jsonReader = new JsonTextReader(textReader);
-			var objectType = (Type)null;
-			var existingValue = (object)null;
-			var serializer = new JsonSerializer();
-
-			var converter = new IntegerBooleanConverter();
-
-			// Act
-			jsonReader.Read();
-			var result = converter.ReadJson(jsonReader, objectType, existingValue, serializer);
-
-			// Assert
-			result.ShouldBeNull();
 		}
 
 		[Fact]
@@ -133,22 +83,19 @@ namespace StrongGrid.UnitTests.Utilities
 		{
 			// Arrange
 			var json = "1";
-
-			var textReader = new StringReader(json);
-			var jsonReader = new JsonTextReader(textReader);
+			var jsonUtf8 = (ReadOnlySpan<byte>)Encoding.UTF8.GetBytes(json);
+			var jsonReader = new Utf8JsonReader(jsonUtf8);
 			var objectType = (Type)null;
-			var existingValue = (object)null;
-			var serializer = new JsonSerializer();
+			var options = new JsonSerializerOptions();
 
 			var converter = new IntegerBooleanConverter();
 
 			// Act
 			jsonReader.Read();
-			var result = converter.ReadJson(jsonReader, objectType, existingValue, serializer);
+			var result = converter.Read(ref jsonReader, objectType, options);
 
 			// Assert
-			result.ShouldBeOfType<bool>();
-			((bool)result).ShouldBeTrue();
+			result.ShouldBeTrue();
 		}
 
 		[Fact]
@@ -156,22 +103,19 @@ namespace StrongGrid.UnitTests.Utilities
 		{
 			// Arrange
 			var json = "\"Anything other than the numeral 1 should yield false\"";
-
-			var textReader = new StringReader(json);
-			var jsonReader = new JsonTextReader(textReader);
+			var jsonUtf8 = (ReadOnlySpan<byte>)Encoding.UTF8.GetBytes(json);
+			var jsonReader = new Utf8JsonReader(jsonUtf8);
 			var objectType = (Type)null;
-			var existingValue = (object)null;
-			var serializer = new JsonSerializer();
+			var options = new JsonSerializerOptions();
 
 			var converter = new IntegerBooleanConverter();
 
 			// Act
 			jsonReader.Read();
-			var result = converter.ReadJson(jsonReader, objectType, existingValue, serializer);
+			var result = converter.Read(ref jsonReader, objectType, options);
 
 			// Assert
-			result.ShouldBeOfType<bool>();
-			((bool)result).ShouldBeFalse();
+			result.ShouldBeFalse();
 		}
 	}
 }

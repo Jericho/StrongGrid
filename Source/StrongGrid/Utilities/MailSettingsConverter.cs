@@ -1,107 +1,56 @@
-using Newtonsoft.Json;
 using StrongGrid.Models;
 using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Utilities
 {
 	/// <summary>
 	/// Converts a MailSettings object to and from JSON.
 	/// </summary>
-	/// <seealso cref="Newtonsoft.Json.JsonConverter" />
-	internal class MailSettingsConverter : JsonConverter
+	/// <seealso cref="JsonConverter" />
+	internal class MailSettingsConverter : JsonConverter<MailSettings>
 	{
 		public MailSettingsConverter()
 		{
 		}
 
-		/// <summary>
-		/// Determines whether this instance can convert the specified object type.
-		/// </summary>
-		/// <param name="objectType">Type of the object.</param>
-		/// <returns>
-		/// <c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
-		/// </returns>
-		public override bool CanConvert(Type objectType)
+		public override MailSettings Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			return objectType == typeof(MailSettings);
+			throw new NotSupportedException("The MailSettingsConverter can only be used to write JSON");
 		}
 
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="T:Newtonsoft.Json.JsonConverter" /> can read JSON.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="T:Newtonsoft.Json.JsonConverter" /> can read JSON; otherwise, <c>false</c>.
-		/// </value>
-		public override bool CanRead
-		{
-			get { return false; }
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="T:Newtonsoft.Json.JsonConverter" /> can write JSON.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="T:Newtonsoft.Json.JsonConverter" /> can write JSON; otherwise, <c>false</c>.
-		/// </value>
-		public override bool CanWrite
-		{
-			get { return true; }
-		}
-
-		/// <summary>
-		/// Writes the JSON representation of the object.
-		/// </summary>
-		/// <param name="writer">The <see cref="T:Newtonsoft.Json.JsonWriter" /> to write to.</param>
-		/// <param name="value">The value.</param>
-		/// <param name="serializer">The calling serializer.</param>
-		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+		public override void Write(Utf8JsonWriter writer, MailSettings value, JsonSerializerOptions options)
 		{
 			if (value == null) return;
 
 			writer.WriteStartObject();
 
-			var mailSettings = (MailSettings)value;
-
 			// bypass_xxx_management should be omited when the value is 'false'.
 			// See https://github.com/Jericho/StrongGrid/issues/395 for details.
-			if (mailSettings.BypassListManagement) WriteEnabledProperty(writer, "bypass_list_management", true, serializer);
-			if (mailSettings.BypassSpamManagement) WriteEnabledProperty(writer, "bypass_spam_management", true, serializer);
-			if (mailSettings.BypassBounceManagement) WriteEnabledProperty(writer, "bypass_bounce_management", true, serializer);
-			if (mailSettings.BypassUnsubscribeManagement) WriteEnabledProperty(writer, "bypass_unsubscribe_management", true, serializer);
+			if (value.BypassListManagement) WriteEnabledProperty(writer, "bypass_list_management", true);
+			if (value.BypassSpamManagement) WriteEnabledProperty(writer, "bypass_spam_management", true);
+			if (value.BypassBounceManagement) WriteEnabledProperty(writer, "bypass_bounce_management", true);
+			if (value.BypassUnsubscribeManagement) WriteEnabledProperty(writer, "bypass_unsubscribe_management", true);
 
-			if (mailSettings.Footer != null)
+			if (value.Footer != null)
 			{
 				writer.WritePropertyName("footer");
-				serializer.Serialize(writer, mailSettings.Footer);
+				JsonSerializer.Serialize(writer, value.Footer, typeof(FooterSettings), options);
 			}
 
-			WriteEnabledProperty(writer, "sandbox_mode", mailSettings.SandboxModeEnabled, serializer);
+			WriteEnabledProperty(writer, "sandbox_mode", value.SandboxModeEnabled);
 
 			// End of JSON serialization
 			writer.WriteEndObject();
 		}
 
-		/// <summary>
-		/// Reads the JSON representation of the object.
-		/// </summary>
-		/// <param name="reader">The <see cref="T:Newtonsoft.Json.JsonReader" /> to read from.</param>
-		/// <param name="objectType">Type of the object.</param>
-		/// <param name="existingValue">The existing value of object being read.</param>
-		/// <param name="serializer">The calling serializer.</param>
-		/// <returns>
-		/// The object value.
-		/// </returns>
-		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-		{
-			throw new NotSupportedException("The MailSettingsConverter can only be used to write JSON");
-		}
-
-		private static void WriteEnabledProperty(JsonWriter writer, string propertyName, bool value, JsonSerializer serializer)
+		private static void WriteEnabledProperty(Utf8JsonWriter writer, string propertyName, bool value)
 		{
 			writer.WritePropertyName(propertyName);
 			writer.WriteStartObject();
 			writer.WritePropertyName("enable");
-			serializer.Serialize(writer, value);
+			writer.WriteBooleanValue(value);
 			writer.WriteEndObject();
 		}
 	}

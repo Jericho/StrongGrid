@@ -19,7 +19,7 @@ namespace StrongGrid.UnitTests.Resources
 	{
 		#region FIELDS
 
-		private const string ENDPOINT = "mail";
+		internal const string ENDPOINT = "mail";
 
 		#endregion
 

@@ -1,11 +1,9 @@
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Models.Search;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -44,12 +42,10 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Segment> CreateAsync(string name, IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>> filterConditions, string listId = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject
-			{
-				{ "name", name },
-				{ "query_dsl",  ToQueryDsl(filterConditions) }
-			};
-			data.AddPropertyIfValue("parent_list_id", listId);
+			var data = new StrongGridJsonObject();
+			data.AddProperty("name", name);
+			data.AddProperty("query_dsl", ToQueryDsl(filterConditions));
+			data.AddProperty("parent_list_id", listId);
 
 			return _client
 				.PostAsync(_endpoint)
@@ -113,11 +109,11 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Segment> UpdateAsync(string segmentId, Parameter<string> name = default, Parameter<IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>>> filterConditions = default, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject();
-			data.AddPropertyIfValue("name", name);
+			var data = new StrongGridJsonObject();
+			data.AddProperty("name", name);
 			if (filterConditions.HasValue)
 			{
-				data.AddPropertyIfValue("query_dsl", ToQueryDsl(filterConditions.Value));
+				data.AddProperty("query_dsl", ToQueryDsl(filterConditions.Value));
 			}
 
 			return _client
@@ -145,14 +141,14 @@ namespace StrongGrid.Resources
 				.AsMessage();
 		}
 
-		private string ToQueryDsl(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>> filterConditions)
+		private static string ToQueryDsl(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>> filterConditions)
 		{
 			if (filterConditions == null) return null;
 
 			var conditions = new List<string>(filterConditions.Count());
 			foreach (var criteria in filterConditions)
 			{
-				var logicalOperator = criteria.Key.GetAttributeOfType<EnumMemberAttribute>().Value;
+				var logicalOperator = criteria.Key.ToEnumString();
 				var values = criteria.Value.Select(criteriaValue => criteriaValue.ToString());
 				conditions.Add(string.Join($" {logicalOperator} ", values));
 			}

@@ -1,6 +1,6 @@
-using Newtonsoft.Json.Linq;
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
+using StrongGrid.Utilities;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -39,12 +39,10 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<AddIpAddressResult> AddAsync(int count, string[] subusers = null, bool? warmup = null, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject()
-			{
-				{ "count", count }
-			};
-			if (subusers != null && subusers.Length > 0) data.Add("subusers", JArray.FromObject(subusers));
-			if (warmup.HasValue) data.Add("warmup", warmup.Value);
+			var data = new StrongGridJsonObject();
+			data.AddProperty("count", count);
+			data.AddProperty("subusers", subusers);
+			data.AddProperty("warmup", warmup.Value);
 
 			return _client
 				.PostAsync(_endpoint)
@@ -60,13 +58,15 @@ namespace StrongGrid.Resources
 		/// <returns>The information about <see cref="IpAddressesRemaining">remaining IP addresses</see>.</returns>
 		public async Task<IpAddressesRemaining> GetRemainingCountAsync(CancellationToken cancellationToken = default)
 		{
-			var remainingInfo = await _client
+			var result = await _client
 				.GetAsync($"{_endpoint}/remaining")
 				.WithCancellationToken(cancellationToken)
-				.AsObject<JArray>("results")
+				.AsRawJsonDocument("results")
 				.ConfigureAwait(false);
 
-			return remainingInfo.First().ToObject<IpAddressesRemaining>();
+			return result.RootElement.EnumerateArray()
+				.First()
+				.ToObject<IpAddressesRemaining>();
 		}
 
 		/// <summary>
@@ -168,10 +168,8 @@ namespace StrongGrid.Resources
 		/// <returns>The async task.</returns>
 		public Task StartWarmupAsync(string address, CancellationToken cancellationToken = default)
 		{
-			var data = new JObject()
-			{
-				{ "ip", address }
-			};
+			var data = new StrongGridJsonObject();
+			data.AddProperty("ip", address);
 
 			return _client
 				.PostAsync($"{_endpoint}/warmup")

@@ -1,44 +1,34 @@
-using Newtonsoft.Json;
 using Shouldly;
 using StrongGrid.Utilities;
 using System;
 using System.IO;
 using System.Text;
+using System.Text.Json;
 using Xunit;
 
 namespace StrongGrid.UnitTests.Utilities
 {
 	public class LegacyCustomFieldsConverterTests
 	{
-		[Fact]
-		public void Properties()
+		[Theory]
+		[InlineData(typeof(StrongGrid.Models.Legacy.Field[]), true)]
+		[InlineData((Type)null, false)]
+		[InlineData(typeof(TimeSpan), false)]
+		[InlineData(typeof(string), false)]
+		[InlineData(typeof(StrongGrid.Models.Field), false)]
+		public void CanConvert(Type typeToConvert, bool expected)
 		{
 			// Act
 			var converter = new LegacyCustomFieldsConverter();
 
 			// Assert
-			converter.CanRead.ShouldBeTrue();
-			converter.CanWrite.ShouldBeTrue();
-		}
-
-		[Fact]
-		public void CanConvert()
-		{
-			// Act
-			var converter = new LegacyCustomFieldsConverter();
-
-			// Assert
-			converter.CanConvert(null).ShouldBeTrue();
+			converter.CanConvert(typeToConvert).ShouldBe(expected);
 		}
 
 		[Fact]
 		public void Write()
 		{
 			// Arrange
-			var sb = new StringBuilder();
-			var sw = new StringWriter(sb);
-			var writer = new JsonTextWriter(sw);
-
 			var value = new StrongGrid.Models.Legacy.Field[]
 			{
 				new StrongGrid.Models.Legacy.Field<string>() { Id = 1, Name = "field1", Value = "111111" },
@@ -47,13 +37,20 @@ namespace StrongGrid.UnitTests.Utilities
 				new StrongGrid.Models.Legacy.Field<DateTime>() { Id = 4, Name = "field4", Value = new DateTime(2017, 3, 28, 13, 55, 0) },
 				new StrongGrid.Models.Legacy.Field<DateTime?>() { Id = 5, Name = "field5", Value = null }
 			};
-			var serializer = new JsonSerializer();
+
+			var ms = new MemoryStream();
+			var jsonWriter = new Utf8JsonWriter(ms);
+			var options = new JsonSerializerOptions();
 
 			var converter = new LegacyCustomFieldsConverter();
 
 			// Act
-			converter.WriteJson(writer, value, serializer);
-			var result = sb.ToString();
+			converter.Write(jsonWriter, value, options);
+			jsonWriter.Flush();
+
+			ms.Position = 0;
+			var sr = new StreamReader(ms);
+			var result = sr.ReadToEnd();
 
 			// Assert
 			result.ShouldBe("[{\"value\":\"111111\",\"id\":1,\"name\":\"field1\"},{\"value\":222222,\"id\":2,\"name\":\"field2\"},{\"id\":3,\"name\":\"field3\"},{\"value\":\"2017-03-28T13:55:00\",\"id\":4,\"name\":\"field4\"},{\"id\":5,\"name\":\"field5\"}]");
@@ -63,26 +60,22 @@ namespace StrongGrid.UnitTests.Utilities
 		public void Read_invalid()
 		{
 			// Arrange
-			var json = "{ 'name': 'this JSON is invalid for this converter' }";
+			var json = "{ \"name\": \"this JSON is invalid for this converter\" }";
 
-			var textReader = new StringReader(json);
-			var jsonReader = new JsonTextReader(textReader);
+			var jsonUtf8 = (ReadOnlySpan<byte>)Encoding.UTF8.GetBytes(json);
+			var jsonReader = new Utf8JsonReader(jsonUtf8);
 			var objectType = (Type)null;
-			var existingValue = (object)null;
-			var serializer = new JsonSerializer();
+			var options = new JsonSerializerOptions();
 
 			var converter = new LegacyCustomFieldsConverter();
 
 			// Act
 			jsonReader.Read();
-			var result = converter.ReadJson(jsonReader, objectType, existingValue, serializer);
+			var result = converter.Read(ref jsonReader, objectType, options);
 
 			// Assert
 			result.ShouldNotBeNull();
-			result.ShouldBeOfType<StrongGrid.Models.Legacy.Field[]>();
-
-			var resultAsArray = (StrongGrid.Models.Legacy.Field[])result;
-			resultAsArray.Length.ShouldBe(0);
+			result.Length.ShouldBe(0);
 		}
 
 		[Fact]
@@ -90,21 +83,31 @@ namespace StrongGrid.UnitTests.Utilities
 		{
 			// Arrange
 			var json = @"[
-				{ 'id':0, 'name':'field0', 'type':'__bogus__' }
+				{ ""id"":0, ""name"":""field0"", ""type"":""__bogus__"" }
 			]";
 
-			var textReader = new StringReader(json);
-			var jsonReader = new JsonTextReader(textReader);
+			var jsonUtf8 = (ReadOnlySpan<byte>)Encoding.UTF8.GetBytes(json);
+			var jsonReader = new Utf8JsonReader(jsonUtf8);
 			var objectType = (Type)null;
-			var existingValue = (object)null;
-			var serializer = new JsonSerializer();
+			var options = new JsonSerializerOptions();
 
 			var converter = new LegacyCustomFieldsConverter();
 
 			// Act
 			jsonReader.Read();
-			Should.Throw<Exception>(() => converter.ReadJson(jsonReader, objectType, existingValue, serializer))
-				.Message.ShouldBe("__bogus__ is an unknown field type");
+
+			// This try...catch is a workaround for the fact that we can't use the following code:
+			// Should.Throw<Exception>(() => converter.Read(ref jsonReader, objectType, options)).Message.ShouldBe("__bogus__ is an unknown field type");
+			// due to the following compile time error:
+			// Cannot use ref local 'jsonReader' inside an anonymous method, lambda expression, or query expression
+			try
+			{
+				var fields = converter.Read(ref jsonReader, objectType, options);
+			}
+			catch (Exception e) when (e.Message == "__bogus__ is an unknown field type")
+			{
+				// This is the expected exception
+			}
 		}
 
 		[Fact]
@@ -112,25 +115,24 @@ namespace StrongGrid.UnitTests.Utilities
 		{
 			// Arrange
 			var json = @"[
-				{ 'id':0, 'name':'field0', 'type':'date', 'value':1490709300 },
-				{ 'id':1, 'name':'field1', 'type':'date' },
-				{ 'id':2, 'name':'field2', 'type':'text', 'value':'abc123' },
-				{ 'id':3, 'name':'field3', 'type':'text' },
-				{ 'id':4, 'name':'field4', 'type':'number', 'value':123 },
-				{ 'id':5, 'name':'field5', 'type':'number' }
+				{ ""id"":0, ""name"":""field0"", ""type"":""date"", ""value"":1490709300 },
+				{ ""id"":1, ""name"":""field1"", ""type"":""date"" },
+				{ ""id"":2, ""name"":""field2"", ""type"":""text"", ""value"":""abc123"" },
+				{ ""id"":3, ""name"":""field3"", ""type"":""text"" },
+				{ ""id"":4, ""name"":""field4"", ""type"":""number"", ""value"":123 },
+				{ ""id"":5, ""name"":""field5"", ""type"":""number"" }
 			]";
 
-			var textReader = new StringReader(json);
-			var jsonReader = new JsonTextReader(textReader);
+			var jsonUtf8 = (ReadOnlySpan<byte>)Encoding.UTF8.GetBytes(json);
+			var jsonReader = new Utf8JsonReader(jsonUtf8);
 			var objectType = (Type)null;
-			var existingValue = (object)null;
-			var serializer = new JsonSerializer();
+			var options = new JsonSerializerOptions();
 
 			var converter = new LegacyCustomFieldsConverter();
 
 			// Act
 			jsonReader.Read();
-			var result = converter.ReadJson(jsonReader, objectType, existingValue, serializer);
+			var result = converter.Read(ref jsonReader, objectType, options);
 
 			// Assert
 			result.ShouldNotBeNull();

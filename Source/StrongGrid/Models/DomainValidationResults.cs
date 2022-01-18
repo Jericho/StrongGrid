@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The mail.
 		/// </value>
-		[JsonProperty("mail_cname", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("mail_cname")]
 		public ValidationResult Mail { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The dkim1.
 		/// </value>
-		[JsonProperty("dkim1", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("dkim1")]
 		public ValidationResult Dkim1 { get; set; }
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The dkim2.
 		/// </value>
-		[JsonProperty("dkim2", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("dkim2")]
 		public ValidationResult Dkim2 { get; set; }
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The SPF.
 		/// </value>
-		[JsonProperty("spf", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("spf")]
 		public ValidationResult Spf { get; set; }
 	}
 }

@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -13,7 +13,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The lists.
 		/// </value>
-		[JsonProperty("list_ids", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("list_ids")]
 		public string[] Lists { get; set; }
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The segments.
 		/// </value>
-		[JsonProperty("segment_ids", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("segment_ids")]
 		public string[] Segments { get; set; }
 	}
 }

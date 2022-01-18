@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
 using System;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.EmailActivities
 {
@@ -14,7 +14,7 @@ namespace StrongGrid.Models.EmailActivities
 		/// <value>
 		/// The event type.
 		/// </value>
-		[JsonProperty("event_name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("event_name")]
 		public EventType EventType { get; set; }
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace StrongGrid.Models.EmailActivities
 		/// <value>
 		/// The date the message was processed.
 		/// </value>
-		[JsonProperty("processed", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("processed")]
 		public DateTime ProcessedOn { get; set; }
 	}
 }

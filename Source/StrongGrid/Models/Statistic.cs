@@ -1,5 +1,6 @@
-﻿using Newtonsoft.Json;
+using StrongGrid.Utilities;
 using System;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -14,7 +15,8 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The date.
 		/// </value>
-		[JsonProperty("date", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("date")]
+		[JsonConverter(typeof(SendGridDateTimeConverter))]
 		public DateTime Date { get; set; }
 
 		/// <summary>
@@ -23,7 +25,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The stats.
 		/// </value>
-		[JsonProperty("stats", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("stats")]
 		public Stat[] Stats { get; set; }
 	}
 }

@@ -1,6 +1,6 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using StrongGrid.Utilities;
 using System.ComponentModel;
+using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
 {
@@ -15,7 +15,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The identifier.
 		/// </value>
-		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("id")]
 		public string Id { get; set; }
 
 		/// <summary>
@@ -24,7 +24,7 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The name.
 		/// </value>
-		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("name")]
 		public string Name { get; set; }
 
 		/// <summary>
@@ -33,8 +33,8 @@ namespace StrongGrid.Models
 		/// <value>
 		/// The type.
 		/// </value>
-		[JsonProperty("field_type", NullValueHandling = NullValueHandling.Ignore)]
-		[JsonConverter(typeof(StringEnumConverter))]
+		[JsonPropertyName("field_type")]
+		[JsonConverter(typeof(StringEnumConverter<FieldType>))]
 		public FieldType Type { get; set; }
 
 		/// <summary>
@@ -44,7 +44,7 @@ namespace StrongGrid.Models
 		/// Value indicating whether the field is read-only.
 		/// </value>
 		[DefaultValue(false)]
-		[JsonProperty("read_only", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
+		[JsonPropertyName("read_only")]
 		public bool ReadOnly { get; set; }
 	}
 }
