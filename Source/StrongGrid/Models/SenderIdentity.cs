@@ -155,16 +155,16 @@ namespace StrongGrid.Models
 		[JsonConverter(typeof(EpochConverter))]
 		public DateTime ModifiedOn { get; set; }
 
-		[JsonProperty("from_email", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("from_email")]
 		private string FromEmail { get; set; }
 
-		[JsonProperty("from_name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("from_name")]
 		private string FromName { get; set; }
 
-		[JsonProperty("reply_to", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("reply_to")]
 		private string ReplyToEmail { get; set; }
 
-		[JsonProperty("reply_to_name", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("reply_to_name")]
 		private string ReplyToName { get; set; }
 	}
 }

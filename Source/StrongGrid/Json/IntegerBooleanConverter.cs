@@ -7,7 +7,6 @@ namespace StrongGrid.Json
 	/// <summary>
 	/// Converts a boolean expressed as 1 for True or 0 for False to and from JSON.
 	/// </summary>
-	/// <seealso cref="Newtonsoft.Json.JsonConverter" />
 	internal class IntegerBooleanConverter : JsonConverter<bool>
 	{
 		public override bool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
