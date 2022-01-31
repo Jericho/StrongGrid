@@ -710,7 +710,7 @@ namespace StrongGrid
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
 		private static async Task<T> AsObject<T>(this HttpContent httpContent, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonSerializerOptions options = null, CancellationToken cancellationToken = default)
 		{
-			var responseContent = await httpContent.ReadAsStringAsync(null).ConfigureAwait(false);
+			var responseContent = await httpContent.ReadAsStringAsync(null, cancellationToken).ConfigureAwait(false);
 
 			if (string.IsNullOrEmpty(propertyName))
 			{
