@@ -593,13 +593,13 @@ namespace StrongGrid
 			var enumType = typeof(T);
 			foreach (var name in Enum.GetNames(enumType))
 			{
+				var customAttributes = enumType.GetField(name).GetCustomAttributes(true);
+
 				// See if there's a matching 'EnumMember' attribute
-				var enumMemberAttribute = ((EnumMemberAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(EnumMemberAttribute), true)).SingleOrDefault();
-				if (enumMemberAttribute != null && string.Equals(enumMemberAttribute.Value, str, StringComparison.OrdinalIgnoreCase)) return (T)Enum.Parse(enumType, name);
+				if (customAttributes.OfType<EnumMemberAttribute>().Any(attribute => string.Equals(attribute.Value, str, StringComparison.OrdinalIgnoreCase))) return (T)Enum.Parse(enumType, name);
 
 				// See if there's a matching 'Description' attribute
-				var descriptionAttribute = ((DescriptionAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(DescriptionAttribute), true)).SingleOrDefault();
-				if (descriptionAttribute != null && string.Equals(descriptionAttribute.Description, str, StringComparison.OrdinalIgnoreCase)) return (T)Enum.Parse(enumType, name);
+				if (customAttributes.OfType<DescriptionAttribute>().Any(attribute => string.Equals(attribute.Description, str, StringComparison.OrdinalIgnoreCase))) return (T)Enum.Parse(enumType, name);
 
 				// See if the value matches the name
 				if (string.Equals(name, str, StringComparison.OrdinalIgnoreCase)) return (T)Enum.Parse(enumType, name);
