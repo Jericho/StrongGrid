@@ -585,7 +585,7 @@ namespace StrongGrid
 		/// <summary>Parses a string into its corresponding enum value.</summary>
 		/// <typeparam name="T">The enum type.</typeparam>
 		/// <param name="str">The string value.</param>
-		/// <returns>The enum representayionm of the string value.</returns>
+		/// <returns>The enum representation of the string value.</returns>
 		/// <remarks>Inspired by: https://stackoverflow.com/questions/10418651/using-enummemberattribute-and-doing-automatic-string-conversions .</remarks>
 		internal static T ToEnum<T>(this string str)
 			where T : Enum
