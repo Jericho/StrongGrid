@@ -28,13 +28,14 @@ namespace StrongGrid.Utilities
 
 					foreach (var name in Enum.GetNames(enumType))
 					{
-						// See if there's an 'EnumMember' with an empty attribute
-						var enumMemberAttribute = ((EnumMemberAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(EnumMemberAttribute), true)).SingleOrDefault();
-						if (enumMemberAttribute != null && string.IsNullOrEmpty(enumMemberAttribute.Value)) return (T)Enum.Parse(enumType, name);
+						// Get the custom attributes on the enum item
+						var customAttributes = enumType.GetField(name).GetCustomAttributes(true);
 
-						// See if there's a 'Description' attribute with an empty attribute
-						var descriptionAttribute = ((DescriptionAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(DescriptionAttribute), true)).SingleOrDefault();
-						if (descriptionAttribute != null && string.IsNullOrEmpty(descriptionAttribute.Description)) return (T)Enum.Parse(enumType, name);
+						// See if there's an 'EnumMember' attribute with an empty value
+						if (customAttributes.OfType<EnumMemberAttribute>().Any(attribute => string.IsNullOrEmpty(attribute.Value))) return (T)Enum.Parse(enumType, name);
+
+						// See if there's a 'Description' attribute with an empty value
+						if (customAttributes.OfType<DescriptionAttribute>().Any(attribute => string.IsNullOrEmpty(attribute.Description))) return (T)Enum.Parse(enumType, name);
 					}
 
 					throw new JsonException($"Unable to convert a null value into a {typeToConvert.Name} enum.");
