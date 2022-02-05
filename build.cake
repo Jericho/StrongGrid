@@ -139,6 +139,7 @@ Setup(context =>
 		Information("");
 		Information("Removing integration tests");
 		DotNetTool(solutionFile, "sln", $"remove {integrationTestsProject.TrimStart(sourceFolder, StringComparison.OrdinalIgnoreCase)}");
+		if (isBenchmarkPresent) DotNetTool(solutionFile, "sln", $"remove {benchmarkProject.TrimStart(sourceFolder, StringComparison.OrdinalIgnoreCase)}");
 	}
 });
 
