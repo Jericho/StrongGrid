@@ -2,7 +2,7 @@
 #tool dotnet:?package=GitVersion.Tool&version=5.8.1
 #tool nuget:?package=GitReleaseManager&version=0.12.1
 #tool nuget:?package=OpenCover&version=4.7.1221
-#tool nuget:?package=ReportGenerator&version=5.0.2
+#tool nuget:?package=ReportGenerator&version=5.0.3
 #tool nuget:?package=coveralls.io&version=1.4.2
 #tool nuget:?package=xunit.runner.console&version=2.4.1
 

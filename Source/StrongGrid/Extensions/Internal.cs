@@ -585,7 +585,7 @@ namespace StrongGrid
 		/// <summary>Parses a string into its corresponding enum value.</summary>
 		/// <typeparam name="T">The enum type.</typeparam>
 		/// <param name="str">The string value.</param>
-		/// <returns>The enum representayionm of the string value.</returns>
+		/// <returns>The enum representation of the string value.</returns>
 		/// <remarks>Inspired by: https://stackoverflow.com/questions/10418651/using-enummemberattribute-and-doing-automatic-string-conversions .</remarks>
 		internal static T ToEnum<T>(this string str)
 			where T : Enum
@@ -593,13 +593,13 @@ namespace StrongGrid
 			var enumType = typeof(T);
 			foreach (var name in Enum.GetNames(enumType))
 			{
+				var customAttributes = enumType.GetField(name).GetCustomAttributes(true);
+
 				// See if there's a matching 'EnumMember' attribute
-				var enumMemberAttribute = ((EnumMemberAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(EnumMemberAttribute), true)).SingleOrDefault();
-				if (enumMemberAttribute != null && string.Equals(enumMemberAttribute.Value, str, StringComparison.OrdinalIgnoreCase)) return (T)Enum.Parse(enumType, name);
+				if (customAttributes.OfType<EnumMemberAttribute>().Any(attribute => string.Equals(attribute.Value, str, StringComparison.OrdinalIgnoreCase))) return (T)Enum.Parse(enumType, name);
 
 				// See if there's a matching 'Description' attribute
-				var descriptionAttribute = ((DescriptionAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(DescriptionAttribute), true)).SingleOrDefault();
-				if (descriptionAttribute != null && string.Equals(descriptionAttribute.Description, str, StringComparison.OrdinalIgnoreCase)) return (T)Enum.Parse(enumType, name);
+				if (customAttributes.OfType<DescriptionAttribute>().Any(attribute => string.Equals(attribute.Description, str, StringComparison.OrdinalIgnoreCase))) return (T)Enum.Parse(enumType, name);
 
 				// See if the value matches the name
 				if (string.Equals(name, str, StringComparison.OrdinalIgnoreCase)) return (T)Enum.Parse(enumType, name);
@@ -710,7 +710,7 @@ namespace StrongGrid
 		/// <exception cref="SendGridException">An error occurred processing the response.</exception>
 		private static async Task<T> AsObject<T>(this HttpContent httpContent, string propertyName = null, bool throwIfPropertyIsMissing = true, JsonSerializerOptions options = null, CancellationToken cancellationToken = default)
 		{
-			var responseContent = await httpContent.ReadAsStringAsync(null).ConfigureAwait(false);
+			var responseContent = await httpContent.ReadAsStringAsync(null, cancellationToken).ConfigureAwait(false);
 
 			if (string.IsNullOrEmpty(propertyName))
 			{
