@@ -192,7 +192,7 @@ namespace WebApplication1.Controllers
 		public async Task<IActionResult> ReceiveEvents()
 		{
 			var parser = new WebhookParser();
-			var events = await parser.ParseWebhookEventsAsync(Request.Body).ConfigureAwait(false);
+			var events = await parser.ParseEventsWebhookAsync(Request.Body).ConfigureAwait(false);
 			
 			... do something with the events ...
 
