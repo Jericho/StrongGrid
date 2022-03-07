@@ -1,8 +1,8 @@
 // Install tools.
-#tool dotnet:?package=GitVersion.Tool&version=5.8.1
+#tool dotnet:?package=GitVersion.Tool&version=5.8.3
 #tool nuget:?package=GitReleaseManager&version=0.13.0
 #tool nuget:?package=OpenCover&version=4.7.1221
-#tool nuget:?package=ReportGenerator&version=5.0.3
+#tool nuget:?package=ReportGenerator&version=5.0.4
 #tool nuget:?package=coveralls.io&version=1.4.2
 #tool nuget:?package=xunit.runner.console&version=2.4.1
 
@@ -381,20 +381,19 @@ Task("Publish-MyGet")
 Task("Create-Release-Notes")
 	.Does(() =>
 {
-	var settings = new GitReleaseManagerCreateSettings
-	{
-		Name              = milestone,
-		Milestone         = milestone,
-		Prerelease        = false,
-		TargetCommitish   = "main"
-	};
-
 	if (string.IsNullOrEmpty(gitHubToken))
 	{
 		throw new InvalidOperationException("GitHub token was not provided.");
 	}
 
-	GitReleaseManagerCreate(gitHubToken, gitHubRepoOwner, gitHubRepo, settings);
+	GitReleaseManagerCreate(gitHubToken, gitHubRepoOwner, gitHubRepo, new GitReleaseManagerCreateSettings
+	{
+		Name            = milestone,
+		Milestone       = milestone,
+		Prerelease      = false,
+		TargetCommitish = "main",
+		Verbose         = true
+	});
 });
 
 Task("Publish-GitHub-Release")
@@ -410,7 +409,10 @@ Task("Publish-GitHub-Release")
 		throw new InvalidOperationException("GitHub token was not provided.");
 	}
 
-	GitReleaseManagerClose(gitHubToken, gitHubRepoOwner, gitHubRepo, milestone);
+	GitReleaseManagerClose(gitHubToken, gitHubRepoOwner, gitHubRepo, milestone, new GitReleaseManagerCloseMilestoneSettings
+	{
+		Verbose = true
+	});
 });
 
 Task("Generate-Benchmark-Report")
