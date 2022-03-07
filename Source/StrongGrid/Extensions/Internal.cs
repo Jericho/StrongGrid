@@ -610,7 +610,7 @@ namespace StrongGrid
 
 		internal static T ToObject<T>(this JsonElement element, JsonSerializerOptions options = null)
 		{
-			return JsonSerializer.Deserialize<T>(element.GetRawText(), options);
+			return JsonSerializer.Deserialize<T>(element.GetRawText(), options ?? JsonFormatter.DeserializerOptions);
 		}
 
 		private static async Task<(bool, string)> GetErrorMessage(HttpResponseMessage message)
@@ -714,14 +714,14 @@ namespace StrongGrid
 
 			if (string.IsNullOrEmpty(propertyName))
 			{
-				return JsonSerializer.Deserialize<T>(responseContent, options);
+				return JsonSerializer.Deserialize<T>(responseContent, options ?? JsonFormatter.DeserializerOptions);
 			}
 
 			var jsonDoc = JsonDocument.Parse(responseContent, (JsonDocumentOptions)default);
 			if (jsonDoc.RootElement.TryGetProperty(propertyName, out JsonElement property))
 			{
 				var propertyContent = property.GetRawText();
-				return JsonSerializer.Deserialize<T>(propertyContent, options);
+				return JsonSerializer.Deserialize<T>(propertyContent, options ?? JsonFormatter.DeserializerOptions);
 			}
 			else if (throwIfPropertyIsMissing)
 			{
@@ -778,7 +778,7 @@ namespace StrongGrid
 		{
 			var jsonDocument = await httpContent.AsRawJsonDocument(null, false, cancellationToken).ConfigureAwait(false);
 			var metadataProperty = jsonDocument.RootElement.GetProperty("_metadata");
-			var metadata = JsonSerializer.Deserialize<PaginationMetadata>(metadataProperty.GetRawText(), options);
+			var metadata = JsonSerializer.Deserialize<PaginationMetadata>(metadataProperty.GetRawText(), options ?? JsonFormatter.DeserializerOptions);
 
 			if (!jsonDocument.RootElement.TryGetProperty(propertyName, out JsonElement jProperty))
 			{
@@ -791,7 +791,7 @@ namespace StrongGrid
 				CurrentPageToken = metadata.SelfToken,
 				NextPageToken = metadata.NextToken,
 				TotalRecords = metadata.Count,
-				Records = JsonSerializer.Deserialize<T[]>(jProperty.GetRawText(), options)
+				Records = JsonSerializer.Deserialize<T[]>(jProperty.GetRawText(), options ?? JsonFormatter.DeserializerOptions)
 			};
 
 			return result;

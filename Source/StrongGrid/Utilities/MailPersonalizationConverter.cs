@@ -84,15 +84,17 @@ namespace StrongGrid.Utilities
 		{
 			writer.WritePropertyName(propertyName);
 
-			// It's important to clone the options in order to be able to modify the 'Converters' list
-			var clonedOptions = new JsonSerializerOptions(options);
-
 			if (propertyConverterAttribute != null)
 			{
+				// It's important to clone the options in order to be able to modify the 'Converters' list
+				var clonedOptions = new JsonSerializerOptions(options);
 				clonedOptions.Converters.Add((JsonConverter)Activator.CreateInstance(propertyConverterAttribute.ConverterType));
+				JsonSerializer.Serialize(writer, propertyValue, propertyValue.GetType(), clonedOptions);
 			}
-
-			JsonSerializer.Serialize(writer, propertyValue, propertyValue.GetType(), clonedOptions);
+			else
+			{
+				JsonSerializer.Serialize(writer, propertyValue, propertyValue.GetType(), options);
+			}
 		}
 	}
 }

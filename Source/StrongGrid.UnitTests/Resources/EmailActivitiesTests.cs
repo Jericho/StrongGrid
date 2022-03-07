@@ -4,6 +4,7 @@ using StrongGrid.Models;
 using StrongGrid.Models.Search;
 using StrongGrid.Models.Search.Legacy;
 using StrongGrid.Resources;
+using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -47,7 +48,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonSerializer.Deserialize<EmailMessageActivity>(SINGLE_MESSAGE);
+			var result = JsonSerializer.Deserialize<EmailMessageActivity>(SINGLE_MESSAGE, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.ShouldNotBeNull();

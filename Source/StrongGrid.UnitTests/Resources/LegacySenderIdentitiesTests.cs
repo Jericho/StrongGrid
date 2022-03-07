@@ -2,6 +2,7 @@ using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Resources.Legacy;
+using StrongGrid.Utilities;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -73,7 +74,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonSerializer.Deserialize<SenderIdentity>(SINGLE_SENDER_IDENTITY_JSON);
+			var result = JsonSerializer.Deserialize<SenderIdentity>(SINGLE_SENDER_IDENTITY_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.ShouldNotBeNull();

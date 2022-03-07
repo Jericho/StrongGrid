@@ -1,5 +1,6 @@
 using Shouldly;
 using StrongGrid.Models.Legacy;
+using StrongGrid.Utilities;
 using System.Text.Json;
 using Xunit;
 
@@ -18,7 +19,7 @@ namespace StrongGrid.UnitTests.Utilities
 			var value = $"\"{json}\"";
 
 			// Act
-			var result = JsonSerializer.Deserialize<CampaignStatus>(value);
+			var result = JsonSerializer.Deserialize<CampaignStatus>(value, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.ShouldBe(expectedStatus);

@@ -3,6 +3,7 @@ using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Models.Legacy;
 using StrongGrid.Resources.Legacy;
+using StrongGrid.Utilities;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -70,7 +71,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonSerializer.Deserialize<StrongGrid.Models.Legacy.Segment>(SINGLE_SEGMENT_JSON);
+			var result = JsonSerializer.Deserialize<StrongGrid.Models.Legacy.Segment>(SINGLE_SEGMENT_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.ShouldNotBeNull();

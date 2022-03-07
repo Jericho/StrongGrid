@@ -5,9 +5,7 @@ using Pathoschild.Http.Client.Extensibility;
 using StrongGrid.Resources;
 using StrongGrid.Utilities;
 using System;
-using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Reflection;
 
 namespace StrongGrid
@@ -288,9 +286,8 @@ namespace StrongGrid
 
 			_fluentClient.Filters.Remove<DefaultErrorFilter>();
 
-			// Replace the built-in Json formatter
-			var defaultJsonFormatter = _fluentClient.Formatters.OfType<JsonMediaTypeFormatter>().Single();
-			_fluentClient.Formatters.Remove(defaultJsonFormatter);
+			// Remove all the built-in formatters and replace them with our custom JSON formatter
+			_fluentClient.Formatters.Clear();
 			_fluentClient.Formatters.Add(new JsonFormatter());
 
 			// Order is important: DiagnosticHandler must be first.

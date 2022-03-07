@@ -2,6 +2,7 @@ using RichardSzalay.MockHttp;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Resources;
+using StrongGrid.Utilities;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -50,7 +51,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonSerializer.Deserialize<SuppressionGroup>(SINGLE_SUPPRESSION_GROUP_JSON);
+			var result = JsonSerializer.Deserialize<SuppressionGroup>(SINGLE_SUPPRESSION_GROUP_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.ShouldNotBeNull();
