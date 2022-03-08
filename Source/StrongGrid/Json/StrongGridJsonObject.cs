@@ -1,3 +1,4 @@
+using StrongGrid.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,7 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-namespace StrongGrid.Utilities
+namespace StrongGrid.Json
 {
 	[JsonConverter(typeof(StrongGridJsonObjectConverter))]
 	internal class StrongGridJsonObject

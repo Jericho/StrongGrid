@@ -1,8 +1,8 @@
 using RichardSzalay.MockHttp;
 using Shouldly;
+using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Resources.Legacy;
-using StrongGrid.Utilities;
 using System;
 using System.Net;
 using System.Net.Http;

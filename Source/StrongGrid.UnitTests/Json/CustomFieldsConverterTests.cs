@@ -1,13 +1,13 @@
 using Shouldly;
+using StrongGrid.Json;
 using StrongGrid.Models;
-using StrongGrid.Utilities;
 using System;
 using System.IO;
 using System.Text;
 using System.Text.Json;
 using Xunit;
 
-namespace StrongGrid.UnitTests.Utilities
+namespace StrongGrid.UnitTests.Json
 {
 	public class CustomFieldsConverterTests
 	{

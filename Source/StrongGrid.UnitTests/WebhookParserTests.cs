@@ -1,7 +1,7 @@
 using Shouldly;
+using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Models.Webhooks;
-using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -507,19 +507,6 @@ Content-Disposition: form-data; name=""attachments""
 				}).Count().ShouldBe(0);
 
 				inboundEmail.Spf.ShouldBe("pass");
-			}
-		}
-
-		[Fact]
-		public async Task sn3b()
-		{
-			using (var fileStream = File.OpenRead("InboudEmailTestData/sn3b.txt"))
-			{
-				var parser = new WebhookParser();
-				var inboundEmail = await parser.ParseInboundEmailWebhookAsync(fileStream).ConfigureAwait(false);
-
-				Assert.NotNull(inboundEmail);
-				Assert.Equal("my-addy@test-domain.com", inboundEmail.From.Email);
 			}
 		}
 

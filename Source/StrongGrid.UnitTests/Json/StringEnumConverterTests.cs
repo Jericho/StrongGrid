@@ -1,10 +1,10 @@
 using Shouldly;
+using StrongGrid.Json;
 using StrongGrid.Models.Legacy;
-using StrongGrid.Utilities;
 using System.Text.Json;
 using Xunit;
 
-namespace StrongGrid.UnitTests.Utilities
+namespace StrongGrid.UnitTests.Json
 {
 	public class StringEnumConverterTests
 	{

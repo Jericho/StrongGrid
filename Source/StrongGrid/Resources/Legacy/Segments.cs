@@ -1,5 +1,5 @@
 using Pathoschild.Http.Client;
-using StrongGrid.Utilities;
+using StrongGrid.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;

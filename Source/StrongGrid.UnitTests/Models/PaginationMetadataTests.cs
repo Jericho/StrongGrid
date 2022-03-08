@@ -1,6 +1,6 @@
 using Shouldly;
+using StrongGrid.Json;
 using StrongGrid.Models;
-using StrongGrid.Utilities;
 using System.Text.Json;
 using Xunit;
 

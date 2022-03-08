@@ -1,12 +1,12 @@
 using System.Text.Json.Serialization;
 
-namespace StrongGrid.Utilities
+namespace StrongGrid.Json
 {
 	[JsonSerializable(typeof(string[]))]
 	[JsonSerializable(typeof(long[]))]
 
-	[JsonSerializable(typeof(StrongGrid.Utilities.StrongGridJsonObject))]
-	[JsonSerializable(typeof(StrongGrid.Utilities.StrongGridJsonObject[]))]
+	[JsonSerializable(typeof(StrongGrid.Json.StrongGridJsonObject))]
+	[JsonSerializable(typeof(StrongGrid.Json.StrongGridJsonObject[]))]
 
 	[JsonSerializable(typeof(StrongGrid.Models.AccessEntry))]
 	[JsonSerializable(typeof(StrongGrid.Models.AccessRequest))]

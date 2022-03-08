@@ -1,5 +1,5 @@
 using Shouldly;
-using StrongGrid.Utilities;
+using StrongGrid.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.Json;
 using Xunit;
 
-namespace StrongGrid.UnitTests.Utilities
+namespace StrongGrid.UnitTests.Json
 {
 	public class MetricsConverterTests
 	{
