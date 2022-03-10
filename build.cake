@@ -85,12 +85,13 @@ var isBenchmarkProjectPresent = FileExists(benchmarkProject);
 // - when running unit tests on Ubuntu
 // - when calculating code coverage
 // FYI, this will cause an error if the source project and/or the unit test project are not configured to target this desired framework:
+const string DefaultFramework = "net6.0";
 var desiredFramework = (
 		!IsRunningOnWindows() ||
 		target.Equals("Coverage", StringComparison.OrdinalIgnoreCase) ||
 		target.Equals("Run-Code-Coverage", StringComparison.OrdinalIgnoreCase) ||
 		target.Equals("Generate-Code-Coverage-Report", StringComparison.OrdinalIgnoreCase)
-	) ? "net6.0" : null;
+	) ? DefaultFramework : null;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -270,17 +271,17 @@ Task("Run-Code-Coverage")
 		NoBuild = true,
 		NoRestore = true,
 		Configuration = configuration,
-		Framework = desiredFramework,
+		Framework = DefaultFramework,
 
 		// The following assumes that coverlet.msbuild has been added to the unit testing project
 		ArgumentCustomization = args => args
 			.Append("/p:CollectCoverage=true")
 			.Append("/p:CoverletOutputFormat=opencover")
-			.Append($"/p:CoverletOutput={MakeAbsolute(Directory(codeCoverageDir))}/coverage.xml")	// The name of the desired framework will be inserted between "coverage" and "xml". This is important to know when uploading the XML file to coveralls.io and when generating the HTML report
+			.Append($"/p:CoverletOutput={MakeAbsolute(Directory(codeCoverageDir))}/coverage.xml")	// The name of the framework will be inserted between "coverage" and "xml". This is important to know when uploading the XML file to coveralls.io and when generating the HTML report
 			.Append($"/p:ExcludeByAttribute={string.Join("%2c", testCoverageExcludeAttributes)}")
 			.Append($"/p:ExcludeByFile={string.Join("%2c", testCoverageExcludeFiles)}")
 			.Append($"/p:Exclude={string.Join("%2c", testCoverageFilters.Where(filter => filter.StartsWith("-")).Select(filter => filter.TrimStart("-", StringComparison.OrdinalIgnoreCase)))}")
-			.Append($"/p:Include={string.Join("%2c", testCoverageFilters.Where(filter => filter.StartsWith("+")).Select(filter => filter.TrimStart("-", StringComparison.OrdinalIgnoreCase)))}")
+			.Append($"/p:Include={string.Join("%2c", testCoverageFilters.Where(filter => filter.StartsWith("+")).Select(filter => filter.TrimStart("+", StringComparison.OrdinalIgnoreCase)))}")
 			.Append("/p:SkipAutoProps=true")
 			.Append("/p:UseSourceLink=true")
     };
@@ -294,7 +295,7 @@ Task("Upload-Coverage-Result")
 {
 	try
 	{
-		CoverallsIo($"{codeCoverageDir}coverage.{desiredFramework}.xml");
+		CoverallsIo($"{codeCoverageDir}coverage.{DefaultFramework}.xml");
 	}
 	catch (Exception e)
 	{
@@ -307,7 +308,7 @@ Task("Generate-Code-Coverage-Report")
 	.Does(() =>
 {
 	ReportGenerator(
-		new FilePath($"{codeCoverageDir}coverage.{desiredFramework}.xml"),
+		new FilePath($"{codeCoverageDir}coverage.{DefaultFramework}.xml"),
 		codeCoverageDir,
 		new ReportGeneratorSettings() {
 			ClassFilters = new[] { "*.UnitTests*" }
