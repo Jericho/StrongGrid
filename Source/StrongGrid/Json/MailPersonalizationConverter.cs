@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 namespace StrongGrid.Json
 {
 	/// <summary>
-	/// Converts a  MailPersonalization object to and from JSON.
+	/// Converts a MailPersonalization object to and from JSON.
 	/// </summary>
 	/// <seealso cref="JsonConverter" />
 	internal class MailPersonalizationConverter : JsonConverter<MailPersonalization>
