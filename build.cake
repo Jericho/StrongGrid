@@ -1,8 +1,8 @@
 // Install tools.
 #tool dotnet:?package=GitVersion.Tool&version=5.9.0
 #tool nuget:?package=GitReleaseManager&version=0.13.0
-#tool nuget:?package=ReportGenerator&version=5.0.4
-#tool nuget:?package=coveralls.io&version=1.4.2
+#tool nuget:?package=ReportGenerator&version=5.1.0
+#tool nuget:?package=coveralls.net&version=3.0.0
 #tool nuget:?package=xunit.runner.console&version=2.4.1
 
 // Install addins.
@@ -295,7 +295,7 @@ Task("Upload-Coverage-Result")
 {
 	try
 	{
-		CoverallsIo($"{codeCoverageDir}coverage.{DefaultFramework}.xml");
+		CoverallsNet(new FilePath($"{codeCoverageDir}coverage.{DefaultFramework}.xml"), CoverallsNetReportType.OpenCover);
 	}
 	catch (Exception e)
 	{
