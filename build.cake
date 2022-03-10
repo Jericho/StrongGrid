@@ -283,7 +283,7 @@ Task("Run-Code-Coverage")
 			.Append($"/p:Exclude={string.Join("%2c", testCoverageFilters.Where(filter => filter.StartsWith("-")).Select(filter => filter.TrimStart("-", StringComparison.OrdinalIgnoreCase)))}")
 			.Append($"/p:Include={string.Join("%2c", testCoverageFilters.Where(filter => filter.StartsWith("+")).Select(filter => filter.TrimStart("+", StringComparison.OrdinalIgnoreCase)))}")
 			.Append("/p:SkipAutoProps=true")
-			.Append("/p:UseSourceLink=true")
+			//.Append("/p:UseSourceLink=true") // Doesn't seem to work. After uploading to coveralls.io, I get "SOURCE NOT AVAILABLE".
     };
 
     DotNetTest(unitTestsProject, testSettings);
