@@ -4,10 +4,12 @@
 #tool nuget:?package=GitReleaseManager&version=0.13.0
 #tool nuget:?package=ReportGenerator&version=5.1.0
 #tool nuget:?package=xunit.runner.console&version=2.4.1
+#tool nuget:?package=Codecov&version=1.13.0
 
 // Install addins.
 #addin nuget:?package=Cake.Coveralls&version=1.1.0
 #addin nuget:?package=Cake.Git&version=2.0.0
+#addin nuget:?package=Cake.Codecov&version=1.0.1
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -41,7 +43,8 @@ var testCoverageExcludeAttributes = new[]
 	"CompilerGeneratedAttribute",
 	"ExcludeFromCodeCoverageAttribute"
 };
-var testCoverageExcludeFiles = new[] {
+var testCoverageExcludeFiles = new[]
+ {
 	"**/AssemblyInfo.cs"
 };
 
@@ -55,6 +58,9 @@ var gitHubToken = Argument<string>("GITHUB_TOKEN", EnvironmentVariable("GITHUB_T
 var gitHubUserName = Argument<string>("GITHUB_USERNAME", EnvironmentVariable("GITHUB_USERNAME"));
 var gitHubPassword = Argument<string>("GITHUB_PASSWORD", EnvironmentVariable("GITHUB_PASSWORD"));
 var gitHubRepoOwner = Argument<string>("GITHUB_REPOOWNER", EnvironmentVariable("GITHUB_REPOOWNER") ?? gitHubUserName);
+
+var coverallsToken = Argument<string>("COVERALLS_REPO_TOKEN", EnvironmentVariable("COVERALLS_REPO_TOKEN"));
+var codecovToken = Argument<string>("CODECOV_TOKEN", EnvironmentVariable("CODECOV_TOKEN"));
 
 var sourceFolder = "./Source/";
 var outputDir = "./artifacts/";
@@ -277,13 +283,12 @@ Task("Run-Code-Coverage")
 		ArgumentCustomization = args => args
 			.Append("/p:CollectCoverage=true")
 			.Append("/p:CoverletOutputFormat=opencover")
-			.Append($"/p:CoverletOutput={MakeAbsolute(Directory(codeCoverageDir))}/coverage.xml")	// The name of the framework will be inserted between "coverage" and "xml". This is important to know when uploading the XML file to coveralls.io and when generating the HTML report
+			.Append($"/p:CoverletOutput={MakeAbsolute(Directory(codeCoverageDir))}/coverage.xml")	// The name of the framework will be inserted between "coverage" and "xml". This is important to know when uploading the XML file to coveralls/codecov and when generating the HTML report
 			.Append($"/p:ExcludeByAttribute={string.Join("%2c", testCoverageExcludeAttributes)}")
 			.Append($"/p:ExcludeByFile={string.Join("%2c", testCoverageExcludeFiles)}")
 			.Append($"/p:Exclude={string.Join("%2c", testCoverageFilters.Where(filter => filter.StartsWith("-")).Select(filter => filter.TrimStart("-", StringComparison.OrdinalIgnoreCase)))}")
 			.Append($"/p:Include={string.Join("%2c", testCoverageFilters.Where(filter => filter.StartsWith("+")).Select(filter => filter.TrimStart("+", StringComparison.OrdinalIgnoreCase)))}")
 			.Append("/p:SkipAutoProps=true")
-			//.Append("/p:UseSourceLink=true") // Doesn't seem to work. After uploading to coveralls.io, I get "SOURCE NOT AVAILABLE".
     };
 
     DotNetTest(unitTestsProject, testSettings);
@@ -295,7 +300,19 @@ Task("Upload-Coverage-Result")
 {
 	try
 	{
-		CoverallsNet(new FilePath($"{codeCoverageDir}coverage.{DefaultFramework}.xml"), CoverallsNetReportType.OpenCover);
+		CoverallsNet(new FilePath($"{codeCoverageDir}coverage.{DefaultFramework}.xml"), CoverallsNetReportType.OpenCover, new CoverallsNetSettings()
+		{
+			RepoToken = coverallsToken
+		});
+	}
+	catch (Exception e)
+	{
+		Warning(e.Message);
+	}
+
+	try
+	{
+		Codecov($"{codeCoverageDir}coverage.{DefaultFramework}.xml", codecovToken);
 	}
 	catch (Exception e)
 	{
