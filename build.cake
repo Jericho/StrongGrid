@@ -96,7 +96,8 @@ var desiredFramework = (
 		!IsRunningOnWindows() ||
 		target.Equals("Coverage", StringComparison.OrdinalIgnoreCase) ||
 		target.Equals("Run-Code-Coverage", StringComparison.OrdinalIgnoreCase) ||
-		target.Equals("Generate-Code-Coverage-Report", StringComparison.OrdinalIgnoreCase)
+		target.Equals("Generate-Code-Coverage-Report", StringComparison.OrdinalIgnoreCase) ||
+		target.Equals("Upload-Coverage-Result", StringComparison.OrdinalIgnoreCase)
 	) ? DefaultFramework : null;
 
 
