@@ -19,9 +19,15 @@ namespace StrongGrid.Json
 
 		public override void Write(Utf8JsonWriter writer, DateTime? value, JsonSerializerOptions options)
 		{
-			if (!value.HasValue) return;
-			var secondsSinceEpoch = value.Value.ToUnixTime();
-			writer.WriteNumberValue(secondsSinceEpoch);
+			if (value.HasValue)
+			{
+				var secondsSinceEpoch = value.Value.ToUnixTime();
+				writer.WriteNumberValue(secondsSinceEpoch);
+			}
+			else
+			{
+				writer.WriteNullValue();
+			}
 		}
 	}
 }
