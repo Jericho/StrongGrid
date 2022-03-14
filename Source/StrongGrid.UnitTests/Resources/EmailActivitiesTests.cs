@@ -1,5 +1,6 @@
 using RichardSzalay.MockHttp;
 using Shouldly;
+using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Models.Search;
 using StrongGrid.Models.Search.Legacy;
@@ -47,7 +48,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonSerializer.Deserialize<EmailMessageActivity>(SINGLE_MESSAGE);
+			var result = JsonSerializer.Deserialize<EmailMessageActivity>(SINGLE_MESSAGE, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.ShouldNotBeNull();

@@ -1,14 +1,15 @@
 // Install tools.
-#tool dotnet:?package=GitVersion.Tool&version=5.8.1
-#tool nuget:?package=GitReleaseManager&version=0.12.1
-#tool nuget:?package=OpenCover&version=4.7.1221
-#tool nuget:?package=ReportGenerator&version=5.0.3
-#tool nuget:?package=coveralls.io&version=1.4.2
+#tool dotnet:?package=GitVersion.Tool&version=5.9.0
+#tool dotnet:?package=coveralls.net&version=3.0.0
+#tool nuget:?package=GitReleaseManager&version=0.13.0
+#tool nuget:?package=ReportGenerator&version=5.1.0
 #tool nuget:?package=xunit.runner.console&version=2.4.1
+#tool nuget:?package=Codecov&version=1.13.0
 
 // Install addins.
 #addin nuget:?package=Cake.Coveralls&version=1.1.0
 #addin nuget:?package=Cake.Git&version=2.0.0
+#addin nuget:?package=Cake.Codecov&version=1.0.1
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -28,9 +29,24 @@ if (IsRunningOnUnix()) target = "Run-Unit-Tests";
 var libraryName = "StrongGrid";
 var gitHubRepo = "StrongGrid";
 
-var testCoverageFilter = "+[StrongGrid]* -[StrongGrid]StrongGrid.Properties.* -[StrongGrid]StrongGrid.Models.*";
-var testCoverageExcludeByAttribute = "*.ExcludeFromCodeCoverage*";
-var testCoverageExcludeByFile = "*/*Designer.cs;*/*AssemblyInfo.cs";
+var testCoverageFilters = new[]
+{
+	"+[StrongGrid]*",
+	"-[StrongGrid]StrongGrid.Properties.*",
+	"-[StrongGrid]StrongGrid.Models.*",
+	"-[StrongGrid]*System.Text.Json.SourceGeneration*"
+};
+var testCoverageExcludeAttributes = new[]
+{
+	"Obsolete",
+	"GeneratedCodeAttribute",
+	"CompilerGeneratedAttribute",
+	"ExcludeFromCodeCoverageAttribute"
+};
+var testCoverageExcludeFiles = new[]
+ {
+	"**/AssemblyInfo.cs"
+};
 
 var nuGetApiUrl = Argument<string>("NUGET_API_URL", EnvironmentVariable("NUGET_API_URL"));
 var nuGetApiKey = Argument<string>("NUGET_API_KEY", EnvironmentVariable("NUGET_API_KEY"));
@@ -42,6 +58,9 @@ var gitHubToken = Argument<string>("GITHUB_TOKEN", EnvironmentVariable("GITHUB_T
 var gitHubUserName = Argument<string>("GITHUB_USERNAME", EnvironmentVariable("GITHUB_USERNAME"));
 var gitHubPassword = Argument<string>("GITHUB_PASSWORD", EnvironmentVariable("GITHUB_PASSWORD"));
 var gitHubRepoOwner = Argument<string>("GITHUB_REPOOWNER", EnvironmentVariable("GITHUB_REPOOWNER") ?? gitHubUserName);
+
+var coverallsToken = Argument<string>("COVERALLS_REPO_TOKEN", EnvironmentVariable("COVERALLS_REPO_TOKEN"));
+var codecovToken = Argument<string>("CODECOV_TOKEN", EnvironmentVariable("CODECOV_TOKEN"));
 
 var sourceFolder = "./Source/";
 var outputDir = "./artifacts/";
@@ -61,11 +80,10 @@ var isLocalBuild = BuildSystem.IsLocalBuild;
 var isMainBranch = StringComparer.OrdinalIgnoreCase.Equals("main", BuildSystem.AppVeyor.Environment.Repository.Branch);
 var isMainRepo = StringComparer.OrdinalIgnoreCase.Equals($"{gitHubRepoOwner}/{gitHubRepo}", BuildSystem.AppVeyor.Environment.Repository.Name);
 var isPullRequest = BuildSystem.AppVeyor.Environment.PullRequest.IsPullRequest;
-var isTagged = (
-	BuildSystem.AppVeyor.Environment.Repository.Tag.IsTag &&
-	!string.IsNullOrWhiteSpace(BuildSystem.AppVeyor.Environment.Repository.Tag.Name)
-);
-var isBenchmarkPresent = FileExists(benchmarkProject);
+var isTagged = BuildSystem.AppVeyor.Environment.Repository.Tag.IsTag && !string.IsNullOrWhiteSpace(BuildSystem.AppVeyor.Environment.Repository.Tag.Name);
+var isIntegrationTestsProjectPresent = FileExists(integrationTestsProject);
+var isUnitTestsProjectPresent = FileExists(unitTestsProject);
+var isBenchmarkProjectPresent = FileExists(benchmarkProject);
 
 // Generally speaking, we want to honor all the TFM configured in the source project and the unit test project.
 // However, there are a few scenarios where a single framework is sufficient. Here are a few examples that come to mind:
@@ -73,7 +91,14 @@ var isBenchmarkPresent = FileExists(benchmarkProject);
 // - when running unit tests on Ubuntu
 // - when calculating code coverage
 // FYI, this will cause an error if the source project and/or the unit test project are not configured to target this desired framework:
-var desiredFramework = IsRunningOnWindows() ? null : "net5.0";
+const string DefaultFramework = "net6.0";
+var desiredFramework = (
+		!IsRunningOnWindows() ||
+		target.Equals("Coverage", StringComparison.OrdinalIgnoreCase) ||
+		target.Equals("Run-Code-Coverage", StringComparison.OrdinalIgnoreCase) ||
+		target.Equals("Generate-Code-Coverage-Report", StringComparison.OrdinalIgnoreCase) ||
+		target.Equals("Upload-Coverage-Result", StringComparison.OrdinalIgnoreCase)
+	) ? DefaultFramework : null;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -134,11 +159,21 @@ Setup(context =>
 	// Integration tests are intended to be used for debugging purposes and not intended to be executed in CI environment.
 	// Also, the runner for these tests contains windows-specific code (such as resizing window, moving window to center of screen, etc.)
 	// which can cause problems when attempting to run unit tests on an Ubuntu image on AppVeyor.
-	if (!isLocalBuild)
+	if (!isLocalBuild && isIntegrationTestsProjectPresent)
 	{
 		Information("");
 		Information("Removing integration tests");
 		DotNetTool(solutionFile, "sln", $"remove {integrationTestsProject.TrimStart(sourceFolder, StringComparison.OrdinalIgnoreCase)}");
+	}
+
+	// Similarly, benchmarking can causes problems similar to this one:
+	// error NETSDK1005: Assets file '/home/appveyor/projects/stronggrid/Source/StrongGrid.Benchmark/obj/project.assets.json' doesn't have a target for 'net5.0'.
+	// Ensure that restore has run and that you have included 'net5.0' in the TargetFrameworks for your project.
+	if (!isLocalBuild && isBenchmarkProjectPresent)
+	{
+		Information("");
+		Information("Removing benchmark project");
+		DotNetTool(solutionFile, "sln", $"remove {benchmarkProject.TrimStart(sourceFolder, StringComparison.OrdinalIgnoreCase)}");
 	}
 });
 
@@ -146,7 +181,7 @@ Teardown(context =>
 {
 	if (!isLocalBuild)
 	{
-		Information("Restoring integration tests");
+		Information("Restoring projects that may have been removed during build script setup");
 		GitCheckout(".", new FilePath[] { solutionFile });
 		Information("");
 	}
@@ -216,7 +251,7 @@ Task("Build")
 			AssemblyVersion = versionInfo.MajorMinorPatch,
 			FileVersion = versionInfo.MajorMinorPatch,
 			InformationalVersion = versionInfo.InformationalVersion,
-			ContinuousIntegrationBuild = !BuildSystem.IsLocalBuild
+			ContinuousIntegrationBuild = true
 		}
 	});
 });
@@ -238,26 +273,26 @@ Task("Run-Code-Coverage")
 	.IsDependentOn("Build")
 	.Does(() =>
 {
-	Action<ICakeContext> testAction = ctx => ctx.DotNetTest(unitTestsProject, new DotNetTestSettings
+	var testSettings = new DotNetTestSettings
 	{
 		NoBuild = true,
 		NoRestore = true,
 		Configuration = configuration,
-		Framework = desiredFramework
-	});
+		Framework = DefaultFramework,
 
-	OpenCover(testAction,
-		$"{codeCoverageDir}coverage.xml",
-		new OpenCoverSettings
-		{
-			OldStyle = true,
-			MergeOutput = true,
-			ArgumentCustomization = args => args.Append("-returntargetcode")
-		}
-		.WithFilter(testCoverageFilter)
-		.ExcludeByAttribute(testCoverageExcludeByAttribute)
-		.ExcludeByFile(testCoverageExcludeByFile)
-	);
+		// The following assumes that coverlet.msbuild has been added to the unit testing project
+		ArgumentCustomization = args => args
+			.Append("/p:CollectCoverage=true")
+			.Append("/p:CoverletOutputFormat=opencover")
+			.Append($"/p:CoverletOutput={MakeAbsolute(Directory(codeCoverageDir))}/coverage.xml")	// The name of the framework will be inserted between "coverage" and "xml". This is important to know when uploading the XML file to coveralls/codecov and when generating the HTML report
+			.Append($"/p:ExcludeByAttribute={string.Join("%2c", testCoverageExcludeAttributes)}")
+			.Append($"/p:ExcludeByFile={string.Join("%2c", testCoverageExcludeFiles)}")
+			.Append($"/p:Exclude={string.Join("%2c", testCoverageFilters.Where(filter => filter.StartsWith("-")).Select(filter => filter.TrimStart("-", StringComparison.OrdinalIgnoreCase)))}")
+			.Append($"/p:Include={string.Join("%2c", testCoverageFilters.Where(filter => filter.StartsWith("+")).Select(filter => filter.TrimStart("+", StringComparison.OrdinalIgnoreCase)))}")
+			.Append("/p:SkipAutoProps=true")
+    };
+
+    DotNetTest(unitTestsProject, testSettings);
 });
 
 Task("Upload-Coverage-Result")
@@ -266,7 +301,19 @@ Task("Upload-Coverage-Result")
 {
 	try
 	{
-		CoverallsIo($"{codeCoverageDir}coverage.xml");
+		CoverallsNet(new FilePath($"{codeCoverageDir}coverage.{DefaultFramework}.xml"), CoverallsNetReportType.OpenCover, new CoverallsNetSettings()
+		{
+			RepoToken = coverallsToken
+		});
+	}
+	catch (Exception e)
+	{
+		Warning(e.Message);
+	}
+
+	try
+	{
+		Codecov($"{codeCoverageDir}coverage.{DefaultFramework}.xml", codecovToken);
 	}
 	catch (Exception e)
 	{
@@ -279,7 +326,7 @@ Task("Generate-Code-Coverage-Report")
 	.Does(() =>
 {
 	ReportGenerator(
-		new FilePath($"{codeCoverageDir}coverage.xml"),
+		new FilePath($"{codeCoverageDir}coverage.{DefaultFramework}.xml"),
 		codeCoverageDir,
 		new ReportGeneratorSettings() {
 			ClassFilters = new[] { "*.UnitTests*" }
@@ -372,20 +419,19 @@ Task("Publish-MyGet")
 Task("Create-Release-Notes")
 	.Does(() =>
 {
-	var settings = new GitReleaseManagerCreateSettings
-	{
-		Name              = milestone,
-		Milestone         = milestone,
-		Prerelease        = false,
-		TargetCommitish   = "main"
-	};
-
 	if (string.IsNullOrEmpty(gitHubToken))
 	{
 		throw new InvalidOperationException("GitHub token was not provided.");
 	}
 
-	GitReleaseManagerCreate(gitHubToken, gitHubRepoOwner, gitHubRepo, settings);
+	GitReleaseManagerCreate(gitHubToken, gitHubRepoOwner, gitHubRepo, new GitReleaseManagerCreateSettings
+	{
+		Name            = milestone,
+		Milestone       = milestone,
+		Prerelease      = false,
+		TargetCommitish = "main",
+		Verbose         = true
+	});
 });
 
 Task("Publish-GitHub-Release")
@@ -401,12 +447,15 @@ Task("Publish-GitHub-Release")
 		throw new InvalidOperationException("GitHub token was not provided.");
 	}
 
-	GitReleaseManagerClose(gitHubToken, gitHubRepoOwner, gitHubRepo, milestone);
+	GitReleaseManagerClose(gitHubToken, gitHubRepoOwner, gitHubRepo, milestone, new GitReleaseManagerCloseMilestoneSettings
+	{
+		Verbose = true
+	});
 });
 
 Task("Generate-Benchmark-Report")
 	.IsDependentOn("Build")
-	.WithCriteria(isBenchmarkPresent)
+	.WithCriteria(isBenchmarkProjectPresent)
 	.Does(() =>
 {
     var publishDirectory = $"{benchmarkDir}Publish/";
@@ -450,7 +499,7 @@ Task("Coverage")
 
 Task("Benchmark")
 	.IsDependentOn("Generate-Benchmark-Report")
-	.WithCriteria(isBenchmarkPresent)
+	.WithCriteria(isBenchmarkProjectPresent)
 	.Does(() =>
 {
     var htmlReports = GetFiles($"{benchmarkDir}results/*-report.html", new GlobberSettings { IsCaseSensitive = false });

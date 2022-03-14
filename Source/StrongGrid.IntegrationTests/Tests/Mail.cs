@@ -39,7 +39,8 @@ namespace StrongGrid.IntegrationTests.Tests
 					CustomArguments = new KeyValuePair<string, string>[]
 					{
 						new  KeyValuePair<string, string>("some_value_specific_to_this_person", "ABC_123")
-					}
+					},
+					SendAt = DateTime.UtcNow
 				},
 				new MailPersonalization
 				{
@@ -54,7 +55,8 @@ namespace StrongGrid.IntegrationTests.Tests
 					CustomArguments = new KeyValuePair<string, string>[]
 					{
 						new  KeyValuePair<string, string>("some_value_specific_to_this_person", "ZZZ_999")
-					}
+					},
+					SendAt = DateTime.UtcNow.AddMinutes(10)
 				}
 			};
 			var mailSettings = new MailSettings
@@ -93,6 +95,7 @@ namespace StrongGrid.IntegrationTests.Tests
 			};
 
 			var messageId = await client.Mail.SendAsync(personalizations, subject, new[] { textContent, htmlContent }, from,
+				sendAt: DateTime.UtcNow.AddMinutes(5),
 				headers: headers,
 				customArgs: customArgs,
 				mailSettings: mailSettings,

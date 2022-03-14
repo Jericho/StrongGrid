@@ -1,5 +1,6 @@
 using RichardSzalay.MockHttp;
 using Shouldly;
+using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Resources;
 using System.Net.Http;
@@ -73,7 +74,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonSerializer.Deserialize<EmailValidationResult>(INVALID_EMAIL_JSON);
+			var result = JsonSerializer.Deserialize<EmailValidationResult>(INVALID_EMAIL_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -104,7 +105,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonSerializer.Deserialize<EmailValidationResult>(VALID_EMAIL_JSON);
+			var result = JsonSerializer.Deserialize<EmailValidationResult>(VALID_EMAIL_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.ShouldNotBeNull();

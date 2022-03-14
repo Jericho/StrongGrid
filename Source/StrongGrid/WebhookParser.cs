@@ -1,4 +1,5 @@
 using HttpMultipartParser;
+using StrongGrid.Json;
 using StrongGrid.Models.Webhooks;
 using StrongGrid.Utilities;
 using System;
@@ -73,7 +74,7 @@ namespace StrongGrid
 		/// <returns>An array of <see cref="Event">events</see>.</returns>
 		public async Task<Event[]> ParseEventsWebhookAsync(Stream stream)
 		{
-			var webHookEvents = await JsonSerializer.DeserializeAsync<Event[]>(stream).ConfigureAwait(false);
+			var webHookEvents = await JsonSerializer.DeserializeAsync<Event[]>(stream, JsonFormatter.DeserializerOptions).ConfigureAwait(false);
 			return webHookEvents;
 		}
 
@@ -148,7 +149,7 @@ namespace StrongGrid
 		/// <returns>An array of <see cref="Event">events</see>.</returns>
 		public Event[] ParseEventsWebhook(string requestBody)
 		{
-			var webHookEvents = JsonSerializer.Deserialize<Event[]>(requestBody);
+			var webHookEvents = JsonSerializer.Deserialize<Event[]>(requestBody, JsonFormatter.DeserializerOptions);
 			return webHookEvents;
 		}
 
@@ -371,7 +372,7 @@ namespace StrongGrid
 				}).ToArray();
 
 			// Convert the 'envelope' from a JSON string into a strongly typed object
-			var envelope = JsonSerializer.Deserialize<InboundEmailEnvelope>(parser.GetParameterValue("envelope", "{}"));
+			var envelope = JsonSerializer.Deserialize<InboundEmailEnvelope>(parser.GetParameterValue("envelope", "{}"), JsonFormatter.DeserializerOptions);
 
 			// Convert the 'from' from a string into an email address
 			var rawFrom = GetEncodedValue("from", charsets, encodedParsers, string.Empty);

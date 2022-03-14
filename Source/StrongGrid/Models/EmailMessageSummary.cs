@@ -1,5 +1,5 @@
+using StrongGrid.Json;
 using StrongGrid.Models.EmailActivities;
-using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 

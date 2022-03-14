@@ -1,5 +1,6 @@
 using RichardSzalay.MockHttp;
 using Shouldly;
+using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Resources;
 using StrongGrid.Utilities;
@@ -82,7 +83,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonSerializer.Deserialize<Subuser>(SINGLE_SUBUSER_JSON);
+			var result = JsonSerializer.Deserialize<Subuser>(SINGLE_SUBUSER_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -98,7 +99,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonSerializer.Deserialize<Subuser>(SINGLE_SUBUSER_CREATED_JSON);
+			var result = JsonSerializer.Deserialize<Subuser>(SINGLE_SUBUSER_CREATED_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -116,7 +117,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonSerializer.Deserialize<MonitorSettings>(MONITOR_SETTINGS_JSON);
+			var result = JsonSerializer.Deserialize<MonitorSettings>(MONITOR_SETTINGS_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.ShouldNotBeNull();

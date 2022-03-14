@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace StrongGrid.Utilities
+namespace StrongGrid.Json
 {
 	/// <summary>
-	/// Converts a  MailPersonalization object to and from JSON.
+	/// Converts a MailPersonalization object to and from JSON.
 	/// </summary>
 	/// <seealso cref="JsonConverter" />
 	internal class MailPersonalizationConverter : JsonConverter<MailPersonalization>
@@ -38,6 +38,7 @@ namespace StrongGrid.Utilities
 				var propertyIsIgnored = propertyCustomAttributes.OfType<JsonIgnoreAttribute>().Any();
 				var propertyName = propertyCustomAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault()?.Name ?? propertyInfo.Name;
 				var propertyValue = propertyInfo.GetValue(value);
+				var propertyType = propertyInfo.PropertyType;
 
 				// Skip the property if it's decorated with the 'ignore' attribute
 				if (propertyIsIgnored) continue;
@@ -56,7 +57,7 @@ namespace StrongGrid.Utilities
 					if (!substitutions.Any()) continue;
 
 					// Write the substitutions to JSON
-					WriteJsonProperty(writer, propertyName, propertyValue, options, propertyConverterAttribute);
+					WriteJsonProperty(writer, propertyName, propertyValue, propertyType, options, propertyConverterAttribute);
 				}
 
 				// Special case: dynamic data
@@ -66,13 +67,13 @@ namespace StrongGrid.Utilities
 					if (!isUsedWithDynamicTemplate) continue;
 
 					// Write the dynamic data to JSON
-					WriteJsonProperty(writer, propertyName, propertyValue, options, propertyConverterAttribute);
+					WriteJsonProperty(writer, propertyName, propertyValue, propertyType, options, propertyConverterAttribute);
 				}
 
 				// Write the property to JSON
 				else
 				{
-					WriteJsonProperty(writer, propertyName, propertyValue, options, propertyConverterAttribute);
+					WriteJsonProperty(writer, propertyName, propertyValue, propertyType, options, propertyConverterAttribute);
 				}
 			}
 
@@ -80,19 +81,21 @@ namespace StrongGrid.Utilities
 			writer.WriteEndObject();
 		}
 
-		public void WriteJsonProperty(Utf8JsonWriter writer, string propertyName, object propertyValue, JsonSerializerOptions options, JsonConverterAttribute propertyConverterAttribute)
+		private void WriteJsonProperty(Utf8JsonWriter writer, string propertyName, object propertyValue, Type propertyType, JsonSerializerOptions options, JsonConverterAttribute propertyConverterAttribute)
 		{
 			writer.WritePropertyName(propertyName);
 
-			// It's important to clone the options in order to be able to modify the 'Converters' list
-			var clonedOptions = new JsonSerializerOptions(options);
-
 			if (propertyConverterAttribute != null)
 			{
+				// It's important to clone the options in order to be able to modify the 'Converters' list
+				var clonedOptions = new JsonSerializerOptions(options);
 				clonedOptions.Converters.Add((JsonConverter)Activator.CreateInstance(propertyConverterAttribute.ConverterType));
+				JsonSerializer.Serialize(writer, propertyValue, propertyType, clonedOptions);
 			}
-
-			JsonSerializer.Serialize(writer, propertyValue, propertyValue.GetType(), clonedOptions);
+			else
+			{
+				JsonSerializer.Serialize(writer, propertyValue, propertyType, options);
+			}
 		}
 	}
 }

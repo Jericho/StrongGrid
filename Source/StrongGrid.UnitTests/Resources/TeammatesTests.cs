@@ -1,5 +1,6 @@
 using RichardSzalay.MockHttp;
 using Shouldly;
+using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Resources;
 using System.Net;
@@ -128,7 +129,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonSerializer.Deserialize<Teammate>(SINGLE_TEAMMATE_JSON);
+			var result = JsonSerializer.Deserialize<Teammate>(SINGLE_TEAMMATE_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.ShouldNotBeNull();

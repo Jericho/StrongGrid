@@ -1,4 +1,4 @@
-using StrongGrid.Utilities;
+using StrongGrid.Json;
 using System;
 using System.Text.Json.Serialization;
 

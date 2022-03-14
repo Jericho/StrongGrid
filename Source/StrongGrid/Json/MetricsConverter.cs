@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace StrongGrid.Utilities
+namespace StrongGrid.Json
 {
 	/// <summary>
 	/// Converts a JSON string into and array of <see cref="KeyValuePair{TKey, TValue}">metrics</see>.

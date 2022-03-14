@@ -2,10 +2,10 @@ using Microsoft.Extensions.Logging;
 using Pathoschild.Http.Client;
 using Pathoschild.Http.Client.Extensibility;
 using RichardSzalay.MockHttp;
+using StrongGrid.Json;
 using StrongGrid.Utilities;
 using System;
 using System.Linq;
-using System.Net.Http.Formatting;
 
 namespace StrongGrid.UnitTests
 {
@@ -20,9 +20,8 @@ namespace StrongGrid.UnitTests
 			client.SetRequestCoordinator(new SendGridRetryStrategy());
 			client.Filters.Remove<DefaultErrorFilter>();
 
-			// Replace the built-in Json formatter
-			var defaultJsonFormatter = client.Formatters.OfType<JsonMediaTypeFormatter>().Single();
-			client.Formatters.Remove(defaultJsonFormatter);
+			// Remove all the built-in formatters and replace them with our custom JSON formatter
+			client.Formatters.Clear();
 			client.Formatters.Add(new JsonFormatter());
 
 			// Order is important: DiagnosticHandler must be first.

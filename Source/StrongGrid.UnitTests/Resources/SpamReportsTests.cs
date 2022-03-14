@@ -1,5 +1,6 @@
 using RichardSzalay.MockHttp;
 using Shouldly;
+using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Resources;
 using System;
@@ -46,7 +47,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonSerializer.Deserialize<SpamReport[]>(SINGLE_SPAM_REPORT_JSON);
+			var result = JsonSerializer.Deserialize<SpamReport[]>(SINGLE_SPAM_REPORT_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.ShouldNotBeNull();

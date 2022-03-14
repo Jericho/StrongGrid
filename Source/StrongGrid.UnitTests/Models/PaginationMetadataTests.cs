@@ -1,4 +1,5 @@
 using Shouldly;
+using StrongGrid.Json;
 using StrongGrid.Models;
 using System.Text.Json;
 using Xunit;
@@ -32,7 +33,7 @@ namespace StrongGrid.UnitTests.Models
 			// Arrange
 
 			// Act
-			var result = JsonSerializer.Deserialize<PaginationMetadata>(FIRST_PAGE_JSON);
+			var result = JsonSerializer.Deserialize<PaginationMetadata>(FIRST_PAGE_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -51,7 +52,7 @@ namespace StrongGrid.UnitTests.Models
 			// Arrange
 
 			// Act
-			var result = JsonSerializer.Deserialize<PaginationMetadata>(MIDDLE_PAGE_JSON);
+			var result = JsonSerializer.Deserialize<PaginationMetadata>(MIDDLE_PAGE_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -70,7 +71,7 @@ namespace StrongGrid.UnitTests.Models
 			// Arrange
 
 			// Act
-			var result = JsonSerializer.Deserialize<PaginationMetadata>(LAST_PAGE_JSON);
+			var result = JsonSerializer.Deserialize<PaginationMetadata>(LAST_PAGE_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.ShouldNotBeNull();

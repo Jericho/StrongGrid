@@ -2,7 +2,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace StrongGrid.Utilities
+namespace StrongGrid.Json
 {
 	/// <summary>
 	/// Converts a 'Unix time' expressed as the number of seconds since midnight on January 1st 1970 to and from JSON.
@@ -19,9 +19,15 @@ namespace StrongGrid.Utilities
 
 		public override void Write(Utf8JsonWriter writer, DateTime? value, JsonSerializerOptions options)
 		{
-			if (!value.HasValue) return;
-			var secondsSinceEpoch = value.Value.ToUnixTime();
-			writer.WriteNumberValue(secondsSinceEpoch);
+			if (value.HasValue)
+			{
+				var secondsSinceEpoch = value.Value.ToUnixTime();
+				writer.WriteNumberValue(secondsSinceEpoch);
+			}
+			else
+			{
+				writer.WriteNullValue();
+			}
 		}
 	}
 }

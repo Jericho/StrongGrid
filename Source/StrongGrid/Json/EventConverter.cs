@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace StrongGrid.Utilities
+namespace StrongGrid.Json
 {
 	/// <summary>
 	/// Converts a JSON string received from a webhook into and array of <see cref="Event">events</see>.
@@ -67,37 +67,37 @@ namespace StrongGrid.Utilities
 					switch (eventType)
 					{
 						case EventType.Bounce:
-							webHookEvent = JsonSerializer.Deserialize<BouncedEvent>(rootElement);
+							webHookEvent = JsonSerializer.Deserialize<BouncedEvent>(rootElement, JsonFormatter.DeserializerOptions);
 							break;
 						case EventType.Click:
-							webHookEvent = JsonSerializer.Deserialize<ClickedEvent>(rootElement);
+							webHookEvent = JsonSerializer.Deserialize<ClickedEvent>(rootElement, JsonFormatter.DeserializerOptions);
 							break;
 						case EventType.Deferred:
-							webHookEvent = JsonSerializer.Deserialize<DeferredEvent>(rootElement);
+							webHookEvent = JsonSerializer.Deserialize<DeferredEvent>(rootElement, JsonFormatter.DeserializerOptions);
 							break;
 						case EventType.Delivered:
-							webHookEvent = JsonSerializer.Deserialize<DeliveredEvent>(rootElement);
+							webHookEvent = JsonSerializer.Deserialize<DeliveredEvent>(rootElement, JsonFormatter.DeserializerOptions);
 							break;
 						case EventType.Dropped:
-							webHookEvent = JsonSerializer.Deserialize<DroppedEvent>(rootElement);
+							webHookEvent = JsonSerializer.Deserialize<DroppedEvent>(rootElement, JsonFormatter.DeserializerOptions);
 							break;
 						case EventType.GroupResubscribe:
-							webHookEvent = JsonSerializer.Deserialize<GroupResubscribeEvent>(rootElement);
+							webHookEvent = JsonSerializer.Deserialize<GroupResubscribeEvent>(rootElement, JsonFormatter.DeserializerOptions);
 							break;
 						case EventType.GroupUnsubscribe:
-							webHookEvent = JsonSerializer.Deserialize<GroupUnsubscribeEvent>(rootElement);
+							webHookEvent = JsonSerializer.Deserialize<GroupUnsubscribeEvent>(rootElement, JsonFormatter.DeserializerOptions);
 							break;
 						case EventType.Open:
-							webHookEvent = JsonSerializer.Deserialize<OpenedEvent>(rootElement);
+							webHookEvent = JsonSerializer.Deserialize<OpenedEvent>(rootElement, JsonFormatter.DeserializerOptions);
 							break;
 						case EventType.Processed:
-							webHookEvent = JsonSerializer.Deserialize<ProcessedEvent>(rootElement);
+							webHookEvent = JsonSerializer.Deserialize<ProcessedEvent>(rootElement, JsonFormatter.DeserializerOptions);
 							break;
 						case EventType.SpamReport:
-							webHookEvent = JsonSerializer.Deserialize<SpamReportEvent>(rootElement);
+							webHookEvent = JsonSerializer.Deserialize<SpamReportEvent>(rootElement, JsonFormatter.DeserializerOptions);
 							break;
 						case EventType.Unsubscribe:
-							webHookEvent = JsonSerializer.Deserialize<UnsubscribeEvent>(rootElement);
+							webHookEvent = JsonSerializer.Deserialize<UnsubscribeEvent>(rootElement, JsonFormatter.DeserializerOptions);
 							break;
 						default:
 							throw new Exception($"{typeAsString} is an unknown event type");

@@ -1,9 +1,10 @@
 using Shouldly;
+using StrongGrid.Json;
 using StrongGrid.Models.Legacy;
 using System.Text.Json;
 using Xunit;
 
-namespace StrongGrid.UnitTests.Utilities
+namespace StrongGrid.UnitTests.Json
 {
 	public class StringEnumConverterTests
 	{
@@ -18,7 +19,7 @@ namespace StrongGrid.UnitTests.Utilities
 			var value = $"\"{json}\"";
 
 			// Act
-			var result = JsonSerializer.Deserialize<CampaignStatus>(value);
+			var result = JsonSerializer.Deserialize<CampaignStatus>(value, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.ShouldBe(expectedStatus);

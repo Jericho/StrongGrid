@@ -1,4 +1,5 @@
 using Shouldly;
+using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Models.Webhooks;
 using System.Collections.Generic;
@@ -464,19 +465,12 @@ Content-Disposition: form-data; name=""attachments""
 		}
 
 		[Fact]
-		public void RawPayloadWithAttachments()
+		public async Task RawPayloadWithAttachments()
 		{
-			var parser = new WebhookParser();
-
-			using (Stream stream = new MemoryStream())
+			using (var fileStream = File.OpenRead("InboudEmailTestData/raw_data.txt"))
 			{
-				using (var fileStream = File.OpenRead("InboudEmailTestData/raw_data.txt"))
-				{
-					fileStream.CopyTo(stream);
-				}
-				stream.Position = 0;
-
-				InboundEmail inboundEmail = parser.ParseInboundEmailWebhook(stream);
+				var parser = new WebhookParser();
+				var inboundEmail = await parser.ParseInboundEmailWebhookAsync(fileStream).ConfigureAwait(false);
 
 				inboundEmail.ShouldNotBeNull();
 
@@ -519,17 +513,10 @@ Content-Disposition: form-data; name=""attachments""
 		[Fact]
 		public async Task RawPayloadWithAttachmentsAsync()
 		{
-			var parser = new WebhookParser();
-
-			using (Stream stream = new MemoryStream())
+			using (var fileStream = File.OpenRead("InboudEmailTestData/raw_data.txt"))
 			{
-				using (var fileStream = File.OpenRead("InboudEmailTestData/raw_data.txt"))
-				{
-					await fileStream.CopyToAsync(stream).ConfigureAwait(false);
-				}
-				stream.Position = 0;
-
-				InboundEmail inboundEmail = await parser.ParseInboundEmailWebhookAsync(stream).ConfigureAwait(false);
+				var parser = new WebhookParser();
+				var inboundEmail = await parser.ParseInboundEmailWebhookAsync(fileStream).ConfigureAwait(false);
 
 				inboundEmail.ShouldNotBeNull();
 
@@ -570,14 +557,14 @@ Content-Disposition: form-data; name=""attachments""
 		}
 
 		[Fact]
-		public void InboundEmail_with_unusual_encoding()
+		public async Task InboundEmail_with_unusual_encoding()
 		{
 			// Arrange
 			var parser = new WebhookParser();
 			using (var stream = GetStream(INBOUND_EMAIL_UNUSUAL_ENCODING_WEBHOOK))
 			{
 				// Act
-				var inboundEmail = parser.ParseInboundEmailWebhook(stream);
+				var inboundEmail = await parser.ParseInboundEmailWebhookAsync(stream).ConfigureAwait(false);
 
 				// Assert
 				inboundEmail.Charsets.ShouldNotBeNull();
@@ -599,7 +586,7 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 
 			// Act
-			var result = (ProcessedEvent)JsonSerializer.Deserialize<Event>(PROCESSED_JSON);
+			var result = (ProcessedEvent)JsonSerializer.Deserialize<Event>(PROCESSED_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.AsmGroupId.ShouldBe(123456);
@@ -625,7 +612,7 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 
 			// Act
-			var result = (BouncedEvent)JsonSerializer.Deserialize<Event>(BOUNCED_JSON);
+			BouncedEvent result = (BouncedEvent)JsonSerializer.Deserialize<Event>(BOUNCED_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.Categories.Length.ShouldBe(1);
@@ -650,7 +637,7 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 
 			// Act
-			var result = (DeferredEvent)JsonSerializer.Deserialize<Event>(DEFERRED_JSON);
+			var result = (DeferredEvent)JsonSerializer.Deserialize<Event>(DEFERRED_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.AsmGroupId.ShouldBeNull();
@@ -674,7 +661,7 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 
 			// Act
-			var result = (DroppedEvent)JsonSerializer.Deserialize<Event>(DROPPED_JSON);
+			var result = (DroppedEvent)JsonSerializer.Deserialize<Event>(DROPPED_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.Categories.Length.ShouldBe(1);
@@ -697,7 +684,7 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 
 			// Act
-			var result = (DeliveredEvent)JsonSerializer.Deserialize<Event>(DELIVERED_JSON);
+			var result = (DeliveredEvent)JsonSerializer.Deserialize<Event>(DELIVERED_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.AsmGroupId.ShouldBeNull();
@@ -721,7 +708,7 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 
 			// Act
-			var result = (ClickedEvent)JsonSerializer.Deserialize<Event>(CLICKED_JSON);
+			var result = (ClickedEvent)JsonSerializer.Deserialize<Event>(CLICKED_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.Categories.Length.ShouldBe(1);
@@ -745,7 +732,7 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 
 			// Act
-			var result = (OpenedEvent)JsonSerializer.Deserialize<Event>(OPENED_JSON);
+			var result = (OpenedEvent)JsonSerializer.Deserialize<Event>(OPENED_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.Email.ShouldBe("example@test.com");
@@ -763,7 +750,7 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 
 			// Act
-			var result = (SpamReportEvent)JsonSerializer.Deserialize<Event>(SPAMREPORT_JSON);
+			var result = (SpamReportEvent)JsonSerializer.Deserialize<Event>(SPAMREPORT_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.Email.ShouldBe("example@test.com");
@@ -779,7 +766,7 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 
 			// Act
-			var result = (UnsubscribeEvent)JsonSerializer.Deserialize<Event>(UNSUBSCRIBE_JSON);
+			var result = (UnsubscribeEvent)JsonSerializer.Deserialize<Event>(UNSUBSCRIBE_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.Email.ShouldBe("example@test.com");
@@ -795,7 +782,7 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 
 			// Act
-			var result = (GroupUnsubscribeEvent)JsonSerializer.Deserialize<Event>(GROUPUNSUBSCRIBE_JSON);
+			var result = (GroupUnsubscribeEvent)JsonSerializer.Deserialize<Event>(GROUPUNSUBSCRIBE_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.Email.ShouldBe("example@test.com");
@@ -813,7 +800,7 @@ Content-Disposition: form-data; name=""attachments""
 			// Arrange
 
 			// Act
-			var result = (GroupResubscribeEvent)JsonSerializer.Deserialize<Event>(GROUPRESUBSCRIBE_JSON);
+			var result = (GroupResubscribeEvent)JsonSerializer.Deserialize<Event>(GROUPRESUBSCRIBE_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.Email.ShouldBe("example@test.com");

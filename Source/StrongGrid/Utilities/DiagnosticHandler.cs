@@ -59,7 +59,7 @@ namespace StrongGrid.Utilities
 			var diagnostic = new StringBuilder();
 
 			diagnostic.AppendLine("REQUEST:");
-			diagnostic.AppendLine($"  {httpRequest.Method.Method} {httpRequest.RequestUri}");
+			diagnostic.AppendLine($"  {httpRequest.Method.Method} {httpRequest.RequestUri} HTTP/{httpRequest.Version}");
 			LogHeaders(diagnostic, httpRequest.Headers);
 			LogContent(diagnostic, httpRequest.Content);
 

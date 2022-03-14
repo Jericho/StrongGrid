@@ -180,36 +180,29 @@ var messageId = await strongGridClient.Mail.SendToSingleRecipientAsync(to, from,
 
 ### Parser
  
-Here's a basic example of an API controller which parses the webhook from SendGrid into an array of Events:
+Here's a basic example of a .net 6.0 API controller which parses the webhook from SendGrid:
 ```csharp
+using Microsoft.AspNetCore.Mvc;
+using StrongGrid;
+
 namespace WebApplication1.Controllers
 {
-	[Route("api/SendGridWebhooks")]
-	public class SendGridController : Controller
+	[Route("api/[controller]")]
+	[ApiController]
+	public class SendGridWebhooksController : ControllerBase
 	{
 		[HttpPost]
 		[Route("Events")]
 		public async Task<IActionResult> ReceiveEvents()
 		{
 			var parser = new WebhookParser();
-			var events = await parser.ParseWebhookEventsAsync(Request.Body).ConfigureAwait(false);
-			
-			... do something with the events ...
+			var events = await parser.ParseEventsWebhookAsync(Request.Body).ConfigureAwait(false);
+
+			// ... do something with the events ...
 
 			return Ok();
 		}
-	}
-}
-```
 
-
-Here's a basic example of an API controller which parses the webhook from SendGrid into an InboundEmail:
-```csharp
-namespace WebApplication1.Controllers
-{
-	[Route("api/SendGridWebhooks")]
-	public class SendGridController : Controller
-	{
 		[HttpPost]
 		[Route("InboundEmail")]
 		public async Task<IActionResult> ReceiveInboundEmail()
@@ -217,11 +210,11 @@ namespace WebApplication1.Controllers
 			var parser = new WebhookParser();
 			var inboundEmail = await parser.ParseInboundEmailWebhookAsync(Request.Body).ConfigureAwait(false);
 
-			... do something with the inbound email ...
+			// ... do something with the inbound email ...
 
 			return Ok();
 		}
-	}
+    }
 }
 ```
 
@@ -232,40 +225,45 @@ SendGrid has a feature called `Signed Event Webhook Requests` which you can enab
 However, if you want to avoid learning how to perform the validation and you simply want this validation to be conveniently performed for you, StrongGrid can help! The `WebhookParser` class has a method called `ParseSignedEventsWebhookAsync`which will automatically validate the data and throw a security exception if validation fails. If the validation fails, you should consider the webhook data to be invalid. Here's how it works:
 
 ```csharp
+using Microsoft.AspNetCore.Mvc;
+using StrongGrid;
+using System.Security;
+
 namespace WebApplication1.Controllers
 {
-    [Route("api/SendGridWebhooks")]
-    public class SendGridController : Controller
-    {
-        [HttpPost]
-        [Route("InboundEmail")]
-        public IActionResult ReceiveInboundEmail()
-        {
-            // Get your public key
-            var apiKey = "... your api key...";
-            var strongGridClient = new StrongGrid.Client(apiKey);
-            var publicKey = await strongGridClient.WebhookSettings.GetSignedEventsPublicKeyAsync().ConfigureAwait(false);
+	[Route("api/[controller]")]
+	[ApiController]
+	public class SendGridWebhooksController : ControllerBase
+	{
+		[HttpPost]
+		[Route("SignedEvents")]
+		public async Task<IActionResult> ReceiveSignedEvents()
+		{
+			// Get your public key
+			var apiKey = "... your api key...";
+			var strongGridClient = new StrongGrid.Client(apiKey);
+			var publicKey = await strongGridClient.WebhookSettings.GetSignedEventsPublicKeyAsync().ConfigureAwait(false);
 
-            // Get the signature and the timestamp from the request headers
-            var signature = Request.Headers[WebhookParser.SIGNATURE_HEADER_NAME]; // SIGNATURE_HEADER_NAME is a convenient constant provided so you don't have to remember the name of the header
-            var timestamp = Request.Headers[WebhookParser.TIMESTAMP_HEADER_NAME]; // TIMESTAMP_HEADER_NAME is a convenient constant provided so you don't have to remember the name of the header
+			// Get the signature and the timestamp from the request headers
+			var signature = Request.Headers[WebhookParser.SIGNATURE_HEADER_NAME]; // SIGNATURE_HEADER_NAME is a convenient constant provided so you don't have to remember the name of the header
+			var timestamp = Request.Headers[WebhookParser.TIMESTAMP_HEADER_NAME]; // TIMESTAMP_HEADER_NAME is a convenient constant provided so you don't have to remember the name of the header
 
-            // Parse the events. The signature will be automatically validated and a security exception thrown if unable to validate
-            try
-            {
-                var parser = new WebhookParser();
-                var events = await parser.ParseSignedEventsWebhookAsync(Request.Body, publicKey, signature, timestamp).ConfigureAwait(false);
+			// Parse the events. The signature will be automatically validated and a security exception thrown if unable to validate
+			try
+			{
+				var parser = new WebhookParser();
+				var events = await parser.ParseSignedEventsWebhookAsync(Request.Body, publicKey, signature, timestamp).ConfigureAwait(false);
 
-                ... do something with the events ...
-            }
-            catch (SecurityException e)
-            {
-                ... unable to validate the data ...
-            }
+				// ... do something with the events...
+			}
+			catch (SecurityException e)
+			{
+				// ... unable to validate the data...
+			}
 
-            return Ok();
-        }
-    }
+			return Ok();
+		}
+	}
 }
 ```
 

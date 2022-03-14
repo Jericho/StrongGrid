@@ -2,7 +2,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace StrongGrid.Utilities
+namespace StrongGrid.Json
 {
 	/// <summary>
 	/// Converts a boolean expressed as 1 for True or 0 for False to and from JSON.

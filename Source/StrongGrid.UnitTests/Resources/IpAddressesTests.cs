@@ -1,5 +1,6 @@
 using RichardSzalay.MockHttp;
 using Shouldly;
+using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Resources;
 using System;
@@ -57,7 +58,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonSerializer.Deserialize<IpAddress>(SINGLE_ASSIGNED_IPADDRESS_JSON);
+			var result = JsonSerializer.Deserialize<IpAddress>(SINGLE_ASSIGNED_IPADDRESS_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -80,7 +81,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonSerializer.Deserialize<IpAddress[]>(MULTIPLE_IPADDRESSES_JSON);
+			var result = JsonSerializer.Deserialize<IpAddress[]>(MULTIPLE_IPADDRESSES_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.ShouldNotBeNull();

@@ -1,5 +1,6 @@
 using RichardSzalay.MockHttp;
 using Shouldly;
+using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Resources;
 using System;
@@ -84,7 +85,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonSerializer.Deserialize<AccessEntry>(SINGLE_ACCESS_ENTRY_JSON);
+			var result = JsonSerializer.Deserialize<AccessEntry>(SINGLE_ACCESS_ENTRY_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -102,7 +103,7 @@ namespace StrongGrid.UnitTests.Resources
 			// Arrange
 
 			// Act
-			var result = JsonSerializer.Deserialize<WhitelistedIp>(SINGLE_WHITELISTED_IP_JSON);
+			var result = JsonSerializer.Deserialize<WhitelistedIp>(SINGLE_WHITELISTED_IP_JSON, JsonFormatter.DeserializerOptions);
 
 			// Assert
 			result.ShouldNotBeNull();
