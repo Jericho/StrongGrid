@@ -241,12 +241,7 @@ namespace StrongGrid.Resources
 				.ConfigureAwait(false);
 
 			// Get the messageId from the response
-			if (response.Message.Headers.TryGetValues("X-Message-Id", out IEnumerable<string> values))
-			{
-				return values?.FirstOrDefault();
-			}
-
-			return null;
+			return response.Message.Headers.GetValue("X-Message-Id");
 		}
 
 		/// <summary>
