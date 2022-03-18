@@ -11,7 +11,7 @@ namespace StrongGrid.Resources
 	/// <summary>
 	/// Allows you to create and manage sender identities for Marketing Campaigns.
 	/// </summary>
-	/// <seealso cref="StrongGrid.Resources.Legacy.ISenderIdentities" />
+	/// <seealso cref="StrongGrid.Resources.ISenderIdentities" />
 	/// <remarks>
 	/// See <a href="https://sendgrid.api-docs.io/v3.0/senders">SendGrid documentation</a> for more information.
 	/// </remarks>
