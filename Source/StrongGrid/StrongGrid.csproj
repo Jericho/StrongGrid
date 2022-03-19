@@ -36,7 +36,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HttpMultipartParser" Version="5.0.0" />
+    <PackageReference Include="HttpMultipartParser" Version="5.1.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
     <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.0.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
@@ -56,7 +56,7 @@
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
   </ItemGroup>
   
   <PropertyGroup Condition="'$(Configuration)' == 'Release' ">
