@@ -66,8 +66,11 @@ namespace StrongGrid.Json
 					// Ignore this property when email is sent without using a template or when using a 'legacy' template
 					if (!isUsedWithDynamicTemplate) continue;
 
+					// Developers can either specify their own serialization options or accept the default options
+					var dynamicDataSerializationOptions = value.DynamicDataSerializationOptions ?? options;
+
 					// Write the dynamic data to JSON
-					WriteJsonProperty(writer, propertyName, propertyValue, propertyType, options, propertyConverterAttribute);
+					WriteJsonProperty(writer, propertyName, propertyValue, propertyType, dynamicDataSerializationOptions, propertyConverterAttribute);
 				}
 
 				// Write the property to JSON
