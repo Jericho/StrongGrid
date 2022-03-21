@@ -1,6 +1,7 @@
 using StrongGrid.Json;
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
@@ -124,6 +125,11 @@ namespace StrongGrid.Models
 		[JsonPropertyName("send_at")]
 		[JsonConverter(typeof(NullableEpochConverter))]
 		public DateTime? SendAt { get; set; }
+
+		/// <summary>Gets or sets the serialization options for the dynamic data.</summary>
+		/// <remarks>Leave this property null to accept the default serialization options.</remarks>
+		[JsonIgnore]
+		public JsonSerializerOptions DynamicDataSerializationOptions { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether a dynamic template is use to personalize the content sent to the recipients.
