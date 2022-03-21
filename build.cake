@@ -2,7 +2,7 @@
 #tool dotnet:?package=GitVersion.Tool&version=5.9.0
 #tool dotnet:?package=coveralls.net&version=3.0.0
 #tool nuget:?package=GitReleaseManager&version=0.13.0
-#tool nuget:?package=ReportGenerator&version=5.1.1
+#tool nuget:?package=ReportGenerator&version=5.1.2
 #tool nuget:?package=xunit.runner.console&version=2.4.1
 #tool nuget:?package=Codecov&version=1.13.0
 
