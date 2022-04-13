@@ -9,7 +9,7 @@ namespace StrongGrid.Json
 	/// Converts a JsonObject to and from JSON.
 	/// </summary>
 	/// <seealso cref="JsonConverter" />
-	internal class StrongGridJsonObjectConverter : JsonConverter<StrongGridJsonObject>
+	internal class StrongGridJsonObjectConverter : BaseJsonConverter<StrongGridJsonObject>
 	{
 		public override StrongGridJsonObject Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

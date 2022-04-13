@@ -8,7 +8,7 @@ namespace StrongGrid.Json
 	/// Converts a 'Unix time' expressed as the number of seconds since midnight on January 1st 1970 to and from JSON.
 	/// </summary>
 	/// <seealso cref="JsonConverter" />
-	internal class EpochConverter : JsonConverter<DateTime>
+	internal class EpochConverter : BaseJsonConverter<DateTime>
 	{
 		public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

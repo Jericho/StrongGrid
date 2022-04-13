@@ -11,7 +11,7 @@ namespace StrongGrid.Json
 	/// Converts a JSON string into and array of <see cref="Event">events</see>.
 	/// </summary>
 	/// <seealso cref="JsonConverter" />
-	internal class EmailActivityEventConverter : JsonConverter<Event[]>
+	internal class EmailActivityEventConverter : BaseJsonConverter<Event[]>
 	{
 		public override Event[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -30,11 +30,6 @@ namespace StrongGrid.Json
 			}
 
 			throw new Exception("Unable to convert to Event(s)");
-		}
-
-		public override void Write(Utf8JsonWriter writer, Event[] value, JsonSerializerOptions options)
-		{
-			throw new NotImplementedException();
 		}
 
 		private static Event Convert(JsonElement jsonElement, JsonSerializerOptions options)

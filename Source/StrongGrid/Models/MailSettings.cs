@@ -16,6 +16,7 @@ namespace StrongGrid.Models
 		/// <remarks>
 		/// This filter cannot be combined with any other bypass filters.
 		/// </remarks>
+		[JsonPropertyName("bypass_list_management")]
 		public bool BypassListManagement { get; set; } = false;
 
 		/// <summary>
@@ -25,6 +26,7 @@ namespace StrongGrid.Models
 		/// <remarks>
 		/// This filter cannot be combined with the <see cref="BypassListManagement">bypass_list_management filter</see>.
 		/// </remarks>
+		[JsonPropertyName("bypass_spam_management")]
 		public bool BypassSpamManagement { get; set; } = false;
 
 		/// <summary>
@@ -34,6 +36,7 @@ namespace StrongGrid.Models
 		/// <remarks>
 		/// This filter cannot be combined with the <see cref="BypassListManagement">bypass_list_management filter</see>.
 		/// </remarks>
+		[JsonPropertyName("bypass_bounce_management")]
 		public bool BypassBounceManagement { get; set; } = false;
 
 		/// <summary>
@@ -44,16 +47,19 @@ namespace StrongGrid.Models
 		/// <remarks>
 		/// This filter cannot be combined with the <see cref="BypassListManagement">bypass_list_management filter</see>.
 		/// </remarks>
+		[JsonPropertyName("bypass_unsubscribe_management")]
 		public bool BypassUnsubscribeManagement { get; set; } = false;
 
 		/// <summary>
 		/// Gets or sets the footer.
 		/// </summary>
+		[JsonPropertyName("footer")]
 		public FooterSettings Footer { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether the sandbox mode is enabled or not.
 		/// </summary>
+		[JsonPropertyName("sandbox_mode")]
 		public bool SandboxModeEnabled { get; set; } = false;
 	}
 }
