@@ -1183,9 +1183,9 @@ namespace StrongGrid
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public static async Task DownloadExportFilesAsync(this IContacts contacts, string jobId, string destinationFolder, bool autoDecompress = false, CancellationToken cancellationToken = default)
+		public static async Task DownloadExportFilesAsync(this IContacts contacts, string jobId, string destinationFolder, bool decompress = false, CancellationToken cancellationToken = default)
 		{
-			var exportFiles = await contacts.DownloadExportFilesAsync(jobId, autoDecompress, cancellationToken).ConfigureAwait(false);
+			var exportFiles = await contacts.DownloadExportFilesAsync(jobId, decompress, cancellationToken).ConfigureAwait(false);
 
 			foreach (var exportFile in exportFiles)
 			{
