@@ -174,7 +174,7 @@ namespace StrongGrid.IntegrationTests.Tests
 			if (jobCompleted)
 			{
 				var tempPath = Path.GetTempPath();
-				await client.Contacts.DownloadExportFilesAsync(exportJobId, tempPath, cancellationToken).ConfigureAwait(false);
+				await client.Contacts.DownloadExportFilesAsync(exportJobId, tempPath, true, cancellationToken).ConfigureAwait(false);
 			}
 
 			if (contacts.Any())
