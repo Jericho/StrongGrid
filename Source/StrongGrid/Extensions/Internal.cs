@@ -569,9 +569,9 @@ namespace StrongGrid
 		internal static async Task<Stream> DecompressAsync(this Stream source)
 		{
 			var decompressedStream = new MemoryStream();
-			using (var gzip = new GZipStream(decompressedStream, CompressionMode.Decompress, true))
+			using (var gzip = new GZipStream(source, CompressionMode.Decompress, true))
 			{
-				await source.CopyToAsync(gzip).ConfigureAwait(false);
+				await gzip.CopyToAsync(decompressedStream).ConfigureAwait(false);
 			}
 
 			decompressedStream.Position = 0;
