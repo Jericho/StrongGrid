@@ -16,6 +16,17 @@ namespace StrongGrid.Json
 		{
 		}
 
+		public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			if (JsonDocument.TryParseValue(ref reader, out var doc))
+			{
+				var obj = doc.RootElement.ToObject<T>(options);
+				return obj;
+			}
+
+			return default;
+		}
+
 		public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
 		{
 			var typeOfValue = typeof(T);

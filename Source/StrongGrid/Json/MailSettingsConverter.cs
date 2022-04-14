@@ -17,7 +17,26 @@ namespace StrongGrid.Json
 
 		public override MailSettings Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			throw new NotSupportedException("The MailSettingsConverter can only be used to write JSON");
+			if (JsonDocument.TryParseValue(ref reader, out var doc))
+			{
+				FooterSettings footer = null;
+				if (doc.RootElement.TryGetProperty("footer", out var footerProperty))
+				{
+					footer = footerProperty.ToObject<FooterSettings>(options);
+				}
+
+				return new MailSettings()
+				{
+					BypassBounceManagement = GetEnabledPropertyValue(doc.RootElement, "bypass_bounce_management", false),
+					BypassListManagement = GetEnabledPropertyValue(doc.RootElement, "bypass_list_management", false),
+					BypassSpamManagement = GetEnabledPropertyValue(doc.RootElement, "bypass_spam_management", false),
+					BypassUnsubscribeManagement = GetEnabledPropertyValue(doc.RootElement, "bypass_unsubscribe_management", false),
+					Footer = footer,
+					SandboxModeEnabled = GetEnabledPropertyValue(doc.RootElement, "sandbox_mode", false)
+				};
+			}
+
+			return null;
 		}
 
 		public override void Write(Utf8JsonWriter writer, MailSettings value, JsonSerializerOptions options)
@@ -62,6 +81,13 @@ namespace StrongGrid.Json
 			writer.WritePropertyName("enable");
 			writer.WriteBooleanValue(value);
 			writer.WriteEndObject();
+		}
+
+		private static bool GetEnabledPropertyValue(JsonElement parentProperty, string propertyName, bool defaultValue)
+		{
+			if (!parentProperty.TryGetProperty(propertyName, out var property)) return defaultValue;
+			if (!property.TryGetProperty("enabled", out var enabledProperty)) return defaultValue;
+			return enabledProperty.GetBoolean();
 		}
 	}
 }
