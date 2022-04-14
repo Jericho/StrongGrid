@@ -14,7 +14,7 @@ namespace StrongGrid.UnitTests.Json
 		public void Write()
 		{
 			// Arrange
-			var value = new[] { "abc123" };
+			var value = new[] { "category1", "category2", "category3" };
 			var ms = new MemoryStream();
 			var jsonWriter = new Utf8JsonWriter(ms);
 			var options = new JsonSerializerOptions();
@@ -22,7 +22,15 @@ namespace StrongGrid.UnitTests.Json
 			var converter = new CategoryConverter();
 
 			// Act
-			Should.Throw<NotImplementedException>(() => converter.Write(jsonWriter, value, options));
+			converter.Write(jsonWriter, value, options);
+			jsonWriter.Flush();
+
+			ms.Position = 0;
+			var sr = new StreamReader(ms);
+			var result = sr.ReadToEnd();
+
+			// Assert
+			result.ShouldBe("[\"category1\",\"category2\",\"category3\"]");
 		}
 
 		[Fact]
