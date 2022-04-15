@@ -1,5 +1,5 @@
 using Shouldly;
-using StrongGrid.Models.Search.Legacy;
+using StrongGrid.Models.Search;
 using Xunit;
 
 namespace StrongGrid.UnitTests.Models.Search
@@ -10,42 +10,42 @@ namespace StrongGrid.UnitTests.Models.Search
 		public void SearchCriteriaBetween()
 		{
 			// Arrange
-			var searchCriteria = new SearchCriteriaBetween(EmailActivitiesFilterField.Clicks, 1, 5);
+			var searchCriteria = new SearchCriteriaBetween<ContactsFilterField>(ContactsFilterField.FirstName, "Allen", "Bob");
 
 			// Act
 			var result = searchCriteria.ToString();
 
 			// Assert
 			result.ShouldNotBeNull();
-			result.ShouldBe("clicks BETWEEN 1 AND 5");
-		}
-
-		[Fact]
-		public void SearchCriteriaIn()
-		{
-			// Arrange
-			var searchCriteria = new SearchCriteriaIn(EmailActivitiesFilterField.Subject, new[] { "Subject1", "Subject2" });
-
-			// Act
-			var result = searchCriteria.ToString();
-
-			// Assert
-			result.ShouldNotBeNull();
-			result.ShouldBe("subject IN (\"Subject1\",\"Subject2\")");
+			result.ShouldBe("first_name BETWEEN \"Allen\" AND \"Bob\"");
 		}
 
 		[Fact]
 		public void SearchCriteriaEqual()
 		{
 			// Arrange
-			var searchCriteria = new SearchCriteriaEqual(EmailActivitiesFilterField.CampaignName, "abc123");
+			var searchCriteria = new SearchCriteriaEqual<ContactsFilterField>(ContactsFilterField.LastName, "Smith");
 
 			// Act
 			var result = searchCriteria.ToString();
 
 			// Assert
 			result.ShouldNotBeNull();
-			result.ShouldBe("campaign_name=\"abc123\"");
+			result.ShouldBe("last_name=\"Smith\"");
+		}
+
+		[Fact]
+		public void SearchCriteriaContains()
+		{
+			// Arrange
+			var searchCriteria = new SearchCriteriaContains<ContactsFilterField>(ContactsFilterField.ListIds, "my-list-id");
+
+			// Act
+			var result = searchCriteria.ToString();
+
+			// Assert
+			result.ShouldNotBeNull();
+			result.ShouldBe("CONTAINS(list_ids,\"my-list-id\")");
 		}
 	}
 }

@@ -89,6 +89,12 @@ namespace StrongGrid.Models.Search
 		/// Not Null.
 		/// </summary>
 		[EnumMember(Value = "IS NOT NULL")]
-		IsNotNull
+		IsNotNull,
+
+		/// <summary>
+		/// Contains.
+		/// </summary>
+		[EnumMember(Value = "CONTAINS")]
+		Contains
 	}
 }
