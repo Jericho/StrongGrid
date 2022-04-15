@@ -1,5 +1,5 @@
 // Install tools.
-#tool dotnet:?package=GitVersion.Tool&version=5.10.0
+#tool dotnet:?package=GitVersion.Tool&version=5.10.1
 #tool dotnet:?package=coveralls.net&version=3.0.0
 #tool nuget:?package=GitReleaseManager&version=0.13.0
 #tool nuget:?package=ReportGenerator&version=5.1.4
