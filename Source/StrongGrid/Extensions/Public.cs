@@ -1178,7 +1178,7 @@ namespace StrongGrid
 		/// <param name="contacts">The Contacts resource.</param>
 		/// <param name="jobId">The job identifier.</param>
 		/// <param name="destinationFolder">The folder where the files will be saved.</param>
-		/// <param name="autoDecompress">Indicate if GZip compressed files should be automatically decompressed.</param>
+		/// <param name="decompress">Indicate if GZip compressed files should be automatically decompressed.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// The async task.
