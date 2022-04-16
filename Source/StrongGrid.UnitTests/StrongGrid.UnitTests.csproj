@@ -38,10 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="InboudEmailTestData\raw_data.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="InboudEmailTestData\raw_email.txt">
+    <None Update="InboudEmailTestData\email_with_attachments.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

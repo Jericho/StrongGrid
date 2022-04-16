@@ -465,91 +465,58 @@ Content-Disposition: form-data; name=""attachments""
 		}
 
 		[Fact]
-		public async Task RawPayloadWithAttachments()
+		public async Task InboundEmailWithAttachmentsAsync()
 		{
-			using (var fileStream = File.OpenRead("InboudEmailTestData/raw_data.txt"))
+			using (var fileStream = File.OpenRead("InboudEmailTestData/email_with_attachments.txt"))
 			{
 				var parser = new WebhookParser();
 				var inboundEmail = await parser.ParseInboundEmailWebhookAsync(fileStream).ConfigureAwait(false);
 
 				inboundEmail.ShouldNotBeNull();
 
-				inboundEmail.Dkim.ShouldBe("{@sendgrid.com : pass}");
+				inboundEmail.Attachments.ShouldNotBeNull();
+				inboundEmail.Attachments.Length.ShouldBe(2);
+				inboundEmail.Attachments[0].ContentId.ShouldBeNull();
+				inboundEmail.Attachments[0].ContentType.ShouldBe("image/jpeg");
+				inboundEmail.Attachments[0].FileName.ShouldBe("001.jpg");
+				inboundEmail.Attachments[0].Id.ShouldBe("attachment2");
+				inboundEmail.Attachments[0].Name.ShouldBe("001.jpg");
+				inboundEmail.Attachments[1].ContentId.ShouldBe("image001.png@01D85101.00357470");
+				inboundEmail.Attachments[1].ContentType.ShouldBe("image/png");
+				inboundEmail.Attachments[1].FileName.ShouldBe("image001.png");
+				inboundEmail.Attachments[1].Id.ShouldBe("attachment1");
+				inboundEmail.Attachments[1].Name.ShouldBe("image001.png");
 
-				var rawEmailTestData = File.ReadAllText("InboudEmailTestData/raw_email.txt").Replace("\r\n", "\n");
-				inboundEmail.RawEmail.Trim().Replace("\r\n", "\n").ShouldBe(rawEmailTestData);
+				inboundEmail.Dkim.ShouldBe("{@hotmail.com : pass}");
 
-				inboundEmail.To[0].Email.ShouldBe("inbound@inbound.example.com");
-				inboundEmail.To[0].Name.ShouldBe(string.Empty);
+				inboundEmail.To[0].Email.ShouldBe("test@api.mydomain.com");
+				inboundEmail.To[0].Name.ShouldBe("API test user");
 
 				inboundEmail.Cc.Length.ShouldBe(0);
 
 				inboundEmail.From.Email.ShouldBe("test@example.com");
-				inboundEmail.From.Name.ShouldBe("Example User");
+				inboundEmail.From.Name.ShouldBe("Test User");
 
-				inboundEmail.SenderIp.ShouldBe("0.0.0.0");
+				inboundEmail.SenderIp.ShouldBe("40.92.19.62");
 
 				inboundEmail.SpamReport.ShouldBeNull();
 
 				inboundEmail.Envelope.From.ShouldBe("test@example.com");
 				inboundEmail.Envelope.To.Length.ShouldBe(1);
-				inboundEmail.Envelope.To.ShouldContain("inbound@inbound.example.com");
+				inboundEmail.Envelope.To.ShouldContain("test@api.mydomain.com");
 
-				inboundEmail.Subject.ShouldBe("Raw Payload");
+				inboundEmail.Subject.ShouldBe("Test #1");
 
 				inboundEmail.SpamScore.ShouldBeNull();
 
 				inboundEmail.Charsets.Except(new[]
 				{
 					new KeyValuePair<string, Encoding>("to", Encoding.UTF8),
+					new KeyValuePair<string, Encoding>("filename", Encoding.UTF8),
+					new KeyValuePair<string, Encoding>("html", Encoding.ASCII),
 					new KeyValuePair<string, Encoding>("subject", Encoding.UTF8),
-					new KeyValuePair<string, Encoding>("from", Encoding.UTF8)
-				}).Count().ShouldBe(0);
-
-				inboundEmail.Spf.ShouldBe("pass");
-			}
-		}
-
-		[Fact]
-		public async Task RawPayloadWithAttachmentsAsync()
-		{
-			using (var fileStream = File.OpenRead("InboudEmailTestData/raw_data.txt"))
-			{
-				var parser = new WebhookParser();
-				var inboundEmail = await parser.ParseInboundEmailWebhookAsync(fileStream).ConfigureAwait(false);
-
-				inboundEmail.ShouldNotBeNull();
-
-				inboundEmail.Dkim.ShouldBe("{@sendgrid.com : pass}");
-
-				var rawEmailTestData = File.ReadAllText("InboudEmailTestData/raw_email.txt").Replace("\r\n", "\n");
-				inboundEmail.RawEmail.Trim().Replace("\r\n", "\n").ShouldBe(rawEmailTestData);
-
-				inboundEmail.To[0].Email.ShouldBe("inbound@inbound.example.com");
-				inboundEmail.To[0].Name.ShouldBe(string.Empty);
-
-				inboundEmail.Cc.Length.ShouldBe(0);
-
-				inboundEmail.From.Email.ShouldBe("test@example.com");
-				inboundEmail.From.Name.ShouldBe("Example User");
-
-				inboundEmail.SenderIp.ShouldBe("0.0.0.0");
-
-				inboundEmail.SpamReport.ShouldBeNull();
-
-				inboundEmail.Envelope.From.ShouldBe("test@example.com");
-				inboundEmail.Envelope.To.Length.ShouldBe(1);
-				inboundEmail.Envelope.To.ShouldContain("inbound@inbound.example.com");
-
-				inboundEmail.Subject.ShouldBe("Raw Payload");
-
-				inboundEmail.SpamScore.ShouldBeNull();
-
-				inboundEmail.Charsets.Except(new[]
-				{
-					new KeyValuePair<string, Encoding>("to", Encoding.UTF8),
-					new KeyValuePair<string, Encoding>("subject", Encoding.UTF8),
-					new KeyValuePair<string, Encoding>("from", Encoding.UTF8)
+					new KeyValuePair<string, Encoding>("from", Encoding.UTF8),
+					new KeyValuePair<string, Encoding>("text", Encoding.ASCII),
 				}).Count().ShouldBe(0);
 
 				inboundEmail.Spf.ShouldBe("pass");
