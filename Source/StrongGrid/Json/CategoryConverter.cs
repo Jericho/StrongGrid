@@ -9,7 +9,7 @@ namespace StrongGrid.Json
 	/// Converts a category (represented either by a string or an array of strings) to and from JSON.
 	/// </summary>
 	/// <seealso cref="JsonConverter" />
-	internal class CategoryConverter : JsonConverter<string[]>
+	internal class CategoryConverter : BaseJsonConverter<string[]>
 	{
 		public override string[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -35,7 +35,20 @@ namespace StrongGrid.Json
 
 		public override void Write(Utf8JsonWriter writer, string[] value, JsonSerializerOptions options)
 		{
-			throw new NotImplementedException();
+			if (value == null || value.Length == 0)
+			{
+				writer.WriteNullValue();
+				return;
+			}
+
+			writer.WriteStartArray();
+
+			foreach (var item in value)
+			{
+				writer.WriteStringValue(item);
+			}
+
+			writer.WriteEndArray();
 		}
 	}
 }

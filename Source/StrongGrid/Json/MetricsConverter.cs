@@ -10,7 +10,7 @@ namespace StrongGrid.Json
 	/// Converts a JSON string into and array of <see cref="KeyValuePair{TKey, TValue}">metrics</see>.
 	/// </summary>
 	/// <seealso cref="JsonConverter" />
-	internal class MetricsConverter : JsonConverter<KeyValuePair<string, long>[]>
+	internal class MetricsConverter : BaseJsonConverter<KeyValuePair<string, long>[]>
 	{
 		public override KeyValuePair<string, long>[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -31,7 +31,16 @@ namespace StrongGrid.Json
 
 		public override void Write(Utf8JsonWriter writer, KeyValuePair<string, long>[] value, JsonSerializerOptions options)
 		{
-			throw new NotImplementedException();
+			if (value == null) return;
+
+			writer.WriteStartObject();
+
+			foreach (var pair in (IEnumerable<KeyValuePair<string, long>>)value)
+			{
+				writer.WriteNumber(pair.Key, pair.Value);
+			}
+
+			writer.WriteEndObject();
 		}
 	}
 }

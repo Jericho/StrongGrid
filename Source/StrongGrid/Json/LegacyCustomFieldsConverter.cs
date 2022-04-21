@@ -12,7 +12,7 @@ namespace StrongGrid.Json
 	/// See <seealso cref="CustomFieldsConverter"/> for the converter for the new API.
 	/// </summary>
 	/// <seealso cref="JsonConverter" />
-	internal class LegacyCustomFieldsConverter : JsonConverter<Models.Legacy.Field[]>
+	internal class LegacyCustomFieldsConverter : BaseJsonConverter<Models.Legacy.Field[]>
 	{
 		public override Models.Legacy.Field[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

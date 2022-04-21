@@ -1,5 +1,4 @@
 using StrongGrid.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -11,60 +10,37 @@ namespace StrongGrid.Json
 	/// Converts a MailPersonalization object to and from JSON.
 	/// </summary>
 	/// <seealso cref="JsonConverter" />
-	internal class MailPersonalizationConverter : JsonConverter<MailPersonalization>
+	internal class MailPersonalizationConverter : BaseJsonConverter<MailPersonalization>
 	{
 		public MailPersonalizationConverter()
 		{
 		}
 
-		public override MailPersonalization Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			throw new NotSupportedException("The MailPersonalizationConverter can only be used to write JSON");
-		}
-
 		public override void Write(Utf8JsonWriter writer, MailPersonalization value, JsonSerializerOptions options)
 		{
-			if (value == null) return;
-
-			writer.WriteStartObject();
-
-			var allProperties = typeof(MailPersonalization).GetProperties();
 			var isUsedWithDynamicTemplate = value.IsUsedWithDynamicTemplate;
 
-			foreach (var propertyInfo in allProperties)
+			Serialize(writer, value, options, (propertyName, propertyValue, propertyType, options, propertyConverterAttribute) =>
 			{
-				var propertyCustomAttributes = propertyInfo.GetCustomAttributes(false);
-				var propertyConverterAttribute = propertyCustomAttributes.OfType<JsonConverterAttribute>().FirstOrDefault();
-				var propertyIsIgnored = propertyCustomAttributes.OfType<JsonIgnoreAttribute>().Any();
-				var propertyName = propertyCustomAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault()?.Name ?? propertyInfo.Name;
-				var propertyValue = propertyInfo.GetValue(value);
-				var propertyType = propertyInfo.PropertyType;
-
-				// Skip the property if it's decorated with the 'ignore' attribute
-				if (propertyIsIgnored) continue;
-
-				// Ignore the property if it contains a null value
-				if (propertyValue == null) continue;
-
 				// Special case: substitutions
-				if (propertyInfo.Name == "Substitutions")
+				if (propertyName == "Substitutions")
 				{
 					// Ignore this property when email is sent using a dynamic template
-					if (isUsedWithDynamicTemplate) continue;
+					if (isUsedWithDynamicTemplate) return;
 
 					// Ignore this property if the enumeration is empty
 					var substitutions = (IEnumerable<KeyValuePair<string, string>>)propertyValue;
-					if (!substitutions.Any()) continue;
+					if (!substitutions.Any()) return;
 
 					// Write the substitutions to JSON
 					WriteJsonProperty(writer, propertyName, propertyValue, propertyType, options, propertyConverterAttribute);
 				}
 
 				// Special case: dynamic data
-				else if (propertyInfo.Name == "DynamicData")
+				else if (propertyName == "DynamicData")
 				{
 					// Ignore this property when email is sent without using a template or when using a 'legacy' template
-					if (!isUsedWithDynamicTemplate) continue;
+					if (!isUsedWithDynamicTemplate) return;
 
 					// Developers can either specify their own serialization options or accept the default options
 					var dynamicDataSerializationOptions = value.DynamicDataSerializationOptions ?? options;
@@ -73,32 +49,13 @@ namespace StrongGrid.Json
 					WriteJsonProperty(writer, propertyName, propertyValue, propertyType, dynamicDataSerializationOptions, propertyConverterAttribute);
 				}
 
-				// Write the property to JSON
+				// Any other property
 				else
 				{
+					// Write the property to JSON
 					WriteJsonProperty(writer, propertyName, propertyValue, propertyType, options, propertyConverterAttribute);
 				}
-			}
-
-			// End of JSON serialization
-			writer.WriteEndObject();
-		}
-
-		private void WriteJsonProperty(Utf8JsonWriter writer, string propertyName, object propertyValue, Type propertyType, JsonSerializerOptions options, JsonConverterAttribute propertyConverterAttribute)
-		{
-			writer.WritePropertyName(propertyName);
-
-			if (propertyConverterAttribute != null)
-			{
-				// It's important to clone the options in order to be able to modify the 'Converters' list
-				var clonedOptions = new JsonSerializerOptions(options);
-				clonedOptions.Converters.Add((JsonConverter)Activator.CreateInstance(propertyConverterAttribute.ConverterType));
-				JsonSerializer.Serialize(writer, propertyValue, propertyType, clonedOptions);
-			}
-			else
-			{
-				JsonSerializer.Serialize(writer, propertyValue, propertyType, options);
-			}
+			});
 		}
 	}
 }
