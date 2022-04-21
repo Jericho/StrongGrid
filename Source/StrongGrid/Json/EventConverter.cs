@@ -11,7 +11,7 @@ namespace StrongGrid.Json
 	/// Converts a JSON string received from a webhook into and array of <see cref="Event">events</see>.
 	/// </summary>
 	/// <seealso cref="JsonConverter" />
-	internal class EventConverter : JsonConverter<Event>
+	internal class EventConverter : BaseJsonConverter<Event>
 	{
 		private static readonly string[] _knownProperties =
 		{
@@ -119,11 +119,6 @@ namespace StrongGrid.Json
 			}
 
 			throw new JsonException("Failed to parse JsonDocument");
-		}
-
-		public override void Write(Utf8JsonWriter writer, Event value, JsonSerializerOptions options)
-		{
-			throw new NotImplementedException();
 		}
 	}
 }

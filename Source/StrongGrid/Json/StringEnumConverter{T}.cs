@@ -11,7 +11,7 @@ namespace StrongGrid.Json
 	/// Converts a string into an enum value.
 	/// </summary>
 	/// <seealso cref="JsonConverter" />
-	internal class StringEnumConverter<T> : JsonConverter<T>
+	internal class StringEnumConverter<T> : BaseJsonConverter<T>
 		where T : Enum
 	{
 		public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

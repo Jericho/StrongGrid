@@ -10,7 +10,7 @@ namespace StrongGrid.Json
 	/// Converts an enumeration of KeyValuePair to and from JSON.
 	/// </summary>
 	/// <seealso cref="JsonConverter" />
-	internal class KeyValuePairEnumerationConverter : JsonConverter<KeyValuePair<string, string>[]>
+	internal class KeyValuePairEnumerationConverter : BaseJsonConverter<KeyValuePair<string, string>[]>
 	{
 		public override KeyValuePair<string, string>[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -37,8 +37,7 @@ namespace StrongGrid.Json
 
 			foreach (var pair in (IEnumerable<KeyValuePair<string, string>>)value)
 			{
-				writer.WritePropertyName(pair.Key);
-				writer.WriteStringValue(pair.Value);
+				writer.WriteString(pair.Key, pair.Value);
 			}
 
 			writer.WriteEndObject();

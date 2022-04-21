@@ -1,6 +1,5 @@
 using StrongGrid.Models;
 using System;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -13,7 +12,7 @@ namespace StrongGrid.Json
 	/// on which endpoint in SendGrid's API you are invoking.
 	/// </summary>
 	/// <seealso cref="JsonConverter" />
-	internal class ClickTrackingSettingsConverter : JsonConverter<ClickTrackingSettings>
+	internal class ClickTrackingSettingsConverter : BaseJsonConverter<ClickTrackingSettings>
 	{
 		public override ClickTrackingSettings Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -47,16 +46,6 @@ namespace StrongGrid.Json
 			}
 
 			return null;
-		}
-
-		public override void Write(Utf8JsonWriter writer, ClickTrackingSettings value, JsonSerializerOptions options)
-		{
-			var valueType = typeof(ClickTrackingSettings);
-
-			writer.WriteStartObject();
-			writer.WriteBoolean(((JsonPropertyNameAttribute)valueType.GetProperty("EnabledInTextContent").GetCustomAttributes(typeof(JsonPropertyNameAttribute), false).Single()).Name, value.EnabledInTextContent);
-			writer.WriteBoolean(((JsonPropertyNameAttribute)valueType.GetProperty("EnabledInHtmlContent").GetCustomAttributes(typeof(JsonPropertyNameAttribute), false).Single()).Name, value.EnabledInHtmlContent);
-			writer.WriteEndObject();
 		}
 	}
 }

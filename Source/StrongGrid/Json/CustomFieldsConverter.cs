@@ -14,7 +14,7 @@ namespace StrongGrid.Json
 	/// See <seealso cref="LegacyCustomFieldsConverter"/> for the converter for the legacy API.
 	/// </summary>
 	/// <seealso cref="JsonConverter" />
-	internal class CustomFieldsConverter : JsonConverter<Field[]>
+	internal class CustomFieldsConverter : BaseJsonConverter<Field[]>
 	{
 		public override Field[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

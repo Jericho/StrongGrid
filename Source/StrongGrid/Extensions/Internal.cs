@@ -566,6 +566,18 @@ namespace StrongGrid
 			return compressedStream;
 		}
 
+		internal static async Task<Stream> DecompressAsync(this Stream source)
+		{
+			var decompressedStream = new MemoryStream();
+			using (var gzip = new GZipStream(source, CompressionMode.Decompress, true))
+			{
+				await gzip.CopyToAsync(decompressedStream).ConfigureAwait(false);
+			}
+
+			decompressedStream.Position = 0;
+			return decompressedStream;
+		}
+
 		/// <summary>Convert an enum to its string representation.</summary>
 		/// <typeparam name="T">The enum type.</typeparam>
 		/// <param name="enumValue">The value.</param>

@@ -140,6 +140,7 @@ namespace StrongGrid.IntegrationTests.Tests
 			}
 
 			var elapsed = Stopwatch.StartNew();
+			var jobCompleted = false;
 			while (true)
 			{
 				await log.WriteLineAsync($"Checking status of job {exportJobId}...").ConfigureAwait(false);
@@ -157,6 +158,7 @@ namespace StrongGrid.IntegrationTests.Tests
 				else if (job.Status == JobStatus.Ready)
 				{
 					await log.WriteLineAsync($"\tJob completed: {job.CompletedOn}").ConfigureAwait(false);
+					jobCompleted = true;
 					break;
 				}
 
@@ -169,14 +171,10 @@ namespace StrongGrid.IntegrationTests.Tests
 				}
 			}
 
-			var completedJob = exportJobs
-				.Where(j => j.Status == JobStatus.Ready)
-				.Where(j => j.FileUrls.Length > 0)
-				.Where(j => j.ExpiresOn > DateTime.UtcNow)
-				.FirstOrDefault();
-			if (completedJob != null)
+			if (jobCompleted)
 			{
-				await client.Contacts.DownloadExportFilesAsync(completedJob.Id, @"C:\temp\", cancellationToken).ConfigureAwait(false);
+				var tempPath = Path.GetTempPath();
+				await client.Contacts.DownloadExportFilesAsync(exportJobId, tempPath, true, cancellationToken).ConfigureAwait(false);
 			}
 
 			if (contacts.Any())

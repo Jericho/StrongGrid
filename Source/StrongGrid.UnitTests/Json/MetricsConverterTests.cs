@@ -31,7 +31,11 @@ namespace StrongGrid.UnitTests.Json
 		public void Write()
 		{
 			// Arrange
-			var value = (KeyValuePair<string, long>[])null;
+			var value = new[]
+			{
+				new KeyValuePair<string, long>("metric1", 1),
+				new KeyValuePair<string, long>("metric2", 2)
+			};
 			var ms = new MemoryStream();
 			var jsonWriter = new Utf8JsonWriter(ms);
 			var options = new JsonSerializerOptions();
@@ -39,7 +43,15 @@ namespace StrongGrid.UnitTests.Json
 			var converter = new MetricsConverter();
 
 			// Act
-			Should.Throw<NotImplementedException>(() => converter.Write(jsonWriter, value, options));
+			converter.Write(jsonWriter, value, options);
+			jsonWriter.Flush();
+
+			ms.Position = 0;
+			var sr = new StreamReader(ms);
+			var result = sr.ReadToEnd();
+
+			// Assert
+			result.ShouldBe("{\"metric1\":1,\"metric2\":2}");
 		}
 
 		[Fact]
