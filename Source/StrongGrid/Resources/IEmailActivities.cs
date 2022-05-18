@@ -25,7 +25,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
-		Task<EmailMessageActivity[]> SearchAsync(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<Models.Search.Legacy.ISearchCriteria>>> filterConditions, int limit = 20, CancellationToken cancellationToken = default);
+		Task<EmailMessageActivity[]> SearchAsync(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions, int limit = 20, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Get all of the details about the specified message.

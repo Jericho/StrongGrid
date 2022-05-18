@@ -1,21 +1,37 @@
-using System;
-
 namespace StrongGrid.Models.Search
 {
 	/// <summary>
 	/// Filter the result of a search for the value of a field to be different than a value.
 	/// </summary>
-	/// <typeparam name="TEnum">The type containing an enum of fields that can used for searching/segmenting.</typeparam>
-	public class SearchCriteriaNotEqual<TEnum> : SearchCriteria<TEnum>
-		where TEnum : Enum
+	public class SearchCriteriaNotEqual : SearchCriteria
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaNotEqual{TEnum}"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteriaNotEqual"/> class.
 		/// </summary>
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SearchCriteriaNotEqual(TEnum filterField, object filterValue)
+		public SearchCriteriaNotEqual(string filterField, object filterValue)
 			: base(filterField, SearchComparisonOperator.NotEqual, filterValue)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SearchCriteriaNotEqual"/> class.
+		/// </summary>
+		/// <param name="filterField">The filter field.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SearchCriteriaNotEqual(ContactsFilterField filterField, object filterValue)
+			: this(filterField.ToEnumString(), filterValue)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SearchCriteriaNotEqual"/> class.
+		/// </summary>
+		/// <param name="filterField">The filter field.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SearchCriteriaNotEqual(EmailActivitiesFilterField filterField, object filterValue)
+			: this(filterField.ToEnumString(), filterValue)
 		{
 		}
 	}

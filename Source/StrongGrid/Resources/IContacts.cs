@@ -155,7 +155,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Contact" />.
 		/// </returns>
-		Task<Contact[]> SearchAsync(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>> filterConditions, CancellationToken cancellationToken = default);
+		Task<Contact[]> SearchAsync(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve up to fifty of the most recent contacts uploaded or attached to a list.

@@ -1,4 +1,4 @@
-namespace StrongGrid.Models.Search.Legacy
+namespace StrongGrid.Models.Search
 {
 	/// <summary>
 	/// Filter the result of a search on the value of a custom tracking argument to be less than a lower value or greater than an upper value.
@@ -17,7 +17,7 @@ namespace StrongGrid.Models.Search.Legacy
 		/// <param name="lowerValue">The lower value.</param>
 		/// <param name="upperValue">The upper value.</param>
 		public SearchCriteriaUniqueArgNotBetween(string uniqueArgName, object lowerValue, object upperValue)
-			: base(uniqueArgName, SearchConditionOperator.NotBetween, lowerValue)
+			: base(uniqueArgName, SearchComparisonOperator.NotBetween, lowerValue)
 		{
 			UpperValue = upperValue;
 		}

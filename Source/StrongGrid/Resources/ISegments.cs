@@ -25,7 +25,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Segment" />.
 		/// </returns>
-		Task<Segment> CreateAsync(string name, IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>> filterConditions, string listId = null, CancellationToken cancellationToken = default);
+		Task<Segment> CreateAsync(string name, IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions, string listId = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve a segment.
@@ -67,7 +67,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Segment" />.
 		/// </returns>
-		Task<Segment> UpdateAsync(string segmentId, Parameter<string> name = default, Parameter<IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>>> filterConditions = default, CancellationToken cancellationToken = default);
+		Task<Segment> UpdateAsync(string segmentId, Parameter<string> name = default, Parameter<IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>>> filterConditions = default, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete a segment.

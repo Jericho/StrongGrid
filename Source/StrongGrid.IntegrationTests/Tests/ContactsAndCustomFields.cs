@@ -119,8 +119,8 @@ namespace StrongGrid.IntegrationTests.Tests
 				}
 			}
 
-			var firstNameCriteria = new SearchCriteriaEqual<ContactsFilterField>(ContactsFilterField.FirstName, "John");
-			var LastNameCriteria = new SearchCriteriaEqual<ContactsFilterField>(ContactsFilterField.LastName, "Doe");
+			var firstNameCriteria = new SearchCriteriaEqual(ContactsFilterField.FirstName, "John");
+			var LastNameCriteria = new SearchCriteriaEqual(ContactsFilterField.LastName, "Doe");
 			var searchResult = await client.Contacts.SearchAsync(new[] { firstNameCriteria, LastNameCriteria }, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Found {searchResult.Length} contacts named John Doe").ConfigureAwait(false);
 

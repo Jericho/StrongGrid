@@ -41,11 +41,11 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Segment" />.
 		/// </returns>
-		public Task<Segment> CreateAsync(string name, IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>> filterConditions, string listId = null, CancellationToken cancellationToken = default)
+		public Task<Segment> CreateAsync(string name, IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions, string listId = null, CancellationToken cancellationToken = default)
 		{
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
-			data.AddProperty("query_dsl", ToQueryDsl(filterConditions));
+			data.AddProperty("query_dsl", Utils.ToQueryDsl(filterConditions));
 			data.AddProperty("parent_list_id", listId);
 
 			return _client
@@ -110,13 +110,13 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="Segment" />.
 		/// </returns>
-		public Task<Segment> UpdateAsync(string segmentId, Parameter<string> name = default, Parameter<IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>>> filterConditions = default, CancellationToken cancellationToken = default)
+		public Task<Segment> UpdateAsync(string segmentId, Parameter<string> name = default, Parameter<IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>>> filterConditions = default, CancellationToken cancellationToken = default)
 		{
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
 			if (filterConditions.HasValue)
 			{
-				data.AddProperty("query_dsl", ToQueryDsl(filterConditions.Value));
+				data.AddProperty("query_dsl", Utils.ToQueryDsl(filterConditions.Value));
 			}
 
 			return _client
@@ -142,22 +142,6 @@ namespace StrongGrid.Resources
 				.WithArgument("delete_contacts", deleteMatchingContacts ? "true" : "false")
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
-		}
-
-		private static string ToQueryDsl(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>> filterConditions)
-		{
-			if (filterConditions == null) return null;
-
-			var conditions = new List<string>(filterConditions.Count());
-			foreach (var criteria in filterConditions)
-			{
-				var logicalOperator = criteria.Key.ToEnumString();
-				var values = criteria.Value.Select(criteriaValue => criteriaValue.ToString());
-				conditions.Add(string.Join($" {logicalOperator} ", values));
-			}
-
-			var query = string.Join(" AND ", conditions);
-			return query;
 		}
 	}
 }

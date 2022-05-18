@@ -38,13 +38,6 @@ namespace StrongGrid.Models.Search
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteria"/> class.
-		/// </summary>
-		protected SearchCriteria()
-		{
-		}
-
-		/// <summary>
 		/// Returns the string representation of a given value as expected by the SendGrid segmenting API.
 		/// </summary>
 		/// <param name="value">The value.</param>
@@ -122,25 +115,6 @@ namespace StrongGrid.Models.Search
 			var filterOperator = ConvertOperatorToString();
 			var filterValue = ConvertValueToString();
 			return $"{FilterField}{filterOperator}{filterValue}";
-		}
-	}
-
-	/// <summary>
-	/// Base class for search criteria classes.
-	/// </summary>
-	/// <typeparam name="TEnum">The type containing an enum of fields that can used for searching/segmenting.</typeparam>
-	public abstract class SearchCriteria<TEnum> : SearchCriteria
-		where TEnum : Enum
-	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteria{TEnum}"/> class.
-		/// </summary>
-		/// <param name="filterField">The filter field.</param>
-		/// <param name="filterOperator">The filter operator.</param>
-		/// <param name="filterValue">The filter value.</param>
-		public SearchCriteria(TEnum filterField, SearchComparisonOperator filterOperator, object filterValue)
-			: base(filterField.ToEnumString(), filterOperator, filterValue)
-		{
 		}
 	}
 }

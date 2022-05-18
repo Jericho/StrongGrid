@@ -1,4 +1,4 @@
-namespace StrongGrid.Models.Search.Legacy
+namespace StrongGrid.Models.Search
 {
 	/// <summary>
 	/// Base class for search criteria classes on the value of a custom tracking argument.
@@ -13,7 +13,7 @@ namespace StrongGrid.Models.Search.Legacy
 		/// <summary>
 		/// Gets or sets the operator used to filter the result.
 		/// </summary>
-		public SearchConditionOperator FilterOperator { get; protected set; }
+		public SearchComparisonOperator FilterOperator { get; protected set; }
 
 		/// <summary>
 		/// Gets or sets the value used to filter the result.
@@ -26,18 +26,11 @@ namespace StrongGrid.Models.Search.Legacy
 		/// <param name="uniqueArgName">The name of the unique arg.</param>
 		/// <param name="filterOperator">The filtering operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SearchCriteriaUniqueArg(string uniqueArgName, SearchConditionOperator filterOperator, object filterValue)
+		public SearchCriteriaUniqueArg(string uniqueArgName, SearchComparisonOperator filterOperator, object filterValue)
 		{
 			UniqueArgName = uniqueArgName;
 			FilterOperator = filterOperator;
 			FilterValue = filterValue;
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaUniqueArg"/> class.
-		/// </summary>
-		protected SearchCriteriaUniqueArg()
-		{
 		}
 
 		/// <summary>

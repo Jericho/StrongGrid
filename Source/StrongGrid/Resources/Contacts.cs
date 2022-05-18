@@ -295,23 +295,10 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// An array of <see cref="Contact" />.
 		/// </returns>
-		public Task<Contact[]> SearchAsync(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>> filterConditions, CancellationToken cancellationToken = default)
+		public Task<Contact[]> SearchAsync(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions, CancellationToken cancellationToken = default)
 		{
-			var conditions = new List<string>(filterConditions?.Count() ?? 0);
-			if (filterConditions != null)
-			{
-				foreach (var criteria in filterConditions)
-				{
-					var logicalOperator = criteria.Key.ToEnumString();
-					var values = criteria.Value.Select(criteriaValue => criteriaValue.ToString());
-					conditions.Add(string.Join($" {logicalOperator} ", values));
-				}
-			}
-
-			var query = string.Join(" AND ", conditions);
-
 			var data = new StrongGridJsonObject();
-			data.AddProperty("query", query, false);
+			data.AddProperty("query", Utils.ToQueryDsl(filterConditions), false);
 
 			return _client
 				.PostAsync($"{_endpoint}/search")

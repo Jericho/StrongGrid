@@ -10,7 +10,7 @@ namespace StrongGrid.UnitTests.Models.Search
 		public void SearchCriteriaBetween()
 		{
 			// Arrange
-			var searchCriteria = new SearchCriteriaBetween<ContactsFilterField>(ContactsFilterField.FirstName, "Allen", "Bob");
+			var searchCriteria = new SearchCriteriaBetween(ContactsFilterField.FirstName, "Allen", "Bob");
 
 			// Act
 			var result = searchCriteria.ToString();
@@ -24,7 +24,7 @@ namespace StrongGrid.UnitTests.Models.Search
 		public void SearchCriteriaEqual()
 		{
 			// Arrange
-			var searchCriteria = new SearchCriteriaEqual<ContactsFilterField>(ContactsFilterField.LastName, "Smith");
+			var searchCriteria = new SearchCriteriaEqual(ContactsFilterField.LastName, "Smith");
 
 			// Act
 			var result = searchCriteria.ToString();
@@ -38,7 +38,7 @@ namespace StrongGrid.UnitTests.Models.Search
 		public void SearchCriteriaContains()
 		{
 			// Arrange
-			var searchCriteria = new SearchCriteriaContains<ContactsFilterField>(ContactsFilterField.ListIds, "my-list-id");
+			var searchCriteria = new SearchCriteriaContains(ContactsFilterField.ListIds, "my-list-id");
 
 			// Act
 			var result = searchCriteria.ToString();
