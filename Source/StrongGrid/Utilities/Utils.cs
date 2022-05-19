@@ -45,20 +45,18 @@ namespace StrongGrid.Utilities
 
 		public static string ToQueryDsl(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions)
 		{
-			if (filterConditions == null) return null;
+			if (filterConditions == null) return string.Empty;
 
 			var conditions = new List<string>(filterConditions.Count());
-			if (filterConditions != null)
+			foreach (var criteria in filterConditions)
 			{
-				foreach (var criteria in filterConditions)
-				{
-					var logicalOperator = criteria.Key.ToEnumString();
-					var values = criteria.Value.Select(criteriaValue => criteriaValue.ToString());
-					conditions.Add(string.Join($" {logicalOperator} ", values));
-				}
+				var logicalOperator = criteria.Key.ToEnumString();
+				var values = criteria.Value.Select(criteriaValue => criteriaValue.ToString());
+				conditions.Add(string.Join($" {logicalOperator} ", values));
 			}
 
-			var query = $"({string.Join(" AND ", conditions)})";
+			var query = string.Join(" AND ", conditions);
+			if (filterConditions.SelectMany(fc => fc.Value).Count() > 1) query = $"({query})";
 
 			return query;
 		}
