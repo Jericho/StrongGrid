@@ -1,5 +1,4 @@
 using StrongGrid.Models;
-using StrongGrid.Models.Search;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.IO;
@@ -150,12 +149,12 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Searches for contacts matching the specified conditions.
 		/// </summary>
-		/// <param name="filterConditions">Filtering conditions.</param>
+		/// <param name="query">The query.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Contact" />.
 		/// </returns>
-		Task<Contact[]> SearchAsync(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions, CancellationToken cancellationToken = default);
+		Task<Contact[]> SearchAsync(string query, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve up to fifty of the most recent contacts uploaded or attached to a list.

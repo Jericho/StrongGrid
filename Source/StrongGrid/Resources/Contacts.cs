@@ -1,7 +1,6 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Json;
 using StrongGrid.Models;
-using StrongGrid.Models.Search;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
@@ -284,21 +283,11 @@ namespace StrongGrid.Resources
 			return contacts.ToArray();
 		}
 
-		/// <summary>
-		/// Searches for contacts matching the specified conditions.
-		/// </summary>
-		/// <remarks>
-		/// SendGrid returns a maximum of 50 contacts.
-		/// </remarks>
-		/// <param name="filterConditions">Filtering conditions.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// An array of <see cref="Contact" />.
-		/// </returns>
-		public Task<Contact[]> SearchAsync(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions, CancellationToken cancellationToken = default)
+		/// <inheritdoc/>
+		public Task<Contact[]> SearchAsync(string query, CancellationToken cancellationToken = default)
 		{
 			var data = new StrongGridJsonObject();
-			data.AddProperty("query", Utils.ToQueryDsl(filterConditions), false);
+			data.AddProperty("query", query, false);
 
 			return _client
 				.PostAsync($"{_endpoint}/search")
