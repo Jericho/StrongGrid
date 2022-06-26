@@ -23,6 +23,6 @@ namespace StrongGrid.Models.Webhooks
 		/// The identifier.
 		/// </value>
 		[JsonPropertyName("id")]
-		public long Id { get; set; }
+		public string Id { get; set; }
 	}
 }
