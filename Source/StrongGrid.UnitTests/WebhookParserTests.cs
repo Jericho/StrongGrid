@@ -16,13 +16,16 @@ namespace StrongGrid.UnitTests
 	{
 		#region FIELDS
 
+		// PLEASE NOTE: according to SendGrid's documentation, "id" is numerical (i.e.: "id":210).
+		// See https://github.com/Jericho/StrongGrid/issues/454 for demonstration that it is in fact a string.
 		private const string PROCESSED_JSON = @"
 		{
 			""email"":""example@test.com"",
 			""timestamp"":1513299569,
 			""pool"": {
 				""name"":""new_MY_test"",
-				""id"":210
+				""id"":""210""
+
 			},
 			""smtp-id"":""<14c5d75ce93.dfd.64b469@ismtpd-555>"",
 			""event"":""processed"",
@@ -564,7 +567,7 @@ Content-Disposition: form-data; name=""attachments""
 			result.InternalEventId.ShouldBe("rbtnWrG1DVDGGGFHFyun0A==");
 			result.InternalMessageId.ShouldBe("14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.000000000000000000000");
 			result.IpPool.ShouldNotBeNull();
-			result.IpPool.Id.ShouldBe(210);
+			result.IpPool.Id.ShouldBe("210");
 			result.IpPool.Name.ShouldBe("new_MY_test");
 			result.MessageId.ShouldBe("14c5d75ce93.dfd.64b469");
 			result.SmtpId.ShouldBe("<14c5d75ce93.dfd.64b469@ismtpd-555>");

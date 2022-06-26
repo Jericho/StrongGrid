@@ -24,9 +24,18 @@ namespace StrongGrid.IntegrationTests.Tests
 			var publicKey = await client.WebhookSettings.GetSignedEventsPublicKeyAsync(cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"The signed events public key is: {publicKey}").ConfigureAwait(false);
 
-			// GET SAMPLE WEBHOOK
-			// Uncomment the following line to receive a sample webhook at your desired URL (useful for debugging)
-			//await client.WebhookSettings.SendEventTestAsync("https://c7c998146d03.ngrok.io/StrongGrid").ConfigureAwait(false);
+			// ==================================================
+			// DEBUGGING
+
+			// Configure your desired URL
+			//const string desiredUrl = "https://4934-2001-18c0-41d-f200-ac79-2199-f1fc-c831.ngrok.io/StrongGrid";
+
+			// Uncomment the following line to configure all webhook events to be sent to your desired URL
+			//var updatedEventWebhookSettings = await client.WebhookSettings.UpdateEventWebhookSettingsAsync(true, desiredUrl, true, true, true, true, true, true, true, true, true, true, true, null, cancellationToken).ConfigureAwait(false);
+
+			// Uncomment the following line to receive a sample webhook at your desired URL
+			//await client.WebhookSettings.SendEventTestAsync(desiredUrl).ConfigureAwait(false);
+			// ==================================================
 		}
 	}
 }
