@@ -205,7 +205,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task UpdateInboundParseWebhookSettingsAsync(string hostname, Parameter<string> url = default, Parameter<bool> spamCheck = default, Parameter<bool> sendRaw = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = ConvertToJson(hostname, url, spamCheck, sendRaw);
+			var data = ConvertToJson(null, url, spamCheck, sendRaw);
 			return _client
 				.PatchAsync($"{_inboundParseWebhookEndpoint}/settings/{hostname}")
 				.OnBehalfOf(onBehalfOf)
