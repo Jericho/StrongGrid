@@ -1,5 +1,4 @@
 using Pathoschild.Http.Client;
-using Pathoschild.Http.Client.Extensibility;
 using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -74,7 +73,7 @@ namespace StrongGrid.Resources
 			}
 		};
 
-		private static readonly IHttpFilter _maxRequestSizeFilter = new MaxRequestSizeFilter(MAX_EMAIL_SIZE);
+		private static readonly MaxRequestSizeFilter _maxRequestSizeFilter = new MaxRequestSizeFilter(MAX_EMAIL_SIZE);
 
 		private readonly Pathoschild.Http.Client.IClient _client;
 
@@ -230,18 +229,12 @@ namespace StrongGrid.Resources
 			data.AddProperty("headers", ConvertEnumerationToJson(combinedHeaders));
 			data.AddProperty("custom_args", ConvertEnumerationToJson(customArgs));
 
-			// Prepare the request
-			var request = _client
+			// Send the request
+			var response = await _client
 				.PostAsync($"{_endpoint}/send")
 				.WithJsonBody(data)
-				.WithCancellationToken(cancellationToken);
-
-			// Add a filter that ensures the request does not exceed SendGrid's max size
-			request.Filters.Remove<MaxRequestSizeFilter>();
-			request.Filters.Add(_maxRequestSizeFilter);
-
-			// Send the request
-			var response = await request
+				.WithFilter(_maxRequestSizeFilter)
+				.WithCancellationToken(cancellationToken)
 				.AsResponse()
 				.ConfigureAwait(false);
 
