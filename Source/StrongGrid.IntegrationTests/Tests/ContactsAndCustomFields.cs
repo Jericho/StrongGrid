@@ -159,7 +159,7 @@ namespace StrongGrid.IntegrationTests.Tests
 					await log.WriteLineAsync($"\tJob is ready. Downloading file(s)...").ConfigureAwait(false);
 
 					var destinationFolder = Path.GetTempPath();
-					var exportFiles = await client.Contacts.DownloadExportFilesAsync(job.Id, true, cancellationToken).ConfigureAwait(false);
+					var exportFiles = await client.Contacts.DownloadExportFilesAsync(job, true, cancellationToken).ConfigureAwait(false);
 
 					foreach (var exportFile in exportFiles)
 					{
@@ -171,7 +171,7 @@ namespace StrongGrid.IntegrationTests.Tests
 					}
 
 					var totalFilesSize = exportFiles.Sum(f => f.Stream.Length);
-					await log.WriteLineAsync($"\tDownloaded {totalFilesSize} bytes").ConfigureAwait(false);
+					await log.WriteLineAsync($"\tDownloaded {exportFiles.Length} files for a total of {totalFilesSize} bytes").ConfigureAwait(false);
 					break;
 				}
 
