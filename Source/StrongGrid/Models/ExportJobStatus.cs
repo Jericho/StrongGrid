@@ -5,10 +5,10 @@ using System.Text.Json.Serialization;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Enumeration to indicate the status of an import/export job.
+	/// Enumeration to indicate the status of an export job.
 	/// </summary>
-	[JsonConverter(typeof(StringEnumConverter<JobStatus>))]
-	public enum JobStatus
+	[JsonConverter(typeof(StringEnumConverter<ExportJobStatus>))]
+	public enum ExportJobStatus
 	{
 		/// <summary>
 		/// Job is not started.
@@ -23,15 +23,9 @@ namespace StrongGrid.Models
 		Ready,
 
 		/// <summary>
-		/// Job finished with some errors.
+		/// Job has failed.
 		/// </summary>
-		[EnumMember(Value = "errored")]
-		Errored,
-
-		/// <summary>
-		/// Job has finshed with all errors or was entirely unprocessable (eg. If you attempt to import file format we do not support).
-		/// </summary>
-		[EnumMember(Value = "failed")]
+		[EnumMember(Value = "failure")]
 		Failed
 	}
 }

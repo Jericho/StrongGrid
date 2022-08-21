@@ -140,25 +140,38 @@ namespace StrongGrid.IntegrationTests.Tests
 			}
 
 			var elapsed = Stopwatch.StartNew();
-			var jobCompleted = false;
 			while (true)
 			{
 				await log.WriteLineAsync($"Checking status of job {exportJobId}...").ConfigureAwait(false);
 				var job = await client.Contacts.GetExportJobAsync(exportJobId, cancellationToken).ConfigureAwait(false);
-				if (job.Status == JobStatus.Failed)
+				if (job.Status == ExportJobStatus.Failed)
 				{
 					await log.WriteLineAsync($"\tJob has failed with the following message: {job.Message}").ConfigureAwait(false);
 					break;
 				}
-				else if (job.Status == JobStatus.Pending)
+				else if (job.Status == ExportJobStatus.Pending)
 				{
 					await log.WriteLineAsync("\tJob is pending. We will wait a few milliseconds and check again.").ConfigureAwait(false);
 					await Task.Delay(500, cancellationToken).ConfigureAwait(false);
 				}
-				else if (job.Status == JobStatus.Ready)
+				else if (job.Status == ExportJobStatus.Ready)
 				{
-					await log.WriteLineAsync($"\tJob completed: {job.CompletedOn}").ConfigureAwait(false);
-					jobCompleted = true;
+					await log.WriteLineAsync($"\tJob is ready. Downloading file(s)...").ConfigureAwait(false);
+
+					var destinationFolder = Path.GetTempPath();
+					var exportFiles = await client.Contacts.DownloadExportFilesAsync(job.Id, true, cancellationToken).ConfigureAwait(false);
+
+					foreach (var exportFile in exportFiles)
+					{
+						var destinationPath = Path.Combine(destinationFolder, exportFile.FileName);
+						using (Stream output = File.OpenWrite(destinationPath))
+						{
+							exportFile.Stream.CopyTo(output);
+						}
+					}
+
+					var totalFilesSize = exportFiles.Sum(f => f.Stream.Length);
+					await log.WriteLineAsync($"\tDownloaded {totalFilesSize} bytes").ConfigureAwait(false);
 					break;
 				}
 
@@ -169,12 +182,6 @@ namespace StrongGrid.IntegrationTests.Tests
 					await log.WriteLineAsync("\tThe job did not complete in a reasonable amount of time.").ConfigureAwait(false);
 					break;
 				}
-			}
-
-			if (jobCompleted)
-			{
-				var tempPath = Path.GetTempPath();
-				await client.Contacts.DownloadExportFilesAsync(exportJobId, tempPath, true, cancellationToken).ConfigureAwait(false);
 			}
 
 			if (contacts.Any())

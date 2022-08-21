@@ -459,7 +459,7 @@ namespace StrongGrid.Resources
 		{
 			var job = await GetExportJobAsync(jobId, cancellationToken);
 
-			if (job.Status != JobStatus.Ready) throw new Exception("The job is not ready");
+			if (job.Status != ExportJobStatus.Ready) throw new Exception("The job is not completed");
 
 			var handler = new HttpClientHandler()
 			{

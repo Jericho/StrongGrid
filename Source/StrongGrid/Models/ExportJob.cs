@@ -26,8 +26,8 @@ namespace StrongGrid.Models
 		/// The status.
 		/// </value>
 		[JsonPropertyName("status")]
-		[JsonConverter(typeof(StringEnumConverter<JobStatus>))]
-		public JobStatus Status { get; set; }
+		[JsonConverter(typeof(StringEnumConverter<ExportJobStatus>))]
+		public ExportJobStatus Status { get; set; }
 
 		/// <summary>
 		/// Gets or sets the date when the job was created.
