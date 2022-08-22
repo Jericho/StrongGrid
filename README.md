@@ -92,8 +92,17 @@ You have access to numerous 'resources' (such as Contacts, Lists, Segments, Sett
 
 Here are a few example:
 ```csharp
-// Create a new contact (contacts are sometimes refered to as 'recipients')
-var contactId = await strongGridClient.Contacts.CreateAsync(email, firstName, lastName, customFields);
+// Import a new contact or update existing contact if a match is found
+var importJobId = await client.Contacts.UpsertAsync(email, firstName, lastName, addressLine1, addressLine2, city, stateOrProvince, country, postalCode, alternateEmails, customFields, null, cancellationToken).ConfigureAwait(false);
+
+// Import several new contacts or update existing contacts when a match is found
+var contacts = new[]
+{
+	new Models.Contact("dummy1@hotmail.com", "John", "Doe"),
+	new Models.Contact("dummy2@hotmail.com", "John", "Smith"),
+	new Models.Contact("dummy3@hotmail.com", "Bob", "Smith")
+};
+var importJobId = await client.Contacts.UpsertAsync(contacts, null, cancellationToken).ConfigureAwait(false);
 
 // Send an email
 await strongGridClient.Mail.SendToSingleRecipientAsync(to, from, subject, htmlContent, textContent);
