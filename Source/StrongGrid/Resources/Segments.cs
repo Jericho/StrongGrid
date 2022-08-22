@@ -72,14 +72,7 @@ namespace StrongGrid.Resources
 				.AsObject<Segment>();
 		}
 
-		/// <summary>
-		/// Retrieve all segments.
-		/// </summary>
-		/// <param name="listIds">An enumeration of lists ids to be used when searching for segments with the specified parent_list_id, no more than 50 is allowed.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// An array of <see cref="Segment" />.
-		/// </returns>
+		/// <inheritdoc/>
 		public Task<Segment[]> GetAllAsync(IEnumerable<string> listIds = null, CancellationToken cancellationToken = default)
 		{
 			var request = _client
@@ -96,6 +89,15 @@ namespace StrongGrid.Resources
 			}
 
 			return request.AsObject<Segment[]>("results");
+		}
+
+		/// <inheritdoc/>
+		public Task<Segment[]> GetAllAsync(CancellationToken cancellationToken = default)
+		{
+			return _client
+				.GetAsync(_endpoint)
+				.WithCancellationToken(cancellationToken)
+				.AsObject<Segment[]>("results");
 		}
 
 		/// <summary>
