@@ -61,6 +61,6 @@ namespace StrongGrid.Models
 		/// The completion date.
 		/// </value>
 		[JsonPropertyName("finished_at")]
-		public DateTime CompletedOn { get; set; }
+		public DateTime? CompletedOn { get; set; }
 	}
 }
