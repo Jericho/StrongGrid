@@ -25,7 +25,7 @@ namespace StrongGrid.Models
 		/// The status.
 		/// </value>
 		[JsonPropertyName("status")]
-		public JobStatus Status { get; set; }
+		public ImportJobStatus Status { get; set; }
 
 		/// <summary>
 		/// Gets or sets the job type.
@@ -61,6 +61,6 @@ namespace StrongGrid.Models
 		/// The completion date.
 		/// </value>
 		[JsonPropertyName("finished_at")]
-		public DateTime CompletedOn { get; set; }
+		public DateTime? CompletedOn { get; set; }
 	}
 }

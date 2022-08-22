@@ -38,14 +38,24 @@ namespace StrongGrid.Resources
 		Task<Segment> GetAsync(string segmentId, CancellationToken cancellationToken = default);
 
 		/// <summary>
-		/// Retrieve all segments.
+		/// Retrieve all segments associated with the specified lists.
 		/// </summary>
+		/// <remarks>If you do not specify any listIds, you will get an array of "orphaned" segments (meaning, segments that are not associated with any list).</remarks>
 		/// <param name="listIds">An enumeration of lists ids to be used when searching for segments with the specified parent_list_id, no more than 50 is allowed.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Segment" />.
 		/// </returns>
 		Task<Segment[]> GetAllAsync(IEnumerable<string> listIds = null, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Retrieve all segments.
+		/// </summary>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="Segment" />.
+		/// </returns>
+		Task<Segment[]> GetAllAsync(CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Update a segment.

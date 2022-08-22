@@ -5,7 +5,6 @@ using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -73,6 +72,8 @@ namespace StrongGrid.Resources
 				}
 			}
 		};
+
+		private static readonly MaxRequestSizeFilter _maxRequestSizeFilter = new MaxRequestSizeFilter(MAX_EMAIL_SIZE);
 
 		private readonly Pathoschild.Http.Client.IClient _client;
 
@@ -228,14 +229,11 @@ namespace StrongGrid.Resources
 			data.AddProperty("headers", ConvertEnumerationToJson(combinedHeaders));
 			data.AddProperty("custom_args", ConvertEnumerationToJson(customArgs));
 
-			// SendGrid does not allow emails that exceed 30MB
-			var serializedContent = JsonSerializer.Serialize(data, typeof(StrongGridJsonObject), JsonFormatter.SerializationContext);
-			if (serializedContent.Length > MAX_EMAIL_SIZE) throw new Exception("Email exceeds the size limit");
-
 			// Send the request
 			var response = await _client
 				.PostAsync($"{_endpoint}/send")
 				.WithJsonBody(data)
+				.WithFilter(_maxRequestSizeFilter)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse()
 				.ConfigureAwait(false);
