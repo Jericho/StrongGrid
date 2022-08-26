@@ -56,7 +56,9 @@ namespace StrongGrid.Utilities
 			}
 
 			var query = string.Join(" AND ", conditions);
-			if (filterConditions.SelectMany(fc => fc.Value).Count() > 1) query = $"({query})";
+
+			// The query must be wrapped in parentheses when there are multiple search criteria
+			if (filterConditions.Sum(fc => fc.Value.Count()) > 1) query = $"({query})";
 
 			return query;
 		}
