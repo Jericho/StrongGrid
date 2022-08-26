@@ -1,8 +1,6 @@
 using StrongGrid.Models;
 using StrongGrid.Models.Search;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -71,7 +69,7 @@ namespace StrongGrid.IntegrationTests.Tests
 			// CREATE A SEGMENT (one contact matches the criteria)
 			var filterConditions = new[]
 			{
-				new KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>(SearchLogicalOperator.And, new[]
+				new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.And, new[]
 				{
 					new SearchCriteriaEqual(ContactsFilterField.FirstName, "John"),
 					new SearchCriteriaEqual(ContactsFilterField.LastName, "Doe")
