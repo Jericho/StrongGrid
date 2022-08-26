@@ -90,16 +90,7 @@ namespace StrongGrid.Resources
 				.AsObject<Segment[]>("results");
 		}
 
-		/// <summary>
-		/// Update a segment.
-		/// </summary>
-		/// <param name="segmentId">The segment identifier.</param>
-		/// <param name="name">The name.</param>
-		/// <param name="filterConditions">The query.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// The <see cref="Segment" />.
-		/// </returns>
+		/// <inheritdoc/>
 		public Task<Segment> UpdateAsync(string segmentId, Parameter<string> name = default, Parameter<string> query = default, Parameter<QueryLanguageVersion> queryLanguageVersion = default, CancellationToken cancellationToken = default)
 		{
 			var data = new StrongGridJsonObject();
