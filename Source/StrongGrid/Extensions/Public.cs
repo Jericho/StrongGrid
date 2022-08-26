@@ -1222,7 +1222,7 @@ namespace StrongGrid
 		public static Task<Segment> UpdateAsync(this ISegments segments, string segmentId, Parameter<string> name = default, Parameter<IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>>> filterConditions = default, CancellationToken cancellationToken = default)
 		{
 			var query = filterConditions.HasValue ? (Parameter<string>)Utils.ToQueryDsl(filterConditions.Value) : (Parameter<string>)default;
-			return segments.UpdateAsync(query, name, query, QueryLanguageVersion.Version1, cancellationToken);
+			return segments.UpdateAsync(segmentId, name, query, QueryLanguageVersion.Version1, cancellationToken);
 		}
 
 		/// <summary>
