@@ -27,15 +27,6 @@ namespace StrongGrid.Models
 		public string Name { get; set; }
 
 		/// <summary>
-		/// Gets or sets the list identifier.
-		/// </summary>
-		/// <value>
-		/// The list identifier.
-		/// </value>
-		[JsonPropertyName("parent_list_id")]
-		public string ListId { get; set; }
-
-		/// <summary>
 		/// Gets or sets the query DSL.
 		/// </summary>
 		/// <value>
@@ -52,6 +43,15 @@ namespace StrongGrid.Models
 		/// </value>
 		[JsonPropertyName("contacts_count")]
 		public long ContactsCount { get; set; }
+
+		/// <summary>
+		/// Gets or sets the sample contacts.
+		/// </summary>
+		/// <value>
+		/// An array of <see cref="Contact">Contacts</see> that match the segmenting criteria.
+		/// </value>
+		[JsonPropertyName("contacts_sample")]
+		public Contact[] SampleContacts { get; set; }
 
 		/// <summary>
 		/// Gets or sets the created on.
@@ -84,12 +84,55 @@ namespace StrongGrid.Models
 		public DateTime? SampleRefreshedOn { get; set; }
 
 		/// <summary>
-		/// Gets or sets the sample contacts.
+		/// Gets or sets the date the sample data will be updated on.
 		/// </summary>
 		/// <value>
-		/// An array of <see cref="Contact">Contacts</see> that match the segmenting criteria.
+		/// The date the sample data will be updated.
 		/// </value>
-		[JsonPropertyName("contacts_sample")]
-		public Contact[] SampleContacts { get; set; }
+		[JsonPropertyName("next_sample_update")]
+		public DateTime? NextSampleUpdateOn { get; set; }
+
+		/// <summary>
+		/// Gets or sets the list identifier.
+		/// </summary>
+		/// <value>
+		/// The list identifier.
+		/// </value>
+		[JsonPropertyName("parent_list_id")]
+		public string ListId { get; set; }
+
+		/// <summary>
+		/// Gets or sets the query DSL version.
+		/// </summary>
+		/// <remarks>
+		/// If not set, segment contains a Query for use with Segment v1 APIs.
+		/// If set to '2', segment contains a SQL query for use in v2.
+		/// </remarks>
+		[JsonPropertyName("query_version")]
+		public QueryLanguageVersion QueryDslVersion { get; set; }
+
+		/// <summary>
+		/// Gets or sets the object that indicates whether the segment's query is valid.
+		/// </summary>
+		[JsonPropertyName("status")]
+		public QueryValidationStatus QueryValidationStatus { get; set; }
+
+		/// <summary>
+		/// Gets or sets the number of times a segment has been manually refreshed since start of today in the user's timezone.
+		/// </summary>
+		[JsonPropertyName("refreshes_used")]
+		public int RefreshesUsed { get; set; }
+
+		/// <summary>
+		/// Gets or sets the maximum number of manual refreshes allowed per day for this segment.
+		/// </summary>
+		[JsonPropertyName("max_refreshes")]
+		public int MaxRefreshes { get; set; }
+
+		/// <summary>
+		/// Gets or sets the date when the segment was last refreshed.
+		/// </summary>
+		[JsonPropertyName("last_refreshed_at")]
+		public DateTime? LastRefreshedOn { get; set; }
 	}
 }
