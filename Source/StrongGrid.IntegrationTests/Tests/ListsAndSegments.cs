@@ -71,11 +71,11 @@ namespace StrongGrid.IntegrationTests.Tests
 			{
 				new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.And, new[]
 				{
-					new SearchCriteriaEqual(ContactsFilterField.FirstName, "John"),
+					new SearchCriteriaEqual(ContactsFilterField.FirstName, "Jane"),
 					new SearchCriteriaEqual(ContactsFilterField.LastName, "Doe")
 				})
 			};
-			var segment = await client.Segments.CreateAsync("StrongGrid Integration Testing: First Name is John and last name is Doe", filterConditions, list.Id, cancellationToken).ConfigureAwait(false);
+			var segment = await client.Segments.CreateAsync("StrongGrid Integration Testing: First Name is Jane and last name is Doe", filterConditions, list.Id, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Segment '{segment.Name}' created. Id: {segment.Id}").ConfigureAwait(false);
 
 			// UPDATE THE SEGMENT (three contacts match the criteria) 
