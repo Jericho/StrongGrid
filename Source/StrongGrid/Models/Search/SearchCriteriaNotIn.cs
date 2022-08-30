@@ -10,10 +10,11 @@ namespace StrongGrid.Models.Search
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SearchCriteriaNotIn"/> class.
 		/// </summary>
+		/// <param name="filterTable">The filter table.</param>
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValues">The filter values.</param>
-		public SearchCriteriaNotIn(string filterField, IEnumerable<object> filterValues)
-			: base(filterField, SearchComparisonOperator.NotIn, filterValues)
+		public SearchCriteriaNotIn(FilterTable filterTable, string filterField, IEnumerable<object> filterValues)
+			: base(filterTable, filterField, SearchComparisonOperator.NotIn, filterValues)
 		{
 		}
 
@@ -23,7 +24,7 @@ namespace StrongGrid.Models.Search
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValues">The filter values.</param>
 		public SearchCriteriaNotIn(ContactsFilterField filterField, IEnumerable<object> filterValues)
-			: this(filterField.ToEnumString(), filterValues)
+			: this(FilterTable.Contacts, filterField.ToEnumString(), filterValues)
 		{
 		}
 
@@ -33,7 +34,7 @@ namespace StrongGrid.Models.Search
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValues">The filter values.</param>
 		public SearchCriteriaNotIn(EmailActivitiesFilterField filterField, IEnumerable<object> filterValues)
-			: this(filterField.ToEnumString(), filterValues)
+			: this(FilterTable.EmailActivities, filterField.ToEnumString(), filterValues)
 		{
 		}
 

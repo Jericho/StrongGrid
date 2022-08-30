@@ -13,11 +13,12 @@ namespace StrongGrid.Models.Search
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SearchCriteriaNotBetween"/> class.
 		/// </summary>
+		/// <param name="filterTable">The filter table.</param>
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="lowerValue">The lower value.</param>
 		/// <param name="upperValue">The upper value.</param>
-		public SearchCriteriaNotBetween(string filterField, object lowerValue, object upperValue)
-			: base(filterField, SearchComparisonOperator.NotBetween, lowerValue)
+		public SearchCriteriaNotBetween(FilterTable filterTable, string filterField, object lowerValue, object upperValue)
+			: base(filterTable, filterField, SearchComparisonOperator.NotBetween, lowerValue)
 		{
 			UpperValue = upperValue;
 		}
@@ -29,7 +30,7 @@ namespace StrongGrid.Models.Search
 		/// <param name="lowerValue">The lower value.</param>
 		/// <param name="upperValue">The upper value.</param>
 		public SearchCriteriaNotBetween(ContactsFilterField filterField, object lowerValue, object upperValue)
-			: this(filterField.ToEnumString(), lowerValue, upperValue)
+			: this(FilterTable.Contacts, filterField.ToEnumString(), lowerValue, upperValue)
 		{
 		}
 
@@ -40,7 +41,7 @@ namespace StrongGrid.Models.Search
 		/// <param name="lowerValue">The lower value.</param>
 		/// <param name="upperValue">The upper value.</param>
 		public SearchCriteriaNotBetween(EmailActivitiesFilterField filterField, object lowerValue, object upperValue)
-			: this(filterField.ToEnumString(), lowerValue, upperValue)
+			: this(FilterTable.EmailActivities, filterField.ToEnumString(), lowerValue, upperValue)
 		{
 		}
 

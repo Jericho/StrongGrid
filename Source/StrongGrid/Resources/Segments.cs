@@ -18,7 +18,7 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class Segments : ISegments
 	{
-		private const string _endpoint = "marketing/segments";
+		private const string _endpoint = "marketing/segments/2.0";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>

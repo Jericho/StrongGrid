@@ -8,9 +8,10 @@ namespace StrongGrid.Models.Search
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SearchCriteriaIsNotNull"/> class.
 		/// </summary>
+		/// <param name="filterTable">The filter table.</param>
 		/// <param name="filterField">The filter field.</param>
-		public SearchCriteriaIsNotNull(string filterField)
-			: base(filterField, SearchComparisonOperator.IsNotNull, null)
+		public SearchCriteriaIsNotNull(FilterTable filterTable, string filterField)
+			: base(filterTable, filterField, SearchComparisonOperator.IsNotNull, null)
 		{
 		}
 
@@ -19,7 +20,7 @@ namespace StrongGrid.Models.Search
 		/// </summary>
 		/// <param name="filterField">The filter field.</param>
 		public SearchCriteriaIsNotNull(ContactsFilterField filterField)
-			: this(filterField.ToEnumString())
+			: this(FilterTable.Contacts, filterField.ToEnumString())
 		{
 		}
 
@@ -28,8 +29,14 @@ namespace StrongGrid.Models.Search
 		/// </summary>
 		/// <param name="filterField">The filter field.</param>
 		public SearchCriteriaIsNotNull(EmailActivitiesFilterField filterField)
-			: this(filterField.ToEnumString())
+			: this(FilterTable.EmailActivities, filterField.ToEnumString())
 		{
+		}
+
+		/// <inheritdoc/>
+		public override string ConvertValueToString()
+		{
+			return string.Empty;
 		}
 
 		/// <summary>

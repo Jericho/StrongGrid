@@ -8,10 +8,11 @@ namespace StrongGrid.Models.Search
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SearchCriteriaNotEqual"/> class.
 		/// </summary>
+		/// <param name="filterTable">The filter table.</param>
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SearchCriteriaNotEqual(string filterField, object filterValue)
-			: base(filterField, SearchComparisonOperator.NotEqual, filterValue)
+		public SearchCriteriaNotEqual(FilterTable filterTable, string filterField, object filterValue)
+			: base(filterTable, filterField, SearchComparisonOperator.NotEqual, filterValue)
 		{
 		}
 
@@ -21,7 +22,7 @@ namespace StrongGrid.Models.Search
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValue">The filter value.</param>
 		public SearchCriteriaNotEqual(ContactsFilterField filterField, object filterValue)
-			: this(filterField.ToEnumString(), filterValue)
+			: this(FilterTable.Contacts, filterField.ToEnumString(), filterValue)
 		{
 		}
 
@@ -31,7 +32,7 @@ namespace StrongGrid.Models.Search
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValue">The filter value.</param>
 		public SearchCriteriaNotEqual(EmailActivitiesFilterField filterField, object filterValue)
-			: this(filterField.ToEnumString(), filterValue)
+			: this(FilterTable.EmailActivities, filterField.ToEnumString(), filterValue)
 		{
 		}
 	}

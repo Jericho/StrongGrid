@@ -94,7 +94,7 @@ namespace StrongGrid.Models.Search
 		/// <summary>
 		/// Contains.
 		/// </summary>
-		[EnumMember(Value = "CONTAINS")]
+		[EnumMember(Value = "array_contains")]
 		Contains
 	}
 }

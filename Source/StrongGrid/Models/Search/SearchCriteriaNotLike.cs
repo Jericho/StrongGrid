@@ -8,10 +8,11 @@ namespace StrongGrid.Models.Search
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SearchCriteriaNotLike"/> class.
 		/// </summary>
+		/// <param name="filterTable">The filter table.</param>
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SearchCriteriaNotLike(string filterField, object filterValue)
-			: base(filterField, SearchComparisonOperator.NotLike, filterValue)
+		public SearchCriteriaNotLike(FilterTable filterTable, string filterField, object filterValue)
+			: base(filterTable, filterField, SearchComparisonOperator.NotLike, filterValue)
 		{
 		}
 
@@ -21,7 +22,7 @@ namespace StrongGrid.Models.Search
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValue">The filter value.</param>
 		public SearchCriteriaNotLike(ContactsFilterField filterField, object filterValue)
-			: this(filterField.ToEnumString(), filterValue)
+			: this(FilterTable.Contacts, filterField.ToEnumString(), filterValue)
 		{
 		}
 
@@ -31,7 +32,7 @@ namespace StrongGrid.Models.Search
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValue">The filter value.</param>
 		public SearchCriteriaNotLike(EmailActivitiesFilterField filterField, object filterValue)
-			: this(filterField.ToEnumString(), filterValue)
+			: this(FilterTable.EmailActivities, filterField.ToEnumString(), filterValue)
 		{
 		}
 

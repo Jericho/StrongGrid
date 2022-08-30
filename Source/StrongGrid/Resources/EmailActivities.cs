@@ -45,7 +45,7 @@ namespace StrongGrid.Resources
 			return _client
 				.GetAsync(_endpoint)
 				.WithArgument("limit", limit)
-				.WithArgument("query", Utils.ToQueryDsl(filterConditions))
+				.WithArgument("query", Utils.ToEmailActivitiesQueryDsl(filterConditions))
 				.WithCancellationToken(cancellationToken)
 				.AsObject<EmailMessageActivity[]>("messages");
 		}

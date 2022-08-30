@@ -14,6 +14,12 @@ namespace StrongGrid.Models.Search
 		{
 		}
 
+		/// <inheritdoc/>
+		public override string ConvertValueToString()
+		{
+			return string.Empty;
+		}
+
 		/// <summary>
 		/// Converts the filter operator into a string as expected by the SendGrid segmenting API.
 		/// </summary>

@@ -63,5 +63,13 @@ namespace StrongGrid.Models.Search
 			var filterValue = ConvertValueToString();
 			return $"(unique_args['{UniqueArgName}']{filterOperator}{filterValue})";
 		}
+
+		/// <inheritdoc/>
+		public string ToString(string tableAlias)
+		{
+			var filterOperator = ConvertOperatorToString();
+			var filterValue = ConvertValueToString();
+			return $"{tableAlias}.DATA:payload.unique_args.{UniqueArgName}{filterOperator}{filterValue}";
+		}
 	}
 }

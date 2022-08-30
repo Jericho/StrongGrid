@@ -10,6 +10,11 @@ namespace StrongGrid.Models.Search
 	public abstract class SearchCriteria : ISearchCriteria
 	{
 		/// <summary>
+		/// Gets or sets the name of the table.
+		/// </summary>
+		public FilterTable FilterTable { get; protected set; }
+
+		/// <summary>
 		/// Gets or sets the filter used to filter the result.
 		/// </summary>
 		public string FilterField { get; protected set; }
@@ -27,11 +32,13 @@ namespace StrongGrid.Models.Search
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SearchCriteria"/> class.
 		/// </summary>
+		/// <param name="filterTable">The filter table.</param>
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SearchCriteria(string filterField, SearchComparisonOperator filterOperator, object filterValue)
+		public SearchCriteria(FilterTable filterTable, string filterField, SearchComparisonOperator filterOperator, object filterValue)
 		{
+			this.FilterTable = filterTable;
 			this.FilterField = filterField;
 			this.FilterOperator = filterOperator;
 			this.FilterValue = filterValue;
@@ -46,19 +53,19 @@ namespace StrongGrid.Models.Search
 		{
 			if (value is DateTime dateValue)
 			{
-				return $"\"{dateValue.ToUniversalTime():yyyy-MM-ddTHH:mm:ssZ}\"";
+				return $"'{dateValue.ToUniversalTime():yyyy-MM-ddTHH:mm:ssZ}'";
 			}
 			else if (value is string stringValue)
 			{
-				return $"\"{stringValue ?? string.Empty}\"";
+				return $"'{stringValue ?? string.Empty}'";
 			}
 			else if (value is Enum enumValue)
 			{
-				return $"\"{enumValue.ToEnumString()}\"";
+				return $"'{enumValue.ToEnumString()}'";
 			}
 			else if (value is IEnumerable values)
 			{
-				return $"({string.Join(",", values.Cast<object>().Select(e => ConvertToString(e)))})";
+				return $"[{string.Join(",", values.Cast<object>().Select(e => ConvertToString(e)))}]";
 			}
 			else if (value.IsNumber())
 			{
@@ -106,15 +113,20 @@ namespace StrongGrid.Models.Search
 			return FilterOperator.ToEnumString();
 		}
 
-		/// <summary>
-		/// Returns a string representation of the search criteria.
-		/// </summary>
-		/// <returns>A <see cref="string"/> representation of the search criteria.</returns>
+		/// <inheritdoc/>
 		public override string ToString()
+		{
+			return ToString(null);
+		}
+
+		/// <inheritdoc/>
+		public virtual string ToString(string tableAlias)
 		{
 			var filterOperator = ConvertOperatorToString();
 			var filterValue = ConvertValueToString();
-			return $"{FilterField}{filterOperator}{filterValue}";
+			var filterField = string.IsNullOrEmpty(tableAlias) ? FilterField : $"{tableAlias}.{FilterField}";
+
+			return $"{filterField}{filterOperator}{filterValue}";
 		}
 	}
 }
