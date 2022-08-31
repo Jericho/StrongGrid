@@ -48,24 +48,25 @@ namespace StrongGrid.Models.Search
 		/// Returns the string representation of a given value as expected by the SendGrid segmenting API.
 		/// </summary>
 		/// <param name="value">The value.</param>
+		/// <param name="quote">The character used to quote string values. This character is a double-quote for v1 queries and a single-quote for v2 queries.</param>
 		/// <returns>The <see cref="string"/> representation of the value.</returns>
-		public static string ConvertToString(object value)
+		public static string ConvertToString(object value, char quote)
 		{
 			if (value is DateTime dateValue)
 			{
-				return $"'{dateValue.ToUniversalTime():yyyy-MM-ddTHH:mm:ssZ}'";
+				return $"{quote}{dateValue.ToUniversalTime():yyyy-MM-ddTHH:mm:ssZ}{quote}";
 			}
 			else if (value is string stringValue)
 			{
-				return $"'{stringValue ?? string.Empty}'";
+				return $"{quote}{stringValue ?? string.Empty}{quote}";
 			}
 			else if (value is Enum enumValue)
 			{
-				return $"'{enumValue.ToEnumString()}'";
+				return $"{quote}{enumValue.ToEnumString()}{quote}";
 			}
 			else if (value is IEnumerable values)
 			{
-				return $"[{string.Join(",", values.Cast<object>().Select(e => ConvertToString(e)))}]";
+				return $"[{string.Join(",", values.Cast<object>().Select(e => ConvertToString(e, quote)))}]";
 			}
 			else if (value.IsNumber())
 			{
@@ -97,10 +98,11 @@ namespace StrongGrid.Models.Search
 		/// Converts the filter value into a string as expected by the SendGrid segmenting API.
 		/// Can be overridden in subclasses if the value needs special formatting.
 		/// </summary>
+		/// <param name="quote">The character used to quote string values. This character is a double-quote for v1 queries and a single-quote for v2 queries.</param>
 		/// <returns>The string representation of the value.</returns>
-		public virtual string ConvertValueToString()
+		public virtual string ConvertValueToString(char quote)
 		{
-			return ConvertToString(FilterValue);
+			return ConvertToString(FilterValue, quote);
 		}
 
 		/// <summary>
@@ -116,14 +118,17 @@ namespace StrongGrid.Models.Search
 		/// <inheritdoc/>
 		public override string ToString()
 		{
-			return ToString(null);
+			var filterOperator = ConvertOperatorToString();
+			var filterValue = ConvertValueToString('"');
+
+			return $"{FilterField}{filterOperator}{filterValue}";
 		}
 
 		/// <inheritdoc/>
 		public virtual string ToString(string tableAlias)
 		{
 			var filterOperator = ConvertOperatorToString();
-			var filterValue = ConvertValueToString();
+			var filterValue = ConvertValueToString('\'');
 			var filterField = string.IsNullOrEmpty(tableAlias) ? FilterField : $"{tableAlias}.{FilterField}";
 
 			return $"{filterField}{filterOperator}{filterValue}";

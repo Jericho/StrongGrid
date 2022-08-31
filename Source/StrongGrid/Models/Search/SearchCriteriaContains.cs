@@ -40,7 +40,7 @@ namespace StrongGrid.Models.Search
 		public override string ToString()
 		{
 			var filterOperator = "CONTAINS"; // This is the operator from SendGrid's query DSL version 1. "ARRAY_CONTAINS" is the operator from version 2.
-			var filterValue = ConvertValueToString();
+			var filterValue = ConvertValueToString('"');
 
 			return $"{filterOperator}({FilterField},{filterValue})";
 		}
@@ -49,7 +49,7 @@ namespace StrongGrid.Models.Search
 		public override string ToString(string tableAlias)
 		{
 			var filterOperator = ConvertOperatorToString();
-			var filterValue = ConvertValueToString();
+			var filterValue = ConvertValueToString('\'');
 			var filterField = string.IsNullOrEmpty(tableAlias) ? FilterField : $"{tableAlias}.{FilterField}";
 
 			return $"{filterOperator}({filterField},{filterValue})";

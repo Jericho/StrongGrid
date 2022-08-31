@@ -45,19 +45,13 @@ namespace StrongGrid.Models.Search
 		{
 		}
 
-		/// <summary>
-		/// Converts the filter value into a string as expected by the SendGrid segmenting API.
-		/// </summary>
-		/// <returns>The string representation of the value.</returns>
-		public override string ConvertValueToString()
+		/// <inheritdoc/>
+		public override string ConvertValueToString(char quote)
 		{
-			return $"{ConvertToString(FilterValue)} AND {ConvertToString(UpperValue)}";
+			return $"{ConvertToString(FilterValue, quote)} AND {ConvertToString(UpperValue, quote)}";
 		}
 
-		/// <summary>
-		/// Converts the filter operator into a string as expected by the SendGrid segmenting API.
-		/// </summary>
-		/// <returns>The string representation of the operator.</returns>
+		/// <inheritdoc/>
 		public override string ConvertOperatorToString()
 		{
 			return $" {base.ConvertOperatorToString()} ";

@@ -235,7 +235,7 @@ namespace StrongGrid.UnitTests.Utilities
 				var result = StrongGrid.Utilities.Utils.ToEmailActivitiesQueryDsl(filter);
 
 				// Assert
-				result.ShouldBe("subject='This is a subject test'");
+				result.ShouldBe("subject=\"This is a subject test\"");
 			}
 
 			[Fact]
@@ -254,7 +254,7 @@ namespace StrongGrid.UnitTests.Utilities
 				var result = StrongGrid.Utilities.Utils.ToEmailActivitiesQueryDsl(filter);
 
 				// Assert
-				result.ShouldBe("to_email='example@example.com'");
+				result.ShouldBe("to_email=\"example@example.com\"");
 			}
 
 			[Fact]
@@ -273,7 +273,7 @@ namespace StrongGrid.UnitTests.Utilities
 				var result = StrongGrid.Utilities.Utils.ToEmailActivitiesQueryDsl(filter);
 
 				// Assert
-				result.ShouldBe("status='bounce'");
+				result.ShouldBe("status=\"bounce\"");
 			}
 		}
 	}
