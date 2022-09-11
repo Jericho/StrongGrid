@@ -9,7 +9,7 @@ namespace StrongGrid.UnitTests.Utilities
 {
 	public class QueryDslTests
 	{
-		public class ToContactsQueryDsl
+		public class ToQueryDslVersion2
 		{
 			[Fact]
 			public void One_condition_with_two_criteria()
@@ -25,7 +25,7 @@ namespace StrongGrid.UnitTests.Utilities
 				};
 
 				// Act
-				var result = StrongGrid.Utilities.Utils.ToContactsQueryDsl(filter);
+				var result = StrongGrid.Utilities.Utils.ToQueryDslVersion2(filter);
 
 				// Assert
 				result.ShouldBe("SELECT contacts.contact_id, contacts.updated_at FROM contact_data AS contacts WHERE contacts.first_name='John' AND contacts.last_name='Doe'");
@@ -38,7 +38,7 @@ namespace StrongGrid.UnitTests.Utilities
 				var filter = Array.Empty<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>>();
 
 				// Act
-				var result = StrongGrid.Utilities.Utils.ToContactsQueryDsl(filter);
+				var result = StrongGrid.Utilities.Utils.ToQueryDslVersion2(filter);
 
 				// Assert
 				result.ShouldBe("SELECT contacts.contact_id, contacts.updated_at FROM contact_data AS contacts");
@@ -57,7 +57,7 @@ namespace StrongGrid.UnitTests.Utilities
 				};
 
 				// Act
-				var result = StrongGrid.Utilities.Utils.ToContactsQueryDsl(filter);
+				var result = StrongGrid.Utilities.Utils.ToQueryDslVersion2(filter);
 
 				// Assert
 				result.ShouldBe("SELECT contacts.contact_id, contacts.updated_at FROM contact_data AS contacts WHERE contacts.first_name='Dave'");
@@ -76,7 +76,7 @@ namespace StrongGrid.UnitTests.Utilities
 				};
 
 				// Act
-				var result = StrongGrid.Utilities.Utils.ToContactsQueryDsl(filter);
+				var result = StrongGrid.Utilities.Utils.ToQueryDslVersion2(filter);
 
 				// Assert
 				result.ShouldBe("SELECT contacts.contact_id, contacts.updated_at FROM contact_data AS contacts WHERE contacts.state_province_region='CO'");
@@ -95,7 +95,7 @@ namespace StrongGrid.UnitTests.Utilities
 				};
 
 				// Act
-				var result = StrongGrid.Utilities.Utils.ToContactsQueryDsl(filter);
+				var result = StrongGrid.Utilities.Utils.ToQueryDslVersion2(filter);
 
 				// Assert
 				result.ShouldBe("SELECT contacts.contact_id, contacts.updated_at FROM contact_data AS contacts WHERE contacts.email LIKE '%gmail.com%'");
@@ -114,7 +114,7 @@ namespace StrongGrid.UnitTests.Utilities
 				};
 
 				// Act
-				var result = StrongGrid.Utilities.Utils.ToContactsQueryDsl(filter);
+				var result = StrongGrid.Utilities.Utils.ToQueryDslVersion2(filter);
 
 				// Assert
 				result.ShouldBe("SELECT contacts.contact_id, contacts.updated_at FROM contact_data AS contacts WHERE contacts.my_text_custom_field='abc'");
@@ -133,7 +133,7 @@ namespace StrongGrid.UnitTests.Utilities
 				};
 
 				// Act
-				var result = StrongGrid.Utilities.Utils.ToContactsQueryDsl(filter);
+				var result = StrongGrid.Utilities.Utils.ToQueryDslVersion2(filter);
 
 				// Assert
 				result.ShouldBe("SELECT contacts.contact_id, contacts.updated_at FROM contact_data AS contacts WHERE contacts.my_number_custom_field=12");
@@ -152,7 +152,7 @@ namespace StrongGrid.UnitTests.Utilities
 				};
 
 				// Act
-				var result = StrongGrid.Utilities.Utils.ToContactsQueryDsl(filter);
+				var result = StrongGrid.Utilities.Utils.ToQueryDslVersion2(filter);
 
 				// Assert
 				result.ShouldBe("SELECT contacts.contact_id, contacts.updated_at FROM contact_data AS contacts WHERE contacts.my_date_custom_field='2021-01-01T12:46:24Z'");
@@ -171,7 +171,7 @@ namespace StrongGrid.UnitTests.Utilities
 				};
 
 				// Act
-				var result = StrongGrid.Utilities.Utils.ToContactsQueryDsl(filter);
+				var result = StrongGrid.Utilities.Utils.ToQueryDslVersion2(filter);
 
 				// Assert
 				result.ShouldBe("SELECT contacts.contact_id, contacts.updated_at FROM contact_data AS contacts WHERE array_contains(contacts.alternate_emails,'alternate@gmail.com')");
@@ -190,7 +190,7 @@ namespace StrongGrid.UnitTests.Utilities
 				};
 
 				// Act
-				var result = StrongGrid.Utilities.Utils.ToContactsQueryDsl(filter);
+				var result = StrongGrid.Utilities.Utils.ToQueryDslVersion2(filter);
 
 				// Assert
 				result.ShouldBe("SELECT contacts.contact_id, contacts.updated_at FROM contact_data AS contacts WHERE array_contains(contacts.list_ids,['aaa','bbb'])");
@@ -210,14 +210,14 @@ namespace StrongGrid.UnitTests.Utilities
 				};
 
 				// Act
-				var result = StrongGrid.Utilities.Utils.ToContactsQueryDsl(filter);
+				var result = StrongGrid.Utilities.Utils.ToQueryDslVersion2(filter);
 
 				// Assert
 				result.ShouldBe("SELECT contacts.contact_id, contacts.updated_at FROM contact_data AS contacts WHERE contacts.first_name!='Dave' OR contacts.first_name IS NULL");
 			}
 		}
 
-		public class ToEmailActivitiesQueryDsl
+		public class ToQueryDslVersion1
 		{
 			[Fact]
 			public void Filter_by_subject()
@@ -232,7 +232,7 @@ namespace StrongGrid.UnitTests.Utilities
 				};
 
 				// Act
-				var result = StrongGrid.Utilities.Utils.ToEmailActivitiesQueryDsl(filter);
+				var result = StrongGrid.Utilities.Utils.ToQueryDslVersion1(filter);
 
 				// Assert
 				result.ShouldBe("subject=\"This is a subject test\"");
@@ -251,7 +251,7 @@ namespace StrongGrid.UnitTests.Utilities
 				};
 
 				// Act
-				var result = StrongGrid.Utilities.Utils.ToEmailActivitiesQueryDsl(filter);
+				var result = StrongGrid.Utilities.Utils.ToQueryDslVersion1(filter);
 
 				// Assert
 				result.ShouldBe("to_email=\"example@example.com\"");
@@ -270,7 +270,7 @@ namespace StrongGrid.UnitTests.Utilities
 				};
 
 				// Act
-				var result = StrongGrid.Utilities.Utils.ToEmailActivitiesQueryDsl(filter);
+				var result = StrongGrid.Utilities.Utils.ToQueryDslVersion1(filter);
 
 				// Assert
 				result.ShouldBe("status=\"bounce\"");
