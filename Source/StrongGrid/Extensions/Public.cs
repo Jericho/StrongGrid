@@ -1052,9 +1052,9 @@ namespace StrongGrid
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
-		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, Models.Search.Legacy.ISearchCriteria criteria, int limit = 20, CancellationToken cancellationToken = default)
+		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, ISearchCriteria criteria, int limit = 20, CancellationToken cancellationToken = default)
 		{
-			var filterCriteria = criteria == null ? Enumerable.Empty<Models.Search.Legacy.ISearchCriteria>() : new[] { criteria };
+			var filterCriteria = criteria == null ? Enumerable.Empty<ISearchCriteria>() : new[] { criteria };
 			return emailActivities.SearchAsync(filterCriteria, limit, cancellationToken);
 		}
 
@@ -1068,10 +1068,10 @@ namespace StrongGrid
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
 		/// </returns>
-		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, IEnumerable<Models.Search.Legacy.ISearchCriteria> filterConditions, int limit = 20, CancellationToken cancellationToken = default)
+		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, IEnumerable<ISearchCriteria> filterConditions, int limit = 20, CancellationToken cancellationToken = default)
 		{
-			var filters = new List<KeyValuePair<SearchLogicalOperator, IEnumerable<Models.Search.Legacy.ISearchCriteria>>>();
-			if (filterConditions != null && filterConditions.Any()) filters.Add(new KeyValuePair<SearchLogicalOperator, IEnumerable<Models.Search.Legacy.ISearchCriteria>>(SearchLogicalOperator.And, filterConditions));
+			var filters = new List<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>>();
+			if (filterConditions != null && filterConditions.Any()) filters.Add(new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.And, filterConditions));
 			return emailActivities.SearchAsync(filters, limit, cancellationToken);
 		}
 
@@ -1084,9 +1084,9 @@ namespace StrongGrid
 		/// <returns>
 		/// An array of <see cref="Contact" />.
 		/// </returns>
-		public static Task<Contact[]> SearchAsync(this IContacts contacts, SearchCriteria<ContactsFilterField> criteria, CancellationToken cancellationToken = default)
+		public static Task<Contact[]> SearchAsync(this IContacts contacts, ISearchCriteria criteria, CancellationToken cancellationToken = default)
 		{
-			var filterCriteria = criteria == null ? Array.Empty<SearchCriteria<ContactsFilterField>>() : new[] { criteria };
+			var filterCriteria = criteria == null ? Array.Empty<SearchCriteria>() : new[] { criteria };
 			return contacts.SearchAsync(filterCriteria, cancellationToken);
 		}
 
@@ -1099,11 +1099,78 @@ namespace StrongGrid
 		/// <returns>
 		/// An array of <see cref="Contact" />.
 		/// </returns>
-		public static Task<Contact[]> SearchAsync(this IContacts contacts, IEnumerable<SearchCriteria<ContactsFilterField>> filterConditions, CancellationToken cancellationToken = default)
+		public static Task<Contact[]> SearchAsync(this IContacts contacts, IEnumerable<ISearchCriteria> filterConditions, CancellationToken cancellationToken = default)
 		{
-			var filters = new List<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>>();
-			if (filterConditions != null && filterConditions.Any()) filters.Add(new KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>(SearchLogicalOperator.And, filterConditions));
+			var filters = new List<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>>();
+			if (filterConditions != null && filterConditions.Any()) filters.Add(new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.And, filterConditions));
 			return contacts.SearchAsync(filters, cancellationToken);
+		}
+
+		/// <summary>
+		/// Get all of the details about the contacts matching the criteria.
+		/// </summary>
+		/// <param name="contacts">The contacts resource.</param>
+		/// <param name="filterConditions">Filtering conditions.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="Contact" />.
+		/// </returns>
+		public static Task<Contact[]> SearchAsync(this IContacts contacts, IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions, CancellationToken cancellationToken = default)
+		{
+			var query = Utils.ToQueryDsl(filterConditions);
+			return contacts.SearchAsync(query, cancellationToken);
+		}
+
+		/// <summary>
+		/// Create a segment.
+		/// </summary>
+		/// <param name="segments">The segments resource.</param>
+		/// <param name="name">The name.</param>
+		/// <param name="criteria">The criteria.</param>
+		/// <param name="listId">The id of the list if this segment is a child of a list. This implies the query is rewritten as (${query_dsl}) AND CONTAINS(list_ids, ${parent_list_id}).</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="Segment" />.
+		/// </returns>
+		public static Task<Segment> CreateAsync(this ISegments segments, string name, ISearchCriteria criteria, string listId = null, CancellationToken cancellationToken = default)
+		{
+			var filterCriteria = criteria != null ? new[] { criteria } : Array.Empty<ISearchCriteria>();
+			return segments.CreateAsync(name, filterCriteria, listId, cancellationToken);
+		}
+
+		/// <summary>
+		/// Create a segment.
+		/// </summary>
+		/// <param name="segments">The segments resource.</param>
+		/// <param name="name">The name.</param>
+		/// <param name="filterConditions">The enumeration of criteria.</param>
+		/// <param name="listId">The id of the list if this segment is a child of a list. This implies the query is rewritten as (${query_dsl}) AND CONTAINS(list_ids, ${parent_list_id}).</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="Segment" />.
+		/// </returns>
+		public static Task<Segment> CreateAsync(this ISegments segments, string name, IEnumerable<ISearchCriteria> filterConditions, string listId = null, CancellationToken cancellationToken = default)
+		{
+			var filters = new List<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>>();
+			if (filterConditions != null && filterConditions.Any()) filters.Add(new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.And, filterConditions));
+			return segments.CreateAsync(name, filters, listId, cancellationToken);
+		}
+
+		/// <summary>
+		/// Create a segment.
+		/// </summary>
+		/// <param name="segments">The segments resource.</param>
+		/// <param name="name">The name.</param>
+		/// <param name="filterConditions">The enumeration of criteria.</param>
+		/// <param name="listId">The id of the list if this segment is a child of a list. This implies the query is rewritten as (${query_dsl}) AND CONTAINS(list_ids, ${parent_list_id}).</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="Segment" />.
+		/// </returns>
+		public static Task<Segment> CreateAsync(this ISegments segments, string name, IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions, string listId = null, CancellationToken cancellationToken = default)
+		{
+			var query = Utils.ToQueryDsl(filterConditions);
+			return segments.CreateAsync(name, query, listId, QueryLanguageVersion.Version1, cancellationToken);
 		}
 
 		/// <summary>
@@ -1117,9 +1184,9 @@ namespace StrongGrid
 		/// <returns>
 		/// The <see cref="Segment" />.
 		/// </returns>
-		public static Task<Segment> UpdateAsync(this ISegments segments, string segmentId, Parameter<string> name = default, Parameter<SearchCriteria<ContactsFilterField>> criteria = default, CancellationToken cancellationToken = default)
+		public static Task<Segment> UpdateAsync(this ISegments segments, string segmentId, Parameter<string> name = default, Parameter<ISearchCriteria> criteria = default, CancellationToken cancellationToken = default)
 		{
-			var filterCriteria = criteria.HasValue && criteria.Value != null ? new[] { criteria.Value } : Array.Empty<SearchCriteria<ContactsFilterField>>();
+			var filterCriteria = criteria.HasValue && criteria.Value != null ? new[] { criteria.Value } : Array.Empty<ISearchCriteria>();
 			return segments.UpdateAsync(segmentId, name, filterCriteria, cancellationToken);
 		}
 
@@ -1134,11 +1201,28 @@ namespace StrongGrid
 		/// <returns>
 		/// The <see cref="Segment" />.
 		/// </returns>
-		public static Task<Segment> UpdateAsync(this ISegments segments, string segmentId, Parameter<string> name = default, Parameter<IEnumerable<SearchCriteria<ContactsFilterField>>> filterConditions = default, CancellationToken cancellationToken = default)
+		public static Task<Segment> UpdateAsync(this ISegments segments, string segmentId, Parameter<string> name = default, Parameter<IEnumerable<ISearchCriteria>> filterConditions = default, CancellationToken cancellationToken = default)
 		{
-			var filters = new List<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>>();
-			if (filterConditions.HasValue && filterConditions.Value != null && filterConditions.Value.Any()) filters.Add(new KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>(SearchLogicalOperator.And, filterConditions.Value));
+			var filters = new List<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>>();
+			if (filterConditions.HasValue && filterConditions.Value != null && filterConditions.Value.Any()) filters.Add(new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.And, filterConditions.Value));
 			return segments.UpdateAsync(segmentId, name, filters, cancellationToken);
+		}
+
+		/// <summary>
+		/// Update a segment.
+		/// </summary>
+		/// <param name="segments">The segments resource.</param>
+		/// <param name="segmentId">The segment identifier.</param>
+		/// <param name="name">The name.</param>
+		/// <param name="filterConditions">The enumeration of criteria.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="Segment" />.
+		/// </returns>
+		public static Task<Segment> UpdateAsync(this ISegments segments, string segmentId, Parameter<string> name = default, Parameter<IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>>> filterConditions = default, CancellationToken cancellationToken = default)
+		{
+			var query = filterConditions.HasValue ? (Parameter<string>)Utils.ToQueryDsl(filterConditions.Value) : (Parameter<string>)default;
+			return segments.UpdateAsync(segmentId, name, query, QueryLanguageVersion.Version1, cancellationToken);
 		}
 
 		/// <summary>

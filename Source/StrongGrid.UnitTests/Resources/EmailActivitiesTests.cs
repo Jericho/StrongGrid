@@ -3,7 +3,6 @@ using Shouldly;
 using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Models.Search;
-using StrongGrid.Models.Search.Legacy;
 using StrongGrid.Resources;
 using System;
 using System.Collections.Generic;
@@ -115,7 +114,7 @@ namespace StrongGrid.UnitTests.Resources
 			var limit = 25;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&query=campaign_name%3D%22value1%22+AND+status%3D%22processed%22").Respond("application/json", ONE_MESSAGE_FOUND);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&query=(marketing_campaign_name%3D%22value1%22+AND+status%3D%22processed%22)").Respond("application/json", ONE_MESSAGE_FOUND);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var emailActivities = (IEmailActivities)new EmailActivities(client);
@@ -142,15 +141,15 @@ namespace StrongGrid.UnitTests.Resources
 			var limit = 25;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&query=campaign_name%3D%22value1%22+OR+msg_id%3D%22value2%22+AND+subject%3D%22value3%22+AND+teammate%3D%22value4%22").Respond("application/json", ONE_MESSAGE_FOUND);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&query=(marketing_campaign_name%3D%22value1%22+OR+msg_id%3D%22value2%22+AND+subject%3D%22value3%22+AND+teammate%3D%22value4%22)").Respond("application/json", ONE_MESSAGE_FOUND);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var emailActivities = new EmailActivities(client);
 
 			var filterConditions = new[]
 			{
-				new KeyValuePair<SearchLogicalOperator, IEnumerable<StrongGrid.Models.Search.Legacy.ISearchCriteria>>(SearchLogicalOperator.Or, new[] { new SearchCriteriaEqual(EmailActivitiesFilterField.CampaignName, "value1"), new SearchCriteriaEqual(EmailActivitiesFilterField.MessageId, "value2") }),
-				new KeyValuePair<SearchLogicalOperator, IEnumerable<StrongGrid.Models.Search.Legacy.ISearchCriteria>>(SearchLogicalOperator.And, new[] { new SearchCriteriaEqual(EmailActivitiesFilterField.Subject, "value3"), new SearchCriteriaEqual(EmailActivitiesFilterField.Teammate, "value4") }),
+				new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.Or, new[] { new SearchCriteriaEqual(EmailActivitiesFilterField.CampaignName, "value1"), new SearchCriteriaEqual(EmailActivitiesFilterField.MessageId, "value2") }),
+				new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.And, new[] { new SearchCriteriaEqual(EmailActivitiesFilterField.Subject, "value3"), new SearchCriteriaEqual(EmailActivitiesFilterField.Teammate, "value4") }),
 			};
 
 			// Act

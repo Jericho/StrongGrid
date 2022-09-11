@@ -1,5 +1,3 @@
-using System;
-
 namespace StrongGrid.Models.Search
 {
 	/// <summary>
@@ -8,17 +6,35 @@ namespace StrongGrid.Models.Search
 	/// <remarks>
 	/// The percentage symbol, %, is the wildcard character.
 	/// </remarks>
-	/// <typeparam name="TEnum">The type containing an enum of fields that can used for searching/segmenting.</typeparam>
-	public class SearchCriteriaLike<TEnum> : SearchCriteria<TEnum>
-		where TEnum : Enum
+	public class SearchCriteriaLike : SearchCriteria
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaLike{TEnum}"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteriaLike"/> class.
 		/// </summary>
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SearchCriteriaLike(TEnum filterField, object filterValue)
+		public SearchCriteriaLike(string filterField, object filterValue)
 			: base(filterField, SearchComparisonOperator.Like, filterValue)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SearchCriteriaLike"/> class.
+		/// </summary>
+		/// <param name="filterField">The filter field.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SearchCriteriaLike(ContactsFilterField filterField, object filterValue)
+			: this(filterField.ToEnumString(), filterValue)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SearchCriteriaLike"/> class.
+		/// </summary>
+		/// <param name="filterField">The filter field.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SearchCriteriaLike(EmailActivitiesFilterField filterField, object filterValue)
+			: this(filterField.ToEnumString(), filterValue)
 		{
 		}
 

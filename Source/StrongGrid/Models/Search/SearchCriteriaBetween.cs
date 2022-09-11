@@ -1,13 +1,9 @@
-using System;
-
 namespace StrongGrid.Models.Search
 {
 	/// <summary>
 	/// Filter the result of a search for the value of a field to be between a lower value and an upper value.
 	/// </summary>
-	/// <typeparam name="TEnum">The type containing an enum of fields that can used for searching/segmenting.</typeparam>
-	public class SearchCriteriaBetween<TEnum> : SearchCriteria<TEnum>
-		where TEnum : Enum
+	public class SearchCriteriaBetween : SearchCriteria
 	{
 		/// <summary>
 		/// Gets the upper value.
@@ -15,15 +11,37 @@ namespace StrongGrid.Models.Search
 		public object UpperValue { get; private set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaBetween{TEnum}"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteriaBetween"/> class.
 		/// </summary>
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="lowerValue">The lower value.</param>
 		/// <param name="upperValue">The upper value.</param>
-		public SearchCriteriaBetween(TEnum filterField, object lowerValue, object upperValue)
+		public SearchCriteriaBetween(string filterField, object lowerValue, object upperValue)
 			: base(filterField, SearchComparisonOperator.Between, lowerValue)
 		{
 			UpperValue = upperValue;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SearchCriteriaBetween"/> class.
+		/// </summary>
+		/// <param name="filterField">The filter field.</param>
+		/// <param name="lowerValue">The lower value.</param>
+		/// <param name="upperValue">The upper value.</param>
+		public SearchCriteriaBetween(ContactsFilterField filterField, object lowerValue, object upperValue)
+			: this(filterField.ToEnumString(), lowerValue, upperValue)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SearchCriteriaBetween"/> class.
+		/// </summary>
+		/// <param name="filterField">The filter field.</param>
+		/// <param name="lowerValue">The lower value.</param>
+		/// <param name="upperValue">The upper value.</param>
+		public SearchCriteriaBetween(EmailActivitiesFilterField filterField, object lowerValue, object upperValue)
+			: this(filterField.ToEnumString(), lowerValue, upperValue)
+		{
 		}
 
 		/// <summary>

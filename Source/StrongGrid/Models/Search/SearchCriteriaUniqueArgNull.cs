@@ -1,16 +1,16 @@
-namespace StrongGrid.Models.Search.Legacy
+namespace StrongGrid.Models.Search
 {
 	/// <summary>
 	/// Filter the result of a search on the value of a custom tracking argument to be NULL.
 	/// </summary>
-	public class SearchCriteriaUniqueArgNotNull : SearchCriteriaUniqueArg
+	public class SearchCriteriaUniqueArgNull : SearchCriteriaUniqueArg
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaUniqueArgNotNull"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteriaUniqueArgNull"/> class.
 		/// </summary>
 		/// <param name="uniqueArgName">The name of the unique arg.</param>
-		public SearchCriteriaUniqueArgNotNull(string uniqueArgName)
-			: base(uniqueArgName, SearchConditionOperator.NotNull, null)
+		public SearchCriteriaUniqueArgNull(string uniqueArgName)
+			: base(uniqueArgName, SearchComparisonOperator.IsNull, null)
 		{
 		}
 

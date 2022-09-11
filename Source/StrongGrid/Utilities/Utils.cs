@@ -1,5 +1,7 @@
 using Microsoft.IO;
+using StrongGrid.Models.Search;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace StrongGrid.Utilities
@@ -39,6 +41,26 @@ namespace StrongGrid.Utilities
 			Buffer.BlockCopy(subjectPublicKeyInfo, prefix.Length + x.Length, y, 0, y.Length);
 
 			return (x, y);
+		}
+
+		public static string ToQueryDsl(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions)
+		{
+			if (filterConditions == null) return string.Empty;
+
+			var conditions = new List<string>(filterConditions.Count());
+			foreach (var criteria in filterConditions)
+			{
+				var logicalOperator = criteria.Key.ToEnumString();
+				var values = criteria.Value.Select(criteriaValue => criteriaValue.ToString());
+				conditions.Add(string.Join($" {logicalOperator} ", values));
+			}
+
+			var query = string.Join(" AND ", conditions);
+
+			// The query must be wrapped in parentheses when there are multiple search criteria
+			if (filterConditions.Sum(fc => fc.Value.Count()) > 1) query = $"({query})";
+
+			return query;
 		}
 	}
 }
