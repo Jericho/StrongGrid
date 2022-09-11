@@ -44,7 +44,9 @@ namespace StrongGrid.Utilities
 			return (x, y);
 		}
 
-		public static string ToEmailActivitiesQueryDsl(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions)
+		// As of August 2022, searhcing for contacts and searching for email activites still use the (old) version 1 query DSL.
+		// You can also use query DSL v1 when segmenting contacts if you so desire, but by default StrongGrid uses v2.
+		public static string ToQueryDslVersion1(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions)
 		{
 			if (filterConditions == null) return string.Empty;
 
@@ -76,7 +78,8 @@ namespace StrongGrid.Utilities
 			return query;
 		}
 
-		public static string ToContactsQueryDsl(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions)
+		// By default StrongGrid uses query DSL v2 when segmenting contacts but you can still use the (old) v1 query DSL if you so desire.
+		public static string ToQueryDslVersion2(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions)
 		{
 			if (filterConditions == null) return string.Empty;
 

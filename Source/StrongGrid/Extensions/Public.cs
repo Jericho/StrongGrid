@@ -1117,7 +1117,7 @@ namespace StrongGrid
 		/// </returns>
 		public static Task<Contact[]> SearchAsync(this IContacts contacts, IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions, CancellationToken cancellationToken = default)
 		{
-			var query = Utils.ToContactsQueryDsl(filterConditions);
+			var query = Utils.ToQueryDslVersion1(filterConditions);
 			return contacts.SearchAsync(query, cancellationToken);
 		}
 
@@ -1169,8 +1169,8 @@ namespace StrongGrid
 		/// </returns>
 		public static Task<Segment> CreateAsync(this ISegments segments, string name, IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions, string listId = null, CancellationToken cancellationToken = default)
 		{
-			var query = Utils.ToContactsQueryDsl(filterConditions);
-			return segments.CreateAsync(name, query, listId, QueryLanguageVersion.Version1, cancellationToken);
+			var query = Utils.ToQueryDslVersion2(filterConditions);
+			return segments.CreateAsync(name, query, listId, QueryLanguageVersion.Version2, cancellationToken);
 		}
 
 		/// <summary>
@@ -1221,8 +1221,8 @@ namespace StrongGrid
 		/// </returns>
 		public static Task<Segment> UpdateAsync(this ISegments segments, string segmentId, Parameter<string> name = default, Parameter<IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>>> filterConditions = default, CancellationToken cancellationToken = default)
 		{
-			var query = filterConditions.HasValue ? (Parameter<string>)Utils.ToContactsQueryDsl(filterConditions.Value) : (Parameter<string>)default;
-			return segments.UpdateAsync(segmentId, name, query, QueryLanguageVersion.Version1, cancellationToken);
+			var query = filterConditions.HasValue ? (Parameter<string>)Utils.ToQueryDslVersion2(filterConditions.Value) : (Parameter<string>)default;
+			return segments.UpdateAsync(segmentId, name, query, QueryLanguageVersion.Version2, cancellationToken);
 		}
 
 		/// <summary>

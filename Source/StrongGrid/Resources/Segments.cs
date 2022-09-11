@@ -31,7 +31,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <inheritdoc/>
-		public Task<Segment> CreateAsync(string name, string query, string listId = null, QueryLanguageVersion queryLanguageVersion = QueryLanguageVersion.Version1, CancellationToken cancellationToken = default)
+		public Task<Segment> CreateAsync(string name, string query, string listId = null, QueryLanguageVersion queryLanguageVersion = QueryLanguageVersion.Version2, CancellationToken cancellationToken = default)
 		{
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
@@ -39,7 +39,7 @@ namespace StrongGrid.Resources
 			data.AddProperty("parent_list_id", listId);
 
 			return _client
-				.PostAsync($"{_endpoint}{(queryLanguageVersion == QueryLanguageVersion.Version2 ? "/2.0" : string.Empty)}")
+				.PostAsync($"{(queryLanguageVersion == QueryLanguageVersion.Version2 ? _endpoint : _endpoint.Replace("/2.0", string.Empty))}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsObject<Segment>();
