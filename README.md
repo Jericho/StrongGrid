@@ -187,7 +187,7 @@ var messageId = await strongGridClient.Mail.SendToSingleRecipientAsync(to, from,
 ```
 
 
-### Parser
+### Webhook Parser
  
 Here's a basic example of a .net 6.0 API controller which parses the webhook from SendGrid:
 ```csharp
