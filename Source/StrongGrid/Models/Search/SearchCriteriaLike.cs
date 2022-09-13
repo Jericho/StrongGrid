@@ -1,5 +1,3 @@
-using System;
-
 namespace StrongGrid.Models.Search
 {
 	/// <summary>
@@ -8,24 +6,40 @@ namespace StrongGrid.Models.Search
 	/// <remarks>
 	/// The percentage symbol, %, is the wildcard character.
 	/// </remarks>
-	/// <typeparam name="TEnum">The type containing an enum of fields that can used for searching/segmenting.</typeparam>
-	public class SearchCriteriaLike<TEnum> : SearchCriteria<TEnum>
-		where TEnum : Enum
+	public class SearchCriteriaLike : SearchCriteria
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaLike{TEnum}"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteriaLike"/> class.
 		/// </summary>
+		/// <param name="filterTable">The filter table.</param>
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SearchCriteriaLike(TEnum filterField, object filterValue)
-			: base(filterField, SearchComparisonOperator.Like, filterValue)
+		public SearchCriteriaLike(FilterTable filterTable, string filterField, object filterValue)
+			: base(filterTable, filterField, SearchComparisonOperator.Like, filterValue)
 		{
 		}
 
 		/// <summary>
-		/// Converts the filter operator into a string as expected by the SendGrid segmenting API.
+		/// Initializes a new instance of the <see cref="SearchCriteriaLike"/> class.
 		/// </summary>
-		/// <returns>The string representation of the operator.</returns>
+		/// <param name="filterField">The filter field.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SearchCriteriaLike(ContactsFilterField filterField, object filterValue)
+			: this(FilterTable.Contacts, filterField.ToEnumString(), filterValue)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SearchCriteriaLike"/> class.
+		/// </summary>
+		/// <param name="filterField">The filter field.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SearchCriteriaLike(EmailActivitiesFilterField filterField, object filterValue)
+			: this(FilterTable.EmailActivities, filterField.ToEnumString(), filterValue)
+		{
+		}
+
+		/// <inheritdoc/>
 		public override string ConvertOperatorToString()
 		{
 			return $" {base.ConvertOperatorToString()} ";

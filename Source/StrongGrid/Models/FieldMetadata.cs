@@ -1,5 +1,4 @@
 using StrongGrid.Json;
-using System.ComponentModel;
 using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
@@ -7,7 +6,7 @@ namespace StrongGrid.Models
 	/// <summary>
 	/// Metadata about a field.
 	/// </summary>
-	public class FieldMetadata
+	public abstract class FieldMetadata
 	{
 		/// <summary>
 		/// Gets or sets the identifier.
@@ -36,15 +35,5 @@ namespace StrongGrid.Models
 		[JsonPropertyName("field_type")]
 		[JsonConverter(typeof(StringEnumConverter<FieldType>))]
 		public FieldType Type { get; set; }
-
-		/// <summary>
-		/// Gets or sets a value indicating whether the field is read-only.
-		/// </summary>
-		/// <value>
-		/// Value indicating whether the field is read-only.
-		/// </value>
-		[DefaultValue(false)]
-		[JsonPropertyName("read_only")]
-		public bool ReadOnly { get; set; }
 	}
 }

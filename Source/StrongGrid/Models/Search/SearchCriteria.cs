@@ -10,6 +10,11 @@ namespace StrongGrid.Models.Search
 	public abstract class SearchCriteria : ISearchCriteria
 	{
 		/// <summary>
+		/// Gets or sets the name of the table.
+		/// </summary>
+		public FilterTable FilterTable { get; protected set; }
+
+		/// <summary>
 		/// Gets or sets the filter used to filter the result.
 		/// </summary>
 		public string FilterField { get; protected set; }
@@ -27,45 +32,41 @@ namespace StrongGrid.Models.Search
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SearchCriteria"/> class.
 		/// </summary>
+		/// <param name="filterTable">The filter table.</param>
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SearchCriteria(string filterField, SearchComparisonOperator filterOperator, object filterValue)
+		public SearchCriteria(FilterTable filterTable, string filterField, SearchComparisonOperator filterOperator, object filterValue)
 		{
+			this.FilterTable = filterTable;
 			this.FilterField = filterField;
 			this.FilterOperator = filterOperator;
 			this.FilterValue = filterValue;
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteria"/> class.
-		/// </summary>
-		protected SearchCriteria()
-		{
-		}
-
-		/// <summary>
 		/// Returns the string representation of a given value as expected by the SendGrid segmenting API.
 		/// </summary>
 		/// <param name="value">The value.</param>
+		/// <param name="quote">The character used to quote string values. This character is a double-quote for v1 queries and a single-quote for v2 queries.</param>
 		/// <returns>The <see cref="string"/> representation of the value.</returns>
-		public static string ConvertToString(object value)
+		public static string ConvertToString(object value, char quote)
 		{
 			if (value is DateTime dateValue)
 			{
-				return $"\"{dateValue.ToUniversalTime():yyyy-MM-ddTHH:mm:ssZ}\"";
+				return $"{quote}{dateValue.ToUniversalTime():yyyy-MM-ddTHH:mm:ssZ}{quote}";
 			}
 			else if (value is string stringValue)
 			{
-				return $"\"{stringValue ?? string.Empty}\"";
+				return $"{quote}{stringValue ?? string.Empty}{quote}";
 			}
 			else if (value is Enum enumValue)
 			{
-				return $"\"{enumValue.ToEnumString()}\"";
+				return $"{quote}{enumValue.ToEnumString()}{quote}";
 			}
 			else if (value is IEnumerable values)
 			{
-				return $"({string.Join(",", values.Cast<object>().Select(e => ConvertToString(e)))})";
+				return $"[{string.Join(",", values.Cast<object>().Select(e => ConvertToString(e, quote)))}]";
 			}
 			else if (value.IsNumber())
 			{
@@ -97,10 +98,11 @@ namespace StrongGrid.Models.Search
 		/// Converts the filter value into a string as expected by the SendGrid segmenting API.
 		/// Can be overridden in subclasses if the value needs special formatting.
 		/// </summary>
+		/// <param name="quote">The character used to quote string values. This character is a double-quote for v1 queries and a single-quote for v2 queries.</param>
 		/// <returns>The string representation of the value.</returns>
-		public virtual string ConvertValueToString()
+		public virtual string ConvertValueToString(char quote)
 		{
-			return ConvertToString(FilterValue);
+			return ConvertToString(FilterValue, quote);
 		}
 
 		/// <summary>
@@ -113,34 +115,23 @@ namespace StrongGrid.Models.Search
 			return FilterOperator.ToEnumString();
 		}
 
-		/// <summary>
-		/// Returns a string representation of the search criteria.
-		/// </summary>
-		/// <returns>A <see cref="string"/> representation of the search criteria.</returns>
+		/// <inheritdoc/>
 		public override string ToString()
 		{
 			var filterOperator = ConvertOperatorToString();
-			var filterValue = ConvertValueToString();
+			var filterValue = ConvertValueToString('"');
+
 			return $"{FilterField}{filterOperator}{filterValue}";
 		}
-	}
 
-	/// <summary>
-	/// Base class for search criteria classes.
-	/// </summary>
-	/// <typeparam name="TEnum">The type containing an enum of fields that can used for searching/segmenting.</typeparam>
-	public abstract class SearchCriteria<TEnum> : SearchCriteria
-		where TEnum : Enum
-	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteria{TEnum}"/> class.
-		/// </summary>
-		/// <param name="filterField">The filter field.</param>
-		/// <param name="filterOperator">The filter operator.</param>
-		/// <param name="filterValue">The filter value.</param>
-		public SearchCriteria(TEnum filterField, SearchComparisonOperator filterOperator, object filterValue)
-			: base(filterField.ToEnumString(), filterOperator, filterValue)
+		/// <inheritdoc/>
+		public virtual string ToString(string tableAlias)
 		{
+			var filterOperator = ConvertOperatorToString();
+			var filterValue = ConvertValueToString('\'');
+			var filterField = string.IsNullOrEmpty(tableAlias) ? FilterField : $"{tableAlias}.{FilterField}";
+
+			return $"{filterField}{filterOperator}{filterValue}";
 		}
 	}
 }

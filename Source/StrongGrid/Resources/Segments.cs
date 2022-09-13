@@ -1,7 +1,6 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Json;
 using StrongGrid.Models;
-using StrongGrid.Models.Search;
 using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +19,7 @@ namespace StrongGrid.Resources
 	public class Segments : ISegments
 	{
 		private const string _endpoint = "marketing/segments";
+		private const string _endpoint_v2 = "marketing/segments/2.0";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
@@ -31,25 +31,16 @@ namespace StrongGrid.Resources
 			_client = client;
 		}
 
-		/// <summary>
-		/// Create a segment.
-		/// </summary>
-		/// <param name="name">The name.</param>
-		/// <param name="filterConditions">The query.</param>
-		/// <param name="listId">The id of the list if this segment is a child of a list. This implies the query is rewritten as (${query_dsl}) AND CONTAINS(list_ids, ${parent_list_id}).</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// The <see cref="Segment" />.
-		/// </returns>
-		public Task<Segment> CreateAsync(string name, IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>> filterConditions, string listId = null, CancellationToken cancellationToken = default)
+		/// <inheritdoc/>
+		public Task<Segment> CreateAsync(string name, string query, string listId = null, QueryLanguageVersion queryLanguageVersion = QueryLanguageVersion.Version2, CancellationToken cancellationToken = default)
 		{
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
-			data.AddProperty("query_dsl", ToQueryDsl(filterConditions));
+			data.AddProperty("query_dsl", query);
 			data.AddProperty("parent_list_id", listId);
 
 			return _client
-				.PostAsync(_endpoint)
+				.PostAsync($"{(queryLanguageVersion == QueryLanguageVersion.Version2 ? _endpoint_v2 : _endpoint)}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsObject<Segment>();
@@ -100,27 +91,15 @@ namespace StrongGrid.Resources
 				.AsObject<Segment[]>("results");
 		}
 
-		/// <summary>
-		/// Update a segment.
-		/// </summary>
-		/// <param name="segmentId">The segment identifier.</param>
-		/// <param name="name">The name.</param>
-		/// <param name="filterConditions">The query.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// The <see cref="Segment" />.
-		/// </returns>
-		public Task<Segment> UpdateAsync(string segmentId, Parameter<string> name = default, Parameter<IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>>> filterConditions = default, CancellationToken cancellationToken = default)
+		/// <inheritdoc/>
+		public Task<Segment> UpdateAsync(string segmentId, Parameter<string> name = default, Parameter<string> query = default, Parameter<QueryLanguageVersion> queryLanguageVersion = default, CancellationToken cancellationToken = default)
 		{
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
-			if (filterConditions.HasValue)
-			{
-				data.AddProperty("query_dsl", ToQueryDsl(filterConditions.Value));
-			}
+			data.AddProperty("query_dsl", query);
 
 			return _client
-				.PatchAsync($"{_endpoint}/{segmentId}")
+				.PatchAsync($"{(queryLanguageVersion == QueryLanguageVersion.Version2 ? _endpoint_v2 : _endpoint)}/{segmentId}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsObject<Segment>();
@@ -142,22 +121,6 @@ namespace StrongGrid.Resources
 				.WithArgument("delete_contacts", deleteMatchingContacts ? "true" : "false")
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
-		}
-
-		private static string ToQueryDsl(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<SearchCriteria<ContactsFilterField>>>> filterConditions)
-		{
-			if (filterConditions == null) return null;
-
-			var conditions = new List<string>(filterConditions.Count());
-			foreach (var criteria in filterConditions)
-			{
-				var logicalOperator = criteria.Key.ToEnumString();
-				var values = criteria.Value.Select(criteriaValue => criteriaValue.ToString());
-				conditions.Add(string.Join($" {logicalOperator} ", values));
-			}
-
-			var query = string.Join(" AND ", conditions);
-			return query;
 		}
 	}
 }

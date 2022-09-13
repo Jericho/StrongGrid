@@ -1,4 +1,4 @@
-using StrongGrid.Models.Search.Legacy;
+using StrongGrid.Models.Search;
 using System.IO;
 using System.Linq;
 using System.Threading;

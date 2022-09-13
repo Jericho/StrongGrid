@@ -1,4 +1,4 @@
-namespace StrongGrid.Models.Search.Legacy
+namespace StrongGrid.Models.Search
 {
 	/// <summary>
 	/// Filter the result of a search on the value of a custom tracking argument to be between a lower value and an upper value.
@@ -17,24 +17,18 @@ namespace StrongGrid.Models.Search.Legacy
 		/// <param name="lowerValue">The lower value.</param>
 		/// <param name="upperValue">The upper value.</param>
 		public SearchCriteriaUniqueArgBetween(string uniqueArgName, object lowerValue, object upperValue)
-			: base(uniqueArgName, SearchConditionOperator.Between, lowerValue)
+			: base(uniqueArgName, SearchComparisonOperator.Between, lowerValue)
 		{
 			UpperValue = upperValue;
 		}
 
-		/// <summary>
-		/// Converts the filter value into a string as expected by the SendGrid segmenting API.
-		/// </summary>
-		/// <returns>The string representation of the value.</returns>
-		public override string ConvertValueToString()
+		/// <inheritdoc/>
+		public override string ConvertValueToString(char quote)
 		{
-			return $"{SearchCriteria.ConvertToString(FilterValue)} AND {SearchCriteria.ConvertToString(UpperValue)}";
+			return $"{SearchCriteria.ConvertToString(FilterValue, quote)} AND {SearchCriteria.ConvertToString(UpperValue, quote)}";
 		}
 
-		/// <summary>
-		/// Converts the filter operator into a string as expected by the SendGrid segmenting API.
-		/// </summary>
-		/// <returns>The string representation of the operator.</returns>
+		/// <inheritdoc/>
 		public override string ConvertOperatorToString()
 		{
 			return $" {base.ConvertOperatorToString()} ";

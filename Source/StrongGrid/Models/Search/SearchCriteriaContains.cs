@@ -1,33 +1,58 @@
-using System;
-
 namespace StrongGrid.Models.Search
 {
 	/// <summary>
 	/// Filter the result of a search for a field to contain a value.
 	/// </summary>
-	/// <typeparam name="TEnum">The type containing an enum of fields that can used for searching/segmenting.</typeparam>
-	public class SearchCriteriaContains<TEnum> : SearchCriteria<TEnum>
-		where TEnum : Enum
+	public class SearchCriteriaContains : SearchCriteria
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaContains{TEnum}"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteriaContains"/> class.
 		/// </summary>
+		/// <param name="filterTable">The filter table.</param>
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SearchCriteriaContains(TEnum filterField, object filterValue)
-			: base(filterField, SearchComparisonOperator.Contains, filterValue)
+		public SearchCriteriaContains(FilterTable filterTable, string filterField, object filterValue)
+			: base(filterTable, filterField, SearchComparisonOperator.Contains, filterValue)
 		{
 		}
 
 		/// <summary>
-		/// Returns a string representation of the search criteria.
+		/// Initializes a new instance of the <see cref="SearchCriteriaContains"/> class.
 		/// </summary>
-		/// <returns>A <see cref="string"/> representation of the search criteria.</returns>
+		/// <param name="filterField">The filter field.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SearchCriteriaContains(ContactsFilterField filterField, object filterValue)
+			: this(FilterTable.Contacts, filterField.ToEnumString(), filterValue)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SearchCriteriaContains"/> class.
+		/// </summary>
+		/// <param name="filterField">The filter field.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SearchCriteriaContains(EmailActivitiesFilterField filterField, object filterValue)
+			: this(FilterTable.EmailActivities, filterField.ToEnumString(), filterValue)
+		{
+		}
+
+		/// <inheritdoc/>
 		public override string ToString()
 		{
-			var filterOperator = ConvertOperatorToString();
-			var filterValue = ConvertValueToString();
+			var filterOperator = "CONTAINS"; // This is the operator from SendGrid's query DSL version 1. "ARRAY_CONTAINS" is the operator from version 2.
+			var filterValue = ConvertValueToString('"');
+
 			return $"{filterOperator}({FilterField},{filterValue})";
+		}
+
+		/// <inheritdoc/>
+		public override string ToString(string tableAlias)
+		{
+			var filterOperator = ConvertOperatorToString();
+			var filterValue = ConvertValueToString('\'');
+			var filterField = string.IsNullOrEmpty(tableAlias) ? FilterField : $"{tableAlias}.{FilterField}";
+
+			return $"{filterOperator}({filterField},{filterValue})";
 		}
 	}
 }

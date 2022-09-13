@@ -1,4 +1,4 @@
-namespace StrongGrid.Models.Search.Legacy
+namespace StrongGrid.Models.Search
 {
 	/// <summary>
 	/// Filter the result of a search on the value of a custom tracking argument to be less than or equal to a value.
@@ -11,7 +11,7 @@ namespace StrongGrid.Models.Search.Legacy
 		/// <param name="uniqueArgName">The name of the unique arg.</param>
 		/// <param name="filterValue">The filter value.</param>
 		public SearchCriteriaUniqueArgLessEqual(string uniqueArgName, object filterValue)
-			: base(uniqueArgName, SearchConditionOperator.LessEqual, filterValue)
+			: base(uniqueArgName, SearchComparisonOperator.LessEqual, filterValue)
 		{
 		}
 	}

@@ -1,13 +1,9 @@
-using System;
-
 namespace StrongGrid.Models.Search
 {
 	/// <summary>
 	/// Filter the result of a search for the value of a field to be less than a lower value or greater than an upper value.
 	/// </summary>
-	/// <typeparam name="TEnum">The type containing an enum of fields that can used for searching/segmenting.</typeparam>
-	public class SearchCriteriaNotBetween<TEnum> : SearchCriteria<TEnum>
-		where TEnum : Enum
+	public class SearchCriteriaNotBetween : SearchCriteria
 	{
 		/// <summary>
 		/// Gets the upper value.
@@ -15,30 +11,47 @@ namespace StrongGrid.Models.Search
 		public object UpperValue { get; private set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaNotBetween{TEnum}"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteriaNotBetween"/> class.
 		/// </summary>
+		/// <param name="filterTable">The filter table.</param>
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="lowerValue">The lower value.</param>
 		/// <param name="upperValue">The upper value.</param>
-		public SearchCriteriaNotBetween(TEnum filterField, object lowerValue, object upperValue)
-			: base(filterField, SearchComparisonOperator.NotBetween, lowerValue)
+		public SearchCriteriaNotBetween(FilterTable filterTable, string filterField, object lowerValue, object upperValue)
+			: base(filterTable, filterField, SearchComparisonOperator.NotBetween, lowerValue)
 		{
 			UpperValue = upperValue;
 		}
 
 		/// <summary>
-		/// Converts the filter value into a string as expected by the SendGrid segmenting API.
+		/// Initializes a new instance of the <see cref="SearchCriteriaNotBetween"/> class.
 		/// </summary>
-		/// <returns>The string representation of the value.</returns>
-		public override string ConvertValueToString()
+		/// <param name="filterField">The filter field.</param>
+		/// <param name="lowerValue">The lower value.</param>
+		/// <param name="upperValue">The upper value.</param>
+		public SearchCriteriaNotBetween(ContactsFilterField filterField, object lowerValue, object upperValue)
+			: this(FilterTable.Contacts, filterField.ToEnumString(), lowerValue, upperValue)
 		{
-			return $"{ConvertToString(FilterValue)} AND {ConvertToString(UpperValue)}";
 		}
 
 		/// <summary>
-		/// Converts the filter operator into a string as expected by the SendGrid segmenting API.
+		/// Initializes a new instance of the <see cref="SearchCriteriaNotBetween"/> class.
 		/// </summary>
-		/// <returns>The string representation of the operator.</returns>
+		/// <param name="filterField">The filter field.</param>
+		/// <param name="lowerValue">The lower value.</param>
+		/// <param name="upperValue">The upper value.</param>
+		public SearchCriteriaNotBetween(EmailActivitiesFilterField filterField, object lowerValue, object upperValue)
+			: this(FilterTable.EmailActivities, filterField.ToEnumString(), lowerValue, upperValue)
+		{
+		}
+
+		/// <inheritdoc/>
+		public override string ConvertValueToString(char quote)
+		{
+			return $"{ConvertToString(FilterValue, quote)} AND {ConvertToString(UpperValue, quote)}";
+		}
+
+		/// <inheritdoc/>
 		public override string ConvertOperatorToString()
 		{
 			return $" {base.ConvertOperatorToString()} ";

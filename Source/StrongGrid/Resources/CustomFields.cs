@@ -36,7 +36,7 @@ namespace StrongGrid.Resources
 		/// <param name="type">The type.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>The <see cref="FieldMetadata">metadata</see> about the new field.</returns>
-		public Task<FieldMetadata> CreateAsync(string name, FieldType type, CancellationToken cancellationToken = default)
+		public Task<CustomFieldMetadata> CreateAsync(string name, FieldType type, CancellationToken cancellationToken = default)
 		{
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
@@ -46,7 +46,7 @@ namespace StrongGrid.Resources
 				.PostAsync(_endpoint)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsObject<FieldMetadata>();
+				.AsObject<CustomFieldMetadata>();
 		}
 
 		/// <summary>
@@ -64,12 +64,12 @@ namespace StrongGrid.Resources
 				.AsResponse()
 				.ConfigureAwait(false);
 
-			var reservedFields = await response.AsObject<FieldMetadata[]>("reserved_fields").ConfigureAwait(false);
+			var reservedFields = await response.AsObject<ReservedFieldMetadata[]>("reserved_fields").ConfigureAwait(false);
 
 			// The 'custom_fields' property is omitted when there are no custom fields.
 			// Therefore it's important NOT to throw an exception if this property is missing.
 			// That's why the `throwIfPropertyIsMissing' parameter is set to false
-			var customFields = await response.AsObject<FieldMetadata[]>("custom_fields", false).ConfigureAwait(false);
+			var customFields = await response.AsObject<CustomFieldMetadata[]>("custom_fields", false).ConfigureAwait(false);
 
 			return reservedFields.Union(customFields ?? Array.Empty<FieldMetadata>()).ToArray();
 		}
@@ -83,7 +83,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="FieldMetadata">metadata</see> about the field.
 		/// </returns>
-		public Task<FieldMetadata> UpdateAsync(string fieldId, string name = null, CancellationToken cancellationToken = default)
+		public Task<CustomFieldMetadata> UpdateAsync(string fieldId, string name = null, CancellationToken cancellationToken = default)
 		{
 			var data = new StrongGridJsonObject();
 			data.AddProperty("id", fieldId);
@@ -93,7 +93,7 @@ namespace StrongGrid.Resources
 				.PatchAsync($"{_endpoint}/{fieldId}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsObject<FieldMetadata>();
+				.AsObject<CustomFieldMetadata>();
 		}
 
 		/// <summary>

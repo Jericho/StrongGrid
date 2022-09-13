@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace StrongGrid.Models.Search.Legacy
+namespace StrongGrid.Models.Search
 {
 	/// <summary>
 	/// Enumeration to indicate the filter field when searching for email activities.
@@ -34,6 +34,7 @@ namespace StrongGrid.Models.Search.Legacy
 		/// <summary>
 		/// The type of email activity.
 		/// </summary>
+		/// <remarks>Valid values include "delivered","not_delivered", and "processing".</remarks>
 		[EnumMember(Value = "status")]
 		ActivityType,
 
@@ -44,34 +45,23 @@ namespace StrongGrid.Models.Search.Legacy
 		TemplateId,
 
 		/// <summary>
-		/// The name of the template.
-		/// </summary>
-		[EnumMember(Value = "template_name")]
-		TemplateName,
-
-		/// <summary>
 		/// The name of the campaign.
 		/// </summary>
-		[EnumMember(Value = "campaign_name")]
+		[EnumMember(Value = "marketing_campaign_name")]
 		CampaignName,
 
 		/// <summary>
 		/// The identifier of the campaign.
 		/// </summary>
-		[EnumMember(Value = "campaign_id")]
+		[EnumMember(Value = "marketing_campaign_id")]
 		CampaignId,
 
 		/// <summary>
 		/// The identifier of the Api Key.
 		/// </summary>
+		/// <remarks>Everything after the first "." and before the second ".".</remarks>
 		[EnumMember(Value = "api_key_id")]
 		ApiKeyId,
-
-		/// <summary>
-		/// The name of the Api Key.
-		/// </summary>
-		[EnumMember(Value = "api_key_name")]
-		ApiKeyName,
 
 		/// <summary>
 		/// Seems like a duplicate of 'status'.
@@ -104,16 +94,9 @@ namespace StrongGrid.Models.Search.Legacy
 		Clicks,
 
 		/// <summary>
-		/// The name of the unsubscribe group.
+		/// The group id.
 		/// </summary>
-		[EnumMember(Value = "unsubscribe_group_name")]
-		UnsubscribeGroupName,
-
-		/// <summary>
-		/// The identified of the unsubscribe group.
-		/// </summary>
-		[EnumMember(Value = "unsubscribe_group_id")]
-		UnsubscribeGroupId,
+		AsmGroupId,
 
 		/// <summary>
 		/// The teamates username.

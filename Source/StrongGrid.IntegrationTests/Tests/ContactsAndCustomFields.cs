@@ -24,7 +24,7 @@ namespace StrongGrid.IntegrationTests.Tests
 
 			// GET ALL FIELDS
 			var fields = await client.CustomFields.GetAllAsync(cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"All custom fields retrieved. There are {fields.Length} fields").ConfigureAwait(false);
+			await log.WriteLineAsync($"All fields retrieved. There are {fields.OfType<ReservedFieldMetadata>().Count()} reserved fields and {fields.OfType<CustomFieldMetadata>().Count()} custom fields").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
 			var cleanUpTasks = fields
@@ -119,8 +119,8 @@ namespace StrongGrid.IntegrationTests.Tests
 				}
 			}
 
-			var firstNameCriteria = new SearchCriteriaEqual<ContactsFilterField>(ContactsFilterField.FirstName, "John");
-			var LastNameCriteria = new SearchCriteriaEqual<ContactsFilterField>(ContactsFilterField.LastName, "Doe");
+			var firstNameCriteria = new SearchCriteriaEqual(ContactsFilterField.FirstName, "John");
+			var LastNameCriteria = new SearchCriteriaEqual(ContactsFilterField.LastName, "Doe");
 			var searchResult = await client.Contacts.SearchAsync(new[] { firstNameCriteria, LastNameCriteria }, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Found {searchResult.Length} contacts named John Doe").ConfigureAwait(false);
 
@@ -201,7 +201,7 @@ namespace StrongGrid.IntegrationTests.Tests
 			await log.WriteLineAsync($"Field {customerSinceField.Name} deleted").ConfigureAwait(false);
 
 			fields = await client.CustomFields.GetAllAsync(cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"All custom fields retrieved. There are {fields.Length} fields").ConfigureAwait(false);
+			await log.WriteLineAsync($"All fields retrieved. There are {fields.OfType<ReservedFieldMetadata>().Count()} reserved fields and {fields.OfType<CustomFieldMetadata>().Count()} custom fields").ConfigureAwait(false);
 		}
 	}
 }

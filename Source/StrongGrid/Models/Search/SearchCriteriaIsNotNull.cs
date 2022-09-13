@@ -1,27 +1,45 @@
-using System;
-
 namespace StrongGrid.Models.Search
 {
 	/// <summary>
 	/// Filter the result of a search for the value of a field to be not NULL.
 	/// </summary>
-	/// <typeparam name="TEnum">The type containing an enum of fields that can used for searching/segmenting.</typeparam>
-	public class SearchCriteriaIsNotNull<TEnum> : SearchCriteria<TEnum>
-		where TEnum : Enum
+	public class SearchCriteriaIsNotNull : SearchCriteria
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaIsNotNull{TEnum}"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteriaIsNotNull"/> class.
 		/// </summary>
+		/// <param name="filterTable">The filter table.</param>
 		/// <param name="filterField">The filter field.</param>
-		public SearchCriteriaIsNotNull(TEnum filterField)
-			: base(filterField, SearchComparisonOperator.IsNotNull, null)
+		public SearchCriteriaIsNotNull(FilterTable filterTable, string filterField)
+			: base(filterTable, filterField, SearchComparisonOperator.IsNotNull, null)
 		{
 		}
 
 		/// <summary>
-		/// Converts the filter operator into a string as expected by the SendGrid segmenting API.
+		/// Initializes a new instance of the <see cref="SearchCriteriaIsNotNull"/> class.
 		/// </summary>
-		/// <returns>The string representation of the operator.</returns>
+		/// <param name="filterField">The filter field.</param>
+		public SearchCriteriaIsNotNull(ContactsFilterField filterField)
+			: this(FilterTable.Contacts, filterField.ToEnumString())
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SearchCriteriaIsNotNull"/> class.
+		/// </summary>
+		/// <param name="filterField">The filter field.</param>
+		public SearchCriteriaIsNotNull(EmailActivitiesFilterField filterField)
+			: this(FilterTable.EmailActivities, filterField.ToEnumString())
+		{
+		}
+
+		/// <inheritdoc/>
+		public override string ConvertValueToString(char quote)
+		{
+			return string.Empty;
+		}
+
+		/// <inheritdoc/>
 		public override string ConvertOperatorToString()
 		{
 			return $" {base.ConvertOperatorToString()}";

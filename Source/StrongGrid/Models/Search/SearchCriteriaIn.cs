@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace StrongGrid.Models.Search
@@ -6,24 +5,40 @@ namespace StrongGrid.Models.Search
 	/// <summary>
 	/// Filter the result of a search for the value of a field to be present in an enumeration of values.
 	/// </summary>
-	/// <typeparam name="TEnum">The type containing an enum of fields that can used for searching/segmenting.</typeparam>
-	public class SearchCriteriaIn<TEnum> : SearchCriteria<TEnum>
-		where TEnum : Enum
+	public class SearchCriteriaIn : SearchCriteria
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaIn{TEnum}"/> class.
+		/// Initializes a new instance of the <see cref="SearchCriteriaIn"/> class.
 		/// </summary>
+		/// <param name="filterTable">The filter table.</param>
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValues">The filter values.</param>
-		public SearchCriteriaIn(TEnum filterField, IEnumerable<object> filterValues)
-			: base(filterField, SearchComparisonOperator.In, filterValues)
+		public SearchCriteriaIn(FilterTable filterTable, string filterField, IEnumerable<object> filterValues)
+			: base(filterTable, filterField, SearchComparisonOperator.In, filterValues)
 		{
 		}
 
 		/// <summary>
-		/// Converts the filter operator into a string as expected by the SendGrid segmenting API.
+		/// Initializes a new instance of the <see cref="SearchCriteriaIn"/> class.
 		/// </summary>
-		/// <returns>The string representation of the operator.</returns>
+		/// <param name="filterField">The filter field.</param>
+		/// <param name="filterValues">The filter values.</param>
+		public SearchCriteriaIn(ContactsFilterField filterField, IEnumerable<object> filterValues)
+			: this(FilterTable.Contacts, filterField.ToEnumString(), filterValues)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SearchCriteriaIn"/> class.
+		/// </summary>
+		/// <param name="filterField">The filter field.</param>
+		/// <param name="filterValues">The filter values.</param>
+		public SearchCriteriaIn(EmailActivitiesFilterField filterField, IEnumerable<object> filterValues)
+			: this(FilterTable.EmailActivities, filterField.ToEnumString(), filterValues)
+		{
+		}
+
+		/// <inheritdoc/>
 		public override string ConvertOperatorToString()
 		{
 			return $" {base.ConvertOperatorToString()} ";

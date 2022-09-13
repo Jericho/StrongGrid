@@ -1,4 +1,4 @@
-namespace StrongGrid.Models.Search.Legacy
+namespace StrongGrid.Models.Search
 {
 	/// <summary>
 	/// Base class for search criteria classes on the value of a custom tracking argument.
@@ -13,7 +13,7 @@ namespace StrongGrid.Models.Search.Legacy
 		/// <summary>
 		/// Gets or sets the operator used to filter the result.
 		/// </summary>
-		public SearchConditionOperator FilterOperator { get; protected set; }
+		public SearchComparisonOperator FilterOperator { get; protected set; }
 
 		/// <summary>
 		/// Gets or sets the value used to filter the result.
@@ -26,7 +26,7 @@ namespace StrongGrid.Models.Search.Legacy
 		/// <param name="uniqueArgName">The name of the unique arg.</param>
 		/// <param name="filterOperator">The filtering operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SearchCriteriaUniqueArg(string uniqueArgName, SearchConditionOperator filterOperator, object filterValue)
+		public SearchCriteriaUniqueArg(string uniqueArgName, SearchComparisonOperator filterOperator, object filterValue)
 		{
 			UniqueArgName = uniqueArgName;
 			FilterOperator = filterOperator;
@@ -34,20 +34,14 @@ namespace StrongGrid.Models.Search.Legacy
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchCriteriaUniqueArg"/> class.
-		/// </summary>
-		protected SearchCriteriaUniqueArg()
-		{
-		}
-
-		/// <summary>
 		/// Converts the filter value into a string as expected by the SendGrid segmenting API.
 		/// Can be overridden in subclasses if the value needs special formatting.
 		/// </summary>
+		/// <param name="quote">The character used to quote string values. This character is a double-quote for v1 queries and a single-quote for v2 queries.</param>
 		/// <returns>The string representation of the value.</returns>
-		public virtual string ConvertValueToString()
+		public virtual string ConvertValueToString(char quote)
 		{
-			return SearchCriteria.ConvertToString(FilterValue);
+			return SearchCriteria.ConvertToString(FilterValue, quote);
 		}
 
 		/// <summary>
@@ -60,15 +54,20 @@ namespace StrongGrid.Models.Search.Legacy
 			return FilterOperator.ToEnumString();
 		}
 
-		/// <summary>
-		/// Returns a string representation of the search criteria.
-		/// </summary>
-		/// <returns>A <see cref="string"/> representation of the search criteria.</returns>
+		/// <inheritdoc/>
 		public override string ToString()
 		{
 			var filterOperator = ConvertOperatorToString();
-			var filterValue = ConvertValueToString();
+			var filterValue = ConvertValueToString('"');
 			return $"(unique_args['{UniqueArgName}']{filterOperator}{filterValue})";
+		}
+
+		/// <inheritdoc/>
+		public string ToString(string tableAlias)
+		{
+			var filterOperator = ConvertOperatorToString();
+			var filterValue = ConvertValueToString('\'');
+			return $"{tableAlias}.DATA:payload.unique_args.{UniqueArgName}{filterOperator}{filterValue}";
 		}
 	}
 }

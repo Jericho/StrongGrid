@@ -1,4 +1,4 @@
-namespace StrongGrid.Models.Search.Legacy
+namespace StrongGrid.Models.Search
 {
 	/// <summary>
 	/// Filter the result of a search on the value of a custom tracking argument to be greater than a value.
@@ -11,7 +11,7 @@ namespace StrongGrid.Models.Search.Legacy
 		/// <param name="uniqueArgName">The name of the unique arg.</param>
 		/// <param name="filterValue">The filter value.</param>
 		public SearchCriteriaUniqueArgGreaterThan(string uniqueArgName, object filterValue)
-			: base(uniqueArgName, SearchConditionOperator.GreaterThan, filterValue)
+			: base(uniqueArgName, SearchComparisonOperator.GreaterThan, filterValue)
 		{
 		}
 	}
