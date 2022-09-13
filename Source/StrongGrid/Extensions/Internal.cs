@@ -665,8 +665,9 @@ namespace StrongGrid
 
 		private static async Task<(bool, string)> GetErrorMessage(HttpResponseMessage message)
 		{
-			// Assume there is no error
-			var isError = false;
+			// Assume there is an error
+			// This is important in case the response contains something like "404 Not Found" which will cause the JSON parsing to fail
+			var isError = true;
 
 			// Default error message
 			var errorMessage = $"{(int)message.StatusCode}: {message.ReasonPhrase}";
@@ -738,6 +739,11 @@ namespace StrongGrid
 					{
 						errorMessage = jsonError.GetString();
 						isError = true;
+					}
+					else
+					{
+						// It's importnat to reset this variable to false because we previously assumed it to be true
+						isError = false;
 					}
 				}
 				catch
