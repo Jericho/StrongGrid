@@ -847,7 +847,7 @@ namespace StrongGrid
 				CurrentPageToken = metadata.SelfToken,
 				NextPageToken = metadata.NextToken,
 				TotalRecords = metadata.Count,
-				Records = JsonSerializer.Deserialize<T[]>(jProperty.GetRawText(), options ?? JsonFormatter.DeserializerOptions)
+				Records = JsonSerializer.Deserialize<T[]>(jProperty.GetRawText(), options ?? JsonFormatter.DeserializerOptions) ?? Array.Empty<T>()
 			};
 
 			return result;
