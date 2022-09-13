@@ -94,6 +94,7 @@ namespace StrongGrid.Json
 	[JsonSerializable(typeof(StrongGrid.Models.NewRelicSettings))]
 	[JsonSerializable(typeof(StrongGrid.Models.OpenTrackingSettings))]
 	[JsonSerializable(typeof(StrongGrid.Models.PaginationMetadata))]
+	[JsonSerializable(typeof(StrongGrid.Models.QueryValidationStatus))]
 	[JsonSerializable(typeof(StrongGrid.Models.ReverseDns))]
 	[JsonSerializable(typeof(StrongGrid.Models.ReverseDnsValidation))]
 	[JsonSerializable(typeof(StrongGrid.Models.ReverseDnsValidationResults))]

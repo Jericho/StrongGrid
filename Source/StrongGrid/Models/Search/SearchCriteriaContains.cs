@@ -8,10 +8,11 @@ namespace StrongGrid.Models.Search
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SearchCriteriaContains"/> class.
 		/// </summary>
+		/// <param name="filterTable">The filter table.</param>
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SearchCriteriaContains(string filterField, object filterValue)
-			: base(filterField, SearchComparisonOperator.Contains, filterValue)
+		public SearchCriteriaContains(FilterTable filterTable, string filterField, object filterValue)
+			: base(filterTable, filterField, SearchComparisonOperator.Contains, filterValue)
 		{
 		}
 
@@ -21,7 +22,7 @@ namespace StrongGrid.Models.Search
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValue">The filter value.</param>
 		public SearchCriteriaContains(ContactsFilterField filterField, object filterValue)
-			: this(filterField.ToEnumString(), filterValue)
+			: this(FilterTable.Contacts, filterField.ToEnumString(), filterValue)
 		{
 		}
 
@@ -31,19 +32,27 @@ namespace StrongGrid.Models.Search
 		/// <param name="filterField">The filter field.</param>
 		/// <param name="filterValue">The filter value.</param>
 		public SearchCriteriaContains(EmailActivitiesFilterField filterField, object filterValue)
-			: this(filterField.ToEnumString(), filterValue)
+			: this(FilterTable.EmailActivities, filterField.ToEnumString(), filterValue)
 		{
 		}
 
-		/// <summary>
-		/// Returns a string representation of the search criteria.
-		/// </summary>
-		/// <returns>A <see cref="string"/> representation of the search criteria.</returns>
+		/// <inheritdoc/>
 		public override string ToString()
 		{
-			var filterOperator = ConvertOperatorToString();
-			var filterValue = ConvertValueToString();
+			var filterOperator = "CONTAINS"; // This is the operator from SendGrid's query DSL version 1. "ARRAY_CONTAINS" is the operator from version 2.
+			var filterValue = ConvertValueToString('"');
+
 			return $"{filterOperator}({FilterField},{filterValue})";
+		}
+
+		/// <inheritdoc/>
+		public override string ToString(string tableAlias)
+		{
+			var filterOperator = ConvertOperatorToString();
+			var filterValue = ConvertValueToString('\'');
+			var filterField = string.IsNullOrEmpty(tableAlias) ? FilterField : $"{tableAlias}.{FilterField}";
+
+			return $"{filterOperator}({filterField},{filterValue})";
 		}
 	}
 }

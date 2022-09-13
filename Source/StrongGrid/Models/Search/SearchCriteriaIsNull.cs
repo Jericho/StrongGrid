@@ -8,9 +8,10 @@ namespace StrongGrid.Models.Search
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SearchCriteriaIsNull"/> class.
 		/// </summary>
+		/// <param name="filterTable">The filter table.</param>
 		/// <param name="filterField">The filter field.</param>
-		public SearchCriteriaIsNull(string filterField)
-			: base(filterField, SearchComparisonOperator.IsNull, null)
+		public SearchCriteriaIsNull(FilterTable filterTable, string filterField)
+			: base(filterTable, filterField, SearchComparisonOperator.IsNull, null)
 		{
 		}
 
@@ -19,7 +20,7 @@ namespace StrongGrid.Models.Search
 		/// </summary>
 		/// <param name="filterField">The filter field.</param>
 		public SearchCriteriaIsNull(ContactsFilterField filterField)
-			: this(filterField.ToEnumString())
+			: this(FilterTable.Contacts, filterField.ToEnumString())
 		{
 		}
 
@@ -28,17 +29,20 @@ namespace StrongGrid.Models.Search
 		/// </summary>
 		/// <param name="filterField">The filter field.</param>
 		public SearchCriteriaIsNull(EmailActivitiesFilterField filterField)
-			: this(filterField.ToEnumString())
+			: this(FilterTable.EmailActivities, filterField.ToEnumString())
 		{
 		}
 
-		/// <summary>
-		/// Converts the filter operator into a string as expected by the SendGrid segmenting API.
-		/// </summary>
-		/// <returns>The string representation of the operator.</returns>
+		/// <inheritdoc/>
+		public override string ConvertValueToString(char quote)
+		{
+			return string.Empty;
+		}
+
+		/// <inheritdoc/>
 		public override string ConvertOperatorToString()
 		{
-			return $" {base.ConvertOperatorToString()} ";
+			return $" {base.ConvertOperatorToString()}";
 		}
 	}
 }

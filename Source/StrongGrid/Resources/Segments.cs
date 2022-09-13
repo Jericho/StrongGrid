@@ -19,6 +19,7 @@ namespace StrongGrid.Resources
 	public class Segments : ISegments
 	{
 		private const string _endpoint = "marketing/segments";
+		private const string _endpoint_v2 = "marketing/segments/2.0";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
 		/// <summary>
@@ -31,7 +32,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <inheritdoc/>
-		public Task<Segment> CreateAsync(string name, string query, string listId = null, QueryLanguageVersion queryLanguageVersion = QueryLanguageVersion.Version1, CancellationToken cancellationToken = default)
+		public Task<Segment> CreateAsync(string name, string query, string listId = null, QueryLanguageVersion queryLanguageVersion = QueryLanguageVersion.Version2, CancellationToken cancellationToken = default)
 		{
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
@@ -39,7 +40,7 @@ namespace StrongGrid.Resources
 			data.AddProperty("parent_list_id", listId);
 
 			return _client
-				.PostAsync($"{_endpoint}{(queryLanguageVersion == QueryLanguageVersion.Version2 ? "/2.0" : string.Empty)}")
+				.PostAsync($"{(queryLanguageVersion == QueryLanguageVersion.Version2 ? _endpoint_v2 : _endpoint)}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsObject<Segment>();
@@ -98,7 +99,7 @@ namespace StrongGrid.Resources
 			data.AddProperty("query_dsl", query);
 
 			return _client
-				.PatchAsync($"{_endpoint}{(queryLanguageVersion == QueryLanguageVersion.Version2 ? "/2.0" : string.Empty)}/{segmentId}")
+				.PatchAsync($"{(queryLanguageVersion == QueryLanguageVersion.Version2 ? _endpoint_v2 : _endpoint)}/{segmentId}")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsObject<Segment>();

@@ -37,10 +37,11 @@ namespace StrongGrid.Models.Search
 		/// Converts the filter value into a string as expected by the SendGrid segmenting API.
 		/// Can be overridden in subclasses if the value needs special formatting.
 		/// </summary>
+		/// <param name="quote">The character used to quote string values. This character is a double-quote for v1 queries and a single-quote for v2 queries.</param>
 		/// <returns>The string representation of the value.</returns>
-		public virtual string ConvertValueToString()
+		public virtual string ConvertValueToString(char quote)
 		{
-			return SearchCriteria.ConvertToString(FilterValue);
+			return SearchCriteria.ConvertToString(FilterValue, quote);
 		}
 
 		/// <summary>
@@ -53,15 +54,20 @@ namespace StrongGrid.Models.Search
 			return FilterOperator.ToEnumString();
 		}
 
-		/// <summary>
-		/// Returns a string representation of the search criteria.
-		/// </summary>
-		/// <returns>A <see cref="string"/> representation of the search criteria.</returns>
+		/// <inheritdoc/>
 		public override string ToString()
 		{
 			var filterOperator = ConvertOperatorToString();
-			var filterValue = ConvertValueToString();
+			var filterValue = ConvertValueToString('"');
 			return $"(unique_args['{UniqueArgName}']{filterOperator}{filterValue})";
+		}
+
+		/// <inheritdoc/>
+		public string ToString(string tableAlias)
+		{
+			var filterOperator = ConvertOperatorToString();
+			var filterValue = ConvertValueToString('\'');
+			return $"{tableAlias}.DATA:payload.unique_args.{UniqueArgName}{filterOperator}{filterValue}";
 		}
 	}
 }

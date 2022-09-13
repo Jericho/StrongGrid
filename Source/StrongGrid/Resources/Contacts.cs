@@ -252,16 +252,21 @@ namespace StrongGrid.Resources
 			var data = new StrongGridJsonObject();
 			data.AddProperty("emails", emailAdresses, false);
 
-			var response = await _client
-				.PostAsync($"{_endpoint}/search/emails")
-				.WithJsonBody(data)
-				.WithCancellationToken(cancellationToken)
-				.AsResponse()
-				.ConfigureAwait(false);
+			IResponse response = null;
 
-			// If no contact is found, SendGrid return HTTP 404
-			if (response.Status == HttpStatusCode.NotFound)
+			try
 			{
+				response = await _client
+					.PostAsync($"{_endpoint}/search/emails")
+					.WithJsonBody(data)
+					.WithCancellationToken(cancellationToken)
+					.AsResponse()
+					.ConfigureAwait(false);
+			}
+			catch (SendGridException e) when (e.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+			{
+				// If no contact is found, SendGrid returns HTTP 404 NOT FOUND
+				// We want to return an empty array instead of throwing an exception.
 				return Array.Empty<Contact>();
 			}
 

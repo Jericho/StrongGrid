@@ -65,17 +65,18 @@ namespace StrongGrid.IntegrationTests.Tests
 			};
 			var importJobId = await client.Contacts.UpsertAsync(contacts, new[] { list.Id }, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"A request to import {contacts.Length} contacts has been sent. JobId: {importJobId}").ConfigureAwait(false);
+			await Task.Delay(500, cancellationToken).ConfigureAwait(false);    // Brief pause to, hopefully, allow SendGrid to execute the job
 
 			// CREATE A SEGMENT (one contact matches the criteria)
 			var filterConditions = new[]
 			{
 				new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.And, new[]
 				{
-					new SearchCriteriaEqual(ContactsFilterField.FirstName, "John"),
+					new SearchCriteriaEqual(ContactsFilterField.FirstName, "Jane"),
 					new SearchCriteriaEqual(ContactsFilterField.LastName, "Doe")
 				})
 			};
-			var segment = await client.Segments.CreateAsync("StrongGrid Integration Testing: First Name is John and last name is Doe", filterConditions, list.Id, cancellationToken).ConfigureAwait(false);
+			var segment = await client.Segments.CreateAsync("StrongGrid Integration Testing: First Name is Jane and last name is Doe", filterConditions, list.Id, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Segment '{segment.Name}' created. Id: {segment.Id}").ConfigureAwait(false);
 
 			// UPDATE THE SEGMENT (three contacts match the criteria) 
@@ -91,12 +92,18 @@ namespace StrongGrid.IntegrationTests.Tests
 			contacts = await client.Contacts.GetMultipleByEmailAddressAsync(new[] { "dummy1@hotmail.com", "dummy2@hotmail.com", "dummy3@hotmail.com" }, cancellationToken).ConfigureAwait(false);
 
 			// REMOVE THE CONTACTS FROM THE LIST (THEY WILL AUTOMATICALLY BE REMOVED FROM THE HOTMAIL SEGMENT)
-			var removeContactsFromListJobId = await client.Lists.RemoveContactsAsync(list.Id, contacts.Select(contact => contact.Id).ToArray(), cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"A request to remove the contacts from list {list.Id} has been sent. JobId: {removeContactsFromListJobId}").ConfigureAwait(false);
+			if (contacts.Any())
+			{
+				var removeContactsFromListJobId = await client.Lists.RemoveContactsAsync(list.Id, contacts.Select(contact => contact.Id).ToArray(), cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"A request to remove the contacts from list {list.Id} has been sent. JobId: {removeContactsFromListJobId}").ConfigureAwait(false);
+			}
 
 			// DELETE THE CONTACTS
-			var deleteJobId = await client.Contacts.DeleteAsync(contacts.Select(contact => contact.Id).ToArray(), cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"A request to delete the contacts has been sent. JobId: {deleteJobId}").ConfigureAwait(false);
+			if (contacts.Any())
+			{
+				var deleteJobId = await client.Contacts.DeleteAsync(contacts.Select(contact => contact.Id).ToArray(), cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"A request to delete the contacts has been sent. JobId: {deleteJobId}").ConfigureAwait(false);
+			}
 
 			// DELETE THE SEGMENT
 			await client.Segments.DeleteAsync(segment.Id, false, cancellationToken).ConfigureAwait(false);
