@@ -1080,7 +1080,7 @@ namespace StrongGrid
 			var metadataProperty = jsonDocument.RootElement.GetProperty("_metadata");
 			var metadata = JsonSerializer.Deserialize<PaginationMetadata>(metadataProperty.GetRawText(), options);
 
-			T[] records;
+			T[] records = null;
 
 			if (string.IsNullOrEmpty(propertyName))
 			{
@@ -1102,7 +1102,7 @@ namespace StrongGrid
 				Previous = paginationLinks.SingleOrDefault(l => l.Relationship == "prev"),
 				Next = paginationLinks.SingleOrDefault(l => l.Relationship == "next"),
 				Last = paginationLinks.SingleOrDefault(l => l.Relationship == "last"),
-				Records = records
+				Records = records ?? Array.Empty<T>()
 			};
 
 			return result;
