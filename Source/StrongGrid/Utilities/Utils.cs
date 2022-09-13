@@ -44,22 +44,11 @@ namespace StrongGrid.Utilities
 			return (x, y);
 		}
 
-		// As of August 2022, searhcing for contacts and searching for email activites still use the (old) version 1 query DSL.
+		// As of August 2022, searching for contacts and searching for email activites still use the (old) version 1 query DSL.
 		// You can also use query DSL v1 when segmenting contacts if you so desire, but by default StrongGrid uses v2.
 		public static string ToQueryDslVersion1(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions)
 		{
 			if (filterConditions == null) return string.Empty;
-
-			var validFilterTables = new[] { FilterTable.Unspecified, FilterTable.EmailActivities };
-			var conditionsValidated = filterConditions
-				.SelectMany(filterCondition => filterCondition.Value)
-				.All(criteria =>
-				{
-					if (criteria is SearchCriteria searchCriteria) return validFilterTables.Contains(searchCriteria.FilterTable);
-					else if (criteria is SearchCriteriaUniqueArg) return true;
-					else return false;
-				});
-			if (!conditionsValidated) throw new InvalidOperationException("You can only use email activities fields when searching for email activities.");
 
 			// Query DSL defined here: https://docs.sendgrid.com/for-developers/sending-email/getting-started-email-activity-api#query-reference
 			var conditions = new List<string>(filterConditions.Count());
@@ -82,17 +71,6 @@ namespace StrongGrid.Utilities
 		public static string ToQueryDslVersion2(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions)
 		{
 			if (filterConditions == null) return string.Empty;
-
-			var validFilterTables = new[] { FilterTable.Contacts, FilterTable.Events };
-			var conditionsValidated = filterConditions
-				.SelectMany(filterCondition => filterCondition.Value)
-				.All(criteria =>
-				{
-					if (criteria is SearchCriteria searchCriteria) return validFilterTables.Contains(searchCriteria.FilterTable);
-					else if (criteria is SearchCriteriaUniqueArg) return true;
-					else return false;
-				});
-			if (!conditionsValidated) throw new InvalidOperationException("You can only use contacts and events fields when searching for contacts.");
 
 			// Query DSL defined here: https://docs.sendgrid.com/for-developers/sending-email/marketing-campaigns-v2-segmentation-query-reference
 			const string contactsTableAlias = "contacts";
