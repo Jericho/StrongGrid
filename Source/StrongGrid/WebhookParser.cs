@@ -178,39 +178,20 @@ namespace StrongGrid
 			var parser = await MultipartFormDataParser.ParseAsync(stream, Encoding.UTF8).ConfigureAwait(false);
 
 			// Convert the 'charset' from a string into array of KeyValuePair
-			var charsetsJsonDoc = JsonDocument.Parse(parser.GetParameterValue("charsets", "{}"));
-			var charsets = charsetsJsonDoc.RootElement.EnumerateObject()
-				.Select(prop =>
-				{
-					var key = prop.Name;
-					var encodingName = prop.Value.GetString();
-
-					try
-					{
-						var encoding = Encoding.GetEncoding(encodingName);
-						return new KeyValuePair<string, Encoding>(key, encoding);
-					}
-					catch (ArgumentException)
-					{
-						// ArgumentException is thrown when an "unusual" code page was used to encode a section of the email
-						// For example: {"to":"UTF-8","subject":"UTF-8","from":"UTF-8","text":"iso-8859-10"}
-						// We can see that 'iso-8859-10' was used to encode the "Text" but this encoding is not supported in
-						// .net (neither dotnet full nor dotnet core). Therefore we fallback on UTF-8. This is obviously not
-						// perfect because UTF-8 may or may not be able to handle all the encoded characters, but it's better
-						// than simply erroring out.
-						// See https://github.com/Jericho/StrongGrid/issues/341 for discussion.
-						return new KeyValuePair<string, Encoding>(key, Encoding.UTF8);
-					}
-				}).ToArray();
+			var charsets = JsonDocument.Parse(parser.GetParameterValue("charsets", "{}"))
+				.RootElement.EnumerateObject()
+				.Select(prop => new KeyValuePair<string, string>(prop.Name, prop.Value.GetString()))
+				.ToArray();
 
 			// Create a dictionary of parsers, one parser for each desired encoding.
 			// This is necessary because MultipartFormDataParser can only handle one
 			// encoding and SendGrid can use different encodings for parameters such
 			// as "from", "to", "text" and "html".
 			var encodedParsers = charsets
-				.Where(c => !c.Value.Equals(Encoding.UTF8))
 				.Select(c => c.Value)
+				.Select(GetEncodingFromName)
 				.Distinct()
+				.Where(encoding => !encoding.Equals(Encoding.UTF8))
 				.Select(async encoding =>
 				{
 					stream.Position = 0; // It's important to rewind the stream
@@ -256,39 +237,20 @@ namespace StrongGrid
 			var parser = MultipartFormDataParser.Parse(stream, Encoding.UTF8);
 
 			// Convert the 'charset' from a string into array of KeyValuePair
-			var charsetsJsonDoc = JsonDocument.Parse(parser.GetParameterValue("charsets", "{}"));
-			var charsets = charsetsJsonDoc.RootElement.EnumerateObject()
-				.Select(prop =>
-				{
-					var key = prop.Name;
-					var encodingName = prop.Value.GetString();
-
-					try
-					{
-						var encoding = Encoding.GetEncoding(encodingName);
-						return new KeyValuePair<string, Encoding>(key, encoding);
-					}
-					catch (ArgumentException)
-					{
-						// ArgumentException is thrown when an "unusual" code page was used to encode a section of the email
-						// For example: {"to":"UTF-8","subject":"UTF-8","from":"UTF-8","text":"iso-8859-10"}
-						// We can see that 'iso-8859-10' was used to encode the "Text" but this encoding is not supported in
-						// .net (neither dotnet full nor dotnet core). Therefore we fallback on UTF-8. This is obviously not
-						// perfect because UTF-8 may or may not be able to handle all the encoded characters, but it's better
-						// than simply erroring out.
-						// See https://github.com/Jericho/StrongGrid/issues/341 for discussion.
-						return new KeyValuePair<string, Encoding>(key, Encoding.UTF8);
-					}
-				}).ToArray();
+			var charsets = JsonDocument.Parse(parser.GetParameterValue("charsets", "{}"))
+				.RootElement.EnumerateObject()
+				.Select(prop => new KeyValuePair<string, string>(prop.Name, prop.Value.GetString()))
+				.ToArray();
 
 			// Create a dictionary of parsers, one parser for each desired encoding.
 			// This is necessary because MultipartFormDataParser can only handle one
 			// encoding and SendGrid can use different encodings for parameters such
 			// as "from", "to", "text" and "html".
 			var encodedParsers = charsets
-				.Where(c => !c.Value.Equals(Encoding.UTF8))
 				.Select(c => c.Value)
+				.Select(GetEncodingFromName)
 				.Distinct()
+				.Where(encoding => !encoding.Equals(Encoding.UTF8))
 				.Select(encoding =>
 				{
 					stream.Position = 0; // It's important to rewind the stream
@@ -311,28 +273,49 @@ namespace StrongGrid
 
 		#region PRIVATE METHODS
 
-		private static Encoding GetEncoding(string parameterName, IEnumerable<KeyValuePair<string, Encoding>> charsets)
+		private static Encoding GetEncoding(string parameterName, IEnumerable<KeyValuePair<string, string>> charsets)
 		{
 			var encoding = charsets.Where(c => c.Key == parameterName);
-			if (encoding.Any()) return encoding.First().Value;
-			else return Encoding.UTF8;
+			if (!encoding.Any()) return Encoding.UTF8;
+
+			var encodingName = encoding.First().Value;
+			return GetEncodingFromName(encodingName);
 		}
 
-		private static MultipartFormDataParser GetEncodedParser(string parameterName, IEnumerable<KeyValuePair<string, Encoding>> charsets, IDictionary<Encoding, MultipartFormDataParser> encodedParsers)
+		private static Encoding GetEncodingFromName(string encodingName)
+		{
+			try
+			{
+				return Encoding.GetEncoding(encodingName);
+			}
+			catch (ArgumentException)
+			{
+				// ArgumentException is thrown when an "unusual" code page was used to encode a section of the email
+				// For example: {"to":"UTF-8","subject":"UTF-8","from":"UTF-8","text":"iso-8859-10"}
+				// We can see that 'iso-8859-10' was used to encode the "Text" but this encoding is not supported in
+				// .net (neither dotnet full nor dotnet core). Therefore we fallback on UTF-8. This is obviously not
+				// perfect because UTF-8 may or may not be able to handle all the encoded characters, but it's better
+				// than simply erroring out.
+				// See https://github.com/Jericho/StrongGrid/issues/341 for discussion.
+				return Encoding.UTF8;
+			}
+		}
+
+		private static MultipartFormDataParser GetEncodedParser(string parameterName, IEnumerable<KeyValuePair<string, string>> charsets, IDictionary<Encoding, MultipartFormDataParser> encodedParsers)
 		{
 			var encoding = GetEncoding(parameterName, charsets);
 			var parser = encodedParsers[encoding];
 			return parser;
 		}
 
-		private static string GetEncodedValue(string parameterName, IEnumerable<KeyValuePair<string, Encoding>> charsets, IDictionary<Encoding, MultipartFormDataParser> encodedParsers, string defaultValue = null)
+		private static string GetEncodedValue(string parameterName, IEnumerable<KeyValuePair<string, string>> charsets, IDictionary<Encoding, MultipartFormDataParser> encodedParsers, string defaultValue = null)
 		{
 			var parser = GetEncodedParser(parameterName, charsets, encodedParsers);
 			var value = parser.GetParameterValue(parameterName, defaultValue);
 			return value;
 		}
 
-		private static InboundEmail ParseInboundEmail(IDictionary<Encoding, MultipartFormDataParser> encodedParsers, KeyValuePair<string, Encoding>[] charsets)
+		private static InboundEmail ParseInboundEmail(IDictionary<Encoding, MultipartFormDataParser> encodedParsers, KeyValuePair<string, string>[] charsets)
 		{
 			// Get the default UTF8 parser
 			var parser = encodedParsers.Single(p => p.Key.Equals(Encoding.UTF8)).Value;

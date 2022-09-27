@@ -514,12 +514,12 @@ Content-Disposition: form-data; name=""attachments""
 
 				inboundEmail.Charsets.Except(new[]
 				{
-					new KeyValuePair<string, Encoding>("to", Encoding.UTF8),
-					new KeyValuePair<string, Encoding>("filename", Encoding.UTF8),
-					new KeyValuePair<string, Encoding>("html", Encoding.ASCII),
-					new KeyValuePair<string, Encoding>("subject", Encoding.UTF8),
-					new KeyValuePair<string, Encoding>("from", Encoding.UTF8),
-					new KeyValuePair<string, Encoding>("text", Encoding.ASCII),
+					new KeyValuePair<string, string>("to", "UTF-8"),
+					new KeyValuePair<string, string>("filename", "UTF-8"),
+					new KeyValuePair<string, string>("html", "us-ascii"),
+					new KeyValuePair<string, string>("subject", "UTF-8"),
+					new KeyValuePair<string, string>("from", "UTF-8"),
+					new KeyValuePair<string, string>("text", "us-ascii"),
 				}).Count().ShouldBe(0);
 
 				inboundEmail.Spf.ShouldBe("pass");
@@ -540,11 +540,11 @@ Content-Disposition: form-data; name=""attachments""
 				inboundEmail.Charsets.ShouldNotBeNull();
 				inboundEmail.Charsets.Except(new[]
 				{
-					new KeyValuePair<string, Encoding>("to", Encoding.UTF8),
-					new KeyValuePair<string, Encoding>("subject", Encoding.UTF8),
-					new KeyValuePair<string, Encoding>("from", Encoding.UTF8),
-					new KeyValuePair<string, Encoding>("html", Encoding.ASCII),
-					new KeyValuePair<string, Encoding>("text", Encoding.UTF8)	// The original encoding is iso-8859-10 but we fallback on UTF-8
+					new KeyValuePair<string, string>("to", "UTF-8"),
+					new KeyValuePair<string, string>("subject", "UTF-8"),
+					new KeyValuePair<string, string>("from", "UTF-8"),
+					new KeyValuePair<string, string>("html", "us-ascii"),
+					new KeyValuePair<string, string>("text", "iso-8859-10")
 				}).Count().ShouldBe(0);
 				inboundEmail.Text.Replace("\r\n", "\n").ShouldBe("Hello SendGrid!\n");
 			}
