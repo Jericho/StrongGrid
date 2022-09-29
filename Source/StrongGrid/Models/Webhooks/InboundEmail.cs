@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text;
+using System.Collections.Generic;
 
 namespace StrongGrid.Models.Webhooks
 {
@@ -121,7 +120,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The charsets.
 		/// </value>
-		public KeyValuePair<string, Encoding>[] Charsets { get; set; }
+		public KeyValuePair<string, string>[] Charsets { get; set; }
 
 		/// <summary>
 		/// Gets or sets the results of the Sender Policy Framework verification of the message sender
