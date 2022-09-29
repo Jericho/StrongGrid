@@ -111,7 +111,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task AddAddressToUnsubscribeGroupAsync(long groupId, string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			return AddAddressToUnsubscribeGroupAsync(groupId, new[] { email }, onBehalfOf, cancellationToken);
+			return AddAddressesToUnsubscribeGroupAsync(groupId, new[] { email }, onBehalfOf, cancellationToken);
 		}
 
 		/// <summary>
@@ -125,7 +125,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task AddAddressToUnsubscribeGroupAsync(long groupId, IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task AddAddressesToUnsubscribeGroupAsync(long groupId, IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new StrongGridJsonObject();
 			data.AddProperty("recipient_emails", emails.ToArray());

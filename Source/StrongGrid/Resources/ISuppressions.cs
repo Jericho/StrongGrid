@@ -72,7 +72,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task AddAddressToUnsubscribeGroupAsync(long groupId, IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task AddAddressesToUnsubscribeGroupAsync(long groupId, IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete a recipient email from the suppressions list for a group.
