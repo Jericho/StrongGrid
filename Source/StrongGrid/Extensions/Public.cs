@@ -1296,5 +1296,26 @@ namespace StrongGrid
 			var job = await contacts.GetExportJobAsync(jobId, cancellationToken).ConfigureAwait(false);
 			return await contacts.DownloadExportFilesAsync(job, decompress, cancellationToken).ConfigureAwait(false);
 		}
+
+		/// <summary>
+		/// Download the CSV and save it to a file.
+		/// </summary>
+		/// <param name="emailActivities">The Email Activities resource.</param>
+		/// <param name="downloadUUID">UUID used to locate the download CSV request entry. You can find this UUID in the email that is sent with the POST Request a CSV.</param>
+		/// <param name="destinationPath">The path and name of the CSV file.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// The async task.
+		/// </returns>
+		public static async Task DownloadCsvAsync(this IEmailActivities emailActivities, string downloadUUID, string destinationPath, CancellationToken cancellationToken = default)
+		{
+			using (var responseStream = await emailActivities.DownloadCsvAsync(downloadUUID, cancellationToken).ConfigureAwait(false))
+			{
+				using (Stream output = File.OpenWrite(destinationPath))
+				{
+					responseStream.CopyTo(output);
+				}
+			}
+		}
 	}
 }
