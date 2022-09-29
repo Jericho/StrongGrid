@@ -138,7 +138,7 @@ namespace StrongGrid.UnitTests.Resources
 		}
 
 		[Fact]
-		public async Task AddAddressToUnsubscribeGroupAsync_single_email()
+		public async Task AddAddressToUnsubscribeGroupAsync()
 		{
 			// Arrange
 			var groupId = 103;
@@ -166,7 +166,7 @@ namespace StrongGrid.UnitTests.Resources
 		}
 
 		[Fact]
-		public async Task AddAddressToUnsubscribeGroupAsync_multiple_emails()
+		public async Task AddAddressesToUnsubscribeGroupAsync()
 		{
 			// Arrange
 			var groupId = 103;
@@ -186,7 +186,7 @@ namespace StrongGrid.UnitTests.Resources
 			var suppressions = new Suppressions(client);
 
 			// Act
-			await suppressions.AddAddressToUnsubscribeGroupAsync(groupId, emails, null, CancellationToken.None).ConfigureAwait(false);
+			await suppressions.AddAddressesToUnsubscribeGroupAsync(groupId, emails, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
