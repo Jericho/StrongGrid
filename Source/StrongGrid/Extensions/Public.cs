@@ -1317,5 +1317,22 @@ namespace StrongGrid
 				}
 			}
 		}
+
+		/// <summary>
+		/// Add recipient address to the suppressions list for a given group.
+		/// If the group has been deleted, this request will add the address to the global suppression.
+		/// </summary>
+		/// <param name="suppressions">The Suppressions resource.</param>
+		/// <param name="groupId">ID of the suppression group.</param>
+		/// <param name="email">Email address to add to the suppression group.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The async task.
+		/// </returns>
+		public static Task AddAddressToUnsubscribeGroupAsync(this ISuppressions suppressions, long groupId, string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		{
+			return suppressions.AddAddressesToUnsubscribeGroupAsync(groupId, new[] { email }, onBehalfOf, cancellationToken);
+		}
 	}
 }
