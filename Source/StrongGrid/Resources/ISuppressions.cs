@@ -49,19 +49,6 @@ namespace StrongGrid.Resources
 		Task<string[]> GetUnsubscribedAddressesAsync(long groupId, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
-		/// Add recipient address to the suppressions list for a given group.
-		/// If the group has been deleted, this request will add the address to the global suppression.
-		/// </summary>
-		/// <param name="groupId">ID of the suppression group.</param>
-		/// <param name="email">Email address to add to the suppression group.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// The async task.
-		/// </returns>
-		Task AddAddressToUnsubscribeGroupAsync(long groupId, string email, string onBehalfOf = null, CancellationToken cancellationToken = default);
-
-		/// <summary>
 		/// Add recipient addresses to the suppressions list for a given group.
 		/// If the group has been deleted, this request will add the address to the global suppression.
 		/// </summary>
@@ -72,7 +59,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task AddAddressToUnsubscribeGroupAsync(long groupId, IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task AddAddressesToUnsubscribeGroupAsync(long groupId, IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Delete a recipient email from the suppressions list for a group.

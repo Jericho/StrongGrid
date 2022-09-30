@@ -72,16 +72,5 @@ namespace StrongGrid.Resources
 		/// The stream.
 		/// </returns>
 		Task<Stream> DownloadCsvAsync(string downloadUUID, CancellationToken cancellationToken = default);
-
-		/// <summary>
-		/// Download the CSV and save it to a file.
-		/// </summary>
-		/// <param name="downloadUUID">UUID used to locate the download CSV request entry. You can find this UUID in the email that is sent with the POST Request a CSV.</param>
-		/// <param name="destinationPath">The path and name of the CSV file.</param>
-		/// <param name="cancellationToken">Cancellation token.</param>
-		/// <returns>
-		/// The async task.
-		/// </returns>
-		Task DownloadCsvAsync(string downloadUUID, string destinationPath, CancellationToken cancellationToken = default);
 	}
 }

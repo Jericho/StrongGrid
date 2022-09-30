@@ -1296,5 +1296,43 @@ namespace StrongGrid
 			var job = await contacts.GetExportJobAsync(jobId, cancellationToken).ConfigureAwait(false);
 			return await contacts.DownloadExportFilesAsync(job, decompress, cancellationToken).ConfigureAwait(false);
 		}
+
+		/// <summary>
+		/// Download the CSV and save it to a file.
+		/// </summary>
+		/// <param name="emailActivities">The Email Activities resource.</param>
+		/// <param name="downloadUUID">UUID used to locate the download CSV request entry. You can find this UUID in the email that is sent with the POST Request a CSV.</param>
+		/// <param name="destinationPath">The path and name of the CSV file.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// The async task.
+		/// </returns>
+		public static async Task DownloadCsvAsync(this IEmailActivities emailActivities, string downloadUUID, string destinationPath, CancellationToken cancellationToken = default)
+		{
+			using (var responseStream = await emailActivities.DownloadCsvAsync(downloadUUID, cancellationToken).ConfigureAwait(false))
+			{
+				using (Stream output = File.OpenWrite(destinationPath))
+				{
+					responseStream.CopyTo(output);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Add recipient address to the suppressions list for a given group.
+		/// If the group has been deleted, this request will add the address to the global suppression.
+		/// </summary>
+		/// <param name="suppressions">The Suppressions resource.</param>
+		/// <param name="groupId">ID of the suppression group.</param>
+		/// <param name="email">Email address to add to the suppression group.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The async task.
+		/// </returns>
+		public static Task AddAddressToUnsubscribeGroupAsync(this ISuppressions suppressions, long groupId, string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		{
+			return suppressions.AddAddressesToUnsubscribeGroupAsync(groupId, new[] { email }, onBehalfOf, cancellationToken);
+		}
 	}
 }
