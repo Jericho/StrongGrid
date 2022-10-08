@@ -1,6 +1,5 @@
 using HttpMultipartParser;
 using Pathoschild.Http.Client;
-using Pathoschild.Http.Client.Extensibility;
 using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -306,42 +305,6 @@ namespace StrongGrid
 		internal static IRequest OnBehalfOf(this IRequest request, string username)
 		{
 			return string.IsNullOrEmpty(username) ? request : request.WithHeader("on-behalf-of", username);
-		}
-
-		/// <summary>Add a filter to a request.</summary>
-		/// <typeparam name="TFilter">The type of filter.</typeparam>
-		/// <param name="request">The request.</param>
-		/// <param name="filter">The filter.</param>
-		/// <param name="replaceExisting">
-		/// When true, the first filter of matching type is replaced with the new filter (thereby preserving the position of the filter in the list of filters) and any other filter of matching type is removed.
-		/// When false, the filter is simply added to the list of filters.
-		/// </param>
-		/// <returns>Returns the request builder for chaining.</returns>
-		internal static IRequest WithFilter<TFilter>(this IRequest request, TFilter filter, bool replaceExisting = true)
-			where TFilter : IHttpFilter
-		{
-			var matchingFilters = request.Filters.OfType<TFilter>().ToArray();
-
-			if (matchingFilters.Length == 0 || !replaceExisting)
-			{
-				request.Filters.Add(filter);
-			}
-			else
-			{
-				// Replace the first matching filter with the new filter
-				var collectionAsList = request.Filters as IList<IHttpFilter>;
-				var indexOfMatchingFilter = collectionAsList.IndexOf(matchingFilters[0]);
-				collectionAsList.RemoveAt(indexOfMatchingFilter);
-				collectionAsList.Insert(indexOfMatchingFilter, filter);
-
-				// Remove any other matching filter
-				for (int i = 1; i < matchingFilters.Length; i++)
-				{
-					request.Filters.Remove(matchingFilters[i]);
-				}
-			}
-
-			return request;
 		}
 
 		/// <summary>Asynchronously retrieve the response body as a <see cref="string"/>.</summary>

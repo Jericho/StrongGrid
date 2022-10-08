@@ -231,6 +231,7 @@ namespace StrongGrid.Resources
 			var response = await _client
 				.PostAsync($"{_endpoint}/send")
 				.WithJsonBody(data)
+				.WithoutFilter<MaxRequestSizeFilter>()
 				.WithFilter(_maxRequestSizeFilter)
 				.WithCancellationToken(cancellationToken)
 				.AsResponse()
