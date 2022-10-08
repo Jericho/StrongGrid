@@ -34,11 +34,11 @@ namespace StrongGrid
 		private static readonly DateTime EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
 		/// <summary>
-		/// Converts a 'unix time' (which is expressed as the number of seconds/milliseconds since
-		/// midnight on January 1st 1970) to a .Net <see cref="DateTime" />.
+		/// Converts a 'unix time', which is expressed as the number of seconds (or milliseconds) since
+		/// midnight on January 1st 1970, to a .Net <see cref="DateTime" />.
 		/// </summary>
 		/// <param name="unixTime">The unix time.</param>
-		/// <param name="precision">The desired precision.</param>
+		/// <param name="precision">The precision of the provided unix time.</param>
 		/// <returns>
 		/// The <see cref="DateTime" />.
 		/// </returns>
@@ -50,8 +50,8 @@ namespace StrongGrid
 		}
 
 		/// <summary>
-		/// Converts a .Net <see cref="DateTime" /> into a 'Unix time' (which is expressed as the number
-		/// of seconds/milliseconds since midnight on January 1st 1970).
+		/// Converts a .Net <see cref="DateTime" /> into a 'Unix time', which is expressed as the number
+		/// of seconds (or milliseconds) since midnight on January 1st 1970.
 		/// </summary>
 		/// <param name="date">The date.</param>
 		/// <param name="precision">The desired precision.</param>
@@ -123,8 +123,8 @@ namespace StrongGrid
 				// exception on subsequent attempts to read the content of the stream
 				using (var ms = Utils.MemoryStreamManager.GetStream())
 				{
-					const int defaultBufferSize = 81920;
-					await contentStream.CopyToAsync(ms, defaultBufferSize, cancellationToken).ConfigureAwait(false);
+					const int DefaultBufferSize = 81920;
+					await contentStream.CopyToAsync(ms, DefaultBufferSize, cancellationToken).ConfigureAwait(false);
 					ms.Position = 0;
 					using (var sr = new StreamReader(ms, encoding))
 					{
@@ -342,7 +342,7 @@ namespace StrongGrid
 		/// <returns>Returns the human readable representation of the TimeSpan.</returns>
 		internal static string ToDurationString(this TimeSpan timeSpan)
 		{
-			void AppendFormatIfNecessary(StringBuilder stringBuilder, string timePart, int value)
+			static void AppendFormatIfNecessary(StringBuilder stringBuilder, string timePart, int value)
 			{
 				if (value <= 0) return;
 				stringBuilder.AppendFormat($" {value} {timePart}{(value > 1 ? "s" : string.Empty)}");
@@ -639,7 +639,7 @@ namespace StrongGrid
 				In case of an error, the SendGrid API returns a JSON string that looks like this:
 				{
 					"errors": [
-						{
+				{
 							"message": "An error has occurred",
 							"field": null,
 							"help": null
@@ -650,13 +650,13 @@ namespace StrongGrid
 				The documentation says that it should look like this:
 			{
 					"errors": [
-						{
+				{
 							"message": <string>,
 							"field": <string>,
 							"error_id": <string>
-						}
-					]
 				}
+					]
+			}
 
 				The documentation for "Add or Update a Contact" under the "New Marketing Campaigns" section says that it looks like this:
 				{
@@ -671,9 +671,9 @@ namespace StrongGrid
 		}
 
 				I have also seen cases where the JSON string looks like this:
-				{
+		{
 					"error": "Name already exists"
-				}
+		}
 			*/
 
 			var responseContent = await message.Content.ReadAsStringAsync(null).ConfigureAwait(false);
