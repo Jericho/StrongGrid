@@ -538,20 +538,98 @@ namespace StrongGrid
 			return querystringParameters;
 		}
 
-		internal static void CheckForSendGridErrors(this IResponse response)
+		internal static (WeakReference<HttpRequestMessage> RequestReference, string Diagnostic, long RequestTimeStamp, long ResponseTimestamp) GetDiagnosticInfo(this IResponse response)
 		{
-			var (isError, errorMessage) = GetErrorMessage(response.Message).GetAwaiter().GetResult();
-			if (!isError) return;
-
 			var diagnosticId = response.Message.RequestMessage.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
-			if (DiagnosticHandler.DiagnosticsInfo.TryGetValue(diagnosticId, out (WeakReference<HttpRequestMessage> RequestReference, string Diagnostic, long RequestTimeStamp, long ResponseTimestamp) diagnosticInfo))
+			DiagnosticHandler.DiagnosticsInfo.TryGetValue(diagnosticId, out (WeakReference<HttpRequestMessage> RequestReference, string Diagnostic, long RequestTimeStamp, long ResponseTimestamp) diagnosticInfo);
+			return diagnosticInfo;
+		}
+
+		internal static async Task<(bool, string)> GetErrorMessageAsync(this HttpResponseMessage message)
+		{
+			// Default error message
+			var errorMessage = $"{(int)message.StatusCode}: {message.ReasonPhrase}";
+
+			/*
+				In case of an error, the SendGrid API returns a JSON string that looks like this:
+				{
+					"errors": [
+						{
+							"message": "An error has occurred",
+							"field": null,
+							"help": null
+						}
+					]
+				}
+
+				The documentation says that it should look like this:
+				{
+					"errors": [
+						{
+							"message": <string>,
+							"field": <string>,
+							"error_id": <string>
+						}
+					]
+				}
+
+				The documentation for "Add or Update a Contact" under the "New Marketing Campaigns" section says that it looks like this:
+				{
+					"errors": [
+						{
+							"message": <string>,
+							"field": <string>,
+							"error_id": <string>,
+							"parameter": <string>
+						}
+					]
+				}
+
+				I have also seen cases where the JSON string looks like this:
+				{
+					"error": "Name already exists"
+				}
+			*/
+
+			var responseContent = await message.Content.ReadAsStringAsync(null).ConfigureAwait(false);
+
+			if (!string.IsNullOrEmpty(responseContent))
 			{
-				throw new SendGridException(errorMessage, response.Message, diagnosticInfo.Diagnostic);
+				try
+				{
+					var rootJsonElement = JsonDocument.Parse(responseContent).RootElement;
+
+					if (rootJsonElement.ValueKind == JsonValueKind.Object)
+					{
+						var foundErrors = rootJsonElement.TryGetProperty("errors", out JsonElement jsonErrors);
+						var foundError = rootJsonElement.TryGetProperty("error", out JsonElement jsonError);
+
+						// Check for the presence of property called 'errors'
+						if (foundErrors && jsonErrors.ValueKind == JsonValueKind.Array)
+						{
+							var errors = jsonErrors.EnumerateArray()
+								.Select(jsonElement => jsonElement.GetProperty("message").GetString())
+								.ToArray();
+
+							errorMessage = string.Join(Environment.NewLine, errors);
+							return (true, errorMessage);
+						}
+
+						// Check for the presence of property called 'error'
+						else if (foundError)
+						{
+							errorMessage = jsonError.GetString();
+							return (true, errorMessage);
+						}
+					}
+				}
+				catch
+				{
+					// Intentionally ignore parsing errors
+				}
 			}
-			else
-			{
-				throw new SendGridException(errorMessage, response.Message, "Diagnostic log unavailable");
-			}
+
+			return (!message.IsSuccessStatusCode, errorMessage);
 		}
 
 		internal static async Task<Stream> CompressAsync(this Stream source)
@@ -624,98 +702,6 @@ namespace StrongGrid
 		internal static T ToObject<T>(this JsonElement element, JsonSerializerOptions options = null)
 		{
 			return JsonSerializer.Deserialize<T>(element.GetRawText(), options ?? JsonFormatter.DeserializerOptions);
-		}
-
-		private static async Task<(bool, string)> GetErrorMessage(HttpResponseMessage message)
-		{
-			// Assume there is an error
-			// This is important in case the response contains something like "404 Not Found" which will cause the JSON parsing to fail
-			var isError = true;
-
-			// Default error message
-			var errorMessage = $"{(int)message.StatusCode}: {message.ReasonPhrase}";
-
-			/*
-				In case of an error, the SendGrid API returns a JSON string that looks like this:
-				{
-					"errors": [
-				{
-							"message": "An error has occurred",
-							"field": null,
-							"help": null
-						}
-					]
-				}
-
-				The documentation says that it should look like this:
-			{
-					"errors": [
-				{
-							"message": <string>,
-							"field": <string>,
-							"error_id": <string>
-				}
-					]
-			}
-
-				The documentation for "Add or Update a Contact" under the "New Marketing Campaigns" section says that it looks like this:
-				{
-					"errors": [
-						{
-							"message": <string>,
-							"field": <string>,
-							"error_id": <string>,
-							"parameter": <string>
-						}
-					]
-		}
-
-				I have also seen cases where the JSON string looks like this:
-		{
-					"error": "Name already exists"
-		}
-			*/
-
-			var responseContent = await message.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-
-			if (!string.IsNullOrEmpty(responseContent))
-			{
-				try
-				{
-					var jsonContent = JsonDocument.Parse(responseContent);
-					var foundErrors = jsonContent.RootElement.TryGetProperty("errors", out JsonElement jsonErrors);
-					var foundError = jsonContent.RootElement.TryGetProperty("error", out JsonElement jsonError);
-
-					// Check for the presence of property called 'errors'
-					if (foundErrors && jsonErrors.ValueKind == JsonValueKind.Array)
-					{
-						var errors = jsonErrors.EnumerateArray()
-							.Select(jsonElement => jsonElement.GetProperty("message").GetString())
-							.ToArray();
-
-						errorMessage = string.Join(Environment.NewLine, errors);
-						isError = true;
-					}
-
-					// Check for the presence of property called 'error'
-					else if (foundError)
-					{
-						errorMessage = jsonError.GetString();
-						isError = true;
-					}
-					else
-					{
-						// It's importnat to reset this variable to false because we previously assumed it to be true
-						isError = false;
-					}
-				}
-				catch
-				{
-					// Intentionally ignore parsing errors
-				}
-			}
-
-			return (isError, errorMessage);
 		}
 
 		/// <summary>Asynchronously converts the JSON encoded content and convert it to an object of the desired type.</summary>

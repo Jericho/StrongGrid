@@ -1,4 +1,5 @@
 using Pathoschild.Http.Client;
+using Pathoschild.Http.Client.Extensibility;
 using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -56,17 +57,14 @@ namespace StrongGrid.Resources.Legacy
 			// SendGrid expects an array despite the fact we are creating a single contact
 			var data = new[] { ConvertToJson(email, firstName, lastName, customFields) };
 
-			var response = await _client
+			var importResult = await _client
 				.PostAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsResponse()
+				.AsObject<Models.Legacy.ImportResult>()
 				.ConfigureAwait(false);
 
-			response.CheckForSendGridErrors();
-
-			var importResult = await response.AsObject<Models.Legacy.ImportResult>().ConfigureAwait(false);
 			return importResult.PersistedRecipients.Single();
 		}
 
@@ -83,7 +81,7 @@ namespace StrongGrid.Resources.Legacy
 		/// The async task.
 		/// </returns>
 		/// <exception cref="SendGridException">Thrown when an exception occurred while updating the contact.</exception>
-		public async Task UpdateAsync(
+		public Task UpdateAsync(
 			string email,
 			Parameter<string> firstName = default,
 			Parameter<string> lastName = default,
@@ -94,15 +92,12 @@ namespace StrongGrid.Resources.Legacy
 			// SendGrid expects an array despite the fact we are updating a single contact
 			var data = new[] { ConvertToJson(email, firstName, lastName, customFields) };
 
-			var response = await _client
+			return _client
 				.PatchAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsResponse()
-				.ConfigureAwait(false);
-
-			response.CheckForSendGridErrors();
+				.AsResponse();
 		}
 
 		/// <summary>
@@ -126,6 +121,8 @@ namespace StrongGrid.Resources.Legacy
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
+				.WithoutFilter<SendGridErrorHandler>() // The response may contain "errors" to indicate that some contacts were not imported but it should not cause an exception to be thrown.
+				.WithFilter(new DefaultErrorFilter()) // Therefore it's important to remove the SendGridErrorHandler and to use the default error filter instead.
 				.AsObject<Models.Legacy.ImportResult>();
 		}
 
