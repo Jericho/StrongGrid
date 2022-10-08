@@ -4,6 +4,7 @@ using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -15,6 +16,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -382,6 +384,47 @@ namespace StrongGrid
 			return !string.IsNullOrEmpty(value) && value.EndsWith(suffix) ? value : string.Concat(value, suffix);
 		}
 
+		internal static JsonElement? GetProperty(this JsonElement element, string name, bool throwIfMissing = true)
+		{
+			var parts = name.Split('/');
+			if (!element.TryGetProperty(parts[0], out var property))
+			{
+				if (throwIfMissing) throw new ArgumentException($"Unable to find '{name}'", nameof(name));
+				else return null;
+			}
+
+			foreach (var part in parts.Skip(1))
+			{
+				if (!property.TryGetProperty(part, out property))
+				{
+					if (throwIfMissing) throw new ArgumentException($"Unable to find '{name}'", nameof(name));
+					else return null;
+				}
+			}
+
+			return property;
+		}
+
+		internal static T GetPropertyValue<T>(this JsonElement element, string name, T defaultValue)
+		{
+			return GetPropertyValue<T>(element, new[] { name }, defaultValue, false);
+		}
+
+		internal static T GetPropertyValue<T>(this JsonElement element, string[] names, T defaultValue)
+		{
+			return GetPropertyValue<T>(element, names, defaultValue, false);
+		}
+
+		internal static T GetPropertyValue<T>(this JsonElement element, string name)
+		{
+			return GetPropertyValue<T>(element, new[] { name }, default, true);
+		}
+
+		internal static T GetPropertyValue<T>(this JsonElement element, string[] names)
+		{
+			return GetPropertyValue<T>(element, names, default, true);
+		}
+
 		/// <summary>
 		/// Retrieve the permissions (AKA "scopes") assigned to the current user.
 		/// </summary>
@@ -554,7 +597,7 @@ namespace StrongGrid
 				In case of an error, the SendGrid API returns a JSON string that looks like this:
 				{
 					"errors": [
-						{
+				{
 							"message": "An error has occurred",
 							"field": null,
 							"help": null
@@ -664,13 +707,36 @@ namespace StrongGrid
 		internal static string ToEnumString<T>(this T enumValue)
 			where T : Enum
 		{
+			if (TryToEnumString(enumValue, out string stringValue)) return stringValue;
+			return enumValue.ToString();
+		}
+
+		internal static bool TryToEnumString<T>(this T enumValue, out string stringValue)
+			where T : Enum
+		{
 			var enumMemberAttribute = enumValue.GetAttributeOfType<EnumMemberAttribute>();
-			if (enumMemberAttribute != null) return enumMemberAttribute.Value;
+			if (enumMemberAttribute != null)
+			{
+				stringValue = enumMemberAttribute.Value;
+				return true;
+			}
+
+			var jsonPropertyNameAttribute = enumValue.GetAttributeOfType<JsonPropertyNameAttribute>();
+			if (jsonPropertyNameAttribute != null)
+			{
+				stringValue = jsonPropertyNameAttribute.Name;
+				return true;
+			}
 
 			var descriptionAttribute = enumValue.GetAttributeOfType<DescriptionAttribute>();
-			if (descriptionAttribute != null) return descriptionAttribute.Description;
+			if (descriptionAttribute != null)
+			{
+				stringValue = descriptionAttribute.Description;
+				return true;
+			}
 
-			return enumValue.ToString();
+			stringValue = null;
+			return false;
 		}
 
 		/// <summary>Parses a string into its corresponding enum value.</summary>
@@ -681,27 +747,63 @@ namespace StrongGrid
 		internal static T ToEnum<T>(this string str)
 			where T : Enum
 		{
+			if (TryToEnum(str, out T enumValue)) return enumValue;
+
+			throw new ArgumentException($"There is no value in the {typeof(T).Name} enum that corresponds to '{str}'.");
+		}
+
+		internal static bool TryToEnum<T>(this string str, out T enumValue)
+			where T : Enum
+		{
 			var enumType = typeof(T);
 			foreach (var name in Enum.GetNames(enumType))
 			{
 				var customAttributes = enumType.GetField(name).GetCustomAttributes(true);
 
 				// See if there's a matching 'EnumMember' attribute
-				if (customAttributes.OfType<EnumMemberAttribute>().Any(attribute => string.Equals(attribute.Value, str, StringComparison.OrdinalIgnoreCase))) return (T)Enum.Parse(enumType, name);
+				if (customAttributes.OfType<EnumMemberAttribute>().Any(attribute => string.Equals(attribute.Value, str, StringComparison.OrdinalIgnoreCase)))
+				{
+					enumValue = (T)Enum.Parse(enumType, name);
+					return true;
+				}
+
+				// See if there's a matching 'JsonPropertyName' attribute
+				if (customAttributes.OfType<JsonPropertyNameAttribute>().Any(attribute => string.Equals(attribute.Name, str, StringComparison.OrdinalIgnoreCase)))
+				{
+					enumValue = (T)Enum.Parse(enumType, name);
+					return true;
+				}
 
 				// See if there's a matching 'Description' attribute
-				if (customAttributes.OfType<DescriptionAttribute>().Any(attribute => string.Equals(attribute.Description, str, StringComparison.OrdinalIgnoreCase))) return (T)Enum.Parse(enumType, name);
+				if (customAttributes.OfType<DescriptionAttribute>().Any(attribute => string.Equals(attribute.Description, str, StringComparison.OrdinalIgnoreCase)))
+				{
+					enumValue = (T)Enum.Parse(enumType, name);
+					return true;
+				}
 
 				// See if the value matches the name
-				if (string.Equals(name, str, StringComparison.OrdinalIgnoreCase)) return (T)Enum.Parse(enumType, name);
+				if (string.Equals(name, str, StringComparison.OrdinalIgnoreCase))
+				{
+					enumValue = (T)Enum.Parse(enumType, name);
+					return true;
+				}
 			}
 
-			throw new ArgumentException($"There is no value in the {enumType.Name} enum that corresponds to '{str}'.");
+			enumValue = default;
+			return false;
 		}
 
 		internal static T ToObject<T>(this JsonElement element, JsonSerializerOptions options = null)
 		{
 			return JsonSerializer.Deserialize<T>(element.GetRawText(), options ?? JsonFormatter.DeserializerOptions);
+		}
+
+		internal static string ToHexString(this byte[] bytes)
+		{
+			var result = new StringBuilder(bytes.Length * 2);
+			for (int i = 0; i < bytes.Length; i++)
+				result.Append(bytes[i].ToString("x2"));
+			return result.ToString();
 		}
 
 		/// <summary>Asynchronously converts the JSON encoded content and convert it to an object of the desired type.</summary>
@@ -725,8 +827,7 @@ namespace StrongGrid
 			var jsonDoc = JsonDocument.Parse(responseContent, (JsonDocumentOptions)default);
 			if (jsonDoc.RootElement.TryGetProperty(propertyName, out JsonElement property))
 			{
-				var propertyContent = property.GetRawText();
-				return JsonSerializer.Deserialize<T>(propertyContent, options ?? JsonFormatter.DeserializerOptions);
+				return property.ToObject<T>(options);
 			}
 			else if (throwIfPropertyIsMissing)
 			{
@@ -783,7 +884,7 @@ namespace StrongGrid
 		{
 			var jsonDocument = await httpContent.AsRawJsonDocument(null, false, cancellationToken).ConfigureAwait(false);
 			var metadataProperty = jsonDocument.RootElement.GetProperty("_metadata");
-			var metadata = JsonSerializer.Deserialize<PaginationMetadata>(metadataProperty.GetRawText(), options ?? JsonFormatter.DeserializerOptions);
+			var metadata = metadataProperty.ToObject<PaginationMetadata>(options);
 
 			if (!jsonDocument.RootElement.TryGetProperty(propertyName, out JsonElement jProperty))
 			{
@@ -796,10 +897,91 @@ namespace StrongGrid
 				CurrentPageToken = metadata.SelfToken,
 				NextPageToken = metadata.NextToken,
 				TotalRecords = metadata.Count,
-				Records = JsonSerializer.Deserialize<T[]>(jProperty.GetRawText(), options ?? JsonFormatter.DeserializerOptions) ?? Array.Empty<T>()
+				Records = jProperty.ToObject<T[]>(options) ?? Array.Empty<T>()
 			};
 
 			return result;
+		}
+
+		private static T GetPropertyValue<T>(this JsonElement element, string[] names, T defaultValue, bool throwIfMissing)
+		{
+			JsonElement? property = null;
+
+			foreach (var name in names)
+			{
+				property = element.GetProperty(name, false);
+				if (property.HasValue) break;
+			}
+
+			if (!property.HasValue) return defaultValue;
+
+			var typeOfT = typeof(T);
+
+			if (typeOfT.IsEnum)
+			{
+				return property.Value.ValueKind switch
+				{
+					JsonValueKind.String => (T)Enum.Parse(typeof(T), property.Value.GetString()),
+					JsonValueKind.Number => (T)Enum.ToObject(typeof(T), property.Value.GetInt16()),
+					_ => throw new ArgumentException($"Unable to convert a {property.Value.ValueKind} into a {typeof(T).FullName}", nameof(T)),
+				};
+			}
+
+			if (typeOfT.IsGenericType && typeOfT.GetGenericTypeDefinition() == typeof(Nullable<>))
+			{
+				var underlyingType = Nullable.GetUnderlyingType(typeOfT);
+				var getElementValue = typeof(Internal)
+					.GetMethod(nameof(Internal.GetElementValue), BindingFlags.Static | BindingFlags.NonPublic)
+					.MakeGenericMethod(underlyingType);
+
+				return (T)getElementValue.Invoke(null, new object[] { property.Value });
+			}
+
+			if (typeOfT.IsArray)
+			{
+				var elementType = typeOfT.GetElementType();
+				var getElementValue = typeof(Internal)
+					.GetMethod(nameof(Internal.GetElementValue), BindingFlags.Static | BindingFlags.NonPublic)
+					.MakeGenericMethod(elementType);
+
+				var arrayList = new ArrayList(property.Value.GetArrayLength());
+				foreach (var arrayElement in property.Value.EnumerateArray())
+				{
+					var elementValue = getElementValue.Invoke(null, new object[] { arrayElement });
+					arrayList.Add(elementValue);
+				}
+
+				return (T)Convert.ChangeType(arrayList.ToArray(elementType), typeof(T));
+			}
+
+			return property.Value.GetElementValue<T>();
+		}
+
+		private static T GetElementValue<T>(this JsonElement element)
+		{
+			var typeOfT = typeof(T);
+
+			return typeOfT switch
+			{
+				Type boolType when boolType == typeof(bool) => (T)(object)element.GetBoolean(),
+				Type strType when strType == typeof(string) => (T)(object)element.GetString(),
+				Type bytesType when bytesType == typeof(byte[]) => (T)(object)element.GetBytesFromBase64(),
+				Type sbyteType when sbyteType == typeof(sbyte) => (T)(object)element.GetSByte(),
+				Type byteType when byteType == typeof(byte) => (T)(object)element.GetByte(),
+				Type shortType when shortType == typeof(short) => (T)(object)element.GetInt16(),
+				Type ushortType when ushortType == typeof(ushort) => (T)(object)element.GetUInt16(),
+				Type intType when intType == typeof(int) => (T)(object)element.GetInt32(),
+				Type uintType when uintType == typeof(uint) => (T)(object)element.GetUInt32(),
+				Type longType when longType == typeof(long) => (T)(object)element.GetInt64(),
+				Type ulongType when ulongType == typeof(ulong) => (T)(object)element.GetUInt64(),
+				Type doubleType when doubleType == typeof(double) => (T)(object)element.GetDouble(),
+				Type floatType when floatType == typeof(float) => (T)(object)element.GetSingle(),
+				Type decimalType when decimalType == typeof(decimal) => (T)(object)element.GetDecimal(),
+				Type datetimeType when datetimeType == typeof(DateTime) => (T)(object)element.GetDateTime(),
+				Type offsetType when offsetType == typeof(DateTimeOffset) => (T)(object)element.GetDateTimeOffset(),
+				Type guidType when guidType == typeof(Guid) => (T)(object)element.GetGuid(),
+				_ => throw new ArgumentException($"Unsable to map {typeof(T).FullName} to a corresponding JSON type", nameof(T)),
+			};
 		}
 	}
 }
