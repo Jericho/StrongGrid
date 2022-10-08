@@ -1,6 +1,7 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Json;
 using StrongGrid.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -62,6 +63,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<SuppressionGroup[]> GetUnsubscribedGroupsAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
+
 			var result = await _client
 				.GetAsync($"{_endpoint}/suppressions/{email}")
 				.OnBehalfOf(onBehalfOf)
@@ -111,8 +114,11 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task AddAddressesToUnsubscribeGroupAsync(long groupId, IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (emails == null) throw new ArgumentNullException(nameof(emails));
+			if (!emails.Any()) throw new ArgumentException("You must provide at least one email address", nameof(emails));
+
 			var data = new StrongGridJsonObject();
-			data.AddProperty("recipient_emails", emails.ToArray());
+			data.AddProperty("recipient_emails", emails);
 
 			return _client
 				.PostAsync($"{_endpoint}/groups/{groupId}/suppressions")
@@ -134,6 +140,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task RemoveAddressFromSuppressionGroupAsync(long groupId, string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
+
 			return _client
 				.DeleteAsync($"{_endpoint}/groups/{groupId}/suppressions/{email}")
 				.OnBehalfOf(onBehalfOf)
@@ -153,6 +161,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<bool> IsSuppressedAsync(long groupId, string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
+
 			var data = new StrongGridJsonObject();
 			data.AddProperty("recipient_emails", new[] { email });
 

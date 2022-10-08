@@ -1,6 +1,7 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Json;
 using StrongGrid.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -59,6 +60,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DenyAccessRequestAsync(string requestId, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(requestId)) throw new ArgumentNullException(nameof(requestId));
+
 			return _client
 				.DeleteAsync($"scopes/requests/{requestId}")
 				.WithCancellationToken(cancellationToken)
@@ -75,6 +78,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task ApproveAccessRequestAsync(string requestId, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(requestId)) throw new ArgumentNullException(nameof(requestId));
+
 			return _client
 				.PatchAsync($"scopes/requests/{requestId}")
 				.WithCancellationToken(cancellationToken)
@@ -95,6 +100,8 @@ namespace StrongGrid.Resources
 		/// </remarks>
 		public Task ResendInvitationAsync(string token, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(token)) throw new ArgumentNullException(nameof(token));
+
 			return _client
 				.PostAsync($"{_endpoint}/pending/{token}/resend")
 				.WithCancellationToken(cancellationToken)
@@ -136,6 +143,8 @@ namespace StrongGrid.Resources
 		/// </remarks>
 		public Task DeleteInvitationAsync(string token, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(token)) throw new ArgumentNullException(nameof(token));
+
 			return _client
 				.DeleteAsync($"{_endpoint}/pending/{token}")
 				.WithCancellationToken(cancellationToken)
@@ -159,9 +168,11 @@ namespace StrongGrid.Resources
 		/// </remarks>
 		public Task<TeammateInvitation> InviteTeammateAsync(string email, IEnumerable<string> scopes, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
+
 			var data = new StrongGridJsonObject();
 			data.AddProperty("email", email);
-			data.AddProperty("scopes", scopes.ToArray());
+			data.AddProperty("scopes", scopes);
 			data.AddProperty("is_admin", false);
 
 			return _client
@@ -187,12 +198,14 @@ namespace StrongGrid.Resources
 		/// </remarks>
 		public async Task<TeammateInvitation> InviteTeammateWithReadOnlyPrivilegesAsync(string email, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
+
 			var scopes = await _client.GetCurrentScopes(true, cancellationToken).ConfigureAwait(true);
 			scopes = scopes.Where(s => s.EndsWith(".read", System.StringComparison.OrdinalIgnoreCase)).ToArray();
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("email", email);
-			data.AddProperty("scopes", scopes.ToArray());
+			data.AddProperty("scopes", scopes);
 			data.AddProperty("is_admin", false);
 
 			return await _client
@@ -219,6 +232,8 @@ namespace StrongGrid.Resources
 		/// </remarks>
 		public Task<TeammateInvitation> InviteTeammateAsAdminAsync(string email, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
+
 			var data = new StrongGridJsonObject();
 			data.AddProperty("email", email);
 			data.AddProperty("is_admin", true);
@@ -255,6 +270,8 @@ namespace StrongGrid.Resources
 		/// <returns>The <see cref="Teammate" />.</returns>
 		public Task<Teammate> GetTeammateAsync(string username, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+
 			return _client
 				.GetAsync($"{_endpoint}/{username}")
 				.WithCancellationToken(cancellationToken)
@@ -270,8 +287,10 @@ namespace StrongGrid.Resources
 		/// <returns>The <see cref="Teammate" />.</returns>
 		public Task<Teammate> UpdateTeammatePermissionsAsync(string username, IEnumerable<string> scopes, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+
 			var data = new StrongGridJsonObject();
-			data.AddProperty("scopes", scopes.ToArray());
+			data.AddProperty("scopes", scopes);
 			data.AddProperty("is_admin", false);
 
 			return _client
@@ -291,6 +310,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteTeammateAsync(string username, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+
 			return _client
 				.DeleteAsync($"{_endpoint}/{username}")
 				.WithCancellationToken(cancellationToken)

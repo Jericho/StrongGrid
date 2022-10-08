@@ -60,7 +60,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<SuppressionGroup[]> GetMultipleAsync(IEnumerable<int> groupIds, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (groupIds == null || !groupIds.Any()) throw new ArgumentNullException(nameof(groupIds), "You must specify at least one group id");
+			if (groupIds == null) throw new ArgumentNullException(nameof(groupIds));
+			if (!groupIds.Any()) throw new ArgumentException("You must specify at least one group id", nameof(groupIds));
 
 			var request = _client
 				.GetAsync(_endpoint)
@@ -106,6 +107,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<SuppressionGroup> CreateAsync(string name, string description, bool isDefault, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
 			data.AddProperty("description", description);

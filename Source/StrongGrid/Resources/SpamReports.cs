@@ -41,6 +41,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<SpamReport[]> GetAsync(string emailAddress, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(emailAddress)) throw new ArgumentNullException(nameof(emailAddress));
+
 			return _client
 				.GetAsync($"{_endpoint}/{emailAddress}")
 				.OnBehalfOf(onBehalfOf)
@@ -105,8 +107,11 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteMultipleAsync(IEnumerable<string> emailAddresses, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (emailAddresses == null) throw new ArgumentNullException(nameof(emailAddresses));
+			if (!emailAddresses.Any()) throw new ArgumentException("You must provide at least one email address", nameof(emailAddresses));
+
 			var data = new StrongGridJsonObject();
-			data.AddProperty("emails", emailAddresses.ToArray());
+			data.AddProperty("emails", emailAddresses);
 
 			return _client
 				.DeleteAsync(_endpoint)
@@ -127,6 +132,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(string emailAddress, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(emailAddress)) throw new ArgumentNullException(nameof(emailAddress));
+
 			return _client
 				.DeleteAsync($"{_endpoint}/{emailAddress}")
 				.OnBehalfOf(onBehalfOf)

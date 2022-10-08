@@ -135,14 +135,12 @@ namespace StrongGrid.Resources
 			if (_client?.BaseClient?.DefaultRequestHeaders?.Authorization?.Scheme?.Equals("Basic", StringComparison.OrdinalIgnoreCase) ?? false)
 			{
 				const string errorMessage = "SendGrid does not support Basic authentication when sending transactional emails.";
-				const string diagnosticLog = "This request was not dispatched to SendGrid because the exception returned by their API in this scenario is not clear: 'Permission denied, wrong credentials'.";
+				const string diagnosticLog = "This request was not dispatched to SendGrid because the exception returned by their API in this scenario would have been unclear: 'Permission denied, wrong credentials'.";
 				throw new SendGridException(errorMessage, null, diagnosticLog);
 			}
 
-			if (personalizations == null || !personalizations.Any())
-			{
-				throw new ArgumentNullException(nameof(personalizations));
-			}
+			if (personalizations == null) throw new ArgumentNullException(nameof(personalizations));
+			if (!personalizations.Any()) throw new ArgumentException("You musy specify at least one personalization", nameof(personalizations));
 
 			// This comparer is used to perform case-insensitive comparisons of email addresses
 			var emailAddressComparer = new LambdaComparer<MailAddress>((address1, address2) => address1.Email.Equals(address2.Email, StringComparison.OrdinalIgnoreCase));

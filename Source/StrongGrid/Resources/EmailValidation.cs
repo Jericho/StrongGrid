@@ -1,6 +1,7 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Json;
 using StrongGrid.Models;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -37,6 +38,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<EmailValidationResult> ValidateAsync(string emailAddress, string source = null, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(emailAddress)) throw new ArgumentNullException(nameof(emailAddress));
+
 			var data = new StrongGridJsonObject();
 			data.AddProperty("email", emailAddress);
 			data.AddProperty("source", source);

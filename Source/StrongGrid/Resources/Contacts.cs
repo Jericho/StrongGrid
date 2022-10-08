@@ -70,6 +70,8 @@ namespace StrongGrid.Resources
 			IEnumerable<string> listIds = null,
 			CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
+
 			// SendGrid expects an array despite the fact we are creating a single contact
 			var contacts = new[] { ConvertToJson(email, firstName, lastName, addressLine1, addressLine2, city, stateOrProvince, country, postalCode, alternateEmails, customFields) };
 
@@ -96,9 +98,12 @@ namespace StrongGrid.Resources
 		/// <exception cref="SendGridException">Thrown when an exception occurred while adding or updating the contact.</exception>
 		public Task<string> UpsertAsync(IEnumerable<Contact> contacts, IEnumerable<string> listIds, CancellationToken cancellationToken = default)
 		{
+			if (contacts == null) throw new ArgumentNullException(nameof(contacts));
+			if (!contacts.Any()) throw new ArgumentException("You must specify at least one contact", nameof(contacts));
+
 			var data = new StrongGridJsonObject();
 			data.AddProperty("list_ids", listIds);
-			data.AddProperty("contacts", contacts.Select(c => ConvertToJson(c)).ToArray());
+			data.AddProperty("contacts", contacts.Select(c => ConvertToJson(c)));
 
 			return _client
 				.PutAsync(_endpoint)
@@ -117,6 +122,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<string> DeleteAsync(string contactId, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(contactId)) throw new ArgumentNullException(nameof(contactId));
+
 			return DeleteAsync(new[] { contactId }, cancellationToken);
 		}
 
@@ -130,6 +137,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<string> DeleteAsync(IEnumerable<string> contactIds, CancellationToken cancellationToken = default)
 		{
+			if (contactIds == null) throw new ArgumentNullException(nameof(contactIds));
+			if (!contactIds.Any()) throw new ArgumentException("You must specify at least one contact Id", nameof(contactIds));
+
 			return _client
 				.DeleteAsync(_endpoint)
 				.WithArgument("ids", string.Join(",", contactIds))
@@ -213,6 +223,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Contact> GetAsync(string contactId, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(contactId)) throw new ArgumentNullException(nameof(contactId));
+
 			return _client
 				.GetAsync($"{_endpoint}/{contactId}")
 				.WithCancellationToken(cancellationToken)
@@ -229,8 +241,11 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Contact[]> GetMultipleAsync(IEnumerable<string> contactIds, CancellationToken cancellationToken = default)
 		{
+			if (contactIds == null) throw new ArgumentNullException(nameof(contactIds));
+			if (!contactIds.Any()) throw new ArgumentException("You must specify at least one contact Id", nameof(contactIds));
+
 			var data = new StrongGridJsonObject();
-			data.AddProperty("ids", contactIds, false);
+			data.AddProperty("ids", contactIds);
 
 			return _client
 				.PostAsync($"{_endpoint}/batch")
@@ -250,7 +265,7 @@ namespace StrongGrid.Resources
 		public async Task<Contact[]> GetMultipleByEmailAddressAsync(IEnumerable<string> emailAdresses, CancellationToken cancellationToken = default)
 		{
 			var data = new StrongGridJsonObject();
-			data.AddProperty("emails", emailAdresses, false);
+			data.AddProperty("emails", emailAdresses);
 
 			IResponse response = null;
 
@@ -291,8 +306,10 @@ namespace StrongGrid.Resources
 		/// <inheritdoc/>
 		public Task<Contact[]> SearchAsync(string query, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(query)) throw new ArgumentNullException(nameof(query));
+
 			var data = new StrongGridJsonObject();
-			data.AddProperty("query", query, false);
+			data.AddProperty("query", query);
 
 			return _client
 				.PostAsync($"{_endpoint}/search")
@@ -340,6 +357,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<string> ImportFromStreamAsync(Stream stream, FileType fileType, IEnumerable<string> fieldsMapping = null, IEnumerable<string> listIds = null, CancellationToken cancellationToken = default)
 		{
+			if (stream == null) throw new ArgumentNullException(nameof(stream));
+
 			var data = new StrongGridJsonObject();
 			data.AddProperty("list_ids", listIds);
 			data.AddProperty("file_type", (Parameter<FileType>)fileType);
@@ -390,6 +409,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<ImportJob> GetImportJobAsync(string jobId, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(jobId)) throw new ArgumentNullException(nameof(jobId));
+
 			return _client
 				.GetAsync($"{_endpoint}/imports/{jobId}")
 				.WithCancellationToken(cancellationToken)
@@ -421,6 +442,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<ExportJob> GetExportJobAsync(string jobId, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(jobId)) throw new ArgumentNullException(nameof(jobId));
+
 			return _client
 				.GetAsync($"{_endpoint}/exports/{jobId}")
 				.WithCancellationToken(cancellationToken)
@@ -438,6 +461,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<(string FileName, Stream Stream)[]> DownloadExportFilesAsync(ExportJob job, bool decompress = false, CancellationToken cancellationToken = default)
 		{
+			if (job == null) throw new ArgumentNullException(nameof(job));
 			if (job.Status != ExportJobStatus.Ready) throw new Exception("The job is not completed");
 
 			var handler = new HttpClientHandler()

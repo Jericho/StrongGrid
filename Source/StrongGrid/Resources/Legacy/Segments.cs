@@ -45,7 +45,7 @@ namespace StrongGrid.Resources.Legacy
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
-			data.AddProperty("conditions", conditions.ToArray());
+			data.AddProperty("conditions", conditions);
 			data.AddProperty("list_id", listId);
 
 			return _client

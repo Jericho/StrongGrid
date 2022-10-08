@@ -2,6 +2,7 @@ using Pathoschild.Http.Client;
 using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -46,6 +47,18 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<SenderIdentity> CreateAsync(string nickname, MailAddress from, MailAddress replyTo, string address1, string address2, string city, string state, string zip, string country, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(nickname)) throw new ArgumentNullException(nameof(nickname));
+			if (string.IsNullOrEmpty(address1)) throw new ArgumentNullException(nameof(address1));
+			if (string.IsNullOrEmpty(city)) throw new ArgumentNullException(nameof(city));
+			if (string.IsNullOrEmpty(country)) throw new ArgumentNullException(nameof(country));
+
+			if (from == null) throw new ArgumentNullException(nameof(from));
+			if (string.IsNullOrEmpty(from.Email)) throw new ArgumentException("You must provide the sender's email address", nameof(from.Email));
+			if (string.IsNullOrEmpty(from.Name)) throw new ArgumentException("You must provide the sender's name", nameof(from.Name));
+
+			if (replyTo == null) throw new ArgumentNullException(nameof(replyTo));
+			if (string.IsNullOrEmpty(replyTo.Email)) throw new ArgumentException("You must provide the 'reply to' email address", nameof(replyTo.Email));
+
 			var data = ConvertToJson(nickname, from, replyTo, address1, address2, city, state, zip, country);
 
 			return _client

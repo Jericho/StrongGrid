@@ -78,15 +78,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task Cancel(string batchId, CancellationToken cancellationToken = default)
 		{
-			var data = new StrongGridJsonObject();
-			data.AddProperty("batch_id", batchId);
-			data.AddProperty("status", "cancel");
-
-			return _client
-				.PostAsync("user/scheduled_sends")
-				.WithJsonBody(data)
-				.WithCancellationToken(cancellationToken)
-				.AsMessage();
+			return UpdateStatus(batchId, BatchStatus.Canceled, cancellationToken);
 		}
 
 		/// <summary>
@@ -99,15 +91,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task Pause(string batchId, CancellationToken cancellationToken = default)
 		{
-			var data = new StrongGridJsonObject();
-			data.AddProperty("batch_id", batchId);
-			data.AddProperty("status", "pause");
-
-			return _client
-				.PostAsync("user/scheduled_sends")
-				.WithJsonBody(data)
-				.WithCancellationToken(cancellationToken)
-				.AsMessage();
+			return UpdateStatus(batchId, BatchStatus.Paused, cancellationToken);
 		}
 
 		/// <summary>
@@ -135,6 +119,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<BatchInfo> GetAsync(string batchId, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(batchId)) throw new ArgumentNullException(nameof(batchId));
+
 			var result = await _client
 				.GetAsync($"user/scheduled_sends/{batchId}")
 				.WithCancellationToken(cancellationToken)
@@ -158,6 +144,21 @@ namespace StrongGrid.Resources
 		{
 			return _client
 				.DeleteAsync($"{_endpoint}/{batchId}")
+				.WithCancellationToken(cancellationToken)
+				.AsMessage();
+		}
+
+		private Task UpdateStatus(string batchId, BatchStatus status, CancellationToken cancellationToken = default)
+		{
+			if (string.IsNullOrEmpty(batchId)) throw new ArgumentNullException(nameof(batchId));
+
+			var data = new StrongGridJsonObject();
+			data.AddProperty("batch_id", batchId);
+			data.AddProperty("status", status.ToEnumString());
+
+			return _client
+				.PostAsync("user/scheduled_sends")
+				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
 		}

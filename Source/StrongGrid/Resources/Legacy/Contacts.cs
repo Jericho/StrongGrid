@@ -116,7 +116,10 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task<Models.Legacy.ImportResult> ImportAsync(IEnumerable<Models.Legacy.Contact> contacts, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = contacts.Select(c => ConvertToJson(c)).ToArray();
+			if (contacts == null) throw new ArgumentNullException(nameof(contacts));
+			if (!contacts.Any()) throw new ArgumentException("You must provide at least one contact", nameof(contacts));
+
+			var data = contacts.Select(ConvertToJson).ToArray();
 
 			return _client
 				.PostAsync(_endpoint)
@@ -143,15 +146,18 @@ namespace StrongGrid.Resources.Legacy
 		/// <summary>
 		/// Delete contacts.
 		/// </summary>
-		/// <param name="contactId">The contact identifier.</param>
+		/// <param name="contactIds">The identifier of the contacts to delete.</param>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(IEnumerable<string> contactId, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task DeleteAsync(IEnumerable<string> contactIds, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = contactId.ToArray();
+			if (contactIds == null) throw new ArgumentNullException(nameof(contactIds));
+			if (!contactIds.Any()) throw new ArgumentException("At least one contact id must be specified.", nameof(contactIds));
+
+			var data = contactIds.ToArray();
 			return _client
 				.DeleteAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)

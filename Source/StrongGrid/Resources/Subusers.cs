@@ -2,6 +2,7 @@ using Pathoschild.Http.Client;
 using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -40,6 +41,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Subuser> GetAsync(string username, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+
 			return _client
 				.GetAsync($"{_endpoint}/{username}")
 				.WithCancellationToken(cancellationToken)
@@ -78,6 +81,10 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Subuser> CreateAsync(string username, string email, string password, Parameter<IEnumerable<string>> ips = default, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+			if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
+			if (string.IsNullOrEmpty(password)) throw new ArgumentNullException(nameof(password));
+
 			var data = ConvertToJson(username: username, email: email, password: password, ips: ips);
 			return _client
 				.PostAsync(_endpoint)
@@ -96,6 +103,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(string username, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+
 			return _client
 				.DeleteAsync($"{_endpoint}/{username}")
 				.WithCancellationToken(cancellationToken)
@@ -105,8 +114,8 @@ namespace StrongGrid.Resources
 		/// <summary>
 		/// Update a Subuser.
 		/// </summary>
-		/// <param name="username">The template identifier.</param>
-		/// <param name="disabled">The name.</param>
+		/// <param name="username">The username.</param>
+		/// <param name="disabled">Indicates whether the user is diabled or not.</param>
 		/// <param name="ips">The ips.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
@@ -114,6 +123,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task UpdateAsync(string username, Parameter<bool> disabled, Parameter<IEnumerable<string>> ips, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+
 			if (disabled.HasValue)
 			{
 				var data = new StrongGridJsonObject();
@@ -150,6 +161,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<MonitorSettings> GetMonitorSettingsAsync(string username, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+
 			return _client
 				.GetAsync($"{_endpoint}/{username}/monitor")
 				.WithCancellationToken(cancellationToken)
@@ -168,6 +181,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<MonitorSettings> CreateMonitorSettingsAsync(string username, string email, int frequency, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+
 			var data = new StrongGridJsonObject();
 			data.AddProperty("email", email);
 			data.AddProperty("frequency", frequency);
@@ -191,6 +206,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<MonitorSettings> UpdateMonitorSettingsAsync(string username, Parameter<string> email = default, Parameter<int> frequency = default, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+
 			var data = new StrongGridJsonObject();
 			data.AddProperty("email", email);
 			data.AddProperty("frequency", frequency);
@@ -212,6 +229,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteMonitorSettingsAsync(string username, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+
 			return _client
 				.DeleteAsync($"{_endpoint}/{username}/monitor")
 				.WithCancellationToken(cancellationToken)
@@ -228,6 +247,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<SenderReputation> GetSenderReputationAsync(string username, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+
 			var reputations = await GetSenderReputationsAsync(new[] { username }, cancellationToken).ConfigureAwait(false);
 			return reputations.FirstOrDefault();
 		}
@@ -242,6 +263,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<SenderReputation[]> GetSenderReputationsAsync(IEnumerable<string> usernames, CancellationToken cancellationToken = default)
 		{
+			if (usernames == null) throw new ArgumentNullException(nameof(usernames));
+			if (!usernames.Any()) throw new ArgumentException("You must provide at least one user name", nameof(usernames));
+
 			var request = _client
 				.GetAsync($"{_endpoint}/reputations")
 				.WithCancellationToken(cancellationToken);

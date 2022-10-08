@@ -2,6 +2,7 @@ using Pathoschild.Http.Client;
 using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -131,6 +132,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<string> UpdateEmailAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
+
 			var data = new StrongGridJsonObject();
 			data.AddProperty("email", email);
 
@@ -170,6 +173,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<string> UpdateUsernameAsync(string username, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+
 			var data = new StrongGridJsonObject();
 			data.AddProperty("username", username);
 
@@ -210,6 +215,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task UpdatePasswordAsync(string oldPassword, string newPassword, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(oldPassword)) throw new ArgumentNullException(nameof(oldPassword));
+			if (string.IsNullOrEmpty(newPassword)) throw new ArgumentNullException(nameof(newPassword));
+
 			var data = new StrongGridJsonObject();
 			data.AddProperty("new_password", oldPassword);
 			data.AddProperty("old_password", newPassword);

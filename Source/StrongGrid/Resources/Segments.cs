@@ -2,6 +2,7 @@ using Pathoschild.Http.Client;
 using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -34,6 +35,9 @@ namespace StrongGrid.Resources
 		/// <inheritdoc/>
 		public Task<Segment> CreateAsync(string name, string query, string listId = null, QueryLanguageVersion queryLanguageVersion = QueryLanguageVersion.Version2, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+			if (string.IsNullOrEmpty(query)) throw new ArgumentNullException(nameof(query));
+
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
 			data.AddProperty("query_dsl", query);
@@ -56,6 +60,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Segment> GetAsync(string segmentId, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(segmentId)) throw new ArgumentNullException(nameof(segmentId));
+
 			return _client
 				.GetAsync($"{_endpoint}/{segmentId}")
 				.WithArgument("query_json", "false")
@@ -94,6 +100,8 @@ namespace StrongGrid.Resources
 		/// <inheritdoc/>
 		public Task<Segment> UpdateAsync(string segmentId, Parameter<string> name = default, Parameter<string> query = default, Parameter<QueryLanguageVersion> queryLanguageVersion = default, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(segmentId)) throw new ArgumentNullException(nameof(segmentId));
+
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
 			data.AddProperty("query_dsl", query);
@@ -116,6 +124,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(string segmentId, bool deleteMatchingContacts = false, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(segmentId)) throw new ArgumentNullException(nameof(segmentId));
+
 			return _client
 				.DeleteAsync($"{_endpoint}/{segmentId}")
 				.WithArgument("delete_contacts", deleteMatchingContacts ? "true" : "false")

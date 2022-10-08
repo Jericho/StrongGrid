@@ -2,6 +2,7 @@ using Pathoschild.Http.Client;
 using StrongGrid.Models;
 using StrongGrid.Models.Search;
 using StrongGrid.Utilities;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -60,6 +61,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<EmailMessageSummary> GetMessageSummaryAsync(string messageId, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(messageId)) throw new ArgumentNullException(nameof(messageId));
+
 			return _client
 				.GetAsync($"{_endpoint}/{messageId}")
 				.WithCancellationToken(cancellationToken)
@@ -98,6 +101,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<string> GetCsvDownloadUrlAsync(string downloadUUID, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(downloadUUID)) throw new ArgumentNullException(nameof(downloadUUID));
+
 			return _client
 				.GetAsync($"{_endpoint}/download/{downloadUUID}")
 				.WithCancellationToken(cancellationToken)

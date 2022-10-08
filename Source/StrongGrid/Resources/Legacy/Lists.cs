@@ -1,5 +1,6 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -100,6 +101,9 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task DeleteAsync(IEnumerable<long> listIds, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (listIds == null) throw new ArgumentNullException(nameof(listIds));
+			if (!listIds.Any()) throw new ArgumentException("You must specify at least one list Id", nameof(listIds));
+
 			var data = listIds.ToArray();
 			return _client
 				.DeleteAsync(_endpoint)
@@ -226,6 +230,9 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task AddRecipientsAsync(long listId, IEnumerable<string> contactIds, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (contactIds == null) throw new ArgumentNullException(nameof(contactIds));
+			if (!contactIds.Any()) throw new ArgumentException("You must specify at least one contact Id", nameof(contactIds));
+
 			var data = contactIds.ToArray();
 			return _client
 				.PostAsync($"{_endpoint}/{listId}/recipients")
@@ -247,6 +254,9 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task RemoveRecipientsAsync(long listId, IEnumerable<string> contactIds, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (contactIds == null) throw new ArgumentNullException(nameof(contactIds));
+			if (!contactIds.Any()) throw new ArgumentException("You must specify at least one contact Id", nameof(contactIds));
+
 			var data = contactIds.ToArray();
 			return _client
 				.DeleteAsync($"{_endpoint}/{listId}/recipients")
