@@ -299,17 +299,17 @@ Task("Upload-Coverage-Result")
 	.IsDependentOn("Run-Code-Coverage")
 	.Does(() =>
 {
-	//try
-	//{
-	//	CoverallsNet(new FilePath($"{codeCoverageDir}coverage.{DefaultFramework}.xml"), CoverallsNetReportType.OpenCover, new CoverallsNetSettings()
-	//	{
-	//		RepoToken = coverallsToken
-	//	});
-	//}
-	//catch (Exception e)
-	//{
-	//	Warning(e.Message);
-	//}
+	try
+	{
+		CoverallsNet(new FilePath($"{codeCoverageDir}coverage.{DefaultFramework}.xml"), CoverallsNetReportType.OpenCover, new CoverallsNetSettings()
+		{
+			RepoToken = coverallsToken
+		});
+	}
+	catch (Exception e)
+	{
+		Information($"=====> Failed to upload coverage to Coveralls: {e.Message}");
+	}
 
 	try
 	{
@@ -317,7 +317,7 @@ Task("Upload-Coverage-Result")
 	}
 	catch (Exception e)
 	{
-		Warning(e.Message);
+		Information($"=====> Failed to upload coverage to CodeCov: {e.Message}");
 	}
 });
 
