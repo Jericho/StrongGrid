@@ -151,14 +151,8 @@ namespace StrongGrid.Resources
 			}
 		}
 
-		/// <summary>
-		/// Get the monitor settings.
-		/// </summary>
-		/// <param name="username">The sub user.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// The <see cref="MonitorSettings" />.
-		/// </returns>
+		/// <inheritdoc/>
+		[Obsolete("Twilio SendGrid will retire Email Monitor on December 13, 2022.")]
 		public Task<MonitorSettings> GetMonitorSettingsAsync(string username, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
@@ -169,16 +163,8 @@ namespace StrongGrid.Resources
 				.AsObject<MonitorSettings>();
 		}
 
-		/// <summary>
-		/// Create monitor settings.
-		/// </summary>
-		/// <param name="username">The sub user.</param>
-		/// <param name="email">The email address to receive the monitor emails.</param>
-		/// <param name="frequency">The frequency.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// The <see cref="MonitorSettings" />.
-		/// </returns>
+		/// <inheritdoc/>
+		[Obsolete("Twilio SendGrid will retire Email Monitor on December 13, 2022.")]
 		public Task<MonitorSettings> CreateMonitorSettingsAsync(string username, string email, int frequency, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
@@ -194,16 +180,8 @@ namespace StrongGrid.Resources
 				.AsObject<MonitorSettings>();
 		}
 
-		/// <summary>
-		/// Update monitor settings.
-		/// </summary>
-		/// <param name="username">The sub user.</param>
-		/// <param name="email">The email address to receive the monitor emails.</param>
-		/// <param name="frequency">The frequency.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// The <see cref="MonitorSettings" />.
-		/// </returns>
+		/// <inheritdoc/>
+		[Obsolete("Twilio SendGrid will retire Email Monitor on December 13, 2022.")]
 		public Task<MonitorSettings> UpdateMonitorSettingsAsync(string username, Parameter<string> email = default, Parameter<int> frequency = default, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
@@ -219,14 +197,8 @@ namespace StrongGrid.Resources
 				.AsObject<MonitorSettings>();
 		}
 
-		/// <summary>
-		/// Delete monitor settings.
-		/// </summary>
-		/// <param name="username">The username.</param>
-		/// <param name="cancellationToken">Cancellation token.</param>
-		/// <returns>
-		/// The async task.
-		/// </returns>
+		/// <inheritdoc/>
+		[Obsolete("Twilio SendGrid will retire Email Monitor on December 13, 2022.")]
 		public Task DeleteMonitorSettingsAsync(string username, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
