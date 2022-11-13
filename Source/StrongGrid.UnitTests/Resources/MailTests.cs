@@ -37,8 +37,13 @@ namespace StrongGrid.UnitTests.Resources
 			{
 				new MailPersonalization()
 				{
-					To = new[] { new MailAddress("bob@example.com", "Bob Smith") }
-				}
+					To = new[] { new MailAddress("bob@example.com", "Bob Smith") },
+					CustomArguments = new[]
+					{
+						new KeyValuePair<string, string>("foo", "bar"),
+					},
+					SendAt = DateTime.Now,
+				},
 			};
 
 			var mailSettings = new MailSettings()
@@ -193,7 +198,9 @@ namespace StrongGrid.UnitTests.Resources
 				new MailContent("text/html", new string('v', 10 * 1024 * 1024))
 			};
 
-			var mail = new Mail(null);
+			var mockHttp = new MockHttpMessageHandler();
+			var client = Utils.GetFluentClient(mockHttp);
+			var mail = new Mail(client);
 
 			// Act
 			var result = await Should.ThrowAsync<Exception>(mail.SendAsync(personalizations, subject, contents, from)).ConfigureAwait(false);

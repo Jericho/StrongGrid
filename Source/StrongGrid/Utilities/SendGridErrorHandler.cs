@@ -20,9 +20,12 @@ namespace StrongGrid.Utilities
 		/// <param name="httpErrorAsException">Whether HTTP error responses should be raised as exceptions.</param>
 		public void OnResponse(IResponse response, bool httpErrorAsException)
 		{
-			if (response.IsSuccessStatusCode) return;
+			var (isError, errorMessage) = response.Message.GetErrorMessageAsync().GetAwaiter().GetResult();
+			if (!isError) return;
 
-			response.CheckForSendGridErrors();
+			var diagnosticInfo = response.GetDiagnosticInfo();
+			var diagnosticLog = diagnosticInfo.Diagnostic ?? "Diagnostic log unavailable";
+			throw new SendGridException(errorMessage, response.Message, diagnosticLog);
 		}
 
 		#endregion

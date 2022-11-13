@@ -1,6 +1,7 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Json;
 using StrongGrid.Models;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -39,6 +40,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<AddIpAddressResult> AddAsync(int count, string[] subusers = null, bool? warmup = null, CancellationToken cancellationToken = default)
 		{
+			if (count < 1) throw new ArgumentOutOfRangeException(nameof(count), "The number of IP addresses to add must be greater than 0.");
+
 			var data = new StrongGridJsonObject();
 			data.AddProperty("count", count);
 			data.AddProperty("subusers", subusers);
@@ -79,6 +82,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<IpAddress> GetAsync(string address, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(address)) throw new ArgumentNullException(nameof(address));
+
 			return _client
 				.GetAsync($"{_endpoint}/{address}")
 				.WithCancellationToken(cancellationToken)
@@ -151,6 +156,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<IpAddress> GetWarmupStatusAsync(string address, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(address)) throw new ArgumentNullException(nameof(address));
+
 			var addresses = await _client
 				.GetAsync($"{_endpoint}/warmup/{address}")
 				.WithCancellationToken(cancellationToken)
@@ -168,6 +175,8 @@ namespace StrongGrid.Resources
 		/// <returns>The async task.</returns>
 		public Task StartWarmupAsync(string address, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(address)) throw new ArgumentNullException(nameof(address));
+
 			var data = new StrongGridJsonObject();
 			data.AddProperty("ip", address);
 
@@ -186,6 +195,8 @@ namespace StrongGrid.Resources
 		/// <returns>The async task.</returns>
 		public Task StopWarmupAsync(string address, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(address)) throw new ArgumentNullException(nameof(address));
+
 			return _client
 				.DeleteAsync($"{_endpoint}/warmup/{address}")
 				.WithCancellationToken(cancellationToken)

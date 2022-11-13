@@ -1,10 +1,10 @@
 using HttpMultipartParser;
 using Pathoschild.Http.Client;
-using Pathoschild.Http.Client.Extensibility;
 using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -16,6 +16,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -35,11 +36,11 @@ namespace StrongGrid
 		private static readonly DateTime EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
 		/// <summary>
-		/// Converts a 'unix time' (which is expressed as the number of seconds/milliseconds since
-		/// midnight on January 1st 1970) to a .Net <see cref="DateTime" />.
+		/// Converts a 'unix time', which is expressed as the number of seconds (or milliseconds) since
+		/// midnight on January 1st 1970, to a .Net <see cref="DateTime" />.
 		/// </summary>
 		/// <param name="unixTime">The unix time.</param>
-		/// <param name="precision">The desired precision.</param>
+		/// <param name="precision">The precision of the provided unix time.</param>
 		/// <returns>
 		/// The <see cref="DateTime" />.
 		/// </returns>
@@ -51,8 +52,8 @@ namespace StrongGrid
 		}
 
 		/// <summary>
-		/// Converts a .Net <see cref="DateTime" /> into a 'Unix time' (which is expressed as the number
-		/// of seconds/milliseconds since midnight on January 1st 1970).
+		/// Converts a .Net <see cref="DateTime" /> into a 'Unix time', which is expressed as the number
+		/// of seconds (or milliseconds) since midnight on January 1st 1970.
 		/// </summary>
 		/// <param name="date">The date.</param>
 		/// <param name="precision">The desired precision.</param>
@@ -124,8 +125,8 @@ namespace StrongGrid
 				// exception on subsequent attempts to read the content of the stream
 				using (var ms = Utils.MemoryStreamManager.GetStream())
 				{
-					const int defaultBufferSize = 81920;
-					await contentStream.CopyToAsync(ms, defaultBufferSize, cancellationToken).ConfigureAwait(false);
+					const int DefaultBufferSize = 81920;
+					await contentStream.CopyToAsync(ms, DefaultBufferSize, cancellationToken).ConfigureAwait(false);
 					ms.Position = 0;
 					using (var sr = new StreamReader(ms, encoding))
 					{
@@ -308,42 +309,6 @@ namespace StrongGrid
 			return string.IsNullOrEmpty(username) ? request : request.WithHeader("on-behalf-of", username);
 		}
 
-		/// <summary>Add a filter to a request.</summary>
-		/// <typeparam name="TFilter">The type of filter.</typeparam>
-		/// <param name="request">The request.</param>
-		/// <param name="filter">The filter.</param>
-		/// <param name="replaceExisting">
-		/// When true, the first filter of matching type is replaced with the new filter (thereby preserving the position of the filter in the list of filters) and any other filter of matching type is removed.
-		/// When false, the filter is simply added to the list of filters.
-		/// </param>
-		/// <returns>Returns the request builder for chaining.</returns>
-		internal static IRequest WithFilter<TFilter>(this IRequest request, TFilter filter, bool replaceExisting = true)
-			where TFilter : IHttpFilter
-		{
-			var matchingFilters = request.Filters.OfType<TFilter>().ToArray();
-
-			if (matchingFilters.Length == 0 || !replaceExisting)
-			{
-				request.Filters.Add(filter);
-			}
-			else
-			{
-				// Replace the first matching filter with the new filter
-				var collectionAsList = request.Filters as IList<IHttpFilter>;
-				var indexOfMatchingFilter = collectionAsList.IndexOf(matchingFilters[0]);
-				collectionAsList.RemoveAt(indexOfMatchingFilter);
-				collectionAsList.Insert(indexOfMatchingFilter, filter);
-
-				// Remove any other matching filter
-				for (int i = 1; i < matchingFilters.Length; i++)
-				{
-					request.Filters.Remove(matchingFilters[i]);
-				}
-			}
-
-			return request;
-		}
-
 		/// <summary>Asynchronously retrieve the response body as a <see cref="string"/>.</summary>
 		/// <param name="response">The response.</param>
 		/// <param name="encoding">The encoding. You can leave this parameter null and the encoding will be
@@ -379,7 +344,7 @@ namespace StrongGrid
 		/// <returns>Returns the human readable representation of the TimeSpan.</returns>
 		internal static string ToDurationString(this TimeSpan timeSpan)
 		{
-			void AppendFormatIfNecessary(StringBuilder stringBuilder, string timePart, int value)
+			static void AppendFormatIfNecessary(StringBuilder stringBuilder, string timePart, int value)
 			{
 				if (value <= 0) return;
 				stringBuilder.AppendFormat($" {value} {timePart}{(value > 1 ? "s" : string.Empty)}");
@@ -417,6 +382,47 @@ namespace StrongGrid
 		internal static string EnsureEndsWith(this string value, string suffix)
 		{
 			return !string.IsNullOrEmpty(value) && value.EndsWith(suffix) ? value : string.Concat(value, suffix);
+		}
+
+		internal static JsonElement? GetProperty(this JsonElement element, string name, bool throwIfMissing = true)
+		{
+			var parts = name.Split('/');
+			if (!element.TryGetProperty(parts[0], out var property))
+			{
+				if (throwIfMissing) throw new ArgumentException($"Unable to find '{name}'", nameof(name));
+				else return null;
+			}
+
+			foreach (var part in parts.Skip(1))
+			{
+				if (!property.TryGetProperty(part, out property))
+				{
+					if (throwIfMissing) throw new ArgumentException($"Unable to find '{name}'", nameof(name));
+					else return null;
+				}
+			}
+
+			return property;
+		}
+
+		internal static T GetPropertyValue<T>(this JsonElement element, string name, T defaultValue)
+		{
+			return GetPropertyValue<T>(element, new[] { name }, defaultValue, false);
+		}
+
+		internal static T GetPropertyValue<T>(this JsonElement element, string[] names, T defaultValue)
+		{
+			return GetPropertyValue<T>(element, names, defaultValue, false);
+		}
+
+		internal static T GetPropertyValue<T>(this JsonElement element, string name)
+		{
+			return GetPropertyValue<T>(element, new[] { name }, default, true);
+		}
+
+		internal static T GetPropertyValue<T>(this JsonElement element, string[] names)
+		{
+			return GetPropertyValue<T>(element, names, default, true);
 		}
 
 		/// <summary>
@@ -575,20 +581,98 @@ namespace StrongGrid
 			return querystringParameters;
 		}
 
-		internal static void CheckForSendGridErrors(this IResponse response)
+		internal static (WeakReference<HttpRequestMessage> RequestReference, string Diagnostic, long RequestTimeStamp, long ResponseTimestamp) GetDiagnosticInfo(this IResponse response)
 		{
-			var (isError, errorMessage) = GetErrorMessage(response.Message).GetAwaiter().GetResult();
-			if (!isError) return;
-
 			var diagnosticId = response.Message.RequestMessage.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
-			if (DiagnosticHandler.DiagnosticsInfo.TryGetValue(diagnosticId, out (WeakReference<HttpRequestMessage> RequestReference, string Diagnostic, long RequestTimeStamp, long ResponseTimestamp) diagnosticInfo))
+			DiagnosticHandler.DiagnosticsInfo.TryGetValue(diagnosticId, out (WeakReference<HttpRequestMessage> RequestReference, string Diagnostic, long RequestTimeStamp, long ResponseTimestamp) diagnosticInfo);
+			return diagnosticInfo;
+		}
+
+		internal static async Task<(bool, string)> GetErrorMessageAsync(this HttpResponseMessage message)
+		{
+			// Default error message
+			var errorMessage = $"{(int)message.StatusCode}: {message.ReasonPhrase}";
+
+			/*
+				In case of an error, the SendGrid API returns a JSON string that looks like this:
+				{
+					"errors": [
+				{
+							"message": "An error has occurred",
+							"field": null,
+							"help": null
+						}
+					]
+				}
+
+				The documentation says that it should look like this:
+				{
+					"errors": [
+						{
+							"message": <string>,
+							"field": <string>,
+							"error_id": <string>
+						}
+					]
+				}
+
+				The documentation for "Add or Update a Contact" under the "New Marketing Campaigns" section says that it looks like this:
+				{
+					"errors": [
+						{
+							"message": <string>,
+							"field": <string>,
+							"error_id": <string>,
+							"parameter": <string>
+						}
+					]
+				}
+
+				I have also seen cases where the JSON string looks like this:
+				{
+					"error": "Name already exists"
+				}
+			*/
+
+			var responseContent = await message.Content.ReadAsStringAsync(null).ConfigureAwait(false);
+
+			if (!string.IsNullOrEmpty(responseContent))
 			{
-				throw new SendGridException(errorMessage, response.Message, diagnosticInfo.Diagnostic);
+				try
+				{
+					var rootJsonElement = JsonDocument.Parse(responseContent).RootElement;
+
+					if (rootJsonElement.ValueKind == JsonValueKind.Object)
+					{
+						var foundErrors = rootJsonElement.TryGetProperty("errors", out JsonElement jsonErrors);
+						var foundError = rootJsonElement.TryGetProperty("error", out JsonElement jsonError);
+
+						// Check for the presence of property called 'errors'
+						if (foundErrors && jsonErrors.ValueKind == JsonValueKind.Array)
+						{
+							var errors = jsonErrors.EnumerateArray()
+								.Select(jsonElement => jsonElement.GetProperty("message").GetString())
+								.ToArray();
+
+							errorMessage = string.Join(Environment.NewLine, errors);
+							return (true, errorMessage);
+						}
+
+						// Check for the presence of property called 'error'
+						else if (foundError)
+						{
+							errorMessage = jsonError.GetString();
+							return (true, errorMessage);
+						}
+					}
+				}
+				catch
+				{
+					// Intentionally ignore parsing errors
+				}
 			}
-			else
-			{
-				throw new SendGridException(errorMessage, response.Message, "Diagnostic log unavailable");
-			}
+
+			return (!message.IsSuccessStatusCode, errorMessage);
 		}
 
 		internal static async Task<Stream> CompressAsync(this Stream source)
@@ -623,13 +707,36 @@ namespace StrongGrid
 		internal static string ToEnumString<T>(this T enumValue)
 			where T : Enum
 		{
+			if (TryToEnumString(enumValue, out string stringValue)) return stringValue;
+			return enumValue.ToString();
+		}
+
+		internal static bool TryToEnumString<T>(this T enumValue, out string stringValue)
+			where T : Enum
+		{
 			var enumMemberAttribute = enumValue.GetAttributeOfType<EnumMemberAttribute>();
-			if (enumMemberAttribute != null) return enumMemberAttribute.Value;
+			if (enumMemberAttribute != null)
+			{
+				stringValue = enumMemberAttribute.Value;
+				return true;
+			}
+
+			var jsonPropertyNameAttribute = enumValue.GetAttributeOfType<JsonPropertyNameAttribute>();
+			if (jsonPropertyNameAttribute != null)
+			{
+				stringValue = jsonPropertyNameAttribute.Name;
+				return true;
+			}
 
 			var descriptionAttribute = enumValue.GetAttributeOfType<DescriptionAttribute>();
-			if (descriptionAttribute != null) return descriptionAttribute.Description;
+			if (descriptionAttribute != null)
+			{
+				stringValue = descriptionAttribute.Description;
+				return true;
+			}
 
-			return enumValue.ToString();
+			stringValue = null;
+			return false;
 		}
 
 		/// <summary>Parses a string into its corresponding enum value.</summary>
@@ -640,22 +747,50 @@ namespace StrongGrid
 		internal static T ToEnum<T>(this string str)
 			where T : Enum
 		{
+			if (TryToEnum(str, out T enumValue)) return enumValue;
+
+			throw new ArgumentException($"There is no value in the {typeof(T).Name} enum that corresponds to '{str}'.");
+		}
+
+		internal static bool TryToEnum<T>(this string str, out T enumValue)
+			where T : Enum
+		{
 			var enumType = typeof(T);
 			foreach (var name in Enum.GetNames(enumType))
 			{
 				var customAttributes = enumType.GetField(name).GetCustomAttributes(true);
 
 				// See if there's a matching 'EnumMember' attribute
-				if (customAttributes.OfType<EnumMemberAttribute>().Any(attribute => string.Equals(attribute.Value, str, StringComparison.OrdinalIgnoreCase))) return (T)Enum.Parse(enumType, name);
+				if (customAttributes.OfType<EnumMemberAttribute>().Any(attribute => string.Equals(attribute.Value, str, StringComparison.OrdinalIgnoreCase)))
+				{
+					enumValue = (T)Enum.Parse(enumType, name);
+					return true;
+				}
+
+				// See if there's a matching 'JsonPropertyName' attribute
+				if (customAttributes.OfType<JsonPropertyNameAttribute>().Any(attribute => string.Equals(attribute.Name, str, StringComparison.OrdinalIgnoreCase)))
+				{
+					enumValue = (T)Enum.Parse(enumType, name);
+					return true;
+				}
 
 				// See if there's a matching 'Description' attribute
-				if (customAttributes.OfType<DescriptionAttribute>().Any(attribute => string.Equals(attribute.Description, str, StringComparison.OrdinalIgnoreCase))) return (T)Enum.Parse(enumType, name);
+				if (customAttributes.OfType<DescriptionAttribute>().Any(attribute => string.Equals(attribute.Description, str, StringComparison.OrdinalIgnoreCase)))
+				{
+					enumValue = (T)Enum.Parse(enumType, name);
+					return true;
+				}
 
 				// See if the value matches the name
-				if (string.Equals(name, str, StringComparison.OrdinalIgnoreCase)) return (T)Enum.Parse(enumType, name);
+				if (string.Equals(name, str, StringComparison.OrdinalIgnoreCase))
+				{
+					enumValue = (T)Enum.Parse(enumType, name);
+					return true;
+				}
 			}
 
-			throw new ArgumentException($"There is no value in the {enumType.Name} enum that corresponds to '{str}'.");
+			enumValue = default;
+			return false;
 		}
 
 		internal static T ToObject<T>(this JsonElement element, JsonSerializerOptions options = null)
@@ -663,96 +798,12 @@ namespace StrongGrid
 			return JsonSerializer.Deserialize<T>(element.GetRawText(), options ?? JsonFormatter.DeserializerOptions);
 		}
 
-		private static async Task<(bool, string)> GetErrorMessage(HttpResponseMessage message)
+		internal static string ToHexString(this byte[] bytes)
 		{
-			// Assume there is an error
-			// This is important in case the response contains something like "404 Not Found" which will cause the JSON parsing to fail
-			var isError = true;
-
-			// Default error message
-			var errorMessage = $"{(int)message.StatusCode}: {message.ReasonPhrase}";
-
-			/*
-				In case of an error, the SendGrid API returns a JSON string that looks like this:
-				{
-					"errors": [
-						{
-							"message": "An error has occurred",
-							"field": null,
-							"help": null
-						}
-					]
-				}
-
-				The documentation says that it should look like this:
-			{
-					"errors": [
-						{
-							"message": <string>,
-							"field": <string>,
-							"error_id": <string>
-						}
-					]
-				}
-
-				The documentation for "Add or Update a Contact" under the "New Marketing Campaigns" section says that it looks like this:
-				{
-					"errors": [
-						{
-							"message": <string>,
-							"field": <string>,
-							"error_id": <string>,
-							"parameter": <string>
-						}
-					]
-		}
-
-				I have also seen cases where the JSON string looks like this:
-				{
-					"error": "Name already exists"
-				}
-			*/
-
-			var responseContent = await message.Content.ReadAsStringAsync(null).ConfigureAwait(false);
-
-			if (!string.IsNullOrEmpty(responseContent))
-			{
-				try
-				{
-					var jsonContent = JsonDocument.Parse(responseContent);
-					var foundErrors = jsonContent.RootElement.TryGetProperty("errors", out JsonElement jsonErrors);
-					var foundError = jsonContent.RootElement.TryGetProperty("error", out JsonElement jsonError);
-
-					// Check for the presence of property called 'errors'
-					if (foundErrors && jsonErrors.ValueKind == JsonValueKind.Array)
-					{
-						var errors = jsonErrors.EnumerateArray()
-							.Select(jsonElement => jsonElement.GetProperty("message").GetString())
-							.ToArray();
-
-						errorMessage = string.Join(Environment.NewLine, errors);
-						isError = true;
-					}
-
-					// Check for the presence of property called 'error'
-					else if (foundError)
-					{
-						errorMessage = jsonError.GetString();
-						isError = true;
-					}
-					else
-					{
-						// It's importnat to reset this variable to false because we previously assumed it to be true
-						isError = false;
-					}
-				}
-				catch
-				{
-					// Intentionally ignore parsing errors
-				}
-			}
-
-			return (isError, errorMessage);
+			var result = new StringBuilder(bytes.Length * 2);
+			for (int i = 0; i < bytes.Length; i++)
+				result.Append(bytes[i].ToString("x2"));
+			return result.ToString();
 		}
 
 		/// <summary>Asynchronously converts the JSON encoded content and convert it to an object of the desired type.</summary>
@@ -776,8 +827,7 @@ namespace StrongGrid
 			var jsonDoc = JsonDocument.Parse(responseContent, (JsonDocumentOptions)default);
 			if (jsonDoc.RootElement.TryGetProperty(propertyName, out JsonElement property))
 			{
-				var propertyContent = property.GetRawText();
-				return JsonSerializer.Deserialize<T>(propertyContent, options ?? JsonFormatter.DeserializerOptions);
+				return property.ToObject<T>(options);
 			}
 			else if (throwIfPropertyIsMissing)
 			{
@@ -834,7 +884,7 @@ namespace StrongGrid
 		{
 			var jsonDocument = await httpContent.AsRawJsonDocument(null, false, cancellationToken).ConfigureAwait(false);
 			var metadataProperty = jsonDocument.RootElement.GetProperty("_metadata");
-			var metadata = JsonSerializer.Deserialize<PaginationMetadata>(metadataProperty.GetRawText(), options ?? JsonFormatter.DeserializerOptions);
+			var metadata = metadataProperty.ToObject<PaginationMetadata>(options);
 
 			if (!jsonDocument.RootElement.TryGetProperty(propertyName, out JsonElement jProperty))
 			{
@@ -847,10 +897,91 @@ namespace StrongGrid
 				CurrentPageToken = metadata.SelfToken,
 				NextPageToken = metadata.NextToken,
 				TotalRecords = metadata.Count,
-				Records = JsonSerializer.Deserialize<T[]>(jProperty.GetRawText(), options ?? JsonFormatter.DeserializerOptions) ?? Array.Empty<T>()
+				Records = jProperty.ToObject<T[]>(options) ?? Array.Empty<T>()
 			};
 
 			return result;
+		}
+
+		private static T GetPropertyValue<T>(this JsonElement element, string[] names, T defaultValue, bool throwIfMissing)
+		{
+			JsonElement? property = null;
+
+			foreach (var name in names)
+			{
+				property = element.GetProperty(name, false);
+				if (property.HasValue) break;
+			}
+
+			if (!property.HasValue) return defaultValue;
+
+			var typeOfT = typeof(T);
+
+			if (typeOfT.IsEnum)
+			{
+				return property.Value.ValueKind switch
+				{
+					JsonValueKind.String => (T)Enum.Parse(typeof(T), property.Value.GetString()),
+					JsonValueKind.Number => (T)Enum.ToObject(typeof(T), property.Value.GetInt16()),
+					_ => throw new ArgumentException($"Unable to convert a {property.Value.ValueKind} into a {typeof(T).FullName}", nameof(T)),
+				};
+			}
+
+			if (typeOfT.IsGenericType && typeOfT.GetGenericTypeDefinition() == typeof(Nullable<>))
+			{
+				var underlyingType = Nullable.GetUnderlyingType(typeOfT);
+				var getElementValue = typeof(Internal)
+					.GetMethod(nameof(Internal.GetElementValue), BindingFlags.Static | BindingFlags.NonPublic)
+					.MakeGenericMethod(underlyingType);
+
+				return (T)getElementValue.Invoke(null, new object[] { property.Value });
+			}
+
+			if (typeOfT.IsArray)
+			{
+				var elementType = typeOfT.GetElementType();
+				var getElementValue = typeof(Internal)
+					.GetMethod(nameof(Internal.GetElementValue), BindingFlags.Static | BindingFlags.NonPublic)
+					.MakeGenericMethod(elementType);
+
+				var arrayList = new ArrayList(property.Value.GetArrayLength());
+				foreach (var arrayElement in property.Value.EnumerateArray())
+				{
+					var elementValue = getElementValue.Invoke(null, new object[] { arrayElement });
+					arrayList.Add(elementValue);
+				}
+
+				return (T)Convert.ChangeType(arrayList.ToArray(elementType), typeof(T));
+			}
+
+			return property.Value.GetElementValue<T>();
+		}
+
+		private static T GetElementValue<T>(this JsonElement element)
+		{
+			var typeOfT = typeof(T);
+
+			return typeOfT switch
+			{
+				Type boolType when boolType == typeof(bool) => (T)(object)element.GetBoolean(),
+				Type strType when strType == typeof(string) => (T)(object)element.GetString(),
+				Type bytesType when bytesType == typeof(byte[]) => (T)(object)element.GetBytesFromBase64(),
+				Type sbyteType when sbyteType == typeof(sbyte) => (T)(object)element.GetSByte(),
+				Type byteType when byteType == typeof(byte) => (T)(object)element.GetByte(),
+				Type shortType when shortType == typeof(short) => (T)(object)element.GetInt16(),
+				Type ushortType when ushortType == typeof(ushort) => (T)(object)element.GetUInt16(),
+				Type intType when intType == typeof(int) => (T)(object)element.GetInt32(),
+				Type uintType when uintType == typeof(uint) => (T)(object)element.GetUInt32(),
+				Type longType when longType == typeof(long) => (T)(object)element.GetInt64(),
+				Type ulongType when ulongType == typeof(ulong) => (T)(object)element.GetUInt64(),
+				Type doubleType when doubleType == typeof(double) => (T)(object)element.GetDouble(),
+				Type floatType when floatType == typeof(float) => (T)(object)element.GetSingle(),
+				Type decimalType when decimalType == typeof(decimal) => (T)(object)element.GetDecimal(),
+				Type datetimeType when datetimeType == typeof(DateTime) => (T)(object)element.GetDateTime(),
+				Type offsetType when offsetType == typeof(DateTimeOffset) => (T)(object)element.GetDateTimeOffset(),
+				Type guidType when guidType == typeof(Guid) => (T)(object)element.GetGuid(),
+				_ => throw new ArgumentException($"Unsable to map {typeof(T).FullName} to a corresponding JSON type", nameof(T)),
+			};
 		}
 	}
 }

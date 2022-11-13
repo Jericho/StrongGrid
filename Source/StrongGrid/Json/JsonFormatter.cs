@@ -14,6 +14,7 @@ namespace StrongGrid.Json
 	{
 		internal static readonly JsonSerializerContext DeserializationContext;
 		internal static readonly JsonSerializerContext SerializationContext;
+
 		internal static readonly JsonSerializerOptions DeserializerOptions;
 		internal static readonly JsonSerializerOptions SerializerOptions;
 

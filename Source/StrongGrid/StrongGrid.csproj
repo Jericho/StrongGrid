@@ -36,12 +36,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HttpMultipartParser" Version="7.0.0" />
+    <PackageReference Include="HttpMultipartParser" Version="7.1.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
     <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.1" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="MimeTypesMap" Version="1.0.8" />
-    <PackageReference Include="Pathoschild.Http.FluentClient" Version="4.1.1" />
+    <PackageReference Include="Pathoschild.Http.FluentClient" Version="4.2.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" />
     <PackageReference Include="System.Buffers" Version="4.5.1" />
     <PackageReference Include="System.Text.Json" Version="6.0.6" />

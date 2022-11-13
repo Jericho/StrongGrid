@@ -404,9 +404,9 @@ namespace StrongGrid.UnitTests.Resources
 		public async Task CreateDomainAsync()
 		{
 			// Arrange
-			var domain = "";
-			var subdomain = "";
-			var username = "";
+			var domain = "foo.com";
+			var subdomain = "bar";
+			var username = "myuser";
 			var ips = Array.Empty<string>();
 			var automaticSecurity = true;
 			var customSpf = false;

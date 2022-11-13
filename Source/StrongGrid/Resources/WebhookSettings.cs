@@ -2,6 +2,7 @@ using Pathoschild.Http.Client;
 using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -86,6 +87,8 @@ namespace StrongGrid.Resources
 			string onBehalfOf = null,
 			CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
+
 			var eventWebhookSettings = new EventWebhookSettings
 			{
 				Enabled = enabled,
@@ -122,6 +125,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task SendEventTestAsync(string url, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
+
 			var data = new StrongGridJsonObject();
 			data.AddProperty("url", url);
 
@@ -147,6 +152,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<InboundParseWebhookSettings> CreateInboundParseWebhookSettingsAsync(string hostname, string url, bool spamCheck = false, bool sendRaw = false, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(hostname)) throw new ArgumentNullException(nameof(hostname));
+			if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
+
 			var data = ConvertToJson(hostname, url, spamCheck, sendRaw);
 			return _client
 				.PostAsync($"{_inboundParseWebhookEndpoint}/settings")
@@ -184,6 +192,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<InboundParseWebhookSettings> GetInboundParseWebhookSettingsAsync(string hostname, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(hostname)) throw new ArgumentNullException(nameof(hostname));
+
 			return _client
 				.GetAsync($"{_inboundParseWebhookEndpoint}/settings/{hostname}")
 				.OnBehalfOf(onBehalfOf)
@@ -205,6 +215,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task UpdateInboundParseWebhookSettingsAsync(string hostname, Parameter<string> url = default, Parameter<bool> spamCheck = default, Parameter<bool> sendRaw = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(hostname)) throw new ArgumentNullException(nameof(hostname));
+
 			var data = ConvertToJson(null, url, spamCheck, sendRaw);
 			return _client
 				.PatchAsync($"{_inboundParseWebhookEndpoint}/settings/{hostname}")
@@ -225,6 +237,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteInboundParseWebhookSettingsAsync(string hostname, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(hostname)) throw new ArgumentNullException(nameof(hostname));
+
 			return _client
 				.DeleteAsync($"{_inboundParseWebhookEndpoint}/settings/{hostname}")
 				.OnBehalfOf(onBehalfOf)

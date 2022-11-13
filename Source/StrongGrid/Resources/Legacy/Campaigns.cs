@@ -278,8 +278,8 @@ namespace StrongGrid.Resources.Legacy
 		/// <exception cref="System.ArgumentException">You must specify at least one email address.</exception>
 		public Task SendTestAsync(long campaignId, IEnumerable<string> emailAddresses, CancellationToken cancellationToken = default)
 		{
-			emailAddresses = emailAddresses ?? Enumerable.Empty<string>();
-			if (!emailAddresses.Any()) throw new ArgumentException("You must specify at least one email address");
+			if (emailAddresses == null) throw new ArgumentNullException(nameof(emailAddresses));
+			if (!emailAddresses.Any()) throw new ArgumentException("You must specify at least one email address", nameof(emailAddresses));
 
 			var data = new StrongGridJsonObject();
 			if (emailAddresses.Count() == 1) data.AddProperty("to", emailAddresses.First());

@@ -4,6 +4,7 @@ namespace StrongGrid.Json
 {
 	[JsonSerializable(typeof(string[]))]
 	[JsonSerializable(typeof(long[]))]
+	[JsonSerializable(typeof(bool))]
 
 	[JsonSerializable(typeof(StrongGrid.Json.StrongGridJsonObject))]
 	[JsonSerializable(typeof(StrongGrid.Json.StrongGridJsonObject[]))]

@@ -2,6 +2,7 @@ using Pathoschild.Http.Client;
 using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -42,6 +43,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<ApiKey> GetAsync(string keyId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(keyId)) throw new ArgumentNullException(nameof(keyId));
+
 			return _client
 				.GetAsync($"{_endpoint}/{keyId}")
 				.OnBehalfOf(onBehalfOf)
@@ -86,6 +89,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<ApiKey> CreateAsync(string name, Parameter<IEnumerable<string>> scopes = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+
 			var data = ConvertToJson(name, scopes);
 			return _client
 				.PostAsync(_endpoint)
@@ -106,6 +111,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(string keyId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(keyId)) throw new ArgumentNullException(nameof(keyId));
+
 			return _client
 				.DeleteAsync($"{_endpoint}/{keyId}")
 				.OnBehalfOf(onBehalfOf)
@@ -124,8 +131,12 @@ namespace StrongGrid.Resources
 		/// <returns>The <see cref="ApiKey"/>.</returns>
 		public Task<ApiKey> UpdateAsync(string keyId, string name, Parameter<IEnumerable<string>> scopes = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(keyId)) throw new ArgumentNullException(nameof(keyId));
+
 			var data = ConvertToJson(name, scopes);
-			return (scopes.HasValue && (scopes.Value ?? Enumerable.Empty<string>()).Any() ? _client.PutAsync($"{_endpoint}/{keyId}") : _client.PatchAsync($"{_endpoint}/{keyId}"))
+			var request = (scopes.Value ?? Enumerable.Empty<string>()).Any() ? _client.PutAsync($"{_endpoint}/{keyId}") : _client.PatchAsync($"{_endpoint}/{keyId}");
+
+			return request
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)

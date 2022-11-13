@@ -1,6 +1,7 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Json;
 using StrongGrid.Models;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -42,6 +43,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<string> CreateAsync(string name, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
 
@@ -84,6 +87,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<IpPool> GetAsync(string name, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+
 			return _client
 				.GetAsync($"{_endpoint}/{name}")
 				.WithCancellationToken(cancellationToken)
@@ -101,6 +106,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<string> UpdateAsync(string name, string newName, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+			if (string.IsNullOrEmpty(newName)) throw new ArgumentNullException(nameof(newName));
+
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", newName);
 
@@ -121,6 +129,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(string name, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+
 			return _client
 				.DeleteAsync($"{_endpoint}/{name}")
 				.WithCancellationToken(cancellationToken)
@@ -138,6 +148,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<IpPoolAddress> AddAddressAsync(string name, string address, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+			if (string.IsNullOrEmpty(address)) throw new ArgumentNullException(nameof(address));
+
 			var data = new StrongGridJsonObject();
 			data.AddProperty("ip", address);
 
@@ -159,6 +172,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task RemoveAddressAsync(string name, string address, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+			if (string.IsNullOrEmpty(address)) throw new ArgumentNullException(nameof(address));
+
 			return _client
 				.DeleteAsync($"{_endpoint}/{name}/ips/{address}")
 				.WithCancellationToken(cancellationToken)

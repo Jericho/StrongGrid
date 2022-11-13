@@ -1,5 +1,6 @@
 using StrongGrid.Models;
 using StrongGrid.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -78,6 +79,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="MonitorSettings" />.
 		/// </returns>
+		[Obsolete("Twilio SendGrid will retire Email Monitor on December 13, 2022.")]
 		Task<MonitorSettings> GetMonitorSettingsAsync(string username, CancellationToken cancellationToken = default);
 
 		/// <summary>
@@ -90,6 +92,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="MonitorSettings" />.
 		/// </returns>
+		[Obsolete("Twilio SendGrid will retire Email Monitor on December 13, 2022.")]
 		Task<MonitorSettings> CreateMonitorSettingsAsync(string username, string email, int frequency, CancellationToken cancellationToken = default);
 
 		/// <summary>
@@ -102,6 +105,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="MonitorSettings" />.
 		/// </returns>
+		[Obsolete("Twilio SendGrid will retire Email Monitor on December 13, 2022.")]
 		Task<MonitorSettings> UpdateMonitorSettingsAsync(string username, Parameter<string> email = default, Parameter<int> frequency = default, CancellationToken cancellationToken = default);
 
 		/// <summary>
@@ -112,6 +116,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
+		[Obsolete("Twilio SendGrid will retire Email Monitor on December 13, 2022.")]
 		Task DeleteMonitorSettingsAsync(string username, CancellationToken cancellationToken = default);
 
 		/// <summary>

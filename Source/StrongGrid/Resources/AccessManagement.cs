@@ -1,6 +1,7 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Json;
 using StrongGrid.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -77,6 +78,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<WhitelistedIp> AddIpAddressToWhitelistAsync(string ip, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(ip)) throw new ArgumentNullException(nameof(ip));
+
 			var data = new StrongGridJsonObject();
 			data.AddProperty("ips/ip", ip);
 
@@ -103,6 +106,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<WhitelistedIp[]> AddIpAddressesToWhitelistAsync(IEnumerable<string> ips, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (ips == null) throw new ArgumentNullException(nameof(ips));
+			if (!ips.Any()) throw new ArgumentException("You must specify at least one IP address", nameof(ips));
+
 			var ipsJsonArray = ips.Select(ip =>
 			{
 				var ipJson = new StrongGridJsonObject();
@@ -150,8 +156,11 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task RemoveIpAddressesFromWhitelistAsync(IEnumerable<long> ids, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			if (ids == null) throw new ArgumentNullException(nameof(ids));
+			if (!ids.Any()) throw new ArgumentException("You must specify at least one IP address identifier", nameof(ids));
+
 			var data = new StrongGridJsonObject();
-			data.AddProperty("ids", ids.ToArray());
+			data.AddProperty("ids", ids);
 
 			return _client
 				.DeleteAsync($"{_endpoint}/whitelist")

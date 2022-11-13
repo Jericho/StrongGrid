@@ -1,4 +1,5 @@
 using Pathoschild.Http.Client;
+using Pathoschild.Http.Client.Extensibility;
 using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Utilities;
@@ -56,17 +57,14 @@ namespace StrongGrid.Resources.Legacy
 			// SendGrid expects an array despite the fact we are creating a single contact
 			var data = new[] { ConvertToJson(email, firstName, lastName, customFields) };
 
-			var response = await _client
+			var importResult = await _client
 				.PostAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsResponse()
+				.AsObject<Models.Legacy.ImportResult>()
 				.ConfigureAwait(false);
 
-			response.CheckForSendGridErrors();
-
-			var importResult = await response.AsObject<Models.Legacy.ImportResult>().ConfigureAwait(false);
 			return importResult.PersistedRecipients.Single();
 		}
 
@@ -83,7 +81,7 @@ namespace StrongGrid.Resources.Legacy
 		/// The async task.
 		/// </returns>
 		/// <exception cref="SendGridException">Thrown when an exception occurred while updating the contact.</exception>
-		public async Task UpdateAsync(
+		public Task UpdateAsync(
 			string email,
 			Parameter<string> firstName = default,
 			Parameter<string> lastName = default,
@@ -94,15 +92,12 @@ namespace StrongGrid.Resources.Legacy
 			// SendGrid expects an array despite the fact we are updating a single contact
 			var data = new[] { ConvertToJson(email, firstName, lastName, customFields) };
 
-			var response = await _client
+			return _client
 				.PatchAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsResponse()
-				.ConfigureAwait(false);
-
-			response.CheckForSendGridErrors();
+				.AsResponse();
 		}
 
 		/// <summary>
@@ -116,13 +111,18 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task<Models.Legacy.ImportResult> ImportAsync(IEnumerable<Models.Legacy.Contact> contacts, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = contacts.Select(c => ConvertToJson(c)).ToArray();
+			if (contacts == null) throw new ArgumentNullException(nameof(contacts));
+			if (!contacts.Any()) throw new ArgumentException("You must provide at least one contact", nameof(contacts));
+
+			var data = contacts.Select(ConvertToJson).ToArray();
 
 			return _client
 				.PostAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
+				.WithoutFilter<SendGridErrorHandler>() // The response may contain "errors" to indicate that some contacts were not imported but it should not cause an exception to be thrown.
+				.WithFilter(new DefaultErrorFilter()) // Therefore it's important to remove the SendGridErrorHandler and to use the default error filter instead.
 				.AsObject<Models.Legacy.ImportResult>();
 		}
 
@@ -143,15 +143,18 @@ namespace StrongGrid.Resources.Legacy
 		/// <summary>
 		/// Delete contacts.
 		/// </summary>
-		/// <param name="contactId">The contact identifier.</param>
+		/// <param name="contactIds">The identifier of the contacts to delete.</param>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task DeleteAsync(IEnumerable<string> contactId, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public Task DeleteAsync(IEnumerable<string> contactIds, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var data = contactId.ToArray();
+			if (contactIds == null) throw new ArgumentNullException(nameof(contactIds));
+			if (!contactIds.Any()) throw new ArgumentException("At least one contact id must be specified.", nameof(contactIds));
+
+			var data = contactIds.ToArray();
 			return _client
 				.DeleteAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)

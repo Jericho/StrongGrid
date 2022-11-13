@@ -38,6 +38,8 @@ namespace StrongGrid.Resources
 		/// <returns>The <see cref="FieldMetadata">metadata</see> about the new field.</returns>
 		public Task<CustomFieldMetadata> CreateAsync(string name, FieldType type, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
 			data.AddProperty("field_type", type.ToEnumString());
@@ -85,6 +87,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<CustomFieldMetadata> UpdateAsync(string fieldId, string name = null, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(fieldId)) throw new ArgumentNullException(nameof(fieldId));
+
 			var data = new StrongGridJsonObject();
 			data.AddProperty("id", fieldId);
 			data.AddProperty("name", name);
@@ -106,6 +110,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(string fieldId, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrEmpty(fieldId)) throw new ArgumentNullException(nameof(fieldId));
+
 			return _client
 				.DeleteAsync($"{_endpoint}/{fieldId}")
 				.WithCancellationToken(cancellationToken)
