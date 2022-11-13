@@ -37,8 +37,13 @@ namespace StrongGrid.UnitTests.Resources
 			{
 				new MailPersonalization()
 				{
-					To = new[] { new MailAddress("bob@example.com", "Bob Smith") }
-				}
+					To = new[] { new MailAddress("bob@example.com", "Bob Smith") },
+					CustomArguments = new[]
+					{
+						new KeyValuePair<string, string>("foo", "bar"),
+					},
+					SendAt = DateTime.Now,
+				},
 			};
 
 			var mailSettings = new MailSettings()
