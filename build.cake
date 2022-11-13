@@ -297,37 +297,21 @@ Task("Run-Code-Coverage")
 
 Task("Upload-Coverage-Result-Coveralls")
 	.IsDependentOn("Run-Code-Coverage")
-	.ContinueOnError()
-	.ReportError(exception => Information($"REPORT ERROR: Failed to upload coverage result to Coveralls: {exception.Message}"))
+	.OnError(exception =>  Information($"ONERROR: Failed to upload coverage result to Coveralls: {exception.Message}"))
 	.Does(() =>
 {
-	try
-	{
-		CoverallsNet(new FilePath($"{codeCoverageDir}coverage.{DefaultFramework}.xml"), CoverallsNetReportType.OpenCover, new CoverallsNetSettings()
-		{
-			RepoToken = coverallsToken
-		});
-	}
-	catch (Exception e)
-	{
-		Information($"CATCH: Failed to upload coverage result to Coveralls: {e.Message}");
-	}
+	//CoverallsNet(new FilePath($"{codeCoverageDir}coverage.{DefaultFramework}.xml"), CoverallsNetReportType.OpenCover, new CoverallsNetSettings()
+	//{
+	//	RepoToken = coverallsToken
+	//});
 });
 
 Task("Upload-Coverage-Result-Codecov")
 	.IsDependentOn("Run-Code-Coverage")
-	.ContinueOnError()
-	.ReportError(exception => Information($"REPORT ERROR: Failed to upload coverage result to Codecov: {exception.Message}"))
+	.OnError(exception =>  Information($"ONERROR: Failed to upload coverage result to Codecov: {exception.Message}"))
 	.Does(() =>
 {
-	try
-	{
-		Codecov($"{codeCoverageDir}coverage.{DefaultFramework}.xml", codecovToken);
-	}
-	catch (Exception e)
-	{
-		Information($"CATCH: Failed to upload coverage result to Codecov: {e.Message}");
-	}
+	//Codecov($"{codeCoverageDir}coverage.{DefaultFramework}.xml", codecovToken);
 });
 
 Task("Generate-Code-Coverage-Report")
