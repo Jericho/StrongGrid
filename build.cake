@@ -295,30 +295,23 @@ Task("Run-Code-Coverage")
     DotNetTest(unitTestsProject, testSettings);
 });
 
-Task("Upload-Coverage-Result")
+Task("Upload-Coverage-Result-Coveralls")
 	.IsDependentOn("Run-Code-Coverage")
+	.OnError(exception =>  Information($"ONERROR: Failed to upload coverage result to Coveralls: {exception.Message}"))
 	.Does(() =>
 {
-	//try
+	//CoverallsNet(new FilePath($"{codeCoverageDir}coverage.{DefaultFramework}.xml"), CoverallsNetReportType.OpenCover, new CoverallsNetSettings()
 	//{
-	//	CoverallsNet(new FilePath($"{codeCoverageDir}coverage.{DefaultFramework}.xml"), CoverallsNetReportType.OpenCover, new CoverallsNetSettings()
-	//	{
-	//		RepoToken = coverallsToken
-	//	});
-	//}
-	//catch (Exception e)
-	//{
-	//	Warning(e.Message);
-	//}
+	//	RepoToken = coverallsToken
+	//});
+});
 
-	try
-	{
-		Codecov($"{codeCoverageDir}coverage.{DefaultFramework}.xml", codecovToken);
-	}
-	catch (Exception e)
-	{
-		Warning(e.Message);
-	}
+Task("Upload-Coverage-Result-Codecov")
+	.IsDependentOn("Run-Code-Coverage")
+	.OnError(exception =>  Information($"ONERROR: Failed to upload coverage result to Codecov: {exception.Message}"))
+	.Does(() =>
+{
+	//Codecov($"{codeCoverageDir}coverage.{DefaultFramework}.xml", codecovToken);
 });
 
 Task("Generate-Code-Coverage-Report")
@@ -514,7 +507,8 @@ Task("ReleaseNotes")
 
 Task("AppVeyor")
 	.IsDependentOn("Run-Code-Coverage")
-	.IsDependentOn("Upload-Coverage-Result")
+	.IsDependentOn("Upload-Coverage-Result-Coveralls")
+	.IsDependentOn("Upload-Coverage-Result-Codecov")
 	.IsDependentOn("Create-NuGet-Package")
 	.IsDependentOn("Upload-AppVeyor-Artifacts")
 	.IsDependentOn("Publish-MyGet")
