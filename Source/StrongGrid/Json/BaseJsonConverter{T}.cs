@@ -95,10 +95,11 @@ namespace StrongGrid.Json
 
 			if (propertyConverterAttribute != null)
 			{
-				// It's important to clone the options in order to be able to modify the 'Converters' list
-				var clonedOptions = new JsonSerializerOptions(options);
-				clonedOptions.Converters.Add((JsonConverter)Activator.CreateInstance(propertyConverterAttribute.ConverterType));
-				JsonSerializer.Serialize(writer, propertyValue, propertyType, clonedOptions);
+				var customOptions = new JsonSerializerOptions()
+				{
+					Converters = { (JsonConverter)Activator.CreateInstance(propertyConverterAttribute.ConverterType) }
+				};
+				JsonSerializer.Serialize(writer, propertyValue, propertyType, customOptions);
 			}
 			else
 			{
