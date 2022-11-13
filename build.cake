@@ -310,7 +310,7 @@ Task("Upload-Coverage-Result-Coveralls")
 	}
 	catch (Exception e)
 	{
-		Information($"CATCH: Failed to upload coverage result to Coveralls: {exception.Message}")
+		Information($"CATCH: Failed to upload coverage result to Coveralls: {e.Message}");
 	}
 });
 
@@ -326,7 +326,7 @@ Task("Upload-Coverage-Result-Codecov")
 	}
 	catch (Exception e)
 	{
-		Information($"CATCH: Failed to upload coverage result to Codecov: {exception.Message}")
+		Information($"CATCH: Failed to upload coverage result to Codecov: {e.Message}");
 	}
 });
 
