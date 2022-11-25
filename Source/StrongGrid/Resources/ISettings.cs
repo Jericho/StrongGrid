@@ -57,6 +57,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="NewRelicSettings" />.
 		/// </returns>
+		[Obsolete("Twilio SendGrid no longer supports SendGrid for New Relic and the related integration features as of August 30, 2022.")]
 		Task<NewRelicSettings> GetNewRelicSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
@@ -69,6 +70,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="NewRelicSettings" />.
 		/// </returns>
+		[Obsolete("Twilio SendGrid no longer supports SendGrid for New Relic and the related integration features as of August 30, 2022.")]
 		Task<NewRelicSettings> UpdateNewRelicSettingsAsync(bool enabled, string licenseKey, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
