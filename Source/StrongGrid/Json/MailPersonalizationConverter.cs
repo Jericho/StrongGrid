@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace StrongGrid.Json
 {
@@ -42,8 +43,11 @@ namespace StrongGrid.Json
 					// Ignore this property when email is sent without using a template or when using a 'legacy' template
 					if (!isUsedWithDynamicTemplate) return;
 
-					// Developers can either specify their own serialization options or accept the default options
-					var dynamicDataSerializationOptions = value.DynamicDataSerializationOptions ?? options;
+					// Developers can either specify their own serialization options or we use reflection-based serialization
+					var dynamicDataSerializationOptions = value.DynamicDataSerializationOptions ?? new JsonSerializerOptions
+					{
+						TypeInfoResolver = new DefaultJsonTypeInfoResolver()
+					};
 
 					// Write the dynamic data to JSON
 					WriteJsonProperty(writer, propertyName, propertyValue, propertyType, dynamicDataSerializationOptions, propertyConverterAttribute);
