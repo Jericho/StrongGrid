@@ -1,4 +1,5 @@
 using StrongGrid.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -24,7 +25,7 @@ namespace StrongGrid.Json
 			Serialize(writer, value, options, (propertyName, propertyValue, propertyType, options, propertyConverterAttribute) =>
 			{
 				// Special case: substitutions
-				if (propertyName == "Substitutions")
+				if (propertyName.Equals("Substitutions", StringComparison.OrdinalIgnoreCase))
 				{
 					// Ignore this property when email is sent using a dynamic template
 					if (isUsedWithDynamicTemplate) return;
@@ -38,7 +39,8 @@ namespace StrongGrid.Json
 				}
 
 				// Special case: dynamic data
-				else if (propertyName == "DynamicData")
+				else if (propertyName.Equals("DynamicData", StringComparison.OrdinalIgnoreCase)
+					  || propertyName.Equals("dynamic_template_data", StringComparison.OrdinalIgnoreCase))
 				{
 					// Ignore this property when email is sent without using a template or when using a 'legacy' template
 					if (!isUsedWithDynamicTemplate) return;
