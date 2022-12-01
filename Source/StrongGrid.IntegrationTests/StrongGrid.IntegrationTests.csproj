@@ -13,9 +13,9 @@
 
   <ItemGroup>
     <PackageReference Include="Logzio.DotNet.NLog" Version="1.0.13" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="NLog.Extensions.Logging" Version="5.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="5.2.0" />
   </ItemGroup>
 
   <ItemGroup>
