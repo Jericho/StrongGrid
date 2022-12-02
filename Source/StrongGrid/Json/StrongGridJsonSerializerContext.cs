@@ -112,7 +112,9 @@ namespace StrongGrid.Json
 	[JsonSerializable(typeof(StrongGrid.Models.MailPriority))]
 	[JsonSerializable(typeof(StrongGrid.Models.MailSettings))]
 	[JsonSerializable(typeof(StrongGrid.Models.MonitorSettings))]
+#pragma warning disable CS0618 // Type or member is obsolete
 	[JsonSerializable(typeof(StrongGrid.Models.NewRelicSettings))]
+#pragma warning restore CS0618 // Type or member is obsolete
 	[JsonSerializable(typeof(StrongGrid.Models.OpenTrackingSettings))]
 	[JsonSerializable(typeof(StrongGrid.Models.PaginationMetadata))]
 	[JsonSerializable(typeof(StrongGrid.Models.QueryLanguageVersion))]
@@ -313,7 +315,9 @@ namespace StrongGrid.Json
 	[JsonSerializable(typeof(StrongGrid.Models.MailPriority[]))]
 	[JsonSerializable(typeof(StrongGrid.Models.MailSettings[]))]
 	[JsonSerializable(typeof(StrongGrid.Models.MonitorSettings[]))]
+#pragma warning disable CS0618 // Type or member is obsolete
 	[JsonSerializable(typeof(StrongGrid.Models.NewRelicSettings[]))]
+#pragma warning restore CS0618 // Type or member is obsolete
 	[JsonSerializable(typeof(StrongGrid.Models.OpenTrackingSettings[]))]
 	[JsonSerializable(typeof(StrongGrid.Models.PaginationMetadata[]))]
 	[JsonSerializable(typeof(StrongGrid.Models.QueryLanguageVersion[]))]
