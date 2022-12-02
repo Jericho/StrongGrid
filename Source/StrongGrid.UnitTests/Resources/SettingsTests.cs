@@ -140,8 +140,8 @@ namespace StrongGrid.UnitTests.Resources
 			var apiResponse = @"{
 				""result"": [
 					{
-						""name"": ""new_relic"",
-						""title"": ""New Relic"",
+						""name"": ""foo_bar"",
+						""title"": ""Foo Bar"",
 						""description"": ""lorem ipsum... ."",
 						""enabled"": true
 					}
@@ -162,7 +162,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(1);
-			result[0].Title.ShouldBe("New Relic");
+			result[0].Title.ShouldBe("Foo Bar");
 		}
 
 		[Fact]

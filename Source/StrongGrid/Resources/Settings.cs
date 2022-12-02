@@ -102,6 +102,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="NewRelicSettings" />.
 		/// </returns>
+		[Obsolete("Twilio SendGrid no longer supports SendGrid for New Relic and the related integration features as of August 30, 2022.")]
 		public Task<NewRelicSettings> GetNewRelicSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return _client
@@ -121,6 +122,7 @@ namespace StrongGrid.Resources
 		/// <returns>
 		/// The <see cref="NewRelicSettings" />.
 		/// </returns>
+		[Obsolete("Twilio SendGrid no longer supports SendGrid for New Relic and the related integration features as of August 30, 2022.")]
 		public Task<NewRelicSettings> UpdateNewRelicSettingsAsync(bool enabled, string licenseKey, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var data = new NewRelicSettings
@@ -217,7 +219,7 @@ namespace StrongGrid.Resources
 		}
 
 		/// <summary>
-		/// Change the New Relic settings.
+		/// Change the Google Analytics settings.
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
 		/// <param name="utmSource">The utm source.</param>

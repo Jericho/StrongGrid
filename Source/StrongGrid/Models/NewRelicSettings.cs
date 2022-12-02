@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models
@@ -5,6 +6,7 @@ namespace StrongGrid.Models
 	/// <summary>
 	/// New Relic settings.
 	/// </summary>
+	[Obsolete("Twilio SendGrid no longer supports SendGrid for New Relic and the related integration features as of August 30, 2022.")]
 	public class NewRelicSettings
 	{
 		/// <summary>
