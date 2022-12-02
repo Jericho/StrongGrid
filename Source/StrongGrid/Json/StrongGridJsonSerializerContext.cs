@@ -405,7 +405,6 @@ namespace StrongGrid.Json
 	[JsonSerializable(typeof(StrongGrid.Models.UserCredits[]))]
 	[JsonSerializable(typeof(StrongGrid.Models.UserProfile[]))]
 	[JsonSerializable(typeof(StrongGrid.Models.ValidationResult[]))]
-	[JsonSerializable(typeof(StrongGrid.Models.VerificationStatus[]))]
 	[JsonSerializable(typeof(StrongGrid.Models.Webhooks.BouncedEvent[]), TypeInfoPropertyName = "WebhooksBouncedEventArray")]
 	[JsonSerializable(typeof(StrongGrid.Models.Webhooks.ClickedEvent[]), TypeInfoPropertyName = "WebhooksClickedEventArray")]
 	[JsonSerializable(typeof(StrongGrid.Models.Webhooks.DeferredEvent[]), TypeInfoPropertyName = "WebhooksDeferredEventArray")]
