@@ -1,4 +1,3 @@
-using HttpMultipartParser;
 using StrongGrid.Json;
 using StrongGrid.Models.Webhooks;
 using StrongGrid.Utilities;
@@ -164,51 +163,18 @@ namespace StrongGrid
 			// Therefore, we must make a copy of the stream if it doesn't allow changing the position
 			if (!stream.CanSeek)
 			{
-				using (var ms = Utils.MemoryStreamManager.GetStream())
-				{
-					await stream.CopyToAsync(ms).ConfigureAwait(false);
-					return await ParseInboundEmailWebhookAsync(ms).ConfigureAwait(false);
-				}
+				using var ms = Utils.MemoryStreamManager.GetStream();
+				await stream.CopyToAsync(ms).ConfigureAwait(false);
+				return await ParseInboundEmailWebhookAsync(ms).ConfigureAwait(false);
 			}
 
 			// It's important to rewind the stream
 			stream.Position = 0;
 
 			// Asynchronously parse the multipart content received from SendGrid
-			var parser = await MultipartFormDataParser.ParseAsync(stream, Encoding.UTF8).ConfigureAwait(false);
+			var parser = await SendGridMultipartFormDataParser.ParseAsync(stream).ConfigureAwait(false);
 
-			// Convert the 'charset' from a string into array of KeyValuePair
-			var charsets = JsonDocument.Parse(parser.GetParameterValue("charsets", "{}"))
-				.RootElement.EnumerateObject()
-				.Select(prop => new KeyValuePair<string, string>(prop.Name, prop.Value.GetString()))
-				.ToArray();
-
-			// Create a dictionary of parsers, one parser for each desired encoding.
-			// This is necessary because MultipartFormDataParser can only handle one
-			// encoding and SendGrid can use different encodings for parameters such
-			// as "from", "to", "text" and "html".
-			var encodedParsers = charsets
-				.Select(c => c.Value)
-				.Select(GetEncodingFromName)
-				.Distinct()
-				.Where(encoding => !encoding.Equals(Encoding.UTF8))
-				.Select(async encoding =>
-				{
-					stream.Position = 0; // It's important to rewind the stream
-					return new
-					{
-						Encoding = encoding,
-						Parser = await MultipartFormDataParser.ParseAsync(stream, encoding).ConfigureAwait(false)
-					};
-				})
-				.Select(r => r.Result)
-				.Union(new[]
-				{
-					new { Encoding = Encoding.UTF8, Parser = parser }
-				})
-				.ToDictionary(ep => ep.Encoding, ep => ep.Parser);
-
-			return ParseInboundEmail(encodedParsers, charsets);
+			return ParseInboundEmail(parser);
 		}
 
 		/// <summary>
@@ -223,103 +189,26 @@ namespace StrongGrid
 			// Therefore, we must make a copy of the stream if it doesn't allow changing the position
 			if (!stream.CanSeek)
 			{
-				using (var ms = Utils.MemoryStreamManager.GetStream())
-				{
-					stream.CopyTo(ms);
-					return ParseInboundEmailWebhook(ms);
-				}
+				using var ms = Utils.MemoryStreamManager.GetStream();
+				stream.CopyTo(ms);
+				return ParseInboundEmailWebhook(ms);
 			}
 
 			// It's important to rewind the stream
 			stream.Position = 0;
 
 			// Parse the multipart content received from SendGrid
-			var parser = MultipartFormDataParser.Parse(stream, Encoding.UTF8);
+			var parser = SendGridMultipartFormDataParser.Parse(stream);
 
-			// Convert the 'charset' from a string into array of KeyValuePair
-			var charsets = JsonDocument.Parse(parser.GetParameterValue("charsets", "{}"))
-				.RootElement.EnumerateObject()
-				.Select(prop => new KeyValuePair<string, string>(prop.Name, prop.Value.GetString()))
-				.ToArray();
-
-			// Create a dictionary of parsers, one parser for each desired encoding.
-			// This is necessary because MultipartFormDataParser can only handle one
-			// encoding and SendGrid can use different encodings for parameters such
-			// as "from", "to", "text" and "html".
-			var encodedParsers = charsets
-				.Select(c => c.Value)
-				.Select(GetEncodingFromName)
-				.Distinct()
-				.Where(encoding => !encoding.Equals(Encoding.UTF8))
-				.Select(encoding =>
-				{
-					stream.Position = 0; // It's important to rewind the stream
-					return new
-					{
-						Encoding = encoding,
-						Parser = MultipartFormDataParser.Parse(stream, encoding)
-					};
-				})
-				.Union(new[]
-				{
-					new { Encoding = Encoding.UTF8, Parser = parser }
-				})
-				.ToDictionary(ep => ep.Encoding, ep => ep.Parser);
-
-			return ParseInboundEmail(encodedParsers, charsets);
+			return ParseInboundEmail(parser);
 		}
 
 		#endregion
 
 		#region PRIVATE METHODS
 
-		private static Encoding GetEncoding(string parameterName, IEnumerable<KeyValuePair<string, string>> charsets)
+		private static InboundEmail ParseInboundEmail(SendGridMultipartFormDataParser parser)
 		{
-			var encoding = charsets.Where(c => c.Key == parameterName);
-			if (!encoding.Any()) return Encoding.UTF8;
-
-			var encodingName = encoding.First().Value;
-			return GetEncodingFromName(encodingName);
-		}
-
-		private static Encoding GetEncodingFromName(string encodingName)
-		{
-			try
-			{
-				return Encoding.GetEncoding(encodingName);
-			}
-			catch (ArgumentException)
-			{
-				// ArgumentException is thrown when an "unusual" code page was used to encode a section of the email
-				// For example: {"to":"UTF-8","subject":"UTF-8","from":"UTF-8","text":"iso-8859-10"}
-				// We can see that 'iso-8859-10' was used to encode the "Text" but this encoding is not supported in
-				// .net (neither dotnet full nor dotnet core). Therefore we fallback on UTF-8. This is obviously not
-				// perfect because UTF-8 may or may not be able to handle all the encoded characters, but it's better
-				// than simply erroring out.
-				// See https://github.com/Jericho/StrongGrid/issues/341 for discussion.
-				return Encoding.UTF8;
-			}
-		}
-
-		private static MultipartFormDataParser GetEncodedParser(string parameterName, IEnumerable<KeyValuePair<string, string>> charsets, IDictionary<Encoding, MultipartFormDataParser> encodedParsers)
-		{
-			var encoding = GetEncoding(parameterName, charsets);
-			var parser = encodedParsers[encoding];
-			return parser;
-		}
-
-		private static string GetEncodedValue(string parameterName, IEnumerable<KeyValuePair<string, string>> charsets, IDictionary<Encoding, MultipartFormDataParser> encodedParsers, string defaultValue = null)
-		{
-			var parser = GetEncodedParser(parameterName, charsets, encodedParsers);
-			var value = parser.GetParameterValue(parameterName, defaultValue);
-			return value;
-		}
-
-		private static InboundEmail ParseInboundEmail(IDictionary<Encoding, MultipartFormDataParser> encodedParsers, KeyValuePair<string, string>[] charsets)
-		{
-			// Get the default UTF8 parser
-			var parser = encodedParsers.Single(p => p.Key.Equals(Encoding.UTF8)).Value;
-
 			// Convert the 'headers' from a string into array of KeyValuePair
 			var headers = parser
 					.GetParameterValue("headers", string.Empty)
@@ -358,33 +247,33 @@ namespace StrongGrid
 			var envelope = JsonSerializer.Deserialize<InboundEmailEnvelope>(parser.GetParameterValue("envelope", "{}"), JsonFormatter.DeserializerOptions);
 
 			// Convert the 'from' from a string into an email address
-			var rawFrom = GetEncodedValue("from", charsets, encodedParsers, string.Empty);
+			var rawFrom = parser.GetParameterValue("from", string.Empty);
 			var from = MailAddressParser.ParseEmailAddress(rawFrom);
 
 			// Convert the 'to' from a string into an array of email addresses
-			var rawTo = GetEncodedValue("to", charsets, encodedParsers, string.Empty);
+			var rawTo = parser.GetParameterValue("to", string.Empty);
 			var to = MailAddressParser.ParseEmailAddresses(rawTo);
 
 			// Convert the 'cc' from a string into an array of email addresses
-			var rawCc = GetEncodedValue("cc", charsets, encodedParsers, string.Empty);
+			var rawCc = parser.GetParameterValue("cc", string.Empty);
 			var cc = MailAddressParser.ParseEmailAddresses(rawCc);
 
 			// Arrange the InboundEmail
 			var inboundEmail = new InboundEmail
 			{
 				Attachments = attachments,
-				Charsets = charsets,
-				Dkim = GetEncodedValue("dkim", charsets, encodedParsers, null),
+				Charsets = parser.Charsets.ToArray(),
+				Dkim = parser.GetParameterValue("dkim", null),
 				Envelope = envelope,
 				From = from,
 				Headers = headers,
-				Html = GetEncodedValue("html", charsets, encodedParsers, null),
-				SenderIp = GetEncodedValue("sender_ip", charsets, encodedParsers, null),
-				SpamReport = GetEncodedValue("spam_report", charsets, encodedParsers, null),
-				SpamScore = GetEncodedValue("spam_score", charsets, encodedParsers, null),
-				Spf = GetEncodedValue("SPF", charsets, encodedParsers, null),
-				Subject = GetEncodedValue("subject", charsets, encodedParsers, null),
-				Text = GetEncodedValue("text", charsets, encodedParsers, null),
+				Html = parser.GetParameterValue("html", null),
+				SenderIp = parser.GetParameterValue("sender_ip", null),
+				SpamReport = parser.GetParameterValue("spam_report", null),
+				SpamScore = parser.GetParameterValue("spam_score", null),
+				Spf = parser.GetParameterValue("SPF", null),
+				Subject = parser.GetParameterValue("subject", null),
+				Text = parser.GetParameterValue("text", null),
 				To = to,
 				Cc = cc,
 				RawEmail = rawEmail

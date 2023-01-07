@@ -1,4 +1,3 @@
-using HttpMultipartParser;
 using Pathoschild.Http.Client;
 using StrongGrid.Json;
 using StrongGrid.Models;
@@ -183,19 +182,6 @@ namespace StrongGrid
 			}
 
 			return encoding;
-		}
-
-		/// <summary>
-		/// Returns the value of a parameter or the default value if it doesn't exist.
-		/// </summary>
-		/// <param name="parser">The parser.</param>
-		/// <param name="name">The name of the parameter.</param>
-		/// <param name="defaultValue">The default value.</param>
-		/// <returns>The value of the parameter.</returns>
-		internal static string GetParameterValue(this MultipartFormDataParser parser, string name, string defaultValue)
-		{
-			if (parser.HasParameter(name)) return parser.GetParameterValue(name);
-			else return defaultValue;
 		}
 
 		/// <summary>Asynchronously retrieve the JSON encoded response body and convert it to an object of the desired type.</summary>
