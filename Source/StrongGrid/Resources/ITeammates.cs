@@ -104,22 +104,6 @@ namespace StrongGrid.Resources
 		Task<TeammateInvitation> InviteTeammateAsync(string email, IEnumerable<string> scopes, CancellationToken cancellationToken = default);
 
 		/// <summary>
-		/// Send a teammate invitation via email with the same "read" permissions that have been granted to you.
-		/// A teammate invite will expire after 7 days, but you may resend the invite at any time
-		/// to reset the expiration date.
-		/// </summary>
-		/// <param name="email">The email address of the teammate.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// The async task.
-		/// </returns>
-		/// <remarks>
-		/// Essentials, Legacy Lite, and Free Trial users may create up to one teammate per account.
-		/// There is not a teammate limit for Pro and higher plans.
-		/// </remarks>
-		Task<TeammateInvitation> InviteTeammateWithReadOnlyPrivilegesAsync(string email, CancellationToken cancellationToken = default);
-
-		/// <summary>
 		/// Send a teammate invitation via email with admin permissions.
 		/// A teammate invite will expire after 7 days, but you may resend the invite at any time
 		/// to reset the expiration date.

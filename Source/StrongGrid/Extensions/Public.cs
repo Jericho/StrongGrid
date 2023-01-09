@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -1333,6 +1334,107 @@ namespace StrongGrid
 		public static Task AddAddressToUnsubscribeGroupAsync(this ISuppressions suppressions, long groupId, string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return suppressions.AddAddressesToUnsubscribeGroupAsync(groupId, new[] { email }, onBehalfOf, cancellationToken);
+		}
+
+		/// <summary>
+		/// Generate a new API Key for billing.
+		/// </summary>
+		/// <param name="apiKeys">The ApiKeys resource.</param>
+		/// <param name="name">The name.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// The <see cref="ApiKey" />.
+		/// </returns>
+		public static Task<ApiKey> CreateWithBillingPermissionsAsync(this IApiKeys apiKeys, string name, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		{
+			var scopes = new[]
+			{
+				"billing.delete",
+				"billing.read",
+				"billing.update"
+			};
+
+			return apiKeys.CreateAsync(name, scopes, onBehalfOf, cancellationToken);
+		}
+
+		/// <summary>
+		/// Generate a new API Key with the same permissions that have been granted to you.
+		/// </summary>
+		/// <param name="apiKeys">The ApiKeys resource.</param>
+		/// <param name="name">The name.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// The <see cref="ApiKey" />.
+		/// </returns>
+		/// <remarks>
+		/// If you specify an API Key when instanciating the <see cref="Client" />, the new API Key will inherit the permissions of that API Key.
+		/// If you specify a username and password when instanciating the <see cref="Client" />, the new API Key will inherit the permissions of that user.
+		/// </remarks>
+		public static async Task<ApiKey> CreateWithAllPermissionsAsync(this IApiKeys apiKeys, string name, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		{
+			var privateField = apiKeys.GetType().GetField("_client", BindingFlags.NonPublic | BindingFlags.Instance);
+			if (privateField == null) throw new ArgumentException("Unable to find the HttpClient in the resource.", nameof(apiKeys));
+			var client = (Pathoschild.Http.Client.IClient)privateField.GetValue(apiKeys);
+
+			var scopes = await client.GetCurrentScopes(true, cancellationToken).ConfigureAwait(false);
+			var superApiKey = await apiKeys.CreateAsync(name, scopes, onBehalfOf, cancellationToken).ConfigureAwait(false);
+			return superApiKey;
+		}
+
+		/// <summary>
+		/// Generate a new API Key with the same "read" permissions that have ben granted to you.
+		/// </summary>
+		/// <param name="apiKeys">The ApiKeys resource.</param>
+		/// <param name="name">The name.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// The <see cref="ApiKey" />.
+		/// </returns>
+		/// <remarks>
+		/// If you specify an API Key when instanciating the <see cref="Client" />, the new API Key will inherit the "read" permissions of that API Key.
+		/// If you specify a username and password when instanciating the <see cref="Client" />, the new API Key will inherit the "read" permissions of that user.
+		/// </remarks>
+		public static async Task<ApiKey> CreateWithReadOnlyPermissionsAsync(this IApiKeys apiKeys, string name, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		{
+			var privateField = apiKeys.GetType().GetField("_client", BindingFlags.NonPublic | BindingFlags.Instance);
+			if (privateField == null) throw new ArgumentException("Unable to find the HttpClient in the resource.", nameof(apiKeys));
+			var client = (Pathoschild.Http.Client.IClient)privateField.GetValue(apiKeys);
+
+			var scopes = await client.GetCurrentScopes(true, cancellationToken).ConfigureAwait(false);
+			scopes = scopes.Where(s => s.EndsWith(".read", System.StringComparison.OrdinalIgnoreCase)).ToArray();
+
+			var readOnlyApiKey = await apiKeys.CreateAsync(name, scopes, onBehalfOf, cancellationToken).ConfigureAwait(false);
+			return readOnlyApiKey;
+		}
+
+		/// <summary>
+		/// Send a teammate invitation via email with the same "read" permissions that have been granted to you.
+		/// A teammate invite will expire after 7 days, but you may resend the invite at any time
+		/// to reset the expiration date.
+		/// </summary>
+		/// <param name="teammates">The teammates resource.</param>
+		/// <param name="email">The email address of the teammate.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The async task.
+		/// </returns>
+		/// <remarks>
+		/// Essentials, Legacy Lite, and Free Trial users may create up to one teammate per account.
+		/// There is not a teammate limit for Pro and higher plans.
+		/// </remarks>
+		public static async Task<TeammateInvitation> InviteTeammateWithReadOnlyPrivilegesAsync(this ITeammates teammates, string email, CancellationToken cancellationToken = default)
+		{
+			var privateField = teammates.GetType().GetField("_client", BindingFlags.NonPublic | BindingFlags.Instance);
+			if (privateField == null) throw new ArgumentException("Unable to find the HttpClient in the resource.", nameof(teammates));
+			var client = (Pathoschild.Http.Client.IClient)privateField.GetValue(teammates);
+
+			var scopes = await client.GetCurrentScopes(true, cancellationToken).ConfigureAwait(true);
+			scopes = scopes.Where(s => s.EndsWith(".read", StringComparison.OrdinalIgnoreCase)).ToArray();
+
+			return await teammates.InviteTeammateAsync(email, scopes, cancellationToken).ConfigureAwait(false);
 		}
 	}
 }
