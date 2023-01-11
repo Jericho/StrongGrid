@@ -149,7 +149,7 @@ namespace StrongGrid.Utilities
 
 		#region PRIVATE METHODS
 
-		private void LogHeaders(StringBuilder diagnostic, HttpHeaders httpHeaders)
+		private static void LogHeaders(StringBuilder diagnostic, HttpHeaders httpHeaders)
 		{
 			if (httpHeaders != null)
 			{
@@ -167,7 +167,7 @@ namespace StrongGrid.Utilities
 			}
 		}
 
-		private void LogContent(StringBuilder diagnostic, HttpContent httpContent)
+		private static void LogContent(StringBuilder diagnostic, HttpContent httpContent)
 		{
 			if (httpContent == null)
 			{
@@ -191,7 +191,7 @@ namespace StrongGrid.Utilities
 			}
 		}
 
-		private void Cleanup()
+		private static void Cleanup()
 		{
 			try
 			{
