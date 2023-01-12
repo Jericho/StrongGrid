@@ -18,6 +18,25 @@ namespace StrongGrid.Utilities
 	/// <seealso cref="Pathoschild.Http.Client.Extensibility.IHttpFilter" />
 	internal class DiagnosticHandler : IHttpFilter
 	{
+		internal class DiagnosticInfo
+		{
+			public WeakReference<HttpRequestMessage> RequestReference { get; set; }
+
+			public string Diagnostic { get; set; }
+
+			public long RequestTimestamp { get; set; }
+
+			public long ResponseTimestamp { get; set; }
+
+			public DiagnosticInfo(WeakReference<HttpRequestMessage> requestReference, string diagnostic, long requestTimestamp, long responseTimestamp)
+			{
+				RequestReference = requestReference;
+				Diagnostic = diagnostic;
+				RequestTimestamp = requestTimestamp;
+				ResponseTimestamp = responseTimestamp;
+			}
+		}
+
 		#region FIELDS
 
 		internal const string DIAGNOSTIC_ID_HEADER_NAME = "StrongGrid-Diagnostic-Id";
@@ -29,7 +48,7 @@ namespace StrongGrid.Utilities
 
 		#region PROPERTIES
 
-		internal static ConcurrentDictionary<string, (WeakReference<HttpRequestMessage> RequestReference, string Diagnostic, long RequestTimestamp, long ResponseTimeStamp)> DiagnosticsInfo { get; } = new ConcurrentDictionary<string, (WeakReference<HttpRequestMessage>, string, long, long)>();
+		internal static ConcurrentDictionary<string, DiagnosticInfo> DiagnosticsInfo { get; } = new();
 
 		#endregion
 
@@ -64,7 +83,7 @@ namespace StrongGrid.Utilities
 			LogContent(diagnostic, httpRequest.Content);
 
 			// Add the diagnostic info to our cache
-			DiagnosticsInfo.TryAdd(diagnosticId, (new WeakReference<HttpRequestMessage>(request.Message), diagnostic.ToString(), Stopwatch.GetTimestamp(), long.MinValue));
+			DiagnosticsInfo.TryAdd(diagnosticId, new DiagnosticInfo(new WeakReference<HttpRequestMessage>(request.Message), diagnostic.ToString(), Stopwatch.GetTimestamp(), long.MinValue));
 		}
 
 		/// <summary>Method invoked just after the HTTP response is received. This method can modify the incoming HTTP response.</summary>
@@ -76,7 +95,7 @@ namespace StrongGrid.Utilities
 			var httpResponse = response.Message;
 
 			var diagnosticId = response.Message.RequestMessage.Headers.GetValue(DIAGNOSTIC_ID_HEADER_NAME);
-			if (DiagnosticsInfo.TryGetValue(diagnosticId, out (WeakReference<HttpRequestMessage> RequestReference, string Diagnostic, long RequestTimestamp, long ResponseTimestamp) diagnosticInfo))
+			if (DiagnosticsInfo.TryGetValue(diagnosticId, out DiagnosticInfo diagnosticInfo))
 			{
 				var updatedDiagnostic = new StringBuilder(diagnosticInfo.Diagnostic);
 				try
@@ -118,8 +137,8 @@ namespace StrongGrid.Utilities
 
 					DiagnosticsInfo.TryUpdate(
 						diagnosticId,
-						(diagnosticInfo.RequestReference, updatedDiagnostic.ToString(), diagnosticInfo.RequestTimestamp, responseTimestamp),
-						(diagnosticInfo.RequestReference, diagnosticInfo.Diagnostic, diagnosticInfo.RequestTimestamp, diagnosticInfo.ResponseTimestamp));
+						new DiagnosticInfo(diagnosticInfo.RequestReference, updatedDiagnostic.ToString(), diagnosticInfo.RequestTimestamp, responseTimestamp),
+						diagnosticInfo);
 				}
 			}
 
@@ -130,7 +149,7 @@ namespace StrongGrid.Utilities
 
 		#region PRIVATE METHODS
 
-		private void LogHeaders(StringBuilder diagnostic, HttpHeaders httpHeaders)
+		private static void LogHeaders(StringBuilder diagnostic, HttpHeaders httpHeaders)
 		{
 			if (httpHeaders != null)
 			{
@@ -148,7 +167,7 @@ namespace StrongGrid.Utilities
 			}
 		}
 
-		private void LogContent(StringBuilder diagnostic, HttpContent httpContent)
+		private static void LogContent(StringBuilder diagnostic, HttpContent httpContent)
 		{
 			if (httpContent == null)
 			{
@@ -172,14 +191,14 @@ namespace StrongGrid.Utilities
 			}
 		}
 
-		private void Cleanup()
+		private static void Cleanup()
 		{
 			try
 			{
 				// Remove diagnostic information for requests that have been garbage collected
 				foreach (string key in DiagnosticHandler.DiagnosticsInfo.Keys.ToArray())
 				{
-					if (DiagnosticHandler.DiagnosticsInfo.TryGetValue(key, out (WeakReference<HttpRequestMessage> RequestReference, string Diagnostic, long RequestTimeStamp, long ResponseTimestamp) diagnosticInfo))
+					if (DiagnosticHandler.DiagnosticsInfo.TryGetValue(key, out DiagnosticInfo diagnosticInfo))
 					{
 						if (!diagnosticInfo.RequestReference.TryGetTarget(out HttpRequestMessage request))
 						{

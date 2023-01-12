@@ -17,6 +17,7 @@ namespace StrongGrid.Json
 		{
 			"asm_group_id",
 			"attempt",
+			"bounce_classification",
 			"category",
 			"cert_err",
 			"email",

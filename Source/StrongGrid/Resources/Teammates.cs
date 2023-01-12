@@ -3,7 +3,6 @@ using StrongGrid.Json;
 using StrongGrid.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -168,52 +167,7 @@ namespace StrongGrid.Resources
 		/// </remarks>
 		public Task<TeammateInvitation> InviteTeammateAsync(string email, IEnumerable<string> scopes, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
-
-			var data = new StrongGridJsonObject();
-			data.AddProperty("email", email);
-			data.AddProperty("scopes", scopes);
-			data.AddProperty("is_admin", false);
-
-			return _client
-				.PostAsync(_endpoint)
-				.WithJsonBody(data)
-				.WithCancellationToken(cancellationToken)
-				.AsObject<TeammateInvitation>();
-		}
-
-		/// <summary>
-		/// Send a teammate invitation via email with the same "read" permissions that have been granted to you.
-		/// A teammate invite will expire after 7 days, but you may resend the invite at any time
-		/// to reset the expiration date.
-		/// </summary>
-		/// <param name="email">The email address of the teammate.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// The async task.
-		/// </returns>
-		/// <remarks>
-		/// Essentials, Legacy Lite, and Free Trial users may create up to one teammate per account.
-		/// There is not a teammate limit for Pro and higher plans.
-		/// </remarks>
-		public async Task<TeammateInvitation> InviteTeammateWithReadOnlyPrivilegesAsync(string email, CancellationToken cancellationToken = default)
-		{
-			if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
-
-			var scopes = await _client.GetCurrentScopes(true, cancellationToken).ConfigureAwait(true);
-			scopes = scopes.Where(s => s.EndsWith(".read", System.StringComparison.OrdinalIgnoreCase)).ToArray();
-
-			var data = new StrongGridJsonObject();
-			data.AddProperty("email", email);
-			data.AddProperty("scopes", scopes);
-			data.AddProperty("is_admin", false);
-
-			return await _client
-				.PostAsync(_endpoint)
-				.WithJsonBody(data)
-				.WithCancellationToken(cancellationToken)
-				.AsObject<TeammateInvitation>()
-				.ConfigureAwait(false);
+			return InviteAsync(email, scopes, false, cancellationToken);
 		}
 
 		/// <summary>
@@ -232,17 +186,7 @@ namespace StrongGrid.Resources
 		/// </remarks>
 		public Task<TeammateInvitation> InviteTeammateAsAdminAsync(string email, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
-
-			var data = new StrongGridJsonObject();
-			data.AddProperty("email", email);
-			data.AddProperty("is_admin", true);
-
-			return _client
-				.PostAsync(_endpoint)
-				.WithJsonBody(data)
-				.WithCancellationToken(cancellationToken)
-				.AsObject<TeammateInvitation>();
+			return InviteAsync(email, null, true, cancellationToken);
 		}
 
 		/// <summary>
@@ -316,6 +260,22 @@ namespace StrongGrid.Resources
 				.DeleteAsync($"{_endpoint}/{username}")
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
+		}
+
+		private Task<TeammateInvitation> InviteAsync(string email, IEnumerable<string> scopes, bool isAdmin, CancellationToken cancellationToken = default)
+		{
+			if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
+
+			var data = new StrongGridJsonObject();
+			data.AddProperty("email", email);
+			data.AddProperty("scopes", scopes);
+			data.AddProperty("is_admin", isAdmin);
+
+			return _client
+				.PostAsync(_endpoint)
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsObject<TeammateInvitation>();
 		}
 	}
 }

@@ -143,69 +143,6 @@ namespace StrongGrid.Resources
 				.AsObject<ApiKey>();
 		}
 
-		/// <summary>
-		/// Generate a new API Key for billing.
-		/// </summary>
-		/// <param name="name">The name.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
-		/// <param name="cancellationToken">Cancellation token.</param>
-		/// <returns>
-		/// The <see cref="ApiKey" />.
-		/// </returns>
-		public Task<ApiKey> CreateWithBillingPermissionsAsync(string name, string onBehalfOf = null, CancellationToken cancellationToken = default)
-		{
-			var scopes = new[]
-			{
-				"billing.delete",
-				"billing.read",
-				"billing.update"
-			};
-
-			return this.CreateAsync(name, scopes, onBehalfOf, cancellationToken);
-		}
-
-		/// <summary>
-		/// Generate a new API Key with the same permissions that have been granted to you.
-		/// </summary>
-		/// <param name="name">The name.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
-		/// <param name="cancellationToken">Cancellation token.</param>
-		/// <returns>
-		/// The <see cref="ApiKey" />.
-		/// </returns>
-		/// <remarks>
-		/// If you specify an API Key when instanciating the <see cref="Client" />, the new API Key will inherit the permissions of that API Key.
-		/// If you specify a username and password when instanciating the <see cref="Client" />, the new API Key will inherit the permissions of that user.
-		/// </remarks>
-		public async Task<ApiKey> CreateWithAllPermissionsAsync(string name, string onBehalfOf = null, CancellationToken cancellationToken = default)
-		{
-			var scopes = await _client.GetCurrentScopes(true, cancellationToken).ConfigureAwait(false);
-			var superApiKey = await this.CreateAsync(name, scopes, onBehalfOf, cancellationToken).ConfigureAwait(false);
-			return superApiKey;
-		}
-
-		/// <summary>
-		/// Generate a new API Key with the same "read" permissions that have ben granted to you.
-		/// </summary>
-		/// <param name="name">The name.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
-		/// <param name="cancellationToken">Cancellation token.</param>
-		/// <returns>
-		/// The <see cref="ApiKey" />.
-		/// </returns>
-		/// <remarks>
-		/// If you specify an API Key when instanciating the <see cref="Client" />, the new API Key will inherit the "read" permissions of that API Key.
-		/// If you specify a username and password when instanciating the <see cref="Client" />, the new API Key will inherit the "read" permissions of that user.
-		/// </remarks>
-		public async Task<ApiKey> CreateWithReadOnlyPermissionsAsync(string name, string onBehalfOf = null, CancellationToken cancellationToken = default)
-		{
-			var scopes = await _client.GetCurrentScopes(true, cancellationToken).ConfigureAwait(false);
-			scopes = scopes.Where(s => s.EndsWith(".read", System.StringComparison.OrdinalIgnoreCase)).ToArray();
-
-			var readOnlyApiKey = await this.CreateAsync(name, scopes, onBehalfOf, cancellationToken).ConfigureAwait(false);
-			return readOnlyApiKey;
-		}
-
 		private static StrongGridJsonObject ConvertToJson(string name, Parameter<IEnumerable<string>> scopes)
 		{
 			var result = new StrongGridJsonObject();

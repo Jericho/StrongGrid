@@ -76,5 +76,15 @@ namespace StrongGrid.Models.Webhooks
 		/// </value>
 		[JsonPropertyName("type")]
 		public BounceType Type { get; set; }
+
+		/// <summary>
+		/// Gets or sets a value indicating the type of SMTP failure.
+		/// </summary>
+		/// <value>The SMTP failure classification.</value>
+		/// <remarks>
+		/// See <a href="https://docs.sendgrid.com/ui/analytics-and-reporting/bounce-and-block-classifications">SendGrid' Bounce Classifications documentation </a> to understand each classification.
+		/// </remarks>
+		[JsonPropertyName("bounce_classification")]
+		public BounceClassification Classification { get; set; }
 	}
 }

@@ -1,4 +1,3 @@
-using HttpMultipartParser;
 using Pathoschild.Http.Client;
 using StrongGrid.Json;
 using StrongGrid.Models;
@@ -19,6 +18,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using static StrongGrid.Utilities.DiagnosticHandler;
 
 namespace StrongGrid
 {
@@ -33,7 +33,7 @@ namespace StrongGrid
 			Milliseconds = 1
 		}
 
-		private static readonly DateTime EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+		private static readonly DateTime EPOCH = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
 		/// <summary>
 		/// Converts a 'unix time', which is expressed as the number of seconds (or milliseconds) since
@@ -117,9 +117,13 @@ namespace StrongGrid
 
 			if (httpContent != null)
 			{
+#if NET7_0_OR_GREATER
+				var contentStream = await httpContent.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+#else
 				var contentStream = await httpContent.ReadAsStreamAsync().ConfigureAwait(false);
+#endif
 
-				if (encoding == null) encoding = httpContent.GetEncoding(Encoding.UTF8);
+				encoding ??= httpContent.GetEncoding(Encoding.UTF8);
 
 				// This is important: we must make a copy of the response stream otherwise we would get an
 				// exception on subsequent attempts to read the content of the stream
@@ -130,7 +134,11 @@ namespace StrongGrid
 					ms.Position = 0;
 					using (var sr = new StreamReader(ms, encoding))
 					{
+#if NET7_0_OR_GREATER
+						content = await sr.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
+#else
 						content = await sr.ReadToEndAsync().ConfigureAwait(false);
+#endif
 					}
 
 					// It's important to rewind the stream
@@ -182,19 +190,6 @@ namespace StrongGrid
 			}
 
 			return encoding;
-		}
-
-		/// <summary>
-		/// Returns the value of a parameter or the default value if it doesn't exist.
-		/// </summary>
-		/// <param name="parser">The parser.</param>
-		/// <param name="name">The name of the parameter.</param>
-		/// <param name="defaultValue">The default value.</param>
-		/// <returns>The value of the parameter.</returns>
-		internal static string GetParameterValue(this MultipartFormDataParser parser, string name, string defaultValue)
-		{
-			if (parser.HasParameter(name)) return parser.GetParameterValue(name);
-			else return defaultValue;
 		}
 
 		/// <summary>Asynchronously retrieve the JSON encoded response body and convert it to an object of the desired type.</summary>
@@ -581,14 +576,14 @@ namespace StrongGrid
 			return querystringParameters;
 		}
 
-		internal static (WeakReference<HttpRequestMessage> RequestReference, string Diagnostic, long RequestTimeStamp, long ResponseTimestamp) GetDiagnosticInfo(this IResponse response)
+		internal static DiagnosticInfo GetDiagnosticInfo(this IResponse response)
 		{
 			var diagnosticId = response.Message.RequestMessage.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
-			DiagnosticHandler.DiagnosticsInfo.TryGetValue(diagnosticId, out (WeakReference<HttpRequestMessage> RequestReference, string Diagnostic, long RequestTimeStamp, long ResponseTimestamp) diagnosticInfo);
+			DiagnosticHandler.DiagnosticsInfo.TryGetValue(diagnosticId, out DiagnosticInfo diagnosticInfo);
 			return diagnosticInfo;
 		}
 
-		internal static async Task<(bool, string)> GetErrorMessageAsync(this HttpResponseMessage message)
+		internal static async Task<(bool IsError, string Message)> GetErrorMessageAsync(this HttpResponseMessage message)
 		{
 			// Default error message
 			var errorMessage = $"{(int)message.StatusCode}: {message.ReasonPhrase}";

@@ -62,7 +62,8 @@ namespace StrongGrid.Warmup
 					var result = _client.IpAddresses.AddAsync(count, subusers, false, cancellationToken).Result;
 					var ipAddresses = result.IpAddresses.Select(r => r.Address).ToArray();
 					return ipAddresses;
-				}, cancellationToken);
+				},
+				cancellationToken);
 		}
 
 		/// <summary>
