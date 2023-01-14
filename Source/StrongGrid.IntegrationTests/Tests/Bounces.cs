@@ -1,3 +1,4 @@
+using StrongGrid.Models;
 using System;
 using System.IO;
 using System.Threading;
@@ -20,6 +21,13 @@ namespace StrongGrid.IntegrationTests.Tests
 
 			var bounces = await client.Bounces.GetAllAsync(startDate, endDate, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All bounces retrieved. There are {bounces.Length} bounces in {lastYear} and {thisYear}").ConfigureAwait(false);
+
+			var totals = await client.Bounces.GetTotalsAsync(startDate, endDate, null, cancellationToken).ConfigureAwait(false);
+			var totalsUnclassified = await client.Bounces.GetTotalsAsync(BounceClassification.Unclassified, startDate, endDate, null, cancellationToken).ConfigureAwait(false);
+
+			var totalsStream = await client.Bounces.GetTotalsAsCsvAsync(startDate, endDate, null, cancellationToken).ConfigureAwait(false);
+			using var fileStream = File.Create($"C:\\temp\\Bounce Totals {lastYear} - {thisYear}.csv");
+			await totalsStream.CopyToAsync(fileStream, cancellationToken).ConfigureAwait(false);
 		}
 	}
 }
