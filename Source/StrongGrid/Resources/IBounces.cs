@@ -1,6 +1,7 @@
-﻿using StrongGrid.Models;
+using StrongGrid.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -68,5 +69,49 @@ namespace StrongGrid.Resources
 		/// The async task.
 		/// </returns>
 		Task DeleteAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Get the total number of bounces by classification for each day.
+		/// </summary>
+		/// <param name="start">The start.</param>
+		/// <param name="end">The end.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="BouncesTotalByDay" />.
+		/// </returns>
+		Task<BouncesTotalByDay[]> GetTotalsAsync(DateTime? start = null, DateTime? end = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Get the total number of bounces for a specified classification for each day.
+		/// </summary>
+		/// <param name="classification">The classification.</param>
+		/// <param name="start">The start.</param>
+		/// <param name="end">The end.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>An array of <see cref="BouncesTotalByDay" />.</returns>
+		Task<BouncesTotalByDay[]> GetTotalsAsync(BounceClassification classification, DateTime? start = null, DateTime? end = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Get the total number of bounces by classification for each day in CSV format.
+		/// </summary>
+		/// <param name="start">The start.</param>
+		/// <param name="end">The end.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>A stream containing the CSV data.</returns>
+		Task<Stream> GetTotalsAsCsvAsync(DateTime? start = null, DateTime? end = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Get the total number of bounces for a specified classification for each day in CSV format.
+		/// </summary>
+		/// <param name="classification">The classification.</param>
+		/// <param name="start">The start.</param>
+		/// <param name="end">The end.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>A stream containing the CSV data.</returns>
+		Task<Stream> GetTotalsAsCsvAsync(BounceClassification classification, DateTime? start = null, DateTime? end = null, string onBehalfOf = null, CancellationToken cancellationToken = default);
 	}
 }

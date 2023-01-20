@@ -3,6 +3,7 @@ using StrongGrid.Json;
 using StrongGrid.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,6 +19,10 @@ namespace StrongGrid.Resources
 	/// </remarks>
 	public class Bounces : IBounces
 	{
+		// The documentation incorrectly states that you can get bounce totals at the following url: /v3/suppression/bounces/classifications
+		// The correct url is: /v3/suppressions/bounces/classifications (notice the word 'suppressions' is plural)
+		private const string _endpointForTotals = "suppressions/bounces/classifications";
+
 		private const string _endpoint = "suppression/bounces";
 		private readonly Pathoschild.Http.Client.IClient _client;
 
@@ -134,6 +139,71 @@ namespace StrongGrid.Resources
 				.DeleteAsync($"{_endpoint}/{email}")
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
+		}
+
+		/// <inheritdoc/>
+		public Task<BouncesTotalByDay[]> GetTotalsAsync(DateTime? start = null, DateTime? end = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		{
+			return _client
+				.GetAsync(_endpointForTotals)
+				.OnBehalfOf(onBehalfOf)
+				.WithArgument("start_time", start?.ToUnixTime())
+				.WithArgument("end_time", end?.ToUnixTime())
+				.WithCancellationToken(cancellationToken)
+				.AsObject<BouncesTotalByDay[]>("result");
+		}
+
+		/// <inheritdoc/>
+		public async Task<BouncesTotalByDay[]> GetTotalsAsync(BounceClassification classification, DateTime? start = null, DateTime? end = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		{
+			var result = await _client
+				.GetAsync($"{_endpointForTotals}/{classification.ToEnumString()}")
+				.OnBehalfOf(onBehalfOf)
+				.WithArgument("start_time", start?.ToUnixTime())
+				.WithArgument("end_time", end?.ToUnixTime())
+				.WithCancellationToken(cancellationToken)
+				.AsObject<BouncesTotalByDay[]>("result")
+				.ConfigureAwait(false);
+
+			// SendGrid does not include the classification in the response. Therefore we must set it ourselves.
+			foreach (var dailyTotal in result.SelectMany(r => r.Totals))
+			{
+				dailyTotal.Classification = classification;
+			}
+
+			return result;
+		}
+
+		/// <inheritdoc/>
+		public Task<Stream> GetTotalsAsCsvAsync(DateTime? start = null, DateTime? end = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		{
+			var request = _client
+				.GetAsync(_endpointForTotals)
+				.OnBehalfOf(onBehalfOf)
+				.WithArgument("start_time", start?.ToUnixTime())
+				.WithArgument("end_time", end?.ToUnixTime())
+				.WithCancellationToken(cancellationToken);
+
+			request.Message.Headers.Remove("Accept");
+			request.Message.Headers.Add("Accept", "text/csv");
+
+			return request.AsStream();
+		}
+
+		/// <inheritdoc/>
+		public Task<Stream> GetTotalsAsCsvAsync(BounceClassification classification, DateTime? start = null, DateTime? end = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		{
+			var request = _client
+				.GetAsync($"{_endpointForTotals}/{classification.ToEnumString()}")
+				.OnBehalfOf(onBehalfOf)
+				.WithArgument("start_time", start?.ToUnixTime())
+				.WithArgument("end_time", end?.ToUnixTime())
+				.WithCancellationToken(cancellationToken);
+
+			request.Message.Headers.Remove("Accept");
+			request.Message.Headers.Add("Accept", "text/csv");
+
+			return request.AsStream();
 		}
 	}
 }
