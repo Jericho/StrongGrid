@@ -801,6 +801,14 @@ namespace StrongGrid
 			return result.ToString();
 		}
 
+		internal static string ToExactLength(this string source, int totalWidth, string postfix = "...", char paddingChar = ' ')
+		{
+			if (string.IsNullOrEmpty(source)) return new string(paddingChar, totalWidth);
+			if (source.Length <= totalWidth) return source.PadRight(totalWidth, paddingChar);
+			var result = $"{source.Substring(0, totalWidth - (postfix?.Length ?? 0))}{postfix ?? string.Empty}";
+			return result;
+		}
+
 		/// <summary>Asynchronously converts the JSON encoded content and convert it to an object of the desired type.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="httpContent">The content.</param>

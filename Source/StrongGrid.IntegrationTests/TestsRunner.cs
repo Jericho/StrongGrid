@@ -153,10 +153,10 @@ namespace StrongGrid.IntegrationTests
 			await summary.WriteLineAsync("******************** SUMMARY *********************").ConfigureAwait(false);
 			await summary.WriteLineAsync("**************************************************").ConfigureAwait(false);
 
+			var nameMaxLength = Math.Min(results.Max(r => r.TestName.Length), TEST_NAME_MAX_LENGTH);
 			foreach (var (TestName, ResultCode, Message) in results.OrderBy(r => r.TestName).ToArray())
 			{
-				var name = TestName.Length <= TEST_NAME_MAX_LENGTH ? TestName : TestName.Substring(0, TEST_NAME_MAX_LENGTH - 3) + "...";
-				await summary.WriteLineAsync($"{name.PadRight(TEST_NAME_MAX_LENGTH, ' ')} : {Message}").ConfigureAwait(false);
+				await summary.WriteLineAsync($"{TestName.ToExactLength(nameMaxLength)} : {Message}").ConfigureAwait(false);
 			}
 
 			await summary.WriteLineAsync("**************************************************").ConfigureAwait(false);
