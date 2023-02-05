@@ -163,15 +163,6 @@ namespace StrongGrid
 		/// <returns>The <see cref="InboundEmail"/>.</returns>
 		public async Task<InboundEmail> ParseInboundEmailWebhookAsync(Stream stream, CancellationToken cancellationToken = default)
 		{
-			// We need to be able to rewind the stream.
-			// Therefore, we must make a copy of the stream if it doesn't allow changing the position
-			if (!stream.CanSeek)
-			{
-				using var ms = Utils.MemoryStreamManager.GetStream();
-				await stream.CopyToAsync(ms).ConfigureAwait(false);
-				return await ParseInboundEmailWebhookAsync(ms).ConfigureAwait(false);
-			}
-
 			// It's important to rewind the stream
 			stream.Position = 0;
 
@@ -189,15 +180,6 @@ namespace StrongGrid
 		[Obsolete("Use the async version of this method, it can read the content of the stream much more efficiently.")]
 		public InboundEmail ParseInboundEmailWebhook(Stream stream)
 		{
-			// We need to be able to rewind the stream.
-			// Therefore, we must make a copy of the stream if it doesn't allow changing the position
-			if (!stream.CanSeek)
-			{
-				using var ms = Utils.MemoryStreamManager.GetStream();
-				stream.CopyTo(ms);
-				return ParseInboundEmailWebhook(ms);
-			}
-
 			// It's important to rewind the stream
 			stream.Position = 0;
 
