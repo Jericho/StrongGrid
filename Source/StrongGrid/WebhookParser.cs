@@ -9,6 +9,7 @@ using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrongGrid
@@ -53,13 +54,14 @@ namespace StrongGrid
 		/// <param name="publicKey">Your public key. To obtain this value, see <see cref="StrongGrid.Resources.WebhookSettings.GetSignedEventsPublicKeyAsync"/>.</param>
 		/// <param name="signature">The signature.</param>
 		/// <param name="timestamp">The timestamp.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>An array of <see cref="Event">events</see>.</returns>
-		public async Task<Event[]> ParseSignedEventsWebhookAsync(Stream stream, string publicKey, string signature, string timestamp)
+		public async Task<Event[]> ParseSignedEventsWebhookAsync(Stream stream, string publicKey, string signature, string timestamp, CancellationToken cancellationToken = default)
 		{
 			string requestBody;
 			using (var streamReader = new StreamReader(stream))
 			{
-				requestBody = await streamReader.ReadToEndAsync().ConfigureAwait(false);
+				requestBody = await streamReader.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
 			}
 
 			var webHookEvents = ParseSignedEventsWebhook(requestBody, publicKey, signature, timestamp);
@@ -70,10 +72,11 @@ namespace StrongGrid
 		/// Parses the events webhook asynchronously.
 		/// </summary>
 		/// <param name="stream">The stream.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>An array of <see cref="Event">events</see>.</returns>
-		public async Task<Event[]> ParseEventsWebhookAsync(Stream stream)
+		public async Task<Event[]> ParseEventsWebhookAsync(Stream stream, CancellationToken cancellationToken = default)
 		{
-			var webHookEvents = await JsonSerializer.DeserializeAsync<Event[]>(stream, JsonFormatter.DeserializerOptions).ConfigureAwait(false);
+			var webHookEvents = await JsonSerializer.DeserializeAsync<Event[]>(stream, JsonFormatter.DeserializerOptions, cancellationToken).ConfigureAwait(false);
 			return webHookEvents;
 		}
 
@@ -156,8 +159,9 @@ namespace StrongGrid
 		/// Parses the inbound email webhook asynchronously.
 		/// </summary>
 		/// <param name="stream">The stream.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>The <see cref="InboundEmail"/>.</returns>
-		public async Task<InboundEmail> ParseInboundEmailWebhookAsync(Stream stream)
+		public async Task<InboundEmail> ParseInboundEmailWebhookAsync(Stream stream, CancellationToken cancellationToken = default)
 		{
 			// We need to be able to rewind the stream.
 			// Therefore, we must make a copy of the stream if it doesn't allow changing the position
@@ -172,7 +176,7 @@ namespace StrongGrid
 			stream.Position = 0;
 
 			// Asynchronously parse the multipart content received from SendGrid
-			var parser = await SendGridMultipartFormDataParser.ParseAsync(stream).ConfigureAwait(false);
+			var parser = await SendGridMultipartFormDataParser.ParseAsync(stream, cancellationToken).ConfigureAwait(false);
 
 			return ParseInboundEmail(parser);
 		}
