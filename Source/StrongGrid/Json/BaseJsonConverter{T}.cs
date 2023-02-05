@@ -50,7 +50,7 @@ namespace StrongGrid.Json
 			}
 		}
 
-		internal void Serialize(Utf8JsonWriter writer, T value, JsonSerializerOptions options, Action<string, object, Type, JsonSerializerOptions, JsonConverterAttribute> propertySerializer = null)
+		internal static void Serialize(Utf8JsonWriter writer, T value, JsonSerializerOptions options, Action<string, object, Type, JsonSerializerOptions, JsonConverterAttribute> propertySerializer = null)
 		{
 			if (value == null)
 			{
@@ -58,10 +58,7 @@ namespace StrongGrid.Json
 				return;
 			}
 
-			if (propertySerializer == null)
-			{
-				propertySerializer = (propertyName, propertyValue, propertyType, options, propertyConverterAttribute) => WriteJsonProperty(writer, propertyName, propertyValue, propertyType, options, propertyConverterAttribute);
-			}
+			propertySerializer ??= (propertyName, propertyValue, propertyType, options, propertyConverterAttribute) => WriteJsonProperty(writer, propertyName, propertyValue, propertyType, options, propertyConverterAttribute);
 
 			writer.WriteStartObject();
 
@@ -89,7 +86,7 @@ namespace StrongGrid.Json
 			writer.WriteEndObject();
 		}
 
-		internal void WriteJsonProperty(Utf8JsonWriter writer, string propertyName, object propertyValue, Type propertyType, JsonSerializerOptions options, JsonConverterAttribute propertyConverterAttribute)
+		internal static void WriteJsonProperty(Utf8JsonWriter writer, string propertyName, object propertyValue, Type propertyType, JsonSerializerOptions options, JsonConverterAttribute propertyConverterAttribute)
 		{
 			writer.WritePropertyName(propertyName);
 
