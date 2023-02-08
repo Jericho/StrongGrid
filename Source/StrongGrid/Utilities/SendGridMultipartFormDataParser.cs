@@ -37,7 +37,7 @@ namespace StrongGrid.Utilities
 
 		public static async Task<SendGridMultipartFormDataParser> ParseAsync(Stream stream, CancellationToken cancellationToken = default)
 		{
-			var parser = await MultipartFormBinaryDataParser.ParseAsync(stream, Encoding.UTF8, cancellationToken).ConfigureAwait(false);
+			var parser = await MultipartFormBinaryDataParser.ParseAsync(stream, Encoding.UTF8, cancellationToken: cancellationToken).ConfigureAwait(false);
 			return ConvertToSendGridParser(parser);
 		}
 
