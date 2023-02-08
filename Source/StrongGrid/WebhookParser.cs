@@ -61,7 +61,11 @@ namespace StrongGrid
 			string requestBody;
 			using (var streamReader = new StreamReader(stream))
 			{
+#if NET7_0_OR_GREATER
 				requestBody = await streamReader.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
+#else
+				requestBody = await streamReader.ReadToEndAsync().ConfigureAwait(false);
+#endif
 			}
 
 			var webHookEvents = ParseSignedEventsWebhook(requestBody, publicKey, signature, timestamp);
