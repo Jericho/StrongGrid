@@ -12,10 +12,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Logzio.DotNet.NLog" Version="1.0.14" />
+    <PackageReference Include="Logzio.DotNet.NLog" Version="1.0.16" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-    <PackageReference Include="NLog.Extensions.Logging" Version="5.2.1" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="5.2.2" />
   </ItemGroup>
 
   <ItemGroup>
