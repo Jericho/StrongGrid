@@ -117,7 +117,7 @@ namespace StrongGrid
 
 			if (httpContent != null)
 			{
-#if NET7_0_OR_GREATER
+#if NET5_0_OR_GREATER
 				var contentStream = await httpContent.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
 #else
 				var contentStream = await httpContent.ReadAsStreamAsync().ConfigureAwait(false);

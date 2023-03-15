@@ -1277,7 +1277,11 @@ namespace StrongGrid
 				var destinationPath = Path.Combine(destinationFolder, exportFile.FileName);
 				using (Stream output = File.OpenWrite(destinationPath))
 				{
+#if NET5_0_OR_GREATER
+					await exportFile.Stream.CopyToAsync(output, cancellationToken).ConfigureAwait(false);
+#else
 					await exportFile.Stream.CopyToAsync(output).ConfigureAwait(false);
+#endif
 				}
 			}
 		}
@@ -1314,7 +1318,11 @@ namespace StrongGrid
 			{
 				using (Stream output = File.OpenWrite(destinationPath))
 				{
+#if NET5_0_OR_GREATER
+					await responseStream.CopyToAsync(output, cancellationToken).ConfigureAwait(false);
+#else
 					await responseStream.CopyToAsync(output).ConfigureAwait(false);
+#endif
 				}
 			}
 		}
