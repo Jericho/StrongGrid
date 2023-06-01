@@ -110,7 +110,7 @@ namespace StrongGrid.Json
 
 					foreach (var property in properties)
 					{
-						webHookEvent.UniqueArguments.Add(property.Name, property.Value.GetString());
+						webHookEvent.UniqueArguments.Add(property.Name, property.Value.GetRawText());
 					}
 
 					return webHookEvent;
