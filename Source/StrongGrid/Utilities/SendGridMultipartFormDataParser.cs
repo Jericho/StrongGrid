@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrongGrid.Utilities
@@ -34,9 +35,9 @@ namespace StrongGrid.Utilities
 			return ConvertToSendGridParser(parser);
 		}
 
-		public static async Task<SendGridMultipartFormDataParser> ParseAsync(Stream stream)
+		public static async Task<SendGridMultipartFormDataParser> ParseAsync(Stream stream, CancellationToken cancellationToken = default)
 		{
-			var parser = await MultipartFormBinaryDataParser.ParseAsync(stream, Encoding.UTF8).ConfigureAwait(false);
+			var parser = await MultipartFormBinaryDataParser.ParseAsync(stream, Encoding.UTF8, cancellationToken: cancellationToken).ConfigureAwait(false);
 			return ConvertToSendGridParser(parser);
 		}
 
