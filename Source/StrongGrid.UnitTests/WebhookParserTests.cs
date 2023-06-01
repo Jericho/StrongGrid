@@ -966,6 +966,42 @@ Content-Disposition: form-data; name=""attachments""
 			result.Length.ShouldBe(11); // The sample payload contains 11 events
 		}
 
+		[Fact]
+		// This unit test validates that we fixed the issue described in GH-492
+		// It proves that we can serialize and deserilize events without loosing
+		// properties of derived types such as 'Reason' for a bounced event,
+		// 'UserAgent' for a click event and 'IpAddress' for an open event.
+		public async Task Serialize_and_deserialize_derived_types()
+		{
+			// Arrange
+			var events = new Event[]
+			{
+				new BouncedEvent() { Email = "test1@whatever.com", Reason = "This is a test"},
+				new ClickedEvent() { Email = "test2@whatever.com", UserAgent = "This is a test" },
+				new OpenedEvent() { Email = "test3@whatever.com", IpAddress = "This is a test" }
+			};
+
+			// Act
+			var serializedEvents = new MemoryStream(JsonSerializer.SerializeToUtf8Bytes(events));
+			var result = await JsonSerializer.DeserializeAsync<Event[]>(serializedEvents).ConfigureAwait(false);
+
+			// Assert
+			result.ShouldNotBeNull();
+			result.Length.ShouldBe(3);
+
+			result[0].Email.ShouldBe("test1@whatever.com");
+			result[0].EventType.ShouldBe(EventType.Bounce);
+			((BouncedEvent)result[0]).Reason.ShouldBe("This is a test");
+
+			result[1].Email.ShouldBe("test2@whatever.com");
+			result[1].EventType.ShouldBe(EventType.Click);
+			((ClickedEvent)result[1]).UserAgent.ShouldBe("This is a test");
+
+			result[2].Email.ShouldBe("test3@whatever.com");
+			result[2].EventType.ShouldBe(EventType.Open);
+			((OpenedEvent)result[2]).IpAddress.ShouldBe("This is a test");
+		}
+
 		private Stream GetStream(string responseContent)
 		{
 			var byteArray = Encoding.UTF8.GetBytes(responseContent);
