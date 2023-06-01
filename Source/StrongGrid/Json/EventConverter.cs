@@ -104,13 +104,13 @@ namespace StrongGrid.Json
 							throw new Exception($"{typeAsString} is an unknown event type");
 					}
 
-					var properties = doc.RootElement
+					var unkownProperties = doc.RootElement
 						.EnumerateObject()
 						.Where(property => !_knownProperties.Contains(property.Name));
 
-					foreach (var property in properties)
+					foreach (var unkownProperty in unkownProperties)
 					{
-						webHookEvent.UniqueArguments.Add(property.Name, property.Value.GetRawText());
+						webHookEvent.UniqueArguments.Add(unkownProperty.Name, unkownProperty.Value.GetRawText());
 					}
 
 					return webHookEvent;
