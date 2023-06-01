@@ -1002,6 +1002,43 @@ Content-Disposition: form-data; name=""attachments""
 			((OpenedEvent)result[2]).IpAddress.ShouldBe("This is a test");
 		}
 
+		[Fact]
+		// This unit reproduces the problem described in GH-491 and
+		// demonstrates that it was resolved in StrongGrid 0.99.1
+		public async Task Webhook_includes_unknow_property()
+		{
+			const string JSON_WITH_RESELLER_ID = @"
+			{
+				""reseller_id"":1234,
+				""email"":""example@test.com"",
+				""timestamp"":1513299569,
+				""smtp-id"":""<14c5d75ce93.dfd.64b469@ismtpd-555>"",
+				""event"":""open"",
+				""sg_machine_open"": false,
+				""category"":""cat facts"",
+				""sg_event_id"":""FOTFFO0ecsBE-zxFXfs6WA=="",
+				""sg_message_id"":""14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0"",
+				""useragent"":""Mozilla/4.0 (compatible; MSIE 6.1; Windows XP; .NET CLR 1.1.4322; .NET CLR 2.0.50727)"",
+				""ip"":""255.255.255.255""
+			}";
+
+			// Arrange
+			var responseContent = $"[{JSON_WITH_RESELLER_ID}]";
+			var parser = new WebhookParser();
+			using (var stream = GetStream(responseContent))
+			{
+				// Act
+				var result = await parser.ParseEventsWebhookAsync(stream).ConfigureAwait(false);
+
+				// Assert
+				result.ShouldNotBeNull();
+				result.Length.ShouldBe(1);
+				result[0].UniqueArguments.ShouldNotBeNull();
+				result[0].UniqueArguments.Count.ShouldBe(1);
+				result[0].UniqueArguments.ShouldContainKeyAndValue("reseller_id", "1234"); // Note that the value has been converted to a string
+			}
+		}
+
 		private Stream GetStream(string responseContent)
 		{
 			var byteArray = Encoding.UTF8.GetBytes(responseContent);
