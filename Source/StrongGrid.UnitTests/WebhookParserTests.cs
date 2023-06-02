@@ -967,7 +967,7 @@ Content-Disposition: form-data; name=""attachments""
 		}
 
 		[Fact]
-		// This unit test validates that we fixed the issue described in GH-492
+		// This unit test validates that we fixed the issue described in GH-492.
 		// It proves that we can serialize and deserilize events without loosing
 		// properties of derived types such as 'Reason' for a bounced event,
 		// 'UserAgent' for a click event and 'IpAddress' for an open event.
@@ -1003,7 +1003,7 @@ Content-Disposition: form-data; name=""attachments""
 		}
 
 		[Fact]
-		// This unit reproduces the problem described in GH-491 and
+		// This unit test reproduces the problem described in GH-491 and
 		// demonstrates that it was resolved in StrongGrid 0.99.1
 		public async Task Webhook_includes_unknow_property()
 		{
@@ -1037,6 +1037,31 @@ Content-Disposition: form-data; name=""attachments""
 				result[0].UniqueArguments.Count.ShouldBe(1);
 				result[0].UniqueArguments.ShouldContainKeyAndValue("reseller_id", "1234"); // Note that the value has been converted to a string
 			}
+		}
+
+		[Fact]
+		// This unit test validates that we fixed the issue described in GH-493.
+		public async Task UniqueArguments_are_serialized()
+		{
+			// Arrange
+			Event bouncedEvent = new BouncedEvent()
+			{
+				Email = "test1@whatever.com",
+				Reason = "This is a test"
+			};
+			bouncedEvent.UniqueArguments.Add("aaa", "1111");
+			bouncedEvent.UniqueArguments.Add("bbb", "qwerty");
+
+			// Act
+			var ms = new MemoryStream(JsonSerializer.SerializeToUtf8Bytes(bouncedEvent));
+			var result = await JsonSerializer.DeserializeAsync<Event>(ms).ConfigureAwait(false);
+
+			// Assert
+			result.ShouldNotBeNull();
+			result.UniqueArguments.ShouldNotBeNull();
+			result.UniqueArguments.Count.ShouldBe(2);
+			result.UniqueArguments.ShouldContainKeyAndValue("aaa", "1111");
+			result.UniqueArguments.ShouldContainKeyAndValue("bbb", "qwerty");
 		}
 
 		private Stream GetStream(string responseContent)

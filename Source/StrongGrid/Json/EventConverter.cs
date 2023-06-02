@@ -1,7 +1,9 @@
 using StrongGrid.Models;
 using StrongGrid.Models.Webhooks;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -110,7 +112,9 @@ namespace StrongGrid.Json
 
 					foreach (var unkownProperty in unkownProperties)
 					{
-						webHookEvent.UniqueArguments.Add(unkownProperty.Name, unkownProperty.Value.GetRawText());
+						var propertyValue = unkownProperty.Value.ValueKind == JsonValueKind.String ? unkownProperty.Value.GetString() : unkownProperty.Value.GetRawText();
+
+						webHookEvent.UniqueArguments.Add(unkownProperty.Name, propertyValue);
 					}
 
 					return webHookEvent;
@@ -120,6 +124,23 @@ namespace StrongGrid.Json
 			}
 
 			throw new JsonException("Failed to parse JsonDocument");
+		}
+
+		public override void SerializeProperty(Utf8JsonWriter writer, object propertyValue, PropertyInfo propertyInfo, JsonSerializerOptions options, Action<string, object, Type, JsonSerializerOptions, JsonConverterAttribute> propertySerializer)
+		{
+			var propertyName = propertyInfo.GetCustomAttribute<JsonPropertyNameAttribute>()?.Name ?? propertyInfo.Name;
+
+			if (propertyName.Equals("UniqueArguments", StringComparison.OrdinalIgnoreCase))
+			{
+				foreach (var item in (IDictionary<string, string>)propertyValue)
+				{
+					WriteJsonProperty(writer, item.Key, item.Value, typeof(string), options, null);
+				}
+			}
+			else
+			{
+				base.SerializeProperty(writer, propertyValue, propertyInfo, options, propertySerializer);
+			}
 		}
 	}
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -51,12 +52,30 @@ namespace StrongGrid.Json
 			}
 		}
 
-		internal static void Serialize(Utf8JsonWriter writer, T value, JsonSerializerOptions options, Action<string, object, Type, JsonSerializerOptions, JsonConverterAttribute> propertySerializer = null)
+		public virtual void SerializeProperty(Utf8JsonWriter writer, object propertyValue, PropertyInfo propertyInfo, JsonSerializerOptions options, Action<string, object, Type, JsonSerializerOptions, JsonConverterAttribute> propertySerializer)
+		{
+			var propertyCustomAttributes = propertyInfo.GetCustomAttributes(false);
+			var propertyConverterAttribute = propertyCustomAttributes.OfType<JsonConverterAttribute>().FirstOrDefault();
+			var propertyIsIgnored = propertyCustomAttributes.OfType<JsonIgnoreAttribute>().Any();
+			var propertyName = propertyCustomAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault()?.Name ?? propertyInfo.Name;
+			var propertyType = propertyInfo.PropertyType;
+
+			// Skip the property if it's decorated with the 'ignore' attribute
+			if (propertyIsIgnored) return;
+
+			// Ignore the property if it contains a null value
+			else if (propertyValue == null) return;
+
+			// Serialize the property.
+			else propertySerializer(propertyName, propertyValue, propertyType, options, propertyConverterAttribute);
+		}
+
+		internal void Serialize(Utf8JsonWriter writer, T value, JsonSerializerOptions options, Action<string, object, Type, JsonSerializerOptions, JsonConverterAttribute> propertySerializer = null)
 		{
 			Serialize(writer, value, value.GetType(), options, propertySerializer);
 		}
 
-		internal static void Serialize(Utf8JsonWriter writer, T value, Type typeOfValue, JsonSerializerOptions options, Action<string, object, Type, JsonSerializerOptions, JsonConverterAttribute> propertySerializer = null)
+		internal void Serialize(Utf8JsonWriter writer, T value, Type typeOfValue, JsonSerializerOptions options, Action<string, object, Type, JsonSerializerOptions, JsonConverterAttribute> propertySerializer = null)
 		{
 			if (value == null)
 			{
@@ -72,27 +91,13 @@ namespace StrongGrid.Json
 
 			foreach (var propertyInfo in allProperties)
 			{
-				var propertyCustomAttributes = propertyInfo.GetCustomAttributes(false);
-				var propertyConverterAttribute = propertyCustomAttributes.OfType<JsonConverterAttribute>().FirstOrDefault();
-				var propertyIsIgnored = propertyCustomAttributes.OfType<JsonIgnoreAttribute>().Any();
-				var propertyName = propertyCustomAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault()?.Name ?? propertyInfo.Name;
-				var propertyValue = propertyInfo.GetValue(value);
-				var propertyType = propertyInfo.PropertyType;
-
-				// Skip the property if it's decorated with the 'ignore' attribute
-				if (propertyIsIgnored) continue;
-
-				// Ignore the property if it contains a null value
-				if (propertyValue == null) continue;
-
-				// Serialize the property.
-				propertySerializer(propertyName, propertyValue, propertyType, options, propertyConverterAttribute);
+				SerializeProperty(writer, propertyInfo.GetValue(value), propertyInfo, options, propertySerializer);
 			}
 
 			writer.WriteEndObject();
 		}
 
-		internal static void WriteJsonProperty(Utf8JsonWriter writer, string propertyName, object propertyValue, Type propertyType, JsonSerializerOptions options, JsonConverterAttribute propertyConverterAttribute)
+		internal void WriteJsonProperty(Utf8JsonWriter writer, string propertyName, object propertyValue, Type propertyType, JsonSerializerOptions options, JsonConverterAttribute propertyConverterAttribute)
 		{
 			writer.WritePropertyName(propertyName);
 
