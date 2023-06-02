@@ -68,7 +68,6 @@ namespace StrongGrid.Json
 
 			// Serialize the property.
 			else propertySerializer(propertyName, propertyValue, propertyType, options, propertyConverterAttribute);
-
 		}
 
 		internal void Serialize(Utf8JsonWriter writer, T value, JsonSerializerOptions options, Action<string, object, Type, JsonSerializerOptions, JsonConverterAttribute> propertySerializer = null)
