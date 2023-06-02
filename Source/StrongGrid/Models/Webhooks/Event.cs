@@ -74,6 +74,7 @@ namespace StrongGrid.Models.Webhooks
 		/// <value>
 		/// The message identifier.
 		/// </value>
+		[JsonIgnore]
 		public string MessageId
 		{
 			get
