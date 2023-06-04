@@ -86,6 +86,8 @@ var isIntegrationTestsProjectPresent = FileExists(integrationTestsProject);
 var isUnitTestsProjectPresent = FileExists(unitTestsProject);
 var isBenchmarkProjectPresent = FileExists(benchmarkProject);
 
+var publishingError = false;
+
 // Generally speaking, we want to honor all the TFM configured in the source project and the unit test project.
 // However, there are a few scenarios where a single framework is sufficient. Here are a few examples that come to mind:
 // - when building source project on Ubuntu
@@ -304,13 +306,18 @@ Task("Upload-Coverage-Result-Coveralls")
 	.WithCriteria(() => !isLocalBuild)
 	.WithCriteria(() => !isPullRequest)
 	.WithCriteria(() => isMainRepo)
-	.OnError(exception => Information($"ERROR: Failed to upload coverage result to Coveralls: {exception.Message}"))
 	.Does(() =>
 {
 	CoverallsNet(new FilePath(coverageFile), CoverallsNetReportType.OpenCover, new CoverallsNetSettings()
 	{
-		RepoToken = coverallsToken
+		RepoToken = coverallsToken,
+		UseRelativePaths = true
 	});
+}).OnError (exception =>
+{
+    Error(exception.Message);
+    Information($"Failed to upload coverage result to Coveralls, but continuing with next Task...");
+    publishingError = true;
 });
 
 Task("Upload-Coverage-Result-Codecov")
@@ -319,10 +326,14 @@ Task("Upload-Coverage-Result-Codecov")
 	.WithCriteria(() => !isLocalBuild)
 	.WithCriteria(() => !isPullRequest)
 	.WithCriteria(() => isMainRepo)
-	.OnError(exception => Information($"ERROR: Failed to upload coverage result to Codecov: {exception.Message}"))
 	.Does(() =>
 {
 	Codecov(coverageFile, codecovToken);
+}).OnError (exception =>
+{
+    Error(exception.Message);
+    Information($"Failed to upload coverage result to Codecov, but continuing with next Task...");
+    publishingError = true;
 });
 
 Task("Generate-Code-Coverage-Report")
@@ -524,7 +535,14 @@ Task("AppVeyor")
 	.IsDependentOn("Upload-AppVeyor-Artifacts")
 	.IsDependentOn("Publish-MyGet")
 	.IsDependentOn("Publish-NuGet")
-	.IsDependentOn("Publish-GitHub-Release");
+	.IsDependentOn("Publish-GitHub-Release")
+    .Finally(() =>
+{
+    if (publishingError)
+    {
+        throw new Exception("An error occurred during the publishing of [StrongGrid]. All publishing tasks have been attempted.");
+    }
+});
 
 Task("Default")
 	.IsDependentOn("Run-Unit-Tests")
