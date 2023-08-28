@@ -1,4 +1,4 @@
-using Moq;
+using NSubstitute;
 using Shouldly;
 using StrongGrid.Models;
 using StrongGrid.Resources;
@@ -27,46 +27,42 @@ namespace StrongGrid.UnitTests.Warmup
 			var warmupSettings = new WarmupSettings(poolName, dailyVolumePerIpAddress, resetDays);
 			var mockSystemClock = new MockSystemClock(2017, 11, 18, 13, 0, 0, 0);
 
-			var mockIpAddressesResource = new Mock<IIpAddresses>(MockBehavior.Strict);
+			var mockIpAddressesResource = Substitute.For<IIpAddresses>();
 			mockIpAddressesResource
-				.Setup(r => r.AddAsync(2, new[] { subuser }, false, It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new AddIpAddressResult
+				.AddAsync(2, Arg.Is<string[]>(a => a.Length == 1 && a[0] == subuser), false, Arg.Any<CancellationToken>())
+				.Returns(Task.FromResult(new AddIpAddressResult
 				{
 					IpAddresses = ipAddresses.Select(ipAddress => new IpAddress() { Address = ipAddress }).ToArray(),
 					RemainingIpAddresses = 0,
 					WarmingUp = false
-				});
+				}));
 
-			var mockIpPoolsResource = new Mock<IIpPools>(MockBehavior.Strict);
+			var mockIpPoolsResource = Substitute.For<IIpPools>();
 			mockIpPoolsResource
-				.Setup(r => r.CreateAsync(poolName, It.IsAny<CancellationToken>()))
-				.ReturnsAsync(poolName);
+				.CreateAsync(poolName, Arg.Any<CancellationToken>())
+				.Returns(Task.FromResult(poolName));
 			mockIpPoolsResource
-				.Setup(r => r.AddAddressAsync(poolName, ipAddresses[0], It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new IpPoolAddress() { Address = ipAddresses[0], WarmupStartedOn = null, Warmup = false });
+				.AddAddressAsync(poolName, ipAddresses[0], Arg.Any<CancellationToken>())
+				.Returns(Task.FromResult(new IpPoolAddress() { Address = ipAddresses[0], WarmupStartedOn = null, Warmup = false }));
 			mockIpPoolsResource
-				.Setup(r => r.AddAddressAsync(poolName, ipAddresses[1], It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new IpPoolAddress() { Address = ipAddresses[1], WarmupStartedOn = null, Warmup = false });
+				.AddAddressAsync(poolName, ipAddresses[1], Arg.Any<CancellationToken>())
+				.Returns(Task.FromResult(new IpPoolAddress() { Address = ipAddresses[1], WarmupStartedOn = null, Warmup = false }));
 
-			var mockClient = new Mock<IBaseClient>(MockBehavior.Strict);
-			mockClient.SetupGet(c => c.IpAddresses).Returns(mockIpAddressesResource.Object);
-			mockClient.SetupGet(c => c.IpPools).Returns(mockIpPoolsResource.Object);
+			var mockClient = Substitute.For<IBaseClient>();
+			mockClient.IpAddresses.Returns(mockIpAddressesResource);
+			mockClient.IpPools.Returns(mockIpPoolsResource);
 
-			var mockRepository = new Mock<IWarmupProgressRepository>(MockBehavior.Strict);
+			var mockRepository = Substitute.For<IWarmupProgressRepository>();
 			mockRepository
-				.Setup(repo => repo.UpdateStatusAsync(It.Is<WarmupStatus>(s => s.WarmupDay == 0), It.IsAny<CancellationToken>()))
+				.UpdateStatusAsync(Arg.Is<WarmupStatus>(s => s.WarmupDay == 0), Arg.Any<CancellationToken>())
 				.Returns(Task.FromResult(true));
 
-			var warmupEngine = new WarmupEngine(warmupSettings, mockClient.Object, mockRepository.Object, mockSystemClock.Object);
+			var warmupEngine = new WarmupEngine(warmupSettings, mockClient, mockRepository, mockSystemClock);
 
 			// Act
 			await warmupEngine.PrepareWithNewIpAddressesAsync(2, new[] { subuser }, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
-			mockClient.VerifyAll();
-			mockIpAddressesResource.VerifyAll();
-			mockIpPoolsResource.VerifyAll();
-			mockRepository.VerifyAll();
 		}
 
 		[Fact]
@@ -83,18 +79,18 @@ namespace StrongGrid.UnitTests.Warmup
 			var warmupSettings = new WarmupSettings(poolName, dailyVolumePerIpAddress, resetDays);
 			var mockSystemClock = new MockSystemClock(2017, 11, 18, 13, 0, 0, 0);
 
-			var mockMailResource = new Mock<IMail>(MockBehavior.Strict);
+			var mockMailResource = Substitute.For<IMail>();
 			mockMailResource
-				.Setup(r => r.SendAsync(It.Is<MailPersonalization[]>(p => p.Length == 1), It.IsAny<string>(), It.IsAny<IEnumerable<MailContent>>(), It.IsAny<MailAddress>(), It.IsAny<IEnumerable<MailAddress>>(), It.IsAny<IEnumerable<Attachment>>(), It.IsAny<string>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<DateTime?>(), It.IsAny<string>(), It.IsAny<UnsubscribeOptions>(), It.IsAny<string>(), It.IsAny<MailSettings>(), It.IsAny<TrackingSettings>(), It.IsAny<MailPriority>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync("message_id_on_pool");
+				.SendAsync(Arg.Is<MailPersonalization[]>(p => p.Length == 1), Arg.Any<string>(), Arg.Any<IEnumerable<MailContent>>(), Arg.Any<MailAddress>(), Arg.Any<IEnumerable<MailAddress>>(), Arg.Any<IEnumerable<Attachment>>(), Arg.Any<string>(), Arg.Any<IEnumerable<KeyValuePair<string, string>>>(), Arg.Any<IEnumerable<string>>(), Arg.Any<IEnumerable<KeyValuePair<string, string>>>(), Arg.Any<DateTime?>(), Arg.Any<string>(), Arg.Any<UnsubscribeOptions>(), Arg.Any<string>(), Arg.Any<MailSettings>(), Arg.Any<TrackingSettings>(), Arg.Any<MailPriority>(), Arg.Any<CancellationToken>())
+				.Returns(Task.FromResult("message_id_on_pool"));
 
-			var mockClient = new Mock<IBaseClient>(MockBehavior.Strict);
-			mockClient.SetupGet(c => c.Mail).Returns(mockMailResource.Object);
+			var mockClient = Substitute.For<IBaseClient>();
+			mockClient.Mail.Returns(mockMailResource);
 
-			var mockRepository = new Mock<IWarmupProgressRepository>(MockBehavior.Strict);
+			var mockRepository = Substitute.For<IWarmupProgressRepository>();
 			mockRepository
-				.Setup(repo => repo.GetWarmupStatusAsync(poolName, It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new WarmupStatus()
+				.GetWarmupStatusAsync(poolName, Arg.Any<CancellationToken>())
+				.Returns(Task.FromResult(new WarmupStatus()
 				{
 					Completed = false,
 					DateLastSent = DateTime.MinValue,
@@ -102,25 +98,23 @@ namespace StrongGrid.UnitTests.Warmup
 					IpAddresses = ipAddresses,
 					PoolName = poolName,
 					WarmupDay = 0
-				});
+				}));
 			mockRepository
-				.Setup(repo => repo.UpdateStatusAsync(It.Is<WarmupStatus>(
+				.UpdateStatusAsync(Arg.Is<WarmupStatus>(
 					s =>
 						s.Completed == false &&
 						s.DateLastSent.Date == (new DateTime(2017, 11, 18)).Date &&
 						s.EmailsSentLastDay == 1 &&
 						s.WarmupDay == 1
-					), It.IsAny<CancellationToken>()))
+					), Arg.Any<CancellationToken>())
 				.Returns(Task.FromResult(true));
 
-			var warmupEngine = new WarmupEngine(warmupSettings, mockClient.Object, mockRepository.Object, mockSystemClock.Object);
+			var warmupEngine = new WarmupEngine(warmupSettings, mockClient, mockRepository, mockSystemClock);
 
 			// Act
 			var result = await warmupEngine.SendToSingleRecipientAsync(recipient, null, null, null, null, null, null, false, false, null, null, null, null, null, null, null, null, null, null, MailPriority.Normal, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
-			mockClient.VerifyAll();
-			mockRepository.VerifyAll();
 			result.Completed.ShouldBeFalse();
 			result.MessageIdOnPool.ShouldBe("message_id_on_pool");
 			result.MessageIdNotOnPool.ShouldBeNull();
@@ -150,21 +144,21 @@ namespace StrongGrid.UnitTests.Warmup
 			var warmupSettings = new WarmupSettings(poolName, dailyVolumePerIpAddress, resetDays);
 			var mockSystemClock = new MockSystemClock(2017, 11, 18, 13, 0, 0, 0);
 
-			var mockMailResource = new Mock<IMail>(MockBehavior.Strict);
+			var mockMailResource = Substitute.For<IMail>();
 			mockMailResource
-				.Setup(r => r.SendAsync(It.Is<MailPersonalization[]>(p => p.Length == 1 && p[0].To[0].Email == "bob@example.com"), It.IsAny<string>(), It.IsAny<IEnumerable<MailContent>>(), It.IsAny<MailAddress>(), It.IsAny<IEnumerable<MailAddress>>(), It.IsAny<IEnumerable<Attachment>>(), It.IsAny<string>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<DateTime?>(), It.IsAny<string>(), It.IsAny<UnsubscribeOptions>(), It.IsAny<string>(), It.IsAny<MailSettings>(), It.IsAny<TrackingSettings>(), It.IsAny<MailPriority>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync("message_id_on_pool");
+				.SendAsync(Arg.Is<MailPersonalization[]>(p => p.Length == 1 && p[0].To[0].Email == "bob@example.com"), Arg.Any<string>(), Arg.Any<IEnumerable<MailContent>>(), Arg.Any<MailAddress>(), Arg.Any<IEnumerable<MailAddress>>(), Arg.Any<IEnumerable<Attachment>>(), Arg.Any<string>(), Arg.Any<IEnumerable<KeyValuePair<string, string>>>(), Arg.Any<IEnumerable<string>>(), Arg.Any<IEnumerable<KeyValuePair<string, string>>>(), Arg.Any<DateTime?>(), Arg.Any<string>(), Arg.Any<UnsubscribeOptions>(), Arg.Any<string>(), Arg.Any<MailSettings>(), Arg.Any<TrackingSettings>(), Arg.Any<MailPriority>(), Arg.Any<CancellationToken>())
+				.Returns(Task.FromResult("message_id_on_pool"));
 			mockMailResource
-				.Setup(r => r.SendAsync(It.Is<MailPersonalization[]>(p => p.Length == 1 && p[0].To[0].Email == "sue@example.com"), It.IsAny<string>(), It.IsAny<IEnumerable<MailContent>>(), It.IsAny<MailAddress>(), It.IsAny<IEnumerable<MailAddress>>(), It.IsAny<IEnumerable<Attachment>>(), It.IsAny<string>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<DateTime?>(), It.IsAny<string>(), It.IsAny<UnsubscribeOptions>(), It.IsAny<string>(), It.IsAny<MailSettings>(), It.IsAny<TrackingSettings>(), It.IsAny<MailPriority>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync("message_id_not_on_pool");
+				.SendAsync(Arg.Is<MailPersonalization[]>(p => p.Length == 1 && p[0].To[0].Email == "sue@example.com"), Arg.Any<string>(), Arg.Any<IEnumerable<MailContent>>(), Arg.Any<MailAddress>(), Arg.Any<IEnumerable<MailAddress>>(), Arg.Any<IEnumerable<Attachment>>(), Arg.Any<string>(), Arg.Any<IEnumerable<KeyValuePair<string, string>>>(), Arg.Any<IEnumerable<string>>(), Arg.Any<IEnumerable<KeyValuePair<string, string>>>(), Arg.Any<DateTime?>(), Arg.Any<string>(), Arg.Any<UnsubscribeOptions>(), Arg.Any<string>(), Arg.Any<MailSettings>(), Arg.Any<TrackingSettings>(), Arg.Any<MailPriority>(), Arg.Any<CancellationToken>())
+				.Returns(Task.FromResult("message_id_not_on_pool"));
 
-			var mockClient = new Mock<IBaseClient>(MockBehavior.Strict);
-			mockClient.SetupGet(c => c.Mail).Returns(mockMailResource.Object);
+			var mockClient = Substitute.For<IBaseClient>();
+			mockClient.Mail.Returns(mockMailResource);
 
-			var mockRepository = new Mock<IWarmupProgressRepository>(MockBehavior.Strict);
+			var mockRepository = Substitute.For<IWarmupProgressRepository>();
 			mockRepository
-				.Setup(repo => repo.GetWarmupStatusAsync(poolName, It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new WarmupStatus()
+				.GetWarmupStatusAsync(poolName, Arg.Any<CancellationToken>())
+				.Returns(Task.FromResult(new WarmupStatus()
 				{
 					Completed = false,
 					DateLastSent = new DateTime(2017, 11, 18, 0, 0, 0, DateTimeKind.Utc),
@@ -172,25 +166,23 @@ namespace StrongGrid.UnitTests.Warmup
 					IpAddresses = ipAddresses,
 					PoolName = poolName,
 					WarmupDay = 1
-				});
+				}));
 			mockRepository
-				.Setup(repo => repo.UpdateStatusAsync(It.Is<WarmupStatus>(
+				.UpdateStatusAsync(Arg.Is<WarmupStatus>(
 					s =>
 						s.Completed == false &&
 						s.DateLastSent.Date == (new DateTime(2017, 11, 18)).Date &&
 						s.EmailsSentLastDay == 6 &&
 						s.WarmupDay == 1
-					), It.IsAny<CancellationToken>()))
+					), Arg.Any<CancellationToken>())
 				.Returns(Task.FromResult(true));
 
-			var warmupEngine = new WarmupEngine(warmupSettings, mockClient.Object, mockRepository.Object, mockSystemClock.Object);
+			var warmupEngine = new WarmupEngine(warmupSettings, mockClient, mockRepository, mockSystemClock);
 
 			// Act
 			var result = await warmupEngine.SendAsync(personalizations, null, null, null, null, null, null, null, null, null, null, null, null, null, null, MailPriority.Normal, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
-			mockClient.VerifyAll();
-			mockRepository.VerifyAll();
 			result.Completed.ShouldBeFalse();
 			result.MessageIdOnPool.ShouldBe("message_id_on_pool");
 			result.MessageIdNotOnPool.ShouldBe("message_id_not_on_pool");
@@ -220,18 +212,18 @@ namespace StrongGrid.UnitTests.Warmup
 			var warmupSettings = new WarmupSettings(poolName, dailyVolumePerIpAddress, resetDays);
 			var mockSystemClock = new MockSystemClock(2017, 11, 18, 13, 0, 0, 0);
 
-			var mockMailResource = new Mock<IMail>(MockBehavior.Strict);
+			var mockMailResource = Substitute.For<IMail>();
 			mockMailResource
-				.Setup(r => r.SendAsync(It.Is<MailPersonalization[]>(p => p.Length == 2), It.IsAny<string>(), It.IsAny<IEnumerable<MailContent>>(), It.IsAny<MailAddress>(), It.IsAny<IEnumerable<MailAddress>>(), It.IsAny<IEnumerable<Attachment>>(), It.IsAny<string>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<DateTime?>(), It.IsAny<string>(), It.IsAny<UnsubscribeOptions>(), It.IsAny<string>(), It.IsAny<MailSettings>(), It.IsAny<TrackingSettings>(), It.IsAny<MailPriority>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync("message_id_on_pool");
+				.SendAsync(Arg.Is<MailPersonalization[]>(p => p.Length == 2), Arg.Any<string>(), Arg.Any<IEnumerable<MailContent>>(), Arg.Any<MailAddress>(), Arg.Any<IEnumerable<MailAddress>>(), Arg.Any<IEnumerable<Attachment>>(), Arg.Any<string>(), Arg.Any<IEnumerable<KeyValuePair<string, string>>>(), Arg.Any<IEnumerable<string>>(), Arg.Any<IEnumerable<KeyValuePair<string, string>>>(), Arg.Any<DateTime?>(), Arg.Any<string>(), Arg.Any<UnsubscribeOptions>(), Arg.Any<string>(), Arg.Any<MailSettings>(), Arg.Any<TrackingSettings>(), Arg.Any<MailPriority>(), Arg.Any<CancellationToken>())
+				.Returns(Task.FromResult("message_id_on_pool"));
 
-			var mockClient = new Mock<IBaseClient>(MockBehavior.Strict);
-			mockClient.SetupGet(c => c.Mail).Returns(mockMailResource.Object);
+			var mockClient = Substitute.For<IBaseClient>();
+			mockClient.Mail.Returns(mockMailResource);
 
-			var mockRepository = new Mock<IWarmupProgressRepository>(MockBehavior.Strict);
+			var mockRepository = Substitute.For<IWarmupProgressRepository>();
 			mockRepository
-				.Setup(repo => repo.GetWarmupStatusAsync(poolName, It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new WarmupStatus()
+				.GetWarmupStatusAsync(poolName, Arg.Any<CancellationToken>())
+				.Returns(Task.FromResult(new WarmupStatus()
 				{
 					Completed = false,
 					DateLastSent = new DateTime(2017, 11, 17, 0, 0, 0, DateTimeKind.Utc),
@@ -239,25 +231,23 @@ namespace StrongGrid.UnitTests.Warmup
 					IpAddresses = ipAddresses,
 					PoolName = poolName,
 					WarmupDay = 1
-				});
+				}));
 			mockRepository
-				.Setup(repo => repo.UpdateStatusAsync(It.Is<WarmupStatus>(
+				.UpdateStatusAsync(Arg.Is<WarmupStatus>(
 					s =>
 						s.Completed == false &&
 						s.DateLastSent.Date == (new DateTime(2017, 11, 18)).Date &&
 						s.EmailsSentLastDay == 2 &&
 						s.WarmupDay == 2
-					), It.IsAny<CancellationToken>()))
+					), Arg.Any<CancellationToken>())
 				.Returns(Task.FromResult(true));
 
-			var warmupEngine = new WarmupEngine(warmupSettings, mockClient.Object, mockRepository.Object, mockSystemClock.Object);
+			var warmupEngine = new WarmupEngine(warmupSettings, mockClient, mockRepository, mockSystemClock);
 
 			// Act
 			var result = await warmupEngine.SendAsync(personalizations, null, null, null, null, null, null, null, null, null, null, null, null, null, null, MailPriority.Normal, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
-			mockClient.VerifyAll();
-			mockRepository.VerifyAll();
 			result.Completed.ShouldBeFalse();
 			result.MessageIdOnPool.ShouldBe("message_id_on_pool");
 			result.MessageIdNotOnPool.ShouldBeNull();
@@ -287,18 +277,18 @@ namespace StrongGrid.UnitTests.Warmup
 			var warmupSettings = new WarmupSettings(poolName, dailyVolumePerIpAddress, resetDays);
 			var mockSystemClock = new MockSystemClock(2017, 11, 18, 13, 0, 0, 0);
 
-			var mockMailResource = new Mock<IMail>(MockBehavior.Strict);
+			var mockMailResource = Substitute.For<IMail>();
 			mockMailResource
-				.Setup(r => r.SendAsync(It.Is<MailPersonalization[]>(p => p.Length == 2), It.IsAny<string>(), It.IsAny<IEnumerable<MailContent>>(), It.IsAny<MailAddress>(), It.IsAny<IEnumerable<MailAddress>>(), It.IsAny<IEnumerable<Attachment>>(), It.IsAny<string>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<DateTime?>(), It.IsAny<string>(), It.IsAny<UnsubscribeOptions>(), It.IsAny<string>(), It.IsAny<MailSettings>(), It.IsAny<TrackingSettings>(), It.IsAny<MailPriority>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync("message_id_on_pool");
+				.SendAsync(Arg.Is<MailPersonalization[]>(p => p.Length == 2), Arg.Any<string>(), Arg.Any<IEnumerable<MailContent>>(), Arg.Any<MailAddress>(), Arg.Any<IEnumerable<MailAddress>>(), Arg.Any<IEnumerable<Attachment>>(), Arg.Any<string>(), Arg.Any<IEnumerable<KeyValuePair<string, string>>>(), Arg.Any<IEnumerable<string>>(), Arg.Any<IEnumerable<KeyValuePair<string, string>>>(), Arg.Any<DateTime?>(), Arg.Any<string>(), Arg.Any<UnsubscribeOptions>(), Arg.Any<string>(), Arg.Any<MailSettings>(), Arg.Any<TrackingSettings>(), Arg.Any<MailPriority>(), Arg.Any<CancellationToken>())
+				.Returns(Task.FromResult("message_id_on_pool"));
 
-			var mockClient = new Mock<IBaseClient>(MockBehavior.Strict);
-			mockClient.SetupGet(c => c.Mail).Returns(mockMailResource.Object);
+			var mockClient = Substitute.For<IBaseClient>();
+			mockClient.Mail.Returns(mockMailResource);
 
-			var mockRepository = new Mock<IWarmupProgressRepository>(MockBehavior.Strict);
+			var mockRepository = Substitute.For<IWarmupProgressRepository>();
 			mockRepository
-				.Setup(repo => repo.GetWarmupStatusAsync(poolName, It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new WarmupStatus()
+				.GetWarmupStatusAsync(poolName, Arg.Any<CancellationToken>())
+				.Returns(Task.FromResult(new WarmupStatus()
 				{
 					Completed = false,
 					DateLastSent = new DateTime(2017, 11, 01, 0, 0, 0, DateTimeKind.Utc),
@@ -306,25 +296,23 @@ namespace StrongGrid.UnitTests.Warmup
 					IpAddresses = ipAddresses,
 					PoolName = poolName,
 					WarmupDay = 2
-				});
+				}));
 			mockRepository
-				.Setup(repo => repo.UpdateStatusAsync(It.Is<WarmupStatus>(
+				.UpdateStatusAsync(Arg.Is<WarmupStatus>(
 					s =>
 						s.Completed == false &&
 						s.DateLastSent.Date == (new DateTime(2017, 11, 18)).Date &&
 						s.EmailsSentLastDay == 2 &&
 						s.WarmupDay == 2
-					), It.IsAny<CancellationToken>()))
+					), Arg.Any<CancellationToken>())
 				.Returns(Task.FromResult(true));
 
-			var warmupEngine = new WarmupEngine(warmupSettings, mockClient.Object, mockRepository.Object, mockSystemClock.Object);
+			var warmupEngine = new WarmupEngine(warmupSettings, mockClient, mockRepository, mockSystemClock);
 
 			// Act
 			var result = await warmupEngine.SendAsync(personalizations, null, null, null, null, null, null, null, null, null, null, null, null, null, null, MailPriority.Normal, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
-			mockClient.VerifyAll();
-			mockRepository.VerifyAll();
 			result.Completed.ShouldBeFalse();
 			result.MessageIdOnPool.ShouldBe("message_id_on_pool");
 			result.MessageIdNotOnPool.ShouldBeNull();
@@ -354,27 +342,27 @@ namespace StrongGrid.UnitTests.Warmup
 			var warmupSettings = new WarmupSettings(poolName, dailyVolumePerIpAddress, resetDays);
 			var mockSystemClock = new MockSystemClock(2017, 11, 18, 13, 0, 0, 0);
 
-			var mockIpPoolsResource = new Mock<IIpPools>(MockBehavior.Strict);
+			var mockIpPoolsResource = Substitute.For<IIpPools>();
 			mockIpPoolsResource
-				.Setup(r => r.DeleteAsync(poolName, It.IsAny<CancellationToken>()))
+				.DeleteAsync(poolName, Arg.Any<CancellationToken>())
 				.Returns(Task.FromResult(true));
 
-			var mockMailResource = new Mock<IMail>(MockBehavior.Strict);
+			var mockMailResource = Substitute.For<IMail>();
 			mockMailResource
-				.Setup(r => r.SendAsync(It.Is<MailPersonalization[]>(p => p.Length == 1 && p[0].To[0].Email == "bob@example.com"), It.IsAny<string>(), It.IsAny<IEnumerable<MailContent>>(), It.IsAny<MailAddress>(), It.IsAny<IEnumerable<MailAddress>>(), It.IsAny<IEnumerable<Attachment>>(), It.IsAny<string>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<DateTime?>(), It.IsAny<string>(), It.IsAny<UnsubscribeOptions>(), It.IsAny<string>(), It.IsAny<MailSettings>(), It.IsAny<TrackingSettings>(), It.IsAny<MailPriority>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync("message_id_on_pool");
+				.SendAsync(Arg.Is<MailPersonalization[]>(p => p.Length == 1 && p[0].To[0].Email == "bob@example.com"), Arg.Any<string>(), Arg.Any<IEnumerable<MailContent>>(), Arg.Any<MailAddress>(), Arg.Any<IEnumerable<MailAddress>>(), Arg.Any<IEnumerable<Attachment>>(), Arg.Any<string>(), Arg.Any<IEnumerable<KeyValuePair<string, string>>>(), Arg.Any<IEnumerable<string>>(), Arg.Any<IEnumerable<KeyValuePair<string, string>>>(), Arg.Any<DateTime?>(), Arg.Any<string>(), Arg.Any<UnsubscribeOptions>(), Arg.Any<string>(), Arg.Any<MailSettings>(), Arg.Any<TrackingSettings>(), Arg.Any<MailPriority>(), Arg.Any<CancellationToken>())
+				.Returns(Task.FromResult("message_id_on_pool"));
 			mockMailResource
-				.Setup(r => r.SendAsync(It.Is<MailPersonalization[]>(p => p.Length == 1 && p[0].To[0].Email == "sue@example.com"), It.IsAny<string>(), It.IsAny<IEnumerable<MailContent>>(), It.IsAny<MailAddress>(), It.IsAny<IEnumerable<MailAddress>>(), It.IsAny<IEnumerable<Attachment>>(), It.IsAny<string>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>(), It.IsAny<DateTime?>(), It.IsAny<string>(), It.IsAny<UnsubscribeOptions>(), It.IsAny<string>(), It.IsAny<MailSettings>(), It.IsAny<TrackingSettings>(), It.IsAny<MailPriority>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync("message_id_not_on_pool");
+				.SendAsync(Arg.Is<MailPersonalization[]>(p => p.Length == 1 && p[0].To[0].Email == "sue@example.com"), Arg.Any<string>(), Arg.Any<IEnumerable<MailContent>>(), Arg.Any<MailAddress>(), Arg.Any<IEnumerable<MailAddress>>(), Arg.Any<IEnumerable<Attachment>>(), Arg.Any<string>(), Arg.Any<IEnumerable<KeyValuePair<string, string>>>(), Arg.Any<IEnumerable<string>>(), Arg.Any<IEnumerable<KeyValuePair<string, string>>>(), Arg.Any<DateTime?>(), Arg.Any<string>(), Arg.Any<UnsubscribeOptions>(), Arg.Any<string>(), Arg.Any<MailSettings>(), Arg.Any<TrackingSettings>(), Arg.Any<MailPriority>(), Arg.Any<CancellationToken>())
+				.Returns(Task.FromResult("message_id_not_on_pool"));
 
-			var mockClient = new Mock<IBaseClient>(MockBehavior.Strict);
-			mockClient.SetupGet(c => c.IpPools).Returns(mockIpPoolsResource.Object);
-			mockClient.SetupGet(c => c.Mail).Returns(mockMailResource.Object);
+			var mockClient = Substitute.For<IBaseClient>();
+			mockClient.IpPools.Returns(mockIpPoolsResource);
+			mockClient.Mail.Returns(mockMailResource);
 
-			var mockRepository = new Mock<IWarmupProgressRepository>(MockBehavior.Strict);
+			var mockRepository = Substitute.For<IWarmupProgressRepository>();
 			mockRepository
-				.Setup(repo => repo.GetWarmupStatusAsync(poolName, It.IsAny<CancellationToken>()))
-				.ReturnsAsync(new WarmupStatus()
+				.GetWarmupStatusAsync(poolName, Arg.Any<CancellationToken>())
+				.Returns(Task.FromResult(new WarmupStatus()
 				{
 					Completed = false,
 					DateLastSent = new DateTime(2017, 11, 18, 0, 0, 0, DateTimeKind.Utc),
@@ -382,26 +370,23 @@ namespace StrongGrid.UnitTests.Warmup
 					IpAddresses = ipAddresses,
 					PoolName = poolName,
 					WarmupDay = 4
-				});
+				}));
 			mockRepository
-				.Setup(repo => repo.UpdateStatusAsync(It.Is<WarmupStatus>(
+				.UpdateStatusAsync(Arg.Is<WarmupStatus>(
 					s =>
 						s.Completed == true &&
 						s.DateLastSent.Date == (new DateTime(2017, 11, 18)).Date &&
 						s.EmailsSentLastDay == 24 &&
 						s.WarmupDay == 4
-					), It.IsAny<CancellationToken>()))
+					), Arg.Any<CancellationToken>())
 				.Returns(Task.FromResult(true));
 
-			var warmupEngine = new WarmupEngine(warmupSettings, mockClient.Object, mockRepository.Object, mockSystemClock.Object);
+			var warmupEngine = new WarmupEngine(warmupSettings, mockClient, mockRepository, mockSystemClock);
 
 			// Act
 			var result = await warmupEngine.SendAsync(personalizations, null, null, null, null, null, null, null, null, null, null, null, null, null, null, MailPriority.Normal, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
-			mockClient.VerifyAll();
-			mockIpPoolsResource.VerifyAll();
-			mockRepository.VerifyAll();
 			result.Completed.ShouldBeTrue();
 			result.MessageIdOnPool.ShouldBe("message_id_on_pool");
 			result.MessageIdNotOnPool.ShouldBe("message_id_not_on_pool");
