@@ -1064,7 +1064,7 @@ Content-Disposition: form-data; name=""attachments""
 			result.UniqueArguments.ShouldContainKeyAndValue("bbb", "qwerty");
 		}
 
-		private Stream GetStream(string responseContent)
+		private static Stream GetStream(string responseContent)
 		{
 			var byteArray = Encoding.UTF8.GetBytes(responseContent);
 			var stream = new MemoryStream(byteArray);

@@ -122,7 +122,6 @@ namespace StrongGrid
 #else
 				var contentStream = await httpContent.ReadAsStreamAsync().ConfigureAwait(false);
 #endif
-
 				encoding ??= httpContent.GetEncoding(Encoding.UTF8);
 
 				// This is important: we must make a copy of the response stream otherwise we would get an
