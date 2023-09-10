@@ -1,5 +1,6 @@
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
+using System.Linq;
 
 namespace StrongGrid.Benchmark
 {
@@ -7,8 +8,19 @@ namespace StrongGrid.Benchmark
 	{
 		static void Main(string[] args)
 		{
-			/*
-			 * Handy code to generate the 'JsonSerializable' attributes for StrongGridJsonSerializerContext
+			//var serializerContext = GenerateAttributesForSerializerContext();
+
+			IConfig config = null;
+
+			// To debug
+			//config = new DebugInProcessConfig();
+
+			BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args, config);
+		}
+
+		private static string GenerateAttributesForSerializerContext()
+		{
+			// Handy code to generate the 'JsonSerializable' attributes for StrongGridJsonSerializerContext
 			var baseNamespace = "StrongGrid.Models";
 			var allTypes = System.Reflection.Assembly
 				.GetAssembly(typeof(Client))
@@ -44,14 +56,7 @@ namespace StrongGrid.Benchmark
 			var nullableAttributes = string.Join("\r\n", typesSortedAlphabetically.Where(t => !string.IsNullOrEmpty(t.JsonSerializeAttributeNullable)).Select(t => t.JsonSerializeAttributeNullable));
 
 			var result = string.Join("\r\n\r\n", new[] { simpleAttributes, arrayAttributes, nullableAttributes });
-			*/
-
-			IConfig config = null;
-
-			// To debug
-			//config = new DebugInProcessConfig();
-
-			BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args, config);
+			return result;
 		}
 	}
 }
