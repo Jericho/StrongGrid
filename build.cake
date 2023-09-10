@@ -1,10 +1,10 @@
 // Install tools.
 #tool dotnet:?package=GitVersion.Tool&version=5.12.0
 #tool dotnet:?package=coveralls.net&version=4.0.1
-#tool nuget:?package=GitReleaseManager&version=0.13.0
-#tool nuget:?package=ReportGenerator&version=5.1.23
+#tool nuget:?package=GitReleaseManager&version=0.15.0
+#tool nuget:?package=ReportGenerator&version=5.1.25
 #tool nuget:?package=xunit.runner.console&version=2.5.0
-#tool nuget:?package=CodecovUploader&version=0.5.0
+#tool nuget:?package=CodecovUploader&version=0.6.2
 
 // Install addins.
 #addin nuget:?package=Cake.Coveralls&version=1.1.0
@@ -50,9 +50,6 @@ var testCoverageExcludeFiles = new[]
 
 var nuGetApiUrl = Argument<string>("NUGET_API_URL", EnvironmentVariable("NUGET_API_URL"));
 var nuGetApiKey = Argument<string>("NUGET_API_KEY", EnvironmentVariable("NUGET_API_KEY"));
-
-var feedzioApiUrl = Argument<string>("FEEDZIO_API_URL", EnvironmentVariable("FEEDZIO_API_URL"));
-var feedzioApiKey = Argument<string>("FEEDZIO_API_KEY", EnvironmentVariable("FEEDZIO_API_KEY"));
 
 var gitHubToken = Argument<string>("GITHUB_TOKEN", EnvironmentVariable("GITHUB_TOKEN"));
 var gitHubUserName = Argument<string>("GITHUB_USERNAME", EnvironmentVariable("GITHUB_USERNAME"));
@@ -133,11 +130,6 @@ Setup(context =>
 		isMainRepo,
 		isPullRequest,
 		isTagged
-	);
-
-	Information("Feedz.io Info:\r\n\tApi Url: {0}\r\n\tApi Key: {1}",
-		feedzioApiUrl,
-		string.IsNullOrEmpty(feedzioApiKey) ? "[NULL]" : new string('*', feedzioApiKey.Length)
 	);
 
 	Information("Nuget Info:\r\n\tApi Url: {0}\r\n\tApi Key: {1}",
@@ -420,28 +412,6 @@ Task("Publish-NuGet")
 	}
 });
 
-Task("Publish-Feedzio")
-	.IsDependentOn("Create-NuGet-Package")
-	.WithCriteria(() => !isLocalBuild)
-	.WithCriteria(() => !isPullRequest)
-	.WithCriteria(() => isMainRepo)
-	.Does(() =>
-{
-	if(string.IsNullOrEmpty(feedzioApiKey)) throw new InvalidOperationException("Could not resolve Feedz.io API key.");
-	if(string.IsNullOrEmpty(feedzioApiUrl)) throw new InvalidOperationException("Could not resolve Feedz.io API url.");
-
-	var settings = new DotNetNuGetPushSettings
-	{
-    	Source = feedzioApiUrl,
-	    ApiKey = feedzioApiKey
-	};
-
-	foreach(var package in GetFiles(outputDir + "*.nupkg"))
-	{
-		DotNetNuGetPush(package, settings);
-	}
-});
-
 Task("Create-Release-Notes")
 	.Does(() =>
 {
@@ -544,7 +514,6 @@ Task("AppVeyor")
 	.IsDependentOn("Upload-Coverage-Result-Codecov")
 	.IsDependentOn("Create-NuGet-Package")
 	.IsDependentOn("Upload-AppVeyor-Artifacts")
-	.IsDependentOn("Publish-Feedzio")
 	.IsDependentOn("Publish-NuGet")
 	.IsDependentOn("Publish-GitHub-Release")
     .Finally(() =>
