@@ -80,6 +80,7 @@ namespace StrongGrid.IntegrationTests
 				typeof(ContactsAndCustomFields),
 				typeof(Designs),
 				typeof(EmailActivities),
+				typeof(EngagementQuality),
 				typeof(EmailValidation),
 				typeof(GlobalSuppressions),
 				typeof(InvalidEmails),
