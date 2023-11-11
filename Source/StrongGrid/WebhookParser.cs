@@ -272,8 +272,7 @@ namespace StrongGrid
 				RawEmail = rawEmail
 			};
 
-			// Check if the inbound email format is "raw".
-			// If so, we can parse the MIME content and derive additional values like attachments, Html, Text, etc.
+			// If the format of the payload is "raw", we can parse the MIME content and derive additional values like attachments, Html, Text, etc.
 			if (!string.IsNullOrEmpty(inboundEmail.RawEmail))
 			{
 				var ms = new MemoryStream(Encoding.UTF8.GetBytes(inboundEmail.RawEmail));
