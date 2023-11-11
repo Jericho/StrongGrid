@@ -176,63 +176,7 @@ namespace StrongGrid
 			// Asynchronously parse the multipart content received from SendGrid
 			var parser = await SendGridMultipartFormDataParser.ParseAsync(stream, cancellationToken).ConfigureAwait(false);
 
-			return ParseInboundEmail(parser);
-		}
-
-		/// <summary>Parses the inbound email webhook asynchronously.</summary>
-		/// <remarks>
-		/// This method must be used when the 'POST the raw, full MIME message' setting is enabled in your SendGrid account.
-		/// If you disabled this option, you must use <see cref="ParseInboundEmailWebhookAsync"/>.
-		/// </remarks>
-		/// <param name="stream">The stream.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>The <see cref="InboundEmail"/>.</returns>
-		public async Task<InboundEmail> ParseRawInboundEmailWebhookAsync(Stream stream, CancellationToken cancellationToken = default)
-		{
-			var inboundEmail = await ParseInboundEmailWebhookAsync(stream, cancellationToken).ConfigureAwait(false);
-
-			var ms = new MemoryStream(Encoding.UTF8.GetBytes(inboundEmail.RawEmail));
-			var message = await MimeMessage.LoadAsync(ms, cancellationToken).ConfigureAwait(false);
-
-			var attachments = message.Attachments
-				.Cast<MimePart>()
-				.Select(mimePart =>
-				{
-					var attachement = new InboundEmailAttachment()
-					{
-						ContentType = mimePart.ContentType.MediaType,
-						Data = new MemoryStream(),
-						FileName = mimePart.FileName,
-						Id = mimePart.ContentId,
-						Name = mimePart.ContentType.Name,
-					};
-					mimePart.Content.DecodeTo(attachement.Data, cancellationToken);
-					return attachement;
-				});
-
-			var inlineContent = message.BodyParts
-				.Where(part => part.ContentDisposition?.Disposition?.Equals("inline", StringComparison.OrdinalIgnoreCase) ?? false)
-				.Cast<MimePart>()
-				.Select(mimePart =>
-				{
-					var attachement = new InboundEmailAttachment()
-					{
-						ContentId = mimePart.ContentId,
-						ContentType = mimePart.ContentType.MimeType,
-						Data = new MemoryStream(),
-						FileName = mimePart.FileName,
-						Name = mimePart.ContentType.Name,
-					};
-					mimePart.Content.DecodeTo(attachement.Data, cancellationToken);
-					return attachement;
-				});
-
-			inboundEmail.Html = message.HtmlBody;
-			inboundEmail.Text = message.TextBody;
-			inboundEmail.Headers = message.Headers.Select(mimeHeader => new KeyValuePair<string, string>(mimeHeader.Field, mimeHeader.Value)).ToArray();
-			inboundEmail.Attachments = attachments.Union(inlineContent).ToArray();
-
-			return inboundEmail;
+			return await ParseInboundEmailAsync(parser, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -249,14 +193,14 @@ namespace StrongGrid
 			// Parse the multipart content received from SendGrid
 			var parser = SendGridMultipartFormDataParser.Parse(stream);
 
-			return ParseInboundEmail(parser);
+			return ParseInboundEmailAsync(parser, CancellationToken.None).GetAwaiter().GetResult();
 		}
 
 		#endregion
 
 		#region PRIVATE METHODS
 
-		private static InboundEmail ParseInboundEmail(SendGridMultipartFormDataParser parser)
+		private static async Task<InboundEmail> ParseInboundEmailAsync(SendGridMultipartFormDataParser parser, CancellationToken cancellationToken)
 		{
 			// Convert the 'headers' from a string into array of KeyValuePair
 			var headers = parser
@@ -328,7 +272,41 @@ namespace StrongGrid
 				RawEmail = rawEmail
 			};
 
+			// Check if the inbound email format is "raw".
+			// If so, we can parse the MIME content and derive additional values like attachments, Html, Text, etc.
+			if (!string.IsNullOrEmpty(inboundEmail.RawEmail))
+			{
+				var ms = new MemoryStream(Encoding.UTF8.GetBytes(inboundEmail.RawEmail));
+				var message = await MimeMessage.LoadAsync(ms, cancellationToken).ConfigureAwait(false);
+
+				var mimeAttachments = message.Attachments.Cast<MimePart>();
+				var mimeInlineContent = message.BodyParts.Where(part => part.ContentDisposition?.Disposition?.Equals("inline", StringComparison.OrdinalIgnoreCase) ?? false).Cast<MimePart>();
+
+				var convertedAttachments = await mimeAttachments.Union(mimeInlineContent)
+					.ForEachAsync(mimePart => ConvertMimePartToAttachmentAsync(mimePart, cancellationToken))
+					.ConfigureAwait(false);
+
+				inboundEmail.Html = message.HtmlBody;
+				inboundEmail.Text = message.TextBody;
+				inboundEmail.Headers = message.Headers.Select(mimeHeader => new KeyValuePair<string, string>(mimeHeader.Field, mimeHeader.Value)).ToArray();
+				inboundEmail.Attachments = convertedAttachments;
+			}
+
 			return inboundEmail;
+		}
+
+		private static async Task<InboundEmailAttachment> ConvertMimePartToAttachmentAsync(MimePart mimePart, CancellationToken cancellationToken)
+		{
+			var attachement = new InboundEmailAttachment()
+			{
+				ContentId = mimePart.ContentId,
+				ContentType = mimePart.ContentType.MimeType,
+				Data = new MemoryStream(),
+				FileName = mimePart.FileName,
+				Name = mimePart.ContentType.Name,
+			};
+			await mimePart.Content.DecodeToAsync(attachement.Data, cancellationToken).ConfigureAwait(false);
+			return attachement;
 		}
 
 		#endregion
