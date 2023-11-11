@@ -161,10 +161,6 @@ namespace StrongGrid
 		}
 
 		/// <summary>Parses the inbound email webhook asynchronously.</summary>
-		/// <remarks>
-		/// This method must be used when the 'POST the raw, full MIME message' setting is disabled in your SendGrid account.
-		/// If you enabled this option, you must use <see cref="ParseRawInboundEmailWebhookAsync"/>.
-		/// </remarks>
 		/// <param name="stream">The stream.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>The <see cref="InboundEmail"/>.</returns>
