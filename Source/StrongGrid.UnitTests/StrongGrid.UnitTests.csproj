@@ -45,6 +45,9 @@
     <None Update="InboudEmailTestData\email_with_attachments.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="InboudEmailTestData\raw_email_with_attachments.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="InboudEmailTestData\raw_email.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -551,7 +551,7 @@ Content-Disposition: form-data; name=""attachments""
 		}
 
 		[Fact]
-		public async Task InboundEmail_with_raw_content()
+		public async Task InboundEmailRawContentAsync()
 		{
 			// Arrange
 			var parser = new WebhookParser();
@@ -572,6 +572,32 @@ Content-Disposition: form-data; name=""attachments""
 				inboundEmail.Attachments.ShouldNotBeNull();
 				inboundEmail.Attachments.Length.ShouldBe(1);
 				inboundEmail.Attachments[0].FileName.ShouldBe("Frangipani Flowers.jpg");
+			}
+		}
+
+		[Fact]
+		public async Task InboundEmailRawContent_with_attachments_Async()
+		{
+			// Arrange
+			var parser = new WebhookParser();
+			using (var fileStream = File.OpenRead("InboudEmailTestData/raw_email_with_attachments.txt"))
+			{
+				// Act
+				var inboundEmail = await parser.ParseInboundEmailWebhookAsync(fileStream).ConfigureAwait(false);
+
+				// Assert
+				inboundEmail.Charsets.ShouldNotBeNull();
+				inboundEmail.Charsets.Except(new[]
+				{
+					new KeyValuePair<string, string>("to", "UTF-8"),
+					new KeyValuePair<string, string>("subject", "UTF-8"),
+					new KeyValuePair<string, string>("from", "UTF-8"),
+				}).Count().ShouldBe(0);
+				inboundEmail.Text.ShouldStartWith("Hello World");
+				inboundEmail.Attachments.ShouldNotBeNull();
+				inboundEmail.Attachments.Length.ShouldBe(2);
+				inboundEmail.Attachments[0].Name.ShouldStartWith("48 hr Flash-Save 25%");
+				inboundEmail.Attachments[1].Name.ShouldBe("DesertSunrise.jpg");
 			}
 		}
 
