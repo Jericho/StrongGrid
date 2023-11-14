@@ -1,4 +1,4 @@
-using HeyRed.Mime;
+using MimeKit;
 using System;
 using System.IO;
 using System.Security.Cryptography;
@@ -159,7 +159,7 @@ namespace StrongGrid.Models
 
 			if (string.IsNullOrEmpty(mimeType))
 			{
-				mimeType = MimeTypesMap.GetMimeType(fileName);
+				mimeType = MimeTypes.GetMimeType(fileName);
 			}
 
 			return new Attachment()
