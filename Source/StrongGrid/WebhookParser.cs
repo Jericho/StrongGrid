@@ -271,14 +271,12 @@ namespace StrongGrid
 			// If the format of the payload is "raw", we can parse the MIME content and derive additional values like attachments, Html, Text, etc.
 			if (!string.IsNullOrEmpty(inboundEmail.RawEmail))
 			{
-				var ms = new MemoryStream(Encoding.UTF8.GetBytes(inboundEmail.RawEmail));
-				var message = await MimeMessage.LoadAsync(ms, cancellationToken).ConfigureAwait(false);
+				using var ms = new MemoryStream(Encoding.UTF8.GetBytes(inboundEmail.RawEmail));
+				using var message = await MimeMessage.LoadAsync(ms, cancellationToken).ConfigureAwait(false);
 
-				var mimeAttachments = message.Attachments.Cast<MimePart>();
-				var mimeInlineContent = message.BodyParts.Where(part => part.ContentDisposition?.Disposition?.Equals("inline", StringComparison.OrdinalIgnoreCase) ?? false).Cast<MimePart>();
-
-				var convertedAttachments = await mimeAttachments.Union(mimeInlineContent)
-					.ForEachAsync(mimePart => ConvertMimePartToAttachmentAsync(mimePart, cancellationToken))
+				var mimeInlineContent = message.BodyParts.Where(part => part.ContentDisposition?.Disposition?.Equals("inline", StringComparison.OrdinalIgnoreCase) ?? false);
+				var convertedAttachments = await message.Attachments.Union(mimeInlineContent)
+					.ForEachAsync(mimeEntity => ConvertMimeEntityToAttachmentAsync(mimeEntity, cancellationToken))
 					.ConfigureAwait(false);
 
 				inboundEmail.Html = message.HtmlBody;
@@ -290,18 +288,36 @@ namespace StrongGrid
 			return inboundEmail;
 		}
 
-		private static async Task<InboundEmailAttachment> ConvertMimePartToAttachmentAsync(MimePart mimePart, CancellationToken cancellationToken)
+		private static async Task<InboundEmailAttachment> ConvertMimeEntityToAttachmentAsync(MimeEntity mimeEntity, CancellationToken cancellationToken)
 		{
-			var attachement = new InboundEmailAttachment()
+			var attachment = new InboundEmailAttachment
 			{
-				ContentId = mimePart.ContentId,
-				ContentType = mimePart.ContentType.MimeType,
+				ContentId = mimeEntity.ContentId,
+				ContentType = mimeEntity.ContentType.MimeType,
 				Data = new MemoryStream(),
-				FileName = mimePart.FileName,
-				Name = mimePart.ContentType.Name,
 			};
-			await mimePart.Content.DecodeToAsync(attachement.Data, cancellationToken).ConfigureAwait(false);
-			return attachement;
+
+			if (mimeEntity is MimePart mimePart)
+			{
+				attachment.FileName = mimePart.FileName;
+				attachment.Name = mimePart.ContentType.Name;
+				await mimePart.Content.DecodeToAsync(attachment.Data, cancellationToken).ConfigureAwait(false);
+			}
+			else if (mimeEntity is MessagePart mimeMessage)
+			{
+				MimeTypes.TryGetExtension(mimeMessage.ContentType.MimeType, out var extension);
+				attachment.FileName = $"{mimeMessage.Message.Subject}{extension}";
+				attachment.Name = mimeMessage.Message.Subject;
+				await mimeMessage.Message.WriteToAsync(attachment.Data, cancellationToken).ConfigureAwait(false);
+			}
+			else
+			{
+				throw new NotImplementedException($"Converting a MimeEntity type {mimeEntity.GetType().Name} to an attachment is not supported");
+			}
+
+			attachment.Data.Position = 0;
+
+			return attachment;
 		}
 
 		#endregion
