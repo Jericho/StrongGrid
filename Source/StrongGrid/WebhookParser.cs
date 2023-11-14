@@ -276,7 +276,7 @@ namespace StrongGrid
 
 				var mimeInlineContent = message.BodyParts.Where(part => part.ContentDisposition?.Disposition?.Equals("inline", StringComparison.OrdinalIgnoreCase) ?? false);
 				var convertedAttachments = await message.Attachments.Union(mimeInlineContent)
-					.ForEachAsync(mimeEntity => ConvertMimeEntityToAttachmentAsync(mimeEntity, cancellationToken))
+					.ForEachAsync((mimeEntity, index) => ConvertMimeEntityToAttachmentAsync(mimeEntity, index, cancellationToken))
 					.ConfigureAwait(false);
 
 				inboundEmail.Html = message.HtmlBody;
@@ -288,7 +288,7 @@ namespace StrongGrid
 			return inboundEmail;
 		}
 
-		private static async Task<InboundEmailAttachment> ConvertMimeEntityToAttachmentAsync(MimeEntity mimeEntity, CancellationToken cancellationToken)
+		private static async Task<InboundEmailAttachment> ConvertMimeEntityToAttachmentAsync(MimeEntity mimeEntity, int index, CancellationToken cancellationToken)
 		{
 			var attachment = new InboundEmailAttachment
 			{
@@ -305,9 +305,10 @@ namespace StrongGrid
 			}
 			else if (mimeEntity is MessagePart mimeMessage)
 			{
+				var attachmentName = !string.IsNullOrEmpty(mimeMessage.Message.Subject) ? mimeMessage.Message.Subject : $"Attachment{index}";
 				MimeTypes.TryGetExtension(mimeMessage.ContentType.MimeType, out var extension);
-				attachment.FileName = $"{mimeMessage.Message.Subject}{extension}";
-				attachment.Name = mimeMessage.Message.Subject;
+				attachment.FileName = $"{attachmentName}{extension}";
+				attachment.Name = attachmentName;
 				await mimeMessage.Message.WriteToAsync(attachment.Data, cancellationToken).ConfigureAwait(false);
 			}
 			else

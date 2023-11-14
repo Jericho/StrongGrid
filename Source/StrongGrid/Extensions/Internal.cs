@@ -450,6 +450,8 @@ namespace StrongGrid
 
 		internal static Task<TResult[]> ForEachAsync<T, TResult>(this IEnumerable<T> items, Func<T, Task<TResult>> action) => ForEachAsync(items, action, DEFAULT_DEGREE_OF_PARALLELISM);
 
+		internal static Task<TResult[]> ForEachAsync<T, TResult>(this IEnumerable<T> items, Func<T, int, Task<TResult>> action) => ForEachAsync(items, action, DEFAULT_DEGREE_OF_PARALLELISM);
+
 		internal static async Task<TResult[]> ForEachAsync<T, TResult>(this IEnumerable<T> items, Func<T, Task<TResult>> action, int maxDegreeOfParalellism)
 		{
 			var allTasks = new List<Task<TResult>>();
@@ -477,7 +479,36 @@ namespace StrongGrid
 			}
 		}
 
+		internal static async Task<TResult[]> ForEachAsync<T, TResult>(this IEnumerable<T> items, Func<T, int, Task<TResult>> action, int maxDegreeOfParalellism)
+		{
+			var allTasks = new List<Task<TResult>>();
+			using (var throttler = new SemaphoreSlim(initialCount: maxDegreeOfParalellism))
+			{
+				foreach (var (item, index) in items.Select((value, i) => (value, i)))
+				{
+					await throttler.WaitAsync();
+					allTasks.Add(
+						Task.Run(async () =>
+						{
+							try
+							{
+								return await action(item, index).ConfigureAwait(false);
+							}
+							finally
+							{
+								throttler.Release();
+							}
+						}));
+				}
+
+				var results = await Task.WhenAll(allTasks).ConfigureAwait(false);
+				return results;
+			}
+		}
+
 		internal static Task ForEachAsync<T>(this IEnumerable<T> items, Func<T, Task> action) => ForEachAsync(items, action, DEFAULT_DEGREE_OF_PARALLELISM);
+
+		internal static Task ForEachAsync<T>(this IEnumerable<T> items, Func<T, int, Task> action) => ForEachAsync(items, action, DEFAULT_DEGREE_OF_PARALLELISM);
 
 		internal static async Task ForEachAsync<T>(this IEnumerable<T> items, Func<T, Task> action, int maxDegreeOfParalellism)
 		{
@@ -493,6 +524,32 @@ namespace StrongGrid
 							try
 							{
 								await action(item).ConfigureAwait(false);
+							}
+							finally
+							{
+								throttler.Release();
+							}
+						}));
+				}
+
+				await Task.WhenAll(allTasks).ConfigureAwait(false);
+			}
+		}
+
+		internal static async Task ForEachAsync<T>(this IEnumerable<T> items, Func<T, int, Task> action, int maxDegreeOfParalellism)
+		{
+			var allTasks = new List<Task>();
+			using (var throttler = new SemaphoreSlim(initialCount: maxDegreeOfParalellism))
+			{
+				foreach (var (item, index) in items.Select((value, i) => (value, i)))
+				{
+					await throttler.WaitAsync();
+					allTasks.Add(
+						Task.Run(async () =>
+						{
+							try
+							{
+								await action(item, index).ConfigureAwait(false);
 							}
 							finally
 							{
