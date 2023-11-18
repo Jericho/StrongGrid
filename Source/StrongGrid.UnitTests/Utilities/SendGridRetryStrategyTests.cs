@@ -18,7 +18,7 @@ namespace StrongGrid.UnitTests.Utilities
 			// Arrange
 			var maxAttempts = 5;
 			var mockSystemClock = new MockSystemClock(2016, 11, 11, 13, 14, 0, 0);
-			var sendGridRetryStrategy = new SendGridRetryStrategy(maxAttempts, mockSystemClock.Object);
+			var sendGridRetryStrategy = new SendGridRetryStrategy(maxAttempts, mockSystemClock);
 			var response = (HttpResponseMessage)null;
 
 			// Act
@@ -34,7 +34,7 @@ namespace StrongGrid.UnitTests.Utilities
 			// Arrange
 			var maxAttempts = 5;
 			var mockSystemClock = new MockSystemClock(2016, 11, 11, 13, 14, 0, 0);
-			var sendGridRetryStrategy = new SendGridRetryStrategy(maxAttempts, mockSystemClock.Object);
+			var sendGridRetryStrategy = new SendGridRetryStrategy(maxAttempts, mockSystemClock);
 			var response = new HttpResponseMessage((HttpStatusCode)429);
 
 			// Act
@@ -50,7 +50,7 @@ namespace StrongGrid.UnitTests.Utilities
 			// Arrange
 			var maxAttempts = 5;
 			var mockSystemClock = new MockSystemClock(2016, 11, 11, 13, 14, 0, 0);
-			var sendGridRetryStrategy = new SendGridRetryStrategy(maxAttempts, mockSystemClock.Object);
+			var sendGridRetryStrategy = new SendGridRetryStrategy(maxAttempts, mockSystemClock);
 			var response = new HttpResponseMessage(HttpStatusCode.BadGateway);
 
 			// Act
@@ -66,7 +66,7 @@ namespace StrongGrid.UnitTests.Utilities
 			// Arrange
 			var maxAttempts = 5;
 			var mockSystemClock = new MockSystemClock(2016, 11, 11, 13, 14, 0, 0);
-			var sendGridRetryStrategy = new SendGridRetryStrategy(maxAttempts, mockSystemClock.Object);
+			var sendGridRetryStrategy = new SendGridRetryStrategy(maxAttempts, mockSystemClock);
 			var response = (HttpResponseMessage)null;
 
 			// Act
@@ -82,7 +82,7 @@ namespace StrongGrid.UnitTests.Utilities
 			// Arrange
 			var maxAttempts = 5;
 			var mockSystemClock = new MockSystemClock(2016, 11, 11, 13, 14, 0, 0);
-			var sendGridRetryStrategy = new SendGridRetryStrategy(maxAttempts, mockSystemClock.Object);
+			var sendGridRetryStrategy = new SendGridRetryStrategy(maxAttempts, mockSystemClock);
 			var response = new HttpResponseMessage((HttpStatusCode)428);
 
 			// Act
@@ -98,7 +98,7 @@ namespace StrongGrid.UnitTests.Utilities
 			// Arrange
 			var maxAttempts = 5;
 			var mockSystemClock = new MockSystemClock(2016, 11, 11, 13, 14, 0, 0);
-			var sendGridRetryStrategy = new SendGridRetryStrategy(maxAttempts, mockSystemClock.Object);
+			var sendGridRetryStrategy = new SendGridRetryStrategy(maxAttempts, mockSystemClock);
 			var response = new HttpResponseMessage((HttpStatusCode)428);
 			response.Headers.Add("X-RateLimit-Reset", "-1");
 
@@ -115,9 +115,9 @@ namespace StrongGrid.UnitTests.Utilities
 			// Arrange
 			var maxAttempts = 5;
 			var mockSystemClock = new MockSystemClock(2016, 11, 11, 13, 14, 0, 0);
-			var sendGridRetryStrategy = new SendGridRetryStrategy(maxAttempts, mockSystemClock.Object);
+			var sendGridRetryStrategy = new SendGridRetryStrategy(maxAttempts, mockSystemClock);
 			var response = new HttpResponseMessage((HttpStatusCode)428);
-			response.Headers.Add("X-RateLimit-Reset", mockSystemClock.Object.UtcNow.AddSeconds(3).ToUnixTime().ToString());
+			response.Headers.Add("X-RateLimit-Reset", mockSystemClock.UtcNow.AddSeconds(3).ToUnixTime().ToString());
 
 			// Act
 			var result = sendGridRetryStrategy.GetDelay(1, response);
@@ -132,9 +132,9 @@ namespace StrongGrid.UnitTests.Utilities
 			// Arrange
 			var maxAttempts = 5;
 			var mockSystemClock = new MockSystemClock(2016, 11, 11, 13, 14, 0, 0);
-			var sendGridRetryStrategy = new SendGridRetryStrategy(maxAttempts, mockSystemClock.Object);
+			var sendGridRetryStrategy = new SendGridRetryStrategy(maxAttempts, mockSystemClock);
 			var response = new HttpResponseMessage((HttpStatusCode)428);
-			response.Headers.Add("X-RateLimit-Reset", mockSystemClock.Object.UtcNow.AddHours(1).ToUnixTime().ToString());
+			response.Headers.Add("X-RateLimit-Reset", mockSystemClock.UtcNow.AddHours(1).ToUnixTime().ToString());
 
 			// Act
 			var result = sendGridRetryStrategy.GetDelay(1, response);

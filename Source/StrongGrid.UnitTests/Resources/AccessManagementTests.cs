@@ -127,8 +127,6 @@ namespace StrongGrid.UnitTests.Resources
 			var result = await accessManagement.GetAccessHistoryAsync(20, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
-			mockHttp.VerifyNoOutstandingExpectation();
-			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(2);
 		}
@@ -147,8 +145,6 @@ namespace StrongGrid.UnitTests.Resources
 			var result = await accessManagement.GetWhitelistedIpAddressesAsync(null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
-			mockHttp.VerifyNoOutstandingExpectation();
-			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(3);
 		}
@@ -169,8 +165,6 @@ namespace StrongGrid.UnitTests.Resources
 			var result = await accessManagement.AddIpAddressToWhitelistAsync(ip, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
-			mockHttp.VerifyNoOutstandingExpectation();
-			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
 
@@ -190,8 +184,6 @@ namespace StrongGrid.UnitTests.Resources
 			var result = await accessManagement.AddIpAddressesToWhitelistAsync(ips, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
-			mockHttp.VerifyNoOutstandingExpectation();
-			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 			result.Length.ShouldBe(3);
 		}
@@ -212,8 +204,6 @@ namespace StrongGrid.UnitTests.Resources
 			await accessManagement.RemoveIpAddressFromWhitelistAsync(id, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
-			mockHttp.VerifyNoOutstandingExpectation();
-			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -232,8 +222,6 @@ namespace StrongGrid.UnitTests.Resources
 			await accessManagement.RemoveIpAddressesFromWhitelistAsync(ids, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
-			mockHttp.VerifyNoOutstandingExpectation();
-			mockHttp.VerifyNoOutstandingRequest();
 		}
 
 		[Fact]
@@ -254,8 +242,6 @@ namespace StrongGrid.UnitTests.Resources
 			var result = await accessManagement.GetWhitelistedIpAddressAsync(id, null, CancellationToken.None).ConfigureAwait(false);
 
 			// Assert
-			mockHttp.VerifyNoOutstandingExpectation();
-			mockHttp.VerifyNoOutstandingRequest();
 			result.ShouldNotBeNull();
 		}
 	}

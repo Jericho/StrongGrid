@@ -1,3 +1,4 @@
+using MimeKit;
 using StrongGrid.Json;
 using StrongGrid.Models.Webhooks;
 using StrongGrid.Utilities;
@@ -159,9 +160,7 @@ namespace StrongGrid
 			return webHookEvents;
 		}
 
-		/// <summary>
-		/// Parses the inbound email webhook asynchronously.
-		/// </summary>
+		/// <summary>Parses the inbound email webhook asynchronously.</summary>
 		/// <param name="stream">The stream.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>The <see cref="InboundEmail"/>.</returns>
@@ -173,7 +172,7 @@ namespace StrongGrid
 			// Asynchronously parse the multipart content received from SendGrid
 			var parser = await SendGridMultipartFormDataParser.ParseAsync(stream, cancellationToken).ConfigureAwait(false);
 
-			return ParseInboundEmail(parser);
+			return await ParseInboundEmailAsync(parser, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -190,14 +189,14 @@ namespace StrongGrid
 			// Parse the multipart content received from SendGrid
 			var parser = SendGridMultipartFormDataParser.Parse(stream);
 
-			return ParseInboundEmail(parser);
+			return ParseInboundEmailAsync(parser, CancellationToken.None).GetAwaiter().GetResult();
 		}
 
 		#endregion
 
 		#region PRIVATE METHODS
 
-		private static InboundEmail ParseInboundEmail(SendGridMultipartFormDataParser parser)
+		private static async Task<InboundEmail> ParseInboundEmailAsync(SendGridMultipartFormDataParser parser, CancellationToken cancellationToken)
 		{
 			// Convert the 'headers' from a string into array of KeyValuePair
 			var headers = parser
@@ -269,7 +268,57 @@ namespace StrongGrid
 				RawEmail = rawEmail
 			};
 
+			// If the format of the payload is "raw", we can parse the MIME content and derive additional values like attachments, Html, Text, etc.
+			if (!string.IsNullOrEmpty(inboundEmail.RawEmail))
+			{
+				using var ms = new MemoryStream(Encoding.UTF8.GetBytes(inboundEmail.RawEmail));
+				using var message = await MimeMessage.LoadAsync(ms, cancellationToken).ConfigureAwait(false);
+
+				var mimeInlineContent = message.BodyParts.Where(part => part.ContentDisposition?.Disposition?.Equals("inline", StringComparison.OrdinalIgnoreCase) ?? false);
+				var convertedAttachments = await message.Attachments.Union(mimeInlineContent)
+					.ForEachAsync((mimeEntity, index) => ConvertMimeEntityToAttachmentAsync(mimeEntity, index, cancellationToken))
+					.ConfigureAwait(false);
+
+				inboundEmail.Html = message.HtmlBody;
+				inboundEmail.Text = message.TextBody;
+				inboundEmail.Headers = message.Headers.Select(mimeHeader => new KeyValuePair<string, string>(mimeHeader.Field, mimeHeader.Value)).ToArray();
+				inboundEmail.Attachments = convertedAttachments;
+			}
+
 			return inboundEmail;
+		}
+
+		private static async Task<InboundEmailAttachment> ConvertMimeEntityToAttachmentAsync(MimeEntity mimeEntity, int index, CancellationToken cancellationToken)
+		{
+			var attachment = new InboundEmailAttachment
+			{
+				ContentId = mimeEntity.ContentId,
+				ContentType = mimeEntity.ContentType.MimeType,
+				Data = new MemoryStream(),
+			};
+
+			if (mimeEntity is MimePart mimePart)
+			{
+				attachment.FileName = mimePart.FileName;
+				attachment.Name = mimePart.ContentType.Name;
+				await mimePart.Content.DecodeToAsync(attachment.Data, cancellationToken).ConfigureAwait(false);
+			}
+			else if (mimeEntity is MessagePart mimeMessage)
+			{
+				var attachmentName = !string.IsNullOrEmpty(mimeMessage.Message.Subject) ? mimeMessage.Message.Subject : $"Attachment{index}";
+				MimeTypes.TryGetExtension(mimeMessage.ContentType.MimeType, out var extension);
+				attachment.FileName = $"{attachmentName}{extension}";
+				attachment.Name = attachmentName;
+				await mimeMessage.Message.WriteToAsync(attachment.Data, cancellationToken).ConfigureAwait(false);
+			}
+			else
+			{
+				throw new NotImplementedException($"Converting a MimeEntity type {mimeEntity.GetType().Name} to an attachment is not supported");
+			}
+
+			attachment.Data.Position = 0;
+
+			return attachment;
 		}
 
 		#endregion

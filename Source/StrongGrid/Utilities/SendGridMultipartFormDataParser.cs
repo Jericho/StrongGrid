@@ -43,7 +43,7 @@ namespace StrongGrid.Utilities
 
 		public string GetParameterValue(string name, string defaultValue)
 		{
-			var parameter = _parameters.FirstOrDefault(p => p.Name == name);
+			var parameter = _parameters.FirstOrDefault(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 			return parameter?.Data ?? defaultValue;
 		}
 
