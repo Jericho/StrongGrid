@@ -1,9 +1,9 @@
 // Install tools.
 #tool dotnet:?package=GitVersion.Tool&version=5.12.0
 #tool dotnet:?package=coveralls.net&version=4.0.1
-#tool nuget:?package=GitReleaseManager&version=0.16.0
+#tool nuget:https://f.feedz.io/jericho/jericho/nuget/?package=GitReleaseManager&version=0.17.0-collaborators0003
 #tool nuget:?package=ReportGenerator&version=5.2.0
-#tool nuget:?package=xunit.runner.console&version=2.6.1
+#tool nuget:?package=xunit.runner.console&version=2.6.5
 #tool nuget:?package=CodecovUploader&version=0.7.1
 
 // Install addins.
@@ -74,8 +74,9 @@ var benchmarkProject = $"{sourceFolder}{libraryName}.Benchmark/{libraryName}.Ben
 var buildBranch = Context.GetBuildBranch();
 var repoName = Context.GetRepoName();
 
-var versionInfo = GitVersion(new GitVersionSettings() { OutputType = GitVersionOutput.Json });
-var milestone = versionInfo.MajorMinorPatch;
+var versionInfo = (GitVersion)null; // Will be calculated in SETUP
+var milestone = string.Empty; // Will be calculated in SETUP
+
 var cakeVersion = typeof(ICakeContext).Assembly.GetName().Version.ToString();
 var isLocalBuild = BuildSystem.IsLocalBuild;
 var isMainBranch = StringComparer.OrdinalIgnoreCase.Equals("main", buildBranch);
@@ -115,6 +116,10 @@ Setup(context =>
 		Information("Increasing verbosity to diagnostic.");
 		context.Log.Verbosity = Verbosity.Diagnostic;
 	}
+
+	Information("Calculating version info...");
+	versionInfo = GitVersion(new GitVersionSettings() { OutputType = GitVersionOutput.Json });
+	milestone = versionInfo.MajorMinorPatch;
 
 	Information("Building version {0} of {1} ({2}, {3}) using version {4} of Cake",
 		versionInfo.LegacySemVerPadded,
@@ -303,6 +308,8 @@ Task("Upload-Coverage-Result-Coveralls")
 	.WithCriteria(() => isMainRepo)
 	.Does(() =>
 {
+	if(string.IsNullOrEmpty(coverallsToken)) throw new InvalidOperationException("Could not resolve Coveralls token.");
+
 	CoverallsNet(new FilePath(coverageFile), CoverallsNetReportType.OpenCover, new CoverallsNetSettings()
 	{
 		RepoToken = coverallsToken,
@@ -323,6 +330,8 @@ Task("Upload-Coverage-Result-Codecov")
 	.WithCriteria(() => isMainRepo)
 	.Does(() =>
 {
+	if(string.IsNullOrEmpty(codecovToken)) throw new InvalidOperationException("Could not resolve CodeCov token.");
+
 	Codecov(new CodecovSettings
     {
         Files = new[] { coverageFile },
