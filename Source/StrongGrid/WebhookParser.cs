@@ -166,8 +166,8 @@ namespace StrongGrid
 		/// <returns>The <see cref="InboundEmail"/>.</returns>
 		public async Task<InboundEmail> ParseInboundEmailWebhookAsync(Stream stream, CancellationToken cancellationToken = default)
 		{
-			// It's important to rewind the stream
-			stream.Position = 0;
+			// It's important to rewind the stream (but only if permitted)
+			if (stream.CanSeek) stream.Position = 0;
 
 			// Asynchronously parse the multipart content received from SendGrid
 			var parser = await SendGridMultipartFormDataParser.ParseAsync(stream, cancellationToken).ConfigureAwait(false);
@@ -183,8 +183,8 @@ namespace StrongGrid
 		[Obsolete("Use the async version of this method, it can read the content of the stream much more efficiently.")]
 		public InboundEmail ParseInboundEmailWebhook(Stream stream)
 		{
-			// It's important to rewind the stream
-			stream.Position = 0;
+			// It's important to rewind the stream (but only if permitted)
+			if (stream.CanSeek) stream.Position = 0;
 
 			// Parse the multipart content received from SendGrid
 			var parser = SendGridMultipartFormDataParser.Parse(stream);
