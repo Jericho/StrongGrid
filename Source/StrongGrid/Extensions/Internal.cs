@@ -141,7 +141,7 @@ namespace StrongGrid
 #endif
 					}
 
-					// It's important to rewind the stream
+					// Rewind the stream (if permitted)
 					if (contentStream.CanSeek) contentStream.Position = 0;
 				}
 			}
