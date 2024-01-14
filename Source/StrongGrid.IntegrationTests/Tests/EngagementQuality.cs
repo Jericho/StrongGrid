@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,7 +23,7 @@ namespace StrongGrid.IntegrationTests.Tests
 			var endDate = DateTime.UtcNow;
 
 			var metrics = await client.EngagementQuality.GetScoresAsync(startDate, endDate, null, cancellationToken).ConfigureAwait(false);
-			//await log.WriteLineAsync("Access history:").ConfigureAwait(false);
+			await log.WriteLineAsync($"Retrieved {metrics.Count()} engagement metrics").ConfigureAwait(false);
 		}
 	}
 }
