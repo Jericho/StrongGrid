@@ -646,7 +646,7 @@ Content-Disposition: form-data; name=""attachments""
 			result.Reason.ShouldBe("500 unknown recipient");
 			result.SmtpId.ShouldBe("<14c5d75ce93.dfd.64b469@ismtpd-555>");
 			result.Status.ShouldBe("5.0.0");
-			result.Type.ShouldBe(StrongGrid.Models.BounceType.Bounce);
+			result.Type.ShouldBe(BounceType.Bounce);
 			result.Timestamp.ToUnixTime().ShouldBe(1513299569);
 			result.UniqueArguments.ShouldNotBeNull();
 			result.UniqueArguments.Count.ShouldBe(0);
@@ -695,6 +695,31 @@ Content-Disposition: form-data; name=""attachments""
 			result.Reason.ShouldBe("Bounced Address");
 			result.SmtpId.ShouldBe("<14c5d75ce93.dfd.64b469@ismtpd-555>");
 			result.Timestamp.ToUnixTime().ShouldBe(1513299569);
+			result.UniqueArguments.ShouldNotBeNull();
+			result.UniqueArguments.Count.ShouldBe(0);
+		}
+
+		[Fact]
+		public void Parse_blocked_JSON()
+		{
+			// Arrange
+
+			// Act
+			var result = (BouncedEvent)JsonSerializer.Deserialize<Event>(BLOCKED_JSON, JsonFormatter.DeserializerOptions);
+
+			// Assert
+			result.Categories.Length.ShouldBe(1);
+			result.Categories[0].ShouldBe("cat facts");
+			result.Email.ShouldBe("example@test.com");
+			result.EventType.ShouldBe(EventType.Bounce);
+			result.InternalEventId.ShouldBe("6g4ZI7SA-xmRDv57GoPIPw==");
+			result.InternalMessageId.ShouldBe("14c5d75ce93.dfd.64b469.filter0001.16648.5515E0B88.0");
+			result.MessageId.ShouldBe("14c5d75ce93.dfd.64b469");
+			result.Reason.ShouldBe("500 unknown recipient");
+			result.SmtpId.ShouldBe("<14c5d75ce93.dfd.64b469@ismtpd-555>");
+			result.Status.ShouldBe("5.0.0");
+			result.Timestamp.ToUnixTime().ShouldBe(1513299569);
+			result.Type.ShouldBe(BounceType.Blocked);
 			result.UniqueArguments.ShouldNotBeNull();
 			result.UniqueArguments.Count.ShouldBe(0);
 		}
