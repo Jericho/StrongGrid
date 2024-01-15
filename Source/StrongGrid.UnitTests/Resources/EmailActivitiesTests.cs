@@ -74,7 +74,7 @@ namespace StrongGrid.UnitTests.Resources
 			var emailActivities = (IEmailActivities)new EmailActivities(client);
 
 			// Act
-			var result = await emailActivities.SearchAsync(null, limit, CancellationToken.None).ConfigureAwait(false);
+			var result = await emailActivities.SearchAsync(null, limit, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -98,7 +98,7 @@ namespace StrongGrid.UnitTests.Resources
 			var criteria = new SearchCriteriaEqual(EmailActivitiesFilterField.Subject, "thevalue");
 
 			// Act
-			var result = await emailActivities.SearchAsync(criteria, limit, CancellationToken.None).ConfigureAwait(false);
+			var result = await emailActivities.SearchAsync(criteria, limit, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -125,7 +125,7 @@ namespace StrongGrid.UnitTests.Resources
 				new SearchCriteriaEqual(EmailActivitiesFilterField.ActivityType, EmailActivityStatus.Processed),
 			};
 			// Act
-			var result = await emailActivities.SearchAsync(filterConditions, limit, CancellationToken.None).ConfigureAwait(false);
+			var result = await emailActivities.SearchAsync(filterConditions, limit, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -153,7 +153,7 @@ namespace StrongGrid.UnitTests.Resources
 			};
 
 			// Act
-			var result = await emailActivities.SearchAsync(filterConditions, limit, CancellationToken.None).ConfigureAwait(false);
+			var result = await emailActivities.SearchAsync(filterConditions, limit, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -177,7 +177,7 @@ namespace StrongGrid.UnitTests.Resources
 			var criteria = new SearchCriteriaUniqueArgEqual("name", "Joe");
 
 			// Act
-			var result = await emailActivities.SearchAsync(criteria, limit, CancellationToken.None).ConfigureAwait(false);
+			var result = await emailActivities.SearchAsync(criteria, limit, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

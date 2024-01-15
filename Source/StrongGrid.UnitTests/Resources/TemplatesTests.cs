@@ -114,7 +114,7 @@ namespace StrongGrid.UnitTests.Resources
 			var templates = new Templates(client);
 
 			// Act
-			var result = await templates.CreateAsync(name, TemplateType.Legacy, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await templates.CreateAsync(name, TemplateType.Legacy, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -135,7 +135,7 @@ namespace StrongGrid.UnitTests.Resources
 			var templates = new Templates(client);
 
 			// Act
-			var result = await templates.GetAsync(templateId, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await templates.GetAsync(templateId, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -156,7 +156,7 @@ namespace StrongGrid.UnitTests.Resources
 			var templates = new Templates(client);
 
 			// Act
-			var result = await templates.GetAllAsync(TemplateType.Legacy, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await templates.GetAllAsync(TemplateType.Legacy, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -178,7 +178,7 @@ namespace StrongGrid.UnitTests.Resources
 			var templates = new Templates(client);
 
 			// Act
-			await templates.DeleteAsync(templateId, null, CancellationToken.None).ConfigureAwait(false);
+			await templates.DeleteAsync(templateId, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -199,7 +199,7 @@ namespace StrongGrid.UnitTests.Resources
 			var templates = new Templates(client);
 
 			// Act
-			var result = await templates.UpdateAsync(templateId, name, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await templates.UpdateAsync(templateId, name, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -225,7 +225,7 @@ namespace StrongGrid.UnitTests.Resources
 			var templates = new Templates(client);
 
 			// Act
-			var result = await templates.CreateVersionAsync(templateId, name, subject, htmlContent, textContent, isActive, cancellationToken: CancellationToken.None).ConfigureAwait(false);
+			var result = await templates.CreateVersionAsync(templateId, name, subject, htmlContent, textContent, isActive, cancellationToken: CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -247,7 +247,7 @@ namespace StrongGrid.UnitTests.Resources
 			var templates = new Templates(client);
 
 			// Act
-			var result = await templates.ActivateVersionAsync(templateId, versionId, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await templates.ActivateVersionAsync(templateId, versionId, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -269,7 +269,7 @@ namespace StrongGrid.UnitTests.Resources
 			var templates = new Templates(client);
 
 			// Act
-			var result = await templates.GetVersionAsync(templateId, versionId, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await templates.GetVersionAsync(templateId, versionId, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -292,7 +292,7 @@ namespace StrongGrid.UnitTests.Resources
 			var templates = new Templates(client);
 
 			// Act
-			var result = await templates.UpdateVersionAsync(templateId, versionId, name, cancellationToken: CancellationToken.None).ConfigureAwait(false);
+			var result = await templates.UpdateVersionAsync(templateId, versionId, name, cancellationToken: CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -314,7 +314,7 @@ namespace StrongGrid.UnitTests.Resources
 			var templates = new Templates(client);
 
 			// Act
-			await templates.DeleteVersionAsync(templateId, versionId, null, CancellationToken.None).ConfigureAwait(false);
+			await templates.DeleteVersionAsync(templateId, versionId, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

@@ -155,7 +155,7 @@ namespace StrongGrid.UnitTests.Utilities
 			var client = Utils.GetFluentClient(mockHttp);
 
 			// Act
-			var result = await client.SendAsync(HttpMethod.Get, "testing").AsString().ConfigureAwait(false);
+			var result = await client.SendAsync(HttpMethod.Get, "testing").AsString();
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -178,7 +178,7 @@ namespace StrongGrid.UnitTests.Utilities
 			var client = Utils.GetFluentClient(mockHttp);
 
 			// Act
-			var result = await Should.ThrowAsync<Exception>(client.SendAsync(HttpMethod.Get, "testing").AsResponse()).ConfigureAwait(false);
+			var result = await Should.ThrowAsync<Exception>(client.SendAsync(HttpMethod.Get, "testing").AsResponse());
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

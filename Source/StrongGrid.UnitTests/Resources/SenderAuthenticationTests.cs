@@ -350,7 +350,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.GetAllDomainsAsync(excludeSubusers: false).ConfigureAwait(false);
+			var result = await senderAuthentication.GetAllDomainsAsync(excludeSubusers: false);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -370,7 +370,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.GetAllDomainsAsync(excludeSubusers: true).ConfigureAwait(false);
+			var result = await senderAuthentication.GetAllDomainsAsync(excludeSubusers: true);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -392,7 +392,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.GetDomainAsync(domainId).ConfigureAwait(false);
+			var result = await senderAuthentication.GetDomainAsync(domainId);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -420,7 +420,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.CreateDomainAsync(domain, subdomain, username, ips, automaticSecurity, customSpf, isDefault, customDkimSelector, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderAuthentication.CreateDomainAsync(domain, subdomain, username, ips, automaticSecurity, customSpf, isDefault, customDkimSelector, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -443,7 +443,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.UpdateDomainAsync(domainId, isDefault, customSpf, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderAuthentication.UpdateDomainAsync(domainId, isDefault, customSpf, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -464,7 +464,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			await senderAuthentication.DeleteDomainAsync(domainId, null, CancellationToken.None).ConfigureAwait(false);
+			await senderAuthentication.DeleteDomainAsync(domainId, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -485,7 +485,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.AddIpAddressToDomainAsync(domainId, ipAddress, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderAuthentication.AddIpAddressToDomainAsync(domainId, ipAddress, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -507,7 +507,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.DeleteIpAddressFromDomainAsync(domainId, ipAddress, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderAuthentication.DeleteIpAddressFromDomainAsync(domainId, ipAddress, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -551,7 +551,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.ValidateDomainAsync(domainId).ConfigureAwait(false);
+			var result = await senderAuthentication.ValidateDomainAsync(domainId);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -582,7 +582,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.GetAssociatedDomainAsync(username, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderAuthentication.GetAssociatedDomainAsync(username, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -603,7 +603,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			await senderAuthentication.DisassociateDomainAsync(username, null, CancellationToken.None).ConfigureAwait(false);
+			await senderAuthentication.DisassociateDomainAsync(username, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -624,7 +624,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.AssociateDomainAsync(domainId, ipAddress, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderAuthentication.AssociateDomainAsync(domainId, ipAddress, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -643,7 +643,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.GetAllReverseDnsAsync().ConfigureAwait(false);
+			var result = await senderAuthentication.GetAllReverseDnsAsync();
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -665,7 +665,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.GetReverseDnsAsync(id).ConfigureAwait(false);
+			var result = await senderAuthentication.GetReverseDnsAsync(id);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -688,7 +688,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.SetupReverseDnsAsync(ipAddress, domain, subdomain, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderAuthentication.SetupReverseDnsAsync(ipAddress, domain, subdomain, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -709,7 +709,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			await senderAuthentication.DeleteReverseDnsAsync(domainId, null, CancellationToken.None).ConfigureAwait(false);
+			await senderAuthentication.DeleteReverseDnsAsync(domainId, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -740,7 +740,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.ValidateReverseDnsAsync(id).ConfigureAwait(false);
+			var result = await senderAuthentication.ValidateReverseDnsAsync(id);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -765,7 +765,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.GetLinkAsync(linkId).ConfigureAwait(false);
+			var result = await senderAuthentication.GetLinkAsync(linkId);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -788,7 +788,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.CreateLinkAsync(domain, subdomain, isDefault, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderAuthentication.CreateLinkAsync(domain, subdomain, isDefault, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -810,7 +810,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.UpdateLinkAsync(linkId, isDefault).ConfigureAwait(false);
+			var result = await senderAuthentication.UpdateLinkAsync(linkId, isDefault);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -831,7 +831,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			await senderAuthentication.DeleteLinkAsync(linkId, null, CancellationToken.None).ConfigureAwait(false);
+			await senderAuthentication.DeleteLinkAsync(linkId, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -851,7 +851,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.GetDefaultLinkAsync(domain).ConfigureAwait(false);
+			var result = await senderAuthentication.GetDefaultLinkAsync(domain);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -887,7 +887,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.ValidateLinkAsync(linkId).ConfigureAwait(false);
+			var result = await senderAuthentication.ValidateLinkAsync(linkId);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -914,7 +914,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.GetAssociatedLinkAsync(username, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderAuthentication.GetAssociatedLinkAsync(username, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -935,7 +935,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			await senderAuthentication.DisassociateLinkAsync(username, null, CancellationToken.None).ConfigureAwait(false);
+			await senderAuthentication.DisassociateLinkAsync(username, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -956,7 +956,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.AssociateLinkAsync(linkId, username, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await senderAuthentication.AssociateLinkAsync(linkId, username, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -975,7 +975,7 @@ namespace StrongGrid.UnitTests.Resources
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
-			var result = await senderAuthentication.GetAllLinksAsync().ConfigureAwait(false);
+			var result = await senderAuthentication.GetAllLinksAsync();
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

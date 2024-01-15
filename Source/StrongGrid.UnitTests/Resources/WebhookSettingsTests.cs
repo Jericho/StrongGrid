@@ -112,7 +112,7 @@ namespace StrongGrid.UnitTests.Resources
 			var webhooks = new WebhookSettings(client);
 
 			// Act
-			var result = await webhooks.GetEventWebhookSettingsAsync(null, CancellationToken.None).ConfigureAwait(false);
+			var result = await webhooks.GetEventWebhookSettingsAsync(null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -173,7 +173,7 @@ namespace StrongGrid.UnitTests.Resources
 			var webhooks = new WebhookSettings(client);
 
 			// Act
-			var result = await webhooks.UpdateEventWebhookSettingsAsync(enabled, url, bounce, click, deferred, delivered, dropped, groupResubscribe, groupUnsubscribe, open, processed, spamReport, unsubscribe, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await webhooks.UpdateEventWebhookSettingsAsync(enabled, url, bounce, click, deferred, delivered, dropped, groupResubscribe, groupUnsubscribe, open, processed, spamReport, unsubscribe, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -194,7 +194,7 @@ namespace StrongGrid.UnitTests.Resources
 			var webhooks = new WebhookSettings(client);
 
 			// Act
-			await webhooks.SendEventTestAsync(url, null, CancellationToken.None).ConfigureAwait(false);
+			await webhooks.SendEventTestAsync(url, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -214,7 +214,7 @@ namespace StrongGrid.UnitTests.Resources
 			var webhooks = new WebhookSettings(client);
 
 			// Act
-			var result = await webhooks.GetInboundParseWebhookSettingsAsync(hostname, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await webhooks.GetInboundParseWebhookSettingsAsync(hostname, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -238,7 +238,7 @@ namespace StrongGrid.UnitTests.Resources
 			var webhooks = new WebhookSettings(client);
 
 			// Act
-			var result = await webhooks.GetAllInboundParseWebhookSettingsAsync(null, CancellationToken.None).ConfigureAwait(false);
+			var result = await webhooks.GetAllInboundParseWebhookSettingsAsync(null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

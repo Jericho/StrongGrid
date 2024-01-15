@@ -141,7 +141,7 @@ namespace StrongGrid.UnitTests.Resources
 			var subusers = new Subusers(client);
 
 			// Act
-			var result = await subusers.CreateAsync(username, email, password, ips, CancellationToken.None).ConfigureAwait(false);
+			var result = await subusers.CreateAsync(username, email, password, ips, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -162,7 +162,7 @@ namespace StrongGrid.UnitTests.Resources
 			var subusers = new Subusers(client);
 
 			// Act
-			var result = await subusers.GetAsync(username, CancellationToken.None).ConfigureAwait(false);
+			var result = await subusers.GetAsync(username, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -181,7 +181,7 @@ namespace StrongGrid.UnitTests.Resources
 			var subusers = new Subusers(client);
 
 			// Act
-			var result = await subusers.GetAllAsync(10, 0, CancellationToken.None).ConfigureAwait(false);
+			var result = await subusers.GetAllAsync(10, 0, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -203,7 +203,7 @@ namespace StrongGrid.UnitTests.Resources
 			var subusers = new Subusers(client);
 
 			// Act
-			await subusers.DeleteAsync(keyId, CancellationToken.None).ConfigureAwait(false);
+			await subusers.DeleteAsync(keyId, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -225,7 +225,7 @@ namespace StrongGrid.UnitTests.Resources
 			var subusers = new Subusers(client);
 
 			// Act
-			await subusers.UpdateAsync(username, disabled, ips, CancellationToken.None).ConfigureAwait(false);
+			await subusers.UpdateAsync(username, disabled, ips, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -247,7 +247,7 @@ namespace StrongGrid.UnitTests.Resources
 			var subusers = new Subusers(client);
 
 			// Act
-			await subusers.UpdateAsync(username, disabled, ips, CancellationToken.None).ConfigureAwait(false);
+			await subusers.UpdateAsync(username, disabled, ips, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -267,7 +267,7 @@ namespace StrongGrid.UnitTests.Resources
 			var subusers = new Subusers(client);
 
 			// Act
-			var result = await subusers.GetMonitorSettingsAsync(username, CancellationToken.None).ConfigureAwait(false);
+			var result = await subusers.GetMonitorSettingsAsync(username, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -290,7 +290,7 @@ namespace StrongGrid.UnitTests.Resources
 			var subusers = new Subusers(client);
 
 			// Act
-			var result = await subusers.CreateMonitorSettingsAsync(username, email, frequency, CancellationToken.None).ConfigureAwait(false);
+			var result = await subusers.CreateMonitorSettingsAsync(username, email, frequency, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -313,7 +313,7 @@ namespace StrongGrid.UnitTests.Resources
 			var subusers = new Subusers(client);
 
 			// Act
-			var result = await subusers.UpdateMonitorSettingsAsync(username, email, frequency, CancellationToken.None).ConfigureAwait(false);
+			var result = await subusers.UpdateMonitorSettingsAsync(username, email, frequency, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -336,7 +336,7 @@ namespace StrongGrid.UnitTests.Resources
 			var subusers = new Subusers(client);
 
 			// Act
-			var result = await subusers.UpdateMonitorSettingsAsync(username, email, frequency, CancellationToken.None).ConfigureAwait(false);
+			var result = await subusers.UpdateMonitorSettingsAsync(username, email, frequency, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -357,7 +357,7 @@ namespace StrongGrid.UnitTests.Resources
 			var subusers = new Subusers(client);
 
 			// Act
-			await subusers.DeleteMonitorSettingsAsync(username, CancellationToken.None).ConfigureAwait(false);
+			await subusers.DeleteMonitorSettingsAsync(username, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -377,7 +377,7 @@ namespace StrongGrid.UnitTests.Resources
 			var subusers = new Subusers(client);
 
 			// Act
-			var result = await subusers.GetSenderReputationAsync(username, CancellationToken.None).ConfigureAwait(false);
+			var result = await subusers.GetSenderReputationAsync(username, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -399,7 +399,7 @@ namespace StrongGrid.UnitTests.Resources
 			var subusers = new Subusers(client);
 
 			// Act
-			var result = await subusers.GetSenderReputationsAsync(usernames, CancellationToken.None).ConfigureAwait(false);
+			var result = await subusers.GetSenderReputationsAsync(usernames, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
