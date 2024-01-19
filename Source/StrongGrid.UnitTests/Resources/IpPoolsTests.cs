@@ -64,7 +64,7 @@ namespace StrongGrid.UnitTests.Resources
 			var ipPools = new IpPools(client);
 
 			// Act
-			var result = await ipPools.CreateAsync(name, CancellationToken.None).ConfigureAwait(false);
+			var result = await ipPools.CreateAsync(name, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -93,7 +93,7 @@ namespace StrongGrid.UnitTests.Resources
 			var ipPools = new IpPools(client);
 
 			// Act
-			var result = await ipPools.GetAllNamesAsync(CancellationToken.None).ConfigureAwait(false);
+			var result = await ipPools.GetAllNamesAsync(CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -117,7 +117,7 @@ namespace StrongGrid.UnitTests.Resources
 			var ipPools = new IpPools(client);
 
 			// Act
-			var result = await ipPools.GetAsync(ipPoolName, CancellationToken.None).ConfigureAwait(false);
+			var result = await ipPools.GetAsync(ipPoolName, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -143,7 +143,7 @@ namespace StrongGrid.UnitTests.Resources
 			var ipPools = new IpPools(client);
 
 			// Act
-			var result = await ipPools.UpdateAsync(oldName, newName, CancellationToken.None).ConfigureAwait(false);
+			var result = await ipPools.UpdateAsync(oldName, newName, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -165,7 +165,7 @@ namespace StrongGrid.UnitTests.Resources
 			var ipPools = new IpPools(client);
 
 			// Act
-			await ipPools.DeleteAsync(name, CancellationToken.None).ConfigureAwait(false);
+			await ipPools.DeleteAsync(name, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -195,7 +195,7 @@ namespace StrongGrid.UnitTests.Resources
 			var ipPools = new IpPools(client);
 
 			// Act
-			await ipPools.AddAddressAsync(name, address, CancellationToken.None).ConfigureAwait(false);
+			await ipPools.AddAddressAsync(name, address, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -216,7 +216,7 @@ namespace StrongGrid.UnitTests.Resources
 			var ipPools = new IpPools(client);
 
 			// Act
-			await ipPools.RemoveAddressAsync(name, address, CancellationToken.None).ConfigureAwait(false);
+			await ipPools.RemoveAddressAsync(name, address, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

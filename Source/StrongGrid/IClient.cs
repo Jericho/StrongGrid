@@ -24,6 +24,14 @@ namespace StrongGrid
 		ICustomFields CustomFields { get; }
 
 		/// <summary>
+		/// Gets the EngagementQuality resource which allows you to retrieve metrics that define the quality of your email program.
+		/// </summary>
+		/// <value>
+		/// The engagement quality resource.
+		/// </value>
+		IEngagementQuality EngagementQuality { get; }
+
+		/// <summary>
 		/// Gets the Lists resource.
 		/// </summary>
 		/// <value>

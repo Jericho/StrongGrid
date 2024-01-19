@@ -36,16 +36,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HttpMultipartParser" Version="8.1.0" />
+    <PackageReference Include="HttpMultipartParser" Version="8.3.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
-    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.3.2" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="MimeKitLite" Version="4.3.0" />
     <PackageReference Include="Pathoschild.Http.FluentClient" Version="4.3.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435" PrivateAssets="All" />
-    <PackageReference Include="System.Buffers" Version="4.5.1" />
     <PackageReference Include="System.Text.Json" Version="7.0.2" />
-    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('net4')) ">

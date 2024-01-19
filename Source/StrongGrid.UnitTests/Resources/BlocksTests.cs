@@ -62,7 +62,7 @@ namespace StrongGrid.UnitTests.Resources
 			var blocks = new Blocks(client);
 
 			// Act
-			var result = await blocks.GetAllAsync().ConfigureAwait(false);
+			var result = await blocks.GetAllAsync();
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -83,7 +83,7 @@ namespace StrongGrid.UnitTests.Resources
 			var blocks = new Blocks(client);
 
 			// Act
-			await blocks.DeleteAllAsync().ConfigureAwait(false);
+			await blocks.DeleteAllAsync();
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -103,7 +103,7 @@ namespace StrongGrid.UnitTests.Resources
 			var blocks = new Blocks(client);
 
 			// Act
-			await blocks.DeleteMultipleAsync(emailAddresses).ConfigureAwait(false);
+			await blocks.DeleteMultipleAsync(emailAddresses);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -123,7 +123,7 @@ namespace StrongGrid.UnitTests.Resources
 			var blocks = new Blocks(client);
 
 			// Act
-			await blocks.DeleteAsync(emailAddress).ConfigureAwait(false);
+			await blocks.DeleteAsync(emailAddress);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -143,7 +143,7 @@ namespace StrongGrid.UnitTests.Resources
 			var blocks = new Blocks(client);
 
 			// Act
-			var result = await blocks.GetAsync(emailAddress, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await blocks.GetAsync(emailAddress, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

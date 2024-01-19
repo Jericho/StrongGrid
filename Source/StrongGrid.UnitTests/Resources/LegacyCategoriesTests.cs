@@ -38,7 +38,7 @@ namespace StrongGrid.UnitTests.Resources
 			var categories = new Categories(client);
 
 			// Act
-			var result = await categories.GetAsync(null, limit, offset, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await categories.GetAsync(null, limit, offset, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

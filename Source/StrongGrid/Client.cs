@@ -35,6 +35,9 @@ namespace StrongGrid
 		/// </value>
 		public ICustomFields CustomFields { get; private set; }
 
+		/// <inheritdoc/>
+		public IEngagementQuality EngagementQuality { get; private set; }
+
 		/// <summary>
 		/// Gets the Lists resource.
 		/// </summary>
@@ -130,6 +133,7 @@ namespace StrongGrid
 		{
 			Contacts = new Contacts(FluentClient);
 			CustomFields = new CustomFields(FluentClient);
+			EngagementQuality = new EngagementQuality(FluentClient);
 			Lists = new Lists(FluentClient);
 			Segments = new Segments(FluentClient);
 			SenderIdentities = new SenderIdentities(FluentClient);

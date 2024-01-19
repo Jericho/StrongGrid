@@ -74,7 +74,7 @@ namespace StrongGrid.UnitTests.Resources
 			var customFields = new CustomFields(client);
 
 			// Act
-			var result = await customFields.CreateAsync(name, type, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await customFields.CreateAsync(name, type, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -95,7 +95,7 @@ namespace StrongGrid.UnitTests.Resources
 			var customFields = new CustomFields(client);
 
 			// Act
-			var result = await customFields.GetAsync(fieldId, null, CancellationToken.None).ConfigureAwait(false);
+			var result = await customFields.GetAsync(fieldId, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -114,7 +114,7 @@ namespace StrongGrid.UnitTests.Resources
 			var customFields = new CustomFields(client);
 
 			// Act
-			var result = await customFields.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
+			var result = await customFields.GetAllAsync(null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -136,7 +136,7 @@ namespace StrongGrid.UnitTests.Resources
 			var customFields = new CustomFields(client);
 
 			// Act
-			await customFields.DeleteAsync(fieldId, null, CancellationToken.None).ConfigureAwait(false);
+			await customFields.DeleteAsync(fieldId, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -195,7 +195,7 @@ namespace StrongGrid.UnitTests.Resources
 			var customFields = new CustomFields(client);
 
 			// Act
-			var result = await customFields.GetReservedFieldsAsync(null, CancellationToken.None).ConfigureAwait(false);
+			var result = await customFields.GetReservedFieldsAsync(null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

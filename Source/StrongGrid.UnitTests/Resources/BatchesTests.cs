@@ -51,7 +51,7 @@ namespace StrongGrid.UnitTests.Resources
 			var batches = new Batches(client);
 
 			// Act
-			var batchId = await batches.GenerateBatchIdAsync().ConfigureAwait(false);
+			var batchId = await batches.GenerateBatchIdAsync();
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -76,7 +76,7 @@ namespace StrongGrid.UnitTests.Resources
 			var batches = new Batches(client);
 
 			// Act
-			var result = await batches.ValidateBatchIdAsync(batchId).ConfigureAwait(false);
+			var result = await batches.ValidateBatchIdAsync(batchId);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -106,7 +106,7 @@ namespace StrongGrid.UnitTests.Resources
 			var batches = new Batches(client);
 
 			// Act
-			var result = await batches.ValidateBatchIdAsync(batchId).ConfigureAwait(false);
+			var result = await batches.ValidateBatchIdAsync(batchId);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -136,7 +136,7 @@ namespace StrongGrid.UnitTests.Resources
 			var batches = new Batches(client);
 
 			// Act
-			var result = await Should.ThrowAsync<Exception>(batches.ValidateBatchIdAsync(batchId)).ConfigureAwait(false);
+			var result = await Should.ThrowAsync<Exception>(batches.ValidateBatchIdAsync(batchId));
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -158,7 +158,7 @@ namespace StrongGrid.UnitTests.Resources
 			var batches = new Batches(client);
 
 			// Act
-			await batches.Cancel(batchId).ConfigureAwait(false);
+			await batches.Cancel(batchId);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -178,7 +178,7 @@ namespace StrongGrid.UnitTests.Resources
 			var batches = new Batches(client);
 
 			// Act
-			await batches.Pause(batchId).ConfigureAwait(false);
+			await batches.Pause(batchId);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -196,7 +196,7 @@ namespace StrongGrid.UnitTests.Resources
 			var batches = new Batches(client);
 
 			// Act
-			var result = await batches.GetAllAsync().ConfigureAwait(false);
+			var result = await batches.GetAllAsync();
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -218,7 +218,7 @@ namespace StrongGrid.UnitTests.Resources
 			var batches = new Batches(client);
 
 			// Act
-			var result = await batches.GetAsync(batchId).ConfigureAwait(false);
+			var result = await batches.GetAsync(batchId);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -239,7 +239,7 @@ namespace StrongGrid.UnitTests.Resources
 			var batches = new Batches(client);
 
 			// Act
-			var result = await batches.GetAsync(batchId).ConfigureAwait(false);
+			var result = await batches.GetAsync(batchId);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -260,7 +260,7 @@ namespace StrongGrid.UnitTests.Resources
 			var batches = new Batches(client);
 
 			// Act
-			await batches.Resume(batchId).ConfigureAwait(false);
+			await batches.Resume(batchId);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
