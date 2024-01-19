@@ -71,6 +71,10 @@ namespace StrongGrid.Models.Webhooks
 		/// <summary>
 		/// Gets the message identifier.
 		/// </summary>
+		/// <remarks>
+		/// The logic to calculate this identifier was slightly modified in January 2024 to match the change introduced by SendGrid.
+		/// See <a href="https://github.com/Jericho/StrongGrid/issues/504">this issue on Github</a> for more details.
+		/// </remarks>
 		/// <value>
 		/// The message identifier.
 		/// </value>
@@ -79,10 +83,22 @@ namespace StrongGrid.Models.Webhooks
 		{
 			get
 			{
-				if (InternalMessageId == null) return null;
+				if (string.IsNullOrEmpty(InternalMessageId)) return InternalMessageId;
+
+				// Up until January 2024, SendGrid used ".filter" as the separator
 				var filterIndex = InternalMessageId.IndexOf(".filter", StringComparison.OrdinalIgnoreCase);
-				if (filterIndex <= 0) return InternalMessageId;
-				return InternalMessageId.Substring(0, filterIndex);
+				if (filterIndex > 0) return InternalMessageId.Substring(0, filterIndex);
+
+				// In January 2024, SendGrid started using ".recvd" as the separator
+				filterIndex = InternalMessageId.IndexOf(".recvd", StringComparison.OrdinalIgnoreCase);
+				if (filterIndex > 0) return InternalMessageId.Substring(0, filterIndex);
+
+				// This check should future-proof our logic in case SendGrid changes the separator again
+				filterIndex = InternalMessageId.IndexOf(".", StringComparison.OrdinalIgnoreCase);
+				if (filterIndex > 0) return InternalMessageId.Substring(0, filterIndex);
+
+				// If all else fails
+				return InternalMessageId;
 			}
 		}
 

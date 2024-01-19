@@ -1044,7 +1044,7 @@ Content-Disposition: form-data; name=""attachments""
 
 		[Fact]
 		// This unit test validates that we fixed the issue described in GH-492.
-		// It proves that we can serialize and deserilize events without loosing
+		// It proves that we can serialize and deserilize events without losing
 		// properties of derived types such as 'Reason' for a bounced event,
 		// 'UserAgent' for a click event and 'IpAddress' for an open event.
 		public async Task Serialize_and_deserialize_derived_types()
@@ -1138,6 +1138,29 @@ Content-Disposition: form-data; name=""attachments""
 			result.UniqueArguments.Count.ShouldBe(2);
 			result.UniqueArguments.ShouldContainKeyAndValue("aaa", "1111");
 			result.UniqueArguments.ShouldContainKeyAndValue("bbb", "qwerty");
+		}
+
+		[Theory]
+		// This unit test demonstrates that we can handle the various message Id formats, as described in GH-504.
+		[InlineData("this-is-the-messageId.filterdrecv-blablabla", "this-is-the-messageId")]// This was the format until January 2024
+		[InlineData("this-is-the-messageId.recvd-blablabla", "this-is-the-messageId")]// This format was introduced in January 2024
+		[InlineData("this-is-the-messageId.SomeOtherSeparator-blablabla", "this-is-the-messageId")] // In case SendGrid changes the separator to some other arbitrary value at some point in the future
+		[InlineData("this-messageId-does-not-contain-any-separator", "this-messageId-does-not-contain-any-separator")] // This is to validate that we can handle the case where messageId does not contain any of the known separators
+		public async Task Can_handle_various_message_id_separators(string internalMessageId, string expectedMesageId)
+		{
+			var jsonPayload = $"[{{\"event\":\"processed\",\r\n\"sg_message_id\":\"{internalMessageId}\"}}]";
+			var parser = new WebhookParser();
+			using (var stream = GetStream(jsonPayload))
+			{
+				// Act
+				var result = await parser.ParseEventsWebhookAsync(stream);
+
+				// Assert
+				result.ShouldNotBeNull();
+				result.Length.ShouldBe(1);
+				result[0].MessageId.ShouldBe(expectedMesageId);
+			}
+
 		}
 
 		private static Stream GetStream(string responseContent)
