@@ -1,5 +1,6 @@
 using StrongGrid.Models;
 using StrongGrid.Models.Search;
+using StrongGrid.Models.Webhooks;
 using StrongGrid.Resources;
 using StrongGrid.Utilities;
 using StrongGrid.Warmup;
@@ -8,6 +9,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -1443,6 +1447,97 @@ namespace StrongGrid
 			scopes = scopes.Where(s => s.EndsWith(".read", StringComparison.OrdinalIgnoreCase)).ToArray();
 
 			return await teammates.InviteTeammateAsync(email, scopes, cancellationToken).ConfigureAwait(false);
+		}
+
+		/// <summary>
+		/// Parses the signed events webhook asynchronously.
+		/// </summary>
+		/// <param name="parser">The webhook parser.</param>
+		/// <param name="stream">The stream.</param>
+		/// <param name="publicKey">Your public key. To obtain this value, see <see cref="StrongGrid.Resources.WebhookSettings.GetSignedEventsPublicKeyAsync"/>.</param>
+		/// <param name="signature">The signature.</param>
+		/// <param name="timestamp">The timestamp.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>An array of <see cref="Event">events</see>.</returns>
+		public static async Task<Event[]> ParseSignedEventsWebhookAsync(this IWebhookParser parser, Stream stream, string publicKey, string signature, string timestamp, CancellationToken cancellationToken = default)
+		{
+			string requestBody;
+			using (var streamReader = new StreamReader(stream))
+			{
+#if NET7_0_OR_GREATER
+				requestBody = await streamReader.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
+#else
+				requestBody = await streamReader.ReadToEndAsync().ConfigureAwait(false);
+#endif
+			}
+
+			var webHookEvents = parser.ParseSignedEventsWebhook(requestBody, publicKey, signature, timestamp);
+			return webHookEvents;
+		}
+
+		/// <summary>
+		/// Parses the signed events webhook.
+		/// </summary>
+		/// <param name="parser">The webhook parser.</param>
+		/// <param name="requestBody">The content submitted by SendGrid's WebHook.</param>
+		/// <param name="publicKey">Your public key. To obtain this value, <see cref="StrongGrid.Resources.WebhookSettings.GetSignedEventsPublicKeyAsync"/>.</param>
+		/// <param name="signature">The signature.</param>
+		/// <param name="timestamp">The timestamp.</param>
+		/// <returns>An array of <see cref="Event">events</see>.</returns>
+		public static Event[] ParseSignedEventsWebhook(this IWebhookParser parser, string requestBody, string publicKey, string signature, string timestamp)
+		{
+			if (string.IsNullOrEmpty(publicKey)) throw new ArgumentNullException(nameof(publicKey));
+			if (string.IsNullOrEmpty(signature)) throw new ArgumentNullException(nameof(signature));
+			if (string.IsNullOrEmpty(timestamp)) throw new ArgumentNullException(nameof(timestamp));
+
+			// Decode the base64 encoded values
+			var signatureBytes = Convert.FromBase64String(signature);
+			var publicKeyBytes = Convert.FromBase64String(publicKey);
+
+			// Must combine the timestamp and the payload
+			var data = Encoding.UTF8.GetBytes(timestamp + requestBody);
+
+			/*
+				The 'ECDsa.ImportSubjectPublicKeyInfo' method was introduced in .NET core 3.0
+				and the DSASignatureFormat enum was introduced in .NET 5.0.
+
+				We can get rid of the 'ConvertECDSASignature' class and the Utils methods that
+				convert public keys when we stop suporting .NET framework and .NET standard.
+			*/
+
+#if NET5_0_OR_GREATER
+			// Verify the signature
+			var eCDsa = ECDsa.Create();
+			eCDsa.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
+			var verified = eCDsa.VerifyData(data, signatureBytes, HashAlgorithmName.SHA256, DSASignatureFormat.Rfc3279DerSequence);
+#elif NET48_OR_GREATER || NETSTANDARD2_1
+			// Convert the signature and public key provided by SendGrid into formats usable by the ECDsa .net crypto class
+			var sig = ConvertECDSASignature.LightweightConvertSignatureFromX9_62ToISO7816_8(256, signatureBytes);
+			var (x, y) = Utils.GetXYFromSecp256r1PublicKey(publicKeyBytes);
+
+			// Verify the signature
+			var eCDsa = ECDsa.Create();
+			eCDsa.ImportParameters(new ECParameters
+			{
+				Curve = ECCurve.NamedCurves.nistP256, // aka secp256r1 aka prime256v1
+				Q = new ECPoint
+				{
+					X = x,
+					Y = y
+				}
+			});
+			var verified = eCDsa.VerifyData(data, sig, HashAlgorithmName.SHA256);
+#else
+#error Unhandled TFM
+#endif
+
+			if (!verified)
+			{
+				throw new SecurityException("Webhook signature validation failed.");
+			}
+
+			var webHookEvents = parser.ParseEventsWebhook(requestBody);
+			return webHookEvents;
 		}
 	}
 }

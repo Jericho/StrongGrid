@@ -6,8 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -19,7 +17,7 @@ namespace StrongGrid
 	/// Allows parsing of information posted from SendGrid.
 	/// This parser supports both 'Events' and 'Inbound emails'.
 	/// </summary>
-	public class WebhookParser
+	public class WebhookParser : IWebhookParser
 	{
 		#region PROPERTIES
 
@@ -48,122 +46,21 @@ namespace StrongGrid
 
 		#region PUBLIC METHODS
 
-		/// <summary>
-		/// Parses the signed events webhook asynchronously.
-		/// </summary>
-		/// <param name="stream">The stream.</param>
-		/// <param name="publicKey">Your public key. To obtain this value, see <see cref="StrongGrid.Resources.WebhookSettings.GetSignedEventsPublicKeyAsync"/>.</param>
-		/// <param name="signature">The signature.</param>
-		/// <param name="timestamp">The timestamp.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>An array of <see cref="Event">events</see>.</returns>
-		public async Task<Event[]> ParseSignedEventsWebhookAsync(Stream stream, string publicKey, string signature, string timestamp, CancellationToken cancellationToken = default)
-		{
-			string requestBody;
-			using (var streamReader = new StreamReader(stream))
-			{
-#if NET7_0_OR_GREATER
-				requestBody = await streamReader.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
-#else
-				requestBody = await streamReader.ReadToEndAsync().ConfigureAwait(false);
-#endif
-			}
-
-			var webHookEvents = ParseSignedEventsWebhook(requestBody, publicKey, signature, timestamp);
-			return webHookEvents;
-		}
-
-		/// <summary>
-		/// Parses the events webhook asynchronously.
-		/// </summary>
-		/// <param name="stream">The stream.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>An array of <see cref="Event">events</see>.</returns>
+		/// <inheritdoc/>
 		public async Task<Event[]> ParseEventsWebhookAsync(Stream stream, CancellationToken cancellationToken = default)
 		{
 			var webHookEvents = await JsonSerializer.DeserializeAsync<Event[]>(stream, JsonFormatter.DeserializerOptions, cancellationToken).ConfigureAwait(false);
 			return webHookEvents;
 		}
 
-		/// <summary>
-		/// Parses the signed events webhook.
-		/// </summary>
-		/// <param name="requestBody">The content submitted by SendGrid's WebHook.</param>
-		/// <param name="publicKey">Your public key. To obtain this value, <see cref="StrongGrid.Resources.WebhookSettings.GetSignedEventsPublicKeyAsync"/>.</param>
-		/// <param name="signature">The signature.</param>
-		/// <param name="timestamp">The timestamp.</param>
-		/// <returns>An array of <see cref="Event">events</see>.</returns>
-		public Event[] ParseSignedEventsWebhook(string requestBody, string publicKey, string signature, string timestamp)
-		{
-			if (string.IsNullOrEmpty(publicKey)) throw new ArgumentNullException(nameof(publicKey));
-			if (string.IsNullOrEmpty(signature)) throw new ArgumentNullException(nameof(signature));
-			if (string.IsNullOrEmpty(timestamp)) throw new ArgumentNullException(nameof(timestamp));
-
-			// Decode the base64 encoded values
-			var signatureBytes = Convert.FromBase64String(signature);
-			var publicKeyBytes = Convert.FromBase64String(publicKey);
-
-			// Must combine the timestamp and the payload
-			var data = Encoding.UTF8.GetBytes(timestamp + requestBody);
-
-			/*
-				The 'ECDsa.ImportSubjectPublicKeyInfo' method was introduced in .NET core 3.0
-				and the DSASignatureFormat enum was introduced in .NET 5.0.
-
-				We can get rid of the 'ConvertECDSASignature' class and the Utils methods that
-				convert public keys when we stop suporting .NET framework and .NET standard.
-			*/
-
-#if NET5_0_OR_GREATER
-			// Verify the signature
-			var eCDsa = ECDsa.Create();
-			eCDsa.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
-			var verified = eCDsa.VerifyData(data, signatureBytes, HashAlgorithmName.SHA256, DSASignatureFormat.Rfc3279DerSequence);
-#elif NET48_OR_GREATER || NETSTANDARD2_1
-			// Convert the signature and public key provided by SendGrid into formats usable by the ECDsa .net crypto class
-			var sig = ConvertECDSASignature.LightweightConvertSignatureFromX9_62ToISO7816_8(256, signatureBytes);
-			var (x, y) = Utils.GetXYFromSecp256r1PublicKey(publicKeyBytes);
-
-			// Verify the signature
-			var eCDsa = ECDsa.Create();
-			eCDsa.ImportParameters(new ECParameters
-			{
-				Curve = ECCurve.NamedCurves.nistP256, // aka secp256r1 aka prime256v1
-				Q = new ECPoint
-				{
-					X = x,
-					Y = y
-				}
-			});
-			var verified = eCDsa.VerifyData(data, sig, HashAlgorithmName.SHA256);
-#else
-#error Unhandled TFM
-#endif
-
-			if (!verified)
-			{
-				throw new SecurityException("Webhook signature validation failed.");
-			}
-
-			var webHookEvents = ParseEventsWebhook(requestBody);
-			return webHookEvents;
-		}
-
-		/// <summary>
-		/// Parses the events webhook.
-		/// </summary>
-		/// <param name="requestBody">The content submitted by SendGrid's WebHook.</param>
-		/// <returns>An array of <see cref="Event">events</see>.</returns>
+		/// <inheritdoc/>
 		public Event[] ParseEventsWebhook(string requestBody)
 		{
 			var webHookEvents = JsonSerializer.Deserialize<Event[]>(requestBody, JsonFormatter.DeserializerOptions);
 			return webHookEvents;
 		}
 
-		/// <summary>Parses the inbound email webhook asynchronously.</summary>
-		/// <param name="stream">The stream.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>The <see cref="InboundEmail"/>.</returns>
+		/// <inheritdoc/>
 		public async Task<InboundEmail> ParseInboundEmailWebhookAsync(Stream stream, CancellationToken cancellationToken = default)
 		{
 			// It's important to rewind the stream (but only if permitted)
@@ -175,11 +72,7 @@ namespace StrongGrid
 			return await ParseInboundEmailAsync(parser, cancellationToken).ConfigureAwait(false);
 		}
 
-		/// <summary>
-		/// Parses the inbound email webhook.
-		/// </summary>
-		/// <param name="stream">The stream.</param>
-		/// <returns>The <see cref="InboundEmail"/>.</returns>
+		/// <inheritdoc/>
 		[Obsolete("Use the async version of this method, it can read the content of the stream much more efficiently.")]
 		public InboundEmail ParseInboundEmailWebhook(Stream stream)
 		{
