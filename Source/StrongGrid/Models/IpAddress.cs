@@ -80,7 +80,7 @@ namespace StrongGrid.Models
 		/// The cost.
 		/// </value>
 		[JsonPropertyName("assigned_at")]
-		[JsonConverter(typeof(EpochConverter))]
-		public DateTime AssignedOn { get; set; }
+		[JsonConverter(typeof(NullableEpochConverter))]
+		public DateTime? AssignedOn { get; set; }
 	}
 }
