@@ -1148,7 +1148,7 @@ Content-Disposition: form-data; name=""attachments""
 		[InlineData("this-messageId-does-not-contain-any-separator", "this-messageId-does-not-contain-any-separator")] // This is to validate that we can handle the case where messageId does not contain any of the known separators
 		public async Task Can_handle_various_message_id_separators(string internalMessageId, string expectedMesageId)
 		{
-			var jsonPayload = $"[{{\"event\":\"processed\",\r\n\"sg_message_id\":\"{internalMessageId}\"}}]";
+			var jsonPayload = $"[{{\"event\":\"processed\",\"sg_message_id\":\"{internalMessageId}\"}}]";
 			var parser = new WebhookParser();
 			using (var stream = GetStream(jsonPayload))
 			{
