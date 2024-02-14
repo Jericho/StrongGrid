@@ -5,7 +5,7 @@ namespace StrongGrid.Models
 	/// <summary>
 	/// Single Send email config.
 	/// </summary>
-	internal class SingleSendEmailConfig
+	public class SingleSendEmailConfig
 	{
 		/// <summary>
 		/// Gets or sets the subject.

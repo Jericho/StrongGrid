@@ -3,9 +3,9 @@ using System.Text.Json.Serialization;
 namespace StrongGrid.Models
 {
 	/// <summary>
-	/// Single Send send to.
+	/// The recipients of a Single Send.
 	/// </summary>
-	internal class SingleSendSendTo
+	public class SingleSendRecipients
 	{
 		/// <summary>
 		/// Gets or sets the lists.
