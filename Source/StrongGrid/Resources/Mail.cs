@@ -150,9 +150,9 @@ namespace StrongGrid.Resources
 			foreach (var personalization in personalizationsCopy)
 			{
 				// Make sure the arrays are not null otherwise Linq's 'Except' method will throw a ArgumentNull exception (See GH-286).
-				if (personalization.To == null) personalization.To = Array.Empty<MailAddress>();
-				if (personalization.Cc == null) personalization.Cc = Array.Empty<MailAddress>();
-				if (personalization.Bcc == null) personalization.Bcc = Array.Empty<MailAddress>();
+				personalization.To ??= Array.Empty<MailAddress>();
+				personalization.Cc ??= Array.Empty<MailAddress>();
+				personalization.Bcc ??= Array.Empty<MailAddress>();
 
 				// Avoid duplicate addresses. This is important because SendGrid does not throw any
 				// exception when a recipient is duplicated (which gives you the impression the email

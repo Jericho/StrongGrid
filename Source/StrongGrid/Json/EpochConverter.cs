@@ -12,8 +12,14 @@ namespace StrongGrid.Json
 	{
 		public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			var secondsSinceEpoch = reader.GetInt64();
-			return secondsSinceEpoch.FromUnixTime();
+			switch (reader.TokenType)
+			{
+				case JsonTokenType.Number:
+					var secondsSinceEpoch = reader.GetInt64();
+					return secondsSinceEpoch.FromUnixTime();
+				default:
+					throw new Exception($"Unable to convert {reader.TokenType.ToEnumString()} to DateTime");
+			}
 		}
 
 		public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
