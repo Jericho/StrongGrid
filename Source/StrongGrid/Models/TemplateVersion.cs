@@ -89,7 +89,6 @@ namespace StrongGrid.Models
 		/// The updated on.
 		/// </value>
 		[JsonPropertyName("updated_at")]
-		[JsonConverter(typeof(SendGridDateTimeConverter))]
 		public DateTime UpdatedOn { get; set; }
 	}
 }

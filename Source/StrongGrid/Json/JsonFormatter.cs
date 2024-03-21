@@ -24,7 +24,12 @@ namespace StrongGrid.Json
 		{
 			DeserializerOptions = new JsonSerializerOptions()
 			{
-				PropertyNameCaseInsensitive = false
+				PropertyNameCaseInsensitive = false,
+				Converters =
+				{
+					new DateTimeConverter(),
+					new NullableDateTimeConverter()
+				}
 			};
 
 			SerializerOptions = new JsonSerializerOptions()
@@ -48,7 +53,7 @@ namespace StrongGrid.Json
 				encoding: Encoding.UTF8,
 				detectEncodingFromByteOrderMarks: true,
 				bufferSize: DefaultBufferSize,
-				leaveOpen: true); // don't close (stream disposal is handled elsewhere)
+				leaveOpen: true);
 			string streamContent = reader.ReadToEnd();
 			object deserializedResult = JsonSerializer.Deserialize(streamContent, type, DeserializationContext);
 			return deserializedResult;

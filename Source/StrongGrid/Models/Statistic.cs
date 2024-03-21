@@ -1,4 +1,3 @@
-using StrongGrid.Json;
 using System;
 using System.Text.Json.Serialization;
 
@@ -16,7 +15,6 @@ namespace StrongGrid.Models
 		/// The date.
 		/// </value>
 		[JsonPropertyName("date")]
-		[JsonConverter(typeof(SendGridDateTimeConverter))]
 		public DateTime Date { get; set; }
 
 		/// <summary>
