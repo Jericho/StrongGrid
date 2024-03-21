@@ -29,13 +29,13 @@ namespace StrongGrid.IntegrationTests.Tests
 			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
 			// GET PRE_BUILT DESIGNS
-			var prebuiltDesigns = await client.Designs.GetAllPrebuiltAsync(2, null, cancellationToken).ConfigureAwait(false);
+			var prebuiltDesigns = await client.Designs.GetAllPrebuiltAsync(25, null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"{prebuiltDesigns.Records.Length} pre-built designs retrieved. There are a total of {prebuiltDesigns.TotalRecords} designs.").ConfigureAwait(false);
 
 			// TEST PAGINATION
-			if (!string.IsNullOrEmpty(prebuiltDesigns.NextPageToken))
+			while (!string.IsNullOrEmpty(prebuiltDesigns.NextPageToken))
 			{
-				prebuiltDesigns = await client.Designs.GetAllPrebuiltAsync(2, prebuiltDesigns.NextPageToken, cancellationToken).ConfigureAwait(false);
+				prebuiltDesigns = await client.Designs.GetAllPrebuiltAsync(25, prebuiltDesigns.NextPageToken, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"Retrieved {prebuiltDesigns.Records.Length} more pre-built designs.").ConfigureAwait(false);
 			}
 
