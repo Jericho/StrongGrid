@@ -149,6 +149,7 @@ namespace StrongGrid.Models
 		/// The created on.
 		/// </value>
 		[JsonPropertyName("created_at")]
+		[JsonConverter(typeof(SendGridDateTimeConverter))]
 		public DateTime CreatedOn { get; set; }
 
 		/// <summary>
@@ -158,6 +159,7 @@ namespace StrongGrid.Models
 		/// The modified on.
 		/// </value>
 		[JsonPropertyName("updated_at")]
+		[JsonConverter(typeof(SendGridDateTimeConverter))]
 		public DateTime ModifiedOn { get; set; }
 
 		/// <summary>
