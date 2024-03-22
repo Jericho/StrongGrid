@@ -12,13 +12,13 @@ namespace StrongGrid.IntegrationTests.Tests
 
 			await log.WriteLineAsync("\n***** WEBHOOK SETTINGS *****\n").ConfigureAwait(false);
 
-			// GET THE EVENT SETTINGS
-			var eventWebhookSettings = await client.WebhookSettings.GetEventWebhookSettingsAsync(null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync("The event webhook settings have been retrieved.").ConfigureAwait(false);
+			// GET ALL THE EVENT SETTINGS
+			var eventWebhookSettings = await client.WebhookSettings.GetAllEventWebhookSettingsAsync(null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync("All the event webhook settings have been retrieved.").ConfigureAwait(false);
 
-			// GET THE INBOUND PARSE SETTINGS
+			// GET ALL THE INBOUND PARSE SETTINGS
 			var inboundParseWebhookSettings = await client.WebhookSettings.GetAllInboundParseWebhookSettingsAsync(null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync("The inbound parse webhook settings have been retrieved.").ConfigureAwait(false);
+			await log.WriteLineAsync("All the inbound parse webhook settings have been retrieved.").ConfigureAwait(false);
 
 			// GET THE SIGNED EVENTS PUBLIC KEY
 			var publicKey = await client.WebhookSettings.GetSignedEventsPublicKeyAsync(cancellationToken).ConfigureAwait(false);
