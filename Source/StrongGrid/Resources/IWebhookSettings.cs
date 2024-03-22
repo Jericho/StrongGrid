@@ -219,10 +219,22 @@ namespace StrongGrid.Resources
 		/// Get the signed events public key.
 		/// </summary>
 		/// <param name="id">The ID of the Event Webhook you want to retrieve.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The public key.
 		/// </returns>
-		Task<string> GetSignedEventsPublicKeyAsync(string id, CancellationToken cancellationToken = default);
+		Task<string> GetSignedEventsPublicKeyAsync(string id, string onBehalfOf = null, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Delete a single Event Webhook by ID.
+		/// </summary>
+		/// <param name="id">The ID of the Event Webhook you want to delete.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The async task.
+		/// </returns>
+		Task DeleteEventWebhookSettingsAsync(string id, string onBehalfOf = null, CancellationToken cancellationToken = default);
 	}
 }
