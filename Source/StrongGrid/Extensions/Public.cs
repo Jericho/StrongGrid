@@ -1637,5 +1637,17 @@ namespace StrongGrid
 			return webhookSettings.ToggleEventWebhookSignatureVerificationAsync(null, enabled, onBehalfOf, cancellationToken);
 		}
 
+		/// <summary>
+		/// Get the signed events public key.
+		/// </summary>
+		/// <param name="webhookSettings">The webhook settings resource.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The public key.
+		/// </returns>
+		public static Task<string> GetSignedEventsPublicKeyAsync(this IWebhookSettings webhookSettings, CancellationToken cancellationToken = default)
+		{
+			return webhookSettings.GetSignedEventsPublicKeyAsync(null, cancellationToken);
+		}
 	}
 }
