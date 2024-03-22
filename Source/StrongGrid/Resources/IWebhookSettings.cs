@@ -131,6 +131,16 @@ namespace StrongGrid.Resources
 			CancellationToken cancellationToken = default);
 
 		/// <summary>
+		/// Enable or disable signature verification for a single Event Webhook.
+		/// </summary>
+		/// <param name="id">The ID of the Event Webhook you want to update.</param>
+		/// <param name="enabled">Indicates if the signature verification should be enbladle or not.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>The async task.</returns>
+		Task ToggleEventWebhookSignatureVerificationAsync(string id, bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default);
+
+		/// <summary>
 		/// Sends a fake event notification post to the provided URL.
 		/// </summary>
 		/// <param name="id">The ID of the Event Webhook you want to retrieve.</param>

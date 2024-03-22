@@ -173,6 +173,23 @@ namespace StrongGrid.Resources
 		}
 
 		/// <inheritdoc/>
+		public Task ToggleEventWebhookSignatureVerificationAsync(string id, bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		{
+			var endpointUrl = $"{_eventWebhookEndpoint}/settings/signed";
+			if (!string.IsNullOrEmpty(id)) endpointUrl += $"/{id}";
+
+			var data = new StrongGridJsonObject();
+			data.AddProperty("enabled", enabled);
+
+			return _client
+				.PatchAsync(endpointUrl)
+				.OnBehalfOf(onBehalfOf)
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsMessage();
+		}
+
+		/// <inheritdoc/>
 		public Task SendEventTestAsync(string id, string url, string oAuthClientId = null, string oAuthClientSecret = null, string oAuthTokenUrl = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
