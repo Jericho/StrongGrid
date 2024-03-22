@@ -1622,5 +1622,20 @@ namespace StrongGrid
 		{
 			return webhookSettings.SendEventTestAsync(null, url, oAuthClientId, oAuthClientSecret, oAuthTokenUrl, onBehalfOf, cancellationToken);
 		}
+
+		/// <summary>
+		/// Enable or disable signature verification for a single Event Webhook.
+		/// </summary>
+		/// <param name="webhookSettings">The webhook settings resource.</param>
+		/// <param name="id">The ID of the Event Webhook you want to update.</param>
+		/// <param name="enabled">Indicates if the signature verification should be enbladle or not.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>The async task.</returns>
+		public static Task ToggleEventWebhookSignatureVerificationAsync(this IWebhookSettings webhookSettings, string id, bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		{
+			return webhookSettings.ToggleEventWebhookSignatureVerificationAsync(null, enabled, onBehalfOf, cancellationToken);
+		}
+
 	}
 }
