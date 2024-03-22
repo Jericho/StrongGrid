@@ -27,6 +27,16 @@ namespace StrongGrid.Resources
 		Task<EventWebhookSettings> GetEventWebhookSettingsAsync(string id, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
+		/// Get all the event webhook settings.
+		/// </summary>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="EventWebhookSettings" />.
+		/// </returns>
+		Task<EventWebhookSettings[]> GetAllEventWebhookSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
+
+		/// <summary>
 		/// Change the events settings.
 		/// </summary>
 		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
@@ -95,7 +105,7 @@ namespace StrongGrid.Resources
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
-		/// The <see cref="InboundParseWebhookSettings" />.
+		/// An array of <see cref="InboundParseWebhookSettings" />.
 		/// </returns>
 		Task<InboundParseWebhookSettings[]> GetAllInboundParseWebhookSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 

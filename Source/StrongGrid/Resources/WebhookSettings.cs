@@ -45,6 +45,16 @@ namespace StrongGrid.Resources
 				.AsObject<EventWebhookSettings>();
 		}
 
+		/// <inheritdoc/>
+		public Task<EventWebhookSettings[]> GetAllEventWebhookSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
+		{
+			return _client
+				.GetAsync($"{_eventWebhookEndpoint}/settings/all")
+				.OnBehalfOf(onBehalfOf)
+				.WithCancellationToken(cancellationToken)
+				.AsObject<EventWebhookSettings[]>("webhooks");
+		}
+
 		/// <summary>
 		/// Change the event webhook settings.
 		/// </summary>
