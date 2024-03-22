@@ -56,6 +56,63 @@ namespace StrongGrid.Resources
 		}
 
 		/// <inheritdoc/>
+		public Task<EventWebhookSettings> CreateEventWebhookSettingsAsync(
+			bool enabled,
+			string url,
+			bool bounce = default,
+			bool click = default,
+			bool deferred = default,
+			bool delivered = default,
+			bool dropped = default,
+			bool groupResubscribe = default,
+			bool groupUnsubscribe = default,
+			bool open = default,
+			bool processed = default,
+			bool spamReport = default,
+			bool unsubscribe = default,
+			string friendlyName = null,
+			string oauthClientId = null,
+			string oauthClientSecret = null,
+			string oAuthTokenUrl = null,
+			string onBehalfOf = null,
+			CancellationToken cancellationToken = default)
+		{
+			if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
+
+			var endpointUrl = $"{_eventWebhookEndpoint}/settings";
+
+			var eventWebhookSettings = new EventWebhookSettings
+			{
+				Enabled = enabled,
+				Url = url,
+				Bounce = bounce,
+				Click = click,
+				Deferred = deferred,
+				Delivered = delivered,
+				Dropped = dropped,
+				FriendlyName = friendlyName,
+				GroupResubscribe = groupResubscribe,
+				GroupUnsubscribe = groupUnsubscribe,
+				Open = open,
+				Processed = processed,
+				SpamReport = spamReport,
+				Unsubscribe = unsubscribe,
+				OauthClientId = oauthClientId,
+				OauthTokenUrl = oAuthTokenUrl,
+			};
+
+			var jsonObject = eventWebhookSettings.ToStrongGridJsonObject();
+			jsonObject.AddProperty("oauth_client_secret", oauthClientSecret);
+
+			return _client
+				.PostAsync(endpointUrl)
+				.OnBehalfOf(onBehalfOf)
+				.WithJsonBody(jsonObject)
+				.WithCancellationToken(cancellationToken)
+				.AsObject<EventWebhookSettings>();
+		}
+
+		/// <inheritdoc/>
 		public Task<EventWebhookSettings> UpdateEventWebhookSettingsAsync(
 			string id,
 			bool enabled,
