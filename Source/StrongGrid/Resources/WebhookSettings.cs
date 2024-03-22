@@ -318,15 +318,28 @@ namespace StrongGrid.Resources
 		}
 
 		/// <inheritdoc/>
-		public Task<string> GetSignedEventsPublicKeyAsync(string id, CancellationToken cancellationToken = default)
+		public Task<string> GetSignedEventsPublicKeyAsync(string id, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			var endpointUrl = $"{_eventWebhookEndpoint}/settings/signed";
 			if (!string.IsNullOrEmpty(id)) endpointUrl += $"/{id}";
 
 			return _client
 				.GetAsync(endpointUrl)
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsObject<string>("public_key");
+		}
+
+		/// <inheritdoc/>
+		public Task DeleteEventWebhookSettingsAsync(string id, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		{
+			if (string.IsNullOrEmpty(id)) throw new ArgumentNullException(nameof(id));
+
+			return _client
+				.DeleteAsync($"{_eventWebhookEndpoint}/settings/{id}")
+				.OnBehalfOf(onBehalfOf)
+				.WithCancellationToken(cancellationToken)
+				.AsMessage();
 		}
 
 		private static StrongGridJsonObject ConvertInboundParseSettingsToJson(string hostname, Parameter<string> url, Parameter<bool> spamCheck, Parameter<bool> sendRaw)
