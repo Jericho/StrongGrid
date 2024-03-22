@@ -1641,13 +1641,14 @@ namespace StrongGrid
 		/// Get the signed events public key.
 		/// </summary>
 		/// <param name="webhookSettings">The webhook settings resource.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The public key.
 		/// </returns>
-		public static Task<string> GetSignedEventsPublicKeyAsync(this IWebhookSettings webhookSettings, CancellationToken cancellationToken = default)
+		public static Task<string> GetSignedEventsPublicKeyAsync(this IWebhookSettings webhookSettings, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			return webhookSettings.GetSignedEventsPublicKeyAsync(null, cancellationToken);
+			return webhookSettings.GetSignedEventsPublicKeyAsync(null, onBehalfOf, cancellationToken);
 		}
 	}
 }
