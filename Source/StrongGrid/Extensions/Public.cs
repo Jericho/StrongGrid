@@ -1539,5 +1539,20 @@ namespace StrongGrid
 			var webHookEvents = parser.ParseEventsWebhook(requestBody);
 			return webHookEvents;
 		}
+
+		/// <summary>
+		/// Get the current event webhook settings.
+		/// </summary>
+		/// <param name="webhookSettings">The webhook settings resource.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="EventWebhookSettings" />.
+		/// </returns>
+		public static Task<EventWebhookSettings> GetEventWebhookSettingsAsync(this IWebhookSettings webhookSettings, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		{
+			return webhookSettings.GetEventWebhookSettingsAsync(null, onBehalfOf, cancellationToken);
+		}
+
 	}
 }

@@ -16,14 +16,15 @@ namespace StrongGrid.Resources
 	public interface IWebhookSettings
 	{
 		/// <summary>
-		/// Get the current events settings.
+		/// Retrieve a single Event Webhook by ID.
 		/// </summary>
+		/// <param name="id">The ID of the Event Webhook you want to retrieve.</param>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The <see cref="EventWebhookSettings" />.
 		/// </returns>
-		Task<EventWebhookSettings> GetEventWebhookSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task<EventWebhookSettings> GetEventWebhookSettingsAsync(string id, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Change the events settings.
