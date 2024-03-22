@@ -36,7 +36,6 @@ namespace StrongGrid.Resources
 		/// </returns>
 		Task<EventWebhookSettings[]> GetAllEventWebhookSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default);
 
-		/*
 		/// <summary>
 		/// Create event webhook settings.
 		/// </summary>
@@ -82,7 +81,6 @@ namespace StrongGrid.Resources
 			string oAuthTokenUrl = null,
 			string onBehalfOf = null,
 			CancellationToken cancellationToken = default);
-		*/
 
 		/// <summary>
 		/// Change the events settings.
