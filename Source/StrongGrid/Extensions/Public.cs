@@ -1604,5 +1604,23 @@ namespace StrongGrid
 		{
 			return webhookSettings.UpdateEventWebhookSettingsAsync(null, enabled, url, bounce, click, deferred, delivered, dropped, groupResubscribe, groupUnsubscribe, open, processed, spamReport, unsubscribe, friendlyName, oauthClientId, oauthClientSecret, oAuthTokenUrl, onBehalfOf, cancellationToken);
 		}
+
+		/// <summary>
+		/// Sends a fake event notification post to the provided URL.
+		/// </summary>
+		/// <param name="webhookSettings">The webhook settings resource.</param>
+		/// <param name="url">The URL where you would like the test notification to be sent.</param>
+		/// <param name="oAuthClientId">The client ID Twilio SendGrid sends to your OAuth server or service provider to generate an OAuth access token. When passing data in this parameter, you must also specify oauThokenUrl.</param>
+		/// <param name="oAuthClientSecret">This value is needed only once to create an access token. SendGrid will store this secret, allowing you to update your Client ID and Token URL without passing the secret to SendGrid again. When passing data in this field, you must also specify oAuthClientId and oAuthTokenUrl.</param>
+		/// <param name="oAuthTokenUrl">The URL where Twilio SendGrid sends the Client ID and Client Secret to generate an access token. This should be your OAuth server or service provider. When passing data in this parameter, you must also include oAuthClientId.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The async task.
+		/// </returns>
+		public static Task SendEventTestAsync(this IWebhookSettings webhookSettings, string url, string oAuthClientId = null, string oAuthClientSecret = null, string oAuthTokenUrl = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		{
+			return webhookSettings.SendEventTestAsync(null, url, oAuthClientId, oAuthClientSecret, oAuthTokenUrl, onBehalfOf, cancellationToken);
+		}
 	}
 }

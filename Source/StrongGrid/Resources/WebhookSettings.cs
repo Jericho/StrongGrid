@@ -71,8 +71,8 @@ namespace StrongGrid.Resources
 			bool spamReport = default,
 			bool unsubscribe = default,
 			string friendlyName = null,
-			string oauthClientId = null,
-			string oauthClientSecret = null,
+			string oAuthClientId = null,
+			string oAuthClientSecret = null,
 			string oAuthTokenUrl = null,
 			string onBehalfOf = null,
 			CancellationToken cancellationToken = default)
@@ -97,12 +97,12 @@ namespace StrongGrid.Resources
 				Processed = processed,
 				SpamReport = spamReport,
 				Unsubscribe = unsubscribe,
-				OauthClientId = oauthClientId,
+				OauthClientId = oAuthClientId,
 				OauthTokenUrl = oAuthTokenUrl,
 			};
 
 			var jsonObject = eventWebhookSettings.ToStrongGridJsonObject();
-			jsonObject.AddProperty("oauth_client_secret", oauthClientSecret);
+			jsonObject.AddProperty("oauth_client_secret", oAuthClientSecret);
 
 			return _client
 				.PostAsync(endpointUrl)
@@ -129,8 +129,8 @@ namespace StrongGrid.Resources
 			bool spamReport = default,
 			bool unsubscribe = default,
 			string friendlyName = null,
-			string oauthClientId = null,
-			string oauthClientSecret = null,
+			string oAuthClientId = null,
+			string oAuthClientSecret = null,
 			string oAuthTokenUrl = null,
 			string onBehalfOf = null,
 			CancellationToken cancellationToken = default)
@@ -157,12 +157,12 @@ namespace StrongGrid.Resources
 				Processed = processed,
 				SpamReport = spamReport,
 				Unsubscribe = unsubscribe,
-				OauthClientId = oauthClientId,
+				OauthClientId = oAuthClientId,
 				OauthTokenUrl = oAuthTokenUrl,
 			};
 
 			var jsonObject = eventWebhookSettings.ToStrongGridJsonObject();
-			jsonObject.AddProperty("oauth_client_secret", oauthClientSecret);
+			jsonObject.AddProperty("oauth_client_secret", oAuthClientSecret);
 
 			return _client
 				.PatchAsync(endpointUrl)
@@ -172,21 +172,17 @@ namespace StrongGrid.Resources
 				.AsObject<EventWebhookSettings>();
 		}
 
-		/// <summary>
-		/// Sends a fake event notification post to the provided URL.
-		/// </summary>
-		/// <param name="url">the event notification endpoint url.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// The async task.
-		/// </returns>
-		public Task SendEventTestAsync(string url, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		/// <inheritdoc/>
+		public Task SendEventTestAsync(string id, string url, string oAuthClientId = null, string oAuthClientSecret = null, string oAuthTokenUrl = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
 
 			var data = new StrongGridJsonObject();
+			data.AddProperty("id", id);
 			data.AddProperty("url", url);
+			data.AddProperty("oauth_client_id", oAuthClientId);
+			data.AddProperty("oauth_client_secret", oAuthClientSecret);
+			data.AddProperty("oauth_token_url", oAuthTokenUrl);
 
 			return _client
 				.PostAsync($"{_eventWebhookEndpoint}/test")

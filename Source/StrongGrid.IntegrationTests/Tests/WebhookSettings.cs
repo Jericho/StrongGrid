@@ -27,7 +27,7 @@ namespace StrongGrid.IntegrationTests.Tests
 			// ==================================================
 			// DEBUGGING
 
-			//const string desiredUrl = "https://4934-2001-18c0-41d-f200-ac79-2199-f1fc-c831.ngrok.io/StrongGrid";
+			//const string desiredUrl = "https://3928-2001-18c0-41c-3f00-00-632b.ngrok-free.app/StrongGrid";
 			//const string inboundHostName = "api.stronggrid.com";
 
 			// Uncomment the following line to configure all webhook events to be sent to your desired URL
