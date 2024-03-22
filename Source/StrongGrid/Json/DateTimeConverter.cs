@@ -18,6 +18,9 @@ namespace StrongGrid.Json
 		{
 			switch (reader.TokenType)
 			{
+				case JsonTokenType.Null:
+					throw new Exception($"SendGridDateTimeConverter in unable to convert a null value into a date.");
+
 				case JsonTokenType.String:
 					// First we try to use the built-in converter.
 					// This works when the data from the SendGrid endpoint has been formatted with a standard format
@@ -26,6 +29,7 @@ namespace StrongGrid.Json
 					// The built-in converter was unable to deserialize the data presumably because it's formatted in an unexpected way.
 					// Therefore we need to guess the format that SenGrid is using.
 					return ConvertToDateTime(reader.GetString());
+
 				default:
 					throw new Exception($"SendGridDateTimeConverter in unable to convert \"{reader.TokenType}\" into a date.");
 			}
@@ -38,7 +42,11 @@ namespace StrongGrid.Json
 
 		private static DateTime ConvertToDateTime(string dateAsString)
 		{
-			if (DateTime.TryParseExact(dateAsString, "yyyy-MM-dd HH:mm:ss zzz 'UTC'", Format_Provider, DateTime_Style, out DateTime sendGridDateTimeWithOffset))
+			if (string.IsNullOrEmpty(dateAsString))
+			{
+				throw new Exception($"SendGridDateTimeConverter in unable to convert an empty string into a date.");
+			}
+			else if (DateTime.TryParseExact(dateAsString, "yyyy-MM-dd HH:mm:ss zzz 'UTC'", Format_Provider, DateTime_Style, out DateTime sendGridDateTimeWithOffset))
 			{
 				return sendGridDateTimeWithOffset;
 			}
