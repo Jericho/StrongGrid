@@ -1554,5 +1554,55 @@ namespace StrongGrid
 			return webhookSettings.GetEventWebhookSettingsAsync(null, onBehalfOf, cancellationToken);
 		}
 
+		/// <summary>
+		/// Change the events settings.
+		/// </summary>
+		/// <param name="webhookSettings">The webhook settings resource.</param>
+		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
+		/// <param name="url">The webhook endpoint url.</param>
+		/// <param name="bounce">if set to <c>true</c> [bounce].</param>
+		/// <param name="click">if set to <c>true</c> [click].</param>
+		/// <param name="deferred">if set to <c>true</c> [deferred].</param>
+		/// <param name="delivered">if set to <c>true</c> [delivered].</param>
+		/// <param name="dropped">if set to <c>true</c> [dropped].</param>
+		/// <param name="groupResubscribe">if set to <c>true</c> [groupResubscribe].</param>
+		/// <param name="groupUnsubscribe">if set to <c>true</c> [groupUnsubscribe].</param>
+		/// <param name="open">if set to <c>true</c> [open].</param>
+		/// <param name="processed">if set to <c>true</c> [processed].</param>
+		/// <param name="spamReport">if set to <c>true</c> [spamReport].</param>
+		/// <param name="unsubscribe">if set to <c>true</c> [unsubscribe].</param>
+		/// <param name="friendlyName">The friendly name.</param>
+		/// <param name="oauthClientId">The OAuth client ID that SendGrid will pass to your OAuth server or service provider to generate an OAuth access token. When passing data in this parameter, you must also specify the oauthTokenUrl.</param>
+		/// <param name="oauthClientSecret">The OAuth client secret that SendGrid will pass to your OAuth server or service provider to generate an OAuth access token. This secret is needed only once to create an access token. SendGrid will store the secret, allowing you to update your client ID and Token URL without passing the secret to SendGrid again. When passing data in this parameter, you must also specify the oauthClientId and oauthTokenUrl.</param>
+		/// <param name="oAuthTokenUrl">The URL where SendGrid will send the OAuth client ID and client secret to generate an OAuth access token. This should be your OAuth server or service provider. When passing data in this parameter, you must also specify the oauthClientId.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="EventWebhookSettings" />.
+		/// </returns>
+		public static Task<EventWebhookSettings> UpdateEventWebhookSettingsAsync(
+			this IWebhookSettings webhookSettings,
+			bool enabled,
+			string url,
+			bool bounce = default,
+			bool click = default,
+			bool deferred = default,
+			bool delivered = default,
+			bool dropped = default,
+			bool groupResubscribe = default,
+			bool groupUnsubscribe = default,
+			bool open = default,
+			bool processed = default,
+			bool spamReport = default,
+			bool unsubscribe = default,
+			string friendlyName = null,
+			string oauthClientId = null,
+			string oauthClientSecret = null,
+			string oAuthTokenUrl = null,
+			string onBehalfOf = null,
+			CancellationToken cancellationToken = default)
+		{
+			return webhookSettings.UpdateEventWebhookSettingsAsync(null, enabled, url, bounce, click, deferred, delivered, dropped, groupResubscribe, groupUnsubscribe, open, processed, spamReport, unsubscribe, friendlyName, oauthClientId, oauthClientSecret, oAuthTokenUrl, onBehalfOf, cancellationToken);
+		}
 	}
 }

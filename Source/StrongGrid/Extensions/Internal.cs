@@ -870,6 +870,20 @@ namespace StrongGrid
 			return result;
 		}
 
+		internal static StrongGridJsonObject ToStrongGridJsonObject<T>(this T source, bool ignoreDefault = true)
+		{
+			var jsonObject = new StrongGridJsonObject();
+			foreach (var property in source.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+			{
+				var propertyName = ((JsonPropertyNameAttribute)property.GetCustomAttribute(typeof(JsonPropertyNameAttribute))).Name;
+				var propertyValue = property.GetValue(source);
+
+				jsonObject.AddProperty(propertyName, propertyValue, ignoreDefault);
+			}
+
+			return jsonObject;
+		}
+
 		/// <summary>Asynchronously converts the JSON encoded content and convert it to an object of the desired type.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="httpContent">The content.</param>
