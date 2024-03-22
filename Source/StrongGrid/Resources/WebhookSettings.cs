@@ -32,18 +32,14 @@ namespace StrongGrid.Resources
 			_client = client;
 		}
 
-		/// <summary>
-		/// Get the current event webhook settings.
-		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// The <see cref="EventWebhookSettings" />.
-		/// </returns>
-		public Task<EventWebhookSettings> GetEventWebhookSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
+		/// <inheritdoc/>
+		public Task<EventWebhookSettings> GetEventWebhookSettingsAsync(string id, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			var url = $"{_eventWebhookEndpoint}/settings";
+			if (!string.IsNullOrEmpty(id)) url += $"/{id}";
+
 			return _client
-				.GetAsync($"{_eventWebhookEndpoint}/settings")
+				.GetAsync(url)
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsObject<EventWebhookSettings>();
