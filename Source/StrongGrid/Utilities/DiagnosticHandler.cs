@@ -4,11 +4,10 @@ using Pathoschild.Http.Client;
 using Pathoschild.Http.Client.Extensibility;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 
 namespace StrongGrid.Utilities
 {
@@ -22,17 +21,17 @@ namespace StrongGrid.Utilities
 		{
 			public WeakReference<HttpRequestMessage> RequestReference { get; set; }
 
-			public string Diagnostic { get; set; }
-
 			public long RequestTimestamp { get; set; }
+
+			public WeakReference<HttpResponseMessage> ResponseReference { get; set; }
 
 			public long ResponseTimestamp { get; set; }
 
-			public DiagnosticInfo(WeakReference<HttpRequestMessage> requestReference, string diagnostic, long requestTimestamp, long responseTimestamp)
+			public DiagnosticInfo(WeakReference<HttpRequestMessage> requestReference, long requestTimestamp, WeakReference<HttpResponseMessage> responseReference, long responseTimestamp)
 			{
 				RequestReference = requestReference;
-				Diagnostic = diagnostic;
 				RequestTimestamp = requestTimestamp;
+				ResponseReference = responseReference;
 				ResponseTimestamp = responseTimestamp;
 			}
 		}
@@ -73,17 +72,8 @@ namespace StrongGrid.Utilities
 			var diagnosticId = Guid.NewGuid().ToString("N");
 			request.WithHeader(DIAGNOSTIC_ID_HEADER_NAME, diagnosticId);
 
-			// Log the request
-			var httpRequest = request.Message;
-			var diagnostic = new StringBuilder();
-
-			diagnostic.AppendLine("REQUEST:");
-			diagnostic.AppendLine($"  {httpRequest.Method.Method} {httpRequest.RequestUri} HTTP/{httpRequest.Version}");
-			LogHeaders(diagnostic, httpRequest.Headers);
-			LogContent(diagnostic, httpRequest.Content);
-
 			// Add the diagnostic info to our cache
-			DiagnosticsInfo.TryAdd(diagnosticId, new DiagnosticInfo(new WeakReference<HttpRequestMessage>(request.Message), diagnostic.ToString(), Stopwatch.GetTimestamp(), long.MinValue));
+			DiagnosticsInfo.TryAdd(diagnosticId, new DiagnosticInfo(new WeakReference<HttpRequestMessage>(request.Message), Stopwatch.GetTimestamp(), null, long.MinValue));
 		}
 
 		/// <summary>Method invoked just after the HTTP response is received. This method can modify the incoming HTTP response.</summary>
@@ -92,104 +82,72 @@ namespace StrongGrid.Utilities
 		public void OnResponse(IResponse response, bool httpErrorAsException)
 		{
 			var responseTimestamp = Stopwatch.GetTimestamp();
-			var httpResponse = response.Message;
 
 			var diagnosticId = response.Message.RequestMessage.Headers.GetValue(DIAGNOSTIC_ID_HEADER_NAME);
 			if (DiagnosticsInfo.TryGetValue(diagnosticId, out DiagnosticInfo diagnosticInfo))
 			{
-				var updatedDiagnostic = new StringBuilder(diagnosticInfo.Diagnostic);
-				try
+				if (!diagnosticInfo.RequestReference.TryGetTarget(out HttpRequestMessage request))
 				{
-					// Log the response
-					updatedDiagnostic.AppendLine();
-					updatedDiagnostic.AppendLine("RESPONSE:");
-					updatedDiagnostic.AppendLine($"  HTTP/{httpResponse.Version} {(int)httpResponse.StatusCode} {httpResponse.ReasonPhrase}");
-					LogHeaders(updatedDiagnostic, httpResponse.Headers);
-					LogContent(updatedDiagnostic, httpResponse.Content);
-
-					// Calculate how much time elapsed between request and response
-					var elapsed = TimeSpan.FromTicks(responseTimestamp - diagnosticInfo.RequestTimestamp);
-
-					// Log diagnostic
-					updatedDiagnostic.AppendLine();
-					updatedDiagnostic.AppendLine("DIAGNOSTIC:");
-					updatedDiagnostic.AppendLine($"  The request took {elapsed.ToDurationString()}");
+					_logger.LogDebug("The HTTP request was garbage-collected before StrongGrid could log debugging information about this request");
 				}
-				catch (Exception e)
-				{
-					Debug.WriteLine("{0}\r\nAN EXCEPTION OCCURRED: {1}\r\n{0}", new string('=', 50), e.GetBaseException().Message);
-					updatedDiagnostic.AppendLine($"AN EXCEPTION OCCURRED: {e.GetBaseException().Message}");
-
-					if (_logger.IsEnabled(LogLevel.Error))
-					{
-						_logger.LogError(e, "An exception occurred when inspecting the response from SendGrid");
-					}
-				}
-				finally
+				else
 				{
 					var logLevel = response.IsSuccessStatusCode ? _logLevelSuccessfulCalls : _logLevelFailedCalls;
 					if (_logger.IsEnabled(logLevel))
 					{
-						_logger.Log(logLevel, updatedDiagnostic.ToString()
-							.Replace("{", "{{")
-							.Replace("}", "}}"));
+						// Calculate the size of the content
+						var requestContentLength = request.Content?.Headers?.ContentLength.GetValueOrDefault(0) ?? 0;
+						var responseContentLength = response.Message?.Content?.Headers?.ContentLength.GetValueOrDefault(0) ?? 0;
+
+						// Scrub sensitive information from headers
+						var safeRequestHeaders = request.Headers?.Where(kvp => !kvp.Key.Equals("authorization", StringComparison.OrdinalIgnoreCase)).Select(kvp => new KeyValuePair<string, string>(kvp.Key, string.Join(", ", kvp.Value)))
+							.Union(request.Headers?.Where(kvp => kvp.Key.Equals("authorization", StringComparison.OrdinalIgnoreCase)).Select(kvp => new KeyValuePair<string, string>(kvp.Key, "...redacted for security reasons...")))
+							.ToList();
+
+						var safeResponseHeaders = response.Message?.Headers?.Where(kvp => !kvp.Key.Equals("authorization", StringComparison.OrdinalIgnoreCase)).Select(kvp => new KeyValuePair<string, string>(kvp.Key, string.Join(", ", kvp.Value)))
+							.Union(response.Message?.Headers?.Where(kvp => kvp.Key.Equals("authorization", StringComparison.OrdinalIgnoreCase)).Select(kvp => new KeyValuePair<string, string>(kvp.Key, "...redacted for security reasons...")))
+							.ToList();
+
+						// Make sure the Content-Length header is present
+						if (!safeRequestHeaders.Any(kvp => kvp.Key.Equals("Content-Length", StringComparison.OrdinalIgnoreCase)))
+						{
+							safeRequestHeaders.Add(new KeyValuePair<string, string>("Content-Length", requestContentLength.ToString()));
+						}
+
+						if (!safeResponseHeaders.Any(kvp => kvp.Key.Equals("Content-Length", StringComparison.OrdinalIgnoreCase)))
+						{
+							safeResponseHeaders.Add(new KeyValuePair<string, string>("Content-Length", responseContentLength.ToString()));
+						}
+
+						// Log the request and response
+						using (_logger.BeginScope("{RequestHeaders}", safeRequestHeaders))
+						{
+							var requestContent = ((requestContentLength > 0 ? request.Content.ReadAsStringAsync(null).GetAwaiter().GetResult() : null) ?? "<NULL>").TrimEnd('\r', '\n'); ;
+							_logger.Log(logLevel, "REQUEST SENT BY STRONGGRID: {HttpMethod} {RequestUri} HTTP/{HttpVersion}\r\nCONTENT OF THE REQUEST: {Content}", request.Method.Method, request.RequestUri, request.Version, requestContent);
+
+							using (_logger.BeginScope("{ResponseHeaders}", safeResponseHeaders))
+							{
+								var elapsed = TimeSpan.FromTicks(responseTimestamp - diagnosticInfo.RequestTimestamp);
+								var responseContent = ((responseContentLength > 0 ? response.Message.Content.ReadAsStringAsync(null).GetAwaiter().GetResult() : null) ?? "<NULL>").TrimEnd('\r', '\n');
+								_logger.Log(logLevel, "RESPONSE FROM SENDGRID: HTTP/{HttpVersion} {StatusCode} {ReasonPhrase}\r\nCONTENT OF THE RESPONSE: {Content}\r\nDIAGNOSTIC: The request took {Elapsed}", response.Message.Version, (int)response.Message.StatusCode, response.Message.ReasonPhrase, responseContent, elapsed.ToDurationString());
+							}
+						}
+
+						// Update the cached diagnostic info
+						DiagnosticsInfo.TryUpdate(
+							diagnosticId,
+							new DiagnosticInfo(diagnosticInfo.RequestReference, diagnosticInfo.RequestTimestamp, new WeakReference<HttpResponseMessage>(response.Message), responseTimestamp),
+							diagnosticInfo);
 					}
-
-					DiagnosticsInfo.TryUpdate(
-						diagnosticId,
-						new DiagnosticInfo(diagnosticInfo.RequestReference, updatedDiagnostic.ToString(), diagnosticInfo.RequestTimestamp, responseTimestamp),
-						diagnosticInfo);
 				}
-			}
 
-			Cleanup();
+				Cleanup();
+			}
 		}
 
 		#endregion
 
 		#region PRIVATE METHODS
-
-		private static void LogHeaders(StringBuilder diagnostic, HttpHeaders httpHeaders)
-		{
-			if (httpHeaders != null)
-			{
-				foreach (var header in httpHeaders)
-				{
-					if (header.Key.Equals("authorization", StringComparison.OrdinalIgnoreCase))
-					{
-						diagnostic.AppendLine($"  {header.Key}: ...redacted for security reasons...");
-					}
-					else
-					{
-						diagnostic.AppendLine($"  {header.Key}: {string.Join(", ", header.Value)}");
-					}
-				}
-			}
-		}
-
-		private static void LogContent(StringBuilder diagnostic, HttpContent httpContent)
-		{
-			if (httpContent == null)
-			{
-				diagnostic.AppendLine("  Content-Length: 0");
-			}
-			else
-			{
-				LogHeaders(diagnostic, httpContent.Headers);
-
-				var contentLength = httpContent.Headers?.ContentLength.GetValueOrDefault(0) ?? 0;
-				if (!httpContent.Headers?.Contains("Content-Length") ?? false)
-				{
-					diagnostic.AppendLine($"  Content-Length: {contentLength}");
-				}
-
-				if (contentLength > 0)
-				{
-					diagnostic.AppendLine();
-					diagnostic.AppendLine(httpContent.ReadAsStringAsync(null).GetAwaiter().GetResult() ?? "<NULL>");
-				}
-			}
-		}
 
 		private static void Cleanup()
 		{
