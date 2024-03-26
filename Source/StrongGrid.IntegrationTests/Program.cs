@@ -115,7 +115,7 @@ namespace StrongGrid.IntegrationTests
 			if (!string.IsNullOrEmpty(instrumentationKey))
 			{
 				var applicationInsightsTarget = new ApplicationInsightsTarget() { InstrumentationKey = instrumentationKey, Name = "StrongGrid" };
-				applicationInsightsTarget.ContextProperties.Add(new Microsoft.ApplicationInsights.NLogTarget.TargetPropertyWithContext("source", "StrongGrid_integration_tests"));
+				applicationInsightsTarget.ContextProperties.Add(new Microsoft.ApplicationInsights.NLogTarget.TargetPropertyWithContext("Source", "StrongGrid_integration_tests"));
 				applicationInsightsTarget.ContextProperties.Add(new Microsoft.ApplicationInsights.NLogTarget.TargetPropertyWithContext("StrongGrid-Version", StrongGrid.Client.Version));
 
 				nLogConfig.AddTarget("ApplicationInsights", applicationInsightsTarget);
@@ -170,7 +170,7 @@ namespace StrongGrid.IntegrationTests
 				// Default: 1
 
 				datadogTarget.Headers.Add(new MethodCallParameter("Content-Type", Layout.FromString("application/json")));
-				datadogTarget.Headers.Add(new MethodCallParameter("source", "StrongGrid_integration_tests"));
+				datadogTarget.Headers.Add(new MethodCallParameter("Source", "StrongGrid_integration_tests"));
 				datadogTarget.Headers.Add(new MethodCallParameter("StrongGrid-Version", StrongGrid.Client.Version));
 
 				nLogConfig.AddTarget("DataDog", datadogTarget);
