@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace StrongGrid.Utilities
 {
@@ -33,6 +35,106 @@ namespace StrongGrid.Utilities
 				RequestTimestamp = requestTimestamp;
 				ResponseReference = responseReference;
 				ResponseTimestamp = responseTimestamp;
+			}
+
+			public string GetLoggingTemplate()
+			{
+				RequestReference.TryGetTarget(out HttpRequestMessage request);
+				ResponseReference.TryGetTarget(out HttpResponseMessage response);
+
+				var logTemplate = new StringBuilder();
+
+				if (request != null)
+				{
+					logTemplate.AppendLine("REQUEST SENT BY STRONGGRID: {Request_HttpMethod} {Request_Uri} HTTP/{Request_HttpVersion}");
+					logTemplate.AppendLine("REQUEST HEADERS:");
+					request.Headers
+						.Where(kvp => !kvp.Key.Equals("authorization", StringComparison.OrdinalIgnoreCase))
+						.OrderBy(kvp => kvp.Key)
+						.Select(kvp => kvp.Key)
+						.ToList()
+						.ForEach(key => logTemplate.AppendLine("  " + key + ": {Request_Header_" + key + "}"));
+					logTemplate.AppendLine("REQUEST: {Request_Content}");
+					logTemplate.AppendLine();
+				}
+
+				if (response != null)
+				{
+					logTemplate.AppendLine("RESPONSE FROM SENDGRID: HTTP/{Response_HttpVersion} {Response_StatusCode} {Response_ReasonPhrase}");
+					logTemplate.AppendLine("RESPONSE HEADERS:");
+					response.Headers
+						.Where(kvp => !kvp.Key.Equals("authorization", StringComparison.OrdinalIgnoreCase))
+						.OrderBy(kvp => kvp.Key)
+						.Select(kvp => kvp.Key)
+						.ToList()
+						.ForEach(key => logTemplate.AppendLine("  " + key + ": {Response_Header_" + key + "}"));
+					logTemplate.AppendLine("RESPONSE: {Response_Content}");
+					logTemplate.AppendLine();
+				}
+
+				logTemplate.AppendLine("DIAGNOSTIC: The request took {Diagnostic_Elapsed:N} milliseconds");
+
+				return logTemplate.ToString();
+			}
+
+			public object[] GetLoggingParameters()
+			{
+				RequestReference.TryGetTarget(out HttpRequestMessage request);
+				ResponseReference.TryGetTarget(out HttpResponseMessage response);
+
+				// Calculate the size of the content
+				var requestContentLength = request?.Content?.Headers?.ContentLength.GetValueOrDefault(0) ?? 0;
+				var responseContentLength = response?.Content?.Headers?.ContentLength.GetValueOrDefault(0) ?? 0;
+
+				// Get the content to the request/response and calculate how long it took to get the response
+				var elapsed = TimeSpan.FromTicks(ResponseTimestamp - RequestTimestamp);
+				var requestContent = (request?.Content?.ReadAsStringAsync(null).GetAwaiter().GetResult() ?? "<NULL>").TrimEnd('\r', '\n');
+				var responseContent = (response?.Content?.ReadAsStringAsync(null).GetAwaiter().GetResult() ?? "<NULL>").TrimEnd('\r', '\n');
+
+				// The order of these values must match the order in which they appear in the logging template
+				var logParams = new List<object>();
+
+				if (request != null)
+				{
+					logParams.AddRange([request.Method.Method, request.RequestUri, request.Version]);
+					logParams.AddRange(request.Headers
+							.Where(kvp => !kvp.Key.Equals("authorization", StringComparison.OrdinalIgnoreCase))
+							.OrderBy(kvp => kvp.Key)
+							.Select(kvp => string.Join(", ", kvp.Value))
+							.ToArray());
+					logParams.Add(requestContent);
+				}
+
+				if (response != null)
+				{
+					logParams.AddRange([response.Version, (int)response.StatusCode, response.ReasonPhrase]);
+					logParams.AddRange(response.Headers
+							.Where(kvp => !kvp.Key.Equals("authorization", StringComparison.OrdinalIgnoreCase))
+							.OrderBy(kvp => kvp.Key)
+							.Select(kvp => string.Join(", ", kvp.Value))
+							.ToList());
+					logParams.Add(responseContent);
+				}
+
+				logParams.Add(elapsed.TotalMilliseconds);
+
+				return logParams.ToArray();
+			}
+
+			public string GetFormattedLog()
+			{
+				var formattedLog = GetLoggingTemplate();
+				var args = GetLoggingParameters();
+
+				var pattern = @"(.*?{)(\w+?.+?)(}.*)";
+				for (var i = 0; i < args.Length; i++)
+				{
+					formattedLog = Regex.Replace(formattedLog, pattern, $"$1 {i} $3", RegexOptions.None);
+				}
+
+				formattedLog = formattedLog.Replace("{ ", "{").Replace(" }", "}");
+
+				return string.Format(formattedLog, args);
 			}
 		}
 
@@ -86,59 +188,18 @@ namespace StrongGrid.Utilities
 			var diagnosticId = response.Message.RequestMessage.Headers.GetValue(DIAGNOSTIC_ID_HEADER_NAME);
 			if (DiagnosticsInfo.TryGetValue(diagnosticId, out DiagnosticInfo diagnosticInfo))
 			{
-				if (!diagnosticInfo.RequestReference.TryGetTarget(out HttpRequestMessage request))
+				// Update the cached diagnostic info
+				diagnosticInfo.ResponseReference = new WeakReference<HttpResponseMessage>(response.Message);
+				DiagnosticsInfo[diagnosticId] = diagnosticInfo;
+
+				// Log
+				var logLevel = response.IsSuccessStatusCode ? _logLevelSuccessfulCalls : _logLevelFailedCalls;
+				if (_logger.IsEnabled(logLevel))
 				{
-					_logger.LogDebug("The HTTP request was garbage-collected before StrongGrid could log debugging information about this request");
-				}
-				else
-				{
-					var logLevel = response.IsSuccessStatusCode ? _logLevelSuccessfulCalls : _logLevelFailedCalls;
-					if (_logger.IsEnabled(logLevel))
-					{
-						// Calculate the size of the content
-						var requestContentLength = request.Content?.Headers?.ContentLength.GetValueOrDefault(0) ?? 0;
-						var responseContentLength = response.Message?.Content?.Headers?.ContentLength.GetValueOrDefault(0) ?? 0;
+					var template = diagnosticInfo.GetLoggingTemplate();
+					var parameters = diagnosticInfo.GetLoggingParameters();
 
-						// Scrub sensitive information from headers
-						var safeRequestHeaders = request.Headers?.Where(kvp => !kvp.Key.Equals("authorization", StringComparison.OrdinalIgnoreCase)).Select(kvp => new KeyValuePair<string, string>(kvp.Key, string.Join(", ", kvp.Value)))
-							.Union(request.Headers?.Where(kvp => kvp.Key.Equals("authorization", StringComparison.OrdinalIgnoreCase)).Select(kvp => new KeyValuePair<string, string>(kvp.Key, "...redacted for security reasons...")))
-							.ToList();
-
-						var safeResponseHeaders = response.Message?.Headers?.Where(kvp => !kvp.Key.Equals("authorization", StringComparison.OrdinalIgnoreCase)).Select(kvp => new KeyValuePair<string, string>(kvp.Key, string.Join(", ", kvp.Value)))
-							.Union(response.Message?.Headers?.Where(kvp => kvp.Key.Equals("authorization", StringComparison.OrdinalIgnoreCase)).Select(kvp => new KeyValuePair<string, string>(kvp.Key, "...redacted for security reasons...")))
-							.ToList();
-
-						// Make sure the Content-Length header is present
-						if (!safeRequestHeaders.Any(kvp => kvp.Key.Equals("Content-Length", StringComparison.OrdinalIgnoreCase)))
-						{
-							safeRequestHeaders.Add(new KeyValuePair<string, string>("Content-Length", requestContentLength.ToString()));
-						}
-
-						if (!safeResponseHeaders.Any(kvp => kvp.Key.Equals("Content-Length", StringComparison.OrdinalIgnoreCase)))
-						{
-							safeResponseHeaders.Add(new KeyValuePair<string, string>("Content-Length", responseContentLength.ToString()));
-						}
-
-						// Log the request and response
-						using (_logger.BeginScope("{RequestHeaders}", safeRequestHeaders))
-						{
-							var requestContent = ((requestContentLength > 0 ? request.Content.ReadAsStringAsync(null).GetAwaiter().GetResult() : null) ?? "<NULL>").TrimEnd('\r', '\n'); ;
-							_logger.Log(logLevel, "REQUEST SENT BY STRONGGRID: {HttpMethod} {RequestUri} HTTP/{HttpVersion}\r\nCONTENT OF THE REQUEST: {Content}", request.Method.Method, request.RequestUri, request.Version, requestContent);
-
-							using (_logger.BeginScope("{ResponseHeaders}", safeResponseHeaders))
-							{
-								var elapsed = TimeSpan.FromTicks(responseTimestamp - diagnosticInfo.RequestTimestamp);
-								var responseContent = ((responseContentLength > 0 ? response.Message.Content.ReadAsStringAsync(null).GetAwaiter().GetResult() : null) ?? "<NULL>").TrimEnd('\r', '\n');
-								_logger.Log(logLevel, "RESPONSE FROM SENDGRID: HTTP/{HttpVersion} {StatusCode} {ReasonPhrase}\r\nCONTENT OF THE RESPONSE: {Content}\r\nDIAGNOSTIC: The request took {Elapsed}", response.Message.Version, (int)response.Message.StatusCode, response.Message.ReasonPhrase, responseContent, elapsed.ToDurationString());
-							}
-						}
-
-						// Update the cached diagnostic info
-						DiagnosticsInfo.TryUpdate(
-							diagnosticId,
-							new DiagnosticInfo(diagnosticInfo.RequestReference, diagnosticInfo.RequestTimestamp, new WeakReference<HttpResponseMessage>(response.Message), responseTimestamp),
-							diagnosticInfo);
-					}
+					_logger.Log(logLevel, template, parameters);
 				}
 
 				Cleanup();
