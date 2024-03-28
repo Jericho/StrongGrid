@@ -196,7 +196,7 @@ namespace StrongGrid.UnitTests.Resources
 			var webhooks = new WebhookSettings(client);
 
 			// Act
-			await webhooks.SendEventTestAsync(url, null, CancellationToken.None);
+			await webhooks.SendEventTestAsync(url, null, null, null, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
