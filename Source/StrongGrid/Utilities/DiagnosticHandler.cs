@@ -2,7 +2,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Pathoschild.Http.Client;
 using Pathoschild.Http.Client.Extensibility;
-using StrongGrid;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -104,7 +103,7 @@ namespace StrongGrid.Utilities
 				var requestContentLength = requestContent?.Length ?? 0;
 				var responseContentLength = responseContent?.Length ?? 0;
 
-				// Get the request headers
+				// Get the request headers (please note: intentionally getting headers from "response.RequestMessage" rather than "request")
 				var requestHeaders = response?.RequestMessage?.Headers ?? Enumerable.Empty<KeyValuePair<string, IEnumerable<string>>>();
 				if (!requestHeaders.Any(kvp => string.Equals(kvp.Key, "Content-Length", StringComparison.OrdinalIgnoreCase)))
 				{
@@ -128,7 +127,7 @@ namespace StrongGrid.Utilities
 							.OrderBy(kvp => kvp.Key)
 							.Select(kvp => kvp.Key.Equals("authorization", StringComparison.OrdinalIgnoreCase) ? "... omitted for security reasons ..." : string.Join(", ", kvp.Value))
 							.ToArray());
-					logParams.Add(requestContent?.TrimEnd('\r', '\n') ?? "<NULL>");
+					logParams.Add(requestContent?.TrimEnd('\r', '\n'));
 				}
 
 				if (response != null)
@@ -138,7 +137,7 @@ namespace StrongGrid.Utilities
 							.OrderBy(kvp => kvp.Key)
 							.Select(kvp => kvp.Key.Equals("authorization", StringComparison.OrdinalIgnoreCase) ? "... omitted for security reasons ..." : string.Join(", ", kvp.Value))
 							.ToList());
-					logParams.Add(responseContent?.TrimEnd('\r', '\n') ?? "<NULL>");
+					logParams.Add(responseContent?.TrimEnd('\r', '\n'));
 				}
 
 				logParams.Add(elapsed.TotalMilliseconds);
