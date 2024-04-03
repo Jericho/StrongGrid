@@ -107,7 +107,7 @@ namespace StrongGrid.IntegrationTests
 				logzioTarget.ContextProperties.Add(new NLog.Targets.TargetPropertyWithContext("StrongGrid-Version", StrongGrid.Client.Version));
 
 				nLogConfig.AddTarget("Logzio", logzioTarget);
-				nLogConfig.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, logzioTarget, "*");
+				nLogConfig.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, logzioTarget, "*");
 			}
 
 			// Send logs to Azure Insights
@@ -119,7 +119,7 @@ namespace StrongGrid.IntegrationTests
 				applicationInsightsTarget.ContextProperties.Add(new Microsoft.ApplicationInsights.NLogTarget.TargetPropertyWithContext("StrongGrid-Version", StrongGrid.Client.Version));
 
 				nLogConfig.AddTarget("ApplicationInsights", applicationInsightsTarget);
-				nLogConfig.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, "ApplicationInsights", "*");
+				nLogConfig.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, applicationInsightsTarget, "*");
 			}
 
 			// Send logs to DataDog
@@ -174,7 +174,7 @@ namespace StrongGrid.IntegrationTests
 				datadogTarget.Headers.Add(new MethodCallParameter("StrongGrid-Version", StrongGrid.Client.Version));
 
 				nLogConfig.AddTarget("DataDog", datadogTarget);
-				nLogConfig.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, "DataDog", "*");
+				nLogConfig.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, datadogTarget, "*");
 			}
 
 			// Send logs to console
