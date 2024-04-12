@@ -30,8 +30,8 @@ namespace StrongGrid.IntegrationTests.Tests
 			}
 
 			// ========== VERY IMPORTANT ==========
-			// You must manually whitelist your IP address in your SendGrid account in the web interface before we
-			// attempt to whitelist an IP via the API. Otherwise, whitelisting an IP address could effectively lock
+			// You must manually whitelist at least one IP address in your SendGrid account in the web interface before
+			// we attempt to whitelist your IP via the API. Otherwise, whitelisting an IP address could effectively lock
 			// you out of your own account. Trust me, it happened to me and it took a week of back and forth with
 			// SendGrid support before they agreed that I was the legitimate owner of my own account and they restored
 			// access to my account. That's the reason why the following code will only run if we find other whitelisted
@@ -47,7 +47,7 @@ namespace StrongGrid.IntegrationTests.Tests
 				await log.WriteLineAsync("").ConfigureAwait(false);
 				await log.WriteLineAsync("CAUTION: do not attempt to manually configure whitelisted IP addresses if you are unsure how to do it or if you").ConfigureAwait(false);
 				await log.WriteLineAsync("don't know how to get your public IP address or if you suspect your ISP may change your assigned IP address from").ConfigureAwait(false);
-				await log.WriteLineAsync("time to time because there is a strong posibility you could lock yourself out your account.").ConfigureAwait(false);
+				await log.WriteLineAsync("time to time because THERE IS A STRONG POSSIBILITY YOU COULD LOCK YOURSELF OUT OF YOUR ACCOUNT.").ConfigureAwait(false);
 				await log.WriteLineAsync("========================================================================\n").ConfigureAwait(false);
 			}
 			else
