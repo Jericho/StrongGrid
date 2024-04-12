@@ -29,7 +29,7 @@ namespace StrongGrid.Json
 				}
 			}
 
-			throw new Exception("Unable to convert to Event(s)");
+			throw new JsonException("Unable to convert to Event(s)");
 		}
 
 		private static Event Convert(JsonElement jsonElement, JsonSerializerOptions options)
@@ -75,7 +75,7 @@ namespace StrongGrid.Json
 					emailActivityEvent = jsonElement.ToObject<GroupResubscribeEvent>(options);
 					break;
 				default:
-					throw new Exception($"{eventTypeAsString} is an unknown event type");
+					throw new JsonException($"{eventTypeAsString} is an unknown event type");
 			}
 
 			return emailActivityEvent;

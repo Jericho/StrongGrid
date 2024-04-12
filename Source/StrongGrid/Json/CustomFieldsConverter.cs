@@ -46,7 +46,7 @@ namespace StrongGrid.Json
 					}
 					else
 					{
-						throw new Exception($"{propertyKind} is an unknown field type");
+						throw new JsonException($"{propertyKind} is an unknown field type");
 					}
 
 					fields.Add(field);

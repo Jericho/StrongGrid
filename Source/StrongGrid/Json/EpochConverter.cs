@@ -14,11 +14,16 @@ namespace StrongGrid.Json
 		{
 			switch (reader.TokenType)
 			{
+				case JsonTokenType.None:
+				case JsonTokenType.Null:
+					throw new JsonException($"Unable to convert a null value into a date");
+
 				case JsonTokenType.Number:
 					var secondsSinceEpoch = reader.GetInt64();
 					return secondsSinceEpoch.FromUnixTime();
+
 				default:
-					throw new Exception($"Unable to convert {reader.TokenType.ToEnumString()} to DateTime");
+					throw new JsonException($"Unable to convert {reader.TokenType.ToEnumString()} into a date");
 			}
 		}
 
