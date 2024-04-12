@@ -17,13 +17,6 @@ namespace StrongGrid.IntegrationTests
 		private const int TEST_NAME_MAX_LENGTH = 25;
 		private const string SUCCESSFUL_TEST_MESSAGE = "Completed successfully";
 
-		private enum ResultCodes
-		{
-			Success = 0,
-			Exception = 1,
-			Cancelled = 1223
-		}
-
 		private readonly ILoggerFactory _loggerFactory;
 
 		public TestsRunner(ILoggerFactory loggerFactory)
