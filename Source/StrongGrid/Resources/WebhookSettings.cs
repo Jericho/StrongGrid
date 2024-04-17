@@ -32,45 +32,31 @@ namespace StrongGrid.Resources
 			_client = client;
 		}
 
-		/// <summary>
-		/// Get the current event webhook settings.
-		/// </summary>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// The <see cref="EventWebhookSettings" />.
-		/// </returns>
-		public Task<EventWebhookSettings> GetEventWebhookSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
+		/// <inheritdoc/>
+		public Task<EventWebhookSettings> GetEventWebhookSettingsAsync(string id, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			var endpointUrl = $"{_eventWebhookEndpoint}/settings";
+			if (!string.IsNullOrEmpty(id)) endpointUrl += $"/{id}";
+
 			return _client
-				.GetAsync($"{_eventWebhookEndpoint}/settings")
+				.GetAsync(endpointUrl)
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsObject<EventWebhookSettings>();
 		}
 
-		/// <summary>
-		/// Change the event webhook settings.
-		/// </summary>
-		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
-		/// <param name="url">the webhook endpoint url.</param>
-		/// <param name="bounce">if set to <c>true</c> [bounce].</param>
-		/// <param name="click">if set to <c>true</c> [click].</param>
-		/// <param name="deferred">if set to <c>true</c> [deferred].</param>
-		/// <param name="delivered">if set to <c>true</c> [delivered].</param>
-		/// <param name="dropped">if set to <c>true</c> [dropped].</param>
-		/// <param name="groupResubscribe">if set to <c>true</c> [groupResubscribe].</param>
-		/// <param name="groupUnsubscribe">if set to <c>true</c> [groupUnsubscribe].</param>
-		/// <param name="open">if set to <c>true</c> [open].</param>
-		/// <param name="processed">if set to <c>true</c> [processed].</param>
-		/// <param name="spamReport">if set to <c>true</c> [spamReport].</param>
-		/// <param name="unsubscribe">if set to <c>true</c> [unsubscribe].</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// The <see cref="EventWebhookSettings" />.
-		/// </returns>
-		public Task<EventWebhookSettings> UpdateEventWebhookSettingsAsync(
+		/// <inheritdoc/>
+		public Task<EventWebhookSettings[]> GetAllEventWebhookSettingsAsync(string onBehalfOf = null, CancellationToken cancellationToken = default)
+		{
+			return _client
+				.GetAsync($"{_eventWebhookEndpoint}/settings/all")
+				.OnBehalfOf(onBehalfOf)
+				.WithCancellationToken(cancellationToken)
+				.AsObject<EventWebhookSettings[]>("webhooks");
+		}
+
+		/// <inheritdoc/>
+		public Task<EventWebhookSettings> CreateEventWebhookSettingsAsync(
 			bool enabled,
 			string url,
 			bool bounce = default,
@@ -84,10 +70,16 @@ namespace StrongGrid.Resources
 			bool processed = default,
 			bool spamReport = default,
 			bool unsubscribe = default,
+			string friendlyName = null,
+			string oAuthClientId = null,
+			string oAuthClientSecret = null,
+			string oAuthTokenUrl = null,
 			string onBehalfOf = null,
 			CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
+
+			var endpointUrl = $"{_eventWebhookEndpoint}/settings";
 
 			var eventWebhookSettings = new EventWebhookSettings
 			{
@@ -98,37 +90,116 @@ namespace StrongGrid.Resources
 				Deferred = deferred,
 				Delivered = delivered,
 				Dropped = dropped,
+				FriendlyName = friendlyName,
 				GroupResubscribe = groupResubscribe,
 				GroupUnsubscribe = groupUnsubscribe,
 				Open = open,
 				Processed = processed,
 				SpamReport = spamReport,
-				Unsubscribe = unsubscribe
+				Unsubscribe = unsubscribe,
+				OauthClientId = oAuthClientId,
+				OauthTokenUrl = oAuthTokenUrl,
 			};
 
+			var jsonObject = eventWebhookSettings.ToStrongGridJsonObject();
+			jsonObject.AddProperty("oauth_client_secret", oAuthClientSecret);
+
 			return _client
-				.PatchAsync($"{_eventWebhookEndpoint}/settings")
+				.PostAsync(endpointUrl)
 				.OnBehalfOf(onBehalfOf)
-				.WithJsonBody(eventWebhookSettings)
+				.WithJsonBody(jsonObject)
 				.WithCancellationToken(cancellationToken)
 				.AsObject<EventWebhookSettings>();
 		}
 
-		/// <summary>
-		/// Sends a fake event notification post to the provided URL.
-		/// </summary>
-		/// <param name="url">the event notification endpoint url.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// The async task.
-		/// </returns>
-		public Task SendEventTestAsync(string url, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		/// <inheritdoc/>
+		public Task<EventWebhookSettings> UpdateEventWebhookSettingsAsync(
+			string id,
+			bool enabled,
+			string url,
+			bool bounce = default,
+			bool click = default,
+			bool deferred = default,
+			bool delivered = default,
+			bool dropped = default,
+			bool groupResubscribe = default,
+			bool groupUnsubscribe = default,
+			bool open = default,
+			bool processed = default,
+			bool spamReport = default,
+			bool unsubscribe = default,
+			string friendlyName = null,
+			string oAuthClientId = null,
+			string oAuthClientSecret = null,
+			string oAuthTokenUrl = null,
+			string onBehalfOf = null,
+			CancellationToken cancellationToken = default)
+		{
+			if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
+
+			var endpointUrl = $"{_eventWebhookEndpoint}/settings";
+			if (!string.IsNullOrEmpty(id)) endpointUrl += $"/{id}";
+
+			var eventWebhookSettings = new EventWebhookSettings
+			{
+				Id = id,
+				Enabled = enabled,
+				Url = url,
+				Bounce = bounce,
+				Click = click,
+				Deferred = deferred,
+				Delivered = delivered,
+				Dropped = dropped,
+				FriendlyName = friendlyName,
+				GroupResubscribe = groupResubscribe,
+				GroupUnsubscribe = groupUnsubscribe,
+				Open = open,
+				Processed = processed,
+				SpamReport = spamReport,
+				Unsubscribe = unsubscribe,
+				OauthClientId = oAuthClientId,
+				OauthTokenUrl = oAuthTokenUrl,
+			};
+
+			var jsonObject = eventWebhookSettings.ToStrongGridJsonObject();
+			jsonObject.AddProperty("oauth_client_secret", oAuthClientSecret);
+
+			return _client
+				.PatchAsync(endpointUrl)
+				.OnBehalfOf(onBehalfOf)
+				.WithJsonBody(jsonObject)
+				.WithCancellationToken(cancellationToken)
+				.AsObject<EventWebhookSettings>();
+		}
+
+		/// <inheritdoc/>
+		public Task ToggleEventWebhookSignatureVerificationAsync(string id, bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		{
+			var endpointUrl = $"{_eventWebhookEndpoint}/settings/signed";
+			if (!string.IsNullOrEmpty(id)) endpointUrl += $"/{id}";
+
+			var data = new StrongGridJsonObject();
+			data.AddProperty("enabled", enabled);
+
+			return _client
+				.PatchAsync(endpointUrl)
+				.OnBehalfOf(onBehalfOf)
+				.WithJsonBody(data)
+				.WithCancellationToken(cancellationToken)
+				.AsMessage();
+		}
+
+		/// <inheritdoc/>
+		public Task SendEventTestAsync(string id, string url, string oAuthClientId = null, string oAuthClientSecret = null, string oAuthTokenUrl = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
 
 			var data = new StrongGridJsonObject();
+			data.AddProperty("id", id);
 			data.AddProperty("url", url);
+			data.AddProperty("oauth_client_id", oAuthClientId);
+			data.AddProperty("oauth_client_secret", oAuthClientSecret);
+			data.AddProperty("oauth_token_url", oAuthTokenUrl);
 
 			return _client
 				.PostAsync($"{_eventWebhookEndpoint}/test")
@@ -155,7 +226,7 @@ namespace StrongGrid.Resources
 			if (string.IsNullOrEmpty(hostname)) throw new ArgumentNullException(nameof(hostname));
 			if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
 
-			var data = ConvertToJson(hostname, url, spamCheck, sendRaw);
+			var data = ConvertInboundParseSettingsToJson(hostname, url, spamCheck, sendRaw);
 			return _client
 				.PostAsync($"{_inboundParseWebhookEndpoint}/settings")
 				.OnBehalfOf(onBehalfOf)
@@ -217,7 +288,7 @@ namespace StrongGrid.Resources
 		{
 			if (string.IsNullOrEmpty(hostname)) throw new ArgumentNullException(nameof(hostname));
 
-			var data = ConvertToJson(null, url, spamCheck, sendRaw);
+			var data = ConvertInboundParseSettingsToJson(null, url, spamCheck, sendRaw);
 			return _client
 				.PatchAsync($"{_inboundParseWebhookEndpoint}/settings/{hostname}")
 				.OnBehalfOf(onBehalfOf)
@@ -246,22 +317,32 @@ namespace StrongGrid.Resources
 				.AsMessage();
 		}
 
-		/// <summary>
-		/// Get the signed events public key.
-		/// </summary>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>
-		/// The public key.
-		/// </returns>
-		public Task<string> GetSignedEventsPublicKeyAsync(CancellationToken cancellationToken = default)
+		/// <inheritdoc/>
+		public Task<string> GetSignedEventsPublicKeyAsync(string id, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
+			var endpointUrl = $"{_eventWebhookEndpoint}/settings/signed";
+			if (!string.IsNullOrEmpty(id)) endpointUrl += $"/{id}";
+
 			return _client
-				.GetAsync($"{_eventWebhookEndpoint}/settings/signed")
+				.GetAsync(endpointUrl)
+				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
 				.AsObject<string>("public_key");
 		}
 
-		private static StrongGridJsonObject ConvertToJson(string hostname, Parameter<string> url, Parameter<bool> spamCheck, Parameter<bool> sendRaw)
+		/// <inheritdoc/>
+		public Task DeleteEventWebhookSettingsAsync(string id, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		{
+			if (string.IsNullOrEmpty(id)) throw new ArgumentNullException(nameof(id));
+
+			return _client
+				.DeleteAsync($"{_eventWebhookEndpoint}/settings/{id}")
+				.OnBehalfOf(onBehalfOf)
+				.WithCancellationToken(cancellationToken)
+				.AsMessage();
+		}
+
+		private static StrongGridJsonObject ConvertInboundParseSettingsToJson(string hostname, Parameter<string> url, Parameter<bool> spamCheck, Parameter<bool> sendRaw)
 		{
 			var result = new StrongGridJsonObject();
 			result.AddProperty("hostname", hostname);

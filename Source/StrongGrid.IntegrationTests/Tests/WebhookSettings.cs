@@ -12,26 +12,26 @@ namespace StrongGrid.IntegrationTests.Tests
 
 			await log.WriteLineAsync("\n***** WEBHOOK SETTINGS *****\n").ConfigureAwait(false);
 
-			// GET THE EVENT SETTINGS
-			var eventWebhookSettings = await client.WebhookSettings.GetEventWebhookSettingsAsync(null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync("The event webhook settings have been retrieved.").ConfigureAwait(false);
+			// GET ALL THE EVENT SETTINGS
+			var eventWebhookSettings = await client.WebhookSettings.GetAllEventWebhookSettingsAsync(null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All the event webhook settings have been retrieved. There are {eventWebhookSettings.Length} configured events.").ConfigureAwait(false);
 
-			// GET THE INBOUND PARSE SETTINGS
+			// GET ALL THE INBOUND PARSE SETTINGS
 			var inboundParseWebhookSettings = await client.WebhookSettings.GetAllInboundParseWebhookSettingsAsync(null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync("The inbound parse webhook settings have been retrieved.").ConfigureAwait(false);
+			await log.WriteLineAsync($"All the inbound parse webhook settings have been retrieved. There are {inboundParseWebhookSettings.Length} configured inbound parse.").ConfigureAwait(false);
 
 			// GET THE SIGNED EVENTS PUBLIC KEY
-			var publicKey = await client.WebhookSettings.GetSignedEventsPublicKeyAsync(cancellationToken).ConfigureAwait(false);
+			var publicKey = await client.WebhookSettings.GetSignedEventsPublicKeyAsync(null, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"The signed events public key is: {publicKey}").ConfigureAwait(false);
 
 			// ==================================================
 			// DEBUGGING
 
-			//const string desiredUrl = "https://4934-2001-18c0-41d-f200-ac79-2199-f1fc-c831.ngrok.io/StrongGrid";
+			//const string desiredUrl = "https://3928-2001-18c0-41c-3f00-00-632b.ngrok-free.app/StrongGrid";
 			//const string inboundHostName = "api.stronggrid.com";
 
 			// Uncomment the following line to configure all webhook events to be sent to your desired URL
-			//var updatedEventWebhookSettings = await client.WebhookSettings.UpdateEventWebhookSettingsAsync(true, desiredUrl, true, true, true, true, true, true, true, true, true, true, true, null, cancellationToken).ConfigureAwait(false);
+			//var updatedEventWebhookSettings = await client.WebhookSettings.UpdateEventWebhookSettingsAsync(true, desiredUrl, true, true, true, true, true, true, true, true, true, true, true, "My friendly Name", null, null, null, null, cancellationToken).ConfigureAwait(false);
 
 			// Uncomment the following line to receive a sample webhook at your desired URL
 			//await client.WebhookSettings.SendEventTestAsync(desiredUrl).ConfigureAwait(false);
