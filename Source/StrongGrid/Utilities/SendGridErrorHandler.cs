@@ -23,8 +23,7 @@ namespace StrongGrid.Utilities
 			var (isError, errorMessage) = response.Message.GetErrorMessageAsync().GetAwaiter().GetResult();
 			if (!isError) return;
 
-			var diagnosticInfo = response.GetDiagnosticInfo();
-			var diagnosticLog = diagnosticInfo.Diagnostic ?? "Diagnostic log unavailable";
+			var diagnosticLog = response.GetDiagnosticInfo()?.GetFormattedLog() ?? "Diagnostic log unavailable";
 			throw new SendGridException(errorMessage, response.Message, diagnosticLog);
 		}
 

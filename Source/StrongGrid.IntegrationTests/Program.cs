@@ -1,13 +1,16 @@
 using Logzio.DotNet.NLog;
+using Microsoft.ApplicationInsights.NLogTarget;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Config;
 using NLog.Extensions.Logging;
+using NLog.Layouts;
 using NLog.Targets;
 using System;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -100,11 +103,78 @@ namespace StrongGrid.IntegrationTests
 					JsonKeysCamelCase = true,
 					// ProxyAddress = "http://localhost:8888",
 				};
-				logzioTarget.ContextProperties.Add(new TargetPropertyWithContext("Source", "StrongGrid_integration_tests"));
-				logzioTarget.ContextProperties.Add(new TargetPropertyWithContext("StrongGrid-Version", StrongGrid.Client.Version));
+				logzioTarget.ContextProperties.Add(new NLog.Targets.TargetPropertyWithContext("Source", "StrongGrid_integration_tests"));
+				logzioTarget.ContextProperties.Add(new NLog.Targets.TargetPropertyWithContext("StrongGrid-Version", StrongGrid.Client.Version));
 
 				nLogConfig.AddTarget("Logzio", logzioTarget);
-				nLogConfig.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, logzioTarget, "*");
+				nLogConfig.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, logzioTarget, "*");
+			}
+
+			// Send logs to Azure Insights
+			var instrumentationKey = Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_INSTRUMENTATION_KEY");
+			if (!string.IsNullOrEmpty(instrumentationKey))
+			{
+				var applicationInsightsTarget = new ApplicationInsightsTarget() { InstrumentationKey = instrumentationKey, Name = "StrongGrid" };
+				applicationInsightsTarget.ContextProperties.Add(new Microsoft.ApplicationInsights.NLogTarget.TargetPropertyWithContext("Source", "StrongGrid_integration_tests"));
+				applicationInsightsTarget.ContextProperties.Add(new Microsoft.ApplicationInsights.NLogTarget.TargetPropertyWithContext("StrongGrid-Version", StrongGrid.Client.Version));
+
+				nLogConfig.AddTarget("ApplicationInsights", applicationInsightsTarget);
+				nLogConfig.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, applicationInsightsTarget, "*");
+			}
+
+			// Send logs to DataDog
+			var datadogKey = Environment.GetEnvironmentVariable("DATADOG_APIKEY");
+			if (!string.IsNullOrEmpty(datadogKey))
+			{
+				var datadogTarget = new WebServiceTarget("datadog")
+				{
+					Url = "https://http-intake.logs.us5.datadoghq.com/v1/input",
+					Encoding = Encoding.UTF8,
+					Protocol = WebServiceProtocol.JsonPost,
+					PreAuthenticate = false
+				};
+
+				// DD_API_KEY
+				// Your Datadog API Key for sending your logs to Datadog.
+				datadogTarget.Headers.Add(new MethodCallParameter("DD-API-KEY", Layout.FromString(datadogKey)));
+
+				// DD_SITE
+				// The name of your Datadog site.Choose from one of the following examples:
+				// Example: datadoghq.com(US1), datadoghq.eu(EU), us3.datadoghq.com(US3), us5.datadoghq.com(US5), ddog - gov.com(US1 - FED)
+				// Default: datadoghq.com(US1)
+				datadogTarget.Headers.Add(new MethodCallParameter("DD_SITE", Layout.FromString("us5.datadoghq.com(US5)")));
+
+				// DD_LOGS_DIRECT_SUBMISSION_INTEGRATIONS
+				// Enables Agentless logging.Enable for your logging framework by setting to Serilog, NLog, Log4Net, or ILogger(for Microsoft.Extensions.Logging).
+				// If you are using multiple logging frameworks, use a semicolon separated list of variables.
+				// Example: Serilog; Log4Net; NLog
+				datadogTarget.Headers.Add(new MethodCallParameter("DD_LOGS_DIRECT_SUBMISSION_INTEGRATIONS", Layout.FromString("NLog")));
+
+				// DD_LOGS_DIRECT_SUBMISSION_SOURCE
+				// Sets the parsing rule for submitted logs.
+				// Should always be set to csharp, unless you have a custom pipeline.
+				// Default: csharp
+				datadogTarget.Headers.Add(new MethodCallParameter("DD_LOGS_DIRECT_SUBMISSION_SOURCE", Layout.FromString("csharp")));
+
+				// DD_LOGS_DIRECT_SUBMISSION_MAX_BATCH_SIZE
+				// Sets the maximum number of logs to send at one time.
+				// Takes into account the limits in place for the API.
+				// Default: 1000
+
+				// DD_LOGS_DIRECT_SUBMISSION_MAX_QUEUE_SIZE
+				// Sets the maximum number of logs to hold in the internal queue at any one time before dropping log messages.
+				// Default: 100000
+
+				// DD_LOGS_DIRECT_SUBMISSION_BATCH_PERIOD_SECONDS
+				// Sets the time to wait(in seconds) before checking for new logs to send.
+				// Default: 1
+
+				datadogTarget.Headers.Add(new MethodCallParameter("Content-Type", Layout.FromString("application/json")));
+				datadogTarget.Headers.Add(new MethodCallParameter("Source", "StrongGrid_integration_tests"));
+				datadogTarget.Headers.Add(new MethodCallParameter("StrongGrid-Version", StrongGrid.Client.Version));
+
+				nLogConfig.AddTarget("DataDog", datadogTarget);
+				nLogConfig.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, datadogTarget, "*");
 			}
 
 			// Send logs to console
