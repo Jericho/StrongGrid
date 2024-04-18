@@ -149,6 +149,7 @@ namespace StrongGrid.UnitTests.Resources
 			var processed = true;
 			var spamReport = true;
 			var unsubscribe = true;
+			var friendlyName = "My friendly name";
 
 			var apiResponse = @"{
 				""enabled"": true,
@@ -163,7 +164,8 @@ namespace StrongGrid.UnitTests.Resources
 				""processed"": true,
 				""open"": true,
 				""click"": true,
-				""dropped"": true
+				""dropped"": true,
+				""friendly_name"": ""My friendly name""
 			}";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -173,7 +175,7 @@ namespace StrongGrid.UnitTests.Resources
 			var webhooks = new WebhookSettings(client);
 
 			// Act
-			var result = await webhooks.UpdateEventWebhookSettingsAsync(enabled, url, bounce, click, deferred, delivered, dropped, groupResubscribe, groupUnsubscribe, open, processed, spamReport, unsubscribe, null, CancellationToken.None);
+			var result = await webhooks.UpdateEventWebhookSettingsAsync(enabled, url, bounce, click, deferred, delivered, dropped, groupResubscribe, groupUnsubscribe, open, processed, spamReport, unsubscribe, friendlyName, null, null, null, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -194,7 +196,7 @@ namespace StrongGrid.UnitTests.Resources
 			var webhooks = new WebhookSettings(client);
 
 			// Act
-			await webhooks.SendEventTestAsync(url, null, CancellationToken.None);
+			await webhooks.SendEventTestAsync(url, null, null, null, null, CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

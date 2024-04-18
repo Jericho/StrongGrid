@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using StrongGrid.IntegrationTests.Tests;
 using StrongGrid.Utilities;
@@ -10,18 +11,11 @@ using System.Threading.Tasks;
 
 namespace StrongGrid.IntegrationTests
 {
-	internal class TestsRunner
+	internal class TestsRunner : IHostedService
 	{
 		private const int MAX_SENDGRID_API_CONCURRENCY = 5;
 		private const int TEST_NAME_MAX_LENGTH = 25;
 		private const string SUCCESSFUL_TEST_MESSAGE = "Completed successfully";
-
-		private enum ResultCodes
-		{
-			Success = 0,
-			Exception = 1,
-			Cancelled = 1223
-		}
 
 		private readonly ILoggerFactory _loggerFactory;
 
@@ -30,31 +24,31 @@ namespace StrongGrid.IntegrationTests
 			_loggerFactory = loggerFactory;
 		}
 
-		public async Task<int> RunAsync()
+		public async Task StartAsync(CancellationToken cancellationToken)
 		{
 			// -----------------------------------------------------------------------------
-			// Do you want to proxy requests through Fiddler? Can be useful for debugging.
-			var useFiddler = true;
-			var fiddlerPort = 8888; // By default Fiddler4 uses port 8888 and Fiddler Everywhere uses port 8866
+			// Do you want to proxy requests through a tool such as Fiddler? Very useful for debugging.
+			var useProxy = true;
 
-			// -----------------------------------------------------------------------------
-			// Do you want to log the details of each exception? Can be overwhelming is there are a lot of exceptions.
-			var logExceptionDetails = false;
+			// By default Fiddler Classic uses port 8888 and Fiddler Everywhere uses port 8866
+			var proxyPort = 8888;
 
 			// Change the default values in the legacy client.
 			var optionsToCorrectLegacyDefaultValues = new StrongGridClientOptions()
 			{
-				LogLevelFailedCalls = LogLevel.Error,
+				LogLevelFailedCalls = LogLevel.Error, // This is a more sensible value than the default value set by the the legacy client
 				LogLevelSuccessfulCalls = LogLevel.Debug
 			};
 			// -----------------------------------------------------------------------------
 
 			// Configure StrongGrid client
 			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
-			var proxy = useFiddler ? new WebProxy($"http://localhost:{fiddlerPort}") : null;
 
-			var legacyClient = new LegacyClient(apiKey, proxy, optionsToCorrectLegacyDefaultValues, logExceptionDetails ? _loggerFactory.CreateLogger<LegacyClient>() : null);
-			var client = new Client(apiKey, proxy, null, logExceptionDetails ? _loggerFactory.CreateLogger<Client>() : null);
+			// Configure the proxy if desired
+			var proxy = useProxy ? new WebProxy($"http://localhost:{proxyPort}") : null;
+
+			var legacyClient = new LegacyClient(apiKey, proxy, optionsToCorrectLegacyDefaultValues, _loggerFactory.CreateLogger<LegacyClient>());
+			var client = new Client(apiKey, proxy, null, _loggerFactory.CreateLogger<Client>());
 
 			// Configure Console
 			var source = new CancellationTokenSource();
@@ -63,10 +57,6 @@ namespace StrongGrid.IntegrationTests
 				e.Cancel = true;
 				source.Cancel();
 			};
-
-			// Ensure the Console is tall enough and centered on the screen
-			if (OperatingSystem.IsWindows()) Console.WindowHeight = Math.Min(60, Console.LargestWindowHeight);
-			Utils.CenterConsole();
 
 			// These are the integration tests that we will execute
 			var integrationTests = new Type[]
@@ -162,23 +152,11 @@ namespace StrongGrid.IntegrationTests
 
 			await summary.WriteLineAsync("**************************************************").ConfigureAwait(false);
 			await Console.Out.WriteLineAsync(summary.ToString()).ConfigureAwait(false);
+		}
 
-			// Prompt user to press a key in order to allow reading the log in the console
-			var promptLog = new StringWriter();
-			await promptLog.WriteLineAsync("\n\n**************************************************").ConfigureAwait(false);
-			await promptLog.WriteLineAsync("Press any key to exit").ConfigureAwait(false);
-			Utils.Prompt(promptLog.ToString());
-
-			// Return code indicating success/failure
-			var resultCode = (int)ResultCodes.Success;
-			if (results.Any(result => result.ResultCode != ResultCodes.Success))
-			{
-				if (results.Any(result => result.ResultCode == ResultCodes.Exception)) resultCode = (int)ResultCodes.Exception;
-				else if (results.Any(result => result.ResultCode == ResultCodes.Cancelled)) resultCode = (int)ResultCodes.Cancelled;
-				else resultCode = (int)results.First(result => result.ResultCode != ResultCodes.Success).ResultCode;
-			}
-
-			return await Task.FromResult(resultCode);
+		public Task StopAsync(CancellationToken cancellationToken)
+		{
+			return Task.CompletedTask;
 		}
 	}
 }

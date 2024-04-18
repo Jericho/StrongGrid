@@ -103,7 +103,7 @@ namespace StrongGrid.Json
 							webHookEvent = JsonSerializer.Deserialize<UnsubscribeEvent>(rootElement, JsonFormatter.DeserializerOptions);
 							break;
 						default:
-							throw new Exception($"{typeAsString} is an unknown event type");
+							throw new JsonException($"{typeAsString} is an unknown event type");
 					}
 
 					var unkownProperties = doc.RootElement

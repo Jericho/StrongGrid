@@ -1539,5 +1539,116 @@ namespace StrongGrid
 			var webHookEvents = parser.ParseEventsWebhook(requestBody);
 			return webHookEvents;
 		}
+
+		/// <summary>
+		/// Get the current event webhook settings.
+		/// </summary>
+		/// <param name="webhookSettings">The webhook settings resource.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="EventWebhookSettings" />.
+		/// </returns>
+		public static Task<EventWebhookSettings> GetEventWebhookSettingsAsync(this IWebhookSettings webhookSettings, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		{
+			return webhookSettings.GetEventWebhookSettingsAsync(null, onBehalfOf, cancellationToken);
+		}
+
+		/// <summary>
+		/// Change the events settings.
+		/// </summary>
+		/// <param name="webhookSettings">The webhook settings resource.</param>
+		/// <param name="enabled">if set to <c>true</c> [enabled].</param>
+		/// <param name="url">The webhook endpoint url.</param>
+		/// <param name="bounce">if set to <c>true</c> [bounce].</param>
+		/// <param name="click">if set to <c>true</c> [click].</param>
+		/// <param name="deferred">if set to <c>true</c> [deferred].</param>
+		/// <param name="delivered">if set to <c>true</c> [delivered].</param>
+		/// <param name="dropped">if set to <c>true</c> [dropped].</param>
+		/// <param name="groupResubscribe">if set to <c>true</c> [groupResubscribe].</param>
+		/// <param name="groupUnsubscribe">if set to <c>true</c> [groupUnsubscribe].</param>
+		/// <param name="open">if set to <c>true</c> [open].</param>
+		/// <param name="processed">if set to <c>true</c> [processed].</param>
+		/// <param name="spamReport">if set to <c>true</c> [spamReport].</param>
+		/// <param name="unsubscribe">if set to <c>true</c> [unsubscribe].</param>
+		/// <param name="friendlyName">The friendly name.</param>
+		/// <param name="oauthClientId">The OAuth client ID that SendGrid will pass to your OAuth server or service provider to generate an OAuth access token. When passing data in this parameter, you must also specify the oauthTokenUrl.</param>
+		/// <param name="oauthClientSecret">The OAuth client secret that SendGrid will pass to your OAuth server or service provider to generate an OAuth access token. This secret is needed only once to create an access token. SendGrid will store the secret, allowing you to update your client ID and Token URL without passing the secret to SendGrid again. When passing data in this parameter, you must also specify the oauthClientId and oauthTokenUrl.</param>
+		/// <param name="oAuthTokenUrl">The URL where SendGrid will send the OAuth client ID and client secret to generate an OAuth access token. This should be your OAuth server or service provider. When passing data in this parameter, you must also specify the oauthClientId.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The <see cref="EventWebhookSettings" />.
+		/// </returns>
+		public static Task<EventWebhookSettings> UpdateEventWebhookSettingsAsync(
+			this IWebhookSettings webhookSettings,
+			bool enabled,
+			string url,
+			bool bounce = default,
+			bool click = default,
+			bool deferred = default,
+			bool delivered = default,
+			bool dropped = default,
+			bool groupResubscribe = default,
+			bool groupUnsubscribe = default,
+			bool open = default,
+			bool processed = default,
+			bool spamReport = default,
+			bool unsubscribe = default,
+			string friendlyName = null,
+			string oauthClientId = null,
+			string oauthClientSecret = null,
+			string oAuthTokenUrl = null,
+			string onBehalfOf = null,
+			CancellationToken cancellationToken = default)
+		{
+			return webhookSettings.UpdateEventWebhookSettingsAsync(null, enabled, url, bounce, click, deferred, delivered, dropped, groupResubscribe, groupUnsubscribe, open, processed, spamReport, unsubscribe, friendlyName, oauthClientId, oauthClientSecret, oAuthTokenUrl, onBehalfOf, cancellationToken);
+		}
+
+		/// <summary>
+		/// Sends a fake event notification post to the provided URL.
+		/// </summary>
+		/// <param name="webhookSettings">The webhook settings resource.</param>
+		/// <param name="url">The URL where you would like the test notification to be sent.</param>
+		/// <param name="oAuthClientId">The client ID Twilio SendGrid sends to your OAuth server or service provider to generate an OAuth access token. When passing data in this parameter, you must also specify oauThokenUrl.</param>
+		/// <param name="oAuthClientSecret">This value is needed only once to create an access token. SendGrid will store this secret, allowing you to update your Client ID and Token URL without passing the secret to SendGrid again. When passing data in this field, you must also specify oAuthClientId and oAuthTokenUrl.</param>
+		/// <param name="oAuthTokenUrl">The URL where Twilio SendGrid sends the Client ID and Client Secret to generate an access token. This should be your OAuth server or service provider. When passing data in this parameter, you must also include oAuthClientId.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The async task.
+		/// </returns>
+		public static Task SendEventTestAsync(this IWebhookSettings webhookSettings, string url, string oAuthClientId = null, string oAuthClientSecret = null, string oAuthTokenUrl = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		{
+			return webhookSettings.SendEventTestAsync(null, url, oAuthClientId, oAuthClientSecret, oAuthTokenUrl, onBehalfOf, cancellationToken);
+		}
+
+		/// <summary>
+		/// Enable or disable signature verification for a single Event Webhook.
+		/// </summary>
+		/// <param name="webhookSettings">The webhook settings resource.</param>
+		/// <param name="id">The ID of the Event Webhook you want to update.</param>
+		/// <param name="enabled">Indicates if the signature verification should be enbladle or not.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>The async task.</returns>
+		public static Task ToggleEventWebhookSignatureVerificationAsync(this IWebhookSettings webhookSettings, string id, bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		{
+			return webhookSettings.ToggleEventWebhookSignatureVerificationAsync(null, enabled, onBehalfOf, cancellationToken);
+		}
+
+		/// <summary>
+		/// Get the signed events public key.
+		/// </summary>
+		/// <param name="webhookSettings">The webhook settings resource.</param>
+		/// <param name="onBehalfOf">The user to impersonate.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The public key.
+		/// </returns>
+		public static Task<string> GetSignedEventsPublicKeyAsync(this IWebhookSettings webhookSettings, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		{
+			return webhookSettings.GetSignedEventsPublicKeyAsync(null, onBehalfOf, cancellationToken);
+		}
 	}
 }

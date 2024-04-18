@@ -5,12 +5,12 @@ using System.Text.Json.Serialization;
 namespace StrongGrid.Json
 {
 	/// <summary>
-	/// Converts a 'Unix time' expressed as the number of seconds since midnight on January 1st 1970 to and from JSON.
+	/// Converts a nullable <see cref="DateTime" /> expressed in a format acceptable to SendGrid to and from JSON.
 	/// </summary>
 	/// <seealso cref="JsonConverter" />
-	internal class NullableEpochConverter : BaseJsonConverter<DateTime?>
+	internal class NullableDateTimeConverter : BaseJsonConverter<DateTime?>
 	{
-		private readonly EpochConverter _epochConverter = new EpochConverter();
+		private readonly DateTimeConverter _dateTimeConverter = new DateTimeConverter();
 
 		public override DateTime? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -18,17 +18,17 @@ namespace StrongGrid.Json
 			{
 				case JsonTokenType.None:
 				case JsonTokenType.Null:
+				case JsonTokenType.String when string.IsNullOrEmpty(reader.GetString()):
 					return null;
-
 				default:
-					return _epochConverter.Read(ref reader, typeToConvert, options);
+					return _dateTimeConverter.Read(ref reader, typeToConvert, options);
 			}
 		}
 
 		public override void Write(Utf8JsonWriter writer, DateTime? value, JsonSerializerOptions options)
 		{
 			if (!value.HasValue) writer.WriteNullValue();
-			else _epochConverter.Write(writer, value.Value, options);
+			else _dateTimeConverter.Write(writer, value.Value, options);
 		}
 	}
 }

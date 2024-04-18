@@ -46,7 +46,7 @@ namespace StrongGrid.Json
 								else field = new Models.Legacy.Field<long>(name, long.Parse(numericProperty.GetString()));
 								break;
 							default:
-								throw new Exception($"{type} is an unknown field type");
+								throw new JsonException($"{type} is an unknown field type");
 						}
 
 						if (id.HasValue) field.Id = id.Value;
