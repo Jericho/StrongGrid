@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,8 +14,20 @@ namespace StrongGrid.IntegrationTests.Tests
 			await log.WriteLineAsync("\n***** WEBHOOK SETTINGS *****\n").ConfigureAwait(false);
 
 			// GET ALL THE EVENT SETTINGS
-			var eventWebhookSettings = await client.WebhookSettings.GetAllEventWebhookSettingsAsync(null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"All the event webhook settings have been retrieved. There are {eventWebhookSettings.Length} configured events.").ConfigureAwait(false);
+			var eventsWebhookSettings = await client.WebhookSettings.GetAllEventWebhookSettingsAsync(null, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"All the event webhook settings have been retrieved. There are {eventsWebhookSettings.Length} configured events.").ConfigureAwait(false);
+
+			// GET ONE EVENT SETTINGS
+			if (eventsWebhookSettings.Any())
+			{
+				// Get event settings without specifying an ID. Per SendGrid documentation, this should return the oldest webhook by created_date.
+				var defaultEventSettings = await client.WebhookSettings.GetEventWebhookSettingsAsync(null, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync("The settings for the default event webhook have been retrieved.").ConfigureAwait(false);
+
+				// Get event settings by specifying an ID.
+				var eventSettings = await client.WebhookSettings.GetEventWebhookSettingsAsync(eventsWebhookSettings.Last().Id, null, cancellationToken).ConfigureAwait(false);
+				await log.WriteLineAsync($"The settings for event webhook {eventSettings.Id} have been retrieved.").ConfigureAwait(false);
+			}
 
 			// GET ALL THE INBOUND PARSE SETTINGS
 			var inboundParseWebhookSettings = await client.WebhookSettings.GetAllInboundParseWebhookSettingsAsync(null, cancellationToken).ConfigureAwait(false);
