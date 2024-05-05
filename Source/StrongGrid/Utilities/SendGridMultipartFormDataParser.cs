@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using UtfUnknown;
 
 namespace StrongGrid.Utilities
 {
@@ -62,6 +63,23 @@ namespace StrongGrid.Utilities
 			{
 				// Get the encoding specified by SendGrid for this parameter
 				encodings.TryGetValue(parameter.Name, out Encoding encoding);
+
+				// If necessary, determine the encoding by looking at the content
+				if (encoding == null && (parameter.Data?.Any() ?? false))
+				{
+					// Concatenate the lines of data.
+					// Normally you would append a NewLine after each line but it's not necessary for this particular instance.
+					// Besides, we don't know (yet) what encoding to use to convert the NewLine characters into bytes.
+					var parameterData = parameter.Data
+						.SelectMany(d => d)
+						.ToArray();
+
+					// Try to detect the encoding based on the content
+					var result = CharsetDetector.DetectFromBytes(parameterData);
+					encoding = result?.Detected?.Encoding;
+				}
+
+				// When all else fails, fallback to UTF8
 				encoding ??= Encoding.UTF8;
 
 				sendGridParser._parameters.Add(new ParameterPart(parameter.Name, parameter.ToString(encoding)));
@@ -79,7 +97,7 @@ namespace StrongGrid.Utilities
 			{
 				return Encoding.GetEncoding(encodingName);
 			}
-			catch (ArgumentException)
+			catch
 			{
 				// ArgumentException is thrown when an "unusual" code page was used to encode a section of the email
 				// For example: {"to":"UTF-8","subject":"UTF-8","from":"UTF-8","text":"iso-8859-10"}
@@ -88,7 +106,11 @@ namespace StrongGrid.Utilities
 				// perfect because UTF-8 may or may not be able to handle all the encoded characters, but it's better
 				// than simply erroring out.
 				// See https://github.com/Jericho/StrongGrid/issues/341 for discussion.
-				return Encoding.UTF8;
+
+				// April 2024: return a null value instead of defaulting to UTF8 when the encoding name is invalid.
+				// This will allow us to subsequently use the actual content to attempt to determine which encoding
+				// was used to encode it.
+				return null;
 			}
 		}
 	}
