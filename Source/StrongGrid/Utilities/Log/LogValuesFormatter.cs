@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace StrongGrid.Utilities
+namespace StrongGrid.Utilities.Log
 {
 	/// <summary>
 	/// Formatter to convert the named format items like {NamedformatItem} to <see cref="string.Format(IFormatProvider, string, object)"/> format.

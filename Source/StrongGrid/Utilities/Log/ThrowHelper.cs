@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 // This file is intended to be used by components that don't have access to ArgumentNullException.ThrowIfNull.
 #pragma warning disable CS0436 // Type conflicts with imported type
 
-namespace StrongGrid.Utilities
+namespace StrongGrid.Utilities.Log
 {
 	internal class ThrowHelper
 	{
@@ -72,19 +72,3 @@ namespace StrongGrid.Utilities
 		}
 	}
 }
-
-#if !NET
-namespace System.Runtime.CompilerServices
-{
-	[AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
-	internal sealed class CallerArgumentExpressionAttribute : Attribute
-	{
-		public CallerArgumentExpressionAttribute(string parameterName)
-		{
-			ParameterName = parameterName;
-		}
-
-		public string ParameterName { get; }
-	}
-}
-#endif

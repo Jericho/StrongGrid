@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace StrongGrid.Utilities
+namespace StrongGrid.Utilities.Log
 {
 	/// <remarks>From the Microsoft.Extensions.Logging.Abstractions project.</remarks>
 	internal ref partial struct ValueStringBuilder
