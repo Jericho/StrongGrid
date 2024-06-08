@@ -12,10 +12,10 @@ namespace StrongGrid.IntegrationTests.Tests
 	{
 		public Task RunAsync(IBaseClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			return RunAsync((IClient)client, log, cancellationToken);
+			return RunAsync((IStrongGridClient)client, log, cancellationToken);
 		}
 
-		public async Task RunAsync(IClient client, TextWriter log, CancellationToken cancellationToken)
+		public async Task RunAsync(IStrongGridClient client, TextWriter log, CancellationToken cancellationToken)
 		{
 			if (cancellationToken.IsCancellationRequested) return;
 

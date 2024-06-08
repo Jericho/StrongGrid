@@ -48,7 +48,7 @@ namespace StrongGrid.IntegrationTests
 			var proxy = useProxy ? new WebProxy($"http://localhost:{proxyPort}") : null;
 
 			var legacyClient = new LegacyClient(apiKey, proxy, optionsToCorrectLegacyDefaultValues, _loggerFactory.CreateLogger<LegacyClient>());
-			var client = new Client(apiKey, proxy, null, _loggerFactory.CreateLogger<Client>());
+			var client = new StrongGridClient(apiKey, proxy, null, _loggerFactory.CreateLogger<StrongGridClient>());
 
 			// Configure Console
 			var source = new CancellationTokenSource();
