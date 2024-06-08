@@ -11,7 +11,7 @@ namespace StrongGrid
 	/// </summary>
 	public class StrongGridClient : BaseClient, IStrongGridClient
 	{
-		private static readonly StrongGridClientOptions _defaultOptions = new StrongGridClientOptions()
+		private static readonly StrongGridClientOptions _defaultOptions = new()
 		{
 			LogLevelSuccessfulCalls = LogLevel.Debug,
 			LogLevelFailedCalls = LogLevel.Error

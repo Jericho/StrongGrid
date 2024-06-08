@@ -12,7 +12,7 @@ namespace StrongGrid
 	[Obsolete("The legacy client, legacy resources and legacy model classes are obsolete")]
 	public class LegacyClient : BaseClient, ILegacyClient
 	{
-		private static readonly StrongGridClientOptions _defaultOptions = new StrongGridClientOptions()
+		private static readonly StrongGridClientOptions _defaultOptions = new()
 		{
 			LogLevelSuccessfulCalls = LogLevel.Debug,
 			LogLevelFailedCalls = LogLevel.Debug
