@@ -15,7 +15,7 @@ namespace StrongGrid.UnitTests
 			// Arrange
 
 			// Act
-			var result = Client.Version;
+			var result = StrongGridClient.Version;
 
 			// Assert
 			result.ShouldNotBeNullOrEmpty();
@@ -25,7 +25,7 @@ namespace StrongGrid.UnitTests
 		public void Dispose()
 		{
 			// Arrange
-			var client = new Client(API_KEY, (IWebProxy)null);
+			var client = new StrongGridClient(API_KEY, (IWebProxy)null);
 
 			// Act
 			client.Dispose();
@@ -39,7 +39,7 @@ namespace StrongGrid.UnitTests
 		{
 			string apiKey = null;
 
-			Should.Throw<ArgumentNullException>(() => new Client(apiKey));
+			Should.Throw<ArgumentNullException>(() => new StrongGridClient(apiKey));
 			Should.Throw<ArgumentNullException>(() => new LegacyClient(apiKey));
 		}
 	}
