@@ -65,7 +65,7 @@ namespace StrongGrid.IntegrationTests
 			// Handy code to generate the 'JsonSerializable' attributes for ZoomNetJsonSerializerContext
 			var baseNamespace = "StrongGrid.Models";
 			var allTypes = System.Reflection.Assembly
-				.GetAssembly(typeof(Client))
+				.GetAssembly(typeof(StrongGridClient))
 				.GetTypes()
 				.Where(t => t.IsClass || t.IsEnum)
 				.Where(t => !string.IsNullOrEmpty(t.Namespace))
