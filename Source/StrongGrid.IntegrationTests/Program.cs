@@ -50,7 +50,7 @@ namespace StrongGrid.IntegrationTests
 			// Handy code to generate the 'JsonSerializable' attributes for ZoomNetJsonSerializerContext
 			var baseNamespace = "StrongGrid.Models";
 			var allTypes = System.Reflection.Assembly
-				.GetAssembly(typeof(Client))
+				.GetAssembly(typeof(StrongGridClient))
 				.GetTypes()
 				.Where(t => t.IsClass || t.IsEnum)
 				.Where(t => !string.IsNullOrEmpty(t.Namespace))
@@ -104,7 +104,7 @@ namespace StrongGrid.IntegrationTests
 					// ProxyAddress = "http://localhost:8888",
 				};
 				logzioTarget.ContextProperties.Add(new NLog.Targets.TargetPropertyWithContext("Source", "StrongGrid_integration_tests"));
-				logzioTarget.ContextProperties.Add(new NLog.Targets.TargetPropertyWithContext("StrongGrid-Version", StrongGrid.Client.Version));
+				logzioTarget.ContextProperties.Add(new NLog.Targets.TargetPropertyWithContext("StrongGrid-Version", StrongGridClient.Version));
 
 				nLogConfig.AddTarget("Logzio", logzioTarget);
 				nLogConfig.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, logzioTarget, "*");
@@ -116,7 +116,7 @@ namespace StrongGrid.IntegrationTests
 			{
 				var applicationInsightsTarget = new ApplicationInsightsTarget() { InstrumentationKey = instrumentationKey, Name = "StrongGrid" };
 				applicationInsightsTarget.ContextProperties.Add(new Microsoft.ApplicationInsights.NLogTarget.TargetPropertyWithContext("Source", "StrongGrid_integration_tests"));
-				applicationInsightsTarget.ContextProperties.Add(new Microsoft.ApplicationInsights.NLogTarget.TargetPropertyWithContext("StrongGrid-Version", StrongGrid.Client.Version));
+				applicationInsightsTarget.ContextProperties.Add(new Microsoft.ApplicationInsights.NLogTarget.TargetPropertyWithContext("StrongGrid-Version", StrongGridClient.Version));
 
 				nLogConfig.AddTarget("ApplicationInsights", applicationInsightsTarget);
 				nLogConfig.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, applicationInsightsTarget, "*");
@@ -171,7 +171,7 @@ namespace StrongGrid.IntegrationTests
 
 				datadogTarget.Headers.Add(new MethodCallParameter("Content-Type", Layout.FromString("application/json")));
 				datadogTarget.Headers.Add(new MethodCallParameter("Source", "StrongGrid_integration_tests"));
-				datadogTarget.Headers.Add(new MethodCallParameter("StrongGrid-Version", StrongGrid.Client.Version));
+				datadogTarget.Headers.Add(new MethodCallParameter("StrongGrid-Version", StrongGridClient.Version));
 
 				nLogConfig.AddTarget("DataDog", datadogTarget);
 				nLogConfig.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, datadogTarget, "*");
