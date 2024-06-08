@@ -17,13 +17,13 @@ namespace StrongGrid.Benchmark
 		private const int recordsPerPage = 25;
 		private const int page = 1;
 
-		private static Client _client;
+		private static StrongGridClient _client;
 		private static LegacyClient _legacyClient;
 
 		public JsonParsingBenchmark()
 		{
 			var mockHttp = GetMockHttpMessageHandler();
-			_client = new Client("my API key", mockHttp, null, null);
+			_client = new StrongGridClient("my API key", mockHttp, null, null);
 			_legacyClient = new LegacyClient("my API key", mockHttp, null, null);
 		}
 
