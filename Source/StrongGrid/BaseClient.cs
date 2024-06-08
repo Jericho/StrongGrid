@@ -45,7 +45,7 @@ namespace StrongGrid
 			{
 				if (string.IsNullOrEmpty(_version))
 				{
-					_version = typeof(Client).GetTypeInfo().Assembly.GetName().Version.ToString(3);
+					_version = typeof(StrongGridClient).GetTypeInfo().Assembly.GetName().Version.ToString(3);
 #if DEBUG
 					_version = "DEBUG";
 #endif

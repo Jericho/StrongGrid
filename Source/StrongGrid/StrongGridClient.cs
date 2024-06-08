@@ -9,7 +9,7 @@ namespace StrongGrid
 	/// <summary>
 	/// REST client for interacting with SendGrid's API.
 	/// </summary>
-	public class Client : BaseClient, IClient
+	public class StrongGridClient : BaseClient, IStrongGridClient
 	{
 		private static readonly StrongGridClientOptions _defaultOptions = new StrongGridClientOptions()
 		{
@@ -75,51 +75,51 @@ namespace StrongGrid
 		#region CTOR
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Client"/> class.
+		/// Initializes a new instance of the <see cref="StrongGridClient"/> class.
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key.</param>
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
-		public Client(string apiKey, StrongGridClientOptions options = null, ILogger logger = null)
+		public StrongGridClient(string apiKey, StrongGridClientOptions options = null, ILogger logger = null)
 			: base(apiKey, null, false, options ?? _defaultOptions, logger)
 		{
 			Init();
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Client"/> class with a specific proxy.
+		/// Initializes a new instance of the <see cref="StrongGridClient"/> class with a specific proxy.
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key.</param>
 		/// <param name="proxy">Allows you to specify a proxy.</param>
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
-		public Client(string apiKey, IWebProxy proxy, StrongGridClientOptions options = null, ILogger logger = null)
+		public StrongGridClient(string apiKey, IWebProxy proxy, StrongGridClientOptions options = null, ILogger logger = null)
 			: base(apiKey, new HttpClient(new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null }), true, options ?? _defaultOptions, logger)
 		{
 			Init();
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Client"/> class with a specific handler.
+		/// Initializes a new instance of the <see cref="StrongGridClient"/> class with a specific handler.
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key.</param>
 		/// <param name="handler">TThe HTTP handler stack to use for sending requests.</param>
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
-		public Client(string apiKey, HttpMessageHandler handler, StrongGridClientOptions options = null, ILogger logger = null)
+		public StrongGridClient(string apiKey, HttpMessageHandler handler, StrongGridClientOptions options = null, ILogger logger = null)
 			: base(apiKey, new HttpClient(handler), true, options ?? _defaultOptions, logger)
 		{
 			Init();
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Client" /> class with a specific http client.
+		/// Initializes a new instance of the <see cref="StrongGridClient" /> class with a specific http client.
 		/// </summary>
 		/// <param name="apiKey">Your SendGrid API Key.</param>
 		/// <param name="httpClient">Allows you to inject your own HttpClient. This is useful, for example, to setup the HtppClient with a proxy.</param>
 		/// <param name="options">Options for the SendGrid client.</param>
 		/// <param name="logger">Logger.</param>
-		public Client(string apiKey, HttpClient httpClient, StrongGridClientOptions options = null, ILogger logger = null)
+		public StrongGridClient(string apiKey, HttpClient httpClient, StrongGridClientOptions options = null, ILogger logger = null)
 			: base(apiKey, httpClient, false, options ?? _defaultOptions, logger)
 		{
 			Init();

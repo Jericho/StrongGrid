@@ -89,7 +89,7 @@ namespace StrongGrid.IntegrationTests
 		{
 			// Handy code to generate the 'JsonSerializable' attributes for JsonSerializerContext
 			var allTypes = Assembly
-				.GetAssembly(typeof(Client))
+				.GetAssembly(typeof(StrongGridClient))
 				.GetTypes()
 				.Where(t => t.IsClass || t.IsEnum)
 				.Where(t => !string.IsNullOrEmpty(t.Namespace))

@@ -3,9 +3,9 @@ using StrongGrid.Resources;
 namespace StrongGrid
 {
 	/// <summary>
-	/// Interface for the SendGrid REST client for SendGrid's API.
+	/// Interface for the StrongGrid REST client for communicating with SendGrid's API.
 	/// </summary>
-	public interface IClient
+	public interface IStrongGridClient
 	{
 		/// <summary>
 		/// Gets the Contacts resource which allows you to manage your contacts (also sometimes refered to as 'recipients').
