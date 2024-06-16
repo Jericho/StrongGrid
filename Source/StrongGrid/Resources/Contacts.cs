@@ -24,7 +24,30 @@ namespace StrongGrid.Resources
 	public class Contacts : IContacts
 	{
 		private const string _endpoint = "marketing/contacts";
+		private static HttpClient _downloadFilesClient = null;
 		private readonly Pathoschild.Http.Client.IClient _client;
+
+		private static HttpClient DownloadFilesClient
+		{
+			get
+			{
+				if (_downloadFilesClient == null)
+				{
+					var handler = new HttpClientHandler()
+					{
+#if NET6_0_OR_GREATER
+						AutomaticDecompression = DecompressionMethods.All
+#else
+						AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+#endif
+					};
+
+					_downloadFilesClient = new HttpClient(handler);
+				}
+
+				return _downloadFilesClient;
+			}
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Contacts" /> class.
@@ -464,33 +487,25 @@ namespace StrongGrid.Resources
 			if (job == null) throw new ArgumentNullException(nameof(job));
 			if (job.Status != ExportJobStatus.Ready) throw new Exception("The job is not completed");
 
-			var handler = new HttpClientHandler()
-			{
-				AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
-			};
-
 			var result = new (string FileName, Stream Stream)[job.FileUrls.Length];
-			using (var client = new HttpClient(handler))
+			for (int i = 0; i < job.FileUrls.Length; i++)
 			{
-				for (int i = 0; i < job.FileUrls.Length; i++)
+				var fileUri = new Uri(job.FileUrls[i]);
+				var fileName = Path.GetFileName(fileUri.AbsolutePath);
+				var stream = await DownloadFilesClient.GetStreamAsync(job.FileUrls[i]).ConfigureAwait(false);
+
+				const string gzipExtension = ".gzip";
+				if (decompress && fileName.EndsWith(gzipExtension))
 				{
-					var fileUri = new Uri(job.FileUrls[i]);
-					var fileName = Path.GetFileName(fileUri.AbsolutePath);
-					var stream = await client.GetStreamAsync(job.FileUrls[i]).ConfigureAwait(false);
-
-					const string gzipExtension = ".gzip";
-					if (decompress && fileName.EndsWith(gzipExtension))
-					{
-						result[i] = (fileName.Substring(0, fileName.Length - gzipExtension.Length), await stream.DecompressAsync().ConfigureAwait(false));
-					}
-					else
-					{
-						result[i] = (fileName, stream);
-					}
+					result[i] = (fileName.Substring(0, fileName.Length - gzipExtension.Length), await stream.DecompressAsync().ConfigureAwait(false));
 				}
-
-				return result;
+				else
+				{
+					result[i] = (fileName, stream);
+				}
 			}
+
+			return result;
 		}
 
 		private static StrongGridJsonObject ConvertToJson(
