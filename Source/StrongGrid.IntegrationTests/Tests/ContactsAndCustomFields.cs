@@ -176,7 +176,7 @@ namespace StrongGrid.IntegrationTests.Tests
 				}
 
 				// Make sure we don't loop indefinetly
-				if (elapsed.Elapsed >= TimeSpan.FromSeconds(5))
+				if (elapsed.Elapsed >= TimeSpan.FromSeconds(10))
 				{
 					elapsed.Stop();
 					await log.WriteLineAsync("\tThe job did not complete in a reasonable amount of time.").ConfigureAwait(false);
