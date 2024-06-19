@@ -45,7 +45,11 @@ namespace StrongGrid.Utilities
 		}
 
 		// As of August 2022, searching for contacts and searching for email activites still use the (old) version 1 query DSL.
+		// As of June 2024, this appears to still be the case.
 		// You can also use query DSL v1 when segmenting contacts if you so desire, but by default StrongGrid uses v2.
+		// SendGrid's documentation states: "The Segmentation v1 API was deprecated on December 31, 2022. Following deprecation,
+		// all segments created in the Marketing Campaigns user interface began using the Segmentation v2 API.".
+		// My understanding of this statement is that it applies to segmentation of contacts, not to searching for contacts.
 		public static string ToQueryDslVersion1(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions)
 		{
 			if (filterConditions == null) return string.Empty;
@@ -73,8 +77,8 @@ namespace StrongGrid.Utilities
 			if (filterConditions == null) return string.Empty;
 
 			// Query DSL defined here: https://docs.sendgrid.com/for-developers/sending-email/marketing-campaigns-v2-segmentation-query-reference
-			const string contactsTableAlias = "contacts";
-			const string eventsTableAlias = "events";
+			const string contactsTableAlias = "c";
+			const string eventsTableAlias = "e";
 
 			var contactConditions = new List<string>();
 			foreach (var criteria in filterConditions)

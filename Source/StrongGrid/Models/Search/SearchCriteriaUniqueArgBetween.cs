@@ -23,9 +23,9 @@ namespace StrongGrid.Models.Search
 		}
 
 		/// <inheritdoc/>
-		public override string ConvertValueToString(char quote)
+		public override string ConvertValueToString(QueryLanguageVersion queryLanguageVersion)
 		{
-			return $"{SearchCriteria.ConvertToString(FilterValue, quote)} AND {SearchCriteria.ConvertToString(UpperValue, quote)}";
+			return $"{SearchCriteria.ConvertToString(FilterValue, queryLanguageVersion)} AND {SearchCriteria.ConvertToString(UpperValue, queryLanguageVersion)}";
 		}
 
 		/// <inheritdoc/>
