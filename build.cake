@@ -2,7 +2,7 @@
 #tool dotnet:?package=GitVersion.Tool&version=5.12.0
 #tool dotnet:?package=coveralls.net&version=4.0.1
 #tool nuget:https://f.feedz.io/jericho/jericho/nuget/?package=GitReleaseManager&version=0.17.0-collaborators0004
-#tool nuget:?package=ReportGenerator&version=5.3.0
+#tool nuget:?package=ReportGenerator&version=5.3.6
 #tool nuget:?package=xunit.runner.console&version=2.8.1
 #tool nuget:?package=CodecovUploader&version=0.7.3
 

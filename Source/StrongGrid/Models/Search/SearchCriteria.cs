@@ -9,6 +9,9 @@ namespace StrongGrid.Models.Search
 	/// </summary>
 	public abstract class SearchCriteria : ISearchCriteria
 	{
+		private const char QuoteV1 = '"';
+		private const char QuoteV2 = '\'';
+
 		/// <summary>
 		/// Gets or sets the name of the table.
 		/// </summary>
@@ -48,13 +51,28 @@ namespace StrongGrid.Models.Search
 		/// Returns the string representation of a given value as expected by the SendGrid segmenting API.
 		/// </summary>
 		/// <param name="value">The value.</param>
-		/// <param name="quote">The character used to quote string values. This character is a double-quote for v1 queries and a single-quote for v2 queries.</param>
+		/// <param name="queryLanguageVersion">The desired query version.</param>
 		/// <returns>The <see cref="string"/> representation of the value.</returns>
-		public static string ConvertToString(object value, char quote)
+		public static string ConvertToString(object value, QueryLanguageVersion queryLanguageVersion)
 		{
+			var quote = queryLanguageVersion switch
+			{
+				QueryLanguageVersion.Unspecified => QuoteV1,
+				QueryLanguageVersion.Version1 => QuoteV1,
+				QueryLanguageVersion.Version2 => QuoteV2,
+				_ => throw new ArgumentOutOfRangeException(nameof(queryLanguageVersion), queryLanguageVersion, null)
+			};
+
 			if (value is DateTime dateValue)
 			{
-				return $"{quote}{dateValue.ToUniversalTime():yyyy-MM-ddTHH:mm:ssZ}{quote}";
+				if (queryLanguageVersion == QueryLanguageVersion.Version1)
+				{
+					return $"TIMESTAMP {quote}{dateValue.ToUniversalTime():yyyy-MM-ddTHH:mm:ssZ}{quote}";
+				}
+				else
+				{
+					return $"{quote}{dateValue.ToUniversalTime():yyyy-MM-ddTHH:mm:ssZ}{quote}";
+				}
 			}
 			else if (value is string stringValue)
 			{
@@ -66,7 +84,7 @@ namespace StrongGrid.Models.Search
 			}
 			else if (value is IEnumerable values)
 			{
-				return $"[{string.Join(",", values.Cast<object>().Select(e => ConvertToString(e, quote)))}]";
+				return $"[{string.Join(",", values.Cast<object>().Select(e => ConvertToString(e, queryLanguageVersion)))}]";
 			}
 			else if (value.IsNumber())
 			{
@@ -98,11 +116,11 @@ namespace StrongGrid.Models.Search
 		/// Converts the filter value into a string as expected by the SendGrid segmenting API.
 		/// Can be overridden in subclasses if the value needs special formatting.
 		/// </summary>
-		/// <param name="quote">The character used to quote string values. This character is a double-quote for v1 queries and a single-quote for v2 queries.</param>
+		/// <param name="queryLanguageVersion">The desired query version.</param>
 		/// <returns>The string representation of the value.</returns>
-		public virtual string ConvertValueToString(char quote)
+		public virtual string ConvertValueToString(QueryLanguageVersion queryLanguageVersion)
 		{
-			return ConvertToString(FilterValue, quote);
+			return ConvertToString(FilterValue, queryLanguageVersion);
 		}
 
 		/// <summary>
@@ -119,7 +137,7 @@ namespace StrongGrid.Models.Search
 		public override string ToString()
 		{
 			var filterOperator = ConvertOperatorToString();
-			var filterValue = ConvertValueToString('"');
+			var filterValue = ConvertValueToString(QueryLanguageVersion.Version1);
 
 			return $"{FilterField}{filterOperator}{filterValue}";
 		}
@@ -128,7 +146,7 @@ namespace StrongGrid.Models.Search
 		public virtual string ToString(string tableAlias)
 		{
 			var filterOperator = ConvertOperatorToString();
-			var filterValue = ConvertValueToString('\'');
+			var filterValue = ConvertValueToString(QueryLanguageVersion.Version2);
 			var filterField = string.IsNullOrEmpty(tableAlias) ? FilterField : $"{tableAlias}.{FilterField}";
 
 			return $"{filterField}{filterOperator}{filterValue}";

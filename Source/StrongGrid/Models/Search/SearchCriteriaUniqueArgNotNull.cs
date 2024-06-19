@@ -15,7 +15,7 @@ namespace StrongGrid.Models.Search
 		}
 
 		/// <inheritdoc/>
-		public override string ConvertValueToString(char quote)
+		public override string ConvertValueToString(QueryLanguageVersion queryLanguageVersion)
 		{
 			return string.Empty;
 		}

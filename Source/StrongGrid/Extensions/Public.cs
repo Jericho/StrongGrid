@@ -1052,7 +1052,7 @@ namespace StrongGrid
 		/// </summary>
 		/// <param name="emailActivities">The email activities resource.</param>
 		/// <param name="criteria">Filtering criteria.</param>
-		/// <param name="limit">Number of IP activity entries to return.</param>
+		/// <param name="limit">Maximum number of activity entries to return.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
@@ -1068,7 +1068,7 @@ namespace StrongGrid
 		/// </summary>
 		/// <param name="emailActivities">The email activities resource.</param>
 		/// <param name="filterConditions">Filtering conditions.</param>
-		/// <param name="limit">Number of IP activity entries to return.</param>
+		/// <param name="limit">Maximum number of activity entries to return.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="EmailMessageActivity" />.
@@ -1078,6 +1078,22 @@ namespace StrongGrid
 			var filters = new List<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>>();
 			if (filterConditions != null && filterConditions.Any()) filters.Add(new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.And, filterConditions));
 			return emailActivities.SearchAsync(filters, limit, cancellationToken);
+		}
+
+		/// <summary>
+		/// Get all of the details about the messages matching the criteria.
+		/// </summary>
+		/// <param name="emailActivities">The email activities resource.</param>
+		/// <param name="filterConditions">Filtering conditions.</param>
+		/// <param name="limit">Maximum number of activity entries to return.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="Contact" />.
+		/// </returns>
+		public static Task<EmailMessageActivity[]> SearchAsync(this IEmailActivities emailActivities, IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions, int limit = 20, CancellationToken cancellationToken = default)
+		{
+			var query = Utils.ToQueryDslVersion1(filterConditions);
+			return emailActivities.SearchAsync(query, limit, cancellationToken);
 		}
 
 		/// <summary>

@@ -1,10 +1,8 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
-using StrongGrid.Models.Search;
-using StrongGrid.Utilities;
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,7 +19,30 @@ namespace StrongGrid.Resources
 	public class EmailActivities : IEmailActivities
 	{
 		private const string _endpoint = "messages";
+		private static HttpClient _downloadFilesClient = null;
 		private readonly Pathoschild.Http.Client.IClient _client;
+
+		private static HttpClient DownloadFilesClient
+		{
+			get
+			{
+				if (_downloadFilesClient == null)
+				{
+					var handler = new HttpClientHandler()
+					{
+#if NET6_0_OR_GREATER
+						AutomaticDecompression = DecompressionMethods.All
+#else
+						AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+#endif
+					};
+
+					_downloadFilesClient = new HttpClient(handler);
+				}
+
+				return _downloadFilesClient;
+			}
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EmailActivities" /> class.
@@ -32,21 +53,13 @@ namespace StrongGrid.Resources
 			_client = client;
 		}
 
-		/// <summary>
-		/// Get all of the details about the messages matching the filtering conditions.
-		/// </summary>
-		/// <param name="filterConditions">Filtering conditions.</param>
-		/// <param name="limit">Number of IP activity entries to return.</param>
-		/// <param name="cancellationToken">Cancellation token.</param>
-		/// <returns>
-		/// An array of <see cref="EmailMessageActivity" />.
-		/// </returns>
-		public Task<EmailMessageActivity[]> SearchAsync(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions, int limit = 20, CancellationToken cancellationToken = default)
+		/// <inheritdoc/>
+		public Task<EmailMessageActivity[]> SearchAsync(string query, int limit = 20, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync(_endpoint)
 				.WithArgument("limit", limit)
-				.WithArgument("query", Utils.ToQueryDslVersion1(filterConditions))
+				.WithArgument("query", query)
 				.WithCancellationToken(cancellationToken)
 				.AsObject<EmailMessageActivity[]>("messages");
 		}
@@ -120,12 +133,7 @@ namespace StrongGrid.Resources
 		public async Task<Stream> DownloadCsvAsync(string downloadUUID, CancellationToken cancellationToken = default)
 		{
 			var url = await GetCsvDownloadUrlAsync(downloadUUID, cancellationToken);
-
-			using (var client = new HttpClient())
-			{
-				var responseStream = await client.GetStreamAsync(url).ConfigureAwait(false);
-				return responseStream;
-			}
+			return await DownloadFilesClient.GetStreamAsync(url).ConfigureAwait(false);
 		}
 	}
 }

@@ -82,7 +82,7 @@ namespace StrongGrid.IntegrationTests.Tests
 				await log.WriteLineAsync($"\t{record.FirstName} {record.LastName}").ConfigureAwait(false);
 			}
 
-			if (contacts.Any())
+			if (contacts.Length > 0)
 			{
 				var batchById = await client.Contacts.GetMultipleAsync(contacts.Take(10).Select(c => c.Id), cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"Retrieved {batchById.Length} contacts by ID in a single API call.").ConfigureAwait(false);
@@ -98,7 +98,7 @@ namespace StrongGrid.IntegrationTests.Tests
 					await log.WriteLineAsync($"\t{record.FirstName} {record.LastName}").ConfigureAwait(false);
 				}
 
-				var contact = await client.Contacts.GetAsync(contacts.First().Id).ConfigureAwait(false);
+				var contact = await client.Contacts.GetAsync(contacts.First().Id, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"Retrieved contact {contact.Id}").ConfigureAwait(false);
 				await log.WriteLineAsync($"\tEmail: {contact.Email}").ConfigureAwait(false);
 				await log.WriteLineAsync($"\tFirst Name: {contact.FirstName}").ConfigureAwait(false);
@@ -123,6 +123,10 @@ namespace StrongGrid.IntegrationTests.Tests
 			var LastNameCriteria = new SearchCriteriaEqual(ContactsFilterField.LastName, "Doe");
 			var searchResult = await client.Contacts.SearchAsync(new[] { firstNameCriteria, LastNameCriteria }, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Found {searchResult.Length} contacts named John Doe").ConfigureAwait(false);
+
+			var modifiedDuringPriorYearCriteria = new SearchCriteriaGreaterThan(ContactsFilterField.ModifiedOn, DateTime.UtcNow.AddYears(-1));
+			searchResult = await client.Contacts.SearchAsync(modifiedDuringPriorYearCriteria, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Found {searchResult.Length} contacts modified during the last year").ConfigureAwait(false);
 
 			var (totalCount, billableCount) = await client.Contacts.GetCountAsync(cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("Record counts").ConfigureAwait(false);
@@ -176,7 +180,7 @@ namespace StrongGrid.IntegrationTests.Tests
 				}
 
 				// Make sure we don't loop indefinetly
-				if (elapsed.Elapsed >= TimeSpan.FromSeconds(5))
+				if (elapsed.Elapsed >= TimeSpan.FromSeconds(10))
 				{
 					elapsed.Stop();
 					await log.WriteLineAsync("\tThe job did not complete in a reasonable amount of time.").ConfigureAwait(false);
@@ -184,7 +188,7 @@ namespace StrongGrid.IntegrationTests.Tests
 				}
 			}
 
-			if (contacts.Any())
+			if (contacts.Length > 0)
 			{
 				var contact = contacts.First();
 				await client.Contacts.DeleteAsync(contact.Id, cancellationToken).ConfigureAwait(false);

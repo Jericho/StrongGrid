@@ -9,7 +9,7 @@ namespace StrongGrid.Models.Search
 		/// Returns a string representation of the search criteria.
 		/// </summary>
 		/// <returns>A <see cref="string"/> representation of the search criteria.</returns>
-		/// <remarks>This is used when generating a SGQL v1 query. For example, when searching for email activities.</remarks>
+		/// <remarks>This is used when generating a SGQL v1 query. For example, when searching for contacts or email activities.</remarks>
 		string ToString();
 
 		/// <summary>
@@ -17,7 +17,7 @@ namespace StrongGrid.Models.Search
 		/// </summary>
 		/// <param name="tableAlias">The table alias.</param>
 		/// <returns>A <see cref="string"/> representation of the search criteria.</returns>
-		/// <remarks>This is used when generating a segmentation query v2. For example, when searching for contacts or when creating a new segment.</remarks>
+		/// <remarks>This is used when generating a segmentation query v2. For example, when creating a new segment.</remarks>
 		string ToString(string tableAlias);
 	}
 }

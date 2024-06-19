@@ -470,7 +470,7 @@ Content-Disposition: form-data; name=""attachments""
 		[Fact]
 		public async Task InboundEmailWithAttachmentsAsync()
 		{
-			using (var fileStream = File.OpenRead("InboudEmailTestData/email_with_attachments.txt"))
+			using (var fileStream = File.OpenRead("InboundEmailTestData/email_with_attachments.txt"))
 			{
 				var parser = new WebhookParser();
 				var inboundEmail = await parser.ParseInboundEmailWebhookAsync(fileStream);
@@ -555,7 +555,7 @@ Content-Disposition: form-data; name=""attachments""
 		{
 			// Arrange
 			var parser = new WebhookParser();
-			using (var fileStream = File.OpenRead("InboudEmailTestData/raw_email.txt"))
+			using (var fileStream = File.OpenRead("InboundEmailTestData/raw_email.txt"))
 			{
 				// Act
 				var inboundEmail = await parser.ParseInboundEmailWebhookAsync(fileStream);
@@ -580,7 +580,7 @@ Content-Disposition: form-data; name=""attachments""
 		{
 			// Arrange
 			var parser = new WebhookParser();
-			using (var fileStream = File.OpenRead("InboudEmailTestData/raw_email_with_attachments.txt"))
+			using (var fileStream = File.OpenRead("InboundEmailTestData/raw_email_with_attachments.txt"))
 			{
 				// Act
 				var inboundEmail = await parser.ParseInboundEmailWebhookAsync(fileStream);
