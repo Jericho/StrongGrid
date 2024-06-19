@@ -82,7 +82,7 @@ namespace StrongGrid.IntegrationTests.Tests
 				await log.WriteLineAsync($"\t{record.FirstName} {record.LastName}").ConfigureAwait(false);
 			}
 
-			if (contacts.Any())
+			if (contacts.Length > 0)
 			{
 				var batchById = await client.Contacts.GetMultipleAsync(contacts.Take(10).Select(c => c.Id), cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"Retrieved {batchById.Length} contacts by ID in a single API call.").ConfigureAwait(false);
@@ -98,7 +98,7 @@ namespace StrongGrid.IntegrationTests.Tests
 					await log.WriteLineAsync($"\t{record.FirstName} {record.LastName}").ConfigureAwait(false);
 				}
 
-				var contact = await client.Contacts.GetAsync(contacts.First().Id).ConfigureAwait(false);
+				var contact = await client.Contacts.GetAsync(contacts.First().Id, cancellationToken).ConfigureAwait(false);
 				await log.WriteLineAsync($"Retrieved contact {contact.Id}").ConfigureAwait(false);
 				await log.WriteLineAsync($"\tEmail: {contact.Email}").ConfigureAwait(false);
 				await log.WriteLineAsync($"\tFirst Name: {contact.FirstName}").ConfigureAwait(false);
@@ -184,7 +184,7 @@ namespace StrongGrid.IntegrationTests.Tests
 				}
 			}
 
-			if (contacts.Any())
+			if (contacts.Length > 0)
 			{
 				var contact = contacts.First();
 				await client.Contacts.DeleteAsync(contact.Id, cancellationToken).ConfigureAwait(false);
