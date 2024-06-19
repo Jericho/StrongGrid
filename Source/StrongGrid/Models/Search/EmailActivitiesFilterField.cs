@@ -96,6 +96,7 @@ namespace StrongGrid.Models.Search
 		/// <summary>
 		/// The group id.
 		/// </summary>
+		[EnumMember(Value = "asm_group_id")]
 		AsmGroupId,
 
 		/// <summary>
