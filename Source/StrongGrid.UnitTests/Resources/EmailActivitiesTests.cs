@@ -68,7 +68,7 @@ namespace StrongGrid.UnitTests.Resources
 			var limit = 25;
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&query=").Respond("application/json", NO_MESSAGES_FOUND);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}").Respond("application/json", NO_MESSAGES_FOUND);
 
 			var client = Utils.GetFluentClient(mockHttp);
 			var emailActivities = (IEmailActivities)new EmailActivities(client);

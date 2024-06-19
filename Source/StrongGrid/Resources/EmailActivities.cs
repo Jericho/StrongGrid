@@ -1,9 +1,6 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Models;
-using StrongGrid.Models.Search;
-using StrongGrid.Utilities;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -56,21 +53,13 @@ namespace StrongGrid.Resources
 			_client = client;
 		}
 
-		/// <summary>
-		/// Get all of the details about the messages matching the filtering conditions.
-		/// </summary>
-		/// <param name="filterConditions">Filtering conditions.</param>
-		/// <param name="limit">Number of IP activity entries to return.</param>
-		/// <param name="cancellationToken">Cancellation token.</param>
-		/// <returns>
-		/// An array of <see cref="EmailMessageActivity" />.
-		/// </returns>
-		public Task<EmailMessageActivity[]> SearchAsync(IEnumerable<KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>> filterConditions, int limit = 20, CancellationToken cancellationToken = default)
+		/// <inheritdoc/>
+		public Task<EmailMessageActivity[]> SearchAsync(string query, int limit = 20, CancellationToken cancellationToken = default)
 		{
 			return _client
 				.GetAsync(_endpoint)
 				.WithArgument("limit", limit)
-				.WithArgument("query", Utils.ToQueryDslVersion1(filterConditions))
+				.WithArgument("query", query)
 				.WithCancellationToken(cancellationToken)
 				.AsObject<EmailMessageActivity[]>("messages");
 		}
