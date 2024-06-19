@@ -41,7 +41,7 @@ namespace StrongGrid.Resources
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
 			data.AddProperty("query_dsl", query);
-			data.AddProperty("parent_list_id", listId);
+			if (!string.IsNullOrEmpty(listId)) data.AddProperty("parent_list_ids", new[] { listId });
 
 			return _client
 				.PostAsync($"{(queryLanguageVersion == QueryLanguageVersion.Version2 ? _endpoint_v2 : _endpoint)}")
