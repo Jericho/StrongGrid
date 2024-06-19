@@ -1,5 +1,6 @@
 using StrongGrid.Models;
 using StrongGrid.Models.Search;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -72,17 +73,15 @@ namespace StrongGrid.IntegrationTests.Tests
 			{
 				new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.And, new[]
 				{
-					new SearchCriteriaEqual(ContactsFilterField.FirstName, "Jane"),
-					new SearchCriteriaEqual(ContactsFilterField.LastName, "Doe")
+					new SearchCriteriaLike(ContactsFilterField.EmailAddress, "%hotmail.com")
 				})
 			};
-			var segment = await client.Segments.CreateAsync("StrongGrid Integration Testing: First Name is Jane and last name is Doe", filterConditions, list.Id, cancellationToken).ConfigureAwait(false);
+			var segment = await client.Segments.CreateAsync("StrongGrid Integration Testing: Recipients @ Hotmail", filterConditions, list.Id, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Segment '{segment.Name}' created. Id: {segment.Id}").ConfigureAwait(false);
 
-			// UPDATE THE SEGMENT (three contacts match the criteria) 
-			var hotmailCriteria = new SearchCriteriaLike(ContactsFilterField.EmailAddress, "%hotmail.com");
-			segment = await client.Segments.UpdateAsync(segment.Id, "StrongGrid Integration Testing: Recipients @ Hotmail", hotmailCriteria, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"Segment {segment.Id} updated. The new name is: '{segment.Name}'").ConfigureAwait(false);
+			// PLEASE NOTE: you must wait at least 5 minutes before updating a segment.
+			// If you attempt to update a segment too quickly, the SendGrid API will throw the following exception:
+			// "Update request came too soon, please wait 5 minutes before trying again"
 
 			// GET THE SEGMENT
 			segment = await client.Segments.GetAsync(segment.Id, cancellationToken).ConfigureAwait(false);
@@ -90,6 +89,17 @@ namespace StrongGrid.IntegrationTests.Tests
 
 			// GET THE CONTACTS
 			contacts = await client.Contacts.GetMultipleByEmailAddressAsync(new[] { "dummy1@hotmail.com", "dummy2@hotmail.com", "dummy3@hotmail.com" }, cancellationToken).ConfigureAwait(false);
+
+			// CREATE ANOTHER SEGMENT
+			filterConditions = new[]
+			{
+				new KeyValuePair<SearchLogicalOperator, IEnumerable<ISearchCriteria>>(SearchLogicalOperator.And, new[]
+				{
+					new SearchCriteriaGreaterThan(ContactsFilterField.ModifiedOn, DateTime.UtcNow.AddYears(-1)),
+				})
+			};
+			var anotherSegment = await client.Segments.CreateAsync("StrongGrid Integration Testing: Modified in the prior year", filterConditions, list.Id, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Segment '{anotherSegment.Name}' created. Id: {anotherSegment.Id}").ConfigureAwait(false);
 
 			// REMOVE THE CONTACTS FROM THE LIST (THEY WILL AUTOMATICALLY BE REMOVED FROM THE HOTMAIL SEGMENT)
 			if (contacts.Any())
@@ -108,6 +118,10 @@ namespace StrongGrid.IntegrationTests.Tests
 			// DELETE THE SEGMENT
 			await client.Segments.DeleteAsync(segment.Id, false, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Segment {segment.Id} deleted").ConfigureAwait(false);
+
+			// DELETE THE OTHER SEGMENT
+			await client.Segments.DeleteAsync(anotherSegment.Id, false, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Segment {anotherSegment.Id} deleted").ConfigureAwait(false);
 
 			// DELETE THE LIST
 			await client.Lists.DeleteAsync(list.Id, false, cancellationToken).ConfigureAwait(false);

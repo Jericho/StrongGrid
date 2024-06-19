@@ -124,6 +124,10 @@ namespace StrongGrid.IntegrationTests.Tests
 			var searchResult = await client.Contacts.SearchAsync(new[] { firstNameCriteria, LastNameCriteria }, cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"Found {searchResult.Length} contacts named John Doe").ConfigureAwait(false);
 
+			var modifiedDuringPriorYearCriteria = new SearchCriteriaGreaterThan(ContactsFilterField.ModifiedOn, DateTime.UtcNow.AddYears(-1));
+			searchResult = await client.Contacts.SearchAsync(modifiedDuringPriorYearCriteria, cancellationToken).ConfigureAwait(false);
+			await log.WriteLineAsync($"Found {searchResult.Length} contacts modified during the last year").ConfigureAwait(false);
+
 			var (totalCount, billableCount) = await client.Contacts.GetCountAsync(cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync("Record counts").ConfigureAwait(false);
 			await log.WriteLineAsync($"\tTotal: {totalCount}").ConfigureAwait(false);
