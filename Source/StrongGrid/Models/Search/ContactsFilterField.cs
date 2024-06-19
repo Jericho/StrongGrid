@@ -56,6 +56,24 @@ namespace StrongGrid.Models.Search
 		EmailAddress,
 
 		/// <summary>
+		/// The phone number.
+		/// </summary>
+		[EnumMember(Value = "phone_number_id")]
+		PhoneNumberId,
+
+		/// <summary>
+		/// The external id.
+		/// </summary>
+		[EnumMember(Value = "external_id")]
+		ExternalId,
+
+		/// <summary>
+		/// The anonymous id.
+		/// </summary>
+		[EnumMember(Value = "anonymous_id")]
+		AnonymousId,
+
+		/// <summary>
 		/// The email domains.
 		/// </summary>
 		[EnumMember(Value = "email_domains")]
