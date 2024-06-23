@@ -1,6 +1,9 @@
 using Shouldly;
 using StrongGrid.Models.Legacy;
 using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using Xunit;
 
 namespace StrongGrid.UnitTests.Utilities
@@ -133,6 +136,62 @@ namespace StrongGrid.UnitTests.Utilities
 
 				// Assert
 				result.ShouldBe(expectedStatus);
+			}
+		}
+
+		public class GetEncoding
+		{
+			[Fact]
+			public void Returns_actual_encoding()
+			{
+				// Arrange
+				var defaultEncoding = Encoding.UTF32;
+				var desiredEncoding = Encoding.ASCII;
+				var content = new StringContent("This is a test", desiredEncoding);
+
+				// Act
+				var result = content.GetEncoding(defaultEncoding);
+
+				// Assert
+				result.ShouldBe(desiredEncoding);
+			}
+
+			[Fact]
+			public void Returns_default_when_charset_is_empty()
+			{
+				// Arrange
+				var defaultEncoding = Encoding.UTF32;
+				var desiredEncoding = Encoding.ASCII;
+				var content = new StringContent("This is a test");
+				content.Headers.ContentType = new MediaTypeHeaderValue("text/plain")
+				{
+					CharSet = string.Empty
+				};
+
+				// Act
+				var result = content.GetEncoding(defaultEncoding);
+
+				// Assert
+				result.ShouldBe(defaultEncoding);
+			}
+
+			[Fact]
+			public void Returns_default_when_charset_is_invalid()
+			{
+				// Arrange
+				var defaultEncoding = Encoding.UTF32;
+				var desiredEncoding = Encoding.ASCII;
+				var content = new StringContent("This is a test");
+				content.Headers.ContentType = new MediaTypeHeaderValue("text/plain")
+				{
+					CharSet = "this is not a valid charset"
+				};
+
+				// Act
+				var result = content.GetEncoding(defaultEncoding);
+
+				// Assert
+				result.ShouldBe(defaultEncoding);
 			}
 		}
 	}
