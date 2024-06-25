@@ -18,7 +18,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using static StrongGrid.Utilities.DiagnosticHandler;
 
 namespace StrongGrid
 {
@@ -379,7 +378,7 @@ namespace StrongGrid
 			return !string.IsNullOrEmpty(value) && value.EndsWith(suffix) ? value : string.Concat(value, suffix);
 		}
 
-		internal static JsonElement? GetProperty(this JsonElement element, string name, bool throwIfMissing = true)
+		internal static JsonElement? GetProperty(this JsonElement element, string name, bool throwIfMissing)
 		{
 			var parts = name.Split('/');
 			if (!element.TryGetProperty(parts[0], out var property))
