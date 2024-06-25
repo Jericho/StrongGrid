@@ -4,6 +4,7 @@ using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
 using Xunit;
 
 namespace StrongGrid.UnitTests.Utilities
@@ -192,6 +193,303 @@ namespace StrongGrid.UnitTests.Utilities
 
 				// Assert
 				result.ShouldBe(defaultEncoding);
+			}
+		}
+
+		public class ToDurationString
+		{
+			[Fact]
+			public void Less_than_one_millisecond()
+			{
+				// Arrange
+				var days = 0;
+				var hours = 0;
+				var minutes = 0;
+				var seconds = 0;
+				var milliseconds = 0;
+				var timespan = new TimeSpan(days, hours, minutes, seconds, milliseconds);
+
+				// Act
+				var result = timespan.ToDurationString();
+
+				// Assert
+				result.ShouldBe("1 millisecond");
+			}
+
+			[Fact]
+			public void Normal()
+			{
+				// Arrange
+				var days = 1;
+				var hours = 2;
+				var minutes = 3;
+				var seconds = 4;
+				var milliseconds = 5;
+				var timespan = new TimeSpan(days, hours, minutes, seconds, milliseconds);
+
+				// Act
+				var result = timespan.ToDurationString();
+
+				// Assert
+				result.ShouldBe("1 day 2 hours 3 minutes 4 seconds 5 milliseconds");
+			}
+		}
+
+		public class EnsureStartsWith
+		{
+			[Fact]
+			public void When_string_is_null()
+			{
+				// Arrange
+				var input = (string)null;
+				var prefix = "Hello";
+				var desired = "Hello";
+
+				// Act
+				var result = input.EnsureStartsWith(prefix);
+
+				// Assert
+				result.ShouldBe(desired);
+			}
+
+			[Fact]
+			public void When_string_starts_with_prefix()
+			{
+				// Arrange
+				var input = "Hello world";
+				var prefix = "Hello";
+				var desired = "Hello world";
+
+				// Act
+				var result = input.EnsureStartsWith(prefix);
+
+				// Assert
+				result.ShouldBe(desired);
+			}
+
+			[Fact]
+			public void When_string_does_not_start_with_prefix()
+			{
+				// Arrange
+				var input = "world";
+				var prefix = "Hello";
+				var desired = "Helloworld";
+
+				// Act
+				var result = input.EnsureStartsWith(prefix);
+
+				// Assert
+				result.ShouldBe(desired);
+			}
+		}
+
+		public class EnsureEndsWith
+		{
+			[Fact]
+			public void When_string_is_null()
+			{
+				// Arrange
+				var input = (string)null;
+				var prefix = "Hello";
+				var desired = "Hello";
+
+				// Act
+				var result = input.EnsureEndsWith(prefix);
+
+				// Assert
+				result.ShouldBe(desired);
+			}
+
+			[Fact]
+			public void When_string_ends_with_suffix()
+			{
+				// Arrange
+				var input = "Hello world";
+				var suffix = "world";
+				var desired = "Hello world";
+
+				// Act
+				var result = input.EnsureEndsWith(suffix);
+
+				// Assert
+				result.ShouldBe(desired);
+			}
+
+			[Fact]
+			public void When_string_does_not_end_with_suffix()
+			{
+				// Arrange
+				var input = "Hello";
+				var suffix = "world";
+				var desired = "Helloworld";
+
+				// Act
+				var result = input.EnsureEndsWith(suffix);
+
+				// Assert
+				result.ShouldBe(desired);
+			}
+		}
+
+		public class GetProperty
+		{
+			[Fact]
+			public void When_property_exists()
+			{
+				// Arrange
+				var jsonString = @"{""Name"":""John""}";
+
+				var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(jsonString));
+				var jsonObj = JsonElement.ParseValue(ref reader);
+
+				// Act
+				var result = jsonObj.GetProperty("Name", true);
+
+				// Assert
+				result.ShouldNotBeNull();
+				result.Value.ValueEquals("John");
+			}
+
+			[Fact]
+			public void When_property_does_not_exist_and_throwIfMissing_is_false()
+			{
+				// Arrange
+				var jsonString = @"{""Name"":""John""}";
+
+				var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(jsonString));
+				var jsonObj = JsonElement.ParseValue(ref reader);
+
+				// Act
+				var result = jsonObj.GetProperty("xxxyyyzzz", false);
+
+				// Assert
+				result.ShouldBeNull();
+			}
+
+			[Fact]
+			public void When_property_does_not_exist_and_throwIfMissing_is_true()
+			{
+				// Arrange
+				var jsonString = @"{""Name"":""John""}";
+
+				var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(jsonString));
+				var jsonObj = JsonElement.ParseValue(ref reader);
+
+				// Act
+				Should.Throw<Exception>(() => jsonObj.GetProperty("xxxyyyzzz", true));
+			}
+
+			[Fact]
+			public void When_multilevel_property_exists()
+			{
+				// Arrange
+				var jsonString = @"{""Name"":""John"", ""Child"":{""Name"":""Bob""}}";
+
+				var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(jsonString));
+				var jsonObj = JsonElement.ParseValue(ref reader);
+
+				// Act
+				var result = jsonObj.GetProperty("Child/Name", true);
+
+				// Assert
+				result.ShouldNotBeNull();
+				result.Value.ValueEquals("Bob");
+			}
+
+			[Fact]
+			public void When_multilevel_property_does_not_exist_and_throwIfMissing_is_false()
+			{
+				// Arrange
+				var jsonString = @"{""Name"":""John"", ""Child"":{""Name"":""Bob""}}";
+
+				var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(jsonString));
+				var jsonObj = JsonElement.ParseValue(ref reader);
+
+				// Act
+				var result = jsonObj.GetProperty("Child/xxxyyyzzz", false);
+
+				// Assert
+				result.ShouldBeNull();
+			}
+
+			[Fact]
+			public void When_multilevel_property_does_not_exist_and_throwIfMissing_is_true()
+			{
+				// Arrange
+				var jsonString = @"{""Name"":""John"", ""Child"":{""Name"":""Bob""}}";
+
+				var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(jsonString));
+				var jsonObj = JsonElement.ParseValue(ref reader);
+
+				// Act
+				Should.Throw<Exception>(() => jsonObj.GetProperty("Child/xxxyyyzzz", true));
+			}
+		}
+
+		public class GetPropertyValue
+		{
+			[Fact]
+			public void When_property_exists()
+			{
+				// Arrange
+				var jsonString = "{\"Name\":\"John\"}";
+
+				var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(jsonString));
+				var jsonObj = JsonElement.ParseValue(ref reader);
+
+				// Act
+				var result = jsonObj.GetPropertyValue<string>("Name");
+
+				// Assert
+				result.ShouldBe("John");
+			}
+
+			[Fact]
+			public void When_property_does_not_exist()
+			{
+				// Arrange
+				var jsonString = "{\"Name\":\"John\"}";
+
+				var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(jsonString));
+				var jsonObj = JsonElement.ParseValue(ref reader);
+
+				// Act
+				var result = jsonObj.GetPropertyValue<string>("xxxyyyzzz");
+
+				// Assert
+				result.ShouldBeNull();
+			}
+
+			[Fact]
+			public void Multiple_properties_exist()
+			{
+				// Arrange
+				var jsonString = "{\"Name\":\"John\",\"City\":\"Atlanta\"}";
+
+				var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(jsonString));
+				var jsonObj = JsonElement.ParseValue(ref reader);
+
+				// Act
+				var result = jsonObj.GetPropertyValue<string>(new[] { "Name", "City" });
+
+				// Assert
+				result.ShouldBe("John");
+			}
+
+			[Fact]
+			public void Multiple_properties_only_one_exists()
+			{
+				// Arrange
+				var jsonString = "{\"Name\":\"John\",\"City\":\"Atlanta\"}";
+
+				var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(jsonString));
+				var jsonObj = JsonElement.ParseValue(ref reader);
+
+				// Act
+				var result = jsonObj.GetPropertyValue<string>(new[] { "xxxyyyzzz", "City" });
+
+				// Assert
+				result.ShouldBe("Atlanta");
 			}
 		}
 	}
