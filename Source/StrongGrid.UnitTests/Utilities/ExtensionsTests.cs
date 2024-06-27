@@ -185,7 +185,7 @@ namespace StrongGrid.UnitTests.Utilities
 				var content = new StringContent("This is a test");
 				content.Headers.ContentType = new MediaTypeHeaderValue("text/plain")
 				{
-					CharSet = "this is not a valid charset"
+					CharSet = "for_testing_purposes_setting_charset_property_to_an_invalid_value"
 				};
 
 				// Act
