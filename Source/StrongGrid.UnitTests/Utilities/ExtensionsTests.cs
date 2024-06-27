@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using Xunit;
+using static StrongGrid.Internal;
 
 namespace StrongGrid.UnitTests.Utilities
 {
@@ -13,107 +14,100 @@ namespace StrongGrid.UnitTests.Utilities
 	{
 		public class FromUnixTime
 		{
-			[Fact]
-			public void Zero_returns_EPOCH()
+			// Note to self:
+			// I'm using TheoryData because can't use DateTime with InlineData: 
+			// Error CS0182  An attribute argument must be a constant expression, typeof expression or array creation expression of an attribute parameter type
+			public static TheoryData<long, DateTime> FromMilliseconds = new TheoryData<long, DateTime>()
 			{
-				// Arrange
-				var unixTime = 0L;
+				{ 0, new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc) },
+				{ 1000, new DateTime(1970, 1, 1, 0, 0, 1, 0, DateTimeKind.Utc) },
+				{ 16040, new DateTime(1970, 1, 1, 0, 0, 16, 40, DateTimeKind.Utc) },
+			};
 
+			public static TheoryData<long, DateTime> FromSeconds = new TheoryData<long, DateTime>()
+			{
+				{ 0, new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc) },
+				{ 1000, new DateTime(1970, 1, 1, 0, 16, 40, 0, DateTimeKind.Utc) },
+			};
+
+			[Theory, MemberData(nameof(FromMilliseconds))]
+			public void Converts_from_milliseconds(long numberOfMilliseconds, DateTime expected)
+			{
 				// Act
-				var result = unixTime.FromUnixTime();
+				var result = numberOfMilliseconds.FromUnixTime(UnixTimePrecision.Milliseconds);
 
 				// Assert
-				result.ShouldBe(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+				result.ShouldBe(expected);
 			}
 
-			[Fact]
-			public void Seconds()
+			[Theory, MemberData(nameof(FromSeconds))]
+			public void Converts_from_seconds(long numberOfSeconds, DateTime expected)
 			{
-				// Arrange
-				var unixTime = 1468155111L;
-
 				// Act
-				var result = unixTime.FromUnixTime(Internal.UnixTimePrecision.Seconds);
+				var result = numberOfSeconds.FromUnixTime(UnixTimePrecision.Seconds);
 
 				// Assert
-				result.ShouldBe(new DateTime(2016, 7, 10, 12, 51, 51, DateTimeKind.Utc));
-			}
-
-			[Fact]
-			public void Milliseconds()
-			{
-				// Arrange
-				var unixTime = 1719149961333L;
-
-				// Act
-				var result = unixTime.FromUnixTime(Internal.UnixTimePrecision.Milliseconds);
-
-				// Assert
-				result.ShouldBe(new DateTime(2024, 6, 23, 13, 39, 21, 333, DateTimeKind.Utc));
+				result.ShouldBe(expected);
 			}
 
 			[Fact]
 			public void Throws_when_unknown_precision()
 			{
 				// Arrange
-				var unixTime = 1468155111L;
-				var unknownPrecision = (Internal.UnixTimePrecision)123;
+				var unknownPrecision = (UnixTimePrecision)3;
 
 				// Act
-				Should.Throw<Exception>(() => unixTime.FromUnixTime(unknownPrecision));
+				Should.Throw<ArgumentException>(() => 123L.FromUnixTime(unknownPrecision));
 			}
 		}
 
 		public class ToUnixTime
 		{
-			[Fact]
-			public void EPOCH_returns_zero()
+			// Note to self:
+			// I'm using TheoryData because can't use DateTime with InlineData: 
+			// Error CS0182  An attribute argument must be a constant expression, typeof expression or array creation expression of an attribute parameter type
+			public static TheoryData<DateTime, long> ToMilliseconds = new TheoryData<DateTime, long>()
 			{
-				// Arrange
-				var date = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+				{ new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 0 },
+				{ new DateTime(1970, 1, 1, 0, 0, 1, 0, DateTimeKind.Utc), 1000 },
+				{ new DateTime(1970, 1, 1, 0, 0, 16, 40, DateTimeKind.Utc), 16040 },
+			};
 
+			public static TheoryData<DateTime, long> ToSeconds = new TheoryData<DateTime, long>()
+			{
+				{ new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 0 },
+				{ new DateTime(1970, 1, 1, 0, 0, 1, 0, DateTimeKind.Utc), 1 },
+				{ new DateTime(1970, 1, 1, 0, 0, 16, 40, DateTimeKind.Utc), 16 },
+			};
+
+			[Theory, MemberData(nameof(ToMilliseconds))]
+			public void Converts_to_milliseconds(DateTime date, long expected)
+			{
 				// Act
-				var result = date.ToUnixTime();
+				var result = date.ToUnixTime(UnixTimePrecision.Milliseconds);
 
 				// Assert
-				result.ShouldBe(0);
+				result.ShouldBe(expected);
 			}
 
-			[Fact]
-			public void Seconds()
+			[Theory, MemberData(nameof(ToSeconds))]
+			public void Converts_to_seconds(DateTime date, long expected)
 			{
-				// Arrange
-				var date = new DateTime(2016, 7, 10, 12, 51, 51, DateTimeKind.Utc);
-
 				// Act
-				var result = date.ToUnixTime(Internal.UnixTimePrecision.Seconds);
+				var result = date.ToUnixTime(UnixTimePrecision.Seconds);
 
 				// Assert
-				result.ShouldBe(1468155111);
-			}
-
-			[Fact]
-			public void Milliseconds()
-			{
-				// Arrange
-				var date = new DateTime(2024, 6, 23, 13, 39, 21, 333, DateTimeKind.Utc);
-
-				// Act
-				var result = date.ToUnixTime(Internal.UnixTimePrecision.Milliseconds);
-
-				// Assert
-				result.ShouldBe(1719149961333);
+				result.ShouldBe(expected);
 			}
 
 			[Fact]
 			public void Throws_when_unknown_precision()
 			{
 				// Arrange
-				var date = new DateTime(2024, 6, 23, 13, 39, 21, 333, DateTimeKind.Utc);
-				var unknownPrecision = (Internal.UnixTimePrecision)123;
+				var unknownPrecision = (UnixTimePrecision)3;
 
 				// Act
-				Should.Throw<Exception>(() => date.ToUnixTime(unknownPrecision));
+				Should.Throw<ArgumentException>(() => DateTime.UtcNow.ToUnixTime(unknownPrecision));
 			}
 		}
 
