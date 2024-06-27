@@ -432,7 +432,7 @@ namespace StrongGrid.UnitTests.Utilities
 			public void When_property_exists()
 			{
 				// Arrange
-				var jsonString = "{\"Name\":\"John\"}";
+				var jsonString = @"{""Name"":""John""}";
 
 				var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(jsonString));
 				var jsonObj = JsonElement.ParseValue(ref reader);
@@ -448,7 +448,7 @@ namespace StrongGrid.UnitTests.Utilities
 			public void When_property_does_not_exist()
 			{
 				// Arrange
-				var jsonString = "{\"Name\":\"John\"}";
+				var jsonString = @"{""Name"":""John""}";
 
 				var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(jsonString));
 				var jsonObj = JsonElement.ParseValue(ref reader);
@@ -464,7 +464,7 @@ namespace StrongGrid.UnitTests.Utilities
 			public void Multiple_properties_exist()
 			{
 				// Arrange
-				var jsonString = "{\"Name\":\"John\",\"City\":\"Atlanta\"}";
+				var jsonString = @"{""Name"":""John"",""City"":""Atlanta""}";
 
 				var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(jsonString));
 				var jsonObj = JsonElement.ParseValue(ref reader);
@@ -480,7 +480,7 @@ namespace StrongGrid.UnitTests.Utilities
 			public void Multiple_properties_only_one_exists()
 			{
 				// Arrange
-				var jsonString = "{\"Name\":\"John\",\"City\":\"Atlanta\"}";
+				var jsonString = @"{""Name"":""John"",""City"":""Atlanta""}";
 
 				var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(jsonString));
 				var jsonObj = JsonElement.ParseValue(ref reader);
