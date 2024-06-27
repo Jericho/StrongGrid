@@ -491,6 +491,96 @@ namespace StrongGrid.UnitTests.Utilities
 				// Assert
 				result.ShouldBe("Atlanta");
 			}
+
+			[Fact]
+			public void Value_is_int()
+			{
+				// Arrange
+				var jsonString = @"{""NumberOfChildren"":2}";
+
+				var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(jsonString));
+				var jsonObj = JsonElement.ParseValue(ref reader);
+
+				// Act
+				var result = jsonObj.GetPropertyValue<int>("NumberOfChildren");
+
+				// Assert
+				result.ShouldBe(2);
+			}
+
+			private enum MyEnum
+			{
+				Value1 = 1,
+				Value2 = 2
+			}
+
+			[Fact]
+			public void Value_is_enum_from_int()
+			{
+				// Arrange
+				var jsonString = @"{""MyProperty"":2}";
+
+				var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(jsonString));
+				var jsonObj = JsonElement.ParseValue(ref reader);
+
+				// Act
+				var result = jsonObj.GetPropertyValue<MyEnum>("MyProperty");
+
+				// Assert
+				result.ShouldBe(MyEnum.Value2);
+			}
+
+			[Fact]
+			public void Value_is_enum_from_string()
+			{
+				// Arrange
+				var jsonString = @"{""MyProperty"":""Value1""}";
+
+				var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(jsonString));
+				var jsonObj = JsonElement.ParseValue(ref reader);
+
+				// Act
+				var result = jsonObj.GetPropertyValue<MyEnum>("MyProperty");
+
+				// Assert
+				result.ShouldBe(MyEnum.Value1);
+			}
+
+			[Theory]
+			[InlineData("null", null)]
+			[InlineData("2", 2)]
+			public void Value_is_nullable_int(string jsonValue, int? expected)
+			{
+				// Arrange
+				var jsonString = @"{""MyProperty"":" + jsonValue + "}";
+
+				var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(jsonString));
+				var jsonObj = JsonElement.ParseValue(ref reader);
+
+				// Act
+				var result = jsonObj.GetPropertyValue<int?>("MyProperty");
+
+				// Assert
+				result.ShouldBe(expected);
+			}
+
+			[Theory]
+			[InlineData("null", (int[])null)]
+			[InlineData("[1,2,3]", new int[] { 1, 2, 3 })]
+			public void Value_is_array(string jsonValue, int[] expected)
+			{
+				// Arrange
+				var jsonString = @"{""MyProperty"":" + jsonValue + "}";
+
+				var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(jsonString));
+				var jsonObj = JsonElement.ParseValue(ref reader);
+
+				// Act
+				var result = jsonObj.GetPropertyValue<int[]>("MyProperty");
+
+				// Assert
+				result.ShouldBe(expected);
+			}
 		}
 	}
 }

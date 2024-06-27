@@ -883,6 +883,11 @@ namespace StrongGrid
 			return jsonObject;
 		}
 
+		internal static bool IsNullableType(this Type type)
+		{
+			return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+		}
+
 		/// <summary>Asynchronously converts the JSON encoded content and convert it to an object of the desired type.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="httpContent">The content.</param>
@@ -1004,8 +1009,10 @@ namespace StrongGrid
 				};
 			}
 
-			if (typeOfT.IsGenericType && typeOfT.GetGenericTypeDefinition() == typeof(Nullable<>))
+			if (typeOfT.IsNullableType())
 			{
+				if (property.Value.ValueKind == JsonValueKind.Null) return (T)default;
+
 				var underlyingType = Nullable.GetUnderlyingType(typeOfT);
 				var getElementValue = typeof(Internal)
 					.GetMethod(nameof(Internal.GetElementValue), BindingFlags.Static | BindingFlags.NonPublic)
@@ -1016,6 +1023,8 @@ namespace StrongGrid
 
 			if (typeOfT.IsArray)
 			{
+				if (property.Value.ValueKind == JsonValueKind.Null) return (T)default;
+
 				var elementType = typeOfT.GetElementType();
 				var getElementValue = typeof(Internal)
 					.GetMethod(nameof(Internal.GetElementValue), BindingFlags.Static | BindingFlags.NonPublic)
@@ -1037,6 +1046,13 @@ namespace StrongGrid
 		private static T GetElementValue<T>(this JsonElement element)
 		{
 			var typeOfT = typeof(T);
+
+			if (element.ValueKind == JsonValueKind.Null)
+			{
+				return typeOfT.IsNullableType()
+					? (T)default
+					: throw new Exception($"JSON contains a null value but {typeOfT.FullName} is not nullable");
+			}
 
 			return typeOfT switch
 			{
