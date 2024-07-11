@@ -39,8 +39,8 @@
     <PackageReference Include="HttpMultipartParser" Version="8.4.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-    <PackageReference Include="MimeKitLite" Version="4.6.0" />
-    <PackageReference Include="Pathoschild.Http.FluentClient" Version="4.4.0" />
+    <PackageReference Include="MimeKitLite" Version="4.7.0" />
+    <PackageReference Include="Pathoschild.Http.FluentClient" Version="4.4.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435" PrivateAssets="All" />
     <PackageReference Include="System.Text.Json" Version="8.0.3" />
     <PackageReference Include="UTF.Unknown" Version="2.5.1" />
