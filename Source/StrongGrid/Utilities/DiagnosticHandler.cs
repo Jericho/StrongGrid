@@ -75,7 +75,7 @@ namespace StrongGrid.Utilities
 				var logLevel = response.IsSuccessStatusCode ? _logLevelSuccessfulCalls : _logLevelFailedCalls;
 				if (_logger.IsEnabled(logLevel))
 				{
-					var template = diagnosticInfo.GetLoggingTemplate();
+					var template = diagnosticInfo.GetLoggingTemplate(true);
 					var parameters = diagnosticInfo.GetLoggingParameters();
 
 					_logger.Log(logLevel, template, parameters);
