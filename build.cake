@@ -1,13 +1,13 @@
 // Install tools.
-#tool dotnet:?package=GitVersion.Tool&version=5.12.0
+#tool dotnet:?package=GitVersion.Tool&version=6.0.0
 #tool dotnet:?package=coveralls.net&version=4.0.1
-#tool nuget:https://f.feedz.io/jericho/jericho/nuget/?package=GitReleaseManager&version=0.17.0-collaborators0007
-#tool nuget:?package=ReportGenerator&version=5.3.6
-#tool nuget:?package=xunit.runner.console&version=2.8.1
-#tool nuget:?package=CodecovUploader&version=0.7.3
+#tool nuget:https://f.feedz.io/jericho/jericho/nuget/?package=GitReleaseManager&version=0.17.0-collaborators0008
+#tool nuget:?package=ReportGenerator&version=5.3.8
+#tool nuget:?package=xunit.runner.console&version=2.9.0
+#tool nuget:?package=CodecovUploader&version=0.8.0
 
 // Install addins.
-#addin nuget:?package=Cake.Coveralls&version=1.1.0
+#addin nuget:?package=Cake.Coveralls&version=4.0.0
 #addin nuget:?package=Cake.Git&version=4.0.0
 #addin nuget:?package=Cake.Codecov&version=3.0.0
 
@@ -285,7 +285,7 @@ Task("Run-Code-Coverage")
 		NoBuild = true,
 		NoRestore = true,
 		Configuration = configuration,
-		Framework = desiredFramework,
+		Framework = DefaultFramework,
 
 		// The following assumes that coverlet.msbuild has been added to the unit testing project
 		ArgumentCustomization = args => args
