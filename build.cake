@@ -124,7 +124,7 @@ Setup(context =>
 	milestone = versionInfo.MajorMinorPatch;
 
 	Information("Building version {0} of {1} ({2}, {3}) using version {4} of Cake",
-		versionInfo.LegacySemVerPadded,
+		versionInfo.FullSemVer,
 		libraryName,
 		configuration,
 		target,
@@ -252,7 +252,7 @@ Task("Build")
 		NoRestore = true,
 		MSBuildSettings = new DotNetMSBuildSettings
 		{
-			Version = versionInfo.LegacySemVerPadded,
+			Version = versionInfo.SemVer,
 			AssemblyVersion = versionInfo.MajorMinorPatch,
 			FileVersion = versionInfo.MajorMinorPatch,
 			InformationalVersion = versionInfo.InformationalVersion,
@@ -378,7 +378,7 @@ Task("Create-NuGet-Package")
 		MSBuildSettings = new DotNetMSBuildSettings
 		{
 			PackageReleaseNotes = releaseNotesUrl,
-			PackageVersion = versionInfo.LegacySemVerPadded
+			PackageVersion = versionInfo.SemVer
 		}
 	};
 
