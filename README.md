@@ -87,7 +87,7 @@ var attachments = new[]
 var messageId = await strongGridClient.Mail.SendToSingleRecipientAsync(to, from, subject, html, text, attachments: attachments).ConfigureAwait(false);
 ```
 
-You have access to numerous 'resources' (such as Contacts, Lists, Segments, Settings, SenderAuthentication, etc) off of the Client and each resource offers several methods to such as retrieve, create, update, delete, etc. 
+You have access to numerous 'resources' (such as Contacts, Lists, Segments, Settings, SenderAuthentication, etc) off of the Client and each resource offers several methods such as retrieve, create, update, delete, etc. 
 
 Here are a few example:
 ```csharp
@@ -120,7 +120,7 @@ var template = await strongGridClient.Templates.CreateAsync("My template");
 ```
 
 ### Dynamic templates
-In August 2018, SendGrid released a new feature in their API that allows you to use the [Handlebars syntax](https://sendgrid.com/docs/User_Guide/Transactional_Templates/Using_handlebars.html) to specify merge fields in your content. Using this powerfull new feature in StrongGrid is very easy.
+In August 2018, SendGrid released a new feature in their API that allows you to use the [Handlebars syntax](https://sendgrid.com/docs/User_Guide/Transactional_Templates/Using_handlebars.html) to specify merge fields in your content. Using this powerful new feature in StrongGrid is very easy.
 
 First, you must specify `TemplateType.Dynamic` when creating a new template like in this example:
 
@@ -228,7 +228,7 @@ namespace WebApplication1.Controllers
 
 ### Parsing a signed webhook
 
-SendGrid has a feature called `Signed Event Webhook Requests` which you can enable under `Settings > Mail Settings > Event Settings` when logged in your SendGrid account. When this feature is enabled, SendGrid includes additional information with each webhook that allow you to verify that this webhook indeed originated from SendGrid and therefore can be trusted. Specifically, the webhook will include a "signature" and a "timestamp" and you must use these two value along with a public key that SendGrid generated when you enabled the feature to validate the data being submited to you. Please note that SendGrid sometimes refers to this value as a "verification key". In case you are curious and want to know more about the inticacies of validating the data, I invite you to read SendGrid's [documentation on this topic](https://sendgrid.com/docs/for-developers/tracking-events/getting-started-event-webhook-security-features/).
+SendGrid has a feature called `Signed Event Webhook Requests` which you can enable under `Settings > Mail Settings > Event Settings` when logged in your SendGrid account. When this feature is enabled, SendGrid includes additional information with each webhook that allows you to verify that this webhook indeed originated from SendGrid and therefore can be trusted. Specifically, the webhook will include a "signature" and a "timestamp" and you must use these two values along with a public key that SendGrid generated when you enabled the feature to validate the data being submited to you. Please note that SendGrid sometimes refers to this value as a "verification key". In case you are curious and want to know more about the intricacies of validating the data, I invite you to read SendGrid's [documentation on this topic](https://sendgrid.com/docs/for-developers/tracking-events/getting-started-event-webhook-security-features/).
 
 However, if you want to avoid learning how to perform the validation and you simply want this validation to be conveniently performed for you, StrongGrid can help! The `WebhookParser` class has a method called `ParseSignedEventsWebhookAsync`which will automatically validate the data and throw a security exception if validation fails. If the validation fails, you should consider the webhook data to be invalid. Here's how it works:
 
@@ -318,9 +318,9 @@ var warmupSettings = WarmupSettings.FromSendGridRecomendedSettings(poolName, est
 ```
 
 **Progress repository:** By default StrongGrid's WarmupEngine will write progress information in a file on your computer's `temp` folder but you can override this settings. 
-You can change the folder where this file is saved but you can also decide to use a completely different repository. Out of the box, StrongGrid provides `FileSystemWarmupProgressRepository` and `MemoryWarmupProgressRepository`.
+You can change the folder where this file is saved and you can also decide to use a completely different repository. Out of the box, StrongGrid provides `FileSystemWarmupProgressRepository` and `MemoryWarmupProgressRepository`.
 It also provides an interface called `IWarmupProgressRepository` which allows you to write your own implementation to save the progress data to a location more suitable to you such as a database, Azure, AWS, etc.
-Please note that `MemoryWarmupProgressRepository` in intended to be used for testing and we don't recommend using it in production. The main reason for this recommendation is that the data is stored in memory and it's lost when your computer is restarted.
+Please note that `MemoryWarmupProgressRepository` in intended to be used for testing and we don't recommend using it in production. The main reason for this recommendation is that the data is stored in memory and is lost when your computer is restarted.
 This means that your warmup process would start all over from day 1 each time you computer is rebooted.
 
 ```csharp
