@@ -448,10 +448,23 @@ namespace StrongGrid.UnitTests.Utilities
 				var jsonObj = JsonElement.ParseValue(ref reader);
 
 				// Act
-				var result = jsonObj.GetPropertyValue<string>("xxxyyyzzz");
+				Should.Throw(() => jsonObj.GetPropertyValue<string>("xxxyyyzzz"), typeof(Exception));
+			}
+
+			[Fact]
+			public void Default_value_when_property_does_not_exist()
+			{
+				// Arrange
+				var jsonString = @"{""Name"":""John""}";
+
+				var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(jsonString));
+				var jsonObj = JsonElement.ParseValue(ref reader);
+
+				// Act
+				var result = jsonObj.GetPropertyValue<string>("xxxyyyzzz", "default value");
 
 				// Assert
-				result.ShouldBeNull();
+				result.ShouldBe("default value");
 			}
 
 			[Fact]
