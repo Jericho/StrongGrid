@@ -1077,8 +1077,6 @@ namespace StrongGrid
 		private static async Task<PaginatedResponseWithLinks<T>> AsPaginatedResponseWithLinks<T>(this HttpContent httpContent, IEnumerable<PaginationLink> paginationLinks, string propertyName, JsonSerializerOptions options = null, CancellationToken cancellationToken = default)
 		{
 			var jsonDocument = await httpContent.AsRawJsonDocument(null, false, cancellationToken).ConfigureAwait(false);
-			var metadataProperty = jsonDocument.RootElement.GetProperty("_metadata");
-			var metadata = JsonSerializer.Deserialize<PaginationMetadata>(metadataProperty.GetRawText(), options);
 
 			T[] records = null;
 

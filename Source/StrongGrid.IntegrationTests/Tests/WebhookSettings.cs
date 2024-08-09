@@ -29,7 +29,7 @@ namespace StrongGrid.IntegrationTests.Tests
 
 			// GET ALL THE INBOUND PARSE SETTINGS
 			var inboundParseWebhookSettings = await client.WebhookSettings.GetAllInboundParseWebhookSettingsAsync(null, cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"All the inbound parse webhook settings have been retrieved. There are {inboundParseWebhookSettings.Length} configured inbound parse.").ConfigureAwait(false);
+			await log.WriteLineAsync($"All the inbound parse webhook settings have been retrieved. There are {inboundParseWebhookSettings.Records.Length} configured inbound parse.").ConfigureAwait(false);
 
 			// GET THE SIGNED EVENTS PUBLIC KEY
 			var publicKey = await client.WebhookSettings.GetSignedEventsPublicKeyAsync(null, cancellationToken).ConfigureAwait(false);
