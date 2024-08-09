@@ -222,7 +222,6 @@ namespace StrongGrid.UnitTests.Resources
 		public async Task GetUnassignedAsync()
 		{
 			// Arrange
-			var limit = 10;
 			var endpoint = Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={StrongGrid.Utilities.Utils.MaxSendGridPagingLimit}&offset=0";
 
 			var mockHttp = new MockHttpMessageHandler();
@@ -238,7 +237,7 @@ namespace StrongGrid.UnitTests.Resources
 			var ipAddresses = new IpAddresses(client);
 
 			// Act
-			var result = await ipAddresses.GetUnassignedAsync(limit, 0, CancellationToken.None);
+			var result = await ipAddresses.GetUnassignedAsync(CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
