@@ -42,7 +42,7 @@
     <PackageReference Include="MimeKitLite" Version="4.7.1" />
     <PackageReference Include="Pathoschild.Http.FluentClient" Version="4.4.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435" PrivateAssets="All" />
-    <PackageReference Include="System.Text.Json" Version="8.0.4" />
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
     <PackageReference Include="UTF.Unknown" Version="2.5.1" />
   </ItemGroup>
 
