@@ -1,1 +1,7 @@
 workflow: GitFlow/v1 # https://github.com/GitTools/GitVersion/blob/main/docs/input/docs/reference/configuration.md#snippet-/docs/workflows/GitFlow/v1.yml
+
+branches:
+  develop:
+    label: beta # default is 'alpha' for the 'develop' branch. I prefer 'beta'.
+  release:
+    label: rc # default is 'beta' for the 'release' branch. I prefer 'RC'.
