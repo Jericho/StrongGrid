@@ -1,4 +1,3 @@
-using StrongGrid.Utilities.Log;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,16 +24,17 @@ namespace StrongGrid.Utilities
 			ResponseTimestamp = responseTimestamp;
 		}
 
-		public string GetLoggingTemplate()
+		public string GetLoggingTemplate(bool structuredFormat)
 		{
 			RequestReference.TryGetTarget(out HttpRequestMessage request);
 			ResponseReference.TryGetTarget(out HttpResponseMessage response);
 
+			var parameterIndex = 0;
 			var logTemplate = new StringBuilder();
 
 			if (request != null)
 			{
-				logTemplate.AppendLine("REQUEST SENT BY STRONGGRID: {Request_HttpMethod} {Request_Uri} HTTP/{Request_HttpVersion}");
+				logTemplate.AppendLine("REQUEST SENT BY STRONGGRID: {" + (structuredFormat ? "Request_HttpMethod" : parameterIndex++) + "} {" + (structuredFormat ? "Request_Uri" : parameterIndex++) + "} HTTP/{" + (structuredFormat ? "Request_HttpVersion" : parameterIndex++) + "}");
 				logTemplate.AppendLine("REQUEST HEADERS:");
 
 				var requestHeaders = response?.RequestMessage?.Headers ?? Enumerable.Empty<KeyValuePair<string, IEnumerable<string>>>();
@@ -45,16 +45,16 @@ namespace StrongGrid.Utilities
 
 				foreach (var header in requestHeaders.OrderBy(kvp => kvp.Key))
 				{
-					logTemplate.AppendLine("  " + header.Key + ": {Request_Header_" + header.Key + "}");
+					logTemplate.AppendLine("  " + header.Key + ": {" + (structuredFormat ? "Request_Header_" + header.Key : parameterIndex++) + "}");
 				}
 
-				logTemplate.AppendLine("REQUEST: {Request_Content}");
+				logTemplate.AppendLine("REQUEST: {" + (structuredFormat ? "Request_Content" : parameterIndex++) + "}");
 				logTemplate.AppendLine();
 			}
 
 			if (response != null)
 			{
-				logTemplate.AppendLine("RESPONSE FROM SENDGRID: HTTP/{Response_HttpVersion} {Response_StatusCode} {Response_ReasonPhrase}");
+				logTemplate.AppendLine("RESPONSE FROM SENDGRID: HTTP/{" + (structuredFormat ? "Response_HttpVersion" : parameterIndex++) + "} {" + (structuredFormat ? "Response_StatusCode" : parameterIndex++) + "} {" + (structuredFormat ? "Response_ReasonPhrase" : parameterIndex++) + "}");
 				logTemplate.AppendLine("RESPONSE HEADERS:");
 
 				var responseHeaders = response?.Headers ?? Enumerable.Empty<KeyValuePair<string, IEnumerable<string>>>();
@@ -65,14 +65,14 @@ namespace StrongGrid.Utilities
 
 				foreach (var header in responseHeaders.OrderBy(kvp => kvp.Key))
 				{
-					logTemplate.AppendLine("  " + header.Key + ": {Response_Header_" + header.Key + "}");
+					logTemplate.AppendLine("  " + header.Key + ": {" + (structuredFormat ? "Response_Header_" + header.Key : parameterIndex++) + "}");
 				}
 
-				logTemplate.AppendLine("RESPONSE: {Response_Content}");
+				logTemplate.AppendLine("RESPONSE: {" + (structuredFormat ? "Response_Content" : parameterIndex++) + "}");
 				logTemplate.AppendLine();
 			}
 
-			logTemplate.AppendLine("DIAGNOSTIC: The request took {Diagnostic_Elapsed:N} milliseconds");
+			logTemplate.AppendLine("DIAGNOSTIC: The request took {" + (structuredFormat ? "Diagnostic_Elapsed" : parameterIndex++) + ":N} milliseconds");
 
 			return logTemplate.ToString();
 		}
@@ -135,12 +135,9 @@ namespace StrongGrid.Utilities
 
 		public string GetFormattedLog()
 		{
-			var template = GetLoggingTemplate();
-			var args = GetLoggingParameters();
-
-			var formater = new LogValuesFormatter(template);
-			var formattedLog = formater.Format(args);
-
+			var template = GetLoggingTemplate(false);
+			var parameters = GetLoggingParameters();
+			var formattedLog = string.Format(template, parameters);
 			return formattedLog;
 		}
 	}

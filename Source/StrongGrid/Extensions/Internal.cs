@@ -1,3 +1,4 @@
+using HttpMultipartParser;
 using Pathoschild.Http.Client;
 using StrongGrid.Json;
 using StrongGrid.Models;
@@ -18,7 +19,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using static StrongGrid.Utilities.DiagnosticHandler;
 
 namespace StrongGrid
 {
@@ -49,7 +49,7 @@ namespace StrongGrid
 		{
 			if (precision == UnixTimePrecision.Seconds) return EPOCH.AddSeconds(unixTime);
 			if (precision == UnixTimePrecision.Milliseconds) return EPOCH.AddMilliseconds(unixTime);
-			throw new Exception($"Unknown precision: {precision}");
+			throw new ArgumentOutOfRangeException($"Unknown precision: {precision}");
 		}
 
 		/// <summary>
@@ -66,7 +66,7 @@ namespace StrongGrid
 			var diff = date.ToUniversalTime() - EPOCH;
 			if (precision == UnixTimePrecision.Seconds) return Convert.ToInt64(diff.TotalSeconds);
 			if (precision == UnixTimePrecision.Milliseconds) return Convert.ToInt64(diff.TotalMilliseconds);
-			throw new Exception($"Unknown precision: {precision}");
+			throw new ArgumentOutOfRangeException($"Unknown precision: {precision}");
 		}
 
 		/// <summary>
@@ -127,23 +127,19 @@ namespace StrongGrid
 
 				// This is important: we must make a copy of the response stream otherwise we would get an
 				// exception on subsequent attempts to read the content of the stream
-				using (var ms = Utils.MemoryStreamManager.GetStream())
-				{
-					const int DefaultBufferSize = 81920;
-					await contentStream.CopyToAsync(ms, DefaultBufferSize, cancellationToken).ConfigureAwait(false);
-					ms.Position = 0;
-					using (var sr = new StreamReader(ms, encoding))
-					{
+				using var ms = Utils.MemoryStreamManager.GetStream();
+				const int DefaultBufferSize = 81920;
+				await contentStream.CopyToAsync(ms, DefaultBufferSize, cancellationToken).ConfigureAwait(false);
+				ms.Position = 0;
+				using var sr = new StreamReader(ms, encoding);
 #if NET7_0_OR_GREATER
-						content = await sr.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
+				content = await sr.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
 #else
-						content = await sr.ReadToEndAsync().ConfigureAwait(false);
+				content = await sr.ReadToEndAsync().ConfigureAwait(false);
 #endif
-					}
 
-					// Rewind the stream (if permitted)
-					if (contentStream.CanSeek) contentStream.Position = 0;
-				}
+				// It's important to rewind the stream
+				if (contentStream.CanSeek) contentStream.Position = 0;
 			}
 
 			return content;
@@ -190,6 +186,19 @@ namespace StrongGrid
 			}
 
 			return encoding;
+		}
+
+		/// <summary>
+		/// Returns the value of a parameter or the default value if it doesn't exist.
+		/// </summary>
+		/// <param name="parser">The parser.</param>
+		/// <param name="name">The name of the parameter.</param>
+		/// <param name="defaultValue">The default value.</param>
+		/// <returns>The value of the parameter.</returns>
+		internal static string GetParameterValue(this MultipartFormDataParser parser, string name, string defaultValue)
+		{
+			if (parser.HasParameter(name)) return parser.GetParameterValue(name);
+			else return defaultValue;
 		}
 
 		/// <summary>Asynchronously retrieve the JSON encoded response body and convert it to an object of the desired type.</summary>
@@ -379,7 +388,7 @@ namespace StrongGrid
 			return !string.IsNullOrEmpty(value) && value.EndsWith(suffix) ? value : string.Concat(value, suffix);
 		}
 
-		internal static JsonElement? GetProperty(this JsonElement element, string name, bool throwIfMissing = true)
+		internal static JsonElement? GetProperty(this JsonElement element, string name, bool throwIfMissing)
 		{
 			var parts = name.Split('/');
 			if (!element.TryGetProperty(parts[0], out var property))
@@ -455,55 +464,51 @@ namespace StrongGrid
 		internal static async Task<TResult[]> ForEachAsync<T, TResult>(this IEnumerable<T> items, Func<T, Task<TResult>> action, int maxDegreeOfParalellism)
 		{
 			var allTasks = new List<Task<TResult>>();
-			using (var throttler = new SemaphoreSlim(initialCount: maxDegreeOfParalellism))
+			using var throttler = new SemaphoreSlim(initialCount: maxDegreeOfParalellism);
+			foreach (var item in items)
 			{
-				foreach (var item in items)
-				{
-					await throttler.WaitAsync();
-					allTasks.Add(
-						Task.Run(async () =>
+				await throttler.WaitAsync();
+				allTasks.Add(
+					Task.Run(async () =>
+					{
+						try
 						{
-							try
-							{
-								return await action(item).ConfigureAwait(false);
-							}
-							finally
-							{
-								throttler.Release();
-							}
-						}));
-				}
-
-				var results = await Task.WhenAll(allTasks).ConfigureAwait(false);
-				return results;
+							return await action(item).ConfigureAwait(false);
+						}
+						finally
+						{
+							throttler.Release();
+						}
+					}));
 			}
+
+			var results = await Task.WhenAll(allTasks).ConfigureAwait(false);
+			return results;
 		}
 
 		internal static async Task<TResult[]> ForEachAsync<T, TResult>(this IEnumerable<T> items, Func<T, int, Task<TResult>> action, int maxDegreeOfParalellism)
 		{
 			var allTasks = new List<Task<TResult>>();
-			using (var throttler = new SemaphoreSlim(initialCount: maxDegreeOfParalellism))
+			using var throttler = new SemaphoreSlim(initialCount: maxDegreeOfParalellism);
+			foreach (var (item, index) in items.Select((value, i) => (value, i)))
 			{
-				foreach (var (item, index) in items.Select((value, i) => (value, i)))
-				{
-					await throttler.WaitAsync();
-					allTasks.Add(
-						Task.Run(async () =>
+				await throttler.WaitAsync();
+				allTasks.Add(
+					Task.Run(async () =>
+					{
+						try
 						{
-							try
-							{
-								return await action(item, index).ConfigureAwait(false);
-							}
-							finally
-							{
-								throttler.Release();
-							}
-						}));
-				}
-
-				var results = await Task.WhenAll(allTasks).ConfigureAwait(false);
-				return results;
+							return await action(item, index).ConfigureAwait(false);
+						}
+						finally
+						{
+							throttler.Release();
+						}
+					}));
 			}
+
+			var results = await Task.WhenAll(allTasks).ConfigureAwait(false);
+			return results;
 		}
 
 		internal static Task ForEachAsync<T>(this IEnumerable<T> items, Func<T, Task> action) => ForEachAsync(items, action, DEFAULT_DEGREE_OF_PARALLELISM);
@@ -513,53 +518,49 @@ namespace StrongGrid
 		internal static async Task ForEachAsync<T>(this IEnumerable<T> items, Func<T, Task> action, int maxDegreeOfParalellism)
 		{
 			var allTasks = new List<Task>();
-			using (var throttler = new SemaphoreSlim(initialCount: maxDegreeOfParalellism))
+			using var throttler = new SemaphoreSlim(initialCount: maxDegreeOfParalellism);
+			foreach (var item in items)
 			{
-				foreach (var item in items)
-				{
-					await throttler.WaitAsync();
-					allTasks.Add(
-						Task.Run(async () =>
+				await throttler.WaitAsync();
+				allTasks.Add(
+					Task.Run(async () =>
+					{
+						try
 						{
-							try
-							{
-								await action(item).ConfigureAwait(false);
-							}
-							finally
-							{
-								throttler.Release();
-							}
-						}));
-				}
-
-				await Task.WhenAll(allTasks).ConfigureAwait(false);
+							await action(item).ConfigureAwait(false);
+						}
+						finally
+						{
+							throttler.Release();
+						}
+					}));
 			}
+
+			await Task.WhenAll(allTasks).ConfigureAwait(false);
 		}
 
 		internal static async Task ForEachAsync<T>(this IEnumerable<T> items, Func<T, int, Task> action, int maxDegreeOfParalellism)
 		{
 			var allTasks = new List<Task>();
-			using (var throttler = new SemaphoreSlim(initialCount: maxDegreeOfParalellism))
+			using var throttler = new SemaphoreSlim(initialCount: maxDegreeOfParalellism);
+			foreach (var (item, index) in items.Select((value, i) => (value, i)))
 			{
-				foreach (var (item, index) in items.Select((value, i) => (value, i)))
-				{
-					await throttler.WaitAsync();
-					allTasks.Add(
-						Task.Run(async () =>
+				await throttler.WaitAsync();
+				allTasks.Add(
+					Task.Run(async () =>
+					{
+						try
 						{
-							try
-							{
-								await action(item, index).ConfigureAwait(false);
-							}
-							finally
-							{
-								throttler.Release();
-							}
-						}));
-				}
-
-				await Task.WhenAll(allTasks).ConfigureAwait(false);
+							await action(item, index).ConfigureAwait(false);
+						}
+						finally
+						{
+							throttler.Release();
+						}
+					}));
 			}
+
+			await Task.WhenAll(allTasks).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -884,6 +885,11 @@ namespace StrongGrid
 			return jsonObject;
 		}
 
+		internal static bool IsNullableType(this Type type)
+		{
+			return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+		}
+
 		/// <summary>Asynchronously converts the JSON encoded content and convert it to an object of the desired type.</summary>
 		/// <typeparam name="T">The response model to deserialize into.</typeparam>
 		/// <param name="httpContent">The content.</param>
@@ -991,7 +997,11 @@ namespace StrongGrid
 				if (property.HasValue) break;
 			}
 
-			if (!property.HasValue) return defaultValue;
+			if (!property.HasValue)
+			{
+				if (throwIfMissing) throw new Exception($"Unable to find {string.Join(", ", names)} in the Json document");
+				else return defaultValue;
+			}
 
 			var typeOfT = typeof(T);
 
@@ -1005,8 +1015,10 @@ namespace StrongGrid
 				};
 			}
 
-			if (typeOfT.IsGenericType && typeOfT.GetGenericTypeDefinition() == typeof(Nullable<>))
+			if (typeOfT.IsNullableType())
 			{
+				if (property.Value.ValueKind == JsonValueKind.Null) return (T)default;
+
 				var underlyingType = Nullable.GetUnderlyingType(typeOfT);
 				var getElementValue = typeof(Internal)
 					.GetMethod(nameof(Internal.GetElementValue), BindingFlags.Static | BindingFlags.NonPublic)
@@ -1017,6 +1029,8 @@ namespace StrongGrid
 
 			if (typeOfT.IsArray)
 			{
+				if (property.Value.ValueKind == JsonValueKind.Null) return (T)default;
+
 				var elementType = typeOfT.GetElementType();
 				var getElementValue = typeof(Internal)
 					.GetMethod(nameof(Internal.GetElementValue), BindingFlags.Static | BindingFlags.NonPublic)
@@ -1038,6 +1052,13 @@ namespace StrongGrid
 		private static T GetElementValue<T>(this JsonElement element)
 		{
 			var typeOfT = typeof(T);
+
+			if (element.ValueKind == JsonValueKind.Null)
+			{
+				return typeOfT.IsNullableType()
+					? (T)default
+					: throw new Exception($"JSON contains a null value but {typeOfT.FullName} is not nullable");
+			}
 
 			return typeOfT switch
 			{

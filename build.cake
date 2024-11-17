@@ -1,13 +1,13 @@
 // Install tools.
-#tool dotnet:?package=GitVersion.Tool&version=5.12.0
+#tool dotnet:?package=GitVersion.Tool&version=6.0.5
 #tool dotnet:?package=coveralls.net&version=4.0.1
-#tool nuget:https://f.feedz.io/jericho/jericho/nuget/?package=GitReleaseManager&version=0.17.0-collaborators0004
-#tool nuget:?package=ReportGenerator&version=5.3.6
-#tool nuget:?package=xunit.runner.console&version=2.8.1
-#tool nuget:?package=CodecovUploader&version=0.7.3
+#tool nuget:https://f.feedz.io/jericho/jericho/nuget/?package=GitReleaseManager&version=0.17.0-collaborators0008
+#tool nuget:?package=ReportGenerator&version=5.4.1
+#tool nuget:?package=xunit.runner.console&version=2.9.2
+#tool nuget:?package=CodecovUploader&version=0.8.0
 
 // Install addins.
-#addin nuget:?package=Cake.Coveralls&version=1.1.0
+#addin nuget:?package=Cake.Coveralls&version=4.0.0
 #addin nuget:?package=Cake.Git&version=4.0.0
 #addin nuget:?package=Cake.Codecov&version=3.0.0
 
@@ -86,6 +86,8 @@ var isTagged = BuildSystem.AppVeyor.Environment.Repository.Tag.IsTag && !string.
 var isIntegrationTestsProjectPresent = FileExists(integrationTestsProject);
 var isUnitTestsProjectPresent = FileExists(unitTestsProject);
 var isBenchmarkProjectPresent = FileExists(benchmarkProject);
+var removeIntegrationTests = isIntegrationTestsProjectPresent && (!isLocalBuild || target == "coverage");
+var removeBenchmarks = isBenchmarkProjectPresent && (!isLocalBuild || target == "coverage");
 
 var publishingError = false;
 
@@ -122,7 +124,7 @@ Setup(context =>
 	milestone = versionInfo.MajorMinorPatch;
 
 	Information("Building version {0} of {1} ({2}, {3}) using version {4} of Cake",
-		versionInfo.LegacySemVerPadded,
+		versionInfo.FullSemVer,
 		libraryName,
 		configuration,
 		target,
@@ -162,7 +164,7 @@ Setup(context =>
 	// Integration tests are intended to be used for debugging purposes and not intended to be executed in CI environment.
 	// Also, the runner for these tests contains windows-specific code (such as resizing window, moving window to center of screen, etc.)
 	// which can cause problems when attempting to run unit tests on an Ubuntu image on AppVeyor.
-	if (!isLocalBuild && isIntegrationTestsProjectPresent)
+	if (removeIntegrationTests)
 	{
 		Information("");
 		Information("Removing integration tests");
@@ -172,7 +174,7 @@ Setup(context =>
 	// Similarly, benchmarking can causes problems similar to this one:
 	// error NETSDK1005: Assets file '/home/appveyor/projects/stronggrid/Source/StrongGrid.Benchmark/obj/project.assets.json' doesn't have a target for 'net5.0'.
 	// Ensure that restore has run and that you have included 'net5.0' in the TargetFrameworks for your project.
-	if (!isLocalBuild && isBenchmarkProjectPresent)
+	if (removeBenchmarks)
 	{
 		Information("");
 		Information("Removing benchmark project");
@@ -182,7 +184,7 @@ Setup(context =>
 
 Teardown(context =>
 {
-	if (!isLocalBuild)
+	if (removeIntegrationTests || removeBenchmarks)
 	{
 		Information("Restoring projects that may have been removed during build script setup");
 		GitCheckout(".", new FilePath[] { solutionFile });
@@ -250,7 +252,7 @@ Task("Build")
 		NoRestore = true,
 		MSBuildSettings = new DotNetMSBuildSettings
 		{
-			Version = versionInfo.LegacySemVerPadded,
+			Version = versionInfo.SemVer,
 			AssemblyVersion = versionInfo.MajorMinorPatch,
 			FileVersion = versionInfo.MajorMinorPatch,
 			InformationalVersion = versionInfo.InformationalVersion,
@@ -352,7 +354,7 @@ Task("Generate-Code-Coverage-Report")
 		new FilePath(coverageFile),
 		codeCoverageDir,
 		new ReportGeneratorSettings() {
-			ClassFilters = new[] { "*.UnitTests*" }
+			ClassFilters = new[] { "+*" }
 		}
 	);
 });
@@ -376,7 +378,7 @@ Task("Create-NuGet-Package")
 		MSBuildSettings = new DotNetMSBuildSettings
 		{
 			PackageReleaseNotes = releaseNotesUrl,
-			PackageVersion = versionInfo.LegacySemVerPadded
+			PackageVersion = versionInfo.FullSemVer.Replace('+', '-')
 		}
 	};
 

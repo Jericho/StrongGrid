@@ -51,6 +51,7 @@ namespace StrongGrid.IntegrationTests.Tests
 
 			// GET THE CURRENT USER'S PERMISSIONS
 			var permissions = await client.User.GetPermissionsAsync(null, cancellationToken).ConfigureAwait(false);
+			Array.Sort(permissions); // Sort the permissions alphabetically for convenience
 			await log.WriteLineAsync($"Current user has been granted {permissions.Length} permissions").ConfigureAwait(false);
 
 			// CREATE AND DELETE A BILLING API KEY (if authorized)
