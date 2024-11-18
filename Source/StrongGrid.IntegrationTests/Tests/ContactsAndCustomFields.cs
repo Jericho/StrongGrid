@@ -54,7 +54,7 @@ namespace StrongGrid.IntegrationTests.Tests
 			//--------------------------------------------------
 
 			fields = await client.CustomFields.GetAllAsync(cancellationToken).ConfigureAwait(false);
-			await log.WriteLineAsync($"All custom fields retrieved. There are {fields.Length} fields").ConfigureAwait(false);
+			await log.WriteLineAsync($"All fields retrieved. There are {fields.OfType<ReservedFieldMetadata>().Count()} reserved fields and {fields.OfType<CustomFieldMetadata>().Count()} custom fields").ConfigureAwait(false);
 
 			var email = "111@example.com";
 			var firstName = "John";
