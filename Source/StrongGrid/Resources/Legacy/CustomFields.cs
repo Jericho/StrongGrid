@@ -39,7 +39,7 @@ namespace StrongGrid.Resources.Legacy
 		{
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
-			data.AddProperty("type", type.ToEnumString());
+			data.AddProperty("type", type.ToEnumString().ToLower()); // The SendGrid API expects this value to be lower-case.
 
 			return _client
 				.PostAsync(_endpoint)
