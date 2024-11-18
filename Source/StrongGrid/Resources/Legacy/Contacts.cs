@@ -62,6 +62,8 @@ namespace StrongGrid.Resources.Legacy
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
+				.WithoutFilter<SendGridErrorHandler>() // The response may contain "errors" to indicate that some contacts were not imported but it should not cause an exception to be thrown.
+				.WithFilter(new DefaultErrorFilter()) // Therefore it's important to remove the SendGridErrorHandler and to use the default error filter instead.
 				.AsObject<Models.Legacy.ImportResult>()
 				.ConfigureAwait(false);
 
@@ -97,6 +99,8 @@ namespace StrongGrid.Resources.Legacy
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
+				.WithoutFilter<SendGridErrorHandler>() // The response may contain "errors" to indicate that some contacts were not imported but it should not cause an exception to be thrown.
+				.WithFilter(new DefaultErrorFilter()) // Therefore it's important to remove the SendGridErrorHandler and to use the default error filter instead.
 				.AsResponse();
 		}
 
