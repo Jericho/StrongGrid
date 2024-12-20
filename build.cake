@@ -1,5 +1,5 @@
 // Install tools.
-#tool dotnet:?package=GitVersion.Tool&version=6.0.5
+#tool dotnet:?package=GitVersion.Tool&version=6.1.0
 #tool dotnet:?package=coveralls.net&version=4.0.1
 #tool nuget:https://f.feedz.io/jericho/jericho/nuget/?package=GitReleaseManager&version=0.17.0-collaborators0008
 #tool nuget:?package=ReportGenerator&version=5.4.1
@@ -8,7 +8,7 @@
 
 // Install addins.
 #addin nuget:?package=Cake.Coveralls&version=4.0.0
-#addin nuget:?package=Cake.Git&version=4.0.0
+#addin nuget:?package=Cake.Git&version=5.0.1
 #addin nuget:?package=Cake.Codecov&version=3.0.0
 
 
@@ -63,7 +63,7 @@ var sourceFolder = "./Source/";
 var outputDir = "./artifacts/";
 var codeCoverageDir = $"{outputDir}CodeCoverage/";
 var benchmarkDir = $"{outputDir}Benchmark/";
-var coverageFile = $"{codeCoverageDir}coverage.{DefaultFramework}.xml";
+var coverageFile = $"{codeCoverageDir}coverage.{DEFAULT_FRAMEWORK}.xml";
 
 var solutionFile = $"{sourceFolder}{libraryName}.sln";
 var sourceProject = $"{sourceFolder}{libraryName}/{libraryName}.csproj";
@@ -96,15 +96,12 @@ var publishingError = false;
 // - when building source project on Ubuntu
 // - when running unit tests on Ubuntu
 // - when calculating code coverage
-// FYI, this will cause an error if the source project and/or the unit test project are not configured to target this desired framework:
-const string DefaultFramework = "net7.0";
-var desiredFramework = (
-		!IsRunningOnWindows() ||
+const string DEFAULT_FRAMEWORK = "net9.0";
+var isSingleTfmMode = !IsRunningOnWindows() ||
 		target.Equals("Coverage", StringComparison.OrdinalIgnoreCase) ||
 		target.Equals("Run-Code-Coverage", StringComparison.OrdinalIgnoreCase) ||
 		target.Equals("Generate-Code-Coverage-Report", StringComparison.OrdinalIgnoreCase) ||
-		target.Equals("Upload-Coverage-Result", StringComparison.OrdinalIgnoreCase)
-	) ? DefaultFramework : null;
+		target.Equals("Upload-Coverage-Result", StringComparison.OrdinalIgnoreCase);
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -180,6 +177,18 @@ Setup(context =>
 		Information("Removing benchmark project");
 		DotNetTool(solutionFile, "sln", $"remove {benchmarkProject.TrimStart(sourceFolder, StringComparison.OrdinalIgnoreCase)}");
 	}
+
+	// In single TFM mode we want to override the framework(s) with our desired framework
+	if (isSingleTfmMode)
+	{
+		var peekSettings = new XmlPeekSettings { SuppressWarning = true };
+		foreach(var projectFile in GetFiles("./Source/**/*.csproj"))
+		{
+			Information("Updating TFM in: {0}", projectFile.ToString());
+			if (XmlPeek(projectFile, "/Project/PropertyGroup/TargetFramework", peekSettings) != null) XmlPoke(projectFile, "/Project/PropertyGroup/TargetFramework", DEFAULT_FRAMEWORK);
+			if (XmlPeek(projectFile, "/Project/PropertyGroup/TargetFrameworks", peekSettings) != null) XmlPoke(projectFile, "/Project/PropertyGroup/TargetFrameworks", DEFAULT_FRAMEWORK);
+		}
+	}
 });
 
 Teardown(context =>
@@ -188,6 +197,14 @@ Teardown(context =>
 	{
 		Information("Restoring projects that may have been removed during build script setup");
 		GitCheckout(".", new FilePath[] { solutionFile });
+		Information("  Restored {0}", solutionFile.ToString());
+		Information("");
+	}
+
+	if (isSingleTfmMode)
+	{
+		Information("Restoring project files that may have been modified during build script setup");
+		GitCheckout(".", GetFiles("./Source/**/*.csproj").ToArray());
 		Information("");
 	}
 
@@ -248,7 +265,7 @@ Task("Build")
 	DotNetBuild(solutionFile, new DotNetBuildSettings
 	{
 		Configuration = configuration,
-		Framework =  desiredFramework,
+		Framework =  isSingleTfmMode ? DEFAULT_FRAMEWORK : null,
 		NoRestore = true,
 		MSBuildSettings = new DotNetMSBuildSettings
 		{
@@ -271,7 +288,7 @@ Task("Run-Unit-Tests")
 		NoBuild = true,
 		NoRestore = true,
 		Configuration = configuration,
-		Framework = desiredFramework
+		Framework = isSingleTfmMode ? DEFAULT_FRAMEWORK : null
 	});
 });
 
@@ -285,7 +302,7 @@ Task("Run-Code-Coverage")
 		NoBuild = true,
 		NoRestore = true,
 		Configuration = configuration,
-		Framework = DefaultFramework,
+		Framework = isSingleTfmMode ? DEFAULT_FRAMEWORK : null,
 
 		// The following assumes that coverlet.msbuild has been added to the unit testing project
 		ArgumentCustomization = args => args
