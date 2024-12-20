@@ -67,7 +67,18 @@ namespace StrongGrid.Resources.Legacy
 				.AsObject<Models.Legacy.ImportResult>()
 				.ConfigureAwait(false);
 
-			return importResult.PersistedRecipients.Single();
+			if (importResult.ErrorCount > 0)
+			{
+				throw new Exception(importResult.Errors[0].Message);
+			}
+			else if (importResult.NewCount == 1 || importResult.UpdatedCount == 1)
+			{
+				return importResult.PersistedRecipients.Single();
+			}
+			else
+			{
+				throw new Exception("Something went wrong but we were unable to determine what went wrong.");
+			}
 		}
 
 		/// <summary>
@@ -83,7 +94,7 @@ namespace StrongGrid.Resources.Legacy
 		/// The async task.
 		/// </returns>
 		/// <exception cref="SendGridException">Thrown when an exception occurred while updating the contact.</exception>
-		public Task UpdateAsync(
+		public async Task UpdateAsync(
 			string email,
 			Parameter<string> firstName = default,
 			Parameter<string> lastName = default,
@@ -94,14 +105,20 @@ namespace StrongGrid.Resources.Legacy
 			// SendGrid expects an array despite the fact we are updating a single contact
 			var data = new[] { ConvertToJson(email, firstName, lastName, customFields) };
 
-			return _client
+			var importResult = await _client
 				.PatchAsync(_endpoint)
 				.OnBehalfOf(onBehalfOf)
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
 				.WithoutFilter<SendGridErrorHandler>() // The response may contain "errors" to indicate that some contacts were not imported but it should not cause an exception to be thrown.
 				.WithFilter(new DefaultErrorFilter()) // Therefore it's important to remove the SendGridErrorHandler and to use the default error filter instead.
-				.AsResponse();
+				.AsObject<Models.Legacy.ImportResult>()
+				.ConfigureAwait(false);
+
+			if (importResult.ErrorCount > 0)
+			{
+				throw new Exception(importResult.Errors[0].Message);
+			}
 		}
 
 		/// <summary>
