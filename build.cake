@@ -2,8 +2,8 @@
 #tool dotnet:?package=GitVersion.Tool&version=6.1.0
 #tool dotnet:?package=coveralls.net&version=4.0.1
 #tool nuget:https://f.feedz.io/jericho/jericho/nuget/?package=GitReleaseManager&version=0.17.0-collaborators0008
-#tool nuget:?package=ReportGenerator&version=5.4.1
-#tool nuget:?package=xunit.runner.console&version=2.9.2
+#tool nuget:?package=ReportGenerator&version=5.4.3
+#tool nuget:?package=xunit.runner.console&version=2.9.3
 #tool nuget:?package=CodecovUploader&version=0.8.0
 
 // Install addins.
