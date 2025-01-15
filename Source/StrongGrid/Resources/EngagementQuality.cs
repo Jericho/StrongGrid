@@ -28,15 +28,25 @@ namespace StrongGrid.Resources
 		}
 
 		/// <inheritdoc/>
-		public Task<EngagementQualityScore[]> GetScoresAsync(DateTime? startDate = null, DateTime? endDate = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
+		public async Task<EngagementQualityScore[]> GetScoresAsync(DateTime? startDate = null, DateTime? endDate = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			return _client
+			var response = await _client
 				.GetAsync(_endpoint)
 				.WithArgument("from", startDate?.ToString("yyyy-MM-dd"))
 				.WithArgument("to", endDate?.ToString("yyyy-MM-dd"))
 				.OnBehalfOf(onBehalfOf)
 				.WithCancellationToken(cancellationToken)
-				.AsObject<EngagementQualityScore[]>("result");
+				.AsResponse()
+				.ConfigureAwait(false);
+
+			// According to SendGrid documentation, HTTP 202 means that SendGrid
+			// does not yet have scores available for the specified date range.
+			if (response.Status == System.Net.HttpStatusCode.Accepted)
+			{
+				return Array.Empty<EngagementQualityScore>();
+			}
+
+			return await response.AsObject<EngagementQualityScore[]>("result").ConfigureAwait(false);
 		}
 	}
 }
