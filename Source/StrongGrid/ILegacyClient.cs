@@ -1,8 +1,11 @@
+using System;
+
 namespace StrongGrid
 {
 	/// <summary>
 	/// Interface for the SendGrid REST client for SendGrid's legacy API.
 	/// </summary>
+	[Obsolete("The legacy client, legacy resources and legacy model classes are obsolete")]
 	public interface ILegacyClient
 	{
 		/// <summary>

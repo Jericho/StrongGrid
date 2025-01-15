@@ -1,5 +1,6 @@
 using StrongGrid.Models;
 using StrongGrid.Utilities;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace StrongGrid.Resources.Legacy
 	/// <remarks>
 	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/sender_identities.html">SendGrid documentation</a> for more information.
 	/// </remarks>
+	[Obsolete("The legacy client, legacy resources and legacy model classes are obsolete")]
 	public interface ISenderIdentities
 	{
 		/// <summary>

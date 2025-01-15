@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.Legacy
@@ -5,6 +6,7 @@ namespace StrongGrid.Models.Legacy
 	/// <summary>
 	/// A field.
 	/// </summary>
+	[Obsolete("The legacy client, legacy resources and legacy model classes are obsolete")]
 	public class Field
 	{
 		/// <summary>
