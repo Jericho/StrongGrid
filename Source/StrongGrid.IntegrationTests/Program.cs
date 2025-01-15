@@ -13,7 +13,7 @@ namespace StrongGrid.IntegrationTests
 	{
 		public static async Task Main(string[] args)
 		{
-			//var serializerContext = GenerateAttributesForSerializerContext();
+			var serializerContext = GenerateAttributesForSerializerContext();
 
 			// Configure cancellation (this allows you to press CTRL+C or CTRL+Break to stop the integration tests)
 			var cts = new CancellationTokenSource();
