@@ -2,6 +2,7 @@ using Formitable.BetterStack.Logger.Microsoft;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 using System;
 using System.Linq;
 using System.Threading;
@@ -54,7 +55,8 @@ namespace StrongGrid.IntegrationTests
 						options.TimestampFormat = "yyyy-MM-dd HH:mm:ss ";
 					});
 
-					logging.AddFilter("*", LogLevel.Debug);
+					logging.AddFilter(logLevel => logLevel >= LogLevel.Debug);
+					logging.AddFilter<ConsoleLoggerProvider>(logLevel => logLevel >= LogLevel.Information);
 				});
 		}
 
