@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1520,19 +1521,12 @@ namespace StrongGrid
 			*/
 
 #if NET5_0_OR_GREATER
-			throw new Exception("NET5_0_OR_GREATER");
-
 			// Verify the signature
-			/*
 			var eCDsa = ECDsa.Create();
 			eCDsa.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
 			var verified = eCDsa.VerifyData(data, signatureBytes, HashAlgorithmName.SHA256, DSASignatureFormat.Rfc3279DerSequence);
-			*/
 #elif NET48_OR_GREATER || NETSTANDARD2_1
-			throw new Exception("NET48_OR_GREATER || NETSTANDARD2_1");
-
 			// Convert the signature and public key provided by SendGrid into formats usable by the ECDsa .net crypto class
-			/*
 			var sig = ConvertECDSASignature.LightweightConvertSignatureFromX9_62ToISO7816_8(256, signatureBytes);
 			var (x, y) = Utils.GetXYFromSecp256r1PublicKey(publicKeyBytes);
 
@@ -1547,8 +1541,9 @@ namespace StrongGrid
 					Y = y
 				}
 			});
-			var verified = eCDsa.VerifyData(data, sig, HashAlgorithmName.SHA256);
-			*/
+			throw new Exception("before VerifyData");
+
+			// var verified = eCDsa.VerifyData(data, sig, HashAlgorithmName.SHA256);
 #else
 #error Unhandled TFM
 #endif
