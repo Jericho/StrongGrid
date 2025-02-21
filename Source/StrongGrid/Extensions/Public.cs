@@ -1522,14 +1522,14 @@ namespace StrongGrid
 			*/
 
 #if NET5_0_OR_GREATER
-			Console.WriteLine("NET5_0_OR_GREATER");
+			throw new Exception("NET5_0_OR_GREATER");
 
 			// Verify the signature
 			var eCDsa = ECDsa.Create();
 			eCDsa.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
 			var verified = eCDsa.VerifyData(data, signatureBytes, HashAlgorithmName.SHA256, DSASignatureFormat.Rfc3279DerSequence);
 #elif NET48_OR_GREATER || NETSTANDARD2_1
-			Console.WriteLine("NET48_OR_GREATER || NETSTANDARD2_1");
+			throw new Exception("NET48_OR_GREATER || NETSTANDARD2_1");
 
 			// Convert the signature and public key provided by SendGrid into formats usable by the ECDsa .net crypto class
 			var sig = ConvertECDSASignature.LightweightConvertSignatureFromX9_62ToISO7816_8(256, signatureBytes);
