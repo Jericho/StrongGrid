@@ -1397,8 +1397,8 @@ namespace StrongGrid
 		/// The <see cref="ApiKey" />.
 		/// </returns>
 		/// <remarks>
-		/// If you specify an API Key when instanciating the <see cref="Client" />, the new API Key will inherit the permissions of that API Key.
-		/// If you specify a username and password when instanciating the <see cref="Client" />, the new API Key will inherit the permissions of that user.
+		/// If you specify an API Key when instanciating the <see cref="StrongGridClient" />, the new API Key will inherit the permissions of that API Key.
+		/// If you specify a username and password when instanciating the <see cref="StrongGridClient" />, the new API Key will inherit the permissions of that user.
 		/// </remarks>
 		public static async Task<ApiKey> CreateWithAllPermissionsAsync(this IApiKeys apiKeys, string name, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
