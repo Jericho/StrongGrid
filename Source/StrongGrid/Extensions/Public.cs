@@ -9,8 +9,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1525,39 +1523,39 @@ namespace StrongGrid
 			throw new Exception("NET5_0_OR_GREATER");
 
 			// Verify the signature
-			var eCDsa = ECDsa.Create();
-			eCDsa.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
-			var verified = eCDsa.VerifyData(data, signatureBytes, HashAlgorithmName.SHA256, DSASignatureFormat.Rfc3279DerSequence);
+			//var eCDsa = ECDsa.Create();
+			//eCDsa.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
+			//var verified = eCDsa.VerifyData(data, signatureBytes, HashAlgorithmName.SHA256, DSASignatureFormat.Rfc3279DerSequence);
 #elif NET48_OR_GREATER || NETSTANDARD2_1
 			throw new Exception("NET48_OR_GREATER || NETSTANDARD2_1");
 
 			// Convert the signature and public key provided by SendGrid into formats usable by the ECDsa .net crypto class
-			var sig = ConvertECDSASignature.LightweightConvertSignatureFromX9_62ToISO7816_8(256, signatureBytes);
-			var (x, y) = Utils.GetXYFromSecp256r1PublicKey(publicKeyBytes);
+			//var sig = ConvertECDSASignature.LightweightConvertSignatureFromX9_62ToISO7816_8(256, signatureBytes);
+			//var (x, y) = Utils.GetXYFromSecp256r1PublicKey(publicKeyBytes);
 
-			// Verify the signature
-			var eCDsa = ECDsa.Create();
-			eCDsa.ImportParameters(new ECParameters
-			{
-				Curve = ECCurve.NamedCurves.nistP256, // aka secp256r1 aka prime256v1
-				Q = new ECPoint
-				{
-					X = x,
-					Y = y
-				}
-			});
-			var verified = eCDsa.VerifyData(data, sig, HashAlgorithmName.SHA256);
+			//// Verify the signature
+			//var eCDsa = ECDsa.Create();
+			//eCDsa.ImportParameters(new ECParameters
+			//{
+			//	Curve = ECCurve.NamedCurves.nistP256, // aka secp256r1 aka prime256v1
+			//	Q = new ECPoint
+			//	{
+			//		X = x,
+			//		Y = y
+			//	}
+			//});
+			//var verified = eCDsa.VerifyData(data, sig, HashAlgorithmName.SHA256);
 #else
 #error Unhandled TFM
 #endif
 
-			if (!verified)
-			{
-				throw new SecurityException("Webhook signature validation failed.");
-			}
+			//if (!verified)
+			//{
+			//	throw new SecurityException("Webhook signature validation failed.");
+			//}
 
-			var webHookEvents = parser.ParseEventsWebhook(requestBody);
-			return webHookEvents;
+			//var webHookEvents = parser.ParseEventsWebhook(requestBody);
+			//return webHookEvents;
 		}
 
 		/// <summary>
