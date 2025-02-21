@@ -1532,6 +1532,8 @@ namespace StrongGrid
 
 			// Verify the signature
 			var eCDsa = ECDsa.Create();
+			throw new Exception("before ImportParameters");
+			/*
 			eCDsa.ImportParameters(new ECParameters
 			{
 				Curve = ECCurve.NamedCurves.nistP256, // aka secp256r1 aka prime256v1
@@ -1541,9 +1543,8 @@ namespace StrongGrid
 					Y = y
 				}
 			});
-			throw new Exception("before VerifyData");
-
-			// var verified = eCDsa.VerifyData(data, sig, HashAlgorithmName.SHA256);
+			var verified = eCDsa.VerifyData(data, sig, HashAlgorithmName.SHA256);
+			*/
 #else
 #error Unhandled TFM
 #endif
