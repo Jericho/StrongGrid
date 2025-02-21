@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1530,8 +1531,6 @@ namespace StrongGrid
 			var (x, y) = Utils.GetXYFromSecp256r1PublicKey(publicKeyBytes);
 
 			// Verify the signature
-			throw new Exception("before ECDsa.Create");
-			/*
 			var eCDsa = ECDsa.Create();
 			eCDsa.ImportParameters(new ECParameters
 			{
@@ -1543,7 +1542,6 @@ namespace StrongGrid
 				}
 			});
 			var verified = eCDsa.VerifyData(data, sig, HashAlgorithmName.SHA256);
-			*/
 #else
 #error Unhandled TFM
 #endif
