@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1531,9 +1530,9 @@ namespace StrongGrid
 			var (x, y) = Utils.GetXYFromSecp256r1PublicKey(publicKeyBytes);
 
 			// Verify the signature
-			var eCDsa = ECDsa.Create();
-			throw new Exception("before ImportParameters");
+			throw new Exception("before ECDsa.Create");
 			/*
+			var eCDsa = ECDsa.Create();
 			eCDsa.ImportParameters(new ECParameters
 			{
 				Curve = ECCurve.NamedCurves.nistP256, // aka secp256r1 aka prime256v1
