@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -1546,7 +1547,6 @@ namespace StrongGrid
 #error Unhandled TFM
 #endif
 
-			/*
 			if (!verified)
 			{
 				throw new SecurityException("Webhook signature validation failed.");
@@ -1554,7 +1554,6 @@ namespace StrongGrid
 
 			var webHookEvents = parser.ParseEventsWebhook(requestBody);
 			return webHookEvents;
-			*/
 		}
 
 		/// <summary>
