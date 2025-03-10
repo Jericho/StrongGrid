@@ -61,14 +61,14 @@ StrongGrid currently supports:
 You declare your client variable like so:
 ```csharp
 var apiKey = "... your api key...";
-var strongGridClient = new StrongGrid.Client(apiKey);
+var strongGridClient = new StrongGridClient(apiKey);
 ```
 
 If you need to use a proxy, you can pass it to the Client:
 ```csharp
 var apiKey = "... your api key...";
 var proxy = new WebProxy("http://myproxy:1234");
-var strongGridClient = new StrongGrid.Client(apiKey, proxy);
+var strongGridClient = new StrongGridClient(apiKey, proxy);
 ```
 
 ### Lifetime management
@@ -166,7 +166,7 @@ You have access to numerous 'resources' (such as Contacts, Lists, Segments, Sett
 Here are a few example:
 ```csharp
 // Import a new contact or update existing contact if a match is found
-var importJobId = await client.Contacts.UpsertAsync(email, firstName, lastName, addressLine1, addressLine2, city, stateOrProvince, country, postalCode, alternateEmails, customFields, null, cancellationToken).ConfigureAwait(false);
+var importJobId = await strongGridClient.Contacts.UpsertAsync(email, firstName, lastName, addressLine1, addressLine2, city, stateOrProvince, country, postalCode, alternateEmails, customFields, null, cancellationToken).ConfigureAwait(false);
 
 // Import several new contacts or update existing contacts when a match is found
 var contacts = new[]
@@ -175,7 +175,7 @@ var contacts = new[]
 	new Models.Contact("dummy2@hotmail.com", "John", "Smith"),
 	new Models.Contact("dummy3@hotmail.com", "Bob", "Smith")
 };
-var importJobId = await client.Contacts.UpsertAsync(contacts, null, cancellationToken).ConfigureAwait(false);
+var importJobId = await strongGridClient.Contacts.UpsertAsync(contacts, null, cancellationToken).ConfigureAwait(false);
 
 // Send an email
 await strongGridClient.Mail.SendToSingleRecipientAsync(to, from, subject, htmlContent, textContent);
@@ -323,7 +323,7 @@ namespace WebApplication1.Controllers
 		{
 			// Get your public key
 			var apiKey = "... your api key...";
-			var strongGridClient = new StrongGrid.Client(apiKey);
+			var strongGridClient = new StrongGridClient(apiKey);
 			var publicKey = await strongGridClient.WebhookSettings.GetSignedEventsPublicKeyAsync().ConfigureAwait(false);
 
 			// Get the signature and the timestamp from the request headers
@@ -361,7 +361,7 @@ var poolName = "warmup_pool";
 var dailyVolumePerIpAddress = new[] { 50, 100, 500, 1000 };
 var resetDays = 1; // Should be 1 if you send on a daily basis, should be 2 if you send every other day, should be 7 if you send on a weekly basis, etc.
 var warmupSettings = new WarmupSettings(poolName, dailyVolumePerIpAddress, resetDays);
-var warmupEngine = new WarmupEngine(warmupSettings, client);
+var warmupEngine = new WarmupEngine(warmupSettings, strongGridClient);
 
 // This is a one-time call to create the IP pool that will be used to warmup the IP addresses
 var ipAddresses = new[] { "168.245.123.132", "168.245.123.133" };
@@ -402,7 +402,7 @@ This means that your warmup process would start all over from day 1 each time yo
 var warmupProgressRepository = new MemoryWarmupProgressRepository();
 var warmupProgressRepository = new FileSystemWarmupProgressRepository();
 var warmupProgressRepository = new FileSystemWarmupProgressRepository(@"C:\temp\myfolder\");
-var warmupEngine = new WarmupEngine(warmupSettings, client, warmupProgressRepository);
+var warmupEngine = new WarmupEngine(warmupSettings, strongGridClient, warmupProgressRepository);
 ```
 
 **Purchase new IP Addresses:** You can purchase new IP addresses using SendGrid' UI, but StrongGrid's WarmupEngine makes it even easier.
