@@ -1477,21 +1477,15 @@ namespace StrongGrid
 		/// <returns>An array of <see cref="Event">events</see>.</returns>
 		public static async Task<Event[]> ParseSignedEventsWebhookAsync(this IWebhookParser parser, Stream stream, string publicKey, string signature, string timestamp, CancellationToken cancellationToken = default)
 		{
-			Console.WriteLine("---ParseSignedEventsWebhookAsync---");
 			string requestBody;
-			Console.WriteLine("BEFORE ReadToEndAsync");
 			using (var streamReader = new StreamReader(stream))
 			{
 #if NET7_0_OR_GREATER
-				Console.WriteLine("NET7_0_OR_GREATER");
 				requestBody = await streamReader.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
 #else
-				Console.WriteLine("NOT NET7_0_OR_GREATER");
 				requestBody = await streamReader.ReadToEndAsync().ConfigureAwait(false);
 #endif
 			}
-
-			Console.WriteLine("AFTER ReadToEndAsync");
 
 			var webHookEvents = parser.ParseSignedEventsWebhook(requestBody, publicKey, signature, timestamp);
 			return webHookEvents;
