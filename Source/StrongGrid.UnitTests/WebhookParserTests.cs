@@ -5,6 +5,7 @@ using StrongGrid.Models.Webhooks;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -1031,6 +1032,18 @@ Content-Disposition: form-data; name=""attachments""
 		[Fact]
 		public void ValidateWebhookSignature()
 		{
+			var isLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+#if NET5_0_OR_GREATER
+			var isFullFramework = false;
+#elif NET48_OR_GREATER || NETSTANDARD2_1
+			var isFullFramework = true;
+#else
+#error Unhandled TFM
+#endif
+
+			// ECDsa.Create doesn't work in Linux+net48. See https://github.com/Jericho/StrongGrid/issues/548
+			Assert.SkipWhen(isLinux && isFullFramework, "Skipping because running on Linux with .NET full framework");
+
 			// Arrange
 			var parser = new WebhookParser();
 
