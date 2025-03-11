@@ -72,13 +72,13 @@ namespace StrongGrid.Resources.Legacy
 			{
 				throw new Exception(importResult.Errors[0].Message);
 			}
-			else if (importResult.NewCount == 1 || importResult.UpdatedCount == 1)
+			else if (importResult.PersistedRecipients.Length == 1)
 			{
 				return importResult.PersistedRecipients.Single();
 			}
 			else
 			{
-				throw new Exception("Something went wrong but we were unable to determine what went wrong.");
+				throw new Exception("Something went wrong but we were unable to determine what happened.");
 			}
 		}
 
