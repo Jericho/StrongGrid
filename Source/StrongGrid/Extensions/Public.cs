@@ -1482,18 +1482,6 @@ namespace StrongGrid
 			return webHookEvents;
 		}
 
-		private static Task<string> GetStreamContent(Stream stream, CancellationToken cancellationToken = default)
-		{
-			using (var streamReader = new StreamReader(stream))
-			{
-#if NET7_0_OR_GREATER
-				return streamReader.ReadToEndAsync(cancellationToken);
-#else
-				return streamReader.ReadToEndAsync();
-#endif
-			}
-		}
-
 		/// <summary>
 		/// Parses the signed events webhook.
 		/// </summary>
@@ -1668,6 +1656,18 @@ namespace StrongGrid
 		public static Task<string> GetSignedEventsPublicKeyAsync(this IWebhookSettings webhookSettings, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return webhookSettings.GetSignedEventsPublicKeyAsync(null, onBehalfOf, cancellationToken);
+		}
+
+		private static Task<string> GetStreamContent(Stream stream, CancellationToken cancellationToken = default)
+		{
+			using (var streamReader = new StreamReader(stream))
+			{
+#if NET7_0_OR_GREATER
+				return streamReader.ReadToEndAsync(cancellationToken);
+#else
+				return streamReader.ReadToEndAsync();
+#endif
+			}
 		}
 	}
 }
