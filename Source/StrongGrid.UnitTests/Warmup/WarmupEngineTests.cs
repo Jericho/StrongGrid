@@ -60,7 +60,7 @@ namespace StrongGrid.UnitTests.Warmup
 			var warmupEngine = new WarmupEngine(warmupSettings, mockClient, mockRepository, mockSystemClock);
 
 			// Act
-			await warmupEngine.PrepareWithNewIpAddressesAsync(2, new[] { subuser }, CancellationToken.None);
+			await warmupEngine.PrepareWithNewIpAddressesAsync(2, new[] { subuser }, TestContext.Current.CancellationToken);
 
 			// Assert
 		}
@@ -112,7 +112,7 @@ namespace StrongGrid.UnitTests.Warmup
 			var warmupEngine = new WarmupEngine(warmupSettings, mockClient, mockRepository, mockSystemClock);
 
 			// Act
-			var result = await warmupEngine.SendToSingleRecipientAsync(recipient, null, null, null, null, null, null, false, false, null, null, null, null, null, null, null, null, null, null, MailPriority.Normal, CancellationToken.None);
+			var result = await warmupEngine.SendToSingleRecipientAsync(recipient, null, null, null, null, null, null, false, false, null, null, null, null, null, null, null, null, null, null, MailPriority.Normal, TestContext.Current.CancellationToken);
 
 			// Assert
 			result.Completed.ShouldBeFalse();
@@ -180,7 +180,7 @@ namespace StrongGrid.UnitTests.Warmup
 			var warmupEngine = new WarmupEngine(warmupSettings, mockClient, mockRepository, mockSystemClock);
 
 			// Act
-			var result = await warmupEngine.SendAsync(personalizations, null, null, null, null, null, null, null, null, null, null, null, null, null, null, MailPriority.Normal, CancellationToken.None);
+			var result = await warmupEngine.SendAsync(personalizations, null, null, null, null, null, null, null, null, null, null, null, null, null, null, MailPriority.Normal, TestContext.Current.CancellationToken);
 
 			// Assert
 			result.Completed.ShouldBeFalse();
@@ -245,7 +245,7 @@ namespace StrongGrid.UnitTests.Warmup
 			var warmupEngine = new WarmupEngine(warmupSettings, mockClient, mockRepository, mockSystemClock);
 
 			// Act
-			var result = await warmupEngine.SendAsync(personalizations, null, null, null, null, null, null, null, null, null, null, null, null, null, null, MailPriority.Normal, CancellationToken.None);
+			var result = await warmupEngine.SendAsync(personalizations, null, null, null, null, null, null, null, null, null, null, null, null, null, null, MailPriority.Normal, TestContext.Current.CancellationToken);
 
 			// Assert
 			result.Completed.ShouldBeFalse();
@@ -310,7 +310,7 @@ namespace StrongGrid.UnitTests.Warmup
 			var warmupEngine = new WarmupEngine(warmupSettings, mockClient, mockRepository, mockSystemClock);
 
 			// Act
-			var result = await warmupEngine.SendAsync(personalizations, null, null, null, null, null, null, null, null, null, null, null, null, null, null, MailPriority.Normal, CancellationToken.None);
+			var result = await warmupEngine.SendAsync(personalizations, null, null, null, null, null, null, null, null, null, null, null, null, null, null, MailPriority.Normal, TestContext.Current.CancellationToken);
 
 			// Assert
 			result.Completed.ShouldBeFalse();
@@ -384,7 +384,7 @@ namespace StrongGrid.UnitTests.Warmup
 			var warmupEngine = new WarmupEngine(warmupSettings, mockClient, mockRepository, mockSystemClock);
 
 			// Act
-			var result = await warmupEngine.SendAsync(personalizations, null, null, null, null, null, null, null, null, null, null, null, null, null, null, MailPriority.Normal, CancellationToken.None);
+			var result = await warmupEngine.SendAsync(personalizations, null, null, null, null, null, null, null, null, null, null, null, null, null, null, MailPriority.Normal, TestContext.Current.CancellationToken);
 
 			// Assert
 			result.Completed.ShouldBeTrue();

@@ -7,7 +7,6 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -124,7 +123,7 @@ namespace StrongGrid.UnitTests.Resources
 			var accessManagement = new AccessManagement(client);
 
 			// Act
-			var result = await accessManagement.GetAccessHistoryAsync(20, null, CancellationToken.None);
+			var result = await accessManagement.GetAccessHistoryAsync(20, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -142,7 +141,7 @@ namespace StrongGrid.UnitTests.Resources
 			var accessManagement = new AccessManagement(client);
 
 			// Act
-			var result = await accessManagement.GetWhitelistedIpAddressesAsync(null, CancellationToken.None);
+			var result = await accessManagement.GetWhitelistedIpAddressesAsync(null, TestContext.Current.CancellationToken);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -162,7 +161,7 @@ namespace StrongGrid.UnitTests.Resources
 			var accessManagement = new AccessManagement(client);
 
 			// Act
-			var result = await accessManagement.AddIpAddressToWhitelistAsync(ip, null, CancellationToken.None);
+			var result = await accessManagement.AddIpAddressToWhitelistAsync(ip, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -181,7 +180,7 @@ namespace StrongGrid.UnitTests.Resources
 			var accessManagement = new AccessManagement(client);
 
 			// Act
-			var result = await accessManagement.AddIpAddressesToWhitelistAsync(ips, null, CancellationToken.None);
+			var result = await accessManagement.AddIpAddressesToWhitelistAsync(ips, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -201,7 +200,7 @@ namespace StrongGrid.UnitTests.Resources
 			var accessManagement = new AccessManagement(client);
 
 			// Act
-			await accessManagement.RemoveIpAddressFromWhitelistAsync(id, null, CancellationToken.None);
+			await accessManagement.RemoveIpAddressFromWhitelistAsync(id, null, TestContext.Current.CancellationToken);
 
 			// Assert
 		}
@@ -219,7 +218,7 @@ namespace StrongGrid.UnitTests.Resources
 			var accessManagement = new AccessManagement(client);
 
 			// Act
-			await accessManagement.RemoveIpAddressesFromWhitelistAsync(ids, null, CancellationToken.None);
+			await accessManagement.RemoveIpAddressesFromWhitelistAsync(ids, null, TestContext.Current.CancellationToken);
 
 			// Assert
 		}
@@ -239,7 +238,7 @@ namespace StrongGrid.UnitTests.Resources
 			var accessManagement = new AccessManagement(client);
 
 			// Act
-			var result = await accessManagement.GetWhitelistedIpAddressAsync(id, null, CancellationToken.None);
+			var result = await accessManagement.GetWhitelistedIpAddressAsync(id, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			result.ShouldNotBeNull();

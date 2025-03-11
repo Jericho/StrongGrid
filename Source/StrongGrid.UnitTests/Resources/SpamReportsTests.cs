@@ -148,7 +148,7 @@ namespace StrongGrid.UnitTests.Resources
 			var spamReports = new SpamReports(client);
 
 			// Act
-			var result = await spamReports.GetAsync(emailAddress, null, CancellationToken.None);
+			var result = await spamReports.GetAsync(emailAddress, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

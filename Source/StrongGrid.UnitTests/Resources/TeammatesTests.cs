@@ -162,7 +162,7 @@ namespace StrongGrid.UnitTests.Resources
 			var teammates = new Teammates(client);
 
 			// Act
-			var result = await teammates.GetAccessRequestsAsync(10, 0, CancellationToken.None);
+			var result = await teammates.GetAccessRequestsAsync(10, 0, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -184,7 +184,7 @@ namespace StrongGrid.UnitTests.Resources
 			var teammates = new Teammates(client);
 
 			// Act
-			await teammates.DenyAccessRequestAsync(requestId, CancellationToken.None);
+			await teammates.DenyAccessRequestAsync(requestId, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -204,7 +204,7 @@ namespace StrongGrid.UnitTests.Resources
 			var teammates = new Teammates(client);
 
 			// Act
-			await teammates.ApproveAccessRequestAsync(requestId, CancellationToken.None);
+			await teammates.ApproveAccessRequestAsync(requestId, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -224,7 +224,7 @@ namespace StrongGrid.UnitTests.Resources
 			var teammates = new Teammates(client);
 
 			// Act
-			await teammates.ResendInvitationAsync(token, CancellationToken.None);
+			await teammates.ResendInvitationAsync(token, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -242,7 +242,7 @@ namespace StrongGrid.UnitTests.Resources
 			var teammates = new Teammates(client);
 
 			// Act
-			var result = await teammates.GetAllPendingInvitationsAsync(50, 0, CancellationToken.None);
+			var result = await teammates.GetAllPendingInvitationsAsync(50, 0, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -264,7 +264,7 @@ namespace StrongGrid.UnitTests.Resources
 			var teammates = new Teammates(client);
 
 			// Act
-			await teammates.DeleteInvitationAsync(token, CancellationToken.None);
+			await teammates.DeleteInvitationAsync(token, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -285,7 +285,7 @@ namespace StrongGrid.UnitTests.Resources
 			var teammates = new Teammates(client);
 
 			// Act
-			var result = await teammates.InviteTeammateAsync(email, scopes, CancellationToken.None);
+			var result = await teammates.InviteTeammateAsync(email, scopes, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -306,7 +306,7 @@ namespace StrongGrid.UnitTests.Resources
 			var teammates = new Teammates(client);
 
 			// Act
-			var result = await teammates.InviteTeammateAsAdminAsync(email, CancellationToken.None);
+			var result = await teammates.InviteTeammateAsAdminAsync(email, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -325,7 +325,7 @@ namespace StrongGrid.UnitTests.Resources
 			var teammates = new Teammates(client);
 
 			// Act
-			var result = await teammates.GetAllTeammatesAsync(10, 0, CancellationToken.None);
+			var result = await teammates.GetAllTeammatesAsync(10, 0, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -347,7 +347,7 @@ namespace StrongGrid.UnitTests.Resources
 			var teammates = new Teammates(client);
 
 			// Act
-			var result = await teammates.GetTeammateAsync(username, CancellationToken.None);
+			var result = await teammates.GetTeammateAsync(username, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -369,7 +369,7 @@ namespace StrongGrid.UnitTests.Resources
 			var teammates = new Teammates(client);
 
 			// Act
-			var result = await teammates.UpdateTeammatePermissionsAsync(username, scopes, CancellationToken.None);
+			var result = await teammates.UpdateTeammatePermissionsAsync(username, scopes, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -390,7 +390,7 @@ namespace StrongGrid.UnitTests.Resources
 			var teammates = new Teammates(client);
 
 			// Act
-			await teammates.DeleteTeammateAsync(username, CancellationToken.None);
+			await teammates.DeleteTeammateAsync(username, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

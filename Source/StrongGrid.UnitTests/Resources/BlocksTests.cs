@@ -143,7 +143,7 @@ namespace StrongGrid.UnitTests.Resources
 			var blocks = new Blocks(client);
 
 			// Act
-			var result = await blocks.GetAsync(emailAddress, null, CancellationToken.None);
+			var result = await blocks.GetAsync(emailAddress, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

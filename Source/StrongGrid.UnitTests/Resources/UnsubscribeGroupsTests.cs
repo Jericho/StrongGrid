@@ -82,7 +82,7 @@ namespace StrongGrid.UnitTests.Resources
 			var goups = new UnsubscribeGroups(client);
 
 			// Act
-			var result = await goups.CreateAsync(name, description, isDefault, null, CancellationToken.None);
+			var result = await goups.CreateAsync(name, description, isDefault, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -106,7 +106,7 @@ namespace StrongGrid.UnitTests.Resources
 			var groups = new UnsubscribeGroups(client);
 
 			// Act
-			var result = await groups.GetAsync(groupId, null, CancellationToken.None);
+			var result = await groups.GetAsync(groupId, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -125,7 +125,7 @@ namespace StrongGrid.UnitTests.Resources
 			var groups = new UnsubscribeGroups(client);
 
 			// Act
-			var result = await groups.GetAllAsync(null, CancellationToken.None);
+			var result = await groups.GetAllAsync(null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -149,7 +149,7 @@ namespace StrongGrid.UnitTests.Resources
 			var groups = new UnsubscribeGroups(client);
 
 			// Act
-			var result = await groups.GetMultipleAsync(groupIds, null, CancellationToken.None);
+			var result = await groups.GetMultipleAsync(groupIds, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -171,7 +171,7 @@ namespace StrongGrid.UnitTests.Resources
 			var groups = new UnsubscribeGroups(client);
 
 			// Act
-			await groups.DeleteAsync(groupId, null, CancellationToken.None);
+			await groups.DeleteAsync(groupId, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -193,7 +193,7 @@ namespace StrongGrid.UnitTests.Resources
 			var groups = new UnsubscribeGroups(client);
 
 			// Act
-			var result = await groups.UpdateAsync(groupId, name, description, null, CancellationToken.None);
+			var result = await groups.UpdateAsync(groupId, name, description, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

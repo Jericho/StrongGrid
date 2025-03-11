@@ -68,7 +68,7 @@ namespace StrongGrid.UnitTests.Resources
 			var invalidEmails = new InvalidEmails(client);
 
 			// Act
-			var result = await invalidEmails.GetAllAsync(null, null, limit, offset, null, CancellationToken.None);
+			var result = await invalidEmails.GetAllAsync(null, null, limit, offset, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -148,7 +148,7 @@ namespace StrongGrid.UnitTests.Resources
 			var invalidEmails = new InvalidEmails(client);
 
 			// Act
-			var result = await invalidEmails.GetAsync(emailAddress, null, CancellationToken.None);
+			var result = await invalidEmails.GetAsync(emailAddress, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

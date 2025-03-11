@@ -42,7 +42,7 @@ namespace StrongGrid.UnitTests.Resources
 			var globalSuppressions = new GlobalSuppressions(client);
 
 			// Act
-			var result = await globalSuppressions.GetAllAsync(null, null, null, 50, 0, null, CancellationToken.None);
+			var result = await globalSuppressions.GetAllAsync(null, null, null, 50, 0, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -70,7 +70,7 @@ namespace StrongGrid.UnitTests.Resources
 			var globalSuppressions = new GlobalSuppressions(client);
 
 			// Act
-			await globalSuppressions.AddAsync(emails, null, CancellationToken.None);
+			await globalSuppressions.AddAsync(emails, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -90,7 +90,7 @@ namespace StrongGrid.UnitTests.Resources
 			var globalSuppressions = new GlobalSuppressions(client);
 
 			// Act
-			await globalSuppressions.RemoveAsync(email, null, CancellationToken.None);
+			await globalSuppressions.RemoveAsync(email, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -114,7 +114,7 @@ namespace StrongGrid.UnitTests.Resources
 			var globalSuppressions = new GlobalSuppressions(client);
 
 			// Act
-			var result = await globalSuppressions.IsUnsubscribedAsync(email, null, CancellationToken.None);
+			var result = await globalSuppressions.IsUnsubscribedAsync(email, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -138,7 +138,7 @@ namespace StrongGrid.UnitTests.Resources
 			var globalSuppressions = new GlobalSuppressions(client);
 
 			// Act
-			var result = await globalSuppressions.IsUnsubscribedAsync(email, null, CancellationToken.None);
+			var result = await globalSuppressions.IsUnsubscribedAsync(email, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
