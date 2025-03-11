@@ -1544,13 +1544,9 @@ namespace StrongGrid
 			};
 
 			// Create a new instance of the Elliptic Curve Digital Signature Algorithm (ECDSA)
-			AppVeyorLogger.Log("Creating ECDsa");
-			var eCDsa = ECDsa.Create(ECCurve.NamedCurves.nistP256);
-			AppVeyorLogger.Log("Importing parameters");
-			eCDsa.ImportParameters(ecParams);
+			var eCDsa = ECDsa.Create(ecParams);
 
 			// Verify the signature
-			AppVeyorLogger.Log("Verifying data");
 			var verified = eCDsa.VerifyData(data, sig, HashAlgorithmName.SHA256);
 #else
 #error Unhandled TFM
@@ -1560,8 +1556,6 @@ namespace StrongGrid
 			{
 				throw new SecurityException("Webhook signature validation failed.");
 			}
-
-			AppVeyorLogger.Log("VERIFIED !!!!!");
 
 			var webHookEvents = parser.ParseEventsWebhook(requestBody);
 			return webHookEvents;
