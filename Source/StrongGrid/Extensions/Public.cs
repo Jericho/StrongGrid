@@ -1397,8 +1397,8 @@ namespace StrongGrid
 		/// The <see cref="ApiKey" />.
 		/// </returns>
 		/// <remarks>
-		/// If you specify an API Key when instanciating the <see cref="Client" />, the new API Key will inherit the permissions of that API Key.
-		/// If you specify a username and password when instanciating the <see cref="Client" />, the new API Key will inherit the permissions of that user.
+		/// If you specify an API Key when instanciating the <see cref="StrongGrid.Client" />, the new API Key will inherit the permissions of that API Key.
+		/// If you specify a username and password when instanciating the <see cref="StrongGrid.Client" />, the new API Key will inherit the permissions of that user.
 		/// </remarks>
 		public static async Task<ApiKey> CreateWithAllPermissionsAsync(this IApiKeys apiKeys, string name, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
@@ -1422,8 +1422,8 @@ namespace StrongGrid
 		/// The <see cref="ApiKey" />.
 		/// </returns>
 		/// <remarks>
-		/// If you specify an API Key when instanciating the <see cref="Client" />, the new API Key will inherit the "read" permissions of that API Key.
-		/// If you specify a username and password when instanciating the <see cref="Client" />, the new API Key will inherit the "read" permissions of that user.
+		/// If you specify an API Key when instanciating the <see cref="StrongGrid.Client" />, the new API Key will inherit the "read" permissions of that API Key.
+		/// If you specify a username and password when instanciating the <see cref="StrongGrid.Client" />, the new API Key will inherit the "read" permissions of that user.
 		/// </remarks>
 		public static async Task<ApiKey> CreateWithReadOnlyPermissionsAsync(this IApiKeys apiKeys, string name, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
@@ -1478,6 +1478,7 @@ namespace StrongGrid
 		public static async Task<Event[]> ParseSignedEventsWebhookAsync(this IWebhookParser parser, Stream stream, string publicKey, string signature, string timestamp, CancellationToken cancellationToken = default)
 		{
 			string requestBody;
+
 			using (var streamReader = new StreamReader(stream))
 			{
 #if NET7_0_OR_GREATER
@@ -1531,9 +1532,8 @@ namespace StrongGrid
 			var sig = ConvertECDSASignature.LightweightConvertSignatureFromX9_62ToISO7816_8(256, signatureBytes);
 			var (x, y) = Utils.GetXYFromSecp256r1PublicKey(publicKeyBytes);
 
-			// Verify the signature
-			var eCDsa = ECDsa.Create();
-			eCDsa.ImportParameters(new ECParameters
+			// Prepare the parameters
+			var ecParams = new ECParameters
 			{
 				Curve = ECCurve.NamedCurves.nistP256, // aka secp256r1 aka prime256v1
 				Q = new ECPoint
@@ -1541,7 +1541,12 @@ namespace StrongGrid
 					X = x,
 					Y = y
 				}
-			});
+			};
+
+			// Create a new instance of the Elliptic Curve Digital Signature Algorithm (ECDSA)
+			var eCDsa = ECDsa.Create(ecParams);
+
+			// Verify the signature
 			var verified = eCDsa.VerifyData(data, sig, HashAlgorithmName.SHA256);
 #else
 #error Unhandled TFM

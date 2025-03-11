@@ -9,6 +9,7 @@ namespace StrongGrid.Models.Legacy
 	/// <summary>
 	/// A contact (also known as a recipient).
 	/// </summary>
+	[Obsolete("The legacy client, legacy resources and legacy model classes are obsolete")]
 	public class Contact
 	{
 		/// <summary>

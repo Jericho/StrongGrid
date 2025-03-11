@@ -1,16 +1,10 @@
-using Logzio.DotNet.NLog;
-using Microsoft.ApplicationInsights.NLogTarget;
+using Formitable.BetterStack.Logger.Microsoft;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using NLog;
-using NLog.Config;
-using NLog.Extensions.Logging;
-using NLog.Layouts;
-using NLog.Targets;
+using Microsoft.Extensions.Logging.Console;
 using System;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,9 +16,6 @@ namespace StrongGrid.IntegrationTests
 		{
 			var serializerContext = GenerateAttributesForSerializerContext();
 
-			var builder = Host.CreateApplicationBuilder();
-			builder.Services.AddHostedService<TestsRunner>();
-
 			// Configure cancellation (this allows you to press CTRL+C or CTRL+Break to stop the integration tests)
 			var cts = new CancellationTokenSource();
 			Console.CancelKeyPress += (s, e) =>
@@ -33,16 +24,40 @@ namespace StrongGrid.IntegrationTests
 				cts.Cancel();
 			};
 
-			// Configure logging
-			builder.Logging.ClearProviders(); // Remove the built-in providers (which include the Console)
-			builder.Logging.AddNLog(GetNLogConfiguration()); // Add our desired custom providers (which include the Colored Console)
+			var services = new ServiceCollection();
+			ConfigureServices(services);
+			using var serviceProvider = services.BuildServiceProvider();
+			var app = serviceProvider.GetService<IHostedService>();
+			await app.StartAsync(cts.Token).ConfigureAwait(false);
+		}
 
-			// Run the tests
-			var host = builder.Build();
-			await host.StartAsync(cts.Token).ConfigureAwait(false);
+		private static void ConfigureServices(ServiceCollection services)
+		{
+			services.AddHostedService<TestsRunner>();
 
-			// Stop NLog (which has the desirable side-effect of flushing any pending logs)
-			LogManager.Shutdown();
+			services
+				.AddLogging(logging =>
+				{
+					var betterStackToken = Environment.GetEnvironmentVariable("BETTERSTACK_TOKEN");
+					if (!string.IsNullOrEmpty(betterStackToken))
+					{
+						logging.AddBetterStackLogger(options =>
+						{
+							options.SourceToken = betterStackToken;
+							options.Context["source"] = "ZoomNet_integration_tests";
+							options.Context["StrongGrid-Version"] = StrongGrid.Client.Version;
+						});
+					}
+
+					logging.AddSimpleConsole(options =>
+					{
+						options.SingleLine = true;
+						options.TimestampFormat = "yyyy-MM-dd HH:mm:ss ";
+					});
+
+					logging.AddFilter(logLevel => logLevel >= LogLevel.Debug);
+					logging.AddFilter<ConsoleLoggerProvider>(logLevel => logLevel >= LogLevel.Information);
+				});
 		}
 
 		private static string GenerateAttributesForSerializerContext()
@@ -84,105 +99,6 @@ namespace StrongGrid.IntegrationTests
 
 			var result = string.Join("\r\n\r\n", [simpleAttributes, arrayAttributes, nullableAttributes]);
 			return result;
-		}
-
-		private static LoggingConfiguration GetNLogConfiguration()
-		{
-			// Configure logging
-			var nLogConfig = new LoggingConfiguration();
-
-			// Send logs to logz.io
-			var logzioToken = Environment.GetEnvironmentVariable("LOGZIO_TOKEN");
-			if (!string.IsNullOrEmpty(logzioToken))
-			{
-				var logzioTarget = new LogzioTarget
-				{
-					Name = "Logzio",
-					Token = logzioToken,
-					LogzioType = "nlog",
-					JsonKeysCamelCase = true,
-					// ProxyAddress = "http://localhost:8888",
-				};
-				logzioTarget.ContextProperties.Add(new NLog.Targets.TargetPropertyWithContext("Source", "StrongGrid_integration_tests"));
-				logzioTarget.ContextProperties.Add(new NLog.Targets.TargetPropertyWithContext("StrongGrid-Version", StrongGrid.Client.Version));
-
-				nLogConfig.AddTarget("Logzio", logzioTarget);
-				nLogConfig.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, logzioTarget, "*");
-			}
-
-			// Send logs to Azure Insights
-			var instrumentationKey = Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_INSTRUMENTATION_KEY");
-			if (!string.IsNullOrEmpty(instrumentationKey))
-			{
-				var applicationInsightsTarget = new ApplicationInsightsTarget() { InstrumentationKey = instrumentationKey, Name = "StrongGrid" };
-				applicationInsightsTarget.ContextProperties.Add(new Microsoft.ApplicationInsights.NLogTarget.TargetPropertyWithContext("Source", "StrongGrid_integration_tests"));
-				applicationInsightsTarget.ContextProperties.Add(new Microsoft.ApplicationInsights.NLogTarget.TargetPropertyWithContext("StrongGrid-Version", StrongGrid.Client.Version));
-
-				nLogConfig.AddTarget("ApplicationInsights", applicationInsightsTarget);
-				nLogConfig.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, applicationInsightsTarget, "*");
-			}
-
-			// Send logs to DataDog
-			var datadogKey = Environment.GetEnvironmentVariable("DATADOG_APIKEY");
-			if (!string.IsNullOrEmpty(datadogKey))
-			{
-				var datadogTarget = new WebServiceTarget("datadog")
-				{
-					Url = "https://http-intake.logs.us5.datadoghq.com/v1/input",
-					Encoding = Encoding.UTF8,
-					Protocol = WebServiceProtocol.JsonPost,
-					PreAuthenticate = false
-				};
-
-				// DD_API_KEY
-				// Your Datadog API Key for sending your logs to Datadog.
-				datadogTarget.Headers.Add(new MethodCallParameter("DD-API-KEY", Layout.FromString(datadogKey)));
-
-				// DD_SITE
-				// The name of your Datadog site.Choose from one of the following examples:
-				// Example: datadoghq.com(US1), datadoghq.eu(EU), us3.datadoghq.com(US3), us5.datadoghq.com(US5), ddog - gov.com(US1 - FED)
-				// Default: datadoghq.com(US1)
-				datadogTarget.Headers.Add(new MethodCallParameter("DD_SITE", Layout.FromString("us5.datadoghq.com(US5)")));
-
-				// DD_LOGS_DIRECT_SUBMISSION_INTEGRATIONS
-				// Enables Agentless logging.Enable for your logging framework by setting to Serilog, NLog, Log4Net, or ILogger(for Microsoft.Extensions.Logging).
-				// If you are using multiple logging frameworks, use a semicolon separated list of variables.
-				// Example: Serilog; Log4Net; NLog
-				datadogTarget.Headers.Add(new MethodCallParameter("DD_LOGS_DIRECT_SUBMISSION_INTEGRATIONS", Layout.FromString("NLog")));
-
-				// DD_LOGS_DIRECT_SUBMISSION_SOURCE
-				// Sets the parsing rule for submitted logs.
-				// Should always be set to csharp, unless you have a custom pipeline.
-				// Default: csharp
-				datadogTarget.Headers.Add(new MethodCallParameter("DD_LOGS_DIRECT_SUBMISSION_SOURCE", Layout.FromString("csharp")));
-
-				// DD_LOGS_DIRECT_SUBMISSION_MAX_BATCH_SIZE
-				// Sets the maximum number of logs to send at one time.
-				// Takes into account the limits in place for the API.
-				// Default: 1000
-
-				// DD_LOGS_DIRECT_SUBMISSION_MAX_QUEUE_SIZE
-				// Sets the maximum number of logs to hold in the internal queue at any one time before dropping log messages.
-				// Default: 100000
-
-				// DD_LOGS_DIRECT_SUBMISSION_BATCH_PERIOD_SECONDS
-				// Sets the time to wait(in seconds) before checking for new logs to send.
-				// Default: 1
-
-				datadogTarget.Headers.Add(new MethodCallParameter("Content-Type", Layout.FromString("application/json")));
-				datadogTarget.Headers.Add(new MethodCallParameter("Source", "StrongGrid_integration_tests"));
-				datadogTarget.Headers.Add(new MethodCallParameter("StrongGrid-Version", StrongGrid.Client.Version));
-
-				nLogConfig.AddTarget("DataDog", datadogTarget);
-				nLogConfig.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, datadogTarget, "*");
-			}
-
-			// Send logs to console
-			var consoleTarget = new ColoredConsoleTarget();
-			nLogConfig.AddTarget("ColoredConsole", consoleTarget);
-			nLogConfig.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, consoleTarget, "*");
-
-			return nLogConfig;
 		}
 	}
 }

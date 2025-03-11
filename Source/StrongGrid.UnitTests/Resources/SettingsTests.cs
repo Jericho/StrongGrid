@@ -56,7 +56,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.GetEnforcedTlsSettingsAsync(null, CancellationToken.None);
+			var result = await settings.GetEnforcedTlsSettingsAsync(null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -85,7 +85,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.UpdateEnforcedTlsSettingsAsync(requireTls, requireValidCert, null, CancellationToken.None);
+			var result = await settings.UpdateEnforcedTlsSettingsAsync(requireTls, requireValidCert, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -120,7 +120,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.GetAllMailSettingsAsync(limit, offset, null, CancellationToken.None);
+			var result = await settings.GetAllMailSettingsAsync(limit, offset, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -155,7 +155,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.GetAllPartnerSettingsAsync(limit, offset, null, CancellationToken.None);
+			var result = await settings.GetAllPartnerSettingsAsync(limit, offset, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -181,7 +181,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.GetNewRelicSettingsAsync(null, CancellationToken.None);
+			var result = await settings.GetNewRelicSettingsAsync(null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -210,7 +210,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.UpdateNewRelicSettingsAsync(enabled, licenseKey, null, CancellationToken.None);
+			var result = await settings.UpdateNewRelicSettingsAsync(enabled, licenseKey, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -245,7 +245,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.GetAllTrackingSettingsAsync(limit, offset, null, CancellationToken.None);
+			var result = await settings.GetAllTrackingSettingsAsync(limit, offset, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -271,7 +271,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.GetClickTrackingSettingsAsync(null, CancellationToken.None);
+			var result = await settings.GetClickTrackingSettingsAsync(null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -299,7 +299,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.UpdateClickTrackingSettingsAsync(enabledInText, enabledInHtml, null, CancellationToken.None);
+			var result = await settings.UpdateClickTrackingSettingsAsync(enabledInText, enabledInHtml, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -328,7 +328,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.GetGoogleAnalyticsGlobalSettingsAsync(null, CancellationToken.None);
+			var result = await settings.GetGoogleAnalyticsGlobalSettingsAsync(null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -369,7 +369,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.UpdateGoogleAnalyticsGlobalSettingsAsync(enabled, utmSource, utmMedium, utmTerm, utmContent, utmCampaign, null, CancellationToken.None);
+			var result = await settings.UpdateGoogleAnalyticsGlobalSettingsAsync(enabled, utmSource, utmMedium, utmTerm, utmContent, utmCampaign, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -392,7 +392,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.GetOpenTrackingSettingsAsync(null, CancellationToken.None);
+			var result = await settings.GetOpenTrackingSettingsAsync(null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -417,7 +417,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.UpdateOpenTrackingSettingsAsync(enabled, null, CancellationToken.None);
+			var result = await settings.UpdateOpenTrackingSettingsAsync(enabled, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -445,7 +445,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.GetSubscriptionTrackingSettingsAsync(null, CancellationToken.None);
+			var result = await settings.GetSubscriptionTrackingSettingsAsync(null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -486,7 +486,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.UpdateSubscriptionTrackingSettingsAsync(enabled, landingPageHtml, url, replacementTag, htmlContent, textContent, null, CancellationToken.None);
+			var result = await settings.UpdateSubscriptionTrackingSettingsAsync(enabled, landingPageHtml, url, replacementTag, htmlContent, textContent, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -513,7 +513,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.GetAddressWhitelistMailSettingsAsync(null, CancellationToken.None);
+			var result = await settings.GetAddressWhitelistMailSettingsAsync(null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -548,7 +548,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.UpdateAddressWhitelistMailSettingsAsync(enabled, emailAddresses, null, CancellationToken.None);
+			var result = await settings.UpdateAddressWhitelistMailSettingsAsync(enabled, emailAddresses, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -573,7 +573,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.GetFooterMailSettingsAsync(null, CancellationToken.None);
+			var result = await settings.GetFooterMailSettingsAsync(null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -605,7 +605,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.UpdateFooterMailSettingsAsync(enabled, htmlContent, textContent, null, CancellationToken.None);
+			var result = await settings.UpdateFooterMailSettingsAsync(enabled, htmlContent, textContent, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -629,7 +629,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.GetForwardSpamMailSettingsAsync(null, CancellationToken.None);
+			var result = await settings.GetForwardSpamMailSettingsAsync(null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -658,7 +658,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.UpdateForwardSpamMailSettingsAsync(enabled, email, null, CancellationToken.None);
+			var result = await settings.UpdateForwardSpamMailSettingsAsync(enabled, email, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -681,7 +681,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.GetPlainContentMailSettingsAsync(null, CancellationToken.None);
+			var result = await settings.GetPlainContentMailSettingsAsync(null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -706,7 +706,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.UpdatePlainContentMailSettingsAsync(enabled, null, CancellationToken.None);
+			var result = await settings.UpdatePlainContentMailSettingsAsync(enabled, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -730,7 +730,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.GetTemplateMailSettingsAsync(null, CancellationToken.None);
+			var result = await settings.GetTemplateMailSettingsAsync(null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -759,7 +759,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.UpdateTemplateMailSettingsAsync(enabled, htmlContent, null, CancellationToken.None);
+			var result = await settings.UpdateTemplateMailSettingsAsync(enabled, htmlContent, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -784,7 +784,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.GetBouncePurgeMailSettingsAsync(null, CancellationToken.None);
+			var result = await settings.GetBouncePurgeMailSettingsAsync(null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -816,7 +816,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.UpdateBouncePurgeMailSettingsAsync(enabled, hardBounces, softBounces, null, CancellationToken.None);
+			var result = await settings.UpdateBouncePurgeMailSettingsAsync(enabled, hardBounces, softBounces, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -840,7 +840,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.GetForwardBounceMailSettingsAsync(null, CancellationToken.None);
+			var result = await settings.GetForwardBounceMailSettingsAsync(null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -869,7 +869,7 @@ namespace StrongGrid.UnitTests.Resources
 			var settings = new Settings(client);
 
 			// Act
-			var result = await settings.UpdateForwardBounceMailSettingsAsync(enabled, email, null, CancellationToken.None);
+			var result = await settings.UpdateForwardBounceMailSettingsAsync(enabled, email, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

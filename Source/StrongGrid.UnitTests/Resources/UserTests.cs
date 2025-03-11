@@ -67,7 +67,7 @@ namespace StrongGrid.UnitTests.Resources
 			var user = new User(client);
 
 			// Act
-			var result = await user.GetProfileAsync(null, CancellationToken.None);
+			var result = await user.GetProfileAsync(null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -91,7 +91,7 @@ namespace StrongGrid.UnitTests.Resources
 			var user = new User(client);
 
 			// Act
-			var result = await user.GetAccountAsync(null, CancellationToken.None);
+			var result = await user.GetAccountAsync(null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -114,7 +114,7 @@ namespace StrongGrid.UnitTests.Resources
 			var user = new User(client);
 
 			// Act
-			var result = await user.UpdateProfileAsync(null, city, null, null, null, null, null, null, null, null, null, CancellationToken.None);
+			var result = await user.UpdateProfileAsync(null, city, null, null, null, null, null, null, null, null, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -137,7 +137,7 @@ namespace StrongGrid.UnitTests.Resources
 			var user = new User(client);
 
 			// Act
-			var result = await user.GetEmailAsync(null, CancellationToken.None);
+			var result = await user.GetEmailAsync(null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -162,7 +162,7 @@ namespace StrongGrid.UnitTests.Resources
 			var user = new User(client);
 
 			// Act
-			var result = await user.UpdateEmailAsync(email, null, CancellationToken.None);
+			var result = await user.UpdateEmailAsync(email, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -185,7 +185,7 @@ namespace StrongGrid.UnitTests.Resources
 			var user = new User(client);
 
 			// Act
-			var result = await user.GetUsernameAsync(null, CancellationToken.None);
+			var result = await user.GetUsernameAsync(null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -210,7 +210,7 @@ namespace StrongGrid.UnitTests.Resources
 			var user = new User(client);
 
 			// Act
-			var result = await user.UpdateUsernameAsync(username, null, CancellationToken.None);
+			var result = await user.UpdateUsernameAsync(username, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -239,7 +239,7 @@ namespace StrongGrid.UnitTests.Resources
 			var user = new User(client);
 
 			// Act
-			var result = await user.GetCreditsAsync(null, CancellationToken.None);
+			var result = await user.GetCreditsAsync(null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -268,7 +268,7 @@ namespace StrongGrid.UnitTests.Resources
 			var user = new User(client);
 
 			// Act
-			await user.UpdatePasswordAsync(oldPassword, newPassword, null, CancellationToken.None);
+			await user.UpdatePasswordAsync(oldPassword, newPassword, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -294,7 +294,7 @@ namespace StrongGrid.UnitTests.Resources
 			var user = new User(client);
 
 			// Act
-			var result = await user.GetPermissionsAsync(null, CancellationToken.None);
+			var result = await user.GetPermissionsAsync(null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

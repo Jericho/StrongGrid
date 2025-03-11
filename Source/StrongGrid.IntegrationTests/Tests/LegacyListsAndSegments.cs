@@ -22,7 +22,7 @@ namespace StrongGrid.IntegrationTests.Tests
 			await log.WriteLineAsync("\n***** LEGACY LISTS AND SEGMENTS *****\n").ConfigureAwait(false);
 
 			// GET LISTS
-			var lists = await client.Lists.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
+			var lists = await client.Lists.GetAllAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All lists retrieved. There are {lists.Length} lists").ConfigureAwait(false);
 
 			// GET SEGMENTS
@@ -30,21 +30,26 @@ namespace StrongGrid.IntegrationTests.Tests
 			await log.WriteLineAsync($"All segements retrieved. There are {segments.Length} segments").ConfigureAwait(false);
 
 			// CLEANUP PREVIOUS INTEGRATION TESTS THAT MIGHT HAVE BEEN INTERRUPTED BEFORE THEY HAD TIME TO CLEANUP AFTER THEMSELVES
-			var cleanUpTasks = lists
+			// Please note: it's important to cleanup the segments first.
+			// Otherwise we may get errors like this: "You cannot delete a list that is currently being used as a condition for an existing segment."
+			var cleanUpTasks = segments
+				.Where(s => s.Name.StartsWith("StrongGrid Integration Testing:"))
+				.Select(async oldSegment =>
+				{
+					await client.Segments.DeleteAsync(oldSegment.Id, false, null, cancellationToken).ConfigureAwait(false);
+					await log.WriteLineAsync($"Segment {oldSegment.Id} deleted").ConfigureAwait(false);
+					await Task.Delay(250, cancellationToken).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
+				});
+			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
+
+			cleanUpTasks = lists
 				.Where(l => l.Name.StartsWith("StrongGrid Integration Testing:"))
 				.Select(async oldList =>
 				{
 					await client.Lists.DeleteAsync(oldList.Id, null, cancellationToken).ConfigureAwait(false);
 					await log.WriteLineAsync($"List {oldList.Id} deleted").ConfigureAwait(false);
 					await Task.Delay(250, cancellationToken).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
-				})
-				.Union(segments.Where(s => s.Name.StartsWith("StrongGrid Integration Testing:"))
-					.Select(async oldSegment =>
-					{
-						await client.Segments.DeleteAsync(oldSegment.Id, false, null, cancellationToken).ConfigureAwait(false);
-						await log.WriteLineAsync($"Segment {oldSegment.Id} deleted").ConfigureAwait(false);
-						await Task.Delay(250, cancellationToken).ConfigureAwait(false);    // Brief pause to ensure SendGrid has time to catch up
-					}));
+				});
 			await Task.WhenAll(cleanUpTasks).ConfigureAwait(false);
 
 			// CREATE A LIST

@@ -49,7 +49,7 @@ namespace StrongGrid.UnitTests.Resources
 			var webhookStats = new WebhookStats(client);
 
 			// Act
-			var result = await webhookStats.GetInboundParseUsageAsync(startDate, endDate, AggregateBy.None, null, CancellationToken.None);
+			var result = await webhookStats.GetInboundParseUsageAsync(startDate, endDate, AggregateBy.None, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

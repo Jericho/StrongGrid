@@ -90,7 +90,7 @@ namespace StrongGrid.UnitTests.Resources
 			var alerts = new Alerts(client);
 
 			// Act
-			var result = await alerts.CreateAsync(type, emailTo, frequency, percentage, null, CancellationToken.None);
+			var result = await alerts.CreateAsync(type, emailTo, frequency, percentage, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -111,7 +111,7 @@ namespace StrongGrid.UnitTests.Resources
 			var alerts = new Alerts(client);
 
 			// Act
-			var result = await alerts.GetAsync(alertId, null, CancellationToken.None);
+			var result = await alerts.GetAsync(alertId, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -130,7 +130,7 @@ namespace StrongGrid.UnitTests.Resources
 			var alerts = new Alerts(client);
 
 			// Act
-			var result = await alerts.GetAllAsync(null, CancellationToken.None);
+			var result = await alerts.GetAllAsync(null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -152,7 +152,7 @@ namespace StrongGrid.UnitTests.Resources
 			var alerts = new Alerts(client);
 
 			// Act
-			await alerts.DeleteAsync(alertId, null, CancellationToken.None);
+			await alerts.DeleteAsync(alertId, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -173,7 +173,7 @@ namespace StrongGrid.UnitTests.Resources
 			var alerts = new Alerts(client);
 
 			// Act
-			var result = await alerts.UpdateAsync(alertId, null, emailTo, null, null, null, CancellationToken.None);
+			var result = await alerts.UpdateAsync(alertId, null, emailTo, null, null, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

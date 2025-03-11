@@ -119,7 +119,7 @@ namespace StrongGrid.UnitTests.Resources
 			var ipAddresses = new IpAddresses(client);
 
 			// Act
-			var result = await ipAddresses.AddAsync(2, new[] { "user", "subuser1" }, true, CancellationToken.None);
+			var result = await ipAddresses.AddAsync(2, new[] { "user", "subuser1" }, true, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -153,7 +153,7 @@ namespace StrongGrid.UnitTests.Resources
 			var ipAddresses = new IpAddresses(client);
 
 			// Act
-			var result = await ipAddresses.GetRemainingCountAsync(CancellationToken.None);
+			var result = await ipAddresses.GetRemainingCountAsync(TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -175,7 +175,7 @@ namespace StrongGrid.UnitTests.Resources
 			var ipAddresses = new IpAddresses(client);
 
 			// Act
-			var result = await ipAddresses.GetAllAsync(false, null, 10, 0, CancellationToken.None);
+			var result = await ipAddresses.GetAllAsync(false, null, 10, 0, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -199,7 +199,7 @@ namespace StrongGrid.UnitTests.Resources
 			var ipAddresses = new IpAddresses(client);
 
 			// Act
-			var result = await ipAddresses.GetAssignedAsync(CancellationToken.None);
+			var result = await ipAddresses.GetAssignedAsync(TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -219,7 +219,7 @@ namespace StrongGrid.UnitTests.Resources
 			var ipAddresses = new IpAddresses(client);
 
 			// Act
-			var result = await ipAddresses.GetUnassignedAsync(CancellationToken.None);
+			var result = await ipAddresses.GetUnassignedAsync(TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -239,7 +239,7 @@ namespace StrongGrid.UnitTests.Resources
 			var ipAddresses = new IpAddresses(client);
 
 			// Act
-			var result = await ipAddresses.GetWarmingUpAsync(CancellationToken.None);
+			var result = await ipAddresses.GetWarmingUpAsync(TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -261,7 +261,7 @@ namespace StrongGrid.UnitTests.Resources
 			var ipAddresses = new IpAddresses(client);
 
 			// Act
-			var result = await ipAddresses.GetWarmupStatusAsync(address, CancellationToken.None);
+			var result = await ipAddresses.GetWarmupStatusAsync(address, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -282,7 +282,7 @@ namespace StrongGrid.UnitTests.Resources
 			var ipAddresses = new IpAddresses(client);
 
 			// Act
-			await ipAddresses.StartWarmupAsync(address, CancellationToken.None);
+			await ipAddresses.StartWarmupAsync(address, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -302,7 +302,7 @@ namespace StrongGrid.UnitTests.Resources
 			var ipAddresses = new IpAddresses(client);
 
 			// Act
-			await ipAddresses.StopWarmupAsync(address, CancellationToken.None);
+			await ipAddresses.StopWarmupAsync(address, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

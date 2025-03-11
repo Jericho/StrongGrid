@@ -28,7 +28,7 @@ namespace StrongGrid.Benchmark
 		}
 
 		[Benchmark]
-		public async Task SystemTextJson6()
+		public async Task SystemTextJson()
 		{
 			var whitelistedIpAddresses = await _client.AccessManagement.GetWhitelistedIpAddressesAsync(null, CancellationToken.None).ConfigureAwait(false);
 			var accessHistory = await _client.AccessManagement.GetAccessHistoryAsync(20, null, CancellationToken.None).ConfigureAwait(false);
@@ -48,7 +48,7 @@ namespace StrongGrid.Benchmark
 			var legacyCategories = await _legacyClient.Categories.GetAsync(null, limit, offset, null, CancellationToken.None).ConfigureAwait(false);
 			var legacyContacts = await _legacyClient.Contacts.GetAsync(recordsPerPage, page, null, CancellationToken.None).ConfigureAwait(false);
 			var legacyCustomFields = await _legacyClient.CustomFields.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
-			var legacyLists = await _legacyClient.Lists.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
+			var legacyLists = await _legacyClient.Lists.GetAllAsync(cancellationToken: CancellationToken.None).ConfigureAwait(false);
 			var legacySegments = await _legacyClient.Segments.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
 			var legacySenderIdentities = await _legacyClient.SenderIdentities.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
 			var authenticationDomains = await _client.SenderAuthentication.GetAllDomainsAsync(limit, offset, false, null, null, null, CancellationToken.None).ConfigureAwait(false);
@@ -76,7 +76,7 @@ namespace StrongGrid.Benchmark
 			mockHttp.When(HttpMethod.Get, UnitTests.Utils.GetSendGridApiUri("suppression/bounces", "test@test.com")).Respond("application/json", UnitTests.Resources.BouncesTests.MULTIPLE_BOUNCES_JSON);
 			mockHttp.When(HttpMethod.Get, UnitTests.Utils.GetSendGridApiUri("campaigns") + $"?limit={limit}&offset={offset}").Respond("application/json", UnitTests.Resources.CampaignsTests.MULTIPLE_CAMPAIGNS_JSON);
 			mockHttp.When(HttpMethod.Get, UnitTests.Utils.GetSendGridApiUri("designs")).Respond("application/json", UnitTests.Resources.DesignsTests.MULTIPLE_DESIGNS_JSON);
-			mockHttp.When(HttpMethod.Get, UnitTests.Utils.GetSendGridApiUri("messages") + $"?limit={limit}&query=").Respond("application/json", UnitTests.Resources.EmailActivitiesTests.MULTIPLE_MESSAGES_FOUND);
+			mockHttp.When(HttpMethod.Get, UnitTests.Utils.GetSendGridApiUri("messages") + $"?limit={limit}").Respond("application/json", UnitTests.Resources.EmailActivitiesTests.MULTIPLE_MESSAGES_FOUND);
 			mockHttp.When(HttpMethod.Post, UnitTests.Utils.GetSendGridApiUri("validations/email")).Respond("application/json", "{\"result\":" + UnitTests.Resources.EmailValidationTests.VALID_EMAIL_JSON + "}");
 			mockHttp.When(HttpMethod.Get, UnitTests.Utils.GetSendGridApiUri("suppression/unsubscribes")).Respond("application/json", UnitTests.Resources.GlobalSuppressionTests.GLOBALLY_UNSUBSCRIBED);
 			mockHttp.When(HttpMethod.Get, UnitTests.Utils.GetSendGridApiUri("suppression/invalid_emails") + $"?limit={limit}&offset={offset}").Respond("application/json", UnitTests.Resources.InvalidEmailsTests.MULTIPLE_INVALID_EMAILS_JSON);

@@ -142,7 +142,7 @@ namespace StrongGrid.UnitTests.Resources
 			var emailValidation = new EmailValidation(client);
 
 			// Act
-			var result = await emailValidation.ValidateAsync("john.doe@gmial.com", "Signup Form", CancellationToken.None);
+			var result = await emailValidation.ValidateAsync("john.doe@gmial.com", "Signup Form", TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

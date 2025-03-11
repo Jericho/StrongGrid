@@ -7,7 +7,6 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -68,7 +67,7 @@ namespace StrongGrid.UnitTests.Resources
 			var invalidEmails = new InvalidEmails(client);
 
 			// Act
-			var result = await invalidEmails.GetAllAsync(null, null, limit, offset, null, CancellationToken.None);
+			var result = await invalidEmails.GetAllAsync(null, null, limit, offset, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -88,7 +87,7 @@ namespace StrongGrid.UnitTests.Resources
 			var invalidEmails = new InvalidEmails(client);
 
 			// Act
-			await invalidEmails.DeleteAllAsync();
+			await invalidEmails.DeleteAllAsync(cancellationToken: TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -108,7 +107,7 @@ namespace StrongGrid.UnitTests.Resources
 			var invalidEmails = new InvalidEmails(client);
 
 			// Act
-			await invalidEmails.DeleteMultipleAsync(emailAddresses);
+			await invalidEmails.DeleteMultipleAsync(emailAddresses, cancellationToken: TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -128,7 +127,7 @@ namespace StrongGrid.UnitTests.Resources
 			var invalidEmails = new InvalidEmails(client);
 
 			// Act
-			await invalidEmails.DeleteAsync(emailAddress);
+			await invalidEmails.DeleteAsync(emailAddress, cancellationToken: TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -148,7 +147,7 @@ namespace StrongGrid.UnitTests.Resources
 			var invalidEmails = new InvalidEmails(client);
 
 			// Act
-			var result = await invalidEmails.GetAsync(emailAddress, null, CancellationToken.None);
+			var result = await invalidEmails.GetAsync(emailAddress, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

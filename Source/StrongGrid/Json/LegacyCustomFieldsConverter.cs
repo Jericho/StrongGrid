@@ -34,6 +34,7 @@ namespace StrongGrid.Json
 							case "date":
 								if (!item.TryGetProperty("value", out JsonElement dateProperty)) field = new Models.Legacy.Field<DateTime?>(name, null);
 								else if (dateProperty.ValueKind == JsonValueKind.Number) field = new Models.Legacy.Field<DateTime>(name, dateProperty.GetInt64().FromUnixTime());
+								else if (dateProperty.ValueKind == JsonValueKind.Null) field = new Models.Legacy.Field<DateTime?>(name, null);
 								else field = new Models.Legacy.Field<DateTime>(name, long.Parse(dateProperty.GetString()).FromUnixTime());
 								break;
 							case "text":
@@ -43,6 +44,7 @@ namespace StrongGrid.Json
 							case "number":
 								if (!item.TryGetProperty("value", out JsonElement numericProperty)) field = new Models.Legacy.Field<long?>(name, null);
 								else if (numericProperty.ValueKind == JsonValueKind.Number) field = new Models.Legacy.Field<long>(name, numericProperty.GetInt64());
+								else if (numericProperty.ValueKind == JsonValueKind.Null) field = new Models.Legacy.Field<long?>(name, null);
 								else field = new Models.Legacy.Field<long>(name, long.Parse(numericProperty.GetString()));
 								break;
 							default:

@@ -1,6 +1,7 @@
 using Pathoschild.Http.Client;
 using StrongGrid.Json;
 using StrongGrid.Models;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,6 +14,7 @@ namespace StrongGrid.Resources.Legacy
 	/// <remarks>
 	/// See <a href="https://sendgrid.com/docs/API_Reference/Web_API_v3/Marketing_Campaigns/contactdb.html">SendGrid documentation</a> for more information.
 	/// </remarks>
+	[Obsolete("The legacy client, legacy resources and legacy model classes are obsolete")]
 	public class CustomFields : ICustomFields
 	{
 		private const string _endpoint = "contactdb/custom_fields";
@@ -39,7 +41,7 @@ namespace StrongGrid.Resources.Legacy
 		{
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
-			data.AddProperty("type", type.ToEnumString());
+			data.AddProperty("type", type.ToEnumString().ToLower()); // The SendGrid API expects this value to be lower-case.
 
 			return _client
 				.PostAsync(_endpoint)

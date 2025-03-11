@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using StrongGrid.Utilities;
+using System;
 using System.Net;
 using System.Net.Http;
 
@@ -8,6 +9,7 @@ namespace StrongGrid
 	/// <summary>
 	/// REST client for interacting with SendGrid's legacy API.
 	/// </summary>
+	[Obsolete("The legacy client, legacy resources and legacy model classes are obsolete")]
 	public class LegacyClient : BaseClient, ILegacyClient
 	{
 		private static readonly StrongGridClientOptions _defaultOptions = new StrongGridClientOptions()

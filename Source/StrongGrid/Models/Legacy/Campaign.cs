@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.Legacy
@@ -7,6 +8,7 @@ namespace StrongGrid.Models.Legacy
 	/// you will be required to provide a subject, sender ID, content (we suggest both html
 	/// and plain text), and at least one list or segment ID.
 	/// </summary>
+	[Obsolete("The legacy client, legacy resources and legacy model classes are obsolete")]
 	public class Campaign
 	{
 		/// <summary>

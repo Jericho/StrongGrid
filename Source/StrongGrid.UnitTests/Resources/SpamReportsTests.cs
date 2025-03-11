@@ -7,7 +7,6 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -68,7 +67,7 @@ namespace StrongGrid.UnitTests.Resources
 			var spamReports = new SpamReports(client);
 
 			// Act
-			var result = await spamReports.GetAllAsync();
+			var result = await spamReports.GetAllAsync(cancellationToken: TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -88,7 +87,7 @@ namespace StrongGrid.UnitTests.Resources
 			var spamReports = new SpamReports(client);
 
 			// Act
-			await spamReports.DeleteAllAsync();
+			await spamReports.DeleteAllAsync(cancellationToken: TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -108,7 +107,7 @@ namespace StrongGrid.UnitTests.Resources
 			var spamReports = new SpamReports(client);
 
 			// Act
-			await spamReports.DeleteMultipleAsync(emailAddresses);
+			await spamReports.DeleteMultipleAsync(emailAddresses, cancellationToken: TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -128,7 +127,7 @@ namespace StrongGrid.UnitTests.Resources
 			var spamReports = new SpamReports(client);
 
 			// Act
-			await spamReports.DeleteAsync(emailAddress);
+			await spamReports.DeleteAsync(emailAddress, cancellationToken: TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -148,7 +147,7 @@ namespace StrongGrid.UnitTests.Resources
 			var spamReports = new SpamReports(client);
 
 			// Act
-			var result = await spamReports.GetAsync(emailAddress, null, CancellationToken.None);
+			var result = await spamReports.GetAsync(emailAddress, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json.Serialization;
 
 namespace StrongGrid.Models.Legacy
@@ -6,6 +7,7 @@ namespace StrongGrid.Models.Legacy
 	/// Metadata about a custom field.
 	/// </summary>
 	/// <seealso cref="StrongGrid.Models.Legacy.FieldMetadata" />
+	[Obsolete("The legacy client, legacy resources and legacy model classes are obsolete")]
 	public class CustomFieldMetadata : FieldMetadata
 	{
 		/// <summary>

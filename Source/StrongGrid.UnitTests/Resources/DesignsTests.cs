@@ -112,7 +112,7 @@ namespace StrongGrid.UnitTests.Resources
 			var designs = new Designs(client);
 
 			// Act
-			var result = await designs.CreateAsync(name, htmlContent, cancellationToken: CancellationToken.None);
+			var result = await designs.CreateAsync(name, htmlContent, cancellationToken: TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -133,7 +133,7 @@ namespace StrongGrid.UnitTests.Resources
 			var designs = new Designs(client);
 
 			// Act
-			var result = await designs.GetAsync(designId, CancellationToken.None);
+			var result = await designs.GetAsync(designId, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -154,7 +154,7 @@ namespace StrongGrid.UnitTests.Resources
 			var designs = new Designs(client);
 
 			// Act
-			var result = await designs.GetPrebuiltAsync(designId, CancellationToken.None);
+			var result = await designs.GetPrebuiltAsync(designId, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -173,7 +173,7 @@ namespace StrongGrid.UnitTests.Resources
 			var designs = new Designs(client);
 
 			// Act
-			var result = await designs.GetAllAsync(100, null, CancellationToken.None);
+			var result = await designs.GetAllAsync(100, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -198,7 +198,7 @@ namespace StrongGrid.UnitTests.Resources
 			var designs = new Designs(client);
 
 			// Act
-			var result = await designs.GetAllPrebuiltAsync(100, null, CancellationToken.None);
+			var result = await designs.GetAllPrebuiltAsync(100, null, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -225,7 +225,7 @@ namespace StrongGrid.UnitTests.Resources
 			var designs = new Designs(client);
 
 			// Act
-			await designs.DeleteAsync(designId, CancellationToken.None);
+			await designs.DeleteAsync(designId, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -247,7 +247,7 @@ namespace StrongGrid.UnitTests.Resources
 			var designs = new Designs(client);
 
 			// Act
-			var result = await designs.UpdateAsync(designId, name, htmlContent, cancellationToken: CancellationToken.None);
+			var result = await designs.UpdateAsync(designId, name, htmlContent, cancellationToken: TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -270,7 +270,7 @@ namespace StrongGrid.UnitTests.Resources
 			var designs = new Designs(client);
 
 			// Act
-			var result = await designs.DuplicateAsync(designId, name, editorType, CancellationToken.None);
+			var result = await designs.DuplicateAsync(designId, name, editorType, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -293,7 +293,7 @@ namespace StrongGrid.UnitTests.Resources
 			var designs = new Designs(client);
 
 			// Act
-			var result = await designs.DuplicatePrebuiltAsync(designId, name, editorType, CancellationToken.None);
+			var result = await designs.DuplicatePrebuiltAsync(designId, name, editorType, TestContext.Current.CancellationToken);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

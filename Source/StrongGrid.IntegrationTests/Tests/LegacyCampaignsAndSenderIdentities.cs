@@ -51,7 +51,7 @@ namespace StrongGrid.IntegrationTests.Tests
 				throw new Exception($"A verification email was previously sent to {sender.From.Email} but the process hasn't been completed yet (hint: there is a link in the email that you must click on).");
 			}
 
-			var lists = await client.Lists.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
+			var lists = await client.Lists.GetAllAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All lists retrieved. There are {lists.Length} lists").ConfigureAwait(false);
 
 			var list = lists.FirstOrDefault(l => l.Name == "Integration testing list");
