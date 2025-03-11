@@ -1503,19 +1503,15 @@ namespace StrongGrid
 		/// <returns>An array of <see cref="Event">events</see>.</returns>
 		public static Event[] ParseSignedEventsWebhook(this IWebhookParser parser, string requestBody, string publicKey, string signature, string timestamp)
 		{
-			AppVeyorLogger.Log("Starting ParseSignedEventsWebhook");
-
 			if (string.IsNullOrEmpty(publicKey)) throw new ArgumentNullException(nameof(publicKey));
 			if (string.IsNullOrEmpty(signature)) throw new ArgumentNullException(nameof(signature));
 			if (string.IsNullOrEmpty(timestamp)) throw new ArgumentNullException(nameof(timestamp));
 
 			// Decode the base64 encoded values
-			AppVeyorLogger.Log("Decoding the base64 encoded values");
 			var signatureBytes = Convert.FromBase64String(signature);
 			var publicKeyBytes = Convert.FromBase64String(publicKey);
 
 			// Must combine the timestamp and the payload
-			AppVeyorLogger.Log("Combining the timestamp and the payload");
 			var data = Encoding.UTF8.GetBytes(timestamp + requestBody);
 
 			/*
@@ -1533,17 +1529,13 @@ namespace StrongGrid
 			var verified = eCDsa.VerifyData(data, signatureBytes, HashAlgorithmName.SHA256, DSASignatureFormat.Rfc3279DerSequence);
 #elif NET48_OR_GREATER || NETSTANDARD2_1
 			// Convert the signature and public key provided by SendGrid into formats usable by the ECDsa .net crypto class
-			AppVeyorLogger.Log("Converting the signature");
 			var sig = ConvertECDSASignature.LightweightConvertSignatureFromX9_62ToISO7816_8(256, signatureBytes);
-
-			AppVeyorLogger.Log("Getting (x, y) from public key");
 			var (x, y) = Utils.GetXYFromSecp256r1PublicKey(publicKeyBytes);
 
 			// Verify the signature
-			AppVeyorLogger.Log("Verifying signature");
 			var eCDsa = ECDsa.Create();
-			AppVeyorLogger.Log("Importing parameters");
-			eCDsa.ImportParameters(new ECParameters
+			AppVeyorLogger.Log("Creating EC parameters");
+			var ecParams = new ECParameters
 			{
 				Curve = ECCurve.NamedCurves.nistP256, // aka secp256r1 aka prime256v1
 				Q = new ECPoint
@@ -1551,7 +1543,10 @@ namespace StrongGrid
 					X = x,
 					Y = y
 				}
-			});
+			};
+
+			AppVeyorLogger.Log("Importing EC parameters");
+			eCDsa.ImportParameters(ecParams);
 
 			AppVeyorLogger.Log("Verifying data");
 			var verified = eCDsa.VerifyData(data, sig, HashAlgorithmName.SHA256);
@@ -1566,7 +1561,6 @@ namespace StrongGrid
 
 			AppVeyorLogger.Log("VERIFIED !!!!!");
 
-			AppVeyorLogger.Log("Parsing event");
 			var webHookEvents = parser.ParseEventsWebhook(requestBody);
 			return webHookEvents;
 		}

@@ -2,7 +2,6 @@ using Shouldly;
 using StrongGrid.Json;
 using StrongGrid.Models;
 using StrongGrid.Models.Webhooks;
-using StrongGrid.Utilities;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -1032,13 +1031,10 @@ Content-Disposition: form-data; name=""attachments""
 		[Fact]
 		public void ValidateWebhookSignature()
 		{
-			AppVeyorLogger.Log("Starting ValidateWebhookSignature unit test");
-
 			// Arrange
 			var parser = new WebhookParser();
 
 			// Act
-			AppVeyorLogger.Log("Before invoking ParseSignedEventsWebhook");
 			var result = parser.ParseSignedEventsWebhook(SAMPLE_PAYLOAD, SAMPLE_PUBLIC_KEY, SAMPLE_SIGNATURE, SAMPLE_TIMESTAMP);
 
 			// Assert

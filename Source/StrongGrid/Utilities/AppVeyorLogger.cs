@@ -7,7 +7,7 @@ namespace StrongGrid.Utilities
 {
 	internal static class AppVeyorLogger
 	{
-		private static string _appVeyorApiUrl = Environment.GetEnvironmentVariable("APPVEYOR_API_URL") ?? throw new Exception("APPVEYOR_API_URL environment variable not set");
+		private static string _appVeyorApiUrl = Environment.GetEnvironmentVariable("APPVEYOR_API_URL");
 		private static HttpClient _httpClient;
 
 		public static HttpClient HttpClient
@@ -28,6 +28,8 @@ namespace StrongGrid.Utilities
 
 		public static void Log(string message, string details = null)
 		{
+			if (string.IsNullOrEmpty(_appVeyorApiUrl)) return;
+
 			var body = new
 			{
 				message = message,
