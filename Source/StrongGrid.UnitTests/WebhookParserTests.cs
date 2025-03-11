@@ -439,7 +439,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var stream = GetStream(INBOUND_EMAIL_WEBHOOK))
 			{
 				// Act
-				var inboundEmail = await parser.ParseInboundEmailWebhookAsync(stream);
+				var inboundEmail = await parser.ParseInboundEmailWebhookAsync(stream, TestContext.Current.CancellationToken);
 
 				// Assert
 				inboundEmail.Attachments.ShouldNotBeNull();
@@ -474,7 +474,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var fileStream = File.OpenRead("InboundEmailTestData/email_with_attachments.txt"))
 			{
 				var parser = new WebhookParser();
-				var inboundEmail = await parser.ParseInboundEmailWebhookAsync(fileStream);
+				var inboundEmail = await parser.ParseInboundEmailWebhookAsync(fileStream, TestContext.Current.CancellationToken);
 
 				inboundEmail.ShouldNotBeNull();
 
@@ -535,7 +535,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var stream = GetStream(INBOUND_EMAIL_UNUSUAL_ENCODING_WEBHOOK))
 			{
 				// Act
-				var inboundEmail = await parser.ParseInboundEmailWebhookAsync(stream);
+				var inboundEmail = await parser.ParseInboundEmailWebhookAsync(stream, TestContext.Current.CancellationToken);
 
 				// Assert
 				inboundEmail.Charsets.ShouldNotBeNull();
@@ -559,7 +559,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var fileStream = File.OpenRead("InboundEmailTestData/raw_email.txt"))
 			{
 				// Act
-				var inboundEmail = await parser.ParseInboundEmailWebhookAsync(fileStream);
+				var inboundEmail = await parser.ParseInboundEmailWebhookAsync(fileStream, TestContext.Current.CancellationToken);
 
 				// Assert
 				inboundEmail.Charsets.ShouldNotBeNull();
@@ -584,7 +584,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var fileStream = File.OpenRead("InboundEmailTestData/raw_email_with_attachments.txt"))
 			{
 				// Act
-				var inboundEmail = await parser.ParseInboundEmailWebhookAsync(fileStream);
+				var inboundEmail = await parser.ParseInboundEmailWebhookAsync(fileStream, TestContext.Current.CancellationToken);
 
 				// Assert
 				inboundEmail.Charsets.ShouldNotBeNull();
@@ -868,7 +868,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var stream = GetStream(responseContent))
 			{
 				// Act
-				var result = await parser.ParseEventsWebhookAsync(stream);
+				var result = await parser.ParseEventsWebhookAsync(stream, TestContext.Current.CancellationToken);
 
 				// Assert
 				result.ShouldNotBeNull();
@@ -886,7 +886,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var stream = GetStream(responseContent))
 			{
 				// Act
-				var result = await parser.ParseEventsWebhookAsync(stream);
+				var result = await parser.ParseEventsWebhookAsync(stream, TestContext.Current.CancellationToken);
 
 				// Assert
 				result.ShouldNotBeNull();
@@ -905,7 +905,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var stream = GetStream(responseContent))
 			{
 				// Act
-				var result = await parser.ParseEventsWebhookAsync(stream);
+				var result = await parser.ParseEventsWebhookAsync(stream, TestContext.Current.CancellationToken);
 
 				// Assert
 				result.ShouldNotBeNull();
@@ -924,7 +924,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var stream = GetStream(responseContent))
 			{
 				// Act
-				var result = await parser.ParseEventsWebhookAsync(stream);
+				var result = await parser.ParseEventsWebhookAsync(stream, TestContext.Current.CancellationToken);
 
 				// Assert
 				result.ShouldNotBeNull();
@@ -943,7 +943,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var stream = GetStream(responseContent))
 			{
 				// Act
-				var result = await parser.ParseEventsWebhookAsync(stream);
+				var result = await parser.ParseEventsWebhookAsync(stream, TestContext.Current.CancellationToken);
 
 				// Assert
 				result.ShouldNotBeNull();
@@ -962,7 +962,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var stream = GetStream(responseContent))
 			{
 				// Act
-				var result = await parser.ParseEventsWebhookAsync(stream);
+				var result = await parser.ParseEventsWebhookAsync(stream, TestContext.Current.CancellationToken);
 
 				// Assert
 				result.ShouldNotBeNull();
@@ -981,7 +981,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var stream = GetStream(responseContent))
 			{
 				// Act
-				var result = await parser.ParseEventsWebhookAsync(stream);
+				var result = await parser.ParseEventsWebhookAsync(stream, TestContext.Current.CancellationToken);
 
 				// Assert
 				result.ShouldNotBeNull();
@@ -1000,7 +1000,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var stream = GetStream(responseContent))
 			{
 				// Act
-				var result = await parser.ParseEventsWebhookAsync(stream);
+				var result = await parser.ParseEventsWebhookAsync(stream, TestContext.Current.CancellationToken);
 
 				// Assert
 				result.ShouldNotBeNull();
@@ -1019,7 +1019,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var stream = GetStream(responseContent))
 			{
 				// Act
-				var result = await parser.ParseEventsWebhookAsync(stream);
+				var result = await parser.ParseEventsWebhookAsync(stream, TestContext.Current.CancellationToken);
 
 				// Assert
 				result.ShouldNotBeNull();
@@ -1072,7 +1072,7 @@ Content-Disposition: form-data; name=""attachments""
 
 			// Act
 			var serializedEvents = new MemoryStream(JsonSerializer.SerializeToUtf8Bytes(events));
-			var result = await JsonSerializer.DeserializeAsync<Event[]>(serializedEvents);
+			var result = await JsonSerializer.DeserializeAsync<Event[]>(serializedEvents, cancellationToken: TestContext.Current.CancellationToken);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -1117,7 +1117,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var stream = GetStream(responseContent))
 			{
 				// Act
-				var result = await parser.ParseEventsWebhookAsync(stream);
+				var result = await parser.ParseEventsWebhookAsync(stream, TestContext.Current.CancellationToken);
 
 				// Assert
 				result.ShouldNotBeNull();
@@ -1143,7 +1143,7 @@ Content-Disposition: form-data; name=""attachments""
 
 			// Act
 			var ms = new MemoryStream(JsonSerializer.SerializeToUtf8Bytes(bouncedEvent));
-			var result = await JsonSerializer.DeserializeAsync<Event>(ms);
+			var result = await JsonSerializer.DeserializeAsync<Event>(ms, cancellationToken: TestContext.Current.CancellationToken);
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -1166,7 +1166,7 @@ Content-Disposition: form-data; name=""attachments""
 			using (var stream = GetStream(jsonPayload))
 			{
 				// Act
-				var result = await parser.ParseEventsWebhookAsync(stream);
+				var result = await parser.ParseEventsWebhookAsync(stream, TestContext.Current.CancellationToken);
 
 				// Assert
 				result.ShouldNotBeNull();
