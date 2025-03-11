@@ -1533,6 +1533,7 @@ namespace StrongGrid
 			var (x, y) = Utils.GetXYFromSecp256r1PublicKey(publicKeyBytes);
 
 			// Verify the signature
+			AppVeyorLogger.Log("Verifying the signature");
 			var eCDsa = ECDsa.Create();
 			AppVeyorLogger.Log("Creating EC parameters");
 			var ecParams = new ECParameters
