@@ -1503,19 +1503,19 @@ namespace StrongGrid
 		/// <returns>An array of <see cref="Event">events</see>.</returns>
 		public static Event[] ParseSignedEventsWebhook(this IWebhookParser parser, string requestBody, string publicKey, string signature, string timestamp)
 		{
-			AppVeyor.AddMessage("Starting ParseSignedEventsWebhook");
+			AppVeyorLogger.Log("Starting ParseSignedEventsWebhook");
 
 			if (string.IsNullOrEmpty(publicKey)) throw new ArgumentNullException(nameof(publicKey));
 			if (string.IsNullOrEmpty(signature)) throw new ArgumentNullException(nameof(signature));
 			if (string.IsNullOrEmpty(timestamp)) throw new ArgumentNullException(nameof(timestamp));
 
 			// Decode the base64 encoded values
-			AppVeyor.AddMessage("Decoding the base64 encoded values");
+			AppVeyorLogger.Log("Decoding the base64 encoded values");
 			var signatureBytes = Convert.FromBase64String(signature);
 			var publicKeyBytes = Convert.FromBase64String(publicKey);
 
 			// Must combine the timestamp and the payload
-			AppVeyor.AddMessage("Combining the timestamp and the payload");
+			AppVeyorLogger.Log("Combining the timestamp and the payload");
 			var data = Encoding.UTF8.GetBytes(timestamp + requestBody);
 
 			/*
@@ -1533,16 +1533,16 @@ namespace StrongGrid
 			var verified = eCDsa.VerifyData(data, signatureBytes, HashAlgorithmName.SHA256, DSASignatureFormat.Rfc3279DerSequence);
 #elif NET48_OR_GREATER || NETSTANDARD2_1
 			// Convert the signature and public key provided by SendGrid into formats usable by the ECDsa .net crypto class
-			AppVeyor.AddMessage("Converting the signature");
+			AppVeyorLogger.Log("Converting the signature");
 			var sig = ConvertECDSASignature.LightweightConvertSignatureFromX9_62ToISO7816_8(256, signatureBytes);
 
-			AppVeyor.AddMessage("Getting (x, y) from public key");
+			AppVeyorLogger.Log("Getting (x, y) from public key");
 			var (x, y) = Utils.GetXYFromSecp256r1PublicKey(publicKeyBytes);
 
 			// Verify the signature
-			AppVeyor.AddMessage("Verifying signature");
+			AppVeyorLogger.Log("Verifying signature");
 			var eCDsa = ECDsa.Create();
-			AppVeyor.AddMessage("Importing parameters");
+			AppVeyorLogger.Log("Importing parameters");
 			eCDsa.ImportParameters(new ECParameters
 			{
 				Curve = ECCurve.NamedCurves.nistP256, // aka secp256r1 aka prime256v1
@@ -1553,7 +1553,7 @@ namespace StrongGrid
 				}
 			});
 
-			AppVeyor.AddMessage("Verifying data");
+			AppVeyorLogger.Log("Verifying data");
 			var verified = eCDsa.VerifyData(data, sig, HashAlgorithmName.SHA256);
 #else
 #error Unhandled TFM
@@ -1564,9 +1564,9 @@ namespace StrongGrid
 				throw new SecurityException("Webhook signature validation failed.");
 			}
 
-			AppVeyor.AddMessage("VERIFIED !!!!!");
+			AppVeyorLogger.Log("VERIFIED !!!!!");
 
-			AppVeyor.AddMessage("Parsing event");
+			AppVeyorLogger.Log("Parsing event");
 			var webHookEvents = parser.ParseEventsWebhook(requestBody);
 			return webHookEvents;
 		}

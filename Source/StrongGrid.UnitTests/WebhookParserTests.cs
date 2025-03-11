@@ -1032,13 +1032,13 @@ Content-Disposition: form-data; name=""attachments""
 		[Fact]
 		public void ValidateWebhookSignature()
 		{
-			AppVeyor.AddMessage("Starting ValidateWebhookSignature unit test");
+			AppVeyorLogger.Log("Starting ValidateWebhookSignature unit test");
 
 			// Arrange
 			var parser = new WebhookParser();
 
 			// Act
-			AppVeyor.AddMessage("Before invoking ParseSignedEventsWebhook");
+			AppVeyorLogger.Log("Before invoking ParseSignedEventsWebhook");
 			var result = parser.ParseSignedEventsWebhook(SAMPLE_PAYLOAD, SAMPLE_PUBLIC_KEY, SAMPLE_SIGNATURE, SAMPLE_TIMESTAMP);
 
 			// Assert
