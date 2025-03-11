@@ -1532,10 +1532,7 @@ namespace StrongGrid
 			var sig = ConvertECDSASignature.LightweightConvertSignatureFromX9_62ToISO7816_8(256, signatureBytes);
 			var (x, y) = Utils.GetXYFromSecp256r1PublicKey(publicKeyBytes);
 
-			// Verify the signature
-			AppVeyorLogger.Log("Verifying the signature");
-			var eCDsa = ECDsa.Create();
-			AppVeyorLogger.Log("Creating EC parameters");
+			// Prepare the parameters
 			var ecParams = new ECParameters
 			{
 				Curve = ECCurve.NamedCurves.nistP256, // aka secp256r1 aka prime256v1
@@ -1546,9 +1543,11 @@ namespace StrongGrid
 				}
 			};
 
-			AppVeyorLogger.Log("Importing EC parameters");
-			eCDsa.ImportParameters(ecParams);
+			// Create a new instance of the Elliptic Curve Digital Signature Algorithm (ECDSA)
+			AppVeyorLogger.Log("Creating ECDsa");
+			var eCDsa = ECDsa.Create(ecParams);
 
+			// Verify the signature
 			AppVeyorLogger.Log("Verifying data");
 			var verified = eCDsa.VerifyData(data, sig, HashAlgorithmName.SHA256);
 #else
