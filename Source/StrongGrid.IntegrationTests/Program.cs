@@ -45,7 +45,7 @@ namespace StrongGrid.IntegrationTests
 						{
 							options.SourceToken = betterStackToken;
 							options.Context["source"] = "ZoomNet_integration_tests";
-							options.Context["StrongGrid-Version"] = StrongGridClient.Version;
+							options.Context["StrongGrid-Version"] = StrongGrid.Client.Version;
 						});
 					}
 
