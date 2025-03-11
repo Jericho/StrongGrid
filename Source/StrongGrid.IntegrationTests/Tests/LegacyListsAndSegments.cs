@@ -22,7 +22,7 @@ namespace StrongGrid.IntegrationTests.Tests
 			await log.WriteLineAsync("\n***** LEGACY LISTS AND SEGMENTS *****\n").ConfigureAwait(false);
 
 			// GET LISTS
-			var lists = await client.Lists.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
+			var lists = await client.Lists.GetAllAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 			await log.WriteLineAsync($"All lists retrieved. There are {lists.Length} lists").ConfigureAwait(false);
 
 			// GET SEGMENTS

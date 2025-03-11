@@ -81,7 +81,7 @@ namespace StrongGrid.UnitTests.Resources
 			var lists = new Lists(client);
 
 			// Act
-			var result = await lists.GetAllAsync(null, CancellationToken.None);
+			var result = await lists.GetAllAsync(cancellationToken: CancellationToken.None);
 
 			// Assert
 			mockHttp.VerifyNoOutstandingExpectation();

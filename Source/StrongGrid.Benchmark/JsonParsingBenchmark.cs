@@ -48,7 +48,7 @@ namespace StrongGrid.Benchmark
 			var legacyCategories = await _legacyClient.Categories.GetAsync(null, limit, offset, null, CancellationToken.None).ConfigureAwait(false);
 			var legacyContacts = await _legacyClient.Contacts.GetAsync(recordsPerPage, page, null, CancellationToken.None).ConfigureAwait(false);
 			var legacyCustomFields = await _legacyClient.CustomFields.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
-			var legacyLists = await _legacyClient.Lists.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
+			var legacyLists = await _legacyClient.Lists.GetAllAsync(cancellationToken: CancellationToken.None).ConfigureAwait(false);
 			var legacySegments = await _legacyClient.Segments.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
 			var legacySenderIdentities = await _legacyClient.SenderIdentities.GetAllAsync(null, CancellationToken.None).ConfigureAwait(false);
 			var authenticationDomains = await _client.SenderAuthentication.GetAllDomainsAsync(limit, offset, false, null, null, null, CancellationToken.None).ConfigureAwait(false);
