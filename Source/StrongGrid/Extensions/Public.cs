@@ -1545,7 +1545,9 @@ namespace StrongGrid
 
 			// Create a new instance of the Elliptic Curve Digital Signature Algorithm (ECDSA)
 			AppVeyorLogger.Log("Creating ECDsa");
-			var eCDsa = ECDsa.Create(ecParams);
+			var eCDsa = ECDsa.Create(ECCurve.NamedCurves.nistP256);
+			AppVeyorLogger.Log("Importing parameters");
+			eCDsa.ImportParameters(ecParams);
 
 			// Verify the signature
 			AppVeyorLogger.Log("Verifying data");
