@@ -14,8 +14,6 @@ namespace StrongGrid.UnitTests.Resources
 {
 	public class AccessManagementTests
 	{
-		#region FIELDS
-
 		internal const string ENDPOINT = "access_settings";
 
 		internal const string SINGLE_ACCESS_ENTRY_JSON = @"{
@@ -76,7 +74,12 @@ namespace StrongGrid.UnitTests.Resources
 			]
 		}";
 
-		#endregion
+		private readonly ITestOutputHelper _outputHelper;
+
+		public AccessManagementTests(ITestOutputHelper outputHelper)
+		{
+			_outputHelper = outputHelper;
+		}
 
 		[Fact]
 		public void Parse_AccessEntry_json()
@@ -119,7 +122,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "activity")).Respond("application/json", MULTIPLE_ACCESS_ENTRIES_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var accessManagement = new AccessManagement(client);
 
 			// Act
@@ -137,7 +141,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "whitelist")).Respond("application/json", MULTIPLE_WHITELISTED_IPS_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var accessManagement = new AccessManagement(client);
 
 			// Act
@@ -157,7 +162,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "whitelist")).Respond("application/json", MULTIPLE_WHITELISTED_IPS_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var accessManagement = new AccessManagement(client);
 
 			// Act
@@ -176,7 +182,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "whitelist")).Respond("application/json", MULTIPLE_WHITELISTED_IPS_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var accessManagement = new AccessManagement(client);
 
 			// Act
@@ -196,7 +203,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, "whitelist", id)).Respond(HttpStatusCode.OK);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var accessManagement = new AccessManagement(client);
 
 			// Act
@@ -214,7 +222,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, "whitelist")).Respond(HttpStatusCode.OK);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var accessManagement = new AccessManagement(client);
 
 			// Act
@@ -234,7 +243,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "whitelist", id)).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var accessManagement = new AccessManagement(client);
 
 			// Act

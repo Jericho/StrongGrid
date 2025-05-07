@@ -5,7 +5,6 @@ using StrongGrid.Resources;
 using System;
 using System.Linq;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -13,6 +12,12 @@ namespace StrongGrid.UnitTests.Resources
 {
 	public class WebhookStatsTests
 	{
+		private readonly ITestOutputHelper _outputHelper;
+
+		public WebhookStatsTests(ITestOutputHelper outputHelper)
+		{
+			_outputHelper = outputHelper;
+		}
 		[Fact]
 		public async Task GetGlobalStatsAsync()
 		{
@@ -43,9 +48,10 @@ namespace StrongGrid.UnitTests.Resources
 			]";
 
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri($"user/webhooks/parse/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={ endDate.ToString("yyyy-MM-dd")}")).Respond("application/json", apiResponse);
+			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri($"user/webhooks/parse/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={endDate.ToString("yyyy-MM-dd")}")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var webhookStats = new WebhookStats(client);
 
 			// Act

@@ -5,7 +5,6 @@ using StrongGrid.Models;
 using StrongGrid.Resources;
 using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -13,8 +12,6 @@ namespace StrongGrid.UnitTests.Resources
 {
 	public class EmailValidationTests
 	{
-		#region FIELDS
-
 		internal const string ENDPOINT = "validations/email";
 
 		internal const string INVALID_EMAIL_JSON = @"{
@@ -66,7 +63,12 @@ namespace StrongGrid.UnitTests.Resources
 			""ip_address"": ""123.123.123.123""
 		}";
 
-		#endregion
+		private readonly ITestOutputHelper _outputHelper;
+
+		public EmailValidationTests(ITestOutputHelper outputHelper)
+		{
+			_outputHelper = outputHelper;
+		}
 
 		[Fact]
 		public void Parse_invalid_email_json()
@@ -138,7 +140,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var emailValidation = new EmailValidation(client);
 
 			// Act

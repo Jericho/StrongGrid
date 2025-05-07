@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -16,8 +15,6 @@ namespace StrongGrid.UnitTests.Resources
 {
 	public class EmailActivitiesTests
 	{
-		#region FIELDS
-
 		internal const string ENDPOINT = "messages";
 
 		internal const string SINGLE_MESSAGE = @"{
@@ -39,7 +36,12 @@ namespace StrongGrid.UnitTests.Resources
 			SINGLE_MESSAGE +
 		"]}";
 
-		#endregion
+		private readonly ITestOutputHelper _outputHelper;
+
+		public EmailActivitiesTests(ITestOutputHelper outputHelper)
+		{
+			_outputHelper = outputHelper;
+		}
 
 		[Fact]
 		public void Parse_json()
@@ -70,7 +72,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}").Respond("application/json", NO_MESSAGES_FOUND);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var emailActivities = (IEmailActivities)new EmailActivities(client);
 
 			// Act
@@ -92,7 +95,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&query=subject%3D%22thevalue%22").Respond("application/json", ONE_MESSAGE_FOUND);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var emailActivities = (IEmailActivities)new EmailActivities(client);
 
 			var criteria = new SearchCriteriaEqual(EmailActivitiesFilterField.Subject, "thevalue");
@@ -116,7 +120,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&query=(marketing_campaign_name%3D%22value1%22+AND+status%3D%22processed%22)").Respond("application/json", ONE_MESSAGE_FOUND);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var emailActivities = (IEmailActivities)new EmailActivities(client);
 
 			var filterConditions = new[]
@@ -143,7 +148,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&query=(marketing_campaign_name%3D%22value1%22+OR+msg_id%3D%22value2%22+AND+subject%3D%22value3%22+AND+teammate%3D%22value4%22)").Respond("application/json", ONE_MESSAGE_FOUND);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var emailActivities = new EmailActivities(client);
 
 			var filterConditions = new[]
@@ -171,7 +177,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&query=(unique_args%5B%27name%27%5D%3D%22Joe%22)").Respond("application/json", ONE_MESSAGE_FOUND);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var emailActivities = (IEmailActivities)new EmailActivities(client);
 
 			var criteria = new SearchCriteriaUniqueArgEqual("name", "Joe");
