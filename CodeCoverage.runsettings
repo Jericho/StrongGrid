@@ -23,8 +23,8 @@
               <Exclude>
                 <Attribute>StrongGrid\.Utilities\.ExcludeFromCodeCoverageAttribute</Attribute>
                 <Attribute>System\.Obsolete</Attribute>
-	            <Attribute>System\.CodeDom\.Compiler\.GeneratedCodeAttribute</Attribute>
-	            <Attribute>System\.Runtime\.CompilerServices\.CompilerGeneratedAttribute</Attribute>
+                <Attribute>System\.CodeDom\.Compiler\.GeneratedCodeAttribute</Attribute>
+                <Attribute>System\.Runtime\.CompilerServices\.CompilerGeneratedAttribute</Attribute>
               </Exclude>
             </Attributes>
 

@@ -2,7 +2,7 @@
 #tool dotnet:?package=GitVersion.Tool&version=6.3.0
 #tool dotnet:?package=coveralls.net&version=4.0.1
 #tool nuget:?package=GitReleaseManager&version=0.20.0
-#tool nuget:?package=ReportGenerator&version=5.4.6
+#tool nuget:?package=ReportGenerator&version=5.4.7
 #tool nuget:?package=xunit.runner.console&version=2.9.3
 #tool nuget:?package=CodecovUploader&version=0.8.0
 
@@ -28,25 +28,6 @@ if (IsRunningOnUnix()) target = "Run-Unit-Tests";
 
 var libraryName = "StrongGrid";
 var gitHubRepo = "StrongGrid";
-
-var testCoverageFilters = new[]
-{
-	"+[StrongGrid]*",
-	"-[StrongGrid]StrongGrid.Properties.*",
-	"-[StrongGrid]StrongGrid.Models.*",
-	"-[StrongGrid]*System.Text.Json.SourceGeneration*"
-};
-var testCoverageExcludeAttributes = new[]
-{
-	"Obsolete",
-	"GeneratedCodeAttribute",
-	"CompilerGeneratedAttribute",
-	"ExcludeFromCodeCoverageAttribute"
-};
-var testCoverageExcludeFiles = new[]
- {
-	"**/AssemblyInfo.cs"
-};
 
 var nuGetApiUrl = Argument<string>("NUGET_API_URL", EnvironmentVariable("NUGET_API_URL"));
 var nuGetApiKey = Argument<string>("NUGET_API_KEY", EnvironmentVariable("NUGET_API_KEY"));
@@ -97,7 +78,7 @@ const string DESIRED_FRAMEWORK_FOR_CODE_COVERAGE = "net9.0";
 // The terminal logger introduced but turned off by default in .NET8 and turned on by default in .NET9
 // doesn't work right on Linux and causes a lot of noise in the build log on Ubuntu in AppVeyor.
 // As of March 2025, the terminal logger doesn't seem to work right on Windows in AppVeyor either.
-// Therefore I am enabling it when building on my machine but turning it off in any other environment.
+// Therefore I am enabling it when building on my machine and turning it off in any other environment.
 var terminalLogger = (isLocalBuild && IsRunningOnWindows()) ? "on" : "off";
 
 
@@ -409,9 +390,7 @@ Task("Publish-NuGet")
 	var settings = new DotNetNuGetPushSettings
 	{
     	Source = nuGetApiUrl,
-	    ApiKey = nuGetApiKey,
-		ArgumentCustomization = args => args
-			.Append($"-tl:{terminalLogger}")
+	    ApiKey = nuGetApiKey
 	};
 
 	foreach(var package in GetFiles(outputDir + "*.nupkg"))
