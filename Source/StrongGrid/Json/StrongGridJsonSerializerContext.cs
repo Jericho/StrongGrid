@@ -1,11 +1,13 @@
+// This file is maintained by StrongGrid.IntegrationTests.Program.
+
 using System.Text.Json.Serialization;
 
+#pragma warning disable CS0618 // Type or member is obsolete
 namespace StrongGrid.Json
 {
-	[JsonSerializable(typeof(string[]))]
-	[JsonSerializable(typeof(long[]))]
-	[JsonSerializable(typeof(bool))]
-
+	[JsonSerializable(typeof(System.String[]))]
+	[JsonSerializable(typeof(System.Int64[]))]
+	[JsonSerializable(typeof(System.Boolean))]
 	[JsonSerializable(typeof(StrongGrid.Json.StrongGridJsonObject))]
 	[JsonSerializable(typeof(StrongGrid.Json.StrongGridJsonObject[]))]
 
@@ -117,9 +119,7 @@ namespace StrongGrid.Json
 	[JsonSerializable(typeof(StrongGrid.Models.MailPriority))]
 	[JsonSerializable(typeof(StrongGrid.Models.MailSettings))]
 	[JsonSerializable(typeof(StrongGrid.Models.MonitorSettings))]
-#pragma warning disable CS0618 // Type or member is obsolete
 	[JsonSerializable(typeof(StrongGrid.Models.NewRelicSettings))]
-#pragma warning restore CS0618 // Type or member is obsolete
 	[JsonSerializable(typeof(StrongGrid.Models.OpenTrackingSettings))]
 	[JsonSerializable(typeof(StrongGrid.Models.PaginationMetadata))]
 	[JsonSerializable(typeof(StrongGrid.Models.QueryLanguageVersion))]
@@ -325,9 +325,7 @@ namespace StrongGrid.Json
 	[JsonSerializable(typeof(StrongGrid.Models.MailPriority[]))]
 	[JsonSerializable(typeof(StrongGrid.Models.MailSettings[]))]
 	[JsonSerializable(typeof(StrongGrid.Models.MonitorSettings[]))]
-#pragma warning disable CS0618 // Type or member is obsolete
 	[JsonSerializable(typeof(StrongGrid.Models.NewRelicSettings[]))]
-#pragma warning restore CS0618 // Type or member is obsolete
 	[JsonSerializable(typeof(StrongGrid.Models.OpenTrackingSettings[]))]
 	[JsonSerializable(typeof(StrongGrid.Models.PaginationMetadata[]))]
 	[JsonSerializable(typeof(StrongGrid.Models.QueryLanguageVersion[]))]
@@ -460,3 +458,4 @@ namespace StrongGrid.Json
 	{
 	}
 }
+#pragma warning restore CS0618 // Type or member is obsolete
