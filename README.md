@@ -48,9 +48,9 @@ using StrongGrid;
 ```
 
 
-## .NET framework suport
+## .NET framework support
 
-StrongGrid supports the `4.8` .NET frameworks as well as any framework supporting `.NET Standard 2.1` (which includes `.NET Core 3.x`, `ASP.NET Core 3.x`, `.NET 5.0` and all subsequent versions).
+StrongGrid supports the `4.8` .NET framework as well as any framework supporting `.NET Standard 2.1` (which includes `.NET Core 3.x`, `ASP.NET Core 3.x`, `.NET 5.0` and all subsequent versions).
 
 ## Usage
 
