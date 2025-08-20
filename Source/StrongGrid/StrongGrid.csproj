@@ -37,6 +37,7 @@
 
   <ItemGroup>
     <PackageReference Include="HttpMultipartParser" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="[8.0.0,10)" /> <!-- DO NOT UPGRADE. Reasoning is same as explained in GH issue 538 -->
     <PackageReference Include="Microsoft.Extensions.Logging" Version="[8.0.0,10)" /> <!-- DO NOT UPGRADE See https://github.com/Jericho/StrongGrid/issues/538 -->
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <PackageReference Include="MimeKitLite" Version="4.11.0" />
