@@ -50,7 +50,7 @@ using StrongGrid;
 
 ## .NET framework suport
 
-StrongGrid supports the `4.8`, `6.0` and `7.0` .NET frameworks as well as any framework supporting `.NET Standard 2.1` (which includes `.NET Core 3.x` and `ASP.NET Core 3.x`).
+StrongGrid supports the `4.8` .NET frameworks as well as any framework supporting `.NET Standard 2.1` (which includes `.NET Core 3.x`, `ASP.NET Core 3.x`, `.NET 5.0` and all subsequent versions).
 
 ## Usage
 
@@ -68,6 +68,22 @@ var proxy = new WebProxy("http://myproxy:1234");
 var strongGridClient = new StrongGrid.Client(apiKey, proxy);
 ```
 
+### Inversion of Control (IoC)
+If you are using an IoC container, The StrongGrid library contains a convenient extension method that will register the `StrongGrid.Client` as a scoped service. For example, if you are using [Microsoft.Extensions.DependencyInjection](https://docs.microsoft.com/en-us/dotnet/core/extensions/dependency-injection), you can do the following:
+```csharp
+var builder = WebApplication.CreateSlimBuilder(args);
+
+// Register StrongGrid.Client as a scoped service
+var sendGridApiKey = "... your API key ...";
+builder.AddStrongGrid(sendGridApiKey);
+
+<... other registrations ...>
+
+// Build the app
+var app = builder.Build();
+```
+
+### Sending emails
 One of the most common scenarios is to send transactional emails. 
 
 Here are a few examples:
@@ -87,6 +103,7 @@ var attachments = new[]
 var messageId = await strongGridClient.Mail.SendToSingleRecipientAsync(to, from, subject, html, text, attachments: attachments).ConfigureAwait(false);
 ```
 
+### Resources
 You have access to numerous 'resources' (such as Contacts, Lists, Segments, Settings, SenderAuthentication, etc) off of the Client and each resource offers several methods such as retrieve, create, update, delete, etc. 
 
 Here are a few example:

@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Security;
@@ -1689,7 +1690,31 @@ namespace StrongGrid
 		/// <returns>An <see cref="IHttpClientBuilder"/> that can be used to further configure the underlying <see cref="HttpClient"/>.</returns>
 		public static IHttpClientBuilder AddStrongGrid(this IServiceCollection services, string apiKey, StrongGridClientOptions clientOptions = null, string httpClientName = "StrongGrid")
 		{
-			var httpClientBuilder = services.AddHttpClient(httpClientName);
+			return services.AddStrongGrid(apiKey, null, clientOptions, httpClientName);
+		}
+
+		/// <summary>
+		/// Adds and configures a StrongGrid client to the specified <see cref="IServiceCollection"/>.
+		/// </summary>
+		/// <remarks>This method registers the StrongGrid client as a scoped service in the dependency injection
+		/// container. It also configures an <see cref="HttpClient"/> with the specified proxy settings and associates it with
+		/// the provided <paramref name="httpClientName"/>.</remarks>
+		/// <param name="services">The <see cref="IServiceCollection"/> to which the StrongGrid client will be added.</param>
+		/// <param name="apiKey">The API key used to authenticate with the StrongGrid service.</param>
+		/// <param name="proxy">The <see cref="IWebProxy"/> to use for HTTP requests. Pass <see langword="null"/> to disable proxy usage.</param>
+		/// <param name="clientOptions">Optional configuration options for the StrongGrid client. If <see langword="null"/>, default options will be used.</param>
+		/// <param name="httpClientName">The name of the <see cref="HttpClient"/> to be used by the StrongGrid client. Defaults to "StrongGrid".</param>
+		/// <returns>An <see cref="IHttpClientBuilder"/> that can be used to further configure the underlying <see cref="HttpClient"/>.</returns>
+		public static IHttpClientBuilder AddStrongGrid(this IServiceCollection services, string apiKey, IWebProxy proxy, StrongGridClientOptions clientOptions = null, string httpClientName = "StrongGrid")
+		{
+			var httpClientBuilder = services
+				.AddHttpClient(httpClientName)
+				.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler()
+				{
+					Proxy = proxy,
+					UseProxy = proxy != null,
+				});
+
 			services.AddScoped<StrongGrid.Client>(serviceProvider =>
 			{
 				var httpClient = serviceProvider.GetRequiredService<IHttpClientFactory>().CreateClient(httpClientName);
