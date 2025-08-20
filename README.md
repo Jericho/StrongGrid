@@ -71,16 +71,32 @@ var strongGridClient = new StrongGrid.Client(apiKey, proxy);
 ### Inversion of Control (IoC)
 If you are using an IoC container, The StrongGrid library contains a convenient extension method that will register the `StrongGrid.Client` as a scoped service. For example, if you are using [Microsoft.Extensions.DependencyInjection](https://docs.microsoft.com/en-us/dotnet/core/extensions/dependency-injection), you can do the following:
 ```csharp
-var builder = WebApplication.CreateSlimBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
-// Register StrongGrid.Client as a scoped service
-var sendGridApiKey = "... your API key ...";
+// Add services to the container.
+
+var sendGridApiKey = "abc123"; // Replace with your actual SendGrid API key
 builder.Services.AddStrongGrid(sendGridApiKey);
 
-<... other registrations ...>
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
-// Build the app
 var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+	app.UseSwagger();
+	app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
+
+app.Run();
+
 ```
 
 ### Sending emails
