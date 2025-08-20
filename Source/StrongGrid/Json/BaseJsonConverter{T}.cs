@@ -30,11 +30,15 @@ namespace StrongGrid.Json
 
 		public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
 		{
-			if (value == null) return;
-
 			var typeOfValue = value.GetType(); // Do not use typeof(T). See https://github.com/Jericho/StrongGrid/issues/492
 			if (typeOfValue.IsArray)
 			{
+				if (value is null)
+				{
+					writer.WriteNullValue();
+					return;
+				}
+
 				var typeOfItems = typeOfValue.GetElementType();
 
 				writer.WriteStartArray();
@@ -77,7 +81,7 @@ namespace StrongGrid.Json
 
 		internal void Serialize(Utf8JsonWriter writer, T value, Type typeOfValue, JsonSerializerOptions options, Action<string, object, Type, JsonSerializerOptions, JsonConverterAttribute> propertySerializer = null)
 		{
-			if (value == null)
+			if (value is null)
 			{
 				writer.WriteNullValue();
 				return;
