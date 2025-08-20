@@ -75,7 +75,7 @@ var builder = WebApplication.CreateSlimBuilder(args);
 
 // Register StrongGrid.Client as a scoped service
 var sendGridApiKey = "... your API key ...";
-builder.AddStrongGrid(sendGridApiKey);
+builder.Services.AddStrongGrid(sendGridApiKey);
 
 <... other registrations ...>
 
