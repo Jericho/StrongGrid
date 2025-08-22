@@ -3,9 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
+using StrongGrid.Utilities;
 using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -18,6 +20,7 @@ namespace StrongGrid.IntegrationTests
 	{
 		public static async Task Main(string[] args)
 		{
+			// Update the StrongGridJsonSerializerContext.cs file (if necessary)
 			var serializerContextPath = Path.Combine(Path.GetDirectoryName(GetThisFilePath()), "..\\StrongGrid\\Json\\StrongGridJsonSerializerContext.cs");
 			var additionalSerializableTypes = new[]
 			{
@@ -29,48 +32,13 @@ namespace StrongGrid.IntegrationTests
 			};
 			await UpdateJsonSerializerContextAsync("StrongGrid", "StrongGrid.Models", serializerContextPath, additionalSerializableTypes).ConfigureAwait(false);
 
-			// Configure cancellation (this allows you to press CTRL+C or CTRL+Break to stop the integration tests)
-			var cts = new CancellationTokenSource();
-			Console.CancelKeyPress += (s, e) =>
-			{
-				e.Cancel = true;
-				cts.Cancel();
-			};
+			var builder = Host.CreateApplicationBuilder();
 
-			var services = new ServiceCollection();
-			ConfigureServices(services);
-			using var serviceProvider = services.BuildServiceProvider();
-			var app = serviceProvider.GetService<IHostedService>();
-			await app.StartAsync(cts.Token).ConfigureAwait(false);
-		}
+			ConfigureLogging(builder.Logging);
+			ConfigureServices(builder.Services);
 
-		private static void ConfigureServices(ServiceCollection services)
-		{
-			services.AddHostedService<TestsRunner>();
-
-			services
-				.AddLogging(logging =>
-				{
-					var betterStackToken = Environment.GetEnvironmentVariable("BETTERSTACK_TOKEN");
-					if (!string.IsNullOrEmpty(betterStackToken))
-					{
-						logging.AddBetterStackLogger(options =>
-						{
-							options.SourceToken = betterStackToken;
-							options.Context["source"] = "ZoomNet_integration_tests";
-							options.Context["StrongGrid-Version"] = StrongGrid.Client.Version;
-						});
-					}
-
-					logging.AddSimpleConsole(options =>
-					{
-						options.SingleLine = true;
-						options.TimestampFormat = "yyyy-MM-dd HH:mm:ss ";
-					});
-
-					logging.AddFilter(logLevel => logLevel >= LogLevel.Debug);
-					logging.AddFilter<ConsoleLoggerProvider>(logLevel => logLevel >= LogLevel.Information);
-				});
+			var host = builder.Build();
+			await host.StartAsync().ConfigureAwait(false);
 		}
 
 		private static async Task UpdateJsonSerializerContextAsync(string projectName, string baseNamespace, string serializerContextPath, Type[] additionalSerializableTypes)
@@ -159,6 +127,63 @@ namespace StrongGrid.IntegrationTests
 		private static string GetThisFilePath([CallerFilePath] string path = null)
 		{
 			return path;
+		}
+
+		private static void ConfigureLogging(ILoggingBuilder logging)
+		{
+			logging.ClearProviders();
+
+			var betterStackToken = Environment.GetEnvironmentVariable("BETTERSTACK_TOKEN");
+			if (!string.IsNullOrEmpty(betterStackToken))
+			{
+				logging.AddBetterStackLogger(options =>
+				{
+					options.SourceToken = betterStackToken;
+					options.Context["source"] = "StrongGrid_integration_tests";
+					options.Context["StrongGrid-Version"] = StrongGrid.Client.Version;
+				});
+			}
+
+			logging.AddSimpleConsole(options =>
+			{
+				options.SingleLine = true;
+				options.TimestampFormat = "yyyy-MM-dd HH:mm:ss ";
+			});
+
+			logging
+				.SetMinimumLevel(LogLevel.Debug) // Set the minimum log level to Debug
+				.AddFilter<ConsoleLoggerProvider>(logLevel => logLevel > LogLevel.Information); // Filter out logs below Information level for ConsoleLoggerProvider
+		}
+
+		private static void ConfigureServices(IServiceCollection services)
+		{
+			// -----------------------------------------------------------------------------
+			// Do you want to proxy requests through a tool such as Fiddler? Very useful for debugging.
+			var useProxy = true;
+
+			// By default Fiddler Classic uses port 8888 and Fiddler Everywhere uses port 8866
+			var proxyPort = 8888;
+
+			// Change the default values to avoid being overwhelmed by too many debug messages in the console
+			var clientOptions = new StrongGridClientOptions()
+			{
+				// Trigger a 'Trace' log (rather than the default 'Debug') when a successful call is made.
+				// This is to ensure that we don't get overwhelmed by too many debug messages in the console.
+				LogLevelSuccessfulCalls = LogLevel.Trace,
+				LogLevelFailedCalls = LogLevel.Error,
+			};
+			// -----------------------------------------------------------------------------
+
+			// Configure StrongGrid client
+			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
+
+			// Configure the proxy if desired
+			var proxy = useProxy ? new WebProxy($"http://localhost:{proxyPort}") : null;
+
+			services.AddStrongGrid(apiKey, proxy, clientOptions);
+			services.AddLegacyStrongGrid(apiKey, proxy, clientOptions);
+
+			services.AddHostedService<TestsRunner>();
 		}
 	}
 }

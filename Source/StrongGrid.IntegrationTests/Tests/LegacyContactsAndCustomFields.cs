@@ -8,17 +8,10 @@ using System.Threading.Tasks;
 
 namespace StrongGrid.IntegrationTests.Tests
 {
-	public class LegacyContactsAndCustomFields : IIntegrationTest
+	public class LegacyContactsAndCustomFields : ILegacyIntegrationTest
 	{
-		public Task RunAsync(IBaseClient client, TextWriter log, CancellationToken cancellationToken)
+		public async Task RunAsync(LegacyClient client, TextWriter log, CancellationToken cancellationToken)
 		{
-			return RunAsync((ILegacyClient)client, log, cancellationToken);
-		}
-
-		public async Task RunAsync(ILegacyClient client, TextWriter log, CancellationToken cancellationToken)
-		{
-			if (cancellationToken.IsCancellationRequested) return;
-
 			await log.WriteLineAsync("\n***** LEGACY CONTACTS AND CUSTOM FIELDS *****\n").ConfigureAwait(false);
 
 			// GET ALL FIELDS
