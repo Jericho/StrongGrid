@@ -50,7 +50,10 @@ using StrongGrid;
 
 ## .NET framework support
 
-StrongGrid supports the `4.8` .NET framework as well as any framework supporting `.NET Standard 2.1` (which includes `.NET Core 3.x`, `ASP.NET Core 3.x`, `.NET 5.0` and all subsequent versions).
+StrongGrid currently supports:
+- .NET framework 4.8
+- any framework supporting `.NET Standard 2.1` (which includes .NET 5.0 and all subsequent versions as well as some legacy versions such as .NET Core 3.x and ASP.NET Core 3.x).
+
 
 ## Usage
 
@@ -68,35 +71,73 @@ var proxy = new WebProxy("http://myproxy:1234");
 var strongGridClient = new StrongGrid.Client(apiKey, proxy);
 ```
 
+### Lifetime management
+By default, the StrongGrid client creates a new instance of HttpClient in order to send requests to the SendGrid API. This means that the lifetime guidance for StrongGrid.Client is the same as the lifetime guidance for HttpClient. Microsoft's documentation states the following:
+
+> HttpClient is intended to be instantiated once and re-used throughout the life of an application. Instantiating an HttpClient class for every request will exhaust the number of sockets available under heavy loads. This will result in SocketException errors.
+
+Keeping Microsoft's guidance in mind, my best advice to developers who are using StrongGrid is to avoid constantly instantiating new StrongGrid.Client because it can lead to socket exhaustion under heavy load.In my opinion, one of the best explanation of the problem with short-lived HTTP clients was [written by Simon Simms back in August 2016](https://www.aspnetmonsters.com/2016/08/2016-08-27-httpclientwrong/) but there are many other similar articles you can find with a quick Google search.
+
+Please note that StrongGrid.Client has a constructor that allows you to provide your own HttpClient wich means that you could instantiate a new StrongGrid.Client as often as you want as long as you provide your own HttpClient and you properly manage the lifetime of this HttpClient.
+
+In summary:
+
+- It's best to instantiate the StrongGrid.Client once and re-use it.
+- You can instantiate a new StrongGrid.Client as often as you desire as long as you provide your own HttpClient and you properly manage the lifetime of this HttpClient.
+
+Having said all this, there's an even better approach if you are using an IoC container (see next section).
+
 ### Inversion of Control (IoC)
-If you are using an IoC container, The StrongGrid library contains a convenient extension method that will register the `StrongGrid.Client` as a scoped service. For example, if you are using [Microsoft.Extensions.DependencyInjection](https://docs.microsoft.com/en-us/dotnet/core/extensions/dependency-injection), you can do the following:
+If you are using [Microsoft.Extensions.DependencyInjection](https://docs.microsoft.com/en-us/dotnet/core/extensions/dependency-injection), the StrongGrid library contains a convenient extension method that will register the `StrongGrid.Client` as a scoped service and the lifetime of the underlying HttpClient is automatically managed to avoid socket exhaustion.
+For other IoC containers (Autofac, SimpleInjector, Pure.DI, etc.), you'll need to register services manually using similar patterns.
+
+1. Here's an example showing how to register the StrongGrid client for .NET 8+ web apps:
 ```csharp
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
-
-var sendGridApiKey = "abc123"; // Replace with your actual SendGrid API key
-builder.Services.AddStrongGrid(sendGridApiKey);
-
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
+var sendGridApiKey = builder.Configuration["SendGridApiKey"]; // use your SendGrid API key
+var strongGridHttpClientBuilder = builder.Services.AddStrongGrid(sendGridApiKey);
+// ...
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-	app.UseSwagger();
-	app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
-
+// ...
 app.Run();
+```
 
+and here's how this StrongGrid client would be used in a service:
+```csharp
+public class MyEmailService
+{
+    private readonly StrongGrid.IClient _strongGridClient; 
+    
+    public MyEmailService(StrongGrid.IClient strongGridClient)
+    {
+        _strongGridClient = strongGridClient;
+    }
+    
+    public async Task SendEmailAsync()
+    {
+        await _strongGridClient.Mail.SendToSingleRecipientAsync(/* email details */);
+    }
+}
+```
+
+2. Here's another example, this one for a console Applications & Worker Services (Using Generic Host):
+```csharp
+var builder = Host.CreateApplicationBuilder(args);
+var sendGridApiKey = builder.Configuration["SendGridApiKey"];
+builder.Services.AddStrongGrid(sendGridApiKey);
+var host = builder.Build();
+var strongGridClient = host.Services.GetRequiredService<StrongGrid.IClient>();
+await strongGridClient.Mail.SendToSingleRecipientAsync(/* email details */);
+```
+
+3. Here's an example for simple console applications or utilities where you don't need the full Generic Host:
+```csharp
+var services = new ServiceCollection();
+services.AddStrongGrid("your-api-key");
+var serviceProvider = services.BuildServiceProvider();
+var client = serviceProvider.GetRequiredService<StrongGrid.IClient>();
+await client.Mail.SendToSingleRecipientAsync(/* email details */);
 ```
 
 ### Sending emails
