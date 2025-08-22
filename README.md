@@ -88,7 +88,7 @@ In summary:
 Having said all this, there's an even better approach if you are using an IoC container (see next section).
 
 ### Inversion of Control (IoC)
-If you are using [Microsoft.Extensions.DependencyInjection](https://docs.microsoft.com/en-us/dotnet/core/extensions/dependency-injection), the StrongGrid library contains a convenient extension method that will register the `StrongGrid.Client` as a scoped service and the lifetime of the underlying HttpClient is automatically managed to avoid socket exhaustion.
+If you are using [Microsoft.Extensions.DependencyInjection](https://docs.microsoft.com/en-us/dotnet/core/extensions/dependency-injection), the StrongGrid library contains a convenient extension method that will register and manage the litetime of the `StrongGrid.Client` as well as manage the underlying HttpClient, all with the goal of avoiding socket exhaustion.
 For other IoC containers (Autofac, SimpleInjector, Pure.DI, etc.), you'll need to register services manually using similar patterns.
 
 1. Here's an example showing how to register the StrongGrid client for .NET 8+ web apps:
