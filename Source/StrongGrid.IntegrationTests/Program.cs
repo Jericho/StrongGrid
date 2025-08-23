@@ -80,7 +80,7 @@ namespace StrongGrid.IntegrationTests
 
 		private static string GenerateAttributesForSerializerContext(string baseNamespace, int tabIndex = 0)
 		{
-			// Handy code to generate the 'JsonSerializable' attributes for ZoomNetJsonSerializerContext
+			// Handy code to generate the 'JsonSerializable' attributes for JsonSerializerContext
 			var allTypes = Assembly
 				.GetAssembly(typeof(Client))
 				.GetTypes()
