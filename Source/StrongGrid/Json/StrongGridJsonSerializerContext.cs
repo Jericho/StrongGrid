@@ -5,10 +5,14 @@ using System.Text.Json.Serialization;
 #pragma warning disable CS0618 // Type or member is obsolete
 namespace StrongGrid.Json
 {
-	[JsonSerializable(typeof(System.String[]))]
-	[JsonSerializable(typeof(System.Int64[]))]
-	[JsonSerializable(typeof(System.Boolean))]
+	[JsonSerializable(typeof(string))]
+	[JsonSerializable(typeof(long))]
+	[JsonSerializable(typeof(bool))]
 	[JsonSerializable(typeof(StrongGrid.Json.StrongGridJsonObject))]
+
+	[JsonSerializable(typeof(string[]))]
+	[JsonSerializable(typeof(long[]))]
+	[JsonSerializable(typeof(bool[]))]
 	[JsonSerializable(typeof(StrongGrid.Json.StrongGridJsonObject[]))]
 
 	[JsonSerializable(typeof(StrongGrid.Models.AccessEntry))]

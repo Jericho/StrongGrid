@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
+using StrongGrid.Json;
 using StrongGrid.Utilities;
 using System;
 using System.IO;
@@ -24,11 +25,10 @@ namespace StrongGrid.IntegrationTests
 			var serializerContextPath = Path.Combine(Path.GetDirectoryName(GetThisFilePath()), "..\\StrongGrid\\Json\\StrongGridJsonSerializerContext.cs");
 			var additionalSerializableTypes = new[]
 			{
-				typeof(string[]),
-				typeof(long[]),
+				typeof(string),
+				typeof(long),
 				typeof(bool),
-				typeof(StrongGrid.Json.StrongGridJsonObject),
-				typeof(StrongGrid.Json.StrongGridJsonObject[]),
+				typeof(StrongGridJsonObject),
 			};
 			await UpdateJsonSerializerContextAsync("StrongGrid", "StrongGrid.Models", serializerContextPath, additionalSerializableTypes).ConfigureAwait(false);
 
@@ -56,7 +56,14 @@ namespace StrongGrid.IntegrationTests
 			var tabs = string.Concat(Enumerable.Repeat("\t", tabIndex));
 			foreach (var type in additionalSerializableTypes ?? Enumerable.Empty<Type>())
 			{
-				newSerializerContext.AppendLine($"{tabs}[JsonSerializable(typeof({type.FullName}))]");
+				newSerializerContext.AppendLine($"{tabs}[JsonSerializable(typeof({type.GetFriendlyName()}))]");
+			}
+
+			newSerializerContext.AppendLine();
+
+			foreach (var type in additionalSerializableTypes ?? Enumerable.Empty<Type>())
+			{
+				newSerializerContext.AppendLine($"{tabs}[JsonSerializable(typeof({type.GetFriendlyName()}[]))]");
 			}
 
 			newSerializerContext
