@@ -7,10 +7,8 @@ namespace StrongGrid.IntegrationTests.Tests
 {
 	public class Designs : IIntegrationTest
 	{
-		public async Task RunAsync(IBaseClient client, TextWriter log, CancellationToken cancellationToken)
+		public async Task RunAsync(Client client, TextWriter log, CancellationToken cancellationToken)
 		{
-			if (cancellationToken.IsCancellationRequested) return;
-
 			await log.WriteLineAsync("\n***** DESIGNS *****\n").ConfigureAwait(false);
 
 			// GET ALL DESIGNS

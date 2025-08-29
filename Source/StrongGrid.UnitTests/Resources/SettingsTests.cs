@@ -5,7 +5,6 @@ using StrongGrid.Models;
 using StrongGrid.Resources;
 using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -13,8 +12,6 @@ namespace StrongGrid.UnitTests.Resources
 {
 	public class SettingsTests
 	{
-		#region FIELDS
-
 		internal const string SINGLE_GLOBAL_SETTING_JSON = @"{
 			""name"": ""bcc"",
 			""title"": ""BCC"",
@@ -22,7 +19,12 @@ namespace StrongGrid.UnitTests.Resources
 			""enabled"": true
 		}";
 
-		#endregion
+		private readonly ITestOutputHelper _outputHelper;
+
+		public SettingsTests(ITestOutputHelper outputHelper)
+		{
+			_outputHelper = outputHelper;
+		}
 
 		[Fact]
 		public void Parse_json()
@@ -52,7 +54,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("user/settings/enforced_tls")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -81,7 +84,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("user/settings/enforced_tls")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -116,7 +120,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri($"mail_settings?limit={limit}&offset={offset}")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -151,7 +156,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri($"partner_settings?limit={limit}&offset={offset}")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -177,7 +183,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("partner_settings/new_relic")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -206,7 +213,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("partner_settings/new_relic")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -241,7 +249,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri($"tracking_settings?limit={limit}&offset={offset}")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -267,7 +276,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("tracking_settings/click")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -295,7 +305,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("tracking_settings/click")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -324,7 +335,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("tracking_settings/google_analytics")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -365,7 +377,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("tracking_settings/google_analytics")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -388,7 +401,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("tracking_settings/open")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -413,7 +427,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("tracking_settings/open")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -441,7 +456,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("tracking_settings/subscription")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -482,7 +498,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("tracking_settings/subscription")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -509,7 +526,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("mail_settings/address_whitelist")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -544,7 +562,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("mail_settings/address_whitelist")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -569,7 +588,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("mail_settings/footer")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -601,7 +621,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("mail_settings/footer")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -625,7 +646,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("mail_settings/forward_spam")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -654,7 +676,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("mail_settings/forward_spam")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -677,7 +700,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("mail_settings/plain_content")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -702,7 +726,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("mail_settings/plain_content")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -726,7 +751,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("mail_settings/template")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -755,7 +781,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("mail_settings/template")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -780,7 +807,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("mail_settings/bounce_purge")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -812,7 +840,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("mail_settings/bounce_purge")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -836,7 +865,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("mail_settings/forward_bounce")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act
@@ -865,7 +895,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri("mail_settings/forward_bounce")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var settings = new Settings(client);
 
 			// Act

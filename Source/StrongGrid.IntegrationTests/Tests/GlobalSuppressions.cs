@@ -6,10 +6,8 @@ namespace StrongGrid.IntegrationTests.Tests
 {
 	public class GlobalSuppressions : IIntegrationTest
 	{
-		public async Task RunAsync(IBaseClient client, TextWriter log, CancellationToken cancellationToken)
+		public async Task RunAsync(Client client, TextWriter log, CancellationToken cancellationToken)
 		{
-			if (cancellationToken.IsCancellationRequested) return;
-
 			await log.WriteLineAsync("\n***** GLOBAL SUPPRESSION *****\n").ConfigureAwait(false);
 
 			// ADD EMAILS TO THE GLOBAL SUPPRESSION LIST

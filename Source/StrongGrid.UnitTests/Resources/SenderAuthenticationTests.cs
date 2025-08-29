@@ -14,8 +14,6 @@ namespace StrongGrid.UnitTests.Resources
 {
 	public class SenderAuthenticationTests
 	{
-		#region FIELDS
-
 		internal const string ENDPOINT = "whitelabel";
 
 		internal const string SINGLE_DOMAIN_JSON = @"{
@@ -296,7 +294,12 @@ namespace StrongGrid.UnitTests.Resources
 			}
 		]";
 
-		#endregion
+		private readonly ITestOutputHelper _outputHelper;
+
+		public SenderAuthenticationTests(ITestOutputHelper outputHelper)
+		{
+			_outputHelper = outputHelper;
+		}
 
 		[Fact]
 		public void Parse_AuthenticatedDomain_json()
@@ -345,7 +348,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "domains?exclude_subusers=false&limit=50&offset=0")).Respond("application/json", MULTIPLE_DOMAINS_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -365,7 +369,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "domains?exclude_subusers=true&limit=50&offset=0")).Respond("application/json", MULTIPLE_DOMAINS_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -387,7 +392,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -415,7 +421,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "domains")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -438,7 +445,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -459,7 +467,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}")).Respond(HttpStatusCode.OK);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -480,7 +489,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}/ips")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -502,7 +512,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}/ips/{ipAddress}")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -546,7 +557,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}/validate")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -577,7 +589,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, $"domains/subuser?username={username}")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -598,7 +611,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, $"domains/subuser?username={username}")).Respond(HttpStatusCode.OK);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -619,7 +633,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, $"domains/{domainId}/subuser")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -638,7 +653,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "ips?limit=50&offset=0")).Respond("application/json", MULTIPLE_IPS_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -660,7 +676,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, $"ips/{id}")).Respond("application/json", SINGLE_IP_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -683,7 +700,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "ips")).Respond("application/json", SINGLE_IP_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -704,7 +722,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, "ips", domainId)).Respond(HttpStatusCode.OK);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -735,7 +754,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "ips", id, "validate")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -760,7 +780,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "links", linkId)).Respond("application/json", SINGLE_LINK_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -783,7 +804,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "links")).Respond("application/json", SINGLE_LINK_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -805,7 +827,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(ENDPOINT, "links", linkId)).Respond("application/json", SINGLE_LINK_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -826,7 +849,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, "links", linkId)).Respond(HttpStatusCode.OK);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -846,7 +870,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, $"links/default?domain={domain}")).Respond("application/json", SINGLE_LINK_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -882,7 +907,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "links", linkId, "validate")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -909,7 +935,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, $"links/subuser?username={username}")).Respond("application/json", SINGLE_LINK_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -930,7 +957,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, $"links/subuser?username={username}")).Respond(HttpStatusCode.OK);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -951,7 +979,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, $"links/{linkId}/subuser")).Respond("application/json", SINGLE_DOMAIN_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act
@@ -970,7 +999,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, "links?limit=50&offset=0")).Respond("application/json", MULTIPLE_LINKS_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var senderAuthentication = new SenderAuthentication(client);
 
 			// Act

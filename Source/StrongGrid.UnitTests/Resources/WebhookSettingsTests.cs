@@ -6,7 +6,6 @@ using StrongGrid.Resources;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -14,8 +13,6 @@ namespace StrongGrid.UnitTests.Resources
 {
 	public class WebhookSettingsTests
 	{
-		#region FIELDS
-
 		internal const string EVENT_ENDPOINT = "user/webhooks/event";
 		internal const string INBOUNDPARSE_ENDPOINT = "user/webhooks/parse";
 
@@ -42,7 +39,12 @@ namespace StrongGrid.UnitTests.Resources
 			""send_raw"": false
 		}";
 
-		#endregion
+		private readonly ITestOutputHelper _outputHelper;
+
+		public WebhookSettingsTests(ITestOutputHelper outputHelper)
+		{
+			_outputHelper = outputHelper;
+		}
 
 		[Fact]
 		public void Parse_event_json()
@@ -108,7 +110,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(EVENT_ENDPOINT, "settings")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var webhooks = new WebhookSettings(client);
 
 			// Act
@@ -171,7 +174,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(new HttpMethod("PATCH"), Utils.GetSendGridApiUri(EVENT_ENDPOINT, "settings")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var webhooks = new WebhookSettings(client);
 
 			// Act
@@ -192,7 +196,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(new HttpMethod("POST"), Utils.GetSendGridApiUri(EVENT_ENDPOINT, "test")).Respond(HttpStatusCode.NoContent);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var webhooks = new WebhookSettings(client);
 
 			// Act
@@ -212,7 +217,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(INBOUNDPARSE_ENDPOINT, "settings", hostname)).Respond("application/json", SINGLE_INBOUNDPARSE_WEBHOOK_SETTING_JSON);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var webhooks = new WebhookSettings(client);
 
 			// Act
@@ -236,7 +242,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(INBOUNDPARSE_ENDPOINT, "settings")).Respond("application/json", apiResponse);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var webhooks = new WebhookSettings(client);
 
 			// Act

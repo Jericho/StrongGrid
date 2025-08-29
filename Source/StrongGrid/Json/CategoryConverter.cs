@@ -35,7 +35,7 @@ namespace StrongGrid.Json
 
 		public override void Write(Utf8JsonWriter writer, string[] value, JsonSerializerOptions options)
 		{
-			if (value == null || value.Length == 0)
+			if (value is null || value.Length == 0)
 			{
 				writer.WriteNullValue();
 				return;

@@ -4,6 +4,7 @@ namespace StrongGrid.IntegrationTests
 	{
 		Success = 0,
 		Exception = 1,
+		Skipped = 2,
 		Cancelled = 1223
 	}
 }

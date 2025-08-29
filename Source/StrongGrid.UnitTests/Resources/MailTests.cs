@@ -16,11 +16,14 @@ namespace StrongGrid.UnitTests.Resources
 {
 	public class MailTests
 	{
-		#region FIELDS
-
 		internal const string ENDPOINT = "mail";
 
-		#endregion
+		private readonly ITestOutputHelper _outputHelper;
+
+		public MailTests(ITestOutputHelper outputHelper)
+		{
+			_outputHelper = outputHelper;
+		}
 
 		[Fact]
 		public async Task SendAsync()
@@ -29,7 +32,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "send")).Respond(HttpStatusCode.Accepted);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var mail = new Mail(client);
 
 			var personalizations = new[]
@@ -81,7 +85,8 @@ namespace StrongGrid.UnitTests.Resources
 				return response;
 			});
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var mail = new Mail(client);
 
 			var personalizations = new[]
@@ -114,7 +119,8 @@ namespace StrongGrid.UnitTests.Resources
 				return response;
 			});
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var mail = new Mail(client);
 
 			var personalizations = new[]
@@ -141,7 +147,8 @@ namespace StrongGrid.UnitTests.Resources
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT, "send")).Respond(HttpStatusCode.Accepted);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var mail = new Mail(client);
 
 			// Act
@@ -167,7 +174,8 @@ namespace StrongGrid.UnitTests.Resources
 				new MailAddress("c@c.com", "c")
 			};
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var mail = new Mail(client);
 
 			// Act
@@ -198,7 +206,9 @@ namespace StrongGrid.UnitTests.Resources
 			};
 
 			var mockHttp = new MockHttpMessageHandler();
-			var client = Utils.GetFluentClient(mockHttp);
+
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 			var mail = new Mail(client);
 
 			// Act
@@ -213,7 +223,9 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var mockHttp = new MockHttpMessageHandler();
-			var client = Utils.GetFluentClient(mockHttp)
+
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger)
 				.SetBasicAuthentication("myUsername", "myPassword");
 			var mail = new Mail(client);
 

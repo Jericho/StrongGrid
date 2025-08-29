@@ -13,7 +13,7 @@ namespace StrongGrid.UnitTests
 	{
 		private const string SENDGRID_API_BASE_URI = "https://api.sendgrid.com/v3/";
 
-		public static Pathoschild.Http.Client.IClient GetFluentClient(MockHttpMessageHandler httpMessageHandler)
+		public static Pathoschild.Http.Client.IClient GetFluentClient(MockHttpMessageHandler httpMessageHandler, ILogger logger)
 		{
 			var httpClient = httpMessageHandler.ToHttpClient();
 			var client = new FluentClient(new Uri(SENDGRID_API_BASE_URI), httpClient);
@@ -26,7 +26,7 @@ namespace StrongGrid.UnitTests
 
 			// Order is important: DiagnosticHandler must be first.
 			// Also, the list of filters must be kept in sync with the filters in BaseClient in the StrongGrid project.
-			client.Filters.Add(new DiagnosticHandler(LogLevel.Debug, LogLevel.Error));
+			client.Filters.Add(new DiagnosticHandler(LogLevel.Debug, LogLevel.Error, logger));
 			client.Filters.Add(new SendGridErrorHandler());
 			return client;
 		}

@@ -36,6 +36,29 @@ namespace StrongGrid
 		private static readonly DateTime EPOCH = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 		private static readonly int DEFAULT_DEGREE_OF_PARALLELISM = Environment.ProcessorCount > 1 ? Environment.ProcessorCount / 2 : 1;
 
+		private static readonly Dictionary<Type, string> _typeAliases =
+			new Dictionary<Type, string>()
+			{
+				{ typeof(byte), "byte" },
+				{ typeof(sbyte), "sbyte" },
+				{ typeof(short), "short" },
+				{ typeof(ushort), "ushort" },
+				{ typeof(int), "int" },
+				{ typeof(uint), "uint" },
+				{ typeof(long), "long" },
+				{ typeof(ulong), "ulong" },
+				{ typeof(float), "float" },
+				{ typeof(double), "double" },
+				{ typeof(decimal), "decimal" },
+				{ typeof(object), "object" },
+				{ typeof(bool), "bool" },
+				{ typeof(char), "char" },
+				{ typeof(string), "string" },
+				{ typeof(void), "void" },
+				{ typeof(nint), "nint" }, // From C# 11 onwards
+				{ typeof(nuint), "nuint" }, // From C# 11 onwards
+			};
+
 		/// <summary>
 		/// Converts a 'unix time', which is expressed as the number of seconds (or milliseconds) since
 		/// midnight on January 1st 1970, to a .Net <see cref="DateTime" />.
@@ -73,10 +96,7 @@ namespace StrongGrid
 		/// Reads the content of the HTTP response as string asynchronously.
 		/// </summary>
 		/// <param name="httpContent">The content.</param>
-		/// <param name="encoding">The encoding. You can leave this parameter null and the encoding will be
-		/// automatically calculated based on the charset in the response. Also, UTF-8
-		/// encoding will be used if the charset is absent from the response, is blank
-		/// or contains an invalid value.</param>
+		/// <param name="fallbackEncoding">Optional. The encoding to use in case the encoding cannot be automatically determined. UTF-8 is used if this parameter is omitted.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>The string content of the response.</returns>
 		/// <remarks>
@@ -112,7 +132,7 @@ namespace StrongGrid
 		/// var responseContent = await response.Content.ReadAsStringAsync(null).ConfigureAwait(false);
 		/// </code>
 		/// </example>
-		internal static async Task<string> ReadAsStringAsync(this HttpContent httpContent, Encoding encoding, CancellationToken cancellationToken = default)
+		internal static async Task<string> ReadAsStringAsync(this HttpContent httpContent, Encoding fallbackEncoding, CancellationToken cancellationToken = default)
 		{
 			var content = string.Empty;
 
@@ -123,7 +143,7 @@ namespace StrongGrid
 #else
 				var contentStream = await httpContent.ReadAsStreamAsync().ConfigureAwait(false);
 #endif
-				encoding ??= httpContent.GetEncoding(Encoding.UTF8);
+				var encoding = httpContent.GetEncoding(fallbackEncoding);
 
 				// This is important: we must make a copy of the response stream otherwise we would get an
 				// exception on subsequent attempts to read the content of the stream
@@ -149,13 +169,11 @@ namespace StrongGrid
 		/// Gets the encoding.
 		/// </summary>
 		/// <param name="content">The content.</param>
-		/// <param name="defaultEncoding">The default encoding.</param>
-		/// <returns>
-		/// The encoding.
-		/// </returns>
+		/// <param name="fallbackEncoding">The encoding to fallback on if we can't determine how to response was encoded.</param>
+		/// <returns>The encoding.</returns>
 		/// <remarks>
 		/// This method tries to get the encoding based on the charset or uses the
-		/// 'defaultEncoding' if the charset is empty or contains an invalid value.
+		/// 'fallbackEncoding' if the charset is empty or contains an invalid value.
 		/// </remarks>
 		/// <example>
 		///   <code>
@@ -169,9 +187,9 @@ namespace StrongGrid
 		/// var encoding = response.Content.GetEncoding(Encoding.UTF8);
 		/// </code>
 		/// </example>
-		internal static Encoding GetEncoding(this HttpContent content, Encoding defaultEncoding)
+		internal static Encoding GetEncoding(this HttpContent content, Encoding fallbackEncoding)
 		{
-			var encoding = defaultEncoding;
+			Encoding encoding = null;
 			try
 			{
 				var charset = content?.Headers?.ContentType?.CharSet;
@@ -182,10 +200,10 @@ namespace StrongGrid
 			}
 			catch
 			{
-				encoding = defaultEncoding;
+				// Ignore exceptions caused by invalid charset in the response
 			}
 
-			return encoding;
+			return encoding ?? fallbackEncoding ?? Encoding.UTF8;
 		}
 
 		/// <summary>
@@ -888,6 +906,11 @@ namespace StrongGrid
 		internal static bool IsNullableType(this Type type)
 		{
 			return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+		}
+
+		internal static string GetFriendlyName(this Type type)
+		{
+			return _typeAliases.ContainsKey(type) ? _typeAliases[type] : type.FullName;
 		}
 
 		/// <summary>Asynchronously converts the JSON encoded content and convert it to an object of the desired type.</summary>

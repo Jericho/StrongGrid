@@ -7,10 +7,8 @@ namespace StrongGrid.IntegrationTests.Tests
 {
 	public class AccessManagement : IIntegrationTest
 	{
-		public async Task RunAsync(IBaseClient client, TextWriter log, CancellationToken cancellationToken)
+		public async Task RunAsync(Client client, TextWriter log, CancellationToken cancellationToken)
 		{
-			if (cancellationToken.IsCancellationRequested) return;
-
 			await log.WriteLineAsync("\n***** ACCESS MANAGEMENT *****\n").ConfigureAwait(false);
 
 			var accessHistory = await client.AccessManagement.GetAccessHistoryAsync(20, null, cancellationToken).ConfigureAwait(false);

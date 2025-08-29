@@ -7,10 +7,8 @@ namespace StrongGrid.IntegrationTests.Tests
 {
 	public class SenderAuthentication : IIntegrationTest
 	{
-		public async Task RunAsync(IBaseClient client, TextWriter log, CancellationToken cancellationToken)
+		public async Task RunAsync(Client client, TextWriter log, CancellationToken cancellationToken)
 		{
-			if (cancellationToken.IsCancellationRequested) return;
-
 			await log.WriteLineAsync("\n***** SENDER AUTHENTICATION: DOMAINS *****\n").ConfigureAwait(false);
 
 			var domains = await client.SenderAuthentication.GetAllDomainsAsync(50, 0, false, null, null, null, cancellationToken).ConfigureAwait(false);

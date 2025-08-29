@@ -12,6 +12,13 @@ namespace StrongGrid.UnitTests.Utilities
 {
 	public class SendGridRetryStrategyTests
 	{
+		private readonly ITestOutputHelper _outputHelper;
+
+		public SendGridRetryStrategyTests(ITestOutputHelper outputHelper)
+		{
+			_outputHelper = outputHelper;
+		}
+
 		[Fact]
 		public void ShouldRetry_returns_false_when_previous_response_is_null()
 		{
@@ -152,7 +159,8 @@ namespace StrongGrid.UnitTests.Utilities
 			mockHttp.Expect(HttpMethod.Get, mockUri).Respond((HttpStatusCode)429);
 			mockHttp.Expect(HttpMethod.Get, mockUri).Respond("application/json", "Success!");
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 
 			// Act
 			var result = await client.SendAsync(HttpMethod.Get, "testing").AsString();
@@ -175,7 +183,8 @@ namespace StrongGrid.UnitTests.Utilities
 			mockHttp.Expect(HttpMethod.Get, mockUri).Respond((HttpStatusCode)429);
 			mockHttp.Expect(HttpMethod.Get, mockUri).Respond((HttpStatusCode)429);
 
-			var client = Utils.GetFluentClient(mockHttp);
+			var logger = _outputHelper.ToLogger<IClient>();
+			var client = Utils.GetFluentClient(mockHttp, logger);
 
 			// Act
 			var result = await Should.ThrowAsync<Exception>(client.SendAsync(HttpMethod.Get, "testing").AsResponse());
