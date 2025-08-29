@@ -6,10 +6,8 @@ namespace StrongGrid.IntegrationTests.Tests
 {
 	public class Batches : IIntegrationTest
 	{
-		public async Task RunAsync(IBaseClient client, TextWriter log, CancellationToken cancellationToken)
+		public async Task RunAsync(Client client, TextWriter log, CancellationToken cancellationToken)
 		{
-			if (cancellationToken.IsCancellationRequested) return;
-
 			await log.WriteLineAsync("\n***** BATCHES *****\n").ConfigureAwait(false);
 
 			var batchId = await client.Batches.GenerateBatchIdAsync(cancellationToken).ConfigureAwait(false);
