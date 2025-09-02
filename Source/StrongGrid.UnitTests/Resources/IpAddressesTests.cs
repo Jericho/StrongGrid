@@ -228,8 +228,7 @@ namespace StrongGrid.UnitTests.Resources
 		public async Task GetUnassignedAsync()
 		{
 			// Arrange
-			var limit = 10;
-			var endpoint = Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&offset=0";
+			var endpoint = Utils.GetSendGridApiUri(ENDPOINT) + $"?exclude_whitelabels=false&limit=500&offset=0&sort_by_direction=asc";
 
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, endpoint).Respond((HttpRequestMessage request) =>

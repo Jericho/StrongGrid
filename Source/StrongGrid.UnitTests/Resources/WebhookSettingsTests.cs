@@ -235,11 +235,7 @@ namespace StrongGrid.UnitTests.Resources
 		{
 			// Arrange
 			var limit = 25;
-			var endpoint = Utils.GetSendGridApiUri(INBOUNDPARSE_ENDPOINT, "settings");
-
-			// This is what the endpoint URL should be but we don't support limit and offset yet.
-			// See: https://github.com/Jericho/StrongGrid/issues/368
-			// var endpoint = Utils.GetSendGridApiUri(INBOUNDPARSE_ENDPOINT, "settings") + $"?limit={limit}&offset=0";
+			var endpoint = Utils.GetSendGridApiUri(INBOUNDPARSE_ENDPOINT, "settings") + $"?limit={limit}&offset=0";
 
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, endpoint).Respond((HttpRequestMessage request) =>
