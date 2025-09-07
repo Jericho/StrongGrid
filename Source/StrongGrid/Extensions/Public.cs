@@ -1721,6 +1721,7 @@ namespace StrongGrid
 				var logger = serviceProvider.GetRequiredService<ILogger<StrongGrid.Client>>();
 				return new StrongGrid.Client(apiKey, httpClient, clientOptions, logger);
 			});
+
 			return httpClientBuilder;
 		}
 
@@ -1771,6 +1772,7 @@ namespace StrongGrid
 				var logger = serviceProvider.GetRequiredService<ILogger<StrongGrid.LegacyClient>>();
 				return new StrongGrid.LegacyClient(apiKey, httpClient, clientOptions, logger);
 			});
+
 			return httpClientBuilder;
 		}
 	}
