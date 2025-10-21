@@ -9,13 +9,20 @@
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 
-  <!-- Enable the MSTest runner -->
   <PropertyGroup>
-    <EnableMSTestRunner>true</EnableMSTestRunner>
-    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+    <!--
+      UseMicrosoftTestingPlatformRunner continues to be necessary for .NET 10, because this flag has nothing to do with dotnet test.
+      It changes how dotnet run works, which is completely independent of dotnet test.
+      https://github.com/xunit/xunit/issues/3421
+    -->
     <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!-- Workaround for problem with .NET 10 RC 2 -->
+    <RestoreEnablePackagePruning Condition="'$(TargetFramework)' == 'net48' "> false</RestoreEnablePackagePruning>
+  </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="MartinCostello.Logging.XUnit.v3" Version="0.6.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
