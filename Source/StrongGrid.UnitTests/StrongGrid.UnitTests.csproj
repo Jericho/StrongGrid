@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net48;net9.0</TargetFrameworks>
+    <TargetFrameworks>net48;net10.0</TargetFrameworks>
     <AssemblyName>StrongGrid.UnitTests</AssemblyName>
     <RootNamespace>StrongGrid.UnitTests</RootNamespace>
     <IsPackable>false</IsPackable>
@@ -9,17 +9,26 @@
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 
-  <!-- Enable the MSTest runner -->
   <PropertyGroup>
-    <EnableMSTestRunner>true</EnableMSTestRunner>
-    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+    <!--
+      UseMicrosoftTestingPlatformRunner continues to be necessary for .NET 10, because this flag has nothing to do with dotnet test.
+      It changes how dotnet run works, which is completely independent of dotnet test.
+      https://github.com/xunit/xunit/issues/3421
+    -->
     <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!-- Workaround for problem with .NET 10 RC 2 -->
+    <RestoreEnablePackagePruning Condition="'$(TargetFramework)' == 'net48' "> false</RestoreEnablePackagePruning>
+  </PropertyGroup>
+  
   <ItemGroup>
-    <PackageReference Include="MartinCostello.Logging.XUnit.v3" Version="0.5.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="17.14.2" />
+    <PackageReference Include="MartinCostello.Logging.XUnit.v3" Version="0.6.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0-rc.2.25502.107" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.0-rc.2.25502.107" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
+    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.1.0" />
     <PackageReference Include="NSubstitute" Version="5.3.0" />
     <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.17">
       <PrivateAssets>all</PrivateAssets>
@@ -27,7 +36,8 @@
     </PackageReference>
     <PackageReference Include="RichardSzalay.MockHttp" Version="7.0.0" />
     <PackageReference Include="Shouldly" Version="4.3.0" />
-    <PackageReference Include="xunit.v3" Version="2.0.2" />
+    <PackageReference Include="System.Text.Json" Version="10.0.0-rc.2.25502.107" />
+    <PackageReference Include="xunit.v3.mtp-v2" Version="3.2.0" />
   </ItemGroup>
 
   <!--
