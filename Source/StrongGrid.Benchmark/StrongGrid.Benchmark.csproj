@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.15.5" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.15.6" />
     <PackageReference Include="RichardSzalay.MockHttp" Version="7.0.0" />
   </ItemGroup>
 
