@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="StrongGrid.Benchmark/StrongGrid.Benchmark.csproj" />
+  <Project Path="StrongGrid.IntegrationTests/StrongGrid.IntegrationTests.csproj" />
+  <Project Path="StrongGrid.UnitTests/StrongGrid.UnitTests.csproj" />
+  <Project Path="StrongGrid/StrongGrid.csproj" />
+</Solution>

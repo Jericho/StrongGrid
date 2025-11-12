@@ -6,13 +6,12 @@
 [![Sourcelink](https://img.shields.io/badge/sourcelink-enabled-brightgreen.svg)](https://github.com/dotnet/sourcelink)
 
 [![Build status](https://ci.appveyor.com/api/projects/status/4c0c37snfwkhgpos?svg=true)](https://ci.appveyor.com/project/Jericho/stronggrid)
-[![Tests](https://img.shields.io/appveyor/tests/jericho/stronggrid/master.svg)](https://ci.appveyor.com/project/jericho/stronggrid/build/tests)
 [![Coverage Status](https://coveralls.io/repos/github/Jericho/StrongGrid/badge.svg?branch=master)](https://coveralls.io/github/Jericho/StrongGrid?branch=master)
 [![CodeFactor](https://www.codefactor.io/repository/github/jericho/stronggrid/badge)](https://www.codefactor.io/repository/github/jericho/stronggrid)
 
-| Release Notes| NuGet (stable) | MyGet (prerelease) |
-|--------------|----------------|--------------------|
-| [![GitHub release](https://img.shields.io/github/release/jericho/stronggrid.svg)](https://github.com/Jericho/StrongGrid/releases) | [![NuGet Version](https://img.shields.io/nuget/v/StrongGrid.svg)](https://www.nuget.org/packages/StrongGrid/) | [![MyGet Pre Release](https://img.shields.io/myget/jericho/vpre/StrongGrid.svg)](https://myget.org/gallery/jericho) |
+| Release Notes| NuGet (stable) | Feedz.IO (prerelease) |
+|--------------|----------------|-----------------------|
+| [![GitHub release](https://img.shields.io/github/release/jericho/stronggrid.svg)](https://github.com/Jericho/StrongGrid/releases) | [![NuGet Version](https://img.shields.io/nuget/v/StrongGrid.svg)](https://www.nuget.org/packages/StrongGrid/) | [![Feedz Version](https://img.shields.io/feedz/vpre/jericho/jericho/StrongGrid)](https://github.com/Jericho/Jericho/blob/main/MyNugetFeed.md) |
 
 ## About
 
