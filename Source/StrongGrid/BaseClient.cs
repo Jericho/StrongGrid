@@ -18,8 +18,6 @@ namespace StrongGrid
 	{
 		#region FIELDS
 
-		private const string SENDGRID_V3_BASE_URI = "https://api.sendgrid.com/v3";
-
 		private static string _version;
 
 		private readonly bool _mustDisposeHttpClient;
@@ -278,10 +276,12 @@ namespace StrongGrid
 		{
 			_mustDisposeHttpClient = disposeClient;
 			_httpClient = httpClient;
-			_options = options;
+			_options = options ?? new StrongGridClientOptions();
 			_logger = logger ?? NullLogger.Instance;
 
-			_fluentClient = new FluentClient(new Uri(SENDGRID_V3_BASE_URI), httpClient)
+			if (_options.ApiEndPoint == null) throw new ArgumentNullException($"{nameof(options)}.{nameof(options.ApiEndPoint)}");
+
+			_fluentClient = new FluentClient(_options.ApiEndPoint, httpClient)
 				.SetUserAgent($"StrongGrid/{Version} (+https://github.com/Jericho/StrongGrid)")
 				.SetRequestCoordinator(new SendGridRetryStrategy());
 

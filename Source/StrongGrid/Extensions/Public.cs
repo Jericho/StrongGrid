@@ -1775,5 +1775,20 @@ namespace StrongGrid
 
 			return httpClientBuilder;
 		}
+
+		/// <summary>
+		/// Configures the client options to use the European Union SendGrid API endpoint.
+		/// </summary>
+		/// <remarks>Use this method to direct API requests to SendGrid's European Union infrastructure, which may be
+		/// required for compliance with regional data regulations.</remarks>
+		/// <param name="options">The client options to configure. Cannot be null.</param>
+		/// <returns>The same <see cref="StrongGridClientOptions"/> instance with the API endpoint set to the European Union endpoint.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="options"/> is null.</exception>
+		public static StrongGridClientOptions WithEuropeanUnionApiEndPoint(this StrongGridClientOptions options)
+		{
+			if (options == null) throw new ArgumentNullException(nameof(options));
+			options.ApiEndPoint = new Uri("https://api.eu.sendgrid.com/v3");
+			return options;
+		}
 	}
 }
