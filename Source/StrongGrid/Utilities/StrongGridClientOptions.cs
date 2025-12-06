@@ -47,6 +47,5 @@ namespace StrongGrid.Utilities
 			this.ApiBaseUrl = new Uri(SENDGRID_EUROPE_V3_BASE_URI);
 			return this;
 		}
-
 	}
 }
