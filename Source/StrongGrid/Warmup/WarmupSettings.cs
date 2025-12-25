@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace StrongGrid.Warmup
@@ -6,7 +7,7 @@ namespace StrongGrid.Warmup
 	/// <summary>
 	/// Setting that are used by the <see cref="WarmupEngine"/>.
 	/// </summary>
-	[StrongGrid.Utilities.ExcludeFromCodeCoverage]
+	[ExcludeFromCodeCoverage]
 	public class WarmupSettings
 	{
 		private static int[] _sendGridRecommendedDailyVolume = new[]
