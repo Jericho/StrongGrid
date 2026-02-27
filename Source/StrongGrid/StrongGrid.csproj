@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net48;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>net48;netstandard2.0;netstandard2.1</TargetFrameworks>
     <LangVersion>preview</LangVersion>
     <PlatformTarget>anycpu</PlatformTarget>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -36,7 +36,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HttpMultipartParser" Version="9.1.0" />
+    <PackageReference Include="HttpMultipartParser" Version="9.1.0" Condition=" '$(TargetFramework)' != 'netstandard2.0' " />
+    <!-- HttpMultipartParser only ships net48 and netstandard2.1; the net48 fallback is safe on netstandard2.0 -->
+    <PackageReference Include="HttpMultipartParser" Version="9.1.0" NoWarn="NU1701" Condition=" '$(TargetFramework)' == 'netstandard2.0' " />
     <PackageReference Include="Microsoft.Extensions.Http" Version="[8.0.0,11)" /> <!-- DO NOT UPGRADE. Reasoning is same as explained in GH issue 538 -->
     <PackageReference Include="Microsoft.Extensions.Logging" Version="[8.0.0,11)" /> <!-- DO NOT UPGRADE See https://github.com/Jericho/StrongGrid/issues/538 -->
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
