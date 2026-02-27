@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net48;netstandard2.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <LangVersion>preview</LangVersion>
     <PlatformTarget>anycpu</PlatformTarget>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -37,7 +37,7 @@
 
   <ItemGroup>
     <PackageReference Include="HttpMultipartParser" Version="9.1.0" Condition=" '$(TargetFramework)' != 'netstandard2.0' " />
-    <!-- HttpMultipartParser only ships net48 and netstandard2.1; the net48 fallback is safe on netstandard2.0 -->
+    <!-- HttpMultipartParser does not ship a netstandard2.0 build; the netstandard2.1 fallback is safe -->
     <PackageReference Include="HttpMultipartParser" Version="9.1.0" NoWarn="NU1701" Condition=" '$(TargetFramework)' == 'netstandard2.0' " />
     <PackageReference Include="Microsoft.Extensions.Http" Version="[8.0.0,11)" /> <!-- DO NOT UPGRADE. Reasoning is same as explained in GH issue 538 -->
     <PackageReference Include="Microsoft.Extensions.Logging" Version="[8.0.0,11)" /> <!-- DO NOT UPGRADE See https://github.com/Jericho/StrongGrid/issues/538 -->
@@ -49,17 +49,11 @@
     <PackageReference Include="UTF.Unknown" Version="2.6.0" />
   </ItemGroup>
 
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('net4')) ">
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System" />
-    <Reference Include="System.Runtime.Serialization" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" !$(TargetFramework.StartsWith('net4')) ">
+  <ItemGroup>
     <PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.0" />
   </ItemGroup>
 
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
   </ItemGroup>
   

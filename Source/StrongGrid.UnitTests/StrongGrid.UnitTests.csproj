@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net48;net10.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
     <AssemblyName>StrongGrid.UnitTests</AssemblyName>
     <RootNamespace>StrongGrid.UnitTests</RootNamespace>
     <IsPackable>false</IsPackable>
@@ -18,11 +18,6 @@
     <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <!-- Workaround for problem with .NET 10 RC 2 -->
-    <RestoreEnablePackagePruning Condition="'$(TargetFramework)' == 'net48' "> false</RestoreEnablePackagePruning>
-  </PropertyGroup>
-  
   <ItemGroup>
     <PackageReference Include="MartinCostello.Logging.XUnit.v3" Version="0.7.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0" />
