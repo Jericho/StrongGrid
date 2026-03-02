@@ -36,9 +36,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HttpMultipartParser" Version="9.1.0" Condition=" '$(TargetFramework)' != 'netstandard2.0' " />
-    <!-- HttpMultipartParser does not ship a netstandard2.0 build; the netstandard2.1 fallback is safe -->
-    <PackageReference Include="HttpMultipartParser" Version="9.1.0" NoWarn="NU1701" Condition=" '$(TargetFramework)' == 'netstandard2.0' " />
+    <PackageReference Include="HttpMultipartParser" Version="10.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="[8.0.0,11)" /> <!-- DO NOT UPGRADE. Reasoning is same as explained in GH issue 538 -->
     <PackageReference Include="Microsoft.Extensions.Logging" Version="[8.0.0,11)" /> <!-- DO NOT UPGRADE See https://github.com/Jericho/StrongGrid/issues/538 -->
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
