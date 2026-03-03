@@ -1033,12 +1033,10 @@ Content-Disposition: form-data; name=""attachments""
 		public void ValidateWebhookSignature()
 		{
 			var isLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
-#if NET5_0_OR_GREATER
-			var isFullFramework = false;
-#elif NET48_OR_GREATER || NETSTANDARD2_1
+#if NETFRAMEWORK || NETSTANDARD
 			var isFullFramework = true;
 #else
-#error Unhandled TFM
+			var isFullFramework = false;
 #endif
 
 			// ECDsa.Create doesn't work in Linux+net48. See https://github.com/Jericho/StrongGrid/issues/548
@@ -1184,3 +1182,4 @@ Content-Disposition: form-data; name=""attachments""
 		}
 	}
 }
+

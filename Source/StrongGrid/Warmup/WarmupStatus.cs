@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace StrongGrid.Warmup
@@ -6,7 +7,7 @@ namespace StrongGrid.Warmup
 	/// <summary>
 	/// Information about the status of the warmup process.
 	/// </summary>
-	[StrongGrid.Utilities.ExcludeFromCodeCoverage]
+	[ExcludeFromCodeCoverage]
 	public class WarmupStatus
 	{
 		/// <summary>

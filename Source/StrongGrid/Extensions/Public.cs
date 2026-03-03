@@ -19,6 +19,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace StrongGrid
 {
 	/// <summary>
@@ -1269,7 +1270,7 @@ namespace StrongGrid
 				var allIpAddresses = await ipAddresses.GetAllAsync(limit: Utils.MaxSendGridPagingLimit, offset: currentOffset, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 				// Take the addresses that have not been added to a pool
-				unassignedIpAddresses.AddRange(allIpAddresses.Where(ip => ip.Pools == null || !ip.Pools.Any()));
+				unassignedIpAddresses.AddRange(allIpAddresses.Where(ip => ip.Pools == null || ip.Pools.Length == 0));
 
 				// Stop if there are no more addresses to fetch
 				if (allIpAddresses.Length < Utils.MaxSendGridPagingLimit) break;
@@ -1406,8 +1407,7 @@ namespace StrongGrid
 		/// </remarks>
 		public static async Task<ApiKey> CreateWithAllPermissionsAsync(this IApiKeys apiKeys, string name, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var privateField = apiKeys.GetType().GetField("_client", BindingFlags.NonPublic | BindingFlags.Instance);
-			if (privateField == null) throw new ArgumentException("Unable to find the HttpClient in the resource.", nameof(apiKeys));
+			var privateField = apiKeys.GetType().GetField("_client", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new ArgumentException("Unable to find the HttpClient in the resource.", nameof(apiKeys));
 			var client = (Pathoschild.Http.Client.IClient)privateField.GetValue(apiKeys);
 
 			var scopes = await client.GetCurrentScopes(true, cancellationToken).ConfigureAwait(false);
@@ -1431,8 +1431,7 @@ namespace StrongGrid
 		/// </remarks>
 		public static async Task<ApiKey> CreateWithReadOnlyPermissionsAsync(this IApiKeys apiKeys, string name, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var privateField = apiKeys.GetType().GetField("_client", BindingFlags.NonPublic | BindingFlags.Instance);
-			if (privateField == null) throw new ArgumentException("Unable to find the HttpClient in the resource.", nameof(apiKeys));
+			var privateField = apiKeys.GetType().GetField("_client", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new ArgumentException("Unable to find the HttpClient in the resource.", nameof(apiKeys));
 			var client = (Pathoschild.Http.Client.IClient)privateField.GetValue(apiKeys);
 
 			var scopes = await client.GetCurrentScopes(true, cancellationToken).ConfigureAwait(false);
@@ -1459,8 +1458,7 @@ namespace StrongGrid
 		/// </remarks>
 		public static async Task<TeammateInvitation> InviteTeammateWithReadOnlyPrivilegesAsync(this ITeammates teammates, string email, CancellationToken cancellationToken = default)
 		{
-			var privateField = teammates.GetType().GetField("_client", BindingFlags.NonPublic | BindingFlags.Instance);
-			if (privateField == null) throw new ArgumentException("Unable to find the HttpClient in the resource.", nameof(teammates));
+			var privateField = teammates.GetType().GetField("_client", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new ArgumentException("Unable to find the HttpClient in the resource.", nameof(teammates));
 			var client = (Pathoschild.Http.Client.IClient)privateField.GetValue(teammates);
 
 			var scopes = await client.GetCurrentScopes(true, cancellationToken).ConfigureAwait(true);
@@ -1531,7 +1529,7 @@ namespace StrongGrid
 			var eCDsa = ECDsa.Create();
 			eCDsa.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
 			var verified = eCDsa.VerifyData(data, signatureBytes, HashAlgorithmName.SHA256, DSASignatureFormat.Rfc3279DerSequence);
-#elif NET48_OR_GREATER || NETSTANDARD2_1
+#else
 			// Convert the signature and public key provided by SendGrid into formats usable by the ECDsa .net crypto class
 			var sig = ConvertECDSASignature.LightweightConvertSignatureFromX9_62ToISO7816_8(256, signatureBytes);
 			var (x, y) = Utils.GetXYFromSecp256r1PublicKey(publicKeyBytes);
@@ -1552,8 +1550,6 @@ namespace StrongGrid
 
 			// Verify the signature
 			var verified = eCDsa.VerifyData(data, sig, HashAlgorithmName.SHA256);
-#else
-#error Unhandled TFM
 #endif
 
 			if (!verified)
@@ -1646,20 +1642,6 @@ namespace StrongGrid
 		public static Task SendEventTestAsync(this IWebhookSettings webhookSettings, string url, string oAuthClientId = null, string oAuthClientSecret = null, string oAuthTokenUrl = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
 			return webhookSettings.SendEventTestAsync(null, url, oAuthClientId, oAuthClientSecret, oAuthTokenUrl, onBehalfOf, cancellationToken);
-		}
-
-		/// <summary>
-		/// Enable or disable signature verification for a single Event Webhook.
-		/// </summary>
-		/// <param name="webhookSettings">The webhook settings resource.</param>
-		/// <param name="id">The ID of the Event Webhook you want to update.</param>
-		/// <param name="enabled">Indicates if the signature verification should be enbladle or not.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>The async task.</returns>
-		public static Task ToggleEventWebhookSignatureVerificationAsync(this IWebhookSettings webhookSettings, string id, bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default)
-		{
-			return webhookSettings.ToggleEventWebhookSignatureVerificationAsync(null, enabled, onBehalfOf, cancellationToken);
 		}
 
 		/// <summary>
@@ -1775,20 +1757,6 @@ namespace StrongGrid
 
 			return httpClientBuilder;
 		}
-
-		/// <summary>
-		/// Configures the client options to use the European Union SendGrid API endpoint.
-		/// </summary>
-		/// <remarks>Use this method to direct API requests to SendGrid's European Union infrastructure, which may be
-		/// required for compliance with regional data regulations.</remarks>
-		/// <param name="options">The client options to configure. Cannot be null.</param>
-		/// <returns>The same <see cref="StrongGridClientOptions"/> instance with the API endpoint set to the European Union endpoint.</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="options"/> is null.</exception>
-		public static StrongGridClientOptions WithEuropeanUnionApiEndPoint(this StrongGridClientOptions options)
-		{
-			if (options == null) throw new ArgumentNullException(nameof(options));
-			options.ApiEndPoint = new Uri("https://api.eu.sendgrid.com/v3");
-			return options;
-		}
 	}
 }
+#pragma warning restore IDE0130 // Namespace does not match folder structure

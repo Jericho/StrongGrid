@@ -2,6 +2,7 @@ using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace StrongGrid.Warmup
 		/// <param name="warmupSettings">The warmup settings.</param>
 		/// <param name="client">The StrongGrid client.</param>
 		/// <param name="warmupProgressRepository">The repository where progress information is stored.</param>
-		[StrongGrid.Utilities.ExcludeFromCodeCoverage]
+		[ExcludeFromCodeCoverage]
 		public WarmupEngine(WarmupSettings warmupSettings, IBaseClient client, IWarmupProgressRepository warmupProgressRepository = null)
 			: this(warmupSettings, client, warmupProgressRepository, null)
 		{

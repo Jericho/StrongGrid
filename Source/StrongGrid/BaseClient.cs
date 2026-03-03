@@ -279,9 +279,9 @@ namespace StrongGrid
 			_options = options ?? new StrongGridClientOptions();
 			_logger = logger ?? NullLogger.Instance;
 
-			if (_options.ApiEndPoint == null) throw new ArgumentNullException($"{nameof(options)}.{nameof(options.ApiEndPoint)}");
+			if (_options.ApiBaseUrl == null) throw new ArgumentNullException($"{nameof(options)}.{nameof(options.ApiBaseUrl)}", "You must specify the API base URL");
 
-			_fluentClient = new FluentClient(_options.ApiEndPoint, httpClient)
+			_fluentClient = new FluentClient(_options.ApiBaseUrl, httpClient)
 				.SetUserAgent($"StrongGrid/{Version} (+https://github.com/Jericho/StrongGrid)")
 				.SetRequestCoordinator(new SendGridRetryStrategy());
 

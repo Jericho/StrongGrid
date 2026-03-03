@@ -1,9 +1,11 @@
-﻿namespace StrongGrid.Warmup
+using System.Diagnostics.CodeAnalysis;
+
+namespace StrongGrid.Warmup
 {
 	/// <summary>
 	/// Information about the result of the email send.
 	/// </summary>
-	[StrongGrid.Utilities.ExcludeFromCodeCoverage]
+	[ExcludeFromCodeCoverage]
 	public class WarmupResult
 	{
 		/// <summary>
