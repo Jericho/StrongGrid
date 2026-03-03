@@ -19,6 +19,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace StrongGrid
 {
 	/// <summary>
@@ -1269,7 +1270,7 @@ namespace StrongGrid
 				var allIpAddresses = await ipAddresses.GetAllAsync(limit: Utils.MaxSendGridPagingLimit, offset: currentOffset, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 				// Take the addresses that have not been added to a pool
-				unassignedIpAddresses.AddRange(allIpAddresses.Where(ip => ip.Pools == null || !ip.Pools.Any()));
+				unassignedIpAddresses.AddRange(allIpAddresses.Where(ip => ip.Pools == null || ip.Pools.Length == 0));
 
 				// Stop if there are no more addresses to fetch
 				if (allIpAddresses.Length < Utils.MaxSendGridPagingLimit) break;
@@ -1406,8 +1407,7 @@ namespace StrongGrid
 		/// </remarks>
 		public static async Task<ApiKey> CreateWithAllPermissionsAsync(this IApiKeys apiKeys, string name, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var privateField = apiKeys.GetType().GetField("_client", BindingFlags.NonPublic | BindingFlags.Instance);
-			if (privateField == null) throw new ArgumentException("Unable to find the HttpClient in the resource.", nameof(apiKeys));
+			var privateField = apiKeys.GetType().GetField("_client", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new ArgumentException("Unable to find the HttpClient in the resource.", nameof(apiKeys));
 			var client = (Pathoschild.Http.Client.IClient)privateField.GetValue(apiKeys);
 
 			var scopes = await client.GetCurrentScopes(true, cancellationToken).ConfigureAwait(false);
@@ -1431,8 +1431,7 @@ namespace StrongGrid
 		/// </remarks>
 		public static async Task<ApiKey> CreateWithReadOnlyPermissionsAsync(this IApiKeys apiKeys, string name, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			var privateField = apiKeys.GetType().GetField("_client", BindingFlags.NonPublic | BindingFlags.Instance);
-			if (privateField == null) throw new ArgumentException("Unable to find the HttpClient in the resource.", nameof(apiKeys));
+			var privateField = apiKeys.GetType().GetField("_client", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new ArgumentException("Unable to find the HttpClient in the resource.", nameof(apiKeys));
 			var client = (Pathoschild.Http.Client.IClient)privateField.GetValue(apiKeys);
 
 			var scopes = await client.GetCurrentScopes(true, cancellationToken).ConfigureAwait(false);
@@ -1459,8 +1458,7 @@ namespace StrongGrid
 		/// </remarks>
 		public static async Task<TeammateInvitation> InviteTeammateWithReadOnlyPrivilegesAsync(this ITeammates teammates, string email, CancellationToken cancellationToken = default)
 		{
-			var privateField = teammates.GetType().GetField("_client", BindingFlags.NonPublic | BindingFlags.Instance);
-			if (privateField == null) throw new ArgumentException("Unable to find the HttpClient in the resource.", nameof(teammates));
+			var privateField = teammates.GetType().GetField("_client", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new ArgumentException("Unable to find the HttpClient in the resource.", nameof(teammates));
 			var client = (Pathoschild.Http.Client.IClient)privateField.GetValue(teammates);
 
 			var scopes = await client.GetCurrentScopes(true, cancellationToken).ConfigureAwait(true);
@@ -1647,20 +1645,6 @@ namespace StrongGrid
 		}
 
 		/// <summary>
-		/// Enable or disable signature verification for a single Event Webhook.
-		/// </summary>
-		/// <param name="webhookSettings">The webhook settings resource.</param>
-		/// <param name="id">The ID of the Event Webhook you want to update.</param>
-		/// <param name="enabled">Indicates if the signature verification should be enbladle or not.</param>
-		/// <param name="onBehalfOf">The user to impersonate.</param>
-		/// <param name="cancellationToken">The cancellation token.</param>
-		/// <returns>The async task.</returns>
-		public static Task ToggleEventWebhookSignatureVerificationAsync(this IWebhookSettings webhookSettings, string id, bool enabled, string onBehalfOf = null, CancellationToken cancellationToken = default)
-		{
-			return webhookSettings.ToggleEventWebhookSignatureVerificationAsync(null, enabled, onBehalfOf, cancellationToken);
-		}
-
-		/// <summary>
 		/// Get the signed events public key.
 		/// </summary>
 		/// <param name="webhookSettings">The webhook settings resource.</param>
@@ -1775,3 +1759,4 @@ namespace StrongGrid
 		}
 	}
 }
+#pragma warning restore IDE0130 // Namespace does not match folder structure
