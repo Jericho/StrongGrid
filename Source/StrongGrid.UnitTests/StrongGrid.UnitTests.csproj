@@ -50,6 +50,12 @@
     <ProjectReference Include="..\StrongGrid\StrongGrid.csproj" />
   </ItemGroup>
 
+  <PropertyGroup Condition="'$(Configuration)' == 'Release' ">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsNotAsErrors>612,618</WarningsNotAsErrors>
+    <NoWarn>$(NoWarn);CS0612;CS0618</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Update="InboundEmailTestData\email_with_attachments.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
