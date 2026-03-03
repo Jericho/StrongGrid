@@ -1531,7 +1531,7 @@ namespace StrongGrid
 			var eCDsa = ECDsa.Create();
 			eCDsa.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
 			var verified = eCDsa.VerifyData(data, signatureBytes, HashAlgorithmName.SHA256, DSASignatureFormat.Rfc3279DerSequence);
-#elif NET48_OR_GREATER || NETSTANDARD2_0_OR_GREATER
+#else
 			// Convert the signature and public key provided by SendGrid into formats usable by the ECDsa .net crypto class
 			var sig = ConvertECDSASignature.LightweightConvertSignatureFromX9_62ToISO7816_8(256, signatureBytes);
 			var (x, y) = Utils.GetXYFromSecp256r1PublicKey(publicKeyBytes);
@@ -1552,8 +1552,6 @@ namespace StrongGrid
 
 			// Verify the signature
 			var verified = eCDsa.VerifyData(data, sig, HashAlgorithmName.SHA256);
-#else
-#error Unhandled TFM
 #endif
 
 			if (!verified)
