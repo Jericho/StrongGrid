@@ -39,7 +39,7 @@ namespace StrongGrid.Resources
 		//   - High
 		//   - Normal
 		//   - Low
-		private static readonly IDictionary<MailPriority, KeyValuePair<string, string>[]> _priorityHeaders = new Dictionary<MailPriority, KeyValuePair<string, string>[]>()
+		private static readonly Dictionary<MailPriority, KeyValuePair<string, string>[]> _priorityHeaders = new Dictionary<MailPriority, KeyValuePair<string, string>[]>()
 		{
 			{
 				MailPriority.High,
@@ -73,7 +73,7 @@ namespace StrongGrid.Resources
 			}
 		};
 
-		private static readonly MaxRequestSizeFilter _maxRequestSizeFilter = new MaxRequestSizeFilter(MAX_EMAIL_SIZE);
+		private static readonly MaxRequestSizeFilter _maxRequestSizeFilter = new(MAX_EMAIL_SIZE);
 
 		private readonly Pathoschild.Http.Client.IClient _client;
 
@@ -170,9 +170,9 @@ namespace StrongGrid.Resources
 					.ToArray();
 
 				// SendGrid doesn't like empty arrays
-				if (!personalization.To.Any()) personalization.To = null;
-				if (!personalization.Cc.Any()) personalization.Cc = null;
-				if (!personalization.Bcc.Any()) personalization.Bcc = null;
+				if (personalization.To.Length == 0) personalization.To = null;
+				if (personalization.Cc.Length == 0) personalization.Cc = null;
+				if (personalization.Bcc.Length == 0) personalization.Bcc = null;
 
 				// Surround recipient names with double-quotes if necessary
 				personalization.To = EnsureRecipientsNamesAreQuoted(personalization.To);
@@ -187,7 +187,7 @@ namespace StrongGrid.Resources
 			var numberOfRecipients = personalizationsCopy.Sum(p => p.To?.Count(r => r != null) ?? 0);
 			numberOfRecipients += personalizationsCopy.Sum(p => p.Cc?.Count(r => r != null) ?? 0);
 			numberOfRecipients += personalizationsCopy.Sum(p => p.Bcc?.Count(r => r != null) ?? 0);
-			if (numberOfRecipients >= 1000) throw new ArgumentOutOfRangeException(nameof(numberOfRecipients), numberOfRecipients, "The total number of recipients must be less than 1000");
+			if (numberOfRecipients >= 1000) throw new Exception($"There are {numberOfRecipients} recipients on this email. The total number of recipients must be less than 1000");
 
 			// Get the priority headers
 			if (!_priorityHeaders.TryGetValue(priority, out KeyValuePair<string, string>[] priorityHeaders))
