@@ -67,7 +67,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Bounce[]> GetAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
+			ArgumentNullException.ThrowIfNullOrEmpty(email);
 
 			return _client
 				.GetAsync($"{_endpoint}/{email}")
@@ -108,8 +108,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (emails == null) throw new ArgumentNullException(nameof(emails));
-			if (!emails.Any()) throw new ArgumentException("You must specify at least one email address", nameof(emails));
+			ArgumentNullException.ThrowIfNullOrEmpty(emails, nameof(emails), "You must specify at least one email address");
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("emails", emails);
@@ -133,7 +132,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
+			ArgumentNullException.ThrowIfNullOrEmpty(email);
 
 			return _client
 				.DeleteAsync($"{_endpoint}/{email}")

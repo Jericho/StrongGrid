@@ -4,7 +4,6 @@ using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -67,7 +66,7 @@ namespace StrongGrid.Resources
 			Parameter<string> ipPool = default,
 			CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+			ArgumentNullException.ThrowIfNullOrEmpty(name);
 
 			var data = ConvertToJson(name, senderId, categories, customUnsubscribeUrl, suppressionGroupId, listIds, segmentIds, default, ipPool, subject, htmlContent, textContent, string.IsNullOrEmpty(textContent), designId, editor);
 			return _client
@@ -115,7 +114,7 @@ namespace StrongGrid.Resources
 			Parameter<string> ipPool = default,
 			CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(singleSendId)) throw new ArgumentNullException(nameof(singleSendId));
+			ArgumentNullException.ThrowIfNullOrEmpty(singleSendId);
 
 			var data = ConvertToJson(name, senderId, categories, customUnsubscribeUrl, suppressionGroupId, listIds, segmentIds, default, ipPool, subject, htmlContent, textContent, string.IsNullOrEmpty(textContent), designId, editor);
 			return _client
@@ -135,8 +134,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(IEnumerable<string> singleSendIds, CancellationToken cancellationToken = default)
 		{
-			if (singleSendIds == null) throw new ArgumentNullException(nameof(singleSendIds));
-			if (!singleSendIds.Any()) throw new ArgumentException("You must provide at least one Single Send Id", nameof(singleSendIds));
+			ArgumentNullException.ThrowIfNullOrEmpty(singleSendIds, nameof(singleSendIds), "You must provide at least one Single Send Id");
 
 			return _client
 			.DeleteAsync(_endpoint)
@@ -155,7 +153,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(string singleSendId, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(singleSendId)) throw new ArgumentNullException(nameof(singleSendId));
+			ArgumentNullException.ThrowIfNullOrEmpty(singleSendId);
 
 			return _client
 				.DeleteAsync($"{_endpoint}/{singleSendId}")
@@ -173,7 +171,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<SingleSend> GetAsync(string singleSendId, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(singleSendId)) throw new ArgumentNullException(nameof(singleSendId));
+			ArgumentNullException.ThrowIfNullOrEmpty(singleSendId);
 
 			return _client
 				.GetAsync($"{_endpoint}/{singleSendId}")
@@ -212,7 +210,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task SendNowAsync(string singleSendId, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(singleSendId)) throw new ArgumentNullException(nameof(singleSendId));
+			ArgumentNullException.ThrowIfNullOrEmpty(singleSendId);
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("send_at", "now");
@@ -235,7 +233,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task ScheduleAsync(string singleSendId, DateTime sendOn, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(singleSendId)) throw new ArgumentNullException(nameof(singleSendId));
+			ArgumentNullException.ThrowIfNullOrEmpty(singleSendId);
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("send_at", sendOn.ToUniversalTime().ToString("o"));
@@ -257,7 +255,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task UnscheduleAsync(string singleSendId, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(singleSendId)) throw new ArgumentNullException(nameof(singleSendId));
+			ArgumentNullException.ThrowIfNullOrEmpty(singleSendId);
 
 			return _client
 				.DeleteAsync($"{_endpoint}/{singleSendId}/schedule")

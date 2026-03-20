@@ -93,7 +93,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<AuthenticatedDomain> CreateDomainAsync(string domain, string subdomain = null, string username = null, IEnumerable<string> ips = null, bool automaticSecurity = false, bool customSpf = false, bool isDefault = false, string customDkimSelector = null, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(domain)) throw new ArgumentNullException(nameof(domain));
+			ArgumentNullException.ThrowIfNullOrEmpty(domain);
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("domain", domain);
@@ -168,7 +168,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<AuthenticatedDomain> AddIpAddressToDomainAsync(long domainId, string ipAddress, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(ipAddress)) throw new ArgumentNullException(nameof(ipAddress));
+			ArgumentNullException.ThrowIfNullOrEmpty(ipAddress);
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("ip", ipAddress);
@@ -193,7 +193,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<AuthenticatedDomain> DeleteIpAddressFromDomainAsync(long domainId, string ipAddress, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(ipAddress)) throw new ArgumentNullException(nameof(ipAddress));
+			ArgumentNullException.ThrowIfNullOrEmpty(ipAddress);
 
 			return _client
 				.DeleteAsync($"{_endpoint}/domains/{domainId}/ips/{ipAddress}")
@@ -344,8 +344,8 @@ namespace StrongGrid.Resources
 		/// </remarks>
 		public Task<ReverseDns> SetupReverseDnsAsync(string ipAddress, string domain, string subdomain, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(ipAddress)) throw new ArgumentNullException(nameof(ipAddress));
-			if (string.IsNullOrEmpty(domain)) throw new ArgumentNullException(nameof(domain));
+			ArgumentNullException.ThrowIfNullOrEmpty(ipAddress);
+			ArgumentNullException.ThrowIfNullOrEmpty(domain);
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("ip", ipAddress);
@@ -455,7 +455,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<BrandedLink> CreateLinkAsync(string domain, string subdomain, bool isDefault, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(domain)) throw new ArgumentNullException(nameof(domain));
+			ArgumentNullException.ThrowIfNullOrEmpty(domain);
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("default", isDefault);

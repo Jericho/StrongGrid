@@ -82,7 +82,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<IpAddress> GetAsync(string address, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(address)) throw new ArgumentNullException(nameof(address));
+			ArgumentNullException.ThrowIfNullOrEmpty(address);
 
 			return _client
 				.GetAsync($"{_endpoint}/{address}")
@@ -156,7 +156,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<IpAddress> GetWarmupStatusAsync(string address, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(address)) throw new ArgumentNullException(nameof(address));
+			ArgumentNullException.ThrowIfNullOrEmpty(address);
 
 			var addresses = await _client
 				.GetAsync($"{_endpoint}/warmup/{address}")
@@ -175,7 +175,7 @@ namespace StrongGrid.Resources
 		/// <returns>The async task.</returns>
 		public Task StartWarmupAsync(string address, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(address)) throw new ArgumentNullException(nameof(address));
+			ArgumentNullException.ThrowIfNullOrEmpty(address);
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("ip", address);
@@ -195,7 +195,7 @@ namespace StrongGrid.Resources
 		/// <returns>The async task.</returns>
 		public Task StopWarmupAsync(string address, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(address)) throw new ArgumentNullException(nameof(address));
+			ArgumentNullException.ThrowIfNullOrEmpty(address);
 
 			return _client
 				.DeleteAsync($"{_endpoint}/warmup/{address}")

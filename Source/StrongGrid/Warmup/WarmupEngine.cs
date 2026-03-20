@@ -40,8 +40,11 @@ namespace StrongGrid.Warmup
 		/// <param name="systemClock">The system clock. This is for unit testing only.</param>
 		internal WarmupEngine(WarmupSettings warmupSettings, IBaseClient client, IWarmupProgressRepository warmupProgressRepository, ISystemClock systemClock)
 		{
-			_warmupSettings = warmupSettings ?? throw new ArgumentNullException(nameof(warmupSettings));
-			_client = client ?? throw new ArgumentNullException(nameof(client));
+			ArgumentNullException.ThrowIfNull(warmupSettings);
+			ArgumentNullException.ThrowIfNull(client);
+
+			_warmupSettings = warmupSettings;
+			_client = client;
 			_warmupProgressRepository = warmupProgressRepository ?? new FileSystemWarmupProgressRepository();
 			_systemClock = systemClock ?? SystemClock.Instance;
 		}
@@ -125,10 +128,7 @@ namespace StrongGrid.Warmup
 			CancellationToken cancellationToken = default)
 		{
 			// Validate parameters
-			if (personalizations == null || !personalizations.Any())
-			{
-				throw new ArgumentNullException(nameof(personalizations));
-			}
+			ArgumentNullException.ThrowIfNullOrEmpty(personalizations, nameof(personalizations), "You must specify at least one personalization.");
 
 			// Get the current warmup status
 			var warmupStatus = await _warmupProgressRepository.GetWarmupStatusAsync(_warmupSettings.PoolName, cancellationToken).ConfigureAwait(false);
@@ -202,7 +202,7 @@ namespace StrongGrid.Warmup
 					p.Cc?.Count(r => r != null) ?? 0 +
 					p.Bcc?.Count(r => r != null) ?? 0);
 
-			// The proces could also be completed if we are on the last day of the process and there won't be any emails left to send after this batch
+			// The process could also be completed if we are on the last day of the process and there won't be any emails left to send after this batch
 			warmupCompleted |= warmupDay == _warmupSettings.DailyVolumePerIpAddress.Length && remainingDailyEmails - emailsToSend <= 0;
 
 			// Send the emails

@@ -4,7 +4,6 @@ using StrongGrid.Models;
 using StrongGrid.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -60,8 +59,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<SuppressionGroup[]> GetMultipleAsync(IEnumerable<int> groupIds, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (groupIds == null) throw new ArgumentNullException(nameof(groupIds));
-			if (!groupIds.Any()) throw new ArgumentException("You must specify at least one group id", nameof(groupIds));
+			ArgumentNullException.ThrowIfNullOrEmpty(groupIds, nameof(groupIds), "You must specify at least one group id");
 
 			var request = _client
 				.GetAsync(_endpoint)
@@ -107,7 +105,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<SuppressionGroup> CreateAsync(string name, string description, bool isDefault, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+			ArgumentNullException.ThrowIfNullOrEmpty(name);
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);

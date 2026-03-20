@@ -139,8 +139,7 @@ namespace StrongGrid.Resources
 				throw new SendGridException(errorMessage, null, diagnosticLog);
 			}
 
-			if (personalizations == null) throw new ArgumentNullException(nameof(personalizations));
-			if (!personalizations.Any()) throw new ArgumentException("You musy specify at least one personalization", nameof(personalizations));
+			ArgumentNullException.ThrowIfNullOrEmpty(personalizations, nameof(personalizations), "You musy specify at least one personalization");
 
 			// This comparer is used to perform case-insensitive comparisons of email addresses
 			var emailAddressComparer = new LambdaComparer<MailAddress>((address1, address2) => address1.Email.Equals(address2.Email, StringComparison.OrdinalIgnoreCase));

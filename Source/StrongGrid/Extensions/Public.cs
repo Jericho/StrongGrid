@@ -1505,9 +1505,9 @@ namespace StrongGrid
 		/// <returns>An array of <see cref="Event">events</see>.</returns>
 		public static Event[] ParseSignedEventsWebhook(this IWebhookParser parser, string requestBody, string publicKey, string signature, string timestamp)
 		{
-			if (string.IsNullOrEmpty(publicKey)) throw new ArgumentNullException(nameof(publicKey));
-			if (string.IsNullOrEmpty(signature)) throw new ArgumentNullException(nameof(signature));
-			if (string.IsNullOrEmpty(timestamp)) throw new ArgumentNullException(nameof(timestamp));
+			ArgumentNullException.ThrowIfNullOrEmpty(publicKey);
+			ArgumentNullException.ThrowIfNullOrEmpty(signature);
+			ArgumentNullException.ThrowIfNullOrEmpty(timestamp);
 
 			// Decode the base64 encoded values
 			var signatureBytes = Convert.FromBase64String(signature);

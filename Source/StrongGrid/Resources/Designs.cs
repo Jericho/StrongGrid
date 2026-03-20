@@ -38,7 +38,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Design> GetAsync(string id, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(id)) throw new ArgumentNullException(nameof(id));
+			ArgumentNullException.ThrowIfNullOrEmpty(id);
 
 			return _client
 				.GetAsync($"{_endpoint}/{id}")
@@ -56,7 +56,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Design> GetPrebuiltAsync(string id, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(id)) throw new ArgumentNullException(nameof(id));
+			ArgumentNullException.ThrowIfNullOrEmpty(id);
 
 			return _client
 				.GetAsync($"{_endpoint}/pre-builts/{id}")
@@ -120,7 +120,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Design> DuplicateAsync(string id, string name = null, EditorType? editorType = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(id)) throw new ArgumentNullException(nameof(id));
+			ArgumentNullException.ThrowIfNullOrEmpty(id);
 
 			var data = ConvertToJson(name, editorType);
 			return _client
@@ -142,7 +142,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Design> DuplicatePrebuiltAsync(string id, string name = null, EditorType? editorType = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(id)) throw new ArgumentNullException(nameof(id));
+			ArgumentNullException.ThrowIfNullOrEmpty(id);
 
 			var data = ConvertToJson(name, editorType);
 			return _client
@@ -162,7 +162,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(string id, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(id)) throw new ArgumentNullException(nameof(id));
+			ArgumentNullException.ThrowIfNullOrEmpty(id);
 
 			return _client
 				.DeleteAsync($"{_endpoint}/{id}")
@@ -210,7 +210,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Design> UpdateAsync(string id, Parameter<string> name = default, Parameter<string> htmlContent = default, Parameter<string> plainContent = default, Parameter<bool> generatePlainContent = default, Parameter<string> subject = default, Parameter<string[]> categories = default, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(id)) throw new ArgumentNullException(nameof(id));
+			ArgumentNullException.ThrowIfNullOrEmpty(id);
 
 			var data = ConvertToJson(name, default, htmlContent, plainContent, generatePlainContent, subject, categories);
 			return _client

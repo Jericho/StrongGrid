@@ -102,8 +102,7 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task DeleteAsync(IEnumerable<long> listIds, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (listIds == null) throw new ArgumentNullException(nameof(listIds));
-			if (!listIds.Any()) throw new ArgumentException("You must specify at least one list Id", nameof(listIds));
+			ArgumentNullException.ThrowIfNullOrEmpty(listIds, nameof(listIds), "You must specify at least one list id");
 
 			var data = listIds.ToArray();
 			return _client
@@ -231,8 +230,7 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task AddRecipientsAsync(long listId, IEnumerable<string> contactIds, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (contactIds == null) throw new ArgumentNullException(nameof(contactIds));
-			if (!contactIds.Any()) throw new ArgumentException("You must specify at least one contact Id", nameof(contactIds));
+			ArgumentNullException.ThrowIfNullOrEmpty(contactIds, nameof(contactIds), "You must specify at least one contact id");
 
 			var data = contactIds.ToArray();
 			return _client
@@ -255,8 +253,7 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task RemoveRecipientsAsync(long listId, IEnumerable<string> contactIds, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (contactIds == null) throw new ArgumentNullException(nameof(contactIds));
-			if (!contactIds.Any()) throw new ArgumentException("You must specify at least one contact Id", nameof(contactIds));
+			ArgumentNullException.ThrowIfNullOrEmpty(contactIds, nameof(contactIds), "You must specify at least one contact id");
 
 			var data = contactIds.ToArray();
 			return _client
