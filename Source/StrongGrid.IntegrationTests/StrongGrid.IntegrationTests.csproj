@@ -5,9 +5,6 @@
     <TargetFramework>net10.0</TargetFramework>
     <AssemblyName>StrongGrid.IntegrationTests</AssemblyName>
     <RootNamespace>StrongGrid.IntegrationTests</RootNamespace>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
