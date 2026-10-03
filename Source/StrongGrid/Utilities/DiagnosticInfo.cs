@@ -1,3 +1,4 @@
+using Pathoschild.Http.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,7 +44,7 @@ namespace StrongGrid.Utilities
 					var requestHeaders = response?.RequestMessage?.Headers ?? Enumerable.Empty<KeyValuePair<string, IEnumerable<string>>>();
 					if (!requestHeaders.Any(kvp => string.Equals(kvp.Key, "Content-Length", StringComparison.OrdinalIgnoreCase)))
 					{
-						requestHeaders = requestHeaders.Append(new KeyValuePair<string, IEnumerable<string>>("Content-Length", new[] { "0" }));
+						requestHeaders = requestHeaders.Append(new KeyValuePair<string, IEnumerable<string>>("Content-Length", ["0"]));
 					}
 
 					foreach (var header in requestHeaders.OrderBy(kvp => kvp.Key))
@@ -71,7 +72,7 @@ namespace StrongGrid.Utilities
 					var responseHeaders = response?.Headers ?? Enumerable.Empty<KeyValuePair<string, IEnumerable<string>>>();
 					if (!responseHeaders.Any(kvp => string.Equals(kvp.Key, "Content-Length", StringComparison.OrdinalIgnoreCase)))
 					{
-						responseHeaders = responseHeaders.Append(new KeyValuePair<string, IEnumerable<string>>("Content-Length", new[] { "0" }));
+						responseHeaders = responseHeaders.Append(new KeyValuePair<string, IEnumerable<string>>("Content-Length", ["0"]));
 					}
 
 					foreach (var header in responseHeaders.OrderBy(kvp => kvp.Key))
@@ -95,6 +96,7 @@ namespace StrongGrid.Utilities
 
 		public object[] GetLoggingParameters(bool includeRequestHeaders, bool includeRequestContent, bool includeResponseHeaders, bool includeResponseContent)
 		{
+			// Get the request and response objects
 			RequestReference.TryGetTarget(out HttpRequestMessage request);
 			ResponseReference.TryGetTarget(out HttpResponseMessage response);
 
@@ -111,14 +113,14 @@ namespace StrongGrid.Utilities
 			var requestHeaders = response?.RequestMessage?.Headers ?? Enumerable.Empty<KeyValuePair<string, IEnumerable<string>>>();
 			if (!requestHeaders.Any(kvp => string.Equals(kvp.Key, "Content-Length", StringComparison.OrdinalIgnoreCase)))
 			{
-				requestHeaders = requestHeaders.Append(new KeyValuePair<string, IEnumerable<string>>("Content-Length", new[] { requestContentLength.ToString() }));
+				requestHeaders = requestHeaders.Append(new KeyValuePair<string, IEnumerable<string>>("Content-Length", [requestContentLength.ToString()]));
 			}
 
 			// Get the response headers
 			var responseHeaders = response?.Headers ?? Enumerable.Empty<KeyValuePair<string, IEnumerable<string>>>();
 			if (!responseHeaders.Any(kvp => string.Equals(kvp.Key, "Content-Length", StringComparison.OrdinalIgnoreCase)))
 			{
-				responseHeaders = responseHeaders.Append(new KeyValuePair<string, IEnumerable<string>>("Content-Length", new[] { responseContentLength.ToString() }));
+				responseHeaders = responseHeaders.Append(new KeyValuePair<string, IEnumerable<string>>("Content-Length", [responseContentLength.ToString()]));
 			}
 
 			// The order of these values must match the order in which they appear in the logging template
@@ -130,9 +132,8 @@ namespace StrongGrid.Utilities
 				if (includeRequestHeaders)
 				{
 					logParams.AddRange(requestHeaders
-							.OrderBy(kvp => kvp.Key)
-							.Select(kvp => kvp.Key.Equals("authorization", StringComparison.OrdinalIgnoreCase) ? "... omitted for security reasons ..." : string.Join(", ", kvp.Value))
-							.ToArray());
+						.OrderBy(kvp => kvp.Key)
+						.Select(kvp => kvp.Key.Equals("authorization", StringComparison.OrdinalIgnoreCase) ? "... omitted for security reasons ..." : string.Join(", ", kvp.Value)));
 				}
 
 				if (includeRequestContent) logParams.Add(requestContent?.TrimEnd('\r', '\n'));
@@ -144,9 +145,8 @@ namespace StrongGrid.Utilities
 				if (includeResponseHeaders)
 				{
 					logParams.AddRange(responseHeaders
-							.OrderBy(kvp => kvp.Key)
-							.Select(kvp => kvp.Key.Equals("authorization", StringComparison.OrdinalIgnoreCase) ? "... omitted for security reasons ..." : string.Join(", ", kvp.Value))
-							.ToList());
+						.OrderBy(kvp => kvp.Key)
+						.Select(kvp => kvp.Key.Equals("authorization", StringComparison.OrdinalIgnoreCase) ? "... omitted for security reasons ..." : string.Join(", ", kvp.Value)));
 				}
 
 				if (includeResponseContent) logParams.Add(responseContent?.TrimEnd('\r', '\n'));

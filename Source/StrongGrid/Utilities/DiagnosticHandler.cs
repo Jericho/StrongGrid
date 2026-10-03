@@ -5,7 +5,6 @@ using Pathoschild.Http.Client.Extensibility;
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
-using System.Linq;
 using System.Net.Http;
 
 namespace StrongGrid.Utilities
@@ -86,7 +85,11 @@ namespace StrongGrid.Utilities
 					var template = diagnosticInfo.GetLoggingTemplate(true, _logRequestHeaders, _logRequestContent, _logResponseHeaders, _logResponseContent);
 					var parameters = diagnosticInfo.GetLoggingParameters(_logRequestHeaders, _logRequestContent, _logResponseHeaders, _logResponseContent);
 
+					// CA2254 warns when the message template varies; allow it here because we need to pass
+					// the template to structured logging providers exactly as produced by DiagnosticInfo.
+#pragma warning disable CA2254 // Template is intentionally dynamic for structured loggers
 					_logger.Log(logLevel, template, parameters);
+#pragma warning restore CA2254
 				}
 
 				Cleanup();
@@ -102,9 +105,9 @@ namespace StrongGrid.Utilities
 			try
 			{
 				// Remove diagnostic information for requests that have been garbage collected
-				foreach (string key in DiagnosticHandler.DiagnosticsInfo.Keys.ToArray())
+				foreach (string key in DiagnosticsInfo.Keys)
 				{
-					if (DiagnosticHandler.DiagnosticsInfo.TryGetValue(key, out DiagnosticInfo diagnosticInfo))
+					if (DiagnosticsInfo.TryGetValue(key, out DiagnosticInfo diagnosticInfo))
 					{
 						if (!diagnosticInfo.RequestReference.TryGetTarget(out HttpRequestMessage request))
 						{
