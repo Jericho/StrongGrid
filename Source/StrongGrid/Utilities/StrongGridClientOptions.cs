@@ -21,6 +21,18 @@ namespace StrongGrid.Utilities
 		/// </summary>
 		public LogLevel LogLevelFailedCalls { get; set; } = LogLevel.Error;
 
+		/// <summary>Gets or sets a value indicating whether to log request headers.</summary>
+		public bool LogRequestHeaders { get; set; } = true;
+
+		/// <summary>Gets or sets a value indicating whether to log request content.</summary>
+		public bool LogRequestContent { get; set; } = true;
+
+		/// <summary>Gets or sets a value indicating whether to log response headers.</summary>
+		public bool LogResponseHeaders { get; set; } = true;
+
+		/// <summary>Gets or sets a value indicating whether to log response content.</summary>
+		public bool LogResponseContent { get; set; } = true;
+
 		/// <summary>
 		/// Gets or sets the base URI of the SendGrid API endpoint.
 		/// </summary>

@@ -22,6 +22,10 @@ namespace StrongGrid.Utilities
 		private readonly ILogger _logger;
 		private readonly LogLevel _logLevelSuccessfulCalls;
 		private readonly LogLevel _logLevelFailedCalls;
+		private readonly bool _logRequestHeaders;
+		private readonly bool _logRequestContent;
+		private readonly bool _logResponseHeaders;
+		private readonly bool _logResponseContent;
 
 		#endregion
 
@@ -33,10 +37,14 @@ namespace StrongGrid.Utilities
 
 		#region CTOR
 
-		public DiagnosticHandler(LogLevel logLevelSuccessfulCalls, LogLevel logLevelFailedCalls, ILogger logger = null)
+		public DiagnosticHandler(LogLevel logLevelSuccessfulCalls, LogLevel logLevelFailedCalls, bool logRequestHeaders, bool logRequestContent, bool logResponseHeaders, bool logResponseContent, ILogger logger = null)
 		{
 			_logLevelSuccessfulCalls = logLevelSuccessfulCalls;
 			_logLevelFailedCalls = logLevelFailedCalls;
+			_logRequestHeaders = logRequestHeaders;
+			_logRequestContent = logRequestContent;
+			_logResponseHeaders = logResponseHeaders;
+			_logResponseContent = logResponseContent;
 			_logger = logger ?? NullLogger.Instance;
 		}
 
@@ -75,8 +83,8 @@ namespace StrongGrid.Utilities
 				var logLevel = response.IsSuccessStatusCode ? _logLevelSuccessfulCalls : _logLevelFailedCalls;
 				if (_logger.IsEnabled(logLevel))
 				{
-					var template = diagnosticInfo.GetLoggingTemplate(true);
-					var parameters = diagnosticInfo.GetLoggingParameters();
+					var template = diagnosticInfo.GetLoggingTemplate(true, _logRequestHeaders, _logRequestContent, _logResponseHeaders, _logResponseContent);
+					var parameters = diagnosticInfo.GetLoggingParameters(_logRequestHeaders, _logRequestContent, _logResponseHeaders, _logResponseContent);
 
 					_logger.Log(logLevel, template, parameters);
 				}
