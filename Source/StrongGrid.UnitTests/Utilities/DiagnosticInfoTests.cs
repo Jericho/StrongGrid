@@ -1,3 +1,4 @@
+using Pathoschild.Http.Client;
 using Shouldly;
 using StrongGrid.Utilities;
 using System;
@@ -15,20 +16,20 @@ namespace StrongGrid.UnitTests.Utilities
 		public static IEnumerable<object[]> TemplateCombinations()
 		{
 			for (int s = 0; s < 2; s++)
-			for (int a = 0; a < 2; a++)
-			for (int b = 0; b < 2; b++)
-			for (int c = 0; c < 2; c++)
-			for (int d = 0; d < 2; d++)
-				yield return new object[] { s == 1, a == 1, b == 1, c == 1, d == 1 };
+				for (int a = 0; a < 2; a++)
+					for (int b = 0; b < 2; b++)
+						for (int c = 0; c < 2; c++)
+							for (int d = 0; d < 2; d++)
+								yield return new object[] { s == 1, a == 1, b == 1, c == 1, d == 1 };
 		}
 
 		public static IEnumerable<object[]> ParameterCombinations()
 		{
 			for (int a = 0; a < 2; a++)
-			for (int b = 0; b < 2; b++)
-			for (int c = 0; c < 2; c++)
-			for (int d = 0; d < 2; d++)
-				yield return new object[] { a == 1, b == 1, c == 1, d == 1 };
+				for (int b = 0; b < 2; b++)
+					for (int c = 0; c < 2; c++)
+						for (int d = 0; d < 2; d++)
+							yield return new object[] { a == 1, b == 1, c == 1, d == 1 };
 		}
 
 		private static DiagnosticInfo CreateDiagnostic(out HttpRequestMessage request, out HttpResponseMessage response, long elapsedTicks = TimeSpan.TicksPerMillisecond * 123)
@@ -50,7 +51,7 @@ namespace StrongGrid.UnitTests.Utilities
 			};
 			response.Headers.Add("Y-Header", "yvalue");
 
-			return new DiagnosticInfo(new WeakReference<HttpRequestMessage>(request), 0, new WeakReference<HttpResponseMessage>(response), elapsedTicks);
+			return new DiagnosticInfo(new WeakReference<HttpRequestMessage>(request), 0, new WeakReference<HttpResponseMessage>(response), elapsedTicks, new RequestOptions());
 		}
 
 		[Theory]
