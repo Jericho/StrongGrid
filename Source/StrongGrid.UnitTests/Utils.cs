@@ -27,7 +27,8 @@ namespace StrongGrid.UnitTests
 			// Order is important: DiagnosticHandler must be first.
 			// Also, the list of filters must be kept in sync with the filters in BaseClient in the StrongGrid project.
 			client.Filters.Add(new DiagnosticHandler(LogLevel.Debug, LogLevel.Error, true, true, true, true, logger));
-			client.Filters.Add(new SendGridErrorHandler());
+			client.Filters.Add(new SendGridErrorHandler(true, true, true, true));
+
 			return client;
 		}
 

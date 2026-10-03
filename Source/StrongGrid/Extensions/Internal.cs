@@ -673,7 +673,7 @@ namespace StrongGrid
 				In case of an error, the SendGrid API returns a JSON string that looks like this:
 				{
 					"errors": [
-				{
+						{
 							"message": "An error has occurred",
 							"field": null,
 							"help": null
