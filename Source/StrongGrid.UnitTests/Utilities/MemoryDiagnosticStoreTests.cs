@@ -1,3 +1,4 @@
+using Pathoschild.Http.Client;
 using Shouldly;
 using StrongGrid.Utilities;
 using System;
@@ -147,7 +148,8 @@ namespace StrongGrid.UnitTests.Utilities
 				new WeakReference<HttpRequestMessage>(request),
 				Stopwatch.GetTimestamp(),
 				null,
-				long.MinValue
+				long.MinValue,
+				new RequestOptions()
 			);
 			store.TryAdd(diagnosticId, diagnosticInfo);
 
@@ -412,7 +414,8 @@ namespace StrongGrid.UnitTests.Utilities
 				new WeakReference<HttpRequestMessage>(request),
 				Stopwatch.GetTimestamp(),
 				null,
-				long.MinValue
+				long.MinValue,
+				new RequestOptions()
 			);
 			store.TryAdd(diagnosticId, diagnosticInfo);
 
@@ -444,7 +447,8 @@ namespace StrongGrid.UnitTests.Utilities
 				new WeakReference<HttpRequestMessage>(aliveRequest),
 				Stopwatch.GetTimestamp(),
 				null,
-				long.MinValue
+				long.MinValue,
+				new RequestOptions()
 			);
 			store.TryAdd(aliveId, aliveInfo);
 
@@ -620,7 +624,8 @@ namespace StrongGrid.UnitTests.Utilities
 				new WeakReference<HttpRequestMessage>(request),
 				requestTimestamp > 0 ? requestTimestamp : Stopwatch.GetTimestamp(),
 				null,
-				responseTimestamp
+				responseTimestamp,
+				new RequestOptions()
 			);
 		}
 
@@ -632,7 +637,8 @@ namespace StrongGrid.UnitTests.Utilities
 				new WeakReference<HttpRequestMessage>(request),
 				Stopwatch.GetTimestamp(),
 				null,
-				long.MinValue
+				long.MinValue,
+				new RequestOptions()
 			);
 			store.TryAdd(diagnosticId, diagnosticInfo);
 			// Request goes out of scope here and becomes eligible for garbage collection
