@@ -67,7 +67,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit={limit}&offset={offset}").Respond("application/json", MULTIPLE_INVALID_EMAILS_JSON);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 			var invalidEmails = new InvalidEmails(client);
 
 			// Act
@@ -88,7 +88,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT)).Respond(HttpStatusCode.NoContent);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 			var invalidEmails = new InvalidEmails(client);
 
 			// Act
@@ -109,7 +109,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT)).Respond(HttpStatusCode.NoContent);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 			var invalidEmails = new InvalidEmails(client);
 
 			// Act
@@ -130,7 +130,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, emailAddress)).Respond(HttpStatusCode.NoContent);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 			var invalidEmails = new InvalidEmails(client);
 
 			// Act
@@ -151,7 +151,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, emailAddress)).Respond("application/json", MULTIPLE_INVALID_EMAILS_JSON);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 			var invalidEmails = new InvalidEmails(client);
 
 			// Act

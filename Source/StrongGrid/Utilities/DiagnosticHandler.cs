@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Pathoschild.Http.Client;
 using Pathoschild.Http.Client.Extensibility;
 using System;
-using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Net.Http;
 
@@ -21,6 +20,7 @@ namespace StrongGrid.Utilities
 		private readonly ILogger _logger;
 		private readonly LogLevel _logLevelSuccessfulCalls;
 		private readonly LogLevel _logLevelFailedCalls;
+		private readonly IDiagnosticStore _diagnosticStore;
 		private readonly bool _logRequestHeaders;
 		private readonly bool _logRequestContent;
 		private readonly bool _logResponseHeaders;
@@ -28,18 +28,13 @@ namespace StrongGrid.Utilities
 
 		#endregion
 
-		#region PROPERTIES
-
-		internal static ConcurrentDictionary<string, DiagnosticInfo> DiagnosticsInfo { get; } = new();
-
-		#endregion
-
 		#region CTOR
 
-		public DiagnosticHandler(LogLevel logLevelSuccessfulCalls, LogLevel logLevelFailedCalls, bool logRequestHeaders, bool logRequestContent, bool logResponseHeaders, bool logResponseContent, ILogger logger = null)
+		public DiagnosticHandler(LogLevel logLevelSuccessfulCalls, LogLevel logLevelFailedCalls, IDiagnosticStore diagnosticStore, bool logRequestHeaders, bool logRequestContent, bool logResponseHeaders, bool logResponseContent, ILogger logger = null)
 		{
 			_logLevelSuccessfulCalls = logLevelSuccessfulCalls;
 			_logLevelFailedCalls = logLevelFailedCalls;
+			_diagnosticStore = diagnosticStore ?? throw new ArgumentNullException(nameof(diagnosticStore));
 			_logRequestHeaders = logRequestHeaders;
 			_logRequestContent = logRequestContent;
 			_logResponseHeaders = logResponseHeaders;
@@ -60,7 +55,7 @@ namespace StrongGrid.Utilities
 			request.WithHeader(DIAGNOSTIC_ID_HEADER_NAME, diagnosticId);
 
 			// Add the diagnostic info to our cache
-			DiagnosticsInfo.TryAdd(diagnosticId, new DiagnosticInfo(new WeakReference<HttpRequestMessage>(request.Message), Stopwatch.GetTimestamp(), null, long.MinValue));
+			_diagnosticStore.TryAdd(diagnosticId, new DiagnosticInfo(new WeakReference<HttpRequestMessage>(request.Message), Stopwatch.GetTimestamp(), null, long.MinValue));
 		}
 
 		/// <summary>Method invoked just after the HTTP response is received. This method can modify the incoming HTTP response.</summary>
@@ -71,12 +66,12 @@ namespace StrongGrid.Utilities
 			var responseTimestamp = Stopwatch.GetTimestamp();
 
 			var diagnosticId = response.Message.RequestMessage.Headers.GetValue(DIAGNOSTIC_ID_HEADER_NAME);
-			if (DiagnosticsInfo.TryGetValue(diagnosticId, out DiagnosticInfo diagnosticInfo))
+			if (_diagnosticStore.TryGetValue(diagnosticId, out DiagnosticInfo diagnosticInfo))
 			{
 				// Update the cached diagnostic info
 				diagnosticInfo.ResponseReference = new WeakReference<HttpResponseMessage>(response.Message);
 				diagnosticInfo.ResponseTimestamp = responseTimestamp;
-				DiagnosticsInfo[diagnosticId] = diagnosticInfo;
+				_diagnosticStore.AddOrUpdate(diagnosticId, diagnosticInfo);
 
 				// Log
 				var logLevel = response.IsSuccessStatusCode ? _logLevelSuccessfulCalls : _logLevelFailedCalls;
@@ -91,34 +86,6 @@ namespace StrongGrid.Utilities
 					_logger.Log(logLevel, template, parameters);
 #pragma warning restore CA2254
 				}
-
-				Cleanup();
-			}
-		}
-
-		#endregion
-
-		#region PRIVATE METHODS
-
-		private static void Cleanup()
-		{
-			try
-			{
-				// Remove diagnostic information for requests that have been garbage collected
-				foreach (string key in DiagnosticsInfo.Keys)
-				{
-					if (DiagnosticsInfo.TryGetValue(key, out DiagnosticInfo diagnosticInfo))
-					{
-						if (!diagnosticInfo.RequestReference.TryGetTarget(out HttpRequestMessage request))
-						{
-							DiagnosticsInfo.TryRemove(key, out _);
-						}
-					}
-				}
-			}
-			catch
-			{
-				// Intentionally left empty
 			}
 		}
 

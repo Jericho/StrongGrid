@@ -83,7 +83,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri($"stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={endDate.ToString("yyyy-MM-dd")}")).Respond("application/json", apiResponse);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 			var statistics = new Statistics(client);
 
 			// Act
@@ -211,7 +211,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri($"categories/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={endDate.ToString("yyyy-MM-dd")}&categories={categories[0]}&categories={categories[1]}")).Respond("application/json", apiResponse);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 			var statistics = new Statistics(client);
 
 			// Act
@@ -340,7 +340,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri($"subusers/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={endDate.ToString("yyyy-MM-dd")}&subusers={subusers[0]}&subusers={subusers[1]}")).Respond("application/json", apiResponse);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 			var statistics = new Statistics(client);
 
 			// Act
@@ -401,7 +401,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri($"geo/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={endDate.ToString("yyyy-MM-dd")}&country={country}")).Respond("application/json", apiResponse);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 			var statistics = new Statistics(client);
 
 			// Act
@@ -457,7 +457,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri($"devices/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={endDate.ToString("yyyy-MM-dd")}")).Respond("application/json", apiResponse);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 			var statistics = new Statistics(client);
 
 			// Act
@@ -514,7 +514,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri($"clients/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={endDate.ToString("yyyy-MM-dd")}")).Respond("application/json", apiResponse);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 			var statistics = new Statistics(client);
 
 			// Act
@@ -588,7 +588,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri($"mailbox_providers/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={endDate.ToString("yyyy-MM-dd")}&mailbox_providers={providers[0]}&mailbox_providers={providers[1]}")).Respond("application/json", apiResponse);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 			var statistics = new Statistics(client);
 
 			// Act
@@ -661,7 +661,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri($"browsers/stats?start_date={startDate.ToString("yyyy-MM-dd")}&end_date={endDate.ToString("yyyy-MM-dd")}&browsers={browsers[0]}&browsers={browsers[1]}")).Respond("application/json", apiResponse);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 			var statistics = new Statistics(client);
 
 			// Act

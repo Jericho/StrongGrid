@@ -73,7 +73,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Post, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", SINGLE_CUSTOM_FIELD_JSON);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 			var customFields = new CustomFields(client);
 
 			// Act
@@ -95,7 +95,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, fieldId)).Respond("application/json", SINGLE_CUSTOM_FIELD_JSON);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 			var customFields = new CustomFields(client);
 
 			// Act
@@ -115,7 +115,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT)).Respond("application/json", MULTIPLE_CUSTOM_FIELDS_JSON);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 			var customFields = new CustomFields(client);
 
 			// Act
@@ -138,7 +138,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, fieldId)).Respond(HttpStatusCode.Accepted);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 			var customFields = new CustomFields(client);
 
 			// Act
@@ -198,7 +198,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri("contactdb/reserved_fields")).Respond("application/json", apiResponse);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 			var customFields = new CustomFields(client);
 
 			// Act
