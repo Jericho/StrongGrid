@@ -9,14 +9,16 @@ using System.Linq;
 
 namespace StrongGrid.UnitTests
 {
-	public static class Utils
+	internal static class Utils
 	{
 		private const string SENDGRID_API_BASE_URI = "https://api.sendgrid.com/v3/";
 
-		public static Pathoschild.Http.Client.IClient GetFluentClient(MockHttpMessageHandler httpMessageHandler, ILogger logger)
+		public static Pathoschild.Http.Client.IClient GetFluentClient(MockHttpMessageHandler httpMessageHandler, IDiagnosticStore diagnosticStore = null, ILogger logger = null)
 		{
 			var httpClient = httpMessageHandler.ToHttpClient();
 			var client = new FluentClient(new Uri(SENDGRID_API_BASE_URI), httpClient);
+			var diagStore = diagnosticStore ?? new MemoryDiagnosticStore();
+
 			client.SetRequestCoordinator(new SendGridRetryStrategy());
 			client.Filters.Remove<DefaultErrorFilter>();
 
@@ -26,8 +28,8 @@ namespace StrongGrid.UnitTests
 
 			// Order is important: DiagnosticHandler must be first.
 			// Also, the list of filters must be kept in sync with the filters in BaseClient in the StrongGrid project.
-			client.Filters.Add(new DiagnosticHandler(LogLevel.Debug, LogLevel.Error, true, true, true, true, logger));
-			client.Filters.Add(new SendGridErrorHandler(true, true, true, true));
+			client.Filters.Add(new DiagnosticHandler(LogLevel.Debug, LogLevel.Error, diagStore, true, true, true, true, logger));
+			client.Filters.Add(new SendGridErrorHandler(diagStore, true, true, true, true));
 
 			return client;
 		}

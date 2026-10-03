@@ -15,12 +15,18 @@ namespace StrongGrid.Utilities
 		private readonly bool _logResponseHeaders;
 		private readonly bool _logResponseContent;
 
+		/// <summary>
+		/// Gets a reference to the diagnostic store.
+		/// </summary>
+		public IDiagnosticStore DiagnosticStore { get; }
+
 		/// <summary>Method invoked just before the HTTP request is submitted. This method can modify the outgoing HTTP request.</summary>
 		/// <param name="request">The HTTP request.</param>
 		public void OnRequest(IRequest request) { }
 
-		public SendGridErrorHandler(bool logRequestHeaders, bool logRequestContent, bool logResponseHeaders, bool logResponseContent)
+		public SendGridErrorHandler(IDiagnosticStore diagnosticStore, bool logRequestHeaders, bool logRequestContent, bool logResponseHeaders, bool logResponseContent)
 		{
+			DiagnosticStore = diagnosticStore ?? throw new ArgumentNullException(nameof(diagnosticStore));
 			_logRequestHeaders = logRequestHeaders;
 			_logRequestContent = logRequestContent;
 			_logResponseHeaders = logResponseHeaders;
@@ -35,7 +41,14 @@ namespace StrongGrid.Utilities
 			var (isError, errorMessage) = response.Message.GetErrorMessageAsync().GetAwaiter().GetResult();
 			if (!isError) return;
 
-			var diagnosticLog = response.GetDiagnosticInfo()?.GetFormattedLog(_logRequestHeaders, _logRequestContent, _logResponseHeaders, _logResponseContent) ?? "Diagnostic log unavailable";
+			var diagnosticLog = "Diagnostic log unavailable";
+			var diagnosticId = response.Message.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
+			if (string.IsNullOrEmpty(diagnosticId)) diagnosticId = response.Message.RequestMessage.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
+			if (!string.IsNullOrEmpty(diagnosticId) && DiagnosticStore.TryGetValue(diagnosticId, out var diagnosticInfo))
+			{
+				diagnosticLog = diagnosticInfo.GetFormattedLog(_logRequestHeaders, _logRequestContent, _logResponseHeaders, _logResponseContent);
+			}
+
 			throw new SendGridException(errorMessage, response.Message, diagnosticLog);
 		}
 	}
