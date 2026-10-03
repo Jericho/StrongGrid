@@ -24,7 +24,7 @@ namespace StrongGrid.Utilities
 			ResponseTimestamp = responseTimestamp;
 		}
 
-		public string GetLoggingTemplate(bool structuredFormat)
+		public string GetLoggingTemplate(bool structuredFormat, bool logRequestHeaders, bool logRequestContent, bool logResponseHeaders, bool logResponseContent)
 		{
 			RequestReference.TryGetTarget(out HttpRequestMessage request);
 			ResponseReference.TryGetTarget(out HttpResponseMessage response);
@@ -35,40 +35,56 @@ namespace StrongGrid.Utilities
 			if (request != null)
 			{
 				logTemplate.AppendLine("REQUEST SENT BY STRONGGRID: {" + (structuredFormat ? "Request_HttpMethod" : parameterIndex++) + "} {" + (structuredFormat ? "Request_Uri" : parameterIndex++) + "} HTTP/{" + (structuredFormat ? "Request_HttpVersion" : parameterIndex++) + "}");
-				logTemplate.AppendLine("REQUEST HEADERS:");
 
-				var requestHeaders = response?.RequestMessage?.Headers ?? Enumerable.Empty<KeyValuePair<string, IEnumerable<string>>>();
-				if (!requestHeaders.Any(kvp => string.Equals(kvp.Key, "Content-Length", StringComparison.OrdinalIgnoreCase)))
+				if (logRequestHeaders)
 				{
-					requestHeaders = requestHeaders.Append(new KeyValuePair<string, IEnumerable<string>>("Content-Length", new[] { "0" }));
+					logTemplate.AppendLine("REQUEST HEADERS:");
+
+					var requestHeaders = response?.RequestMessage?.Headers ?? Enumerable.Empty<KeyValuePair<string, IEnumerable<string>>>();
+					if (!requestHeaders.Any(kvp => string.Equals(kvp.Key, "Content-Length", StringComparison.OrdinalIgnoreCase)))
+					{
+						requestHeaders = requestHeaders.Append(new KeyValuePair<string, IEnumerable<string>>("Content-Length", new[] { "0" }));
+					}
+
+					foreach (var header in requestHeaders.OrderBy(kvp => kvp.Key))
+					{
+						logTemplate.AppendLine("  " + header.Key + ": {" + (structuredFormat ? "Request_Header_" + header.Key : parameterIndex++) + "}");
+					}
 				}
 
-				foreach (var header in requestHeaders.OrderBy(kvp => kvp.Key))
+				if (logRequestContent)
 				{
-					logTemplate.AppendLine("  " + header.Key + ": {" + (structuredFormat ? "Request_Header_" + header.Key : parameterIndex++) + "}");
+					logTemplate.AppendLine("REQUEST: {" + (structuredFormat ? "Request_Content" : parameterIndex++) + "}");
 				}
 
-				logTemplate.AppendLine("REQUEST: {" + (structuredFormat ? "Request_Content" : parameterIndex++) + "}");
 				logTemplate.AppendLine();
 			}
 
 			if (response != null)
 			{
 				logTemplate.AppendLine("RESPONSE FROM SENDGRID: HTTP/{" + (structuredFormat ? "Response_HttpVersion" : parameterIndex++) + "} {" + (structuredFormat ? "Response_StatusCode" : parameterIndex++) + "} {" + (structuredFormat ? "Response_ReasonPhrase" : parameterIndex++) + "}");
-				logTemplate.AppendLine("RESPONSE HEADERS:");
 
-				var responseHeaders = response?.Headers ?? Enumerable.Empty<KeyValuePair<string, IEnumerable<string>>>();
-				if (!responseHeaders.Any(kvp => string.Equals(kvp.Key, "Content-Length", StringComparison.OrdinalIgnoreCase)))
+				if (logResponseHeaders)
 				{
-					responseHeaders = responseHeaders.Append(new KeyValuePair<string, IEnumerable<string>>("Content-Length", new[] { "0" }));
+					logTemplate.AppendLine("RESPONSE HEADERS:");
+
+					var responseHeaders = response?.Headers ?? Enumerable.Empty<KeyValuePair<string, IEnumerable<string>>>();
+					if (!responseHeaders.Any(kvp => string.Equals(kvp.Key, "Content-Length", StringComparison.OrdinalIgnoreCase)))
+					{
+						responseHeaders = responseHeaders.Append(new KeyValuePair<string, IEnumerable<string>>("Content-Length", new[] { "0" }));
+					}
+
+					foreach (var header in responseHeaders.OrderBy(kvp => kvp.Key))
+					{
+						logTemplate.AppendLine("  " + header.Key + ": {" + (structuredFormat ? "Response_Header_" + header.Key : parameterIndex++) + "}");
+					}
 				}
 
-				foreach (var header in responseHeaders.OrderBy(kvp => kvp.Key))
+				if (logResponseContent)
 				{
-					logTemplate.AppendLine("  " + header.Key + ": {" + (structuredFormat ? "Response_Header_" + header.Key : parameterIndex++) + "}");
+					logTemplate.AppendLine("RESPONSE: {" + (structuredFormat ? "Response_Content" : parameterIndex++) + "}");
 				}
 
-				logTemplate.AppendLine("RESPONSE: {" + (structuredFormat ? "Response_Content" : parameterIndex++) + "}");
 				logTemplate.AppendLine();
 			}
 
@@ -77,15 +93,15 @@ namespace StrongGrid.Utilities
 			return logTemplate.ToString();
 		}
 
-		public object[] GetLoggingParameters()
+		public object[] GetLoggingParameters(bool includeRequestHeaders, bool includeRequestContent, bool includeResponseHeaders, bool includeResponseContent)
 		{
 			RequestReference.TryGetTarget(out HttpRequestMessage request);
 			ResponseReference.TryGetTarget(out HttpResponseMessage response);
 
 			// Get the content to the request/response and calculate how long it took to get the response
 			var elapsed = TimeSpan.FromTicks(ResponseTimestamp - RequestTimestamp);
-			var requestContent = request?.Content?.ReadAsStringAsync(null).GetAwaiter().GetResult();
-			var responseContent = response?.Content?.ReadAsStringAsync(null).GetAwaiter().GetResult();
+			var requestContent = request?.Content?.ReadAsStringAsync().GetAwaiter().GetResult();
+			var responseContent = response?.Content?.ReadAsStringAsync().GetAwaiter().GetResult();
 
 			// Calculate the content size
 			var requestContentLength = requestContent?.Length ?? 0;
@@ -111,21 +127,29 @@ namespace StrongGrid.Utilities
 			if (request != null)
 			{
 				logParams.AddRange([request.Method.Method, request.RequestUri, request.Version]);
-				logParams.AddRange(requestHeaders
-						.OrderBy(kvp => kvp.Key)
-						.Select(kvp => kvp.Key.Equals("authorization", StringComparison.OrdinalIgnoreCase) ? "... omitted for security reasons ..." : string.Join(", ", kvp.Value))
-						.ToArray());
-				logParams.Add(requestContent?.TrimEnd('\r', '\n'));
+				if (includeRequestHeaders)
+				{
+					logParams.AddRange(requestHeaders
+							.OrderBy(kvp => kvp.Key)
+							.Select(kvp => kvp.Key.Equals("authorization", StringComparison.OrdinalIgnoreCase) ? "... omitted for security reasons ..." : string.Join(", ", kvp.Value))
+							.ToArray());
+				}
+
+				if (includeRequestContent) logParams.Add(requestContent?.TrimEnd('\r', '\n'));
 			}
 
 			if (response != null)
 			{
 				logParams.AddRange([response.Version, (int)response.StatusCode, response.ReasonPhrase]);
-				logParams.AddRange(responseHeaders
-						.OrderBy(kvp => kvp.Key)
-						.Select(kvp => kvp.Key.Equals("authorization", StringComparison.OrdinalIgnoreCase) ? "... omitted for security reasons ..." : string.Join(", ", kvp.Value))
-						.ToList());
-				logParams.Add(responseContent?.TrimEnd('\r', '\n'));
+				if (includeResponseHeaders)
+				{
+					logParams.AddRange(responseHeaders
+							.OrderBy(kvp => kvp.Key)
+							.Select(kvp => kvp.Key.Equals("authorization", StringComparison.OrdinalIgnoreCase) ? "... omitted for security reasons ..." : string.Join(", ", kvp.Value))
+							.ToList());
+				}
+
+				if (includeResponseContent) logParams.Add(responseContent?.TrimEnd('\r', '\n'));
 			}
 
 			logParams.Add(elapsed.TotalMilliseconds);
@@ -133,12 +157,17 @@ namespace StrongGrid.Utilities
 			return logParams.ToArray();
 		}
 
-		public string GetFormattedLog()
+		public string GetFormattedLog(bool includeRequestHeaders, bool includeRequestContent, bool includeResponseHeaders, bool includeResponseContent)
 		{
-			var template = GetLoggingTemplate(false);
-			var parameters = GetLoggingParameters();
+			var template = GetLoggingTemplate(false, includeRequestHeaders, includeRequestContent, includeResponseHeaders, includeResponseContent);
+			var parameters = GetLoggingParameters(includeRequestHeaders, includeRequestContent, includeResponseHeaders, includeResponseContent);
 			var formattedLog = string.Format(template, parameters);
 			return formattedLog;
+		}
+
+		public string GetFormattedLog()
+		{
+			return GetFormattedLog(true, true, true, true);
 		}
 	}
 }
