@@ -293,7 +293,7 @@ namespace StrongGrid
 
 			// Order is important: DiagnosticHandler must be first.
 			// Also, the list of filters must be kept in sync with the filters in Utils.GetFluentClient in the unit testing project.
-			_fluentClient.Filters.Add(new DiagnosticHandler(_options.LogLevelSuccessfulCalls, _options.LogLevelFailedCalls, _logger));
+			_fluentClient.Filters.Add(new DiagnosticHandler(_options.LogLevelSuccessfulCalls, _options.LogLevelFailedCalls, _options.LogRequestHeaders, _options.LogRequestContent, _options.LogResponseHeaders, _options.LogResponseContent, _logger));
 			_fluentClient.Filters.Add(new SendGridErrorHandler());
 
 			ArgumentNullException.ThrowIfNullOrEmpty(apiKey, nameof(apiKey));
