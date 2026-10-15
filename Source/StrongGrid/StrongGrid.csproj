@@ -41,21 +41,21 @@
 
   <ItemGroup>
     <PackageReference Include="HttpMultipartParser" Version="10.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="[8.0.0,11)" /> <!-- DO NOT UPGRADE. Reasoning is same as explained in GH issue 538 -->
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="[8.0.0,11)" /> <!-- DO NOT UPGRADE See https://github.com/Jericho/StrongGrid/issues/538 -->
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.403" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="[8.0.0,12)" /> <!-- DO NOT UPGRADE. Reasoning is same as explained in GH issue 538 -->
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="[8.0.0,12)" /> <!-- DO NOT UPGRADE See https://github.com/Jericho/StrongGrid/issues/538 -->
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="11.0.100-rc.2.26504.105" PrivateAssets="All" />
     <PackageReference Include="MimeKitLite" Version="4.18.1" />
     <PackageReference Include="Pathoschild.Http.FluentClient" Version="4.4.2" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.3.151-beta">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Text.Json" Version="[8.0.5,11)" /> <!-- DO NOT UPGRADE See https://github.com/Jericho/StrongGrid/issues/538 -->
+    <PackageReference Include="System.Text.Json" Version="[8.0.5,12)" /> <!-- DO NOT UPGRADE See https://github.com/Jericho/StrongGrid/issues/538 -->
     <PackageReference Include="UTF.Unknown" Version="2.8.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.14" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="11.0.0-rc.2.26504.105" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
