@@ -6,7 +6,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using Xunit;
-using static StrongGrid.Internal;
 
 namespace StrongGrid.UnitTests.Utilities
 {

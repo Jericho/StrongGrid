@@ -36,6 +36,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Jericho.Common\Jericho.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="HttpMultipartParser" Version="10.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="[8.0.0,11)" /> <!-- DO NOT UPGRADE. Reasoning is same as explained in GH issue 538 -->
     <PackageReference Include="Microsoft.Extensions.Logging" Version="[8.0.0,11)" /> <!-- DO NOT UPGRADE See https://github.com/Jericho/StrongGrid/issues/538 -->
