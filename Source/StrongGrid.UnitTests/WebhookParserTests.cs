@@ -1174,7 +1174,7 @@ Content-Disposition: form-data; name=""attachments""
 
 		}
 
-		private static Stream GetStream(string responseContent)
+		private static MemoryStream GetStream(string responseContent)
 		{
 			var byteArray = Encoding.UTF8.GetBytes(responseContent);
 			var stream = new MemoryStream(byteArray);
