@@ -11,34 +11,24 @@ namespace StrongGrid.Utilities
 	/// <summary>
 	/// Diagnostic handler for requests dispatched to the SendGrid API.
 	/// </summary>
-	/// <seealso cref="Pathoschild.Http.Client.Extensibility.IHttpFilter" />
+	/// <seealso cref="IHttpFilter" />
 	internal class DiagnosticHandler : IHttpFilter
 	{
 		#region FIELDS
 
 		internal const string DIAGNOSTIC_ID_HEADER_NAME = "StrongGrid-Diagnostic-Id";
 		private readonly ILogger _logger;
-		private readonly LogLevel _logLevelSuccessfulCalls;
-		private readonly LogLevel _logLevelFailedCalls;
 		private readonly IDiagnosticStore _diagnosticStore;
-		private readonly bool _logRequestHeaders;
-		private readonly bool _logRequestContent;
-		private readonly bool _logResponseHeaders;
-		private readonly bool _logResponseContent;
+		private readonly StrongGridClientOptions _clientOptions;
 
 		#endregion
 
 		#region CTOR
 
-		public DiagnosticHandler(LogLevel logLevelSuccessfulCalls, LogLevel logLevelFailedCalls, IDiagnosticStore diagnosticStore, bool logRequestHeaders, bool logRequestContent, bool logResponseHeaders, bool logResponseContent, ILogger logger = null)
+		public DiagnosticHandler(IDiagnosticStore diagnosticStore, StrongGridClientOptions clientOptions = null, ILogger logger = null)
 		{
-			_logLevelSuccessfulCalls = logLevelSuccessfulCalls;
-			_logLevelFailedCalls = logLevelFailedCalls;
 			_diagnosticStore = diagnosticStore ?? throw new ArgumentNullException(nameof(diagnosticStore));
-			_logRequestHeaders = logRequestHeaders;
-			_logRequestContent = logRequestContent;
-			_logResponseHeaders = logResponseHeaders;
-			_logResponseContent = logResponseContent;
+			_clientOptions = clientOptions ?? new StrongGridClientOptions();
 			_logger = logger ?? NullLogger.Instance;
 		}
 
@@ -74,11 +64,11 @@ namespace StrongGrid.Utilities
 				_diagnosticStore.AddOrUpdate(diagnosticId, diagnosticInfo);
 
 				// Log
-				var logLevel = response.IsSuccessStatusCode ? _logLevelSuccessfulCalls : _logLevelFailedCalls;
-				if (_logger.IsEnabled(logLevel))
+				var logLevel = response.IsSuccessStatusCode ? _clientOptions.LogLevelSuccessfulCalls : _clientOptions.LogLevelFailedCalls;
+				if (_logger?.IsEnabled(logLevel) ?? false)
 				{
-					var template = diagnosticInfo.GetLoggingTemplate(true, _logRequestHeaders, _logRequestContent, _logResponseHeaders, _logResponseContent);
-					var parameters = diagnosticInfo.GetLoggingParameters(_logRequestHeaders, _logRequestContent, _logResponseHeaders, _logResponseContent);
+					var template = diagnosticInfo.GetLoggingTemplate(true, _clientOptions.LogRequestHeaders, _clientOptions.LogRequestContent, _clientOptions.LogResponseHeaders, _clientOptions.LogResponseContent);
+					var parameters = diagnosticInfo.GetLoggingParameters(_clientOptions.LogRequestHeaders, _clientOptions.LogRequestContent, _clientOptions.LogResponseHeaders, _clientOptions.LogResponseContent);
 
 					// CA2254 warns when the message template varies; allow it here because we need to pass
 					// the template to structured logging providers exactly as produced by DiagnosticInfo.

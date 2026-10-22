@@ -6,7 +6,7 @@ namespace StrongGrid.Utilities
 	/// <summary>
 	/// Options for the StrongGrid client.
 	/// </summary>
-	public class StrongGridClientOptions
+	public record StrongGridClientOptions
 	{
 		private const string SENDGRID_V3_BASE_URI = "https://api.sendgrid.com/v3";
 		private const string SENDGRID_EUROPE_V3_BASE_URI = "https://api.eu.sendgrid.com/v3";

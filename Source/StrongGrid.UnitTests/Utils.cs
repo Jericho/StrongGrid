@@ -26,10 +26,12 @@ namespace StrongGrid.UnitTests
 			client.Formatters.Clear();
 			client.Formatters.Add(new JsonFormatter());
 
+			var clientOptions = new StrongGridClientOptions() with { LogLevelSuccessfulCalls = LogLevel.Debug, LogLevelFailedCalls = LogLevel.Error };
+
 			// Order is important: DiagnosticHandler must be first.
 			// Also, the list of filters must be kept in sync with the filters in BaseClient in the StrongGrid project.
-			client.Filters.Add(new DiagnosticHandler(LogLevel.Debug, LogLevel.Error, diagStore, true, true, true, true, logger));
-			client.Filters.Add(new SendGridErrorHandler(diagStore, true, true, true, true));
+			client.Filters.Add(new DiagnosticHandler(diagStore, clientOptions, logger));
+			client.Filters.Add(new SendGridErrorHandler(diagStore, clientOptions));
 
 			return client;
 		}
