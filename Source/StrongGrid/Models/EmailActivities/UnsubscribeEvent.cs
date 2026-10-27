@@ -1,4 +1,4 @@
-﻿namespace StrongGrid.Models.EmailActivities
+namespace StrongGrid.Models.EmailActivities
 {
 	/// <summary>
 	/// Recipient has unsubscribed.

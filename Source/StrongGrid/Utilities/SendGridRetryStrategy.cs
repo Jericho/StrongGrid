@@ -1,4 +1,4 @@
-﻿using Pathoschild.Http.Client.Retry;
+using Pathoschild.Http.Client.Retry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
