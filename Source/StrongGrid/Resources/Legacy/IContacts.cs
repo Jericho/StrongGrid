@@ -83,13 +83,13 @@ namespace StrongGrid.Resources.Legacy
 		/// <summary>
 		/// Delete contacts.
 		/// </summary>
-		/// <param name="contactId">The contact identifier.</param>
+		/// <param name="contactIds">The identifiers of the contacts to delete.</param>
 		/// <param name="onBehalfOf">The user to impersonate.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		Task DeleteAsync(IEnumerable<string> contactId, string onBehalfOf = null, CancellationToken cancellationToken = default);
+		Task DeleteAsync(IEnumerable<string> contactIds, string onBehalfOf = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Retrieve a contact.

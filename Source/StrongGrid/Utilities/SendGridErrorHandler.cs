@@ -10,11 +10,11 @@ namespace StrongGrid.Utilities
 	/// <seealso cref="Pathoschild.Http.Client.Extensibility.IHttpFilter" />
 	internal class SendGridErrorHandler : IHttpFilter
 	{
-		/// <summary>Options used to configure the StrongGrid client.</summary>
-		public StrongGridClientOptions ClientOptions { get; set; }
+		/// <summary>Gets the options used to configure the StrongGrid client.</summary>
+		public StrongGridClientOptions ClientOptions { get; private set; }
 
 		/// <summary>Gets a reference to the diagnostic store.</summary>
-		public IDiagnosticStore DiagnosticStore { get; set; }
+		public IDiagnosticStore DiagnosticStore { get; private set; }
 
 		public SendGridErrorHandler(IDiagnosticStore diagnosticStore, StrongGridClientOptions clientOptions)
 		{

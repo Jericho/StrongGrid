@@ -90,7 +90,7 @@ namespace StrongGrid.Utilities
 			}
 
 			// otherwise the first byte of the length specifies the number of encoding bytes that follows
-			var end = offset + l1 & 0x7F;
+			var end = (offset + l1) & 0x7F;
 
 			uint result = 0;
 
