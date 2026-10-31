@@ -94,7 +94,7 @@ namespace StrongGrid.Models
 		/// <exception cref="Exception">Content exceeds the size limit.</exception>
 		public static Attachment FromStream(Stream contentStream, string fileName, string mimeType = null, string contentId = null)
 		{
-			if (contentStream == null) throw new ArgumentNullException(nameof(contentStream));
+			ArgumentNullException.ThrowIfNull(contentStream);
 			if (!contentStream.CanRead) throw new ArgumentException("The content stream is not readable", nameof(contentStream));
 
 			using (var base64ContentStream = new CryptoStream(contentStream, new ToBase64Transform(), CryptoStreamMode.Read))
@@ -117,9 +117,7 @@ namespace StrongGrid.Models
 		/// <exception cref="Exception">File exceeds the size limit.</exception>
 		public static Attachment FromBinary(byte[] content, string fileName, string mimeType = null, string contentId = null)
 		{
-			if (content == null) throw new ArgumentNullException(nameof(content));
-			if (content.Length == 0) throw new ArgumentException("The content is empty", nameof(content));
-
+			ArgumentNullException.ThrowIfNullOrEmpty(content, nameof(content), "The content is empty");
 			return FromBase64String(Convert.ToBase64String(content), fileName, mimeType, contentId);
 		}
 
@@ -136,8 +134,7 @@ namespace StrongGrid.Models
 		/// <exception cref="Exception">File exceeds the size limit.</exception>
 		public static Attachment FromString(string content, string fileName, string mimeType = null, string contentId = null)
 		{
-			if (content == null) throw new ArgumentNullException(nameof(content));
-			if (content.Length == 0) throw new ArgumentException("The content is empty", nameof(content));
+			ArgumentNullException.ThrowIfNullOrEmpty(content, nameof(content), "The content is empty");
 			return FromBase64String(Convert.ToBase64String(Encoding.UTF8.GetBytes(content)), fileName, mimeType, contentId);
 		}
 
@@ -153,8 +150,7 @@ namespace StrongGrid.Models
 		/// <exception cref="Exception">Content exceeds the size limit.</exception>
 		public static Attachment FromBase64String(string content, string fileName, string mimeType = null, string contentId = null)
 		{
-			if (content == null) throw new ArgumentNullException(nameof(content));
-			if (content.Length == 0) throw new ArgumentException("The content is empty", nameof(content));
+			ArgumentNullException.ThrowIfNullOrEmpty(content, nameof(content), "The content is empty");
 			if (content.Length > MAX_ATTACHMENT_SIZE) throw new Exception("Content exceeds the size limit");
 
 			if (string.IsNullOrEmpty(mimeType))

@@ -3,7 +3,6 @@ using StrongGrid.Json;
 using StrongGrid.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -78,7 +77,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<bool> IsUnsubscribedAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
+			ArgumentNullException.ThrowIfNullOrEmpty(email);
 
 			var response = await _client
 				.GetAsync($"{_endpoint}/{email}")
@@ -106,8 +105,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task AddAsync(IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (emails == null) throw new ArgumentNullException(nameof(emails));
-			if (!emails.Any()) throw new ArgumentException("You must specify at least one email address", nameof(emails));
+			ArgumentNullException.ThrowIfNullOrEmpty(emails, nameof(emails), "You must specify at least one email address");
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("recipient_emails", emails, false);
@@ -131,7 +129,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task RemoveAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
+			ArgumentNullException.ThrowIfNullOrEmpty(email);
 
 			return _client
 				.DeleteAsync($"{_endpoint}/{email}")

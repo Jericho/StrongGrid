@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging.Console;
 using StrongGrid.Json;
 using StrongGrid.Utilities;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -165,12 +166,6 @@ namespace StrongGrid.IntegrationTests
 		private static void ConfigureServices(IServiceCollection services)
 		{
 			// -----------------------------------------------------------------------------
-			// Do you want to proxy requests through a tool such as Fiddler? Very useful for debugging.
-			var useProxy = true;
-
-			// By default Fiddler Classic uses port 8888 and Fiddler Everywhere uses port 8866
-			var proxyPort = 8888;
-
 			// Change the default values to avoid being overwhelmed by too many debug messages in the console
 			var clientOptions = new StrongGridClientOptions()
 			{
@@ -184,8 +179,11 @@ namespace StrongGrid.IntegrationTests
 			// Configure StrongGrid client
 			var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
 
-			// Configure the proxy if desired
-			var proxy = useProxy ? new WebProxy($"http://localhost:{proxyPort}") : null;
+			// Configure proxy if desired
+			var isFiddlerRunning = Process.GetProcessesByName("Fiddler").Length > 0;
+			var isFiddlerEverywhereRunning = Process.GetProcessesByName("Fiddler Everywhere").Length > 0;
+			var proxyPort = isFiddlerRunning ? 8888 : (isFiddlerEverywhereRunning ? 8866 : 0);
+			var proxy = isFiddlerRunning || isFiddlerEverywhereRunning ? new WebProxy($"http://localhost:{proxyPort}") : null;
 
 			services.AddStrongGrid(apiKey, proxy, clientOptions);
 			services.AddLegacyStrongGrid(apiKey, proxy, clientOptions);

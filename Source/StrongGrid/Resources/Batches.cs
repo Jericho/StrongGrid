@@ -119,7 +119,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<BatchInfo> GetAsync(string batchId, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(batchId)) throw new ArgumentNullException(nameof(batchId));
+			ArgumentNullException.ThrowIfNullOrEmpty(batchId);
 
 			var result = await _client
 				.GetAsync($"user/scheduled_sends/{batchId}")
@@ -150,7 +150,7 @@ namespace StrongGrid.Resources
 
 		private Task UpdateStatus(string batchId, BatchStatus status, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(batchId)) throw new ArgumentNullException(nameof(batchId));
+			ArgumentNullException.ThrowIfNullOrEmpty(batchId);
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("batch_id", batchId);

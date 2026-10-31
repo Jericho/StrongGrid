@@ -61,7 +61,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT) + $"?limit=25&offset=0").Respond("application/json", MULTIPLE_BLOCKS_JSON);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 			var blocks = new Blocks(client);
 
 			// Act
@@ -83,7 +83,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT)).Respond(HttpStatusCode.NoContent);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 			var blocks = new Blocks(client);
 
 			// Act
@@ -104,7 +104,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT)).Respond(HttpStatusCode.NoContent);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 			var blocks = new Blocks(client);
 
 			// Act
@@ -125,7 +125,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Delete, Utils.GetSendGridApiUri(ENDPOINT, emailAddress)).Respond(HttpStatusCode.NoContent);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 			var blocks = new Blocks(client);
 
 			// Act
@@ -146,7 +146,7 @@ namespace StrongGrid.UnitTests.Resources
 			mockHttp.Expect(HttpMethod.Get, Utils.GetSendGridApiUri(ENDPOINT, emailAddress)).Respond("application/json", MULTIPLE_BLOCKS_JSON);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 			var blocks = new Blocks(client);
 
 			// Act

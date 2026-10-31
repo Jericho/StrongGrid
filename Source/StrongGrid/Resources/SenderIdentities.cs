@@ -47,17 +47,17 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<SenderIdentity> CreateAsync(string nickname, MailAddress from, MailAddress replyTo, string address1, string address2, string city, string state, string zip, string country, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(nickname)) throw new ArgumentNullException(nameof(nickname));
-			if (string.IsNullOrEmpty(address1)) throw new ArgumentNullException(nameof(address1));
-			if (string.IsNullOrEmpty(city)) throw new ArgumentNullException(nameof(city));
-			if (string.IsNullOrEmpty(country)) throw new ArgumentNullException(nameof(country));
+			ArgumentNullException.ThrowIfNullOrEmpty(nickname);
+			ArgumentNullException.ThrowIfNullOrEmpty(address1);
+			ArgumentNullException.ThrowIfNullOrEmpty(city);
+			ArgumentNullException.ThrowIfNullOrEmpty(country);
 
-			if (from == null) throw new ArgumentNullException(nameof(from));
-			if (string.IsNullOrEmpty(from.Email)) throw new ArgumentException("You must provide the sender's email address", nameof(from.Email));
-			if (string.IsNullOrEmpty(from.Name)) throw new ArgumentException("You must provide the sender's name", nameof(from.Name));
+			ArgumentNullException.ThrowIfNull(from);
+			ArgumentNullException.ThrowIfNullOrEmpty(from.Email, $"{nameof(from)}.{nameof(from.Email)}", "You must provide the sender's email address");
+			ArgumentNullException.ThrowIfNullOrEmpty(from.Name, $"{nameof(from)}.{nameof(from.Name)}", "You must provide the sender's name");
 
-			if (replyTo == null) throw new ArgumentNullException(nameof(replyTo));
-			if (string.IsNullOrEmpty(replyTo.Email)) throw new ArgumentException("You must provide the 'reply to' email address", nameof(replyTo.Email));
+			ArgumentNullException.ThrowIfNull(replyTo);
+			ArgumentNullException.ThrowIfNullOrEmpty(replyTo.Email, $"{nameof(replyTo)}.{nameof(replyTo.Email)}", "You must provide the 'reply to' email address");
 
 			var data = ConvertToJson(nickname, from, replyTo, address1, address2, city, state, zip, country);
 

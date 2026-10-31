@@ -43,7 +43,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<ApiKey> GetAsync(string keyId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(keyId)) throw new ArgumentNullException(nameof(keyId));
+			ArgumentNullException.ThrowIfNullOrEmpty(keyId);
 
 			return _client
 				.GetAsync($"{_endpoint}/{keyId}")
@@ -89,7 +89,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<ApiKey> CreateAsync(string name, Parameter<IEnumerable<string>> scopes = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+			ArgumentNullException.ThrowIfNullOrEmpty(name);
 
 			var data = ConvertToJson(name, scopes);
 			return _client
@@ -111,7 +111,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(string keyId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(keyId)) throw new ArgumentNullException(nameof(keyId));
+			ArgumentNullException.ThrowIfNullOrEmpty(keyId);
 
 			return _client
 				.DeleteAsync($"{_endpoint}/{keyId}")
@@ -131,7 +131,7 @@ namespace StrongGrid.Resources
 		/// <returns>The <see cref="ApiKey"/>.</returns>
 		public Task<ApiKey> UpdateAsync(string keyId, string name, Parameter<IEnumerable<string>> scopes = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(keyId)) throw new ArgumentNullException(nameof(keyId));
+			ArgumentNullException.ThrowIfNullOrEmpty(keyId);
 
 			var data = ConvertToJson(name, scopes);
 			var request = (scopes.Value ?? Enumerable.Empty<string>()).Any() ? _client.PutAsync($"{_endpoint}/{keyId}") : _client.PatchAsync($"{_endpoint}/{keyId}");

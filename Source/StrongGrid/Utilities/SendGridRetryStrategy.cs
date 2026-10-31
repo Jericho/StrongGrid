@@ -1,4 +1,4 @@
-﻿using Pathoschild.Http.Client.Retry;
+using Pathoschild.Http.Client.Retry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -83,13 +83,13 @@ namespace StrongGrid.Utilities
 		/// <summary>
 		/// Gets a TimeSpan value which defines how long to wait before trying again after an unsuccessful attempt.
 		/// </summary>
-		/// <param name="attempt">The number of attempts carried out so far. That is, after the first attempt (for
+		/// <param name="retry">The number of attempts carried out so far. That is, after the first attempt (for
 		/// the first retry), attempt will be set to 1, after the second attempt it is set to 2, and so on.</param>
 		/// <param name="response">The Http response of the previous request.</param>
 		/// <returns>
 		/// A TimeSpan value which defines how long to wait before the next attempt.
 		/// </returns>
-		public TimeSpan GetDelay(int attempt, HttpResponseMessage response)
+		public TimeSpan GetDelay(int retry, HttpResponseMessage response)
 		{
 			// Default value in case the 'reset' time is missing from HTTP headers
 			var waitTime = DEFAULT_DELAY;

@@ -1,5 +1,6 @@
 using Pathoschild.Http.Client;
 using Pathoschild.Http.Client.Extensibility;
+using System;
 
 namespace StrongGrid.Utilities
 {
@@ -9,7 +10,17 @@ namespace StrongGrid.Utilities
 	/// <seealso cref="Pathoschild.Http.Client.Extensibility.IHttpFilter" />
 	internal class SendGridErrorHandler : IHttpFilter
 	{
-		#region PUBLIC METHODS
+		/// <summary>Gets the options used to configure the StrongGrid client.</summary>
+		public StrongGridClientOptions ClientOptions { get; private set; }
+
+		/// <summary>Gets a reference to the diagnostic store.</summary>
+		public IDiagnosticStore DiagnosticStore { get; private set; }
+
+		public SendGridErrorHandler(IDiagnosticStore diagnosticStore, StrongGridClientOptions clientOptions)
+		{
+			DiagnosticStore = diagnosticStore ?? throw new ArgumentNullException(nameof(diagnosticStore));
+			ClientOptions = clientOptions ?? new StrongGridClientOptions();
+		}
 
 		/// <summary>Method invoked just before the HTTP request is submitted. This method can modify the outgoing HTTP request.</summary>
 		/// <param name="request">The HTTP request.</param>
@@ -23,10 +34,15 @@ namespace StrongGrid.Utilities
 			var (isError, errorMessage) = response.Message.GetErrorMessageAsync().GetAwaiter().GetResult();
 			if (!isError) return;
 
-			var diagnosticLog = response.GetDiagnosticInfo()?.GetFormattedLog() ?? "Diagnostic log unavailable";
+			var diagnosticLog = "Diagnostic log unavailable";
+			var diagnosticId = response.Message.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
+			if (string.IsNullOrEmpty(diagnosticId)) diagnosticId = response.Message.RequestMessage.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
+			if (!string.IsNullOrEmpty(diagnosticId) && DiagnosticStore.TryGetValue(diagnosticId, out var diagnosticInfo))
+			{
+				diagnosticLog = diagnosticInfo.GetFormattedLog(ClientOptions.LogRequestHeaders, ClientOptions.LogRequestContent, ClientOptions.LogResponseHeaders, ClientOptions.LogResponseContent);
+			}
+
 			throw new SendGridException(errorMessage, response.Message, diagnosticLog);
 		}
-
-		#endregion
 	}
 }

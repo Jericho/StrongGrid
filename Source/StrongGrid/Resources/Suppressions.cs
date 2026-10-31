@@ -63,7 +63,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<SuppressionGroup[]> GetUnsubscribedGroupsAsync(string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
+			ArgumentNullException.ThrowIfNullOrEmpty(email);
 
 			var result = await _client
 				.GetAsync($"{_endpoint}/suppressions/{email}")
@@ -114,8 +114,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task AddAddressesToUnsubscribeGroupAsync(long groupId, IEnumerable<string> emails, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (emails == null) throw new ArgumentNullException(nameof(emails));
-			if (!emails.Any()) throw new ArgumentException("You must provide at least one email address", nameof(emails));
+			ArgumentNullException.ThrowIfNullOrEmpty(emails, nameof(emails), "You must specify at least one email address");
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("recipient_emails", emails);
@@ -140,7 +139,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task RemoveAddressFromSuppressionGroupAsync(long groupId, string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
+			ArgumentNullException.ThrowIfNullOrEmpty(email);
 
 			return _client
 				.DeleteAsync($"{_endpoint}/groups/{groupId}/suppressions/{email}")
@@ -161,7 +160,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<bool> IsSuppressedAsync(long groupId, string email, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
+			ArgumentNullException.ThrowIfNullOrEmpty(email);
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("recipient_emails", new[] { email });

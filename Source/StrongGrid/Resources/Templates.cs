@@ -42,7 +42,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Template> CreateAsync(string name, TemplateType type, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+			ArgumentNullException.ThrowIfNullOrEmpty(name);
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
@@ -86,7 +86,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Template> GetAsync(string templateId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(templateId)) throw new ArgumentNullException(nameof(templateId));
+			ArgumentNullException.ThrowIfNullOrEmpty(templateId);
 
 			return _client
 				.GetAsync($"{_endpoint}/{templateId}")
@@ -107,8 +107,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Template> UpdateAsync(string templateId, string name, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(templateId)) throw new ArgumentNullException(nameof(templateId));
-			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+			ArgumentNullException.ThrowIfNullOrEmpty(templateId);
+			ArgumentNullException.ThrowIfNullOrEmpty(name);
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
@@ -132,7 +132,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(string templateId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(templateId)) throw new ArgumentNullException(nameof(templateId));
+			ArgumentNullException.ThrowIfNullOrEmpty(templateId);
 
 			return _client
 				.DeleteAsync($"{_endpoint}/{templateId}")
@@ -159,7 +159,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<TemplateVersion> CreateVersionAsync(string templateId, string name, string subject, string htmlContent, string textContent, bool isActive, Parameter<EditorType?> editorType = default, Parameter<object> testData = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(templateId)) throw new ArgumentNullException(nameof(templateId));
+			ArgumentNullException.ThrowIfNullOrEmpty(templateId);
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
@@ -190,7 +190,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<TemplateVersion> ActivateVersionAsync(string templateId, string versionId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(templateId)) throw new ArgumentNullException(nameof(templateId));
+			ArgumentNullException.ThrowIfNullOrEmpty(templateId);
 
 			return _client
 				.PostAsync($"{_endpoint}/{templateId}/versions/{versionId}/activate")
@@ -211,8 +211,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<TemplateVersion> GetVersionAsync(string templateId, string versionId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(templateId)) throw new ArgumentNullException(nameof(templateId));
-			if (string.IsNullOrEmpty(versionId)) throw new ArgumentNullException(nameof(versionId));
+			ArgumentNullException.ThrowIfNullOrEmpty(templateId);
+			ArgumentNullException.ThrowIfNullOrEmpty(versionId);
 
 			return _client
 				.GetAsync($"{_endpoint}/{templateId}/versions/{versionId}")
@@ -239,8 +239,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<TemplateVersion> UpdateVersionAsync(string templateId, string versionId, Parameter<string> name = default, Parameter<string> subject = default, Parameter<string> htmlContent = default, Parameter<string> textContent = default, Parameter<bool> isActive = default, Parameter<object> testData = default, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(templateId)) throw new ArgumentNullException(nameof(templateId));
-			if (string.IsNullOrEmpty(versionId)) throw new ArgumentNullException(nameof(versionId));
+			ArgumentNullException.ThrowIfNullOrEmpty(templateId);
+			ArgumentNullException.ThrowIfNullOrEmpty(versionId);
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
@@ -270,8 +270,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteVersionAsync(string templateId, string versionId, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(templateId)) throw new ArgumentNullException(nameof(templateId));
-			if (string.IsNullOrEmpty(versionId)) throw new ArgumentNullException(nameof(versionId));
+			ArgumentNullException.ThrowIfNullOrEmpty(templateId);
+			ArgumentNullException.ThrowIfNullOrEmpty(versionId);
 
 			return _client
 				.DeleteAsync($"{_endpoint}/{templateId}/versions/{versionId}")

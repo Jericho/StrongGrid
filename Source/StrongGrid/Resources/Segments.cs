@@ -35,8 +35,8 @@ namespace StrongGrid.Resources
 		/// <inheritdoc/>
 		public Task<Segment> CreateAsync(string name, string query, string listId = null, QueryLanguageVersion queryLanguageVersion = QueryLanguageVersion.Version2, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
-			if (string.IsNullOrEmpty(query)) throw new ArgumentNullException(nameof(query));
+			ArgumentNullException.ThrowIfNullOrEmpty(name);
+			ArgumentNullException.ThrowIfNullOrEmpty(query);
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
@@ -60,7 +60,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Segment> GetAsync(string segmentId, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(segmentId)) throw new ArgumentNullException(nameof(segmentId));
+			ArgumentNullException.ThrowIfNullOrEmpty(segmentId);
 
 			return _client
 				.GetAsync($"{_endpoint}/{segmentId}")
@@ -100,7 +100,7 @@ namespace StrongGrid.Resources
 		/// <inheritdoc/>
 		public Task<Segment> UpdateAsync(string segmentId, Parameter<string> name = default, Parameter<string> query = default, Parameter<QueryLanguageVersion> queryLanguageVersion = default, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(segmentId)) throw new ArgumentNullException(nameof(segmentId));
+			ArgumentNullException.ThrowIfNullOrEmpty(segmentId);
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
@@ -124,7 +124,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(string segmentId, bool deleteMatchingContacts = false, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(segmentId)) throw new ArgumentNullException(nameof(segmentId));
+			ArgumentNullException.ThrowIfNullOrEmpty(segmentId);
 
 			return _client
 				.DeleteAsync($"{_endpoint}/{segmentId}")

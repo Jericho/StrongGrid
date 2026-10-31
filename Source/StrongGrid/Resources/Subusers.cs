@@ -41,7 +41,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Subuser> GetAsync(string username, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+			ArgumentNullException.ThrowIfNullOrEmpty(username);
 
 			return _client
 				.GetAsync($"{_endpoint}/{username}")
@@ -81,9 +81,9 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<Subuser> CreateAsync(string username, string email, string password, Parameter<IEnumerable<string>> ips = default, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
-			if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
-			if (string.IsNullOrEmpty(password)) throw new ArgumentNullException(nameof(password));
+			ArgumentNullException.ThrowIfNullOrEmpty(username);
+			ArgumentNullException.ThrowIfNullOrEmpty(email);
+			ArgumentNullException.ThrowIfNullOrEmpty(password);
 
 			var data = ConvertToJson(username: username, email: email, password: password, ips: ips);
 			return _client
@@ -103,7 +103,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(string username, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+			ArgumentNullException.ThrowIfNullOrEmpty(username);
 
 			return _client
 				.DeleteAsync($"{_endpoint}/{username}")
@@ -123,7 +123,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task UpdateAsync(string username, Parameter<bool> disabled, Parameter<IEnumerable<string>> ips, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+			ArgumentNullException.ThrowIfNullOrEmpty(username);
 
 			if (disabled.HasValue)
 			{
@@ -155,7 +155,7 @@ namespace StrongGrid.Resources
 		[Obsolete("Twilio SendGrid will retire Email Monitor on December 13, 2022.")]
 		public Task<MonitorSettings> GetMonitorSettingsAsync(string username, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+			ArgumentNullException.ThrowIfNullOrEmpty(username);
 
 			return _client
 				.GetAsync($"{_endpoint}/{username}/monitor")
@@ -167,7 +167,7 @@ namespace StrongGrid.Resources
 		[Obsolete("Twilio SendGrid will retire Email Monitor on December 13, 2022.")]
 		public Task<MonitorSettings> CreateMonitorSettingsAsync(string username, string email, int frequency, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+			ArgumentNullException.ThrowIfNullOrEmpty(username);
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("email", email);
@@ -184,7 +184,7 @@ namespace StrongGrid.Resources
 		[Obsolete("Twilio SendGrid will retire Email Monitor on December 13, 2022.")]
 		public Task<MonitorSettings> UpdateMonitorSettingsAsync(string username, Parameter<string> email = default, Parameter<int> frequency = default, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+			ArgumentNullException.ThrowIfNullOrEmpty(username);
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("email", email);
@@ -201,7 +201,7 @@ namespace StrongGrid.Resources
 		[Obsolete("Twilio SendGrid will retire Email Monitor on December 13, 2022.")]
 		public Task DeleteMonitorSettingsAsync(string username, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+			ArgumentNullException.ThrowIfNullOrEmpty(username);
 
 			return _client
 				.DeleteAsync($"{_endpoint}/{username}/monitor")
@@ -219,7 +219,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public async Task<SenderReputation> GetSenderReputationAsync(string username, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+			ArgumentNullException.ThrowIfNullOrEmpty(username);
 
 			var reputations = await GetSenderReputationsAsync(new[] { username }, cancellationToken).ConfigureAwait(false);
 			return reputations.FirstOrDefault();
@@ -235,8 +235,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<SenderReputation[]> GetSenderReputationsAsync(IEnumerable<string> usernames, CancellationToken cancellationToken = default)
 		{
-			if (usernames == null) throw new ArgumentNullException(nameof(usernames));
-			if (!usernames.Any()) throw new ArgumentException("You must provide at least one user name", nameof(usernames));
+			ArgumentNullException.ThrowIfNullOrEmpty(usernames, nameof(usernames), "You must provide at least one user name");
 
 			var request = _client
 				.GetAsync($"{_endpoint}/reputations")

@@ -16,7 +16,7 @@ namespace StrongGrid.Json
 	internal class EventConverter : BaseJsonConverter<Event>
 	{
 		private static readonly string[] _knownProperties =
-		{
+		[
 			"asm_group_id",
 			"attempt",
 			"bounce_classification",
@@ -48,11 +48,11 @@ namespace StrongGrid.Json
 			"url",
 			"url_offset",
 			"useragent"
-		};
+		];
 
-		public override bool CanConvert(Type type)
+		public override bool CanConvert(Type typeToConvert)
 		{
-			return type.IsAssignableFrom(typeof(Event));
+			return typeof(Event).IsAssignableFrom(typeToConvert);
 		}
 
 		public override Event Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -67,45 +67,21 @@ namespace StrongGrid.Json
 					var rootElement = doc.RootElement.GetRawText();
 
 					var webHookEvent = (Event)null;
-					switch (eventType)
+					webHookEvent = eventType switch
 					{
-						case EventType.Bounce:
-							webHookEvent = JsonSerializer.Deserialize<BouncedEvent>(rootElement, JsonFormatter.DeserializerOptions);
-							break;
-						case EventType.Click:
-							webHookEvent = JsonSerializer.Deserialize<ClickedEvent>(rootElement, JsonFormatter.DeserializerOptions);
-							break;
-						case EventType.Deferred:
-							webHookEvent = JsonSerializer.Deserialize<DeferredEvent>(rootElement, JsonFormatter.DeserializerOptions);
-							break;
-						case EventType.Delivered:
-							webHookEvent = JsonSerializer.Deserialize<DeliveredEvent>(rootElement, JsonFormatter.DeserializerOptions);
-							break;
-						case EventType.Dropped:
-							webHookEvent = JsonSerializer.Deserialize<DroppedEvent>(rootElement, JsonFormatter.DeserializerOptions);
-							break;
-						case EventType.GroupResubscribe:
-							webHookEvent = JsonSerializer.Deserialize<GroupResubscribeEvent>(rootElement, JsonFormatter.DeserializerOptions);
-							break;
-						case EventType.GroupUnsubscribe:
-							webHookEvent = JsonSerializer.Deserialize<GroupUnsubscribeEvent>(rootElement, JsonFormatter.DeserializerOptions);
-							break;
-						case EventType.Open:
-							webHookEvent = JsonSerializer.Deserialize<OpenedEvent>(rootElement, JsonFormatter.DeserializerOptions);
-							break;
-						case EventType.Processed:
-							webHookEvent = JsonSerializer.Deserialize<ProcessedEvent>(rootElement, JsonFormatter.DeserializerOptions);
-							break;
-						case EventType.SpamReport:
-							webHookEvent = JsonSerializer.Deserialize<SpamReportEvent>(rootElement, JsonFormatter.DeserializerOptions);
-							break;
-						case EventType.Unsubscribe:
-							webHookEvent = JsonSerializer.Deserialize<UnsubscribeEvent>(rootElement, JsonFormatter.DeserializerOptions);
-							break;
-						default:
-							throw new JsonException($"{typeAsString} is an unknown event type");
-					}
-
+						EventType.Bounce => JsonSerializer.Deserialize<BouncedEvent>(rootElement, JsonFormatter.DeserializerOptions),
+						EventType.Click => JsonSerializer.Deserialize<ClickedEvent>(rootElement, JsonFormatter.DeserializerOptions),
+						EventType.Deferred => JsonSerializer.Deserialize<DeferredEvent>(rootElement, JsonFormatter.DeserializerOptions),
+						EventType.Delivered => JsonSerializer.Deserialize<DeliveredEvent>(rootElement, JsonFormatter.DeserializerOptions),
+						EventType.Dropped => JsonSerializer.Deserialize<DroppedEvent>(rootElement, JsonFormatter.DeserializerOptions),
+						EventType.GroupResubscribe => JsonSerializer.Deserialize<GroupResubscribeEvent>(rootElement, JsonFormatter.DeserializerOptions),
+						EventType.GroupUnsubscribe => JsonSerializer.Deserialize<GroupUnsubscribeEvent>(rootElement, JsonFormatter.DeserializerOptions),
+						EventType.Open => JsonSerializer.Deserialize<OpenedEvent>(rootElement, JsonFormatter.DeserializerOptions),
+						EventType.Processed => JsonSerializer.Deserialize<ProcessedEvent>(rootElement, JsonFormatter.DeserializerOptions),
+						EventType.SpamReport => JsonSerializer.Deserialize<SpamReportEvent>(rootElement, JsonFormatter.DeserializerOptions),
+						EventType.Unsubscribe => JsonSerializer.Deserialize<UnsubscribeEvent>(rootElement, JsonFormatter.DeserializerOptions),
+						_ => throw new JsonException($"{typeAsString} is an unknown event type"),
+					};
 					var unkownProperties = doc.RootElement
 						.EnumerateObject()
 						.Where(property => !_knownProperties.Contains(property.Name));

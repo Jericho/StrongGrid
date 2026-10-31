@@ -133,8 +133,7 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task<Models.Legacy.ImportResult> ImportAsync(IEnumerable<Models.Legacy.Contact> contacts, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (contacts == null) throw new ArgumentNullException(nameof(contacts));
-			if (!contacts.Any()) throw new ArgumentException("You must provide at least one contact", nameof(contacts));
+			ArgumentNullException.ThrowIfNullOrEmpty(contacts, nameof(contacts), "You must specify at least one contacts");
 
 			var data = contacts.Select(ConvertToJson).ToArray();
 
@@ -173,8 +172,7 @@ namespace StrongGrid.Resources.Legacy
 		/// </returns>
 		public Task DeleteAsync(IEnumerable<string> contactIds, string onBehalfOf = null, CancellationToken cancellationToken = default)
 		{
-			if (contactIds == null) throw new ArgumentNullException(nameof(contactIds));
-			if (!contactIds.Any()) throw new ArgumentException("At least one contact id must be specified.", nameof(contactIds));
+			ArgumentNullException.ThrowIfNullOrEmpty(contactIds, nameof(contactIds), "You must specify at least one contact id");
 
 			var data = contactIds.ToArray();
 			return _client

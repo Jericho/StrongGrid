@@ -74,7 +74,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<EmailMessageSummary> GetMessageSummaryAsync(string messageId, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(messageId)) throw new ArgumentNullException(nameof(messageId));
+			ArgumentNullException.ThrowIfNullOrEmpty(messageId);
 
 			return _client
 				.GetAsync($"{_endpoint}/{messageId}")
@@ -114,7 +114,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<string> GetCsvDownloadUrlAsync(string downloadUUID, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(downloadUUID)) throw new ArgumentNullException(nameof(downloadUUID));
+			ArgumentNullException.ThrowIfNullOrEmpty(downloadUUID);
 
 			return _client
 				.GetAsync($"{_endpoint}/download/{downloadUUID}")
@@ -133,7 +133,12 @@ namespace StrongGrid.Resources
 		public async Task<Stream> DownloadCsvAsync(string downloadUUID, CancellationToken cancellationToken = default)
 		{
 			var url = await GetCsvDownloadUrlAsync(downloadUUID, cancellationToken);
+#if NET
+			return await DownloadFilesClient.GetStreamAsync(url, cancellationToken).ConfigureAwait(false);
+#else
 			return await DownloadFilesClient.GetStreamAsync(url).ConfigureAwait(false);
+#endif
+
 		}
 	}
 }

@@ -38,7 +38,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<EmailValidationResult> ValidateAsync(string emailAddress, string source = null, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(emailAddress)) throw new ArgumentNullException(nameof(emailAddress));
+			ArgumentNullException.ThrowIfNullOrEmpty(emailAddress);
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("email", emailAddress);

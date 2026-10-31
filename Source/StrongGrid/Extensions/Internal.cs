@@ -20,6 +20,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace StrongGrid
 {
 	/// <summary>
@@ -656,13 +657,6 @@ namespace StrongGrid
 			return querystringParameters;
 		}
 
-		internal static DiagnosticInfo GetDiagnosticInfo(this IResponse response)
-		{
-			var diagnosticId = response.Message.RequestMessage.Headers.GetValue(DiagnosticHandler.DIAGNOSTIC_ID_HEADER_NAME);
-			DiagnosticHandler.DiagnosticsInfo.TryGetValue(diagnosticId, out DiagnosticInfo diagnosticInfo);
-			return diagnosticInfo;
-		}
-
 		internal static async Task<(bool IsError, string Message)> GetErrorMessageAsync(this HttpResponseMessage message)
 		{
 			// Default error message
@@ -672,7 +666,7 @@ namespace StrongGrid
 				In case of an error, the SendGrid API returns a JSON string that looks like this:
 				{
 					"errors": [
-				{
+						{
 							"message": "An error has occurred",
 							"field": null,
 							"help": null
@@ -910,7 +904,8 @@ namespace StrongGrid
 
 		internal static string GetFriendlyName(this Type type)
 		{
-			return _typeAliases.ContainsKey(type) ? _typeAliases[type] : type.FullName;
+			if (_typeAliases.TryGetValue(type, out var alias)) return alias;
+			return type.FullName;
 		}
 
 		/// <summary>Asynchronously converts the JSON encoded content and convert it to an object of the desired type.</summary>
@@ -1107,3 +1102,4 @@ namespace StrongGrid
 		}
 	}
 }
+#pragma warning restore IDE0130 // Namespace does not match folder structure

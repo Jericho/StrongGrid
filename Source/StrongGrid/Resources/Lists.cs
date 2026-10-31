@@ -2,7 +2,6 @@ using Pathoschild.Http.Client;
 using StrongGrid.Json;
 using StrongGrid.Models;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -41,8 +40,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<string> RemoveContactAsync(string listId, string contactId, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(listId)) throw new ArgumentNullException(nameof(listId));
-			if (string.IsNullOrEmpty(contactId)) throw new ArgumentNullException(nameof(contactId));
+			ArgumentNullException.ThrowIfNullOrEmpty(listId);
+			ArgumentNullException.ThrowIfNullOrEmpty(contactId);
 
 			return RemoveContactsAsync(listId, new[] { contactId }, cancellationToken);
 		}
@@ -59,9 +58,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<string> RemoveContactsAsync(string listId, string[] contactIds, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(listId)) throw new ArgumentNullException(nameof(listId));
-			if (contactIds == null) throw new ArgumentNullException(nameof(contactIds));
-			if (!contactIds.Any()) throw new ArgumentException("You must specify at least one contact Id", nameof(contactIds));
+			ArgumentNullException.ThrowIfNullOrEmpty(listId);
+			ArgumentNullException.ThrowIfNullOrEmpty(contactIds, nameof(contactIds), "You must specify at least one contact Id");
 
 			return _client
 				.DeleteAsync($"{_endpoint}/{listId}/contacts")
@@ -80,7 +78,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<long> GetContactsCountAsync(string listId, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(listId)) throw new ArgumentNullException(nameof(listId));
+			ArgumentNullException.ThrowIfNullOrEmpty(listId);
 
 			return _client
 				.GetAsync($"{_endpoint}/{listId}/contacts/count")
@@ -99,8 +97,8 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<List> UpdateAsync(string listId, string name, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(listId)) throw new ArgumentNullException(nameof(listId));
-			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+			ArgumentNullException.ThrowIfNullOrEmpty(listId);
+			ArgumentNullException.ThrowIfNullOrEmpty(name);
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
@@ -122,7 +120,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<List> GetAsync(string listId, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(listId)) throw new ArgumentNullException(nameof(listId));
+			ArgumentNullException.ThrowIfNullOrEmpty(listId);
 
 			return _client
 				.GetAsync($"{_endpoint}/{listId}")
@@ -162,7 +160,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task<List> CreateAsync(string name, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+			ArgumentNullException.ThrowIfNullOrEmpty(name);
 
 			var data = new StrongGridJsonObject();
 			data.AddProperty("name", name);
@@ -185,7 +183,7 @@ namespace StrongGrid.Resources
 		/// </returns>
 		public Task DeleteAsync(string listId, bool deleteContacts = false, CancellationToken cancellationToken = default)
 		{
-			if (string.IsNullOrEmpty(listId)) throw new ArgumentNullException(nameof(listId));
+			ArgumentNullException.ThrowIfNullOrEmpty(listId);
 
 			return _client
 				.DeleteAsync($"{_endpoint}/{listId}")
