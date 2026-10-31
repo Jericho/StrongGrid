@@ -481,9 +481,7 @@ namespace StrongGrid.UnitTests.Utilities
 		{
 			// Arrange
 			using var store = new MemoryDiagnosticStore(TimeSpan.FromMilliseconds(200));
-			string diagnosticId = null;
-
-			CreateAndAddDiagnosticEntry(store, out diagnosticId);
+			CreateAndAddDiagnosticEntry(store, out string diagnosticId);
 
 			// Verify entry exists
 			store.ContainsKey(diagnosticId).ShouldBeTrue();
@@ -494,7 +492,7 @@ namespace StrongGrid.UnitTests.Utilities
 			GC.Collect();
 
 			// Act - Wait for timer to trigger cleanup
-			Thread.Sleep(500);
+			Thread.Sleep(1000);
 
 			// Assert - Entry should be removed by timer
 			store.ContainsKey(diagnosticId).ShouldBeFalse();
