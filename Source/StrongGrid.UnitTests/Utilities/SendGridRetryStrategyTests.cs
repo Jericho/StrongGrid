@@ -160,7 +160,7 @@ namespace StrongGrid.UnitTests.Utilities
 			mockHttp.Expect(HttpMethod.Get, mockUri).Respond("application/json", "Success!");
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 
 			// Act
 			var result = await client.SendAsync(HttpMethod.Get, "testing").AsString();
@@ -184,7 +184,7 @@ namespace StrongGrid.UnitTests.Utilities
 			mockHttp.Expect(HttpMethod.Get, mockUri).Respond((HttpStatusCode)429);
 
 			var logger = _outputHelper.ToLogger<IClient>();
-			var client = Utils.GetFluentClient(mockHttp, logger);
+			var client = Utils.GetFluentClient(mockHttp, logger: logger);
 
 			// Act
 			var result = await Should.ThrowAsync<Exception>(client.SendAsync(HttpMethod.Get, "testing").AsResponse());

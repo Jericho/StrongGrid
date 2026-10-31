@@ -291,10 +291,13 @@ namespace StrongGrid
 			_fluentClient.Formatters.Clear();
 			_fluentClient.Formatters.Add(new JsonFormatter());
 
+			var cleanupInterval = TimeSpan.FromSeconds(15);
+			var diagnosticStore = new MemoryDiagnosticStore(cleanupInterval);
+
 			// Order is important: DiagnosticHandler must be first.
 			// Also, the list of filters must be kept in sync with the filters in Utils.GetFluentClient in the unit testing project.
-			_fluentClient.Filters.Add(new DiagnosticHandler(_options.LogLevelSuccessfulCalls, _options.LogLevelFailedCalls, _logger));
-			_fluentClient.Filters.Add(new SendGridErrorHandler());
+			_fluentClient.Filters.Add(new DiagnosticHandler(diagnosticStore, _options, _logger));
+			_fluentClient.Filters.Add(new SendGridErrorHandler(diagnosticStore, _options));
 
 			ArgumentNullException.ThrowIfNullOrEmpty(apiKey, nameof(apiKey));
 			_fluentClient.SetBearerAuthentication(apiKey);
