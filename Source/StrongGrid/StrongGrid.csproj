@@ -46,7 +46,7 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.403" PrivateAssets="All" />
     <PackageReference Include="MimeKitLite" Version="4.18.1" />
     <PackageReference Include="Pathoschild.Http.FluentClient" Version="4.4.2" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.3.151-beta">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.3.180">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
