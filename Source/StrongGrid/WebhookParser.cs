@@ -164,8 +164,14 @@ namespace StrongGrid
 			// If the format of the payload is "raw", we can parse the MIME content and derive additional values like attachments, Html, Text, etc.
 			if (!string.IsNullOrEmpty(inboundEmail.RawEmail))
 			{
+				var mimeOptions = new ParserOptions()
+				{
+					// See this discussion where we debate what the default maxHeaderLength should be: https://github.com/Jericho/StrongGrid/issues/569
+					MaxHeaderLength = 32 * 1024, // 32 KB. The default is 16 KB
+				};
+
 				using var ms = new MemoryStream(Encoding.UTF8.GetBytes(inboundEmail.RawEmail));
-				using var message = await MimeMessage.LoadAsync(ms, cancellationToken).ConfigureAwait(false);
+				using var message = await MimeMessage.LoadAsync(mimeOptions, ms, cancellationToken).ConfigureAwait(false);
 
 				var mimeInlineContent = message.BodyParts.Where(part => part.ContentDisposition?.Disposition?.Equals("inline", StringComparison.OrdinalIgnoreCase) ?? false);
 				var convertedAttachments = await message.Attachments.Union(mimeInlineContent)
