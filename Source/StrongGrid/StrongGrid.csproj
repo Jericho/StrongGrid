@@ -44,7 +44,7 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="[8.0.0,12)" /> <!-- DO NOT UPGRADE. Reasoning is same as explained in GH issue 538 -->
     <PackageReference Include="Microsoft.Extensions.Logging" Version="[8.0.0,12)" /> <!-- DO NOT UPGRADE See https://github.com/Jericho/StrongGrid/issues/538 -->
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="11.0.100" PrivateAssets="All" />
-    <PackageReference Include="MimeKitLite" Version="4.18.1" />
+    <PackageReference Include="MimeKit.Core" Version="5.0.0" />
     <PackageReference Include="Pathoschild.Http.FluentClient" Version="4.4.2" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.3.180">
       <PrivateAssets>all</PrivateAssets>
